@@ -9,7 +9,11 @@ namespace Hackathon.DAL.Configurations
         public void Configure(EntityTypeBuilder<EventEntity> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name);
+
+            builder
+                .Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
         }
     }
 }
