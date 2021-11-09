@@ -17,7 +17,7 @@ namespace Hackathon.BL.Event.Validators
             RuleFor(x => x.Start)
                .NotNull()
                .NotEmpty()
-               .GreaterThan(DateTime.UtcNow).WithMessage("Please set date and time greater than current"); 
+               .GreaterThan(DateTime.UtcNow).WithMessage("Значение должно быть больше текущих даты и времени");
         }
     }
 }
