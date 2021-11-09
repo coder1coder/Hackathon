@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Models;
+using System;
 
 namespace Hackathon.BL.Event.Validators
 {
@@ -11,7 +12,12 @@ namespace Hackathon.BL.Event.Validators
                 .NotNull()
                 .NotEmpty()
                 .MinimumLength(5)
-                .MaximumLength(100);
+                .MaximumLength(100); 
+            
+            RuleFor(x => x.Start)
+               .NotNull()
+               .NotEmpty()
+               .GreaterThan(DateTime.UtcNow).WithMessage("Please set date and time greater than current"); 
         }
     }
 }
