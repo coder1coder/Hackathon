@@ -14,6 +14,8 @@ namespace Hackathon.DAL.Configurations
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
+                
+            builder.Property(x => x.Start);
         }
     }
 }

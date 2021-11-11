@@ -28,7 +28,7 @@ namespace Hackathon.API.Controllers
             var eventId = await _eventService.CreateAsync(createEventModel);
             return new BaseCreateResponse
             {
-                Id = eventId
+                Id = eventId,
             };
         }
 
