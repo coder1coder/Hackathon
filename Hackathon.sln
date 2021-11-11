@@ -18,11 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Infrastucture", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Tests", "Hackathon.Tests", "{BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.DAL", "Hackathon.Tests.DAL\Hackathon.Tests.DAL.csproj", "{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.DAL", "Hackathon.Tests\Hackathon.Tests.DAL\Hackathon.Tests.DAL.csproj", "{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.BL", "Hackathon.Tests.BL\Hackathon.Tests.BL.csproj", "{0B425B08-6040-47D7-B9DF-E976124E4E62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.BL", "Hackathon.Tests\Hackathon.Tests.BL\Hackathon.Tests.BL.csproj", "{0B425B08-6040-47D7-B9DF-E976124E4E62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
