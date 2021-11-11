@@ -9,6 +9,7 @@ namespace Hackathon.DAL
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<TeamRepository>().As<ITeamRepository>().InstancePerLifetimeScope();
         }
     }
 }
