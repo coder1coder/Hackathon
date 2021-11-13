@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models;
+using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
@@ -27,8 +26,8 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="createEventRequest"></param>
         /// <returns></returns>
-        [HttpPost(nameof(Create))]
         [Authorize]
+        [HttpPost]
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {
             var createEventModel = _mapper.Map<CreateEventModel>(createEventRequest);
@@ -37,6 +36,28 @@ namespace Hackathon.API.Controllers
             {
                 Id = eventId,
             };
+        }
+
+        /// <summary>
+        /// Задать статус события
+        /// </summary>
+        /// <param name="setStatusRequest"></param>
+        [Authorize]
+        [HttpPut(nameof(SetStatus))]
+        public async Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
+        {
+            await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
+        }
+
+        /// <summary>
+        /// Полное удаление события
+        /// </summary>
+        /// <param name="id"></param>
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public async Task Delete([FromRoute] long id)
+        {
+            await _eventService.DeleteAsync(id);
         }
 
     }

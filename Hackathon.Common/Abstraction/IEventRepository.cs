@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Hackathon.Common.Entities;
+using Hackathon.Common.Models.Event;
 
 namespace Hackathon.Common.Abstraction
 {
     public interface IEventRepository
     {
-        Task<long> CreateAsync(EventEntity eventEntity);
+        Task<long> CreateAsync(EventModel eventModel);
+        Task<EventModel> GetAsync(long eventId);
+        Task UpdateAsync(EventModel eventModel);
+        Task DeleteAsync(long eventId);
     }
 }
