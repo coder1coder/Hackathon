@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
 
 namespace Hackathon.DAL.Repositories

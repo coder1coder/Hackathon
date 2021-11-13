@@ -1,10 +1,14 @@
 ﻿using System.Reflection;
+using Hackathon.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL
 {
     public class ApplicationDbContext: DbContext
     {
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<EventEntity> Events { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
