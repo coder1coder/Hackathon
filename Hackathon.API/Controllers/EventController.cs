@@ -6,6 +6,7 @@ using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
@@ -27,6 +28,7 @@ namespace Hackathon.API.Controllers
         /// <param name="createEventRequest"></param>
         /// <returns></returns>
         [HttpPost(nameof(Create))]
+        [Authorize]
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {
             var createEventModel = _mapper.Map<CreateEventModel>(createEventRequest);
