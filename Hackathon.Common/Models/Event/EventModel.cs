@@ -1,10 +1,10 @@
 ﻿using System;
-using Hackathon.Common.Models.Event;
 
-namespace Hackathon.Common.Entities
+namespace Hackathon.Common.Models.Event
 {
-    public class EventEntity: BaseEntity
+    public class EventModel
     {
+        public long Id { get; set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public EventStatus Status { get; set; }
