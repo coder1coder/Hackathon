@@ -9,7 +9,17 @@ namespace Hackathon.DAL.Configurations
         public void Configure(EntityTypeBuilder<TeamEntity> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name);
+            
+            builder
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            builder
+                .Property(x => x.Name)
+                .IsRequired();
+
+
+
         }
     }
 }
