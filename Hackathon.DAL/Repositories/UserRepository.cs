@@ -27,26 +27,36 @@ namespace Hackathon.DAL.Repositories
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
+
             await _dbContext.Users.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
+
             return entity.Id;
         }
 
         public async Task<UserModel> GetAsync(long userId)
         {
-            var entity = await _dbContext.Users.SingleOrDefaultAsync(x => x.Id == userId);
+            var entity = await _dbContext.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == userId);
+
             return _mapper.Map<UserModel>(entity);
         }
 
         public async Task<UserModel> GetAsync(string userName)
         {
-            var entity = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userName);
+            var entity = await _dbContext.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.UserName == userName);
+
             return _mapper.Map<UserModel>(entity);
         }
 
         public async Task<bool> CanCreateAsync(SignUpModel signUpModel)
         {
-            var query = _dbContext.Users.Where(x => x.UserName.ToLower() == signUpModel.UserName.ToLower());
+            var query = _dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.UserName.ToLower() == signUpModel.UserName.ToLower());
 
             if (signUpModel.Email != null)
                 query = query.Where(x => x.Email.ToLower() == signUpModel.Email.ToLower());

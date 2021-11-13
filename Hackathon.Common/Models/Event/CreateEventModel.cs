@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hackathon.Common.Models
+namespace Hackathon.Common.Models.Event
 {
     public class CreateEventModel
     {

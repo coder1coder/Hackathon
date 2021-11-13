@@ -4,6 +4,7 @@ using Hackathon.BL.Event.Validators;
 using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Event
 {
