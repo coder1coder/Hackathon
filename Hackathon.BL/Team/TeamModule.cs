@@ -2,6 +2,7 @@
 using FluentValidation;
 using Hackathon.BL.Team.Validators;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 
 namespace Hackathon.BL.Team

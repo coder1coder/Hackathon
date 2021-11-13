@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Models;
 
-namespace Hackathon.Common
+namespace Hackathon.Common.Abstraction
 {
     public interface ITeamService
     {

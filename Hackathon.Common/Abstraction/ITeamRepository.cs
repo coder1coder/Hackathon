@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Entities;
 
-namespace Hackathon.Common
+namespace Hackathon.Common.Abstraction
 {
     public interface ITeamRepository
     {

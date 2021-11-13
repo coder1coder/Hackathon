@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
 using Hackathon.Common.Models;
 using MapsterMapper;
