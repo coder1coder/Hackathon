@@ -4,6 +4,7 @@ using Hackathon.BL.Team.Validators;
 using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team
 {

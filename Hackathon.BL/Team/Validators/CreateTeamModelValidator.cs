@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators
 {

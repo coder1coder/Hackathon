@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Common.Models
+﻿namespace Hackathon.Common.Models.Team
 {
     public class CreateTeamModel
     {

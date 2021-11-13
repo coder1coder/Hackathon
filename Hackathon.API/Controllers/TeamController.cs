@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Team;
 using Microsoft.AspNetCore.Authorization;
@@ -33,8 +34,8 @@ namespace Hackathon.API.Controllers
         [HttpPost]
         public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
         {
-            var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
-            var teamId = await _teamService.CreateAsync(createTeamModel);
+            var teamModel = _mapper.Map<TeamModel>(createTeamRequest);
+            var teamId = await _teamService.CreateAsync(teamModel);
             return new BaseCreateResponse
             {
                 Id = teamId,
