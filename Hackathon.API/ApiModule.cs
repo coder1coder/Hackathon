@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Hackathon.Common.Configuration;
 using MapsterMapper;
+using Microsoft.Extensions.Options;
 
 namespace Hackathon.API
 {

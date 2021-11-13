@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Hackathon.Common;
+using Hackathon.Common.Abstraction;
 using Hackathon.DAL.Repositories;
 
 namespace Hackathon.DAL
@@ -9,6 +9,7 @@ namespace Hackathon.DAL
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
         }
     }
 }
