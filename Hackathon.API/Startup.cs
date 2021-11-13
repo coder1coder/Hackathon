@@ -1,6 +1,12 @@
+using System;
+using System.IO;
+using System.Reflection;
 using Autofac;
 using Hackathon.BL;
+using Hackathon.Common.Configuration;
 using Hackathon.DAL;
+using Hackathon.DAL.Mappings;
+using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +28,18 @@ namespace Hackathon.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
+
+            TypeAdapterConfig.GlobalSettings.Apply(new IRegister[]
+            {
+                new UserEntityMapping()
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
+                options.EnableSensitiveDataLogging();
+                options.LogTo(Console.WriteLine);
             });
 
             services.AddControllers();

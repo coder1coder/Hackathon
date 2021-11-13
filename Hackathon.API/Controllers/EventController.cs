@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Contracts.Requests;
+using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class EventController: ControllerBase
+    public class EventController: BaseController
     {
         private readonly IMapper _mapper;
         private readonly IEventService _eventService;
@@ -21,6 +21,11 @@ namespace Hackathon.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Создание нового события
+        /// </summary>
+        /// <param name="createEventRequest"></param>
+        /// <returns></returns>
         [HttpPost(nameof(Create))]
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {

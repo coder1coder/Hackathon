@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Hackathon.Contracts.Requests
+namespace Hackathon.Contracts.Requests.Event
 {
     public class CreateEventRequest
     {
