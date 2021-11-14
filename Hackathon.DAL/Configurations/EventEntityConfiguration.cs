@@ -8,14 +8,25 @@ namespace Hackathon.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<EventEntity> builder)
         {
+            builder.ToTable("Events");
             builder.HasKey(x => x.Id);
 
             builder
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-                
-            builder.Property(x => x.Start);
+
+            builder
+                .Property(x => x.Start)
+                .IsRequired();
+
+            builder
+                .Property(x => x.Status)
+                .IsRequired();
+
+            builder
+                .HasMany(x => x.Teams)
+                .WithOne(x => x.Event);
         }
     }
 }

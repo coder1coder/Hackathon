@@ -8,6 +8,7 @@ namespace Hackathon.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
+            builder.ToTable("Users");
             builder
                 .HasIndex(x => x.UserName)
                 .IsUnique();

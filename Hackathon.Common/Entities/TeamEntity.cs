@@ -3,5 +3,7 @@
     public class TeamEntity : BaseEntity
     {
         public string Name { get; set; }
+        public EventEntity Event { get; set; }
+        public long EventId { get; set; }
     }
 }
