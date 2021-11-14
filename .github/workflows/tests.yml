@@ -1,4 +1,4 @@
-name: Hackathon Tests
+name: .NET
 
 on:
   push:
