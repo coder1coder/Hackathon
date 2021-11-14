@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Event;
@@ -10,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
+    /// <summary>
+    /// События
+    /// </summary>
     public class EventController: BaseController
     {
         private readonly IMapper _mapper;
@@ -36,6 +40,31 @@ namespace Hackathon.API.Controllers
             {
                 Id = eventId,
             };
+        }
+
+        /// <summary>
+        /// Получить все события
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<BaseCollectionResponse<EventModel>> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
+        {
+            var getFilterModel = _mapper.Map<GetFilterModel<EventFilterModel>>(filterRequest);
+            var collectionModel = await _eventService.GetAsync(getFilterModel);
+            return _mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel);
+        }
+
+        /// <summary>
+        /// Получить событие по идентификатору
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("{id:long}")]
+        public async Task<EventModel> Get([FromRoute] long id)
+        {
+            return await _eventService.GetAsync(id);
         }
 
         /// <summary>
