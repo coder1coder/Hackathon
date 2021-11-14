@@ -2,6 +2,8 @@
 using FluentValidation;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Exceptions;
+using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using MapsterMapper;
 
@@ -26,6 +28,22 @@ namespace Hackathon.BL.Event
 
             var eventModel = _mapper.Map<EventModel>(createEventModel);
             return await _eventRepository.CreateAsync(eventModel);
+        }
+
+        public async Task<EventModel> GetAsync(long eventId)
+        {
+            return await GetEventThrowIfNotExist(eventId);
+        }
+
+        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
+        {
+            if (getFilterModel.Page.HasValue && getFilterModel.Page < 1)
+                throw new ServiceException("Номер страницы должен быть больше 0");
+
+            if (getFilterModel.PageSize.HasValue && getFilterModel.PageSize < 1)
+                throw new ServiceException("Размер страницы должен быть больше 0");
+
+            return await _eventRepository.GetAsync(getFilterModel);
         }
 
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
