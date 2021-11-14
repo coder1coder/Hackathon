@@ -4,6 +4,6 @@ namespace Hackathon.API.Client.Base
 {
     public interface IBaseApiClient
     {
-        Task<TResponse> CreateAsync<TRequest, TResponse>(TRequest request);
+        Task<TResponse> PostAsync<TRequest, TResponse>(string endpoint, TRequest request);
     }
 }

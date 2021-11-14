@@ -9,20 +9,18 @@ namespace Hackathon.API.Client.Base
     public abstract class BaseApiClient: IBaseApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly string _endpoint;
 
-        protected BaseApiClient(string endpoint, HttpClient httpClient)
+        protected BaseApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _endpoint = endpoint;
         }
 
-        public async Task<TResponse> CreateAsync<TRequest, TResponse>(TRequest request)
+        public async Task<TResponse> PostAsync<TRequest, TResponse>(string endpoint, TRequest request)
         {
             var requestJson = JsonConvert.SerializeObject(request);
             var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(_endpoint,  content);
+            var response = await _httpClient.PostAsync(endpoint,  content);
             var result = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
