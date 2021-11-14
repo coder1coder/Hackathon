@@ -39,7 +39,6 @@ namespace Hackathon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventEntity");
                     b.ToTable("Events");
                 });
 
@@ -70,21 +69,6 @@ namespace Hackathon.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Hackathon.Common.Entities.TeamEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TeamEntity");
                 });
 #pragma warning restore 612, 618
         }

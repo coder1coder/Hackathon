@@ -1,7 +1,6 @@
 using Autofac;
 using Hackathon.BL.Event;
 using Hackathon.BL.User;
-using Hackathon.BL.Team;
 
 namespace Hackathon.BL
 {
@@ -11,7 +10,6 @@ namespace Hackathon.BL
         {
             builder.RegisterModule(new EventModule());
             builder.RegisterModule(new UserModule());
-            builder.RegisterModule(new TeamModule());
         }
     }
 }
