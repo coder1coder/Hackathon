@@ -83,7 +83,7 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         [Authorize]
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:long}")]
         public async Task Delete([FromRoute] long id)
         {
             await _eventService.DeleteAsync(id);

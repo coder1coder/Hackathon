@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bogus;
+using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.Tests.Integration
@@ -15,6 +17,18 @@ namespace Hackathon.Tests.Integration
                 .RuleFor(x => x.Password, f => f.Random.String2(6, 20))
                 .RuleFor(x => x.FullName, f => f.Person.FullName)
                 .RuleFor(x => x.Email, f => f.Person.Email);
+
+            return faker.Generate(count);
+        }
+
+        public static List<EventModel> GetEventModels(int count)
+        {
+            var faker = new Faker<EventModel>();
+
+            faker
+                .RuleFor(x => x.Name, f => f.Random.String2(6,20))
+                .RuleFor(x => x.Status, f => f.PickRandom<EventStatus>())
+                .RuleFor(x => x.Start, _ => DateTime.UtcNow.AddDays(1));
 
             return faker.Generate(count);
         }
