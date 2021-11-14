@@ -9,5 +9,6 @@ namespace Hackathon.Common.Abstraction
         Task<TeamModel> GetAsync(long teamId);
         Task<bool> ExistAsync(string teamName);
         Task<bool> ExistAsync(long teamId);
+        Task AddMemberAsync(long teamId, long userId);
     }
 }

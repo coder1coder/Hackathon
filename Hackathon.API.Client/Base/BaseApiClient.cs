@@ -27,6 +27,17 @@ namespace Hackathon.API.Client.Base
             await _httpClient.PutAsync(endpoint,  content);
         }
 
+        public async Task PostAsync<TRequest>(string endpoint, TRequest request, bool isUseAuthorization = true)
+        {
+            if (!isUseAuthorization)
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+
+            var requestJson = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+            await _httpClient.PostAsync(endpoint,  content);
+        }
+
         public async Task<TResponse> PostAsync<TRequest, TResponse>(string endpoint, TRequest request, bool isUseAuthorization = true)
         {
             if (!isUseAuthorization)
@@ -62,6 +73,9 @@ namespace Hackathon.API.Client.Base
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
                 throw new Exception($"Необходимо указать валидный токен");
+
+            if (response.StatusCode == HttpStatusCode.InternalServerError)
+                throw new Exception("Неустранимая ошибка API");
 
             throw new Exception($"Код состояния {response.StatusCode} не поддерживается");
         }

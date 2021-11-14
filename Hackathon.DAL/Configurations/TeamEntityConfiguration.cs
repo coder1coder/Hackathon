@@ -22,6 +22,10 @@ namespace Hackathon.DAL.Configurations
             builder
                 .Property(x => x.EventId)
                 .IsRequired();
+
+            builder
+                .HasMany(x => x.Members)
+                .WithMany(x => x.Teams);
         }
     }
 }

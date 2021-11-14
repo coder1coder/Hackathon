@@ -39,5 +39,16 @@ namespace Hackathon.API.Controllers
                 Id = teamId,
             };
         }
+
+        /// <summary>
+        /// Регистрация пользователя в команде
+        /// </summary>
+        /// <param name="teamAddMemberRequest"></param>
+        [Authorize]
+        [HttpPost(nameof(AddMember))]
+        public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
+        {
+            await _teamService.AddMemberAsync(teamAddMemberRequest.TeamId, teamAddMemberRequest.UserId);
+        }
     }
 }
