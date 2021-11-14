@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Hackathon.Common.Models.Team;
 
 namespace Hackathon.Common.Models.Event
 {
@@ -8,5 +10,7 @@ namespace Hackathon.Common.Models.Event
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public EventStatus Status { get; set; }
+
+        public IReadOnlyCollection<TeamModel> Teams { get; set; } = new List<TeamModel>();
     }
 }

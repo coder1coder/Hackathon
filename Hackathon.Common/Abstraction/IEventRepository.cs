@@ -12,5 +12,6 @@ namespace Hackathon.Common.Abstraction
         Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel);
         Task UpdateAsync(EventModel eventModel);
         Task DeleteAsync(long eventId);
+        Task<bool> ExistAsync(long eventId);
     }
 }

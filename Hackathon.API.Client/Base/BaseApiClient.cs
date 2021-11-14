@@ -16,6 +16,17 @@ namespace Hackathon.API.Client.Base
             _httpClient = httpClient;
         }
 
+        public async Task PutAsync<TRequest>(string endpoint, TRequest request, bool isUseAuthorization = true)
+        {
+            if (!isUseAuthorization)
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+
+            var requestJson = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+            await _httpClient.PutAsync(endpoint,  content);
+        }
+
         public async Task<TResponse> PostAsync<TRequest, TResponse>(string endpoint, TRequest request, bool isUseAuthorization = true)
         {
             if (!isUseAuthorization)

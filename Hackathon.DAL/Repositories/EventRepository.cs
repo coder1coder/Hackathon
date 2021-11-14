@@ -38,6 +38,7 @@ namespace Hackathon.DAL.Repositories
         {
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
+                .Include(x=>x.Teams)
                 .FirstOrDefaultAsync(x => x.Id == eventId);
 
             return _mapper.Map<EventModel>(eventEntity);
@@ -125,6 +126,13 @@ namespace Hackathon.DAL.Repositories
 
             _dbContext.Remove(eventEntity);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistAsync(long eventId)
+        {
+            return await _dbContext.Events
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == eventId);
         }
     }
 }
