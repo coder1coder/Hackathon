@@ -3,15 +3,17 @@ using System;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211112133200_AddTeam")]
+    partial class AddTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,42 +36,9 @@ namespace Hackathon.DAL.Migrations
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.ToTable("EventEntity");
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("Hackathon.Common.Entities.UserEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Hackathon.Common.Entities.TeamEntity", b =>
