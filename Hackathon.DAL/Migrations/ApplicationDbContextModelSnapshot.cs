@@ -39,8 +39,31 @@ namespace Hackathon.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventEntity");
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("Hackathon.Common.Entities.TeamEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Hackathon.Common.Entities.UserEntity", b =>
@@ -74,17 +97,18 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.Common.Entities.TeamEntity", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                    b.HasOne("Hackathon.Common.Entities.EventEntity", "Event")
+                        .WithMany("Teams")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Navigation("Event");
+                });
 
-                    b.HasKey("Id");
-
-                    b.ToTable("TeamEntity");
+            modelBuilder.Entity("Hackathon.Common.Entities.EventEntity", b =>
+                {
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

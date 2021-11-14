@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators
@@ -13,6 +12,9 @@ namespace Hackathon.BL.Team.Validators
                 .NotEmpty()
                 .MinimumLength(3)
                 .MaximumLength(30);
+
+            RuleFor(x => x.EventId)
+                .GreaterThan(0);
         }
     }
 }

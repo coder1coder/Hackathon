@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
@@ -27,15 +27,30 @@ namespace Hackathon.DAL.Repositories
             return createTeamEntity.Id;
         }
 
-        public async Task<bool> CanCreateAsync(CreateTeamModel createTeamModel)
+        public async Task<TeamModel> GetAsync(long teamId)
         {
-            var query = _dbContext.Teams
+            var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
-                .Where(x => x.Name.ToLower() == createTeamModel.Name.ToLower());
+                .FirstOrDefaultAsync(x => x.Id == teamId);
 
-            var team = await query.FirstOrDefaultAsync();
-            
-            return team == null;
+            if (teamEntity == null)
+                throw new Exception("Команда с таким идентификатором не найдена");
+
+            return _mapper.Map<TeamModel>(teamEntity);
+        }
+
+        public async Task<bool> ExistAsync(string teamName)
+        {
+            return await _dbContext.Teams
+                .AsNoTracking()
+                .AnyAsync(x => x.Name.ToLower() == teamName.ToLower());
+        }
+
+        public async Task<bool> ExistAsync(long teamId)
+        {
+            return await _dbContext.Teams
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == teamId);
         }
     }
 }

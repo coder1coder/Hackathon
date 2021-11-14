@@ -8,8 +8,9 @@ namespace Hackathon.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<TeamEntity> builder)
         {
+            builder.ToTable("Teams");
             builder.HasKey(x => x.Id);
-            
+
             builder
                 .HasIndex(x => x.Name)
                 .IsUnique();
@@ -18,8 +19,9 @@ namespace Hackathon.DAL.Configurations
                 .Property(x => x.Name)
                 .IsRequired();
 
-
-
+            builder
+                .Property(x => x.EventId)
+                .IsRequired();
         }
     }
 }
