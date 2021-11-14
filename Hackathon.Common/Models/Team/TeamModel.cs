@@ -10,7 +10,7 @@ namespace Hackathon.Common.Models.Team
         public string Name { get; set; }
         public long EventId { get; set; }
 
-        public List<EventModel> Event { get; set; }
-        public List<UserModel> Members { get; set; }
+        public EventModel Event { get; set; }
+        public List<UserModel> Users { get; set; }
     }
 }

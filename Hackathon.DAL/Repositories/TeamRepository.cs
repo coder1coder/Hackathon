@@ -32,7 +32,7 @@ namespace Hackathon.DAL.Repositories
             var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
                 .Include(x=>x.Event)
-                .Include(x=>x.Members)
+                .Include(x=>x.Users)
                 .FirstOrDefaultAsync(x => x.Id == teamId);
 
             if (teamEntity == null)
@@ -67,7 +67,7 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == userId);
 
-            teamEntity.Members.Add(userEntity);
+            teamEntity.Users.Add(userEntity);
             await _dbContext.SaveChangesAsync();
         }
     }

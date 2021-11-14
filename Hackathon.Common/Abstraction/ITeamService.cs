@@ -7,5 +7,6 @@ namespace Hackathon.Common.Abstraction
     {
         Task<long> CreateAsync(CreateTeamModel createTeamModel);
         Task AddMemberAsync(long teamId, long userId);
+        Task<TeamModel> GetAsync(long teamId);
     }
 }

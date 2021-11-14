@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Entities;
+﻿using System.Collections.Generic;
+using Hackathon.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,8 +25,12 @@ namespace Hackathon.DAL.Configurations
                 .IsRequired();
 
             builder
-                .HasMany(x => x.Members)
-                .WithMany(x => x.Teams);
+                .HasMany(x => x.Users)
+                .WithMany(x => x.Teams)
+                .UsingEntity<Dictionary<string, object>>("UserTeam",
+                x => x.HasOne<UserEntity>().WithMany().HasForeignKey("UserId"),
+                x => x.HasOne<TeamEntity>().WithMany().HasForeignKey("TeamId"),
+                x => x.ToTable("UserTeam"));
         }
     }
 }

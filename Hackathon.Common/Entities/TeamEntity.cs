@@ -8,6 +8,6 @@ namespace Hackathon.Common.Entities
         public EventEntity Event { get; set; }
         public long EventId { get; set; }
 
-        public List<UserEntity> Members { get; set; }
+        public List<UserEntity> Users { get; set; } = new ();
     }
 }
