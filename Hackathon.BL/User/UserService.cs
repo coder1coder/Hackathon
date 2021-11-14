@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.BL.User.Validators;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
@@ -65,7 +64,7 @@ namespace Hackathon.BL.User
             if (!verified)
                 throw new ServiceException("Неправильное имя пользователя или пароль");
 
-            return GenerateToken(user);
+            return GenerateToken(user.Id);
         }
 
         public async Task<UserModel> GetAsync(long userId)
@@ -78,14 +77,14 @@ namespace Hackathon.BL.User
             return userModel;
         }
 
-        private AuthTokenModel GenerateToken(UserModel userModel)
+        public AuthTokenModel GenerateToken(long userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new (ClaimTypes.NameIdentifier, userModel.Id.ToString()),
+                    new (ClaimTypes.NameIdentifier, userId.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_authConfig.LifeTime),
                 Issuer = _authConfig.Issuer,
@@ -100,34 +99,10 @@ namespace Hackathon.BL.User
 
             return new AuthTokenModel
             {
-                UserId = userModel.Id,
+                UserId = userId,
                 Expires = tokenDescriptor.Expires,
                 Token = tokenString
             };
-        }
-
-        private bool ValidateToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = _authConfig.Issuer,
-                    ValidAudience = _authConfig.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_authConfig.Secret))
-                }, out _);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }

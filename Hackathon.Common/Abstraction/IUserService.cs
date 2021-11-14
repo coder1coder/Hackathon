@@ -9,5 +9,7 @@ namespace Hackathon.Common.Abstraction
         Task<long> CreateAsync(SignUpModel signUpModel);
         Task<AuthTokenModel> SignInAsync(SignInModel signInModel);
         Task<UserModel> GetAsync(long userId);
+
+        AuthTokenModel GenerateToken(long userId);
     }
 }

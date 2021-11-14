@@ -16,12 +16,12 @@ namespace Hackathon.API.Client.User
 
         public Task<BaseCreateResponse> SignUpAsync(SignUpRequest request)
         {
-            return PostAsync<SignUpRequest, BaseCreateResponse>(Endpoint, request);
+            return PostAsync<SignUpRequest, BaseCreateResponse>(Endpoint, request, true);
         }
 
         public Task<AuthTokenModel> SignInAsync(SignInRequest request)
         {
-            return PostAsync<SignInRequest, AuthTokenModel>($"{Endpoint}/SignIn", request);
+            return PostAsync<SignInRequest, AuthTokenModel>($"{Endpoint}/SignIn", request, true);
         }
     }
 }
