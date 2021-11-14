@@ -29,8 +29,8 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost(nameof(SignUp))]
-        public async Task<BaseCreateResponse> SignUp(SignUpRequest request)
+        [HttpPost]
+        public async Task<BaseCreateResponse> SignUp([FromBody] SignUpRequest request)
         {
             var signUpModel = _mapper.Map<SignUpModel>(request);
             var userId = await _userService.CreateAsync(signUpModel);
@@ -46,7 +46,7 @@ namespace Hackathon.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost(nameof(SignIn))]
-        public async Task<AuthTokenModel> SignIn(SignInRequest request)
+        public async Task<AuthTokenModel> SignIn([FromBody] SignInRequest request)
         {
             var signInModel = _mapper.Map<SignInModel>(request);
             return await _userService.SignInAsync(signInModel);
