@@ -1,14 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models.Team;
+using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
-using Microsoft.AspNetCore.Mvc;
-using Hackathon.Common;
-using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models;
-using Hackathon.Common.Models.Team;
-using Hackathon.Contracts.Requests;
-using Hackathon.Contracts.Requests.Team;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
@@ -49,6 +46,17 @@ namespace Hackathon.API.Controllers
         public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
         {
             await _teamService.AddMemberAsync(teamAddMemberRequest.TeamId, teamAddMemberRequest.UserId);
+        }
+
+        /// <summary>
+        /// Получить команду по идентификатору
+        /// </summary>
+        /// <param name="id"></param>
+        [Authorize]
+        [HttpGet("{id:long}")]
+        public async Task<TeamModel> Get([FromRoute] long id)
+        {
+            return await _teamService.GetAsync(id);
         }
     }
 }

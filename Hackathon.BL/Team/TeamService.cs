@@ -76,13 +76,23 @@ namespace Hackathon.BL.Team
             if (eventModel == null)
                 throw new ServiceException("События с таким идентификатором не найдено");
 
-            if (teamModel.Members.Any(x => x.Id == userId))
+            if (teamModel.Users.Any(x => x.Id == userId))
                 throw new ServiceException("Пользователь уже добавлен в эту команду");
 
             if (eventModel.Status != EventStatus.Published)
                 throw new ServiceException("Невозможно добавить участника в команду. Событие не опубликовано.");
 
             await _teamRepository.AddMemberAsync(teamId, userId);
+        }
+
+        public async Task<TeamModel> GetAsync(long teamId)
+        {
+            var teamModel = await _teamRepository.GetAsync(teamId);
+
+            if (teamModel == null)
+                throw new ServiceException("Команды с указаным идентификатором не существует");
+
+            return teamModel;
         }
     }
 }
