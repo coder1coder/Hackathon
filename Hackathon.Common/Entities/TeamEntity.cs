@@ -1,9 +1,13 @@
-﻿namespace Hackathon.Common.Entities
+﻿using System.Collections.Generic;
+
+namespace Hackathon.Common.Entities
 {
     public class TeamEntity : BaseEntity
     {
         public string Name { get; set; }
         public EventEntity Event { get; set; }
         public long EventId { get; set; }
+
+        public List<UserEntity> Members { get; set; }
     }
 }

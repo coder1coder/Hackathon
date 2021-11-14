@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers

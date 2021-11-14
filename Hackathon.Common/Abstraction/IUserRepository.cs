@@ -9,5 +9,6 @@ namespace Hackathon.Common.Abstraction
         Task<UserModel> GetAsync(long userId);
         Task<UserModel> GetAsync(string userName);
         Task<bool> CanCreateAsync(SignUpModel signUpModel);
+        Task<bool> ExistAsync(long userId);
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
 using Hackathon.Common.Models.User;
@@ -64,6 +62,13 @@ namespace Hackathon.DAL.Repositories
             var user = await query.FirstOrDefaultAsync();
 
             return user == null;
+        }
+
+        public async Task<bool> ExistAsync(long userId)
+        {
+            return await _dbContext.Users
+                .AsNoTracking()
+                .AnyAsync(x => x.Id == userId);
         }
     }
 }
