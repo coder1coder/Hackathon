@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Hackathon.API.Controllers
 {
-    // [ApiController]
-    // [Route("[controller]")]
     public class TeamController : BaseController
     {
         private readonly IMapper _mapper;
@@ -34,8 +32,8 @@ namespace Hackathon.API.Controllers
         [HttpPost]
         public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
         {
-            var teamModel = _mapper.Map<TeamModel>(createTeamRequest);
-            var teamId = await _teamService.CreateAsync(teamModel);
+            var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
+            var teamId = await _teamService.CreateAsync(createTeamModel);
             return new BaseCreateResponse
             {
                 Id = teamId,

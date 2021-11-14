@@ -6,6 +6,6 @@ namespace Hackathon.Common.Abstraction
 {
     public interface ITeamService
     {
-        Task<long> CreateAsync(TeamModel teamModel);
+        Task<long> CreateAsync(CreateTeamModel createTeamModel);
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -19,23 +17,25 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        public async Task<long> CreateAsync(TeamEntity teamModel)
+        public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
-            var teamEntity = _mapper.Map<TeamEntity>(teamModel);
+            var createTeamEntity = _mapper.Map<TeamEntity>(createTeamModel);
 
-            await _dbContext.AddAsync(teamEntity);
+            await _dbContext.AddAsync(createTeamEntity);
             await _dbContext.SaveChangesAsync();
 
-            return teamEntity.Id;
+            return createTeamEntity.Id;
         }
 
-        public async Task<bool> CanCreateAsync(TeamModel teamModel)
+        public async Task<bool> CanCreateAsync(CreateTeamModel createTeamModel)
         {
             var query = _dbContext.Teams
                 .AsNoTracking()
-                .Where(x => x.Name.ToLower() == teamModel.Name.ToLower());
+                .Where(x => x.Name.ToLower() == createTeamModel.Name.ToLower());
 
-            return query == null;
+            var team = await query.FirstOrDefaultAsync();
+            
+            return team == null;
         }
     }
 }

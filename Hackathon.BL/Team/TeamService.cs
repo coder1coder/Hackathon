@@ -13,26 +13,26 @@ namespace Hackathon.BL.Team
     public class TeamService : ITeamService
     {
         private readonly IMapper _mapper;
-        private readonly IValidator<TeamModel> _teamModelValidator;
+        private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
         private readonly ITeamRepository _teamRepository;
 
-        public TeamService(IMapper mapper, IValidator<TeamModel> teamModelValidator,
+        public TeamService(IMapper mapper, IValidator<CreateTeamModel> createTeamModelValidator,
             ITeamRepository teamRepository)
         {
             _mapper = mapper;
-            _teamModelValidator = teamModelValidator;
+            _createTeamModelValidator = createTeamModelValidator;
             _teamRepository = teamRepository;
         }
 
-        public async Task<long> CreateAsync(TeamModel teamModel)
+        public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
-            await _teamModelValidator.ValidateAndThrowAsync(teamModel);
-            var canCreate = await _teamRepository.CanCreateAsync(teamModel);
+            await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
+            var canCreate = await _teamRepository.CanCreateAsync(createTeamModel);
             if (!canCreate)
                 throw new ServiceException("Невозможно создать команду");
-            var teamEntity = _mapper.Map<TeamEntity>(teamModel);
+            var createTeamEntity = _mapper.Map<CreateTeamModel>(createTeamModel);
 
-            return await _teamRepository.CreateAsync(teamEntity);
+            return await _teamRepository.CreateAsync(createTeamEntity);
         }
     }
 }
