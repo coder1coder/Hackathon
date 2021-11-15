@@ -1,19 +1,19 @@
 ﻿using Hackathon.Common.Entities;
-using Hackathon.Common.Models.User;
+using Hackathon.Common.Models.Event;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings
 {
-    public class UserEntityMapping: IRegister
+    public class EventEntityMapping : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
             config
-                .ForType<SignUpModel, UserEntity>()
+                .ForType<EventEntity, EventModel>()
 
                 .PreserveReference(true)
 
-                .Map(x => x.PasswordHash, s => s.Password);
+                .Map(x => x.Teams, s => s.Teams);
         }
     }
 }

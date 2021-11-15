@@ -36,6 +36,8 @@ namespace Hackathon.API
 
             TypeAdapterConfig.GlobalSettings.Apply(new IRegister[]
             {
+                new EventEntityMapping(),
+                new TeamEntityMapping(),
                 new UserEntityMapping()
             });
 
