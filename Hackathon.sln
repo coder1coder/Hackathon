@@ -18,9 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Infrastucture", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Tests", "Hackathon.Tests", "{BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.DAL", "Hackathon.Tests\Hackathon.Tests.DAL\Hackathon.Tests.DAL.csproj", "{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.BL", "Hackathon.Tests\Hackathon.Tests.BL\Hackathon.Tests.BL.csproj", "{0B425B08-6040-47D7-B9DF-E976124E4E62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Unit", "Hackathon.Tests\Hackathon.Tests.Unit\Hackathon.Tests.Unit.csproj", "{0B425B08-6040-47D7-B9DF-E976124E4E62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
@@ -52,10 +50,6 @@ Global
 		{D77A209E-78AB-47CB-9445-35873B59C50B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D77A209E-78AB-47CB-9445-35873B59C50B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D77A209E-78AB-47CB-9445-35873B59C50B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B425B08-6040-47D7-B9DF-E976124E4E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B425B08-6040-47D7-B9DF-E976124E4E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B425B08-6040-47D7-B9DF-E976124E4E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,7 +64,6 @@ Global
 		{A1D48CD7-3309-4224-AADC-9B0B31323456}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9C1C42E7-FAAE-4F87-BBD2-993CA5322BDC} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{0B425B08-6040-47D7-B9DF-E976124E4E62} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{0EE92567-1C23-4660-89FC-8B4363B9CDB5} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 	EndGlobalSection
