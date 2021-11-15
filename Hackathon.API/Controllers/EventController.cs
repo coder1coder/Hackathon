@@ -77,6 +77,17 @@ namespace Hackathon.API.Controllers
         {
             await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
         }
+        
+        /// <summary>
+        /// Установить дату начала регистрации события
+        /// </summary>
+        /// <param name="setStartRegistrationRequest"></param>
+        [Authorize]
+        [HttpPut(nameof(SetStartRegistration))]
+        public async Task SetStartRegistration(SetStartRegistrationRequest setStartRegistrationRequest)
+        {
+            await _eventService.SetStartRegistrationAsync(setStartRegistrationRequest.Id, setStartRegistrationRequest.StartRegistration);
+        }
 
         /// <summary>
         /// Полное удаление события

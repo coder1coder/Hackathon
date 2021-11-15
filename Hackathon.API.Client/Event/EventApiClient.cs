@@ -25,6 +25,11 @@ namespace Hackathon.API.Client.Event
             await PutAsync($"{Endpoint}/SetStatus", setStatusRequest);
         }
 
+        public async Task SetStartRegistration(SetStartRegistrationRequest setStartRegistrationRequest)
+        {
+            await PutAsync($"{Endpoint}/SetStartRegistration", setStartRegistrationRequest);
+        }
+
         public Task<EventModel> Get(long id)
         {
             return GetAsync<EventModel>($"{Endpoint}/{id}");

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -11,6 +12,7 @@ namespace Hackathon.Common.Abstraction
         Task<EventModel> GetAsync(long eventId);
         Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel);
         Task SetStatusAsync(long eventId, EventStatus eventStatus);
-        Task DeleteAsync(long eventId);
+        Task DeleteAsync(long eventId); 
+        Task SetStartRegistrationAsync(long eventId, DateTime eventStartRegistration);
     }
 }
