@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+
+        <RootNamespace>Hackathon.Tests.BL</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
