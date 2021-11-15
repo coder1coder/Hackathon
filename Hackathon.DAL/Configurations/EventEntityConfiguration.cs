@@ -21,7 +21,7 @@ namespace Hackathon.DAL.Configurations
                 .IsRequired(); 
             
             builder
-                .Property(x => x.StartRegistration);
+                .Property(x => x.StartMemberRegistration);
 
             builder
                 .Property(x => x.Status)

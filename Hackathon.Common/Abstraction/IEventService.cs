@@ -13,7 +13,7 @@ namespace Hackathon.Common.Abstraction
         Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel);
         Task SetStatusAsync(long eventId, EventStatus eventStatus);
         Task DeleteAsync(long eventId); 
-        Task SetStartRegistrationAsync(long eventId, DateTime eventStartRegistration);
+        Task SetStartMemberRegistrationAsync(long eventId, DateTime eventStartMemberRegistration);
         Task SetMinTeamMembersAsync(long eventId, int eventMinTeamMembers);
         Task SetMaxEventMembersAsync(long eventId, int eventMaxEventMembers);
     }

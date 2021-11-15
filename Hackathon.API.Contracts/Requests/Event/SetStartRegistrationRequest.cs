@@ -2,9 +2,9 @@
 
 namespace Hackathon.Contracts.Requests.Event
 {
-    public class SetStartRegistrationRequest
+    public class SetStartMemberRegistrationRequest
     {
         public long Id { get; set; }
-        public DateTime StartRegistration { get; set; }
+        public DateTime StartMemberRegistration { get; set; }
     }
 }

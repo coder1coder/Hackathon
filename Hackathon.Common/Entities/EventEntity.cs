@@ -8,7 +8,7 @@ namespace Hackathon.Common.Entities
     {
         public string Name { get; set; }
         public DateTime Start { get; set; }
-        public DateTime StartRegistration { get; set; }
+        public DateTime StartMemberRegistration { get; set; }
         public EventStatus Status { get; set; }
         
         public int MinTeamMembers { get; set; }

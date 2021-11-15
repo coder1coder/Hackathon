@@ -60,10 +60,10 @@ namespace Hackathon.BL.Event
             await _eventRepository.DeleteAsync(eventId);
         }
 
-        public async Task SetStartRegistrationAsync(long eventId, DateTime eventStartRegistration)
+        public async Task SetStartMemberRegistrationAsync(long eventId, DateTime eventStartMemberRegistration)
         {
             var eventModel = await GetEventThrowIfNotExist(eventId);
-            eventModel.StartRegistration = eventStartRegistration; 
+            eventModel.StartMemberRegistration = eventStartMemberRegistration; 
             await _eventRepository.UpdateAsync(eventModel);
         }
 

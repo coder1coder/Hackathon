@@ -25,9 +25,9 @@ namespace Hackathon.API.Client.Event
             await PutAsync($"{Endpoint}/SetStatus", setStatusRequest);
         }
 
-        public async Task SetStartRegistration(SetStartRegistrationRequest setStartRegistrationRequest)
+        public async Task SetStartMemberRegistrationMember(SetStartMemberRegistrationRequest setStartMemberRegistrationRequest)
         {
-            await PutAsync($"{Endpoint}/SetStartRegistration", setStartRegistrationRequest);
+            await PutAsync($"{Endpoint}/SetStartMemberRegistration", setStartMemberRegistrationRequest);
         }
 
         public async Task SetMaxEventMembers(SetMaxEventMembersRequest setMaxEventMembersRequest)
