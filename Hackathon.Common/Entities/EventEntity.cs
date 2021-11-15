@@ -10,6 +10,9 @@ namespace Hackathon.Common.Entities
         public DateTime Start { get; set; }
         public DateTime StartRegistration { get; set; }
         public EventStatus Status { get; set; }
+        
+        public int MinMembers { get; set; }
+        public int MaxMembers { get; set; }
 
         public ICollection<TeamEntity> Teams { get; set; }
     }

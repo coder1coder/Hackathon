@@ -88,7 +88,29 @@ namespace Hackathon.API.Controllers
         {
             await _eventService.SetStartRegistrationAsync(setStartRegistrationRequest.Id, setStartRegistrationRequest.StartRegistration);
         }
+        
+        /// <summary>
+        /// Задать минимальное количество участников для события
+        /// </summary>
+        /// <param name="setMinMembersRequest"></param>
+        [Authorize]
+        [HttpPut(nameof(SetMinMembers))]
+        public async Task SetMinMembers(SetMinMembersRequest setMinMembersRequest)
+        {
+            await _eventService.SetMinMembersAsync(setMinMembersRequest.Id, setMinMembersRequest.MinMembers);
+        }
 
+        /// <summary>
+        /// Задать максимальное количество участников для события
+        /// </summary>
+        /// <param name="setMaxMembersRequest"></param>
+        [Authorize]
+        [HttpPut(nameof(SetMaxMembers))]
+        public async Task SetMaxMembers(SetMaxMembersRequest setMaxMembersRequest)
+        {
+            await _eventService.SetMaxMembersAsync(setMaxMembersRequest.Id, setMaxMembersRequest.MaxMembers);
+        }
+        
         /// <summary>
         /// Полное удаление события
         /// </summary>
