@@ -79,39 +79,6 @@ namespace Hackathon.API.Controllers
         }
         
         /// <summary>
-        /// Установить дату начала регистрации события
-        /// </summary>
-        /// <param name="setStartMemberRegistrationRequest"></param>
-        [Authorize]
-        [HttpPut(nameof(SetStartMemberRegistration))]
-        public async Task SetStartMemberRegistration(SetStartMemberRegistrationRequest setStartMemberRegistrationRequest)
-        {
-            await _eventService.SetStartMemberRegistrationAsync(setStartMemberRegistrationRequest.Id, setStartMemberRegistrationRequest.StartMemberRegistration);
-        }
-        
-        /// <summary>
-        /// Задать минимальное количество участников в команде для события
-        /// </summary>
-        /// <param name="setMinTeamMembersRequest"></param>
-        [Authorize]
-        [HttpPut(nameof(SetMinTeamMembers))]
-        public async Task SetMinTeamMembers(SetMinTeamMembersRequest setMinTeamMembersRequest)
-        {
-            await _eventService.SetMinTeamMembersAsync(setMinTeamMembersRequest.Id, setMinTeamMembersRequest.MinTeamMembers);
-        }
-
-        /// <summary>
-        /// Задать максимальное количество участников в событии
-        /// </summary>
-        /// <param name="setMaxEventMembersRequest"></param>
-        [Authorize]
-        [HttpPut(nameof(SetMaxEventMembers))]
-        public async Task SetMaxEventMembers(SetMaxEventMembersRequest setMaxEventMembersRequest)
-        {
-            await _eventService.SetMaxEventMembersAsync(setMaxEventMembersRequest.Id, setMaxEventMembersRequest.MaxEventMembers);
-        }
-        
-        /// <summary>
         /// Полное удаление события
         /// </summary>
         /// <param name="id"></param>
