@@ -74,10 +74,10 @@ namespace Hackathon.BL.Event
             await _eventRepository.UpdateAsync(eventModel);
         }
 
-        public async Task SetMaxTeamMembersAsync(long eventId, int eventMaxTeamMembers)
+        public async Task SetMaxEventMembersAsync(long eventId, int eventMaxEventMembers)
         {
             var eventModel = await GetEventThrowIfNotExist(eventId);
-            eventModel.MaxTeamMembers = eventMaxTeamMembers; 
+            eventModel.MaxEventMembers = eventMaxEventMembers; 
             await _eventRepository.UpdateAsync(eventModel);
         }
 

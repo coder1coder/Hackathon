@@ -34,7 +34,7 @@ namespace Hackathon.DAL.Configurations
             builder
                 .Property(x => x.MinTeamMembers); 
             builder
-                .Property(x => x.MaxTeamMembers);
+                .Property(x => x.MaxEventMembers);
         }
     }
 }

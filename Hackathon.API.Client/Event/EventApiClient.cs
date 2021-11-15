@@ -30,9 +30,9 @@ namespace Hackathon.API.Client.Event
             await PutAsync($"{Endpoint}/SetStartRegistration", setStartRegistrationRequest);
         }
 
-        public async Task SetMaxTeamMembers(SetMaxTeamMembersRequest setMaxTeamMembersRequest)
+        public async Task SetMaxEventMembers(SetMaxEventMembersRequest setMaxEventMembersRequest)
         {
-            await PutAsync($"{Endpoint}/SetMaxTeamMembers", setMaxTeamMembersRequest);
+            await PutAsync($"{Endpoint}/SetMaxEventMembers", setMaxEventMembersRequest);
         }
 
         public async Task SetMinMembers(SetMinTeamMembersRequest setMinTeamMembersRequest)

@@ -90,7 +90,7 @@ namespace Hackathon.API.Controllers
         }
         
         /// <summary>
-        /// Задать минимальное количество участников для события
+        /// Задать минимальное количество участников в команде для события
         /// </summary>
         /// <param name="setMinTeamMembersRequest"></param>
         [Authorize]
@@ -101,14 +101,14 @@ namespace Hackathon.API.Controllers
         }
 
         /// <summary>
-        /// Задать максимальное количество участников для события
+        /// Задать максимальное количество участников в событии
         /// </summary>
-        /// <param name="setMaxTeamMembersRequest"></param>
+        /// <param name="setMaxEventMembersRequest"></param>
         [Authorize]
-        [HttpPut(nameof(SetMaxTeamMembers))]
-        public async Task SetMaxTeamMembers(SetMaxTeamMembersRequest setMaxTeamMembersRequest)
+        [HttpPut(nameof(SetMaxEventMembers))]
+        public async Task SetMaxEventMembers(SetMaxEventMembersRequest setMaxEventMembersRequest)
         {
-            await _eventService.SetMaxTeamMembersAsync(setMaxTeamMembersRequest.Id, setMaxTeamMembersRequest.MaxTeamMembers);
+            await _eventService.SetMaxEventMembersAsync(setMaxEventMembersRequest.Id, setMaxEventMembersRequest.MaxEventMembers);
         }
         
         /// <summary>

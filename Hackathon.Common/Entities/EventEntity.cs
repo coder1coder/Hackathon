@@ -12,7 +12,7 @@ namespace Hackathon.Common.Entities
         public EventStatus Status { get; set; }
         
         public int MinTeamMembers { get; set; }
-        public int MaxTeamMembers { get; set; }
+        public int MaxEventMembers { get; set; }
 
         public ICollection<TeamEntity> Teams { get; set; }
     }
