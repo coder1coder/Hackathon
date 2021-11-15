@@ -14,12 +14,14 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
         protected readonly ITeamRepository TeamRepository;
+        protected readonly IProjectRepository ProjectRepository;
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
             UserRepository = factory.Services.GetRequiredService<IUserRepository>();
             EventRepository = factory.Services.GetRequiredService<IEventRepository>();
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
+            ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
 
             var userService = factory.Services.GetRequiredService<IUserService>();
 

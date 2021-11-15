@@ -1,4 +1,5 @@
 ﻿using Hackathon.API.Client.Event;
+using Hackathon.API.Client.Project;
 using Hackathon.API.Client.Team;
 using Hackathon.API.Client.User;
 
@@ -9,5 +10,6 @@ namespace Hackathon.API.Client
         public IUserApiClient Users { get; }
         public IEventApiClient Events { get; }
         public ITeamApiClient Teams { get; }
+        public IProjectApiClient Projects { get; }
     }
 }

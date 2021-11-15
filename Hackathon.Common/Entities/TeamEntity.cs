@@ -9,5 +9,8 @@ namespace Hackathon.Common.Entities
         public long EventId { get; set; }
 
         public List<UserEntity> Users { get; set; } = new ();
+
+        public ProjectEntity Project { get; set; }
+        public long ProjectId { get; set; }
     }
 }

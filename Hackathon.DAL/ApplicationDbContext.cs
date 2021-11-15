@@ -9,6 +9,7 @@ namespace Hackathon.DAL
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<EventEntity> Events { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
+        public DbSet<ProjectEntity> Projects { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
