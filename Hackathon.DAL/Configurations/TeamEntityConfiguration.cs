@@ -31,6 +31,11 @@ namespace Hackathon.DAL.Configurations
                 x => x.HasOne<UserEntity>().WithMany().HasForeignKey("UserId"),
                 x => x.HasOne<TeamEntity>().WithMany().HasForeignKey("TeamId"),
                 x => x.ToTable("UserTeam"));
+
+            builder
+                .HasOne(x => x.Project)
+                .WithOne(x => x.Team)
+                .HasForeignKey<ProjectEntity>(x => x.TeamId);
         }
     }
 }
