@@ -92,23 +92,23 @@ namespace Hackathon.API.Controllers
         /// <summary>
         /// Задать минимальное количество участников для события
         /// </summary>
-        /// <param name="setMinMembersRequest"></param>
+        /// <param name="setMinTeamMembersRequest"></param>
         [Authorize]
-        [HttpPut(nameof(SetMinMembers))]
-        public async Task SetMinMembers(SetMinMembersRequest setMinMembersRequest)
+        [HttpPut(nameof(SetMinTeamMembers))]
+        public async Task SetMinTeamMembers(SetMinTeamMembersRequest setMinTeamMembersRequest)
         {
-            await _eventService.SetMinMembersAsync(setMinMembersRequest.Id, setMinMembersRequest.MinMembers);
+            await _eventService.SetMinTeamMembersAsync(setMinTeamMembersRequest.Id, setMinTeamMembersRequest.MinTeamMembers);
         }
 
         /// <summary>
         /// Задать максимальное количество участников для события
         /// </summary>
-        /// <param name="setMaxMembersRequest"></param>
+        /// <param name="setMaxTeamMembersRequest"></param>
         [Authorize]
-        [HttpPut(nameof(SetMaxMembers))]
-        public async Task SetMaxMembers(SetMaxMembersRequest setMaxMembersRequest)
+        [HttpPut(nameof(SetMaxTeamMembers))]
+        public async Task SetMaxTeamMembers(SetMaxTeamMembersRequest setMaxTeamMembersRequest)
         {
-            await _eventService.SetMaxMembersAsync(setMaxMembersRequest.Id, setMaxMembersRequest.MaxMembers);
+            await _eventService.SetMaxTeamMembersAsync(setMaxTeamMembersRequest.Id, setMaxTeamMembersRequest.MaxTeamMembers);
         }
         
         /// <summary>

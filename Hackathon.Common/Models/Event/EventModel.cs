@@ -11,8 +11,8 @@ namespace Hackathon.Common.Models.Event
         public DateTime Start { get; set; }
         public DateTime StartRegistration { get; set; }
         public EventStatus Status { get; set; }
-        public int MinMembers { get; set; }
-        public int MaxMembers { get; set; }
+        public int MinTeamMembers { get; set; }
+        public int MaxTeamMembers { get; set; }
 
         public IReadOnlyCollection<TeamModel> Teams { get; set; } = new List<TeamModel>();
     }

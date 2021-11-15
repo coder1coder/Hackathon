@@ -10,8 +10,8 @@ namespace Hackathon.API.Client.Event
         Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest);
         Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest);
         Task SetStartRegistration(SetStartRegistrationRequest setStartRegistrationRequest);
-        Task SetMaxMembers(SetMaxMembersRequest setMaxMembersRequest);
-        Task SetMinMembers(SetMinMembersRequest setMinMembersRequest);
+        Task SetMaxTeamMembers(SetMaxTeamMembersRequest setMaxTeamMembersRequest);
+        Task SetMinMembers(SetMinTeamMembersRequest setMinTeamMembersRequest);
         Task<EventModel> Get(long id);
     }
 }

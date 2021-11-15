@@ -1,8 +1,8 @@
 ﻿namespace Hackathon.Contracts.Requests.Event
 {
-    public class SetMaxMembersRequest
+    public class SetMaxTeamMembersRequest
     {
         public long Id { get; set; }
-        public int MaxMembers { get; set; }
+        public int MaxTeamMembers { get; set; }
     }
 }

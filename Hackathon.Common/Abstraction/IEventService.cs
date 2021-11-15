@@ -14,7 +14,7 @@ namespace Hackathon.Common.Abstraction
         Task SetStatusAsync(long eventId, EventStatus eventStatus);
         Task DeleteAsync(long eventId); 
         Task SetStartRegistrationAsync(long eventId, DateTime eventStartRegistration);
-        Task SetMinMembersAsync(long eventId, int eventMinMembers);
-        Task SetMaxMembersAsync(long eventId, int eventMaxMembers);
+        Task SetMinTeamMembersAsync(long eventId, int eventMinTeamMembers);
+        Task SetMaxTeamMembersAsync(long eventId, int eventMaxTeamMembers);
     }
 }
