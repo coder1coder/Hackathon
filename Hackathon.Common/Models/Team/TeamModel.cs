@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.Common.Models.Team
@@ -12,5 +13,6 @@ namespace Hackathon.Common.Models.Team
 
         public EventModel Event { get; set; }
         public List<UserModel> Users { get; set; }
+        public ProjectModel Project { get; set; }
     }
 }

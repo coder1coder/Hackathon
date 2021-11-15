@@ -11,6 +11,7 @@ namespace Hackathon.DAL
             builder.RegisterType<EventRepository>().As<IEventRepository>().InstancePerLifetimeScope();
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TeamRepository>().As<ITeamRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ProjectRepository>().As<IProjectRepository>().InstancePerLifetimeScope();
         }
     }
 }
