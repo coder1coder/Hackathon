@@ -18,10 +18,11 @@ namespace Hackathon.DAL.Configurations
 
             builder
                 .Property(x => x.Start)
-                .IsRequired(); 
-            
+                .IsRequired();
+
             builder
-                .Property(x => x.StartMemberRegistration);
+                .Property(x => x.StartMemberRegistration)
+                .IsRequired();
 
             builder
                 .Property(x => x.Status)
@@ -30,11 +31,11 @@ namespace Hackathon.DAL.Configurations
             builder
                 .HasMany(x => x.Teams)
                 .WithOne(x => x.Event);
-            
+
             builder
                 .Property(x => x.MinTeamMembers)
                 .IsRequired();
-            
+
             builder
                 .Property(x => x.MaxEventMembers)
                 .IsRequired();
