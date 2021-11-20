@@ -21,12 +21,24 @@ namespace Hackathon.DAL.Configurations
                 .IsRequired();
 
             builder
+                .Property(x => x.StartMemberRegistration)
+                .IsRequired();
+
+            builder
                 .Property(x => x.Status)
                 .IsRequired();
 
             builder
                 .HasMany(x => x.Teams)
                 .WithOne(x => x.Event);
+
+            builder
+                .Property(x => x.MinTeamMembers)
+                .IsRequired();
+
+            builder
+                .Property(x => x.MaxEventMembers)
+                .IsRequired();
         }
     }
 }

@@ -9,7 +9,11 @@ namespace Hackathon.Common.Models.Event
         public long Id { get; set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }
+        public DateTime StartMemberRegistration { get; set; }
         public EventStatus Status { get; set; }
+        
+        public int MinTeamMembers { get; set; }
+        public int MaxEventMembers { get; set; }
 
         public IReadOnlyCollection<TeamModel> Teams { get; set; } = new List<TeamModel>();
     }

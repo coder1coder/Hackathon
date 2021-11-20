@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Exceptions;
@@ -58,7 +59,7 @@ namespace Hackathon.BL.Event
             await GetEventThrowIfNotExist(eventId);
             await _eventRepository.DeleteAsync(eventId);
         }
-
+        
         private async Task<EventModel> GetEventThrowIfNotExist(long eventId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);

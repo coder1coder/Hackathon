@@ -77,7 +77,7 @@ namespace Hackathon.API.Controllers
         {
             await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
         }
-
+        
         /// <summary>
         /// Полное удаление события
         /// </summary>
