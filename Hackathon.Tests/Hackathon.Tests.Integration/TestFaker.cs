@@ -21,13 +21,13 @@ namespace Hackathon.Tests.Integration
             return faker.Generate(count);
         }
 
-        public static List<EventModel> GetEventModels(int count)
+        public static List<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventModel>();
 
             faker
                 .RuleFor(x => x.Name, f => f.Random.String2(6,20))
-                .RuleFor(x => x.Status, f => f.PickRandom<EventStatus>())
+                .RuleFor(x => x.Status, f => eventStatus ?? f.PickRandom<EventStatus>())
                 .RuleFor(x => x.Start, _ => DateTime.UtcNow.AddDays(1));
 
             return faker.Generate(count);
