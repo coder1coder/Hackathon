@@ -13,6 +13,9 @@ namespace Hackathon.BL.Team
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>();
+            builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamAddMemberModel>>();
+            builder.RegisterType<TeamExistValidator>().As<IValidator<long>>();
+
             builder.RegisterType<TeamService>().As<ITeamService>().InstancePerLifetimeScope();
         }
     }

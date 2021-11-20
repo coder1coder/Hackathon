@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,15 +18,18 @@ namespace Hackathon.BL.User
 {
     public class UserService: IUserService
     {
-        private readonly SignUpModelValidator _signUpModelValidator;
-        private readonly SignInModelValidator _signInModelValidator;
+        private readonly IValidator<SignUpModel> _signUpModelValidator;
+        private readonly IValidator<SignInModel> _signInModelValidator;
+        private readonly UserExistValidator _userExistValidator;
+
         private readonly IUserRepository _userRepository;
         private readonly AuthOptions _authConfig;
 
         public UserService(
             IOptions<AuthOptions> authOptions,
-            SignUpModelValidator signUpModelValidator,
-            SignInModelValidator signInModelValidator,
+            UserExistValidator userExistValidator,
+            IValidator<SignUpModel> signUpModelValidator,
+            IValidator<SignInModel> signInModelValidator,
             IUserRepository userRepository
             )
         {
@@ -33,16 +37,12 @@ namespace Hackathon.BL.User
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _userRepository = userRepository;
+            _userExistValidator = userExistValidator;
         }
 
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             await _signUpModelValidator.ValidateAndThrowAsync(signUpModel);
-
-            var canCreate = await _userRepository.CanCreateAsync(signUpModel);
-
-            if (!canCreate)
-                throw new ServiceException("Невозможно создать пользователя");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(signUpModel.Password);
             signUpModel.Password = passwordHash;
@@ -54,10 +54,15 @@ namespace Hackathon.BL.User
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
 
-            var user = await _userRepository.GetAsync(signInModel.UserName);
+            var users = await _userRepository.GetAsync(new GetFilterModel<UserFilterModel>
+            {
+                Filter = new UserFilterModel
+                {
+                    Username = signInModel.UserName
+                }
+            });
 
-            if (user == null)
-                throw new ServiceException("Пользователя с такими данными не существует");
+            var user = users.Items.First();
 
             var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, user.PasswordHash);
 
@@ -69,12 +74,8 @@ namespace Hackathon.BL.User
 
         public async Task<UserModel> GetAsync(long userId)
         {
-            var userModel = await _userRepository.GetAsync(userId);
-
-            if (userModel == null)
-                throw new ServiceException($"Пользователя с идентификатором {userId} не существует");
-
-            return userModel;
+            await _userExistValidator.ValidateAndThrowAsync(userId);
+            return await _userRepository.GetAsync(userId);
         }
 
         public AuthTokenModel GenerateToken(long userId)

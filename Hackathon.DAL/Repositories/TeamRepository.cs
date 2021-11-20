@@ -56,17 +56,17 @@ namespace Hackathon.DAL.Repositories
                 .AnyAsync(x => x.Id == teamId);
         }
 
-        public async Task AddMemberAsync(long teamId, long userId)
+        public async Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel)
         {
             var teamEntity = await _dbContext.Teams
-                .FirstOrDefaultAsync(x=>x.Id == teamId);
+                .FirstOrDefaultAsync(x=>x.Id == teamAddMemberModel.TeamId);
 
             if (teamEntity == null)
                 throw new Exception("Команда с указаным индентификатором не найдена");
 
             var userEntity = await _dbContext.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == userId);
+                .FirstOrDefaultAsync(x => x.Id == teamAddMemberModel.UserId);
 
             teamEntity.Users.Add(userEntity);
             await _dbContext.SaveChangesAsync();

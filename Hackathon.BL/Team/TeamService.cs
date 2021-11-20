@@ -1,98 +1,47 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Exceptions;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
-using MapsterMapper;
 
 namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
-        private readonly IMapper _mapper;
-
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
-        private readonly IEventRepository _eventRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IValidator<long> _teamExistValidator;
+        private readonly IValidator<TeamAddMemberModel> _teamAddMemberModelValidator;
 
-        public TeamService(IMapper mapper,
+        public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
-            ITeamRepository teamRepository,
-            IUserRepository userRepository,
-            IEventRepository eventRepository)
+            IValidator<TeamAddMemberModel> teamAddMemberModelValidator,
+            IValidator<long> teamExistValidator,
+            ITeamRepository teamRepository)
         {
-            _mapper = mapper;
             _createTeamModelValidator = createTeamModelValidator;
+            _teamAddMemberModelValidator = teamAddMemberModelValidator;
+            _teamExistValidator = teamExistValidator;
+
             _teamRepository = teamRepository;
-            _eventRepository = eventRepository;
-            _userRepository = userRepository;
         }
 
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
-
-            var isEventExist = await _eventRepository.ExistAsync(createTeamModel.EventId);
-
-            if (!isEventExist)
-                throw new ServiceException("События с таким идентификатором не существует");
-
-            var isSameNameExist = await _teamRepository.ExistAsync(createTeamModel.Name);
-
-            if (isSameNameExist)
-                throw new ServiceException("Команда с таким названием уже существует");
-
-            var eventModel = await _eventRepository.GetAsync(createTeamModel.EventId);
-
-            if (eventModel.Status != EventStatus.Published)
-                throw new ServiceException("Зарегистрировать команду возможно только для опубликованного события");
-
-            var createTeamEntity = _mapper.Map<CreateTeamModel>(createTeamModel);
-            return await _teamRepository.CreateAsync(createTeamEntity);
+            return await _teamRepository.CreateAsync(createTeamModel);
         }
 
-        public async Task AddMemberAsync(long teamId, long userId)
+        public async Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel)
         {
-            if (teamId <= default(long))
-                throw new ServiceException("Идентификатор команды должен быть больше 0");
-
-            if (userId <= default(long))
-                throw new ServiceException("Идентификатор пользователя должен быть больше 0");
-
-            if (await _teamRepository.ExistAsync(teamId) == false)
-                throw new ServiceException("Команды с таким идентификатором не существует");
-
-            if (await _userRepository.ExistAsync(userId) == false)
-                throw new ServiceException("Пользователя с таким идентификатором не существует");
-
-            var teamModel = await _teamRepository.GetAsync(teamId);
-
-            var eventModel = await _eventRepository.GetAsync(teamModel.EventId);
-
-            if (eventModel == null)
-                throw new ServiceException("События с таким идентификатором не найдено");
-
-            if (teamModel.Users.Any(x => x.Id == userId))
-                throw new ServiceException("Пользователь уже добавлен в эту команду");
-
-            if (eventModel.Status != EventStatus.Published)
-                throw new ServiceException("Невозможно добавить участника в команду. Событие не опубликовано.");
-
-            await _teamRepository.AddMemberAsync(teamId, userId);
+            await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamAddMemberModel);
+            await _teamRepository.AddMemberAsync(teamAddMemberModel);
         }
 
         public async Task<TeamModel> GetAsync(long teamId)
         {
-            var teamModel = await _teamRepository.GetAsync(teamId);
-
-            if (teamModel == null)
-                throw new ServiceException("Команды с указаным идентификатором не существует");
-
-            return teamModel;
+            await _teamExistValidator.ValidateAndThrowAsync(teamId);
+            return await _teamRepository.GetAsync(teamId);
         }
     }
 }

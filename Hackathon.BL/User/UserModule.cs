@@ -1,7 +1,8 @@
 ﻿using Autofac;
+using FluentValidation;
 using Hackathon.BL.User.Validators;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.User
 {
@@ -9,8 +10,9 @@ namespace Hackathon.BL.User
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SignUpModelValidator>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<SignInModelValidator>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<SignUpModelValidator>().As<IValidator<SignUpModel>>().InstancePerLifetimeScope();
+            builder.RegisterType<SignInModelValidator>().As<IValidator<SignInModel>>().InstancePerLifetimeScope();
+            builder.RegisterType<UserExistValidator>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
         }

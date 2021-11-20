@@ -2,7 +2,10 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
+using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
+using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,27 +44,49 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<UserModel>(entity);
         }
 
-        public async Task<UserModel> GetAsync(string userName)
+        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
         {
-            var entity = await _dbContext.Users
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserName == userName);
+            var query = _dbContext.Users.AsNoTracking();
 
-            return _mapper.Map<UserModel>(entity);
-        }
+            if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Username))
+                query = query.Where(x=>x.UserName.ToLower() == getFilterModel.Filter.Username.ToLower());
 
-        public async Task<bool> CanCreateAsync(SignUpModel signUpModel)
-        {
-            var query = _dbContext.Users
-                .AsNoTracking()
-                .Where(x => x.UserName.ToLower() == signUpModel.UserName.ToLower());
+            if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Email))
+                query = query.Where(x=>x.Email.ToLower() == getFilterModel.Filter.Email.ToLower());
 
-            if (signUpModel.Email != null)
-                query = query.Where(x => x.Email.ToLower() == signUpModel.Email.ToLower());
+            var totalCount = await query.LongCountAsync();
 
-            var user = await query.FirstOrDefaultAsync();
+            if (!string.IsNullOrWhiteSpace(getFilterModel.SortBy))
+            {
+                query = getFilterModel.SortBy switch
+                {
+                    nameof(UserEntity.UserName) => getFilterModel.SortOrder == SortOrder.Asc
+                        ? query.OrderBy(x => x.UserName)
+                        : query.OrderByDescending(x => x.UserName),
 
-            return user == null;
+                    nameof(UserEntity.Email) => getFilterModel.SortOrder == SortOrder.Asc
+                        ? query.OrderBy(x => x.Email)
+                        : query.OrderByDescending(x => x.Email),
+
+                    _ => getFilterModel.SortOrder == SortOrder.Asc
+                        ? query.OrderBy(x => x.Id)
+                        : query.OrderByDescending(x => x.Id)
+                };
+            }
+
+            var page = getFilterModel.Page ?? 1;
+            var pageSize = getFilterModel.PageSize ?? 1000;
+
+            return new BaseCollectionModel<UserModel>
+            {
+                Items = await query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ProjectToType<UserModel>()
+                    .ToListAsync(),
+
+                TotalCount = totalCount
+            };
         }
 
         public async Task<bool> ExistAsync(long userId)
