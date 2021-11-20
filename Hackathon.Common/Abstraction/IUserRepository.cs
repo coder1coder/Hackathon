@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.Common.Abstraction
@@ -7,8 +9,7 @@ namespace Hackathon.Common.Abstraction
     {
         Task<long> CreateAsync(SignUpModel signUpModel);
         Task<UserModel> GetAsync(long userId);
-        Task<UserModel> GetAsync(string userName);
-        Task<bool> CanCreateAsync(SignUpModel signUpModel);
+        Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel);
         Task<bool> ExistAsync(long userId);
     }
 }

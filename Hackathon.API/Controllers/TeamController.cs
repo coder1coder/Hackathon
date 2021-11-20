@@ -45,7 +45,8 @@ namespace Hackathon.API.Controllers
         [HttpPost(nameof(AddMember))]
         public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
         {
-            await _teamService.AddMemberAsync(teamAddMemberRequest.TeamId, teamAddMemberRequest.UserId);
+            var teamAddMemberModel = _mapper.Map<TeamAddMemberModel>(teamAddMemberRequest);
+            await _teamService.AddMemberAsync(teamAddMemberModel);
         }
 
         /// <summary>
