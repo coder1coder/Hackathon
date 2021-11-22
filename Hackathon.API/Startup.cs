@@ -15,29 +15,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
-
-// services.AddProblemDetails(setup =>
-// {
-//     setup.IncludeExceptionDetails = (ctx, exc) =>
-//         Environment.IsDevelopment() || Environment.IsStaging();
-//     setup.Map<CustomException>(exception => new CustomDetails
-//     {
-//         Title = exception.Title,
-//         Detail = exception.Detail,
-//         Status = StatusCodes.Status500InternalServerError,
-//         Type = exception.Type,
-//         Instance = exception.Instance,
-//         AdditionalInfo = exception.AdditionalInfo
-//     });
-
 
 namespace Hackathon.API
 {
@@ -71,7 +54,6 @@ namespace Hackathon.API
                 });
             });
 
-            services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
 
             TypeAdapterConfig.GlobalSettings.Apply(new IRegister[]
             {
@@ -90,28 +72,26 @@ namespace Hackathon.API
             services.AddControllers();
 
             services
-                .AddAuthentication(x =>
+            .AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(
-                                Encoding.UTF8.GetBytes(Configuration["AuthOptions:Secret"])),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = Configuration["AuthOptions:Issuer"],
-                        ValidAudience = Configuration["AuthOptions:Audience"],
-                        ClockSkew = TimeSpan.Zero,
-                    };
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthOptions:Secret"])),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Configuration["AuthOptions:Issuer"],
+                    ValidAudience = Configuration["AuthOptions:Audience"],
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -150,35 +130,34 @@ namespace Hackathon.API
             });
         }
 
-
         public void ConfigureContainer(ContainerBuilder builder)
-            {
-                builder.ConfigureBLContainer();
-                builder.RegisterModule(new ApiModule());
-                builder.RegisterModule(new DalModule());
-            }
+        {
+            builder.ConfigureBLContainer();
+            builder.RegisterModule(new ApiModule());
+            builder.RegisterModule(new DalModule());
+        }
 
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+           
+            if (env.IsDevelopment())
             {
-                app.UseProblemDetails();
-
-                if (env.IsDevelopment())
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
                 {
-                    
-                    app.UseDeveloperExceptionPage();
-                    app.UseSwagger();
-                    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1"); });
-                }
-
-                app.UseHttpsRedirection();
-
-                app.UseRouting();
-
-                app.UseAuthentication();
-                app.UseAuthorization();
-
-                app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
+                });
             }
+            //app.UseProblemDetails();
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
-
+}

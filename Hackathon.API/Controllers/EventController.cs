@@ -51,7 +51,6 @@ namespace Hackathon.API.Controllers
         [HttpGet]
         public async Task<BaseCollectionResponse<EventModel>> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
         {
-            //throw new Exception("There was an exception while fetching the product");
             var getFilterModel = _mapper.Map<GetFilterModel<EventFilterModel>>(filterRequest);
             var collectionModel = await _eventService.GetAsync(getFilterModel);
             return _mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel);
