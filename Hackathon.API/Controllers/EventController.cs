@@ -47,7 +47,7 @@ namespace Hackathon.API.Controllers
         /// Получить все события
         /// </summary>
         /// <returns></returns>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<BaseCollectionResponse<EventModel>> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
         {

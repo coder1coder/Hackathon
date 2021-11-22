@@ -137,10 +137,10 @@ namespace Hackathon.API
             builder.RegisterModule(new DalModule());
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
            
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -149,7 +149,7 @@ namespace Hackathon.API
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
                 });
             }
-            //app.UseProblemDetails();
+            app.UseProblemDetails();
             app.UseHttpsRedirection();
 
             app.UseRouting();
