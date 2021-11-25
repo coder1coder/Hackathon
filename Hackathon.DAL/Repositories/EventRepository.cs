@@ -24,9 +24,9 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        public async Task<long> CreateAsync(EventModel eventModel)
+        public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
-            var eventEntity = _mapper.Map<EventEntity>(eventModel);
+            var eventEntity = _mapper.Map<EventEntity>(createEventModel);
 
             await _dbContext.AddAsync(eventEntity);
             await _dbContext.SaveChangesAsync();
@@ -99,14 +99,15 @@ namespace Hackathon.DAL.Repositories
             var page = getFilterModel.Page ?? 1;
             var pageSize = getFilterModel.PageSize ?? 1000;
 
+            var eventModels = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectToType<EventModel>()
+                .ToListAsync();
+
             return new BaseCollectionModel<EventModel>
             {
-                Items = await query
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ProjectToType<EventModel>()
-                    .ToListAsync(),
-
+                Items = eventModels,
                 TotalCount = totalCount
             };
         }

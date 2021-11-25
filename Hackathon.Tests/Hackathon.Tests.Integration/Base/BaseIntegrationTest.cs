@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using Hackathon.API.Client;
 using Hackathon.Common.Abstraction;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,7 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IEventRepository EventRepository;
         protected readonly ITeamRepository TeamRepository;
         protected readonly IProjectRepository ProjectRepository;
+        protected readonly IMapper Mapper;
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
@@ -24,6 +26,8 @@ namespace Hackathon.Tests.Integration.Base
             ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
 
             var userService = factory.Services.GetRequiredService<IUserService>();
+
+            Mapper = factory.Services.GetRequiredService<IMapper>();
 
             var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             {

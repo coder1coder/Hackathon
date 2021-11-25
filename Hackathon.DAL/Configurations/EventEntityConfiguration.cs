@@ -30,7 +30,7 @@ namespace Hackathon.DAL.Configurations
 
             builder
                 .HasMany(x => x.Teams)
-                .WithOne(x => x.Event);
+                .WithOne(x => x. Event);
 
             builder
                 .Property(x => x.MinTeamMembers)

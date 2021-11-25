@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
@@ -31,10 +32,10 @@ namespace Hackathon.DAL.Repositories
         {
             var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
-                .Include(x=>x.Event)
+                // .Include(x=>x.Event)
                 .Include(x=>x.Users)
-                .Include(x=>x.Project)
-                .FirstOrDefaultAsync(x => x.Id == teamId);
+                .Include(x=> x.Project)
+                .FirstOrDefaultAsync(x=>x.Id == teamId);
 
             if (teamEntity == null)
                 throw new Exception("Команда с таким идентификатором не найдена");
@@ -59,6 +60,7 @@ namespace Hackathon.DAL.Repositories
         public async Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel)
         {
             var teamEntity = await _dbContext.Teams
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x=>x.Id == teamAddMemberModel.TeamId);
 
             if (teamEntity == null)

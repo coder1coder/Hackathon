@@ -5,25 +5,22 @@ using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using MapsterMapper;
 
 namespace Hackathon.BL.Event
 {
     public class EventService: IEventService
     {
-        private readonly IMapper _mapper;
         private readonly IValidator<CreateEventModel> _createEventModelValidator;
         private readonly IEventRepository _eventRepository;
         private readonly IValidator<GetFilterModel<EventFilterModel>> _getFilterModelValidator;
         private readonly EventExistValidator _eventExistValidator;
 
-        public EventService(IMapper mapper,
+        public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
             EventExistValidator eventExistValidator,
             IValidator<GetFilterModel<EventFilterModel>> getFilterModelValidator,
             IEventRepository eventRepository)
         {
-            _mapper = mapper;
             _createEventModelValidator = createEventModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
             _eventExistValidator = eventExistValidator;
@@ -32,9 +29,7 @@ namespace Hackathon.BL.Event
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             await _createEventModelValidator.ValidateAndThrowAsync(createEventModel);
-
-            var eventModel = _mapper.Map<EventModel>(createEventModel);
-            return await _eventRepository.CreateAsync(eventModel);
+            return await _eventRepository.CreateAsync(createEventModel);
         }
 
         public async Task<EventModel> GetAsync(long eventId)

@@ -4,7 +4,7 @@ using Hackathon.Common.Models.Team;
 
 namespace Hackathon.Common.Models.Event
 {
-    public class EventModel
+    public class EventFullModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -14,5 +14,7 @@ namespace Hackathon.Common.Models.Event
 
         public int MinTeamMembers { get; set; }
         public int MaxEventMembers { get; set; }
+
+        public List<TeamModel> Teams { get; set; } = new List<TeamModel>();
     }
 }

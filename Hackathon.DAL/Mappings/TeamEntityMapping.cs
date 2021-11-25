@@ -10,12 +10,11 @@ namespace Hackathon.DAL.Mappings
         {
             config
                 .ForType<TeamEntity, TeamModel>()
-
-                .IgnoreNonMapped(true)
                 .PreserveReference(true)
-
                 .Map(x => x.Event, s => s.Event)
-                .Map(x => x.Users, s => s.Users);
+                .Map(x => x.Users, s => s.Users)
+                .Map(x => x.Project, s=>s.Project)
+                ;
         }
     }
 }

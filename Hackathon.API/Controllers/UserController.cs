@@ -33,7 +33,7 @@ namespace Hackathon.API.Controllers
         {
             var signUpModel = _mapper.Map<SignUpModel>(request);
             var userId = await _userService.CreateAsync(signUpModel);
-            return new BaseCreateResponse()
+            return new BaseCreateResponse
             {
                 Id = userId
             };
