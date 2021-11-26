@@ -26,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Hackathon.API.Client\Hackathon.API.Client.csproj" />
       <ProjectReference Include="..\..\Hackathon.API\Hackathon.API.csproj" />
+      <ProjectReference Include="..\Hackathon.Tests.Common\Hackathon.Tests.Common.csproj" />
     </ItemGroup>
 
 </Project>

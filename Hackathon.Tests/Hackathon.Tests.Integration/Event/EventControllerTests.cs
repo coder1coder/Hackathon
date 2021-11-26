@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
+using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
@@ -18,17 +19,18 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task Get_ShouldReturn_Success()
         {
-            var createEventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1).First();
+            var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
-            var eventModel = await ApiService.Events.Get(eventId);
+            eventModel = await ApiService.Events.Get(eventId);
 
             Assert.NotNull(eventModel);
 
             eventModel.Id.Should().Be(eventId);
 
             eventModel.Should().BeEquivalentTo(createEventModel, options =>
-                options.Excluding(x => x.Id)
+                options
                     .Using<DateTime>(x=>
                         x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(1)
                         )).WhenTypeIs<DateTime>());
@@ -37,7 +39,9 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task SetStatus_ShouldReturn_Success()
         {
-            var createEventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1).First();
+            var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
+
             var eventId = await EventRepository.CreateAsync(createEventModel);
 
             await FluentActions
@@ -49,7 +53,7 @@ namespace Hackathon.Tests.Integration.Event
                 .Should()
                 .NotThrowAsync();
 
-            var eventModel = await ApiService.Events.Get(eventId);
+            eventModel = await ApiService.Events.Get(eventId);
             eventModel.Status.Should().Be(EventStatus.Published);
 
             await FluentActions

@@ -10,10 +10,7 @@ namespace Hackathon.DAL.Mappings
         {
             config
                 .ForType<EventEntity, EventModel>()
-
-                .PreserveReference(true)
-
-                .Map(x => x.Teams, s => s.Teams);
+                .PreserveReference(true);
         }
     }
 }

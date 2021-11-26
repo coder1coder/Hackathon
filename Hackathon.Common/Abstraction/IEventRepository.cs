@@ -7,7 +7,7 @@ namespace Hackathon.Common.Abstraction
 {
     public interface IEventRepository
     {
-        Task<long> CreateAsync(EventModel eventModel);
+        Task<long> CreateAsync(CreateEventModel createEventModel);
         Task<EventModel> GetAsync(long eventId);
         Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel);
         Task UpdateAsync(EventModel eventModel);

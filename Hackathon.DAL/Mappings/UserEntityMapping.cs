@@ -10,10 +10,10 @@ namespace Hackathon.DAL.Mappings
         {
             config
                 .ForType<SignUpModel, UserEntity>()
-
                 .PreserveReference(true)
+                .Map(x => x.PasswordHash, s => s.Password)
+                ;
 
-                .Map(x => x.PasswordHash, s => s.Password);
         }
     }
 }
