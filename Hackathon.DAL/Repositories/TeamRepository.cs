@@ -32,7 +32,7 @@ namespace Hackathon.DAL.Repositories
         {
             var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
-                // .Include(x=>x.Event)
+                .Include(x=>x.Event)
                 .Include(x=>x.Users)
                 .Include(x=> x.Project)
                 .FirstOrDefaultAsync(x=>x.Id == teamId);
