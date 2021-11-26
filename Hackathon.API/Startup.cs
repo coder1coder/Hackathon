@@ -48,7 +48,10 @@ namespace Hackathon.API
                 options.LogTo(Console.WriteLine);
             });
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new MainActionFilter());
+            });
 
             services
             .AddAuthentication(x =>

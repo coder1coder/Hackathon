@@ -13,6 +13,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.User
 {
@@ -67,7 +68,7 @@ namespace Hackathon.BL.User
             var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, user.PasswordHash);
 
             if (!verified)
-                throw new ServiceException("Неправильное имя пользователя или пароль");
+                throw new ValidationException("Неправильное имя пользователя или пароль");
 
             return GenerateToken(user.Id);
         }
