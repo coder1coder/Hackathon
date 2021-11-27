@@ -60,13 +60,13 @@ namespace Hackathon.Tests.Integration.Event
                 .Invoking(async () => await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
                 {
                     Id = eventId,
-                    Status = EventStatus.Archived
+                    Status = EventStatus.Started
                 }))
                 .Should()
                 .NotThrowAsync();
 
             eventModel = await ApiService.Events.Get(eventId);
-            eventModel.Status.Should().Be(EventStatus.Archived);
+            eventModel.Status.Should().Be(EventStatus.Started);
         }
     }
 }
