@@ -14,5 +14,7 @@ namespace Hackathon.Common.Models.Event
 
         public int MinTeamMembers { get; set; }
         public int MaxEventMembers { get; set; }
+
+        public List<ChangeEventStatusMessage> ChangeStatusMessages { get; set; }
     }
 }

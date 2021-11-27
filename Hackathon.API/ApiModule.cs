@@ -1,7 +1,8 @@
 ﻿using Autofac;
-using Hackathon.Common.Configuration;
+using Hackathon.MessageQueue;
+using Hackathon.MessageQueue.Hubs;
+using Hackathon.MessageQueue.Messages;
 using MapsterMapper;
-using Microsoft.Extensions.Options;
 
 namespace Hackathon.API
 {
@@ -10,6 +11,8 @@ namespace Hackathon.API
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<Mapper>().As<IMapper>().InstancePerLifetimeScope();
+
+            builder.RegisterType<EventMessageHub>().As<IMessageHub<EventMessage>>().InstancePerLifetimeScope();
         }
     }
 }
