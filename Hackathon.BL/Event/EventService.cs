@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.MessageQueue;
 using Hackathon.MessageQueue.Messages;
+using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.Event
 {
@@ -56,6 +58,12 @@ namespace Hackathon.BL.Event
             await _eventExistValidator.ValidateAndThrowAsync(eventId);
 
             var eventModel = await _eventRepository.GetAsync(eventId);
+
+            var canChangeStatus = (int) eventModel.Status == (int) eventStatus - 1;
+
+            if (!canChangeStatus)
+                throw new ValidationException(ErrorMessages.CantSetEventStatus);
+
             eventModel.Status = eventStatus;
 
             await _eventRepository.UpdateAsync(eventModel);
