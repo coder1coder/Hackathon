@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.MessageQueue;
+using Hackathon.MessageQueue.Messages;
 
 namespace Hackathon.BL.Event
 {
@@ -14,17 +17,21 @@ namespace Hackathon.BL.Event
         private readonly IEventRepository _eventRepository;
         private readonly IValidator<GetFilterModel<EventFilterModel>> _getFilterModelValidator;
         private readonly EventExistValidator _eventExistValidator;
+        private readonly IMessageHub<EventMessage> _eventMessageHub;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
             EventExistValidator eventExistValidator,
             IValidator<GetFilterModel<EventFilterModel>> getFilterModelValidator,
-            IEventRepository eventRepository)
+            IEventRepository eventRepository,
+            IMessageHub<EventMessage> eventMessageHub
+            )
         {
             _createEventModelValidator = createEventModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
             _eventExistValidator = eventExistValidator;
             _eventRepository = eventRepository;
+            _eventMessageHub = eventMessageHub;
         }
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
@@ -52,6 +59,14 @@ namespace Hackathon.BL.Event
             eventModel.Status = eventStatus;
 
             await _eventRepository.UpdateAsync(eventModel);
+
+            var changeEventStatusMessage = eventModel.ChangeStatusMessages
+                .FirstOrDefault(x => x.Status == eventStatus);
+
+            if (changeEventStatusMessage != null)
+                await _eventMessageHub.Publish(
+                    TopicNames.EventChangeStatus,
+                    new EventMessage(eventId, changeEventStatusMessage.Message));
         }
 
         public async Task DeleteAsync(long eventId)
