@@ -5,7 +5,10 @@ using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
+using Hackathon.Jobs;
 using Hackathon.MessageQueue.Hubs;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +51,14 @@ namespace Hackathon.API
                 options.Filters.Add(new MainActionFilter());
             });
 
+            services
+                .AddHangfire(configuration =>
+                {
+                    configuration
+                        .UsePostgreSqlStorage(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
+                })
+                .AddHangfireServer();
+
             services.AddSignalR();
 
             services.AddAuthentication(Configuration);
@@ -59,6 +70,7 @@ namespace Hackathon.API
         {
             builder.ConfigureBLContainer();
             builder.RegisterModule(new ApiModule());
+            builder.RegisterModule(new JobsModule());
             builder.RegisterModule(new DalModule());
         }
 
@@ -75,6 +87,8 @@ namespace Hackathon.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseJobs();
 
             app.UseRouting();
 
