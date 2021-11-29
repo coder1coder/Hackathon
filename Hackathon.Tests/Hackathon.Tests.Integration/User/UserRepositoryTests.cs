@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 using Hackathon.Tests.Common;
-using Microsoft.Extensions.Options;
+using Hackathon.Tests.Integration.Base;
 using Xunit;
 
-namespace Hackathon.Tests.Unit
+namespace Hackathon.Tests.Integration.User
 {
-    public class UserRepositoryTests: BaseUnitTests
+    public class UserRepositoryTests: BaseRepositoryTests, IClassFixture<TestWebApplicationFactory>
     {
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()

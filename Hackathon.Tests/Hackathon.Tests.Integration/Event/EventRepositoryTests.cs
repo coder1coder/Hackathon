@@ -7,12 +7,17 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.DAL.Entities;
 using Hackathon.Tests.Common;
+using Hackathon.Tests.Integration.Base;
 using Xunit;
 
-namespace Hackathon.Tests.Unit
+namespace Hackathon.Tests.Integration.Event
 {
-    public class EventRepositoryTests: BaseUnitTests
+    public class EventRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
+        public EventRepositoryTests(TestWebApplicationFactory factory) : base(factory)
+        {
+        }
+
         [Fact]
         public async Task ExistAsync_ShouldReturn_Success()
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
@@ -12,9 +12,9 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Hackathon.Tests.Unit
+namespace Hackathon.Tests.Integration.Base
 {
-    public abstract class BaseUnitTests: IDisposable
+    public abstract class BaseRepositoryTests: IDisposable
     {
         protected readonly ApplicationDbContext DbContext;
 
@@ -23,7 +23,7 @@ namespace Hackathon.Tests.Unit
         protected readonly ITeamRepository TeamRepository;
         protected readonly IProjectRepository ProjectRepository;
 
-        protected BaseUnitTests()
+        protected BaseRepositoryTests()
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
@@ -56,19 +56,7 @@ namespace Hackathon.Tests.Unit
             ProjectRepository = new ProjectRepository(mapper, DbContext);
         }
 
-        protected async Task<TeamModel> CreateTeamWithEvent()
-        {
-            var eventModel = TestFaker.GetCreateEventModels(1).First();
-            var eventId = await EventRepository.CreateAsync(eventModel);
 
-            var createTeamModel = TestFaker.GetCreateTeamModels(1).First();
-            createTeamModel.EventId = eventId;
-
-            var teamModel = createTeamModel.Adapt<TeamModel>();
-
-            teamModel.Id = await TeamRepository.CreateAsync(createTeamModel);
-            return teamModel;
-        }
 
         public void Dispose()
         {

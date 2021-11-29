@@ -2,7 +2,10 @@ name: .NET
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - develop
+      - "feature/*"
+
   pull_request:
     branches: [ develop ]
 
@@ -13,7 +16,7 @@ jobs:
     strategy:
       matrix:
         dotnet: [ '5.0.x' ]
-        
+
     services:
       database:
         image: 'postgres'
@@ -24,7 +27,7 @@ jobs:
         ports:
           - 8432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-        
+
       database_tests:
         image: 'postgres'
         env:
@@ -35,25 +38,34 @@ jobs:
           - 9432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+      database_jobs:
+        image: 'postgres'
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: Hackathon.Jobs
+        ports:
+          - 7432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
-        
+
     - name: Restore dependencies
       run: dotnet restore
-      
+
     - name: Build
       run: dotnet build --no-restore
-      
+
     - name: Update database
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
         dotnet ef database update -p Hackathon.DAL -s Hackathon.API -c ApplicationDbContext
         dotnet ef database update -p Hackathon.DAL -s Hackathon.API -c ApplicationDbContext -- --environment Tests.Unit
-
     - name: Test
       run: dotnet test --no-build --verbosity normal

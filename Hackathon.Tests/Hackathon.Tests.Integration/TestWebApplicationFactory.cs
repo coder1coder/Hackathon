@@ -10,6 +10,7 @@ namespace Hackathon.Tests.Integration
         {
             base.ConfigureWebHost(builder);
 
+            builder.UseEnvironment("Tests.Unit");
             builder.ConfigureKestrel(x => x.ListenLocalhost(7100));
         }
     }

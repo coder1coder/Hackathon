@@ -3,12 +3,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Team;
 using Hackathon.Tests.Common;
+using Hackathon.Tests.Integration.Base;
 using Xunit;
 
-namespace Hackathon.Tests.Unit
+namespace Hackathon.Tests.Integration.Team
 {
-    public class TeamRepositoryTests: BaseUnitTests
+    public class TeamRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
+        public TeamRepositoryTests(TestWebApplicationFactory factory) : base(factory)
+        {
+        }
+
         [Fact]
         public async Task ExistAsync_ById_ShouldReturn_True()
         {
@@ -35,7 +40,7 @@ namespace Hackathon.Tests.Unit
         [Fact]
         public async Task GetAsync_ShouldReturn_NotNull()
         {
-            var createdTeamModel = CreateTeamWithEvent();
+            var createdTeamModel = await CreateTeamWithEvent();
             var teamModel = await TeamRepository.GetAsync(createdTeamModel.Id);
             teamModel.Should().NotBeNull();
         }
