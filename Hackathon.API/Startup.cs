@@ -50,7 +50,7 @@ namespace Hackathon.API
 
             services.AddSignalR();
 
-            services.AddAuthentication();
+            services.AddAuthentication(Configuration);
 
             services.AddSwagger();
         }

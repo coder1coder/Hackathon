@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
@@ -50,8 +51,8 @@ namespace Hackathon.DAL.Repositories
 
             if (getFilterModel.Filter != null)
             {
-                if (getFilterModel.Filter.Id.HasValue)
-                    query = query.Where(x => x.Id == getFilterModel.Filter.Id);
+                if (getFilterModel.Filter.Ids != null)
+                    query = query.Where(x => getFilterModel.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Name))
                     query = query.Where(x => x.Name == getFilterModel.Filter.Name);
@@ -112,10 +113,10 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        public async Task UpdateAsync(EventModel eventModel)
+        public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
         {
-            var eventEntity = _mapper.Map<EventEntity>(eventModel);
-            _dbContext.Update(eventEntity);
+            var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
+            _dbContext.UpdateRange(eventEntities);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -134,6 +135,22 @@ namespace Hackathon.DAL.Repositories
             return await _dbContext.Events
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == eventId);
+        }
+
+        /// <summary>
+        /// Проверяет существование событий по идентификаторам
+        /// </summary>
+        /// <param name="eventsIds">Список идентификаторов событий</param>
+        /// <returns>Возвращает True, если все события существуют</returns>
+        public async Task<bool> ExistAsync(long[] eventsIds)
+        {
+            var distinctIds = eventsIds.Distinct();
+
+            var existCount = await _dbContext.Events
+                .AsNoTracking()
+                .LongCountAsync(x => distinctIds.Contains(x.Id));
+
+            return distinctIds.LongCount() == existCount;
         }
     }
 }

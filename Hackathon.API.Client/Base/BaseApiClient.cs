@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Hackathon.Common.Exceptions;
 using Newtonsoft.Json;
 
 namespace Hackathon.API.Client.Base
@@ -74,8 +75,16 @@ namespace Hackathon.API.Client.Base
             if (response.StatusCode == HttpStatusCode.Unauthorized)
                 throw new Exception($"Необходимо указать валидный токен");
 
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+                throw new ValidationException(result);
+
             if (response.StatusCode == HttpStatusCode.InternalServerError)
-                throw new Exception("Неустранимая ошибка API");
+            {
+                throw new Exception( !string.IsNullOrWhiteSpace(result)
+                ? result
+                : "Неустранимая ошибка API");
+            }
+
 
             throw new Exception($"Код состояния {response.StatusCode} не поддерживается");
         }

@@ -13,9 +13,9 @@ namespace Hackathon.API.Client.Team
         {
         }
 
-        public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
+        public Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
         {
-            return await PostAsync<CreateTeamRequest, BaseCreateResponse>(Endpoint, createTeamRequest);
+            return PostAsync<CreateTeamRequest, BaseCreateResponse>(Endpoint, createTeamRequest);
         }
 
         public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
