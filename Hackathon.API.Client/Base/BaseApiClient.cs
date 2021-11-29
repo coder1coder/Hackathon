@@ -75,7 +75,12 @@ namespace Hackathon.API.Client.Base
                 throw new Exception($"Необходимо указать валидный токен");
 
             if (response.StatusCode == HttpStatusCode.InternalServerError)
-                throw new Exception("Неустранимая ошибка API");
+            {
+                throw new Exception( !string.IsNullOrWhiteSpace(result)
+                ? result
+                : "Неустранимая ошибка API");
+            }
+
 
             throw new Exception($"Код состояния {response.StatusCode} не поддерживается");
         }
