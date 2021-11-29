@@ -50,8 +50,8 @@ namespace Hackathon.DAL.Repositories
 
             if (getFilterModel.Filter != null)
             {
-                if (getFilterModel.Filter.Id.HasValue)
-                    query = query.Where(x => x.Id == getFilterModel.Filter.Id);
+                if (getFilterModel.Filter.Ids != null)
+                    query = query.Where(x => getFilterModel.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Name))
                     query = query.Where(x => x.Name == getFilterModel.Filter.Name);
@@ -134,6 +134,22 @@ namespace Hackathon.DAL.Repositories
             return await _dbContext.Events
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == eventId);
+        }
+
+        /// <summary>
+        /// Проверяет существование событий по идентификаторам
+        /// </summary>
+        /// <param name="eventsIds">Список идентификаторов событий</param>
+        /// <returns>Возвращает True, если все события существуют</returns>
+        public async Task<bool> ExistAsync(long[] eventsIds)
+        {
+            var distinctIds = eventsIds.Distinct();
+
+            var existCount = await _dbContext.Events
+                .AsNoTracking()
+                .LongCountAsync(x => distinctIds.Contains(x.Id));
+
+            return distinctIds.LongCount() == existCount;
         }
     }
 }

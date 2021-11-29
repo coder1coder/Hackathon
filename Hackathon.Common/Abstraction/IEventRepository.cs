@@ -13,5 +13,6 @@ namespace Hackathon.Common.Abstraction
         Task UpdateAsync(EventModel eventModel);
         Task DeleteAsync(long eventId);
         Task<bool> ExistAsync(long eventId);
+        Task<bool> ExistAsync(long[] eventsIds);
     }
 }

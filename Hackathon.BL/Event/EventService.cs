@@ -43,7 +43,7 @@ namespace Hackathon.BL.Event
 
         public async Task<EventModel> GetAsync(long eventId)
         {
-            await _eventExistValidator.ValidateAndThrowAsync(eventId);
+            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
             return await _eventRepository.GetAsync(eventId);
         }
 
@@ -55,7 +55,7 @@ namespace Hackathon.BL.Event
 
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
-            await _eventExistValidator.ValidateAndThrowAsync(eventId);
+            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
 
             var eventModel = await _eventRepository.GetAsync(eventId);
 
@@ -64,8 +64,40 @@ namespace Hackathon.BL.Event
             if (!canChangeStatus)
                 throw new ValidationException(ErrorMessages.CantSetEventStatus);
 
-            eventModel.Status = eventStatus;
+            await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
+        }
 
+        public async Task SetStatusAsync(long[] eventsIds, EventStatus eventStatus)
+        {
+            await _eventExistValidator.ValidateAndThrowAsync(eventsIds);
+
+            var eventModels = await _eventRepository.GetAsync(new GetFilterModel<EventFilterModel>
+            {
+                Filter = new EventFilterModel
+                {
+                    Ids = eventsIds,
+                    Status = eventStatus - 1
+                }
+            });
+
+            var canChangeStatus = eventModels.TotalCount == eventsIds.Length;
+
+            if (!canChangeStatus)
+                throw new ValidationException(ErrorMessages.CantSetEventsStatus);
+
+            foreach (var eventModel in eventModels.Items)
+                await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
+        }
+
+        public async Task DeleteAsync(long eventId)
+        {
+            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
+            await _eventRepository.DeleteAsync(eventId);
+        }
+
+        private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
+        {
+            eventModel.Status = eventStatus;
             await _eventRepository.UpdateAsync(eventModel);
 
             var changeEventStatusMessage = eventModel.ChangeStatusMessages
@@ -74,13 +106,7 @@ namespace Hackathon.BL.Event
             if (changeEventStatusMessage != null)
                 await _eventMessageHub.Publish(
                     TopicNames.EventChangeStatus,
-                    new EventMessage(eventId, changeEventStatusMessage.Message));
-        }
-
-        public async Task DeleteAsync(long eventId)
-        {
-            await _eventExistValidator.ValidateAndThrowAsync(eventId);
-            await _eventRepository.DeleteAsync(eventId);
+                    new EventMessage(eventModel.Id, changeEventStatusMessage.Message));
         }
     }
 }
