@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API", "Hackathon.API\Hackathon.API.csproj", "{118F4E10-EA48-4C40-A056-2D8FAA00A583}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL", "Hackathon.BL\Hackathon.BL.csproj", "{4AA75C3E-A4BD-4671-8AB7-C459141E8E67}"
@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Unit", "Hac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API.Client", "Hackathon.API.Client\Hackathon.API.Client.csproj", "{A1D48CD7-3309-4224-AADC-9B0B31323456}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API.SDK", "Hackathon.API.SDK\Hackathon.API.SDK.csproj", "{A1D48CD7-3309-4224-AADC-9B0B31323456}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Common", "Hackathon.Tests\Hackathon.Tests.Common\Hackathon.Tests.Common.csproj", "{C9AEBEF4-6675-4E60-93AF-C0AD5A89B151}"
 EndProject
