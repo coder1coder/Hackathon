@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Hackathon.Common.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
+using Hackathon.DAL.Entities;
 using Hackathon.Tests.Common;
 using Xunit;
 

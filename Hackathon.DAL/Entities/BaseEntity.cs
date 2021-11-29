@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Common.Entities
+﻿namespace Hackathon.DAL.Entities
 {
     public class BaseEntity
     {

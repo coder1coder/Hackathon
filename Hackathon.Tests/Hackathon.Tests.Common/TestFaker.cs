@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bogus;
-using Hackathon.Common.Entities;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
+using Hackathon.DAL.Entities;
 using Mapster;
 
 namespace Hackathon.Tests.Common

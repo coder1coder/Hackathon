@@ -12,16 +12,16 @@ namespace Hackathon.Jobs
 {
     public class ChangeEventStatusJob: IChangeEventStatusJob
     {
-        // private readonly IEventService _eventService;
+        private readonly IEventService _eventService;
 
         public ChangeEventStatusJob(
-            // IEventService eventService
+            IEventService eventService
             )
         {
             Name = nameof(ChangeEventStatusJob);
             CronInterval = Cron.Minutely();
 
-            // _eventService = eventService;
+            _eventService = eventService;
         }
 
         public string Name { get; }
@@ -29,26 +29,26 @@ namespace Hackathon.Jobs
 
         public async Task Execute()
         {
-            // var publishedEvents = await _eventService.GetAsync(new GetFilterModel<EventFilterModel>
-            // {
-            //     Filter = new EventFilterModel
-            //     {
-            //         Status = EventStatus.Published
-            //     }
-            // });
-            //
-            // if (publishedEvents.TotalCount > 0)
-            // {
-            //     var memberRegistrationEndedEvents = publishedEvents.Items
-            //         .Where(x => x.Start.AddMinutes(x.MemberRegistrationMinutes) >= DateTime.UtcNow)
-            //         .ToImmutableList();
-            //
-            //     foreach (var eventModel in memberRegistrationEndedEvents)
-            //     {
-            //         await _eventService.SetStatusAsync(eventModel.Id, EventStatus.Started);
-            //         Log.Logger.Information($"{nameof(ChangeEventStatusJob)} EventId: {eventModel.Id}, OldStatus: {eventModel.Status}, NewStatus: {EventStatus.Started}");
-            //     }
-            // }
+            var publishedEvents = await _eventService.GetAsync(new GetFilterModel<EventFilterModel>
+            {
+                Filter = new EventFilterModel
+                {
+                    Status = EventStatus.Published
+                }
+            });
+
+            if (publishedEvents.TotalCount > 0)
+            {
+                var memberRegistrationEndedEvents = publishedEvents.Items
+                    .Where(x => x.Start.AddMinutes(x.MemberRegistrationMinutes) >= DateTime.UtcNow)
+                    .ToImmutableList();
+
+                foreach (var eventModel in memberRegistrationEndedEvents)
+                {
+                    await _eventService.SetStatusAsync(eventModel.Id, EventStatus.Started);
+                    Log.Logger.Information($"{nameof(ChangeEventStatusJob)} EventId: {eventModel.Id}, OldStatus: {eventModel.Status}, NewStatus: {EventStatus.Started}");
+                }
+            }
         }
     }
 }

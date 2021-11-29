@@ -1,4 +1,4 @@
-﻿using Hackathon.Common.Entities;
+﻿using Hackathon.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +22,10 @@ namespace Hackathon.DAL.Configurations
 
             builder
                 .Property(x => x.StartMemberRegistration)
+                .IsRequired();
+
+            builder
+                .Property(x => x.MemberRegistrationMinutes)
                 .IsRequired();
 
             builder

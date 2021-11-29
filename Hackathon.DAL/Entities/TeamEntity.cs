@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Hackathon.Common.Entities
+namespace Hackathon.DAL.Entities
 {
     public class TeamEntity : BaseEntity
     {

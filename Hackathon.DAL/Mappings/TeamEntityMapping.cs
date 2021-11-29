@@ -1,5 +1,5 @@
-﻿using Hackathon.Common.Entities;
-using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models.Team;
+using Hackathon.DAL.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings

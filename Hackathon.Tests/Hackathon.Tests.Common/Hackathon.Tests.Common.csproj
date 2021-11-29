@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Hackathon.Common\Hackathon.Common.csproj" />
+    <ProjectReference Include="..\..\Hackathon.DAL\Hackathon.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

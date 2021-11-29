@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Entities;
 using Hackathon.Common.Models.Project;
+using Hackathon.DAL.Entities;
 using MapsterMapper;
 
 namespace Hackathon.DAL.Repositories

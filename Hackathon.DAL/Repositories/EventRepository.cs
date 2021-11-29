@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

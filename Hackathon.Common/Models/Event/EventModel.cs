@@ -10,6 +10,11 @@ namespace Hackathon.Common.Models.Event
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public DateTime StartMemberRegistration { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public int MemberRegistrationMinutes { get; set; }
         public EventStatus Status { get; set; }
 
         public int MinTeamMembers { get; set; }
