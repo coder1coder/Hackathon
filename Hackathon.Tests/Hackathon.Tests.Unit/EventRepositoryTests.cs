@@ -86,7 +86,7 @@ namespace Hackathon.Tests.Unit
             eventModel.Name = newName;
 
             DbContext.ChangeTracker.Clear();
-            await EventRepository.UpdateAsync(eventModel);
+            await EventRepository.UpdateAsync(new []{ eventModel });
 
             eventModel = await EventRepository.GetAsync(eventId);
             eventModel.Name.Should().Be(newName);

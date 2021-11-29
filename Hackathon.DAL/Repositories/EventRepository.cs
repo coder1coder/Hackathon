@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Entities;
@@ -112,10 +113,10 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        public async Task UpdateAsync(EventModel eventModel)
+        public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
         {
-            var eventEntity = _mapper.Map<EventEntity>(eventModel);
-            _dbContext.Update(eventEntity);
+            var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
+            _dbContext.UpdateRange(eventEntities);
             await _dbContext.SaveChangesAsync();
         }
 

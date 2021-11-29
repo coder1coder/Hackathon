@@ -98,7 +98,7 @@ namespace Hackathon.BL.Event
         private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
         {
             eventModel.Status = eventStatus;
-            await _eventRepository.UpdateAsync(eventModel);
+            await _eventRepository.UpdateAsync(new []{ eventModel });
 
             var changeEventStatusMessage = eventModel.ChangeStatusMessages
                 .FirstOrDefault(x => x.Status == eventStatus);
