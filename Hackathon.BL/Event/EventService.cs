@@ -100,7 +100,7 @@ namespace Hackathon.BL.Event
             eventModel.Status = eventStatus;
             await _eventRepository.UpdateAsync(new []{ eventModel });
 
-            var changeEventStatusMessage = eventModel.ChangeStatusMessages
+            var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
                 .FirstOrDefault(x => x.Status == eventStatus);
 
             if (changeEventStatusMessage != null)
