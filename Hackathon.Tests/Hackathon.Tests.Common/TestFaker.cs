@@ -29,14 +29,8 @@ namespace Hackathon.Tests.Common
 
         public static IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
         {
-            var faker = new Faker<EventModel>();
-
-            faker
-                .RuleFor(x => x.Name, f => f.Random.String2(6,20))
-                .RuleFor(x => x.Status, f => eventStatus ?? f.PickRandom<EventStatus>())
-                .RuleFor(x => x.Start, _ => DateTime.UtcNow.AddDays(1));
-
-            return faker.Generate(count);
+            var eventEntities = GetEventEntities(count, eventStatus);
+            return eventEntities.Adapt<List<EventModel>>();
         }
 
         public static IEnumerable<CreateEventModel> GetCreateEventModels(int count)
@@ -78,8 +72,10 @@ namespace Hackathon.Tests.Common
             faker
                 .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
                 .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
-                .RuleFor(x => x.StartMemberRegistration, DateTime.UtcNow.AddDays(1).AddMinutes(30))
-                .RuleFor(x => x.MaxEventMembers, _ => 30)
+                .RuleFor(x => x.MemberRegistrationMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.DevelopmentMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.TeamPresentationMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.MaxEventMembers, _=>30)
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
                 ;
