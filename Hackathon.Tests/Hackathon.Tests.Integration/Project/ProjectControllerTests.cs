@@ -24,7 +24,7 @@ namespace Hackathon.Tests.Integration.Subject
         public async Task Create_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1).First();
-            var eventRequest = eventModel.Adapt<CreateEventRequest>();
+            var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await ApiService.Events.Create(eventRequest);
 
             await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
