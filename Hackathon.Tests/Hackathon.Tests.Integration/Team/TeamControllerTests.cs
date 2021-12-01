@@ -50,7 +50,7 @@ namespace Hackathon.Tests.Integration.Team
         public async Task AddMember_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1).First();
-            var eventRequest = eventModel.Adapt<CreateEventRequest>();
+            var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await ApiService.Events.Create(eventRequest);
 
             await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
@@ -65,7 +65,8 @@ namespace Hackathon.Tests.Integration.Team
                 EventId = createEventResponse.Id
             });
 
-            var fakeRequest = TestFaker.GetSignUpModels(1).First().Adapt<SignUpRequest>();
+            var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
+
             var createUserResponse = await ApiService.Users.SignUpAsync(fakeRequest);
 
             await FluentActions.Invoking(async () =>

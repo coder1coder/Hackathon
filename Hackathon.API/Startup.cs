@@ -39,12 +39,12 @@ namespace Hackathon.API
                 new UserEntityMapping()
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContextPool<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
                 options.EnableSensitiveDataLogging();
                 options.LogTo(Console.WriteLine);
-            });
+            }, 1000);
 
             services.AddControllers(options =>
             {

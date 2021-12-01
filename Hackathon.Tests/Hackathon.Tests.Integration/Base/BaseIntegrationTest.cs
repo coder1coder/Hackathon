@@ -59,7 +59,7 @@ namespace Hackathon.Tests.Integration.Base
             var createTeamModel = TestFaker.GetCreateTeamModels(1).First();
             createTeamModel.EventId = eventId;
 
-            var teamModel = createTeamModel.Adapt<TeamModel>();
+            var teamModel = Mapper.Map<TeamModel>(createTeamModel);
 
             teamModel.Id = await TeamRepository.CreateAsync(createTeamModel);
             return teamModel;
