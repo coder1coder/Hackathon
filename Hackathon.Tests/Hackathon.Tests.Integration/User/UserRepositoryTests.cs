@@ -9,8 +9,12 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.User
 {
-    public class UserRepositoryTests: BaseRepositoryTests, IClassFixture<TestWebApplicationFactory>
+    public class UserRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
+        protected UserRepositoryTests(TestWebApplicationFactory factory) : base(factory)
+        {
+        }
+
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
