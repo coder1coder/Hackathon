@@ -66,6 +66,6 @@ jobs:
         dotnet tool install --global dotnet-ef
         dotnet tool restore
         dotnet ef database update -p Hackathon.DAL -s Hackathon.API -c ApplicationDbContext
-        dotnet ef database update -p Hackathon.DAL -s Hackathon.API -c ApplicationDbContext -- --environment Tests.Unit
+        dotnet ef database update -p Hackathon.DAL -s Hackathon.API -c ApplicationDbContext --environment Tests.Unit
     - name: Test
       run: dotnet test --no-build --verbosity normal
