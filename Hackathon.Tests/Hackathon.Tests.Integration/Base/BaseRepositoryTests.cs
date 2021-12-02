@@ -1,9 +1,7 @@
 using System;
 using Hackathon.Common.Abstraction;
 using Hackathon.DAL;
-using Hackathon.DAL.Mappings;
 using Hackathon.DAL.Repositories;
-using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,15 +34,7 @@ namespace Hackathon.Tests.Integration.Base
             DbContext = new ApplicationDbContext(options);
             DbContext.Database.EnsureCreated();
 
-            var mapperConfig = new TypeAdapterConfig();
-            mapperConfig.Apply(new IRegister[]
-            {
-                new EventEntityMapping(),
-                new TeamEntityMapping(),
-                new UserEntityMapping()
-            });
-
-            IMapper mapper = new Mapper(mapperConfig);
+            IMapper mapper = new Mapper();
 
             UserRepository = new UserRepository(mapper, DbContext);
             EventRepository = new EventRepository(mapper, DbContext);
