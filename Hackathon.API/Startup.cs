@@ -41,8 +41,7 @@ namespace Hackathon.API
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"), x=>
-                    );
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
                 options.EnableSensitiveDataLogging();
                 options.LogTo(Console.WriteLine);
             });
