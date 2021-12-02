@@ -20,7 +20,6 @@ jobs:
     services:
       database:
         image: 'postgres'
-        command: postgres -c 'max_connections=1000'
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
