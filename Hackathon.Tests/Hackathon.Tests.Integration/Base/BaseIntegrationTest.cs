@@ -37,6 +37,7 @@ namespace Hackathon.Tests.Integration.Base
             var userService = factory.Services.GetRequiredService<IUserService>();
 
             Mapper = factory.Services.GetRequiredService<IMapper>();
+            TestFaker.Mapper = Mapper;
 
             var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             {

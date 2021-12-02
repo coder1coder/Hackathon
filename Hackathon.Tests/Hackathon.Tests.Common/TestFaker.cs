@@ -6,12 +6,14 @@ using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
-using Mapster;
+using MapsterMapper;
 
 namespace Hackathon.Tests.Common
 {
     public static class TestFaker
     {
+        public static IMapper Mapper { get; set; }
+
         #region Models
 
         public static IEnumerable<SignUpModel> GetSignUpModels(int count)
@@ -30,12 +32,13 @@ namespace Hackathon.Tests.Common
         public static IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
         {
             var eventEntities = GetEventEntities(count, eventStatus);
-            return eventEntities.Adapt<List<EventModel>>();
+            return Mapper.Map<List<EventModel>>(eventEntities);
         }
 
         public static IEnumerable<CreateEventModel> GetCreateEventModels(int count)
         {
-            return GetEventEntities(count).Adapt<List<CreateEventModel>>();
+            var eventEntities = GetEventEntities(count);
+            return Mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
         public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)

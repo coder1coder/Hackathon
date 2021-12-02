@@ -1,12 +1,8 @@
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models.Team;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.DAL.Repositories;
-using Hackathon.Tests.Common;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
