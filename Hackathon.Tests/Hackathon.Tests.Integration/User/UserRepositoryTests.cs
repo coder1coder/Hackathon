@@ -11,7 +11,7 @@ namespace Hackathon.Tests.Integration.User
 {
     public class UserRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
-        protected UserRepositoryTests(TestWebApplicationFactory factory) : base(factory)
+        public UserRepositoryTests(TestWebApplicationFactory factory) : base(factory)
         {
         }
 
