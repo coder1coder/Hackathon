@@ -8,15 +8,19 @@ using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
 using MapsterMapper;
 
-namespace Hackathon.Tests.Common
+namespace Hackathon.Tests.Integration
 {
-    public static class TestFaker
+    public class TestFaker
     {
-        public static IMapper Mapper { get; set; }
+        private readonly IMapper _mapper;
+        public TestFaker(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
 
         #region Models
 
-        public static IEnumerable<SignUpModel> GetSignUpModels(int count)
+        public IEnumerable<SignUpModel> GetSignUpModels(int count)
         {
             var faker = new Faker<SignUpModel>();
 
@@ -29,19 +33,19 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
         {
             var eventEntities = GetEventEntities(count, eventStatus);
-            return Mapper.Map<List<EventModel>>(eventEntities);
+            return _mapper.Map<List<EventModel>>(eventEntities);
         }
 
-        public static IEnumerable<CreateEventModel> GetCreateEventModels(int count)
+        public IEnumerable<CreateEventModel> GetCreateEventModels(int count)
         {
             var eventEntities = GetEventEntities(count);
-            return Mapper.Map<List<CreateEventModel>>(eventEntities);
+            return _mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
-        public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
+        public IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
         {
             var faker = new Faker<CreateTeamModel>();
 
@@ -52,7 +56,7 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
+        public IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
         {
             var faker = new Faker<ProjectCreateModel>();
 
@@ -68,7 +72,7 @@ namespace Hackathon.Tests.Common
 
         #region Entities
 
-        public static IEnumerable<EventEntity> GetEventEntities(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventEntity> GetEventEntities(int count, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventEntity>();
 
@@ -86,7 +90,7 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<UserEntity> GetUserEntities(int count)
+        public IEnumerable<UserEntity> GetUserEntities(int count)
         {
             var faker = new Faker<UserEntity>();
 

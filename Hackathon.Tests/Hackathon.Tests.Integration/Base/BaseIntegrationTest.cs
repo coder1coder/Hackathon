@@ -25,6 +25,7 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IMapper Mapper;
 
         protected readonly ApplicationDbContext DbContext;
+        protected readonly TestFaker TestFaker;
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
@@ -37,7 +38,7 @@ namespace Hackathon.Tests.Integration.Base
             var userService = factory.Services.GetRequiredService<IUserService>();
 
             Mapper = factory.Services.GetRequiredService<IMapper>();
-            TestFaker.Mapper = Mapper;
+            TestFaker = new TestFaker(Mapper);
 
             var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
