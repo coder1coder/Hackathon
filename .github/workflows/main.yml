@@ -70,3 +70,5 @@ jobs:
         ASPNETCORE_ENVIRONMENT: Tests
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      env:
+        ASPNETCORE_ENVIRONMENT: Tests
