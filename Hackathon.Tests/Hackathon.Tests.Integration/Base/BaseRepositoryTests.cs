@@ -21,7 +21,7 @@ namespace Hackathon.Tests.Integration.Base
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
-                .AddJsonFile($"appsettings.Tests.Unit.json", true, false);
+                .AddJsonFile($"appsettings.Tests.json", true, false);
 
             var configurationRoot = configurationBuilder.Build();
             var connectionString = configurationRoot.GetConnectionString("DefaultConnectionString");
