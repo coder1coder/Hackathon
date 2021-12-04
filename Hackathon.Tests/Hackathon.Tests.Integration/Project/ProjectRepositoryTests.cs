@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 

@@ -6,9 +6,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Requests.Team;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
-using Mapster;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Subject

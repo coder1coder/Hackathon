@@ -6,8 +6,6 @@ using Hackathon.API.Client;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL;
-using Hackathon.Tests.Common;
-using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;

@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Contracts.Requests.User;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
-using Mapster;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.User

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Team;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
