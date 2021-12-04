@@ -6,9 +6,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Requests.Team;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
-using Mapster;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Subject
@@ -24,7 +22,7 @@ namespace Hackathon.Tests.Integration.Subject
         public async Task Create_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1).First();
-            var eventRequest = eventModel.Adapt<CreateEventRequest>();
+            var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await ApiService.Events.Create(eventRequest);
 
             await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>

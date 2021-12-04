@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 

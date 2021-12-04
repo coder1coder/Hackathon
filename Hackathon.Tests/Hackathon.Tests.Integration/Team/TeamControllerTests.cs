@@ -6,9 +6,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Requests.User;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
-using Mapster;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Team
@@ -23,7 +21,7 @@ namespace Hackathon.Tests.Integration.Team
         public async Task Create_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1).First();
-            var eventRequest = eventModel.Adapt<CreateEventRequest>();
+            var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await ApiService.Events.Create(eventRequest);
 
             await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
@@ -50,7 +48,7 @@ namespace Hackathon.Tests.Integration.Team
         public async Task AddMember_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1).First();
-            var eventRequest = eventModel.Adapt<CreateEventRequest>();
+            var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await ApiService.Events.Create(eventRequest);
 
             await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
@@ -65,7 +63,8 @@ namespace Hackathon.Tests.Integration.Team
                 EventId = createEventResponse.Id
             });
 
-            var fakeRequest = TestFaker.GetSignUpModels(1).First().Adapt<SignUpRequest>();
+            var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
+
             var createUserResponse = await ApiService.Users.SignUpAsync(fakeRequest);
 
             await FluentActions.Invoking(async () =>

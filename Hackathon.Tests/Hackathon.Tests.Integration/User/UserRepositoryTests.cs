@@ -3,14 +3,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.User
 {
-    public class UserRepositoryTests: BaseRepositoryTests, IClassFixture<TestWebApplicationFactory>
+    public class UserRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
+        public UserRepositoryTests(TestWebApplicationFactory factory) : base(factory)
+        {
+        }
+
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {

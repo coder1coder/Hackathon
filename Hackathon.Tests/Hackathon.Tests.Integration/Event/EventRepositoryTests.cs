@@ -6,7 +6,6 @@ using FluentAssertions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.DAL.Entities;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 

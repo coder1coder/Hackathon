@@ -6,7 +6,6 @@ using Hackathon.API.Client;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL;
-using Hackathon.Tests.Common;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -25,6 +24,7 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IMapper Mapper;
 
         protected readonly ApplicationDbContext DbContext;
+        protected readonly TestFaker TestFaker;
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
@@ -36,7 +36,8 @@ namespace Hackathon.Tests.Integration.Base
 
             var userService = factory.Services.GetRequiredService<IUserService>();
 
-            Mapper = factory.Services.GetRequiredService<IMapper>();
+            Mapper = new Mapper();
+            TestFaker = new TestFaker(Mapper);
 
             var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -59,7 +60,7 @@ namespace Hackathon.Tests.Integration.Base
             var createTeamModel = TestFaker.GetCreateTeamModels(1).First();
             createTeamModel.EventId = eventId;
 
-            var teamModel = createTeamModel.Adapt<TeamModel>();
+            var teamModel = Mapper.Map<TeamModel>(createTeamModel);
 
             teamModel.Id = await TeamRepository.CreateAsync(createTeamModel);
             return teamModel;

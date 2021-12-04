@@ -6,15 +6,21 @@ using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
-using Mapster;
+using MapsterMapper;
 
-namespace Hackathon.Tests.Common
+namespace Hackathon.Tests.Integration
 {
-    public static class TestFaker
+    public class TestFaker
     {
+        private readonly IMapper _mapper;
+        public TestFaker(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         #region Models
 
-        public static IEnumerable<SignUpModel> GetSignUpModels(int count)
+        public IEnumerable<SignUpModel> GetSignUpModels(int count)
         {
             var faker = new Faker<SignUpModel>();
 
@@ -27,24 +33,19 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
         {
-            var faker = new Faker<EventModel>();
-
-            faker
-                .RuleFor(x => x.Name, f => f.Random.String2(6,20))
-                .RuleFor(x => x.Status, f => eventStatus ?? f.PickRandom<EventStatus>())
-                .RuleFor(x => x.Start, _ => DateTime.UtcNow.AddDays(1));
-
-            return faker.Generate(count);
+            var eventEntities = GetEventEntities(count, eventStatus);
+            return _mapper.Map<List<EventModel>>(eventEntities);
         }
 
-        public static IEnumerable<CreateEventModel> GetCreateEventModels(int count)
+        public IEnumerable<CreateEventModel> GetCreateEventModels(int count)
         {
-            return GetEventEntities(count).Adapt<List<CreateEventModel>>();
+            var eventEntities = GetEventEntities(count);
+            return _mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
-        public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
+        public IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
         {
             var faker = new Faker<CreateTeamModel>();
 
@@ -55,7 +56,7 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
+        public IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
         {
             var faker = new Faker<ProjectCreateModel>();
 
@@ -71,15 +72,17 @@ namespace Hackathon.Tests.Common
 
         #region Entities
 
-        public static IEnumerable<EventEntity> GetEventEntities(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventEntity> GetEventEntities(int count, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventEntity>();
 
             faker
                 .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
                 .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
-                .RuleFor(x => x.StartMemberRegistration, DateTime.UtcNow.AddDays(1).AddMinutes(30))
-                .RuleFor(x => x.MaxEventMembers, _ => 30)
+                .RuleFor(x => x.MemberRegistrationMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.DevelopmentMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.TeamPresentationMinutes, f=>f.Random.Int(1,30))
+                .RuleFor(x => x.MaxEventMembers, _=>30)
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
                 ;
@@ -87,7 +90,7 @@ namespace Hackathon.Tests.Common
             return faker.Generate(count);
         }
 
-        public static IEnumerable<UserEntity> GetUserEntities(int count)
+        public IEnumerable<UserEntity> GetUserEntities(int count)
         {
             var faker = new Faker<UserEntity>();
 

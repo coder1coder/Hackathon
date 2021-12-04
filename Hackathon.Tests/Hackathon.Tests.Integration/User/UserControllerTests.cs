@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Contracts.Requests.User;
-using Hackathon.Tests.Common;
 using Hackathon.Tests.Integration.Base;
-using Mapster;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.User
@@ -19,7 +17,7 @@ namespace Hackathon.Tests.Integration.User
         [Fact]
         public async Task SignUp_Should_Success()
         {
-            var fakeRequest = TestFaker.GetSignUpModels(1).First().Adapt<SignUpRequest>();
+            var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
 
             var response = await ApiService.Users.SignUpAsync(fakeRequest);
 
@@ -36,13 +34,13 @@ namespace Hackathon.Tests.Integration.User
         [Fact]
         public async Task SignIn_ShouldReturn_AuthToken()
         {
-            var fakeSignUpRequest = TestFaker.GetSignUpModels(1).First().Adapt<SignUpRequest>();
+            var fakeSignUpRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
 
             var signUpResponse = await ApiService.Users.SignUpAsync(fakeSignUpRequest);
 
             Assert.NotNull(signUpResponse);
 
-            var signInRequest = fakeSignUpRequest.Adapt<SignInRequest>();
+            var signInRequest = Mapper.Map<SignInRequest>(fakeSignUpRequest);
 
             var signInResponse = await ApiService.Users.SignInAsync(signInRequest);
 
