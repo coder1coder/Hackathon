@@ -10,6 +10,7 @@ using Hackathon.MessageQueue.Hubs;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,12 +33,17 @@ namespace Hackathon.API
         {
             services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
 
-            TypeAdapterConfig.GlobalSettings.Apply(new IRegister[]
+            var config = new TypeAdapterConfig();
+
+            config.Apply(new IRegister[]
             {
                 new EventEntityMapping(),
                 new TeamEntityMapping(),
                 new UserEntityMapping()
             });
+
+            services.AddSingleton(config);
+            services.AddSingleton<IMapper, ServiceMapper>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

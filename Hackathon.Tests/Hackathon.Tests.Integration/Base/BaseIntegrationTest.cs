@@ -6,6 +6,7 @@ using Hackathon.API.Client;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL;
+using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,7 @@ namespace Hackathon.Tests.Integration.Base
 
             var userService = factory.Services.GetRequiredService<IUserService>();
 
-            Mapper = factory.Services.GetRequiredService<IMapper>();
+            Mapper = new Mapper();
             TestFaker = new TestFaker(Mapper);
 
             var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
