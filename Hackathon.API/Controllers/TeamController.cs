@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
+using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
@@ -25,7 +27,6 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="createTeamRequest"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
         {
@@ -41,7 +42,6 @@ namespace Hackathon.API.Controllers
         /// Регистрация пользователя в команде
         /// </summary>
         /// <param name="teamAddMemberRequest"></param>
-        [Authorize]
         [HttpPost(nameof(AddMember))]
         public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
         {
@@ -53,11 +53,22 @@ namespace Hackathon.API.Controllers
         /// Получить команду по идентификатору
         /// </summary>
         /// <param name="id"></param>
-        [Authorize]
         [HttpGet("{id:long}")]
-        public async Task<TeamModel> Get([FromRoute] long id)
+        public Task<TeamModel> Get([FromRoute] long id)
         {
-            return await _teamService.GetAsync(id);
+            return _teamService.GetAsync(id);
+        }
+
+        /// <summary>
+        /// Получить все команды
+        /// </summary>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<BaseCollectionResponse<TeamModel>> Get([FromQuery] GetFilterRequest<TeamFilterModel> filterRequest)
+        {
+            var getFilterModel = _mapper.Map<GetFilterModel<TeamFilterModel>>(filterRequest);
+            var collectionModel = await _teamService.GetAsync(getFilterModel);
+            return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
         }
     }
 }

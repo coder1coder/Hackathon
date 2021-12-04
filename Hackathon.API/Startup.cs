@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Autofac;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
@@ -52,6 +53,20 @@ namespace Hackathon.API
                 options.LogTo(Console.WriteLine);
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", builder =>
+                    builder
+                        .WithOrigins(
+                            "http://localhost:5000",
+                            "https://localhost:5001",
+                            "https://localhost:5002",
+                            "http://localhost:5003")
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .WithMethods("GET", "POST", "PUT", "OPTIONS"));
+            });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add(new MainActionFilter());
@@ -102,6 +117,8 @@ namespace Hackathon.API
             app.UseAuthorization();
 
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
+
+            app.UseCors("default");
 
             app.UseEndpoints(endpoints =>
             {

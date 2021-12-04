@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team
@@ -12,18 +14,21 @@ namespace Hackathon.BL.Team
         private readonly ITeamRepository _teamRepository;
         private readonly IValidator<long> _teamExistValidator;
         private readonly IValidator<TeamAddMemberModel> _teamAddMemberModelValidator;
+        private readonly IValidator<GetFilterModel<TeamFilterModel>> _getFilterModelValidator;
 
         public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
             IValidator<TeamAddMemberModel> teamAddMemberModelValidator,
             IValidator<long> teamExistValidator,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            IValidator<GetFilterModel<TeamFilterModel>> getFilterModelValidator)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
             _teamExistValidator = teamExistValidator;
 
             _teamRepository = teamRepository;
+            _getFilterModelValidator = getFilterModelValidator;
         }
 
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
@@ -42,6 +47,12 @@ namespace Hackathon.BL.Team
         {
             await _teamExistValidator.ValidateAndThrowAsync(teamId);
             return await _teamRepository.GetAsync(teamId);
+        }
+
+        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
+        {
+            await _getFilterModelValidator.ValidateAndThrowAsync(getFilterModel);
+            return await _teamRepository.GetAsync(getFilterModel);
         }
     }
 }

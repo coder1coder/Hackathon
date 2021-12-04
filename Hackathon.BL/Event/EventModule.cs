@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FluentValidation;
+using Hackathon.BL.Common.Validators;
 using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
@@ -12,7 +13,7 @@ namespace Hackathon.BL.Event
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<CreateEventModelValidator>().As<IValidator<CreateEventModel>>();
-            builder.RegisterType<GetFilterModelValidator>().As<IValidator<GetFilterModel<EventFilterModel>>>();
+            builder.RegisterType<GetFilterModelValidator<EventFilterModel>>().As<IValidator<GetFilterModel<EventFilterModel>>>();
             builder.RegisterType<EventExistValidator>().AsSelf();
 
             builder.RegisterType<EventService>().As<IEventService>().InstancePerLifetimeScope();

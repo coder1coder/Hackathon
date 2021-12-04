@@ -1,6 +1,8 @@
-﻿namespace Hackathon.Common.Models
+﻿using Hackathon.Common.Models.Base;
+
+namespace Hackathon.Common.Models
 {
-    public class GetFilterModel<T> where T: class
+    public class GetFilterModel<T> where T: IFilterModel
     {
         public T Filter { get; set; }
 

@@ -30,7 +30,6 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="createEventRequest"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {
@@ -46,7 +45,6 @@ namespace Hackathon.API.Controllers
         /// Получить все события
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpGet]
         public async Task<BaseCollectionResponse<EventModel>> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
         {
@@ -60,7 +58,6 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpGet("{id:long}")]
         public async Task<EventModel> Get([FromRoute] long id)
         {
@@ -71,18 +68,16 @@ namespace Hackathon.API.Controllers
         /// Задать статус события
         /// </summary>
         /// <param name="setStatusRequest"></param>
-        [Authorize]
         [HttpPut(nameof(SetStatus))]
         public async Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
         {
             await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
         }
-        
+
         /// <summary>
         /// Полное удаление события
         /// </summary>
         /// <param name="id"></param>
-        [Authorize]
         [HttpDelete("{id:long}")]
         public async Task Delete([FromRoute] long id)
         {

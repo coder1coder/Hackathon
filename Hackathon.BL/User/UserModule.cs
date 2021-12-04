@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using FluentValidation;
+using Hackathon.BL.Common.Validators;
 using Hackathon.BL.User.Validators;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.User
@@ -13,8 +15,8 @@ namespace Hackathon.BL.User
             builder.RegisterType<SignUpModelValidator>().As<IValidator<SignUpModel>>().InstancePerLifetimeScope();
             builder.RegisterType<SignInModelValidator>().As<IValidator<SignInModel>>().InstancePerLifetimeScope();
             builder.RegisterType<UserExistValidator>().AsSelf().InstancePerLifetimeScope();
-
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
+            builder.RegisterType<GetFilterModelValidator<UserFilterModel>>().As<IValidator<GetFilterModel<UserFilterModel>>>();
         }
     }
 }

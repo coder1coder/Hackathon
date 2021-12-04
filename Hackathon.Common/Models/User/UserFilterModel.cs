@@ -1,6 +1,8 @@
-﻿namespace Hackathon.Common.Models.User
+﻿using Hackathon.Common.Models.Base;
+
+namespace Hackathon.Common.Models.User
 {
-    public class UserFilterModel
+    public class UserFilterModel: IFilterModel
     {
         public string Username { get; set; }
         public string Email { get; set; }
