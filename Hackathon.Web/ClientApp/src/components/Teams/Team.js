@@ -51,7 +51,7 @@ export class Team extends Component {
                         <li>
                             <b>eventId</b>: {this.state.team.eventId}
                             <br/>
-                            <a href={"/Events/" + this.state.team.eventId}>{this.state.team.event.name}</a>
+                            <a href={"/Event/" + this.state.team.eventId}>{this.state.team.event.name}</a>
                         </li>
                         <li><b>members</b>:
                         </li>
