@@ -5,6 +5,7 @@ using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
@@ -28,6 +29,7 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost]
         public async Task<BaseCreateResponse> SignUp([FromBody] SignUpRequest request)
         {
@@ -44,6 +46,7 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost(nameof(SignIn))]
         public async Task<AuthTokenModel> SignIn([FromBody] SignInRequest request)
         {

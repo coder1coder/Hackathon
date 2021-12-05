@@ -8,6 +8,8 @@ import {Events} from "./components/Events/Events";
 import {Event} from "./components/Events/Event";
 import {Teams} from "./components/Teams/Teams";
 import {Team} from "./components/Teams/Team";
+import {SignIn} from "./components/Users/SignIn";
+import {SignUp} from "./components/Users/SignUp";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -20,6 +22,8 @@ export default class App extends Component {
           <Route path="/events" component={Events}/>
           <Route path="/team/:id" component={Team} />
           <Route path="/teams" component={Teams}/>
+          <Route path="/signIn" component={SignIn}/>
+          <Route path="/signUp" component={SignUp}/>
       </Layout>
     );
   }
