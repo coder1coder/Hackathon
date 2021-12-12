@@ -43,7 +43,7 @@ namespace Hackathon.Web
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            // app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();

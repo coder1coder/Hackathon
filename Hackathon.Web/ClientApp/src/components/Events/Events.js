@@ -1,5 +1,56 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import {Loader} from "../Common/Loader/Loader";
+import {NoResponse} from "../Common/NoResponse/NoResponse";
+import {Button, Pagination, PaginationItem, PaginationLink, Table} from "reactstrap";
+import {Language} from "../../common/Language";
+import {Link} from "react-router-dom";
+
+
+function EventsTable(props){
+    const pageSize = props.pageSize ?? 10;
+    const pageCount = ((props.events?.totalCount ?? 0) / pageSize) - 1;
+    const currentPage = props.currentPage ?? 1;
+
+    let paginationItems = [];
+
+    for (let i = 1; i < pageCount + 1; i++) {
+        const isCurrentPage = currentPage === i;
+        paginationItems.push(
+            <PaginationItem key={i} active={isCurrentPage}>
+                <PaginationLink onClick={(e) => {
+                        e.preventDefault();
+                        !isCurrentPage && props.onItemClick(i)
+                    }
+                }>{i}</PaginationLink>
+            </PaginationItem>
+        )
+    }
+
+    return (
+        <div>
+            <Table hover>
+                <thead>
+                <tr>
+                    <td>#</td>
+                    <td>{Language.Event.name}</td>
+                    <td>{Language.Event.start}</td>
+                </tr>
+                </thead>
+                <tbody>
+                    { props.events?.items.length > 0 && props.events?.items.map((item, index) => (
+                        <tr key={index}>
+                            <td>{item.id}</td>
+                            <td><a href={"/Event/" + item.id}>{item.name}</a></td>
+                            <td>{item.start}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+            <Pagination>{ paginationItems }</Pagination>
+        </div>
+    )
+}
 
 export class Events extends Component {
 
@@ -11,22 +62,33 @@ export class Events extends Component {
         this.API = process.env.REACT_APP_API_URL;
 
         this.state = {
-            isLoading: false
+            isLoading: false,
+            currentPage: 1
         };
+
+        this.getEvents = this.getEvents.bind(this);
     }
 
     componentDidMount() {
         this.getEvents();
     }
 
-    getEvents(){
-        this.setState({ isLoading: true });
+    getEvents(page = 1, pageSize = 10){
 
-        axios.get(`${this.API}/Event`).then(
+        setTimeout(() => this.setState({ isLoading: true }), 1);
+
+        axios.get(`${this.API}/Event`,
+            {
+                params: {
+                    Page: page,
+                    pageSize: pageSize,
+                    SortBy: 'Id'
+                }
+            }).then(
             response => {
-                console.log(response);
                 this.setState({
-                    events: response.data.items
+                    events: response.data,
+                    currentPage: page
                 });
             },
             error =>{
@@ -37,19 +99,21 @@ export class Events extends Component {
             });
     }
 
-    render () {
+    render() {
         return (
             <div>
-                <h1>Events</h1>
-
-                <ul>
-                    {this.state.events && this.state.events.length > 0 && this.state.events.map(( item, index ) => (
-                        <li key={ index }>
-                            <a href={"/event/" + item.id}>{ item.name }</a>
-                        </li>
-                    ))}
-                </ul>
+                <h1>События</h1>
+                <Link to="/Event">
+                    <Button color="primary">Создать</Button>
+                </Link>
+                {
+                    this.state.isLoading
+                        ? <Loader/>
+                        : this.state.events?.items.length > 0
+                            ? <EventsTable events={this.state.events} currentPage={this.state.currentPage} onItemClick={this.getEvents}/>
+                            : <NoResponse/>
+                }
             </div>
-        );
+        )
     }
 }

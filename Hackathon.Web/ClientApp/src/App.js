@@ -9,9 +9,10 @@ import {Events} from "./components/Events/Events";
 import {Event} from "./components/Events/Event";
 import {Teams} from "./components/Teams/Teams";
 import {Team} from "./components/Teams/Team";
-import {SignIn} from "./components/Users/SignIn";
-import {SignUp} from "./components/Users/SignUp";
+import {SignIn} from "./components/Users/SignIn/SignIn";
+import {SignUp} from "./components/Users/SignUp/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
+import {EventForm} from "./components/Events/EventForm";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -23,6 +24,7 @@ export default class App extends Component {
           <Route path="/signIn" component={SignIn}/>
           <Route path="/signUp" component={SignUp}/>
 
+          <PrivateRoute exact path="/event" component={EventForm}/>
           <PrivateRoute exact path="/event/:id" component={Event} />
           <PrivateRoute exact path="/events" component={Events}/>
           <PrivateRoute exact path="/team/:id" component={Team} />

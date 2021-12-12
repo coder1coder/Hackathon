@@ -12,3 +12,14 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.table > :not(:first-child) {
+  border-top: 0;
+}

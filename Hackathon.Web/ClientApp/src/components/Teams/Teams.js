@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios";
+import {NoResponse} from "../Common/NoResponse/NoResponse";
+import {Loader} from "../Common/Loader/Loader";
 
 export class Teams extends Component {
 
@@ -19,7 +21,7 @@ export class Teams extends Component {
         this.getTeams();
     }
 
-    getTeams(){
+    getTeams() {
         this.setState({ isLoading: true });
 
         axios.get(`${this.API}/Team/`).then(
@@ -37,19 +39,26 @@ export class Teams extends Component {
             });
     }
 
-    render () {
+    render() {
         return (
             <div>
                 <h1>Teams</h1>
-
-                <ul>
-                    {this.state.teams && this.state.teams.length > 0 && this.state.teams.map(( item, index ) => (
-                        <li key={ index }>
-                            <a href={"/Team/" + item.id}>{ item.name }</a>
-                        </li>
-                    ))}
-                </ul>
+                {
+                    this.state.isLoading
+                    ? <Loader/>
+                    : (
+                        <ul>
+                            {
+                                this.state.teams?.length > 0
+                                ? this.state.teams.map((item, index) => (
+                                    <li key={index}>
+                                        <a href={"/Team/" + item.id}>{item.name}</a>
+                                    </li>))
+                                :<NoResponse/>
+                            }
+                        </ul>)
+                }
             </div>
-        );
+        )
     }
 }

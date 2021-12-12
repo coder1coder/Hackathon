@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import {Loader} from "../Common/Loader/Loader";
+import {NoResponse} from "../Common/NoResponse/NoResponse";
 
 export class Team extends Component {
 
@@ -41,8 +43,12 @@ export class Team extends Component {
     }
 
     render () {
-        return (
-                this.state.team !== undefined &&
+        if (this.state.isLoading)
+            return (<Loader/>)
+
+        if (this.state.team !== undefined)
+        {
+            return (
                 <div>
                     <h1>Team {this.state.team.id}</h1>
                     <ul>
@@ -57,6 +63,7 @@ export class Team extends Component {
                         </li>
                     </ul>
                 </div>
-        );
+            )
+        } else return (<NoResponse/>)
     }
 }

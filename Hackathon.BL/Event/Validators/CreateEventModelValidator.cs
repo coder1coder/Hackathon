@@ -39,7 +39,7 @@ namespace Hackathon.BL.Event.Validators
                 .GreaterThan(0)
                 .WithMessage("Продолжительность этапа презентации должна быть больше 0 минут");
 
-            When(x => x.ChangeEventStatusMessages.Any(), () =>
+            When(x => x.ChangeEventStatusMessages != null && x.ChangeEventStatusMessages.Any(), () =>
             {
                 RuleForEach(x => x.ChangeEventStatusMessages).ChildRules(statusMessages =>
                 {
