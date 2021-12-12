@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import "./SignIn.css"
+import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 
 export class SignIn extends Component
 {
@@ -65,18 +65,37 @@ export class SignIn extends Component
     render(){
         return (
             <div>
-                <h1>SignIn</h1>
+                <Form onSubmit={this.handleSubmit}>
+                    <h1>Войти</h1>
 
-                <form onSubmit={this.handleSubmit}>
+                    <FormGroup className={"mb-3"}>
+                        <Label for="username" className={"form-label"}>Имя пользователя</Label>
+                        <Input id="username"
+                               name="username"
+                               value={this.state.username}
+                               onChange={ e => this.setState({ username: e.target.value })}
+                               placeholder={"Имя пользователя"}
+                               required
+                        />
+                    </FormGroup>
 
-                    <label>Имя: <input type="text" name="username" value={this.state.username} onChange={ e =>
-                        this.setState({ username: e.target.value })} />
-                    </label>
-                    <label>Пароль: <input type="password" name="password" value={this.state.password} onChange={ e =>
-                        this.setState({ password: e.target.value })} /></label>
+                    <FormGroup className={"mb-3"}>
+                        <Label for="password" className={"form-label"}>Пароль</Label>
+                        <Input id="password"
+                               name="password"
+                               value={this.state.password}
+                               onChange={ e => this.setState({ password: e.target.value })}
+                               placeholder={"Пароль"}
+                               type="password"
+                               required
+                        />
+                    </FormGroup>
 
-                    <input type="submit" value="Отправить" />
-                </form>
+                    <div>
+                        <Button color="primary" type="submit">Войти</Button>
+                    </div>
+
+                </Form>
             </div>
         )
     }

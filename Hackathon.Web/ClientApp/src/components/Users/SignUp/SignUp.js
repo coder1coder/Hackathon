@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
+import {Button, Form, FormGroup, Input, Label} from "reactstrap";
+import {Language} from "../../../common/Language";
 
 export class SignUp extends Component
 {
@@ -63,22 +65,60 @@ export class SignUp extends Component
     render(){
         return (
             <div>
-                <h1>SignUp</h1>
-                <form onSubmit={this.handleSubmit}>
 
-                    <label>userName: <input type="text" name="username" value={this.state.username} onChange={ e =>
-                        this.setState({ username: e.target.value })} /></label>
-                    <label>password: <input type="password" name="password" value={this.state.password} onChange={ e =>
-                        this.setState({ password: e.target.value })} /></label>
+                <Form onSubmit={this.handleSubmit}>
+                    <h1>Регистрация нового пользователя</h1>
 
-                    <label>email: <input type="text" name="email" value={this.state.email} onChange={ e =>
-                        this.setState({ email: e.target.value })} /></label>
-                    <label>fullName: <input type="text" name="fullName" value={this.state.fullName} onChange={ e =>
-                        this.setState({ fullName: e.target.value })} /></label>
+                    <FormGroup className={"mb-3"}>
+                        <Label for="username" className={"form-label"}>Имя пользователя</Label>
+                        <Input id="username"
+                               name="username"
+                               value={this.state.username}
+                               onChange={ e => this.setState({ username: e.target.value })}
+                               placeholder={"Имя пользователя"}
+                               required
+                        />
+                    </FormGroup>
 
+                    <FormGroup className={"mb-3"}>
+                        <Label for="password" className={"form-label"}>Пароль</Label>
+                        <Input id="password"
+                               name="password"
+                               value={this.state.password}
+                               onChange={ e => this.setState({ password: e.target.value })}
+                               placeholder={"Пароль"}
+                               type="password"
+                               required
+                        />
+                    </FormGroup>
 
-                    <input type="submit" value="Отправить" />
-                </form>
+                    <FormGroup className={"mb-3"}>
+                        <Label for="email" className={"form-label"}>Email</Label>
+                        <Input id="email"
+                               name="email"
+                               value={this.state.email}
+                               onChange={ e => this.setState({ email: e.target.value })}
+                               placeholder={"Email"}
+                               type="email"
+                               required
+                        />
+                    </FormGroup>
+
+                    <FormGroup className={"mb-3"}>
+                        <Label for="fullName" className={"form-label"}>Реальное имя пользователя</Label>
+                        <Input id="fullName"
+                               name="fullName"
+                               value={this.state.fullName}
+                               onChange={ e => this.setState({ fullName: e.target.value })}
+                               placeholder={"Реальное имя пользователя"}
+                               required
+                        />
+                    </FormGroup>
+
+                    <div>
+                        <Button color="primary" type="submit">Отправить</Button>
+                    </div>
+                </Form>
             </div>
         )
     }
