@@ -23,7 +23,6 @@ namespace Hackathon.API.Controllers
             _projectService = projectService;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<BaseCreateResponse> Create(ProjectCreateRequest projectCreateRequest)
         {

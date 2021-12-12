@@ -1,0 +1,11 @@
+<header>
+  <button mat-button [matMenuTriggerFor]="profileMenu">Профиль</button>
+  <mat-menu #profileMenu="matMenu" yPosition="below">
+    <button mat-menu-item routerLink="/profile">Открыть</button>
+    <button mat-menu-item routerLink="/logout">Выйти</button>
+  </mat-menu>
+
+  <button mat-button routerLink="/events">События</button>
+  <button mat-button routerLink="/teams">Команды</button>
+</header>
+

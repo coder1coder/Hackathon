@@ -1,0 +1,62 @@
+:host {
+  margin: 0 auto;
+}
+
+.loginForm {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &__messages{
+    font-size: .9em;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+  }
+
+  &__message {
+
+    &.info { color: blue; }
+    &.warn { color: orange; }
+    &.error { color: red; }
+  }
+
+  .welcomeText {
+    padding-bottom: 35px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: lighter;
+  }
+
+&__fields {
+   display: flex;
+   flex-direction: column;
+   max-width: 400px;
+   width: 300px;
+ }
+
+&__buttons {
+   display: flex;
+   justify-content: center;
+   column-gap: 10px;
+ }
+}
+
+.loader {
+  background: rgba(255, 255, 255, 0.75);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

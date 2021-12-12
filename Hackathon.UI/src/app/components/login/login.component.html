@@ -1,0 +1,35 @@
+<form [formGroup]="profileForm" class="loginForm" >
+  <div class="welcomeText">{{ welcomeText }}</div>
+  <div class="loginForm__fields">
+    <mat-form-field appearance="fill">
+      <mat-label>Учетная запись</mat-label>
+      <input matInput autocomplete="off"
+             id="login" #login formControlName="login"
+             required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Пароль</mat-label>
+      <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
+             autocomplete="off"
+             id="password" #password formControlName="password"
+             required
+             (keyup.enter)="signIn()"
+      >
+      <mat-icon matSuffix (click)="isPassFieldHide = !isPassFieldHide" [attr.aria-pressed]="isPassFieldHide" style="cursor: pointer;">
+        {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
+      </mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="loginForm__bottom">
+    <div class="loginForm__buttons">
+      <button mat-raised-button color="primary" (click)="signIn()">Войти</button>
+      <button mat-button (click)="signUp()">Регистрация</button>
+    </div>
+  </div>
+</form>
+
+<div class="loader" *ngIf="isLoading">
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</div>

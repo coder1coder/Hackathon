@@ -41,17 +41,11 @@ namespace Hackathon.API.Controllers
             };
         }
 
-        /// <summary>
-        /// Авторизация пользователя
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost(nameof(SignIn))]
-        public async Task<AuthTokenModel> SignIn([FromBody] SignInRequest request)
+        [HttpGet]
+        [Route("{userId:long}")]
+        public async Task<UserModel> Get([FromRoute] long userId)
         {
-            var signInModel = _mapper.Map<SignInModel>(request);
-            return await _userService.SignInAsync(signInModel);
+            return await _userService.GetAsync(userId);
         }
     }
 }

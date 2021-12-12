@@ -47,7 +47,10 @@ namespace Hackathon.DAL.Repositories
 
         public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
         {
-            var query = _dbContext.Events.AsNoTracking();
+            var query = _dbContext.Events
+                .AsNoTracking()
+                .Include(x=>x.Teams)
+                .AsQueryable();
 
             if (getFilterModel.Filter != null)
             {

@@ -1,13 +1,5 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:2314",
-      "sslPort": 44301
-    }
-  },
   "profiles": {
     "Hackathon.API": {
       "commandName": "Project",

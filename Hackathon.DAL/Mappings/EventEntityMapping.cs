@@ -8,9 +8,10 @@ namespace Hackathon.DAL.Mappings
     {
         public void Register(TypeAdapterConfig config)
         {
-            config
-                .ForType<EventEntity, EventModel>()
-                .PreserveReference(true);
+            TypeAdapterConfig<EventEntity, EventModel>.NewConfig()
+                .IgnoreNullValues(true)
+                .MaxDepth(2)
+                ;
         }
     }
 }

@@ -46,8 +46,9 @@ namespace Hackathon.Tests.Integration.User
 
             Assert.NotNull(signInResponse);
 
+
             signInResponse.UserId.Should().Be(signUpResponse.Id);
-            signInResponse.Expires.Should().BeAfter(DateTime.UtcNow);
+            signInResponse.Expires.Should().BeGreaterThan(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             signInResponse.Token.Should().NotBeNullOrWhiteSpace();
         }
     }

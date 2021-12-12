@@ -1,0 +1,10 @@
+<app-nav-menu></app-nav-menu>
+
+<div *ngIf="currentUser != undefined">
+  <ul>
+    <li><b>id</b> {{ currentUser.id }}</li>
+    <li><b>userName</b> {{ currentUser.userName }}</li>
+    <li><b>email</b> {{ currentUser.email }}</li>
+    <li><b>fullName</b> {{ currentUser.fullName }}</li>
+  </ul>
+</div>

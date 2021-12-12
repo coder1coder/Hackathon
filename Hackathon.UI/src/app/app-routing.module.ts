@@ -1,0 +1,31 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import {LoginComponent} from "./components/login/login.component";
+import {RegisterComponent} from "./components/register/register.component";
+import {EventsComponent} from "./components/events/events.component";
+import {NotFoundComponent} from "./components/not-found/not-found.component";
+import {EventComponent} from "./components/event/event.component";
+import {TeamsComponent} from "./components/teams/teams.component";
+import {TeamComponent} from "./components/team/team.component";
+import {AuthGuard} from "./services/auth.guard";
+import {ProfileComponent} from "./components/profile/profile.component";
+
+const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'event/:eventId', component: EventComponent, canActivate: [AuthGuard] },
+  { path: 'events', component: EventsComponent, canActivate: [AuthGuard] },
+  { path: 'team/:eventId', component: TeamComponent, canActivate: [AuthGuard] },
+  { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard] },
+  { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

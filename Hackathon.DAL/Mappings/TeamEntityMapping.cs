@@ -14,6 +14,7 @@ namespace Hackathon.DAL.Mappings
                 .Map(x => x.Event, s => s.Event)
                 .Map(x => x.Users, s => s.Users)
                 .Map(x => x.Project, s=>s.Project)
+                .MaxDepth(2);
                 ;
         }
     }

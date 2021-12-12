@@ -8,7 +8,6 @@ using FluentValidation;
 using Hackathon.BL.User.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Options;
@@ -81,6 +80,8 @@ namespace Hackathon.BL.User
 
         public AuthTokenModel GenerateToken(long userId)
         {
+            var expires = DateTimeOffset.UtcNow.AddMinutes(_authConfig.LifeTime);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -88,7 +89,7 @@ namespace Hackathon.BL.User
                 {
                     new (ClaimTypes.NameIdentifier, userId.ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(_authConfig.LifeTime),
+                Expires = expires.UtcDateTime,
                 Issuer = _authConfig.Issuer,
                 Audience = _authConfig.Audience,
                 SigningCredentials = new SigningCredentials(
@@ -102,7 +103,7 @@ namespace Hackathon.BL.User
             return new AuthTokenModel
             {
                 UserId = userId,
-                Expires = tokenDescriptor.Expires,
+                Expires = expires.ToUnixTimeMilliseconds(),
                 Token = tokenString
             };
         }

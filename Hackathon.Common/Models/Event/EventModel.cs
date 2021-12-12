@@ -60,5 +60,10 @@ namespace Hackathon.Common.Models.Event
         /// Статус события
         /// </summary>
         public EventStatus Status { get; set; }
+
+        /// <summary>
+        /// Список команд связанных с событием
+        /// </summary>
+        public List<TeamModel> Teams { get; set; } = new();
     }
 }

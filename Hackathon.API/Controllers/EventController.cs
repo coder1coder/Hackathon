@@ -7,6 +7,7 @@ using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
@@ -46,11 +47,12 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<BaseCollectionResponse<EventModel>> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventModel>))]
+        public async Task<IActionResult> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
         {
             var getFilterModel = _mapper.Map<GetFilterModel<EventFilterModel>>(filterRequest);
             var collectionModel = await _eventService.GetAsync(getFilterModel);
-            return _mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel);
+            return Ok(_mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel));
         }
 
         /// <summary>
@@ -59,9 +61,10 @@ namespace Hackathon.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id:long}")]
-        public async Task<EventModel> Get([FromRoute] long id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
+        public async Task<IActionResult> Get([FromRoute] long id)
         {
-            return await _eventService.GetAsync(id);
+            return Ok(await _eventService.GetAsync(id));
         }
 
         /// <summary>
