@@ -86,8 +86,8 @@ export class EventForm extends Component
             <Form onSubmit={this.handleSubmit}>
                 <h1>{this.state.form.title}</h1>
 
-                <FormGroup>
-                    <Label for="name">{Language.Event.name}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="name" className={"form-label"}>{Language.Event.name}</Label>
                     <Input id="name"
                            name="name"
                            value={this.state.event.name}
@@ -105,8 +105,8 @@ export class EventForm extends Component
                     <Label check>{Language.Event.isCreateTeamsAutomatically}</Label>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="start">{Language.Event.start}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="start" className={"form-label"}>{Language.Event.start}</Label>
                     <Input id="start"
                            name="start"
                            value={this.state.event.start}
@@ -116,8 +116,8 @@ export class EventForm extends Component
                            type="datetime-local"/>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="developmentMinutes">{Language.Event.developmentMinutes}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="developmentMinutes" className={"form-label"}>{Language.Event.developmentMinutes}</Label>
                     <Input
                         id="developmentMinutes"
                         name="developmentMinutes"
@@ -128,8 +128,8 @@ export class EventForm extends Component
                     />
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="teamPresentationMinutes">{Language.Event.teamPresentationMinutes}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="teamPresentationMinutes" className={"form-label"}>{Language.Event.teamPresentationMinutes}</Label>
                     <Input
                         id="teamPresentationMinutes"
                         name="teamPresentationMinutes"
@@ -140,8 +140,8 @@ export class EventForm extends Component
                     />
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="memberRegistrationMinutes">{Language.Event.memberRegistrationMinutes}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="memberRegistrationMinutes" className={"form-label"}>{Language.Event.memberRegistrationMinutes}</Label>
                     <Input
                         id="memberRegistrationMinutes"
                         name="memberRegistrationMinutes"
@@ -152,8 +152,8 @@ export class EventForm extends Component
                     />
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="minTeamMembers">{Language.Event.minTeamMembers}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="minTeamMembers" className={"form-label"}>{Language.Event.minTeamMembers}</Label>
                     <Input
                         id="minTeamMembers"
                         name="minTeamMembers"
@@ -164,8 +164,8 @@ export class EventForm extends Component
                     />
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="maxEventMembers">{Language.Event.maxEventMembers}</Label>
+                <FormGroup className={"mb-3"}>
+                    <Label for="maxEventMembers" className={"form-label"}>{Language.Event.maxEventMembers}</Label>
                     <Input
                         id="maxEventMembers"
                         name="maxEventMembers"
