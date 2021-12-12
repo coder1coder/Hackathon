@@ -13,3 +13,10 @@ Language.Event = {
     isCreateTeamsAutomatically: 'Создавать команды автоматически',
     changeEventStatusMessages: 'Сообщения смены статуса события'
 }
+
+Language.Team = {
+    id: 'Идентификатор',
+    name: 'Название команды',
+    eventId: 'Идентификатор события',
+    members: 'Список участников'
+}

@@ -6,7 +6,6 @@ import {Button, Pagination, PaginationItem, PaginationLink, Table} from "reactst
 import {Language} from "../../common/Language";
 import {Link} from "react-router-dom";
 
-
 function EventsTable(props){
     const pageSize = props.pageSize ?? 10;
     const pageCount = ((props.events?.totalCount ?? 0) / pageSize) - 1;
@@ -75,7 +74,7 @@ export class Events extends Component {
 
     getEvents(page = 1, pageSize = 10){
 
-        setTimeout(() => this.setState({ isLoading: true }), 1);
+        this.setState({ isLoading: true })
 
         axios.get(`${this.API}/Event`,
             {

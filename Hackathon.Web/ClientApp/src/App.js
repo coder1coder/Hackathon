@@ -13,6 +13,7 @@ import {SignIn} from "./components/Users/SignIn/SignIn";
 import {SignUp} from "./components/Users/SignUp/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
 import {EventForm} from "./components/Events/EventForm";
+import {TeamForm} from "./components/Teams/TeamForm";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -27,6 +28,7 @@ export default class App extends Component {
           <PrivateRoute exact path="/event" component={EventForm}/>
           <PrivateRoute exact path="/event/:id" component={Event} />
           <PrivateRoute exact path="/events" component={Events}/>
+          <PrivateRoute exact path="/team" component={TeamForm}/>
           <PrivateRoute exact path="/team/:id" component={Team} />
           <PrivateRoute exact path="/teams" component={Teams}/>
 

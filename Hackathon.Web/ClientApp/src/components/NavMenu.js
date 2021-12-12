@@ -26,21 +26,21 @@ export class NavMenu extends Component {
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
           <Container>
-            <NavbarBrand tag={Link} to="/">Hackathon.Web</NavbarBrand>
+            <NavbarBrand tag={Link} to="/">Hackathon</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/Events">Events</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/Events">События</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/Teams">Teams</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/Teams">Команды</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/signUp">Sign Up</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/signUp">Регистрация</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/signIn">Sign In</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/signIn">Войти</NavLink>
                 </NavItem>
               </ul>
             </Collapse>
