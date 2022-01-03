@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="33.1.1" />
-        <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.12" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="Bogus" Version="33.1.1"/>
+        <PackageReference Include="FluentAssertions" Version="6.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.12"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4"/>
+        <PackageReference Include="xunit" Version="2.4.1"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -24,9 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Hackathon.API.SDK\Hackathon.API.SDK.csproj" />
-      <ProjectReference Include="..\..\Hackathon.API\Hackathon.API.csproj" />
-      <ProjectReference Include="..\Hackathon.Tests.Common\Hackathon.Tests.Common.csproj" />
+        <ProjectReference Include="..\..\Hackathon.API.SDK\Hackathon.API.SDK.csproj"/>
+        <ProjectReference Include="..\..\Hackathon.API\Hackathon.API.csproj"/>
     </ItemGroup>
 
 </Project>
