@@ -62,9 +62,9 @@ namespace Hackathon.API.Controllers
         /// <returns></returns>
         [HttpGet("{id:long}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
-        public async Task<IActionResult> Get([FromRoute] long id)
+        public async Task<EventModel> Get([FromRoute] long id)
         {
-            return Ok(await _eventService.GetAsync(id));
+            return await _eventService.GetAsync(id);
         }
 
         /// <summary>

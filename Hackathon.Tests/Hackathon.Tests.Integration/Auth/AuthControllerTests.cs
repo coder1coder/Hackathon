@@ -19,7 +19,7 @@ namespace Hackathon.Tests.Integration.Auth
         {
             var fakeSignUpRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
 
-            var signUpResponse = await UsersApi.SignUpAsync(fakeSignUpRequest);
+            var signUpResponse = await UsersApi.SignUp(fakeSignUpRequest);
 
             Assert.NotNull(signUpResponse);
 

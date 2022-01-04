@@ -37,7 +37,7 @@ namespace Hackathon.Tests.Integration.Project
                 EventId = createEventResponse.Id
             });
 
-            var createProjectResponse = await ProjectsApi.CreateAsync(new ProjectCreateRequest
+            var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
             {
                 TeamId = teamCreateResponse.Id,
                 Name = Guid.NewGuid().ToString()[..8],
