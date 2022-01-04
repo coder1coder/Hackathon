@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using Autofac;
+using System.Text.Json.Serialization;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
@@ -53,6 +52,12 @@ namespace Hackathon.API
                 options.LogTo(Console.WriteLine);
             });
 
+            services
+                .AddDalDependencies()
+                .AddBlDependencies()
+                .AddApiDependencies()
+                .AddJobsDependencies();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("default", builder =>
@@ -71,6 +76,8 @@ namespace Hackathon.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new MainActionFilter());
+            }).AddJsonOptions(opt => {
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services
@@ -88,15 +95,7 @@ namespace Hackathon.API
             services.AddSwagger();
         }
 
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.ConfigureBLContainer();
-            builder.RegisterModule(new ApiModule());
-            builder.RegisterModule(new JobsModule());
-            builder.RegisterModule(new DalModule());
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -110,7 +109,7 @@ namespace Hackathon.API
 
             app.UseHttpsRedirection();
 
-            app.UseJobs();
+            app.UseJobs(serviceProvider);
 
             app.UseRouting();
 

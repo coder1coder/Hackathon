@@ -9,7 +9,7 @@ using Hackathon.Contracts.Requests.Team;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
-namespace Hackathon.Tests.Integration.Subject
+namespace Hackathon.Tests.Integration.Project
 {
     public class ProjectControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
@@ -23,21 +23,21 @@ namespace Hackathon.Tests.Integration.Subject
         {
             var eventModel = TestFaker.GetEventModels(1).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-            var createEventResponse = await ApiService.Events.Create(eventRequest);
+            var createEventResponse = await EventsApi.Create(eventRequest);
 
-            await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
+            await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
 
-            var teamCreateResponse = await ApiService.Teams.Create(new CreateTeamRequest
+            var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
             {
                 Name = Guid.NewGuid().ToString()[..4],
                 EventId = createEventResponse.Id
             });
 
-            var createProjectResponse = await ApiService.Projects.CreateAsync(new ProjectCreateRequest
+            var createProjectResponse = await ProjectsApi.CreateAsync(new ProjectCreateRequest
             {
                 TeamId = teamCreateResponse.Id,
                 Name = Guid.NewGuid().ToString()[..8],

@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using Hackathon.Common.Models;
-using System;
+﻿using System;
 using System.Linq;
+using FluentValidation;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Event.Validators

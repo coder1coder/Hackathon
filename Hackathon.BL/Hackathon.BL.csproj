@@ -10,7 +10,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.3.0" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
       <PackageReference Include="FluentValidation" Version="10.3.6" />
       <PackageReference Include="Mapster" Version="7.2.0" />

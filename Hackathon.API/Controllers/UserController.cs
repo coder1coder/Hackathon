@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
-    public class UserController: BaseController
+    public class UserController: BaseController, IUserApi
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;

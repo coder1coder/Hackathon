@@ -2,20 +2,28 @@
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Hackathon.API.Client;
+using Hackathon.API.Abstraction;
+using Hackathon.API.Client.Event;
+using Hackathon.API.Client.Project;
+using Hackathon.API.Client.Team;
+using Hackathon.API.Client.User;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL;
-using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Hackathon.Tests.Integration.Base
 {
     public class BaseIntegrationTest
     {
-        protected readonly IApiService ApiService;
+        protected readonly IAuthApi AuthApi;
+        protected readonly IUserApiClient UsersApi;
+        protected readonly IEventApiClient EventsApi;
+        protected readonly ITeamApiClient TeamsApi;
+        protected readonly IProjectApiClient ProjectsApi;
 
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
@@ -49,7 +57,11 @@ namespace Hackathon.Tests.Integration.Base
             httpClient.BaseAddress = new Uri("https://localhost:7001/");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.Token);
 
-            ApiService = new ApiService(httpClient);
+            AuthApi = RestService.For<IAuthApi>(httpClient);
+            UsersApi = RestService.For<IUserApiClient>(httpClient);
+            EventsApi = RestService.For<IEventApiClient>(httpClient);
+            TeamsApi = RestService.For<ITeamApiClient>(httpClient);
+            ProjectsApi = RestService.For<IProjectApiClient>(httpClient);
         }
 
         protected async Task<TeamModel> CreateTeamWithEvent()

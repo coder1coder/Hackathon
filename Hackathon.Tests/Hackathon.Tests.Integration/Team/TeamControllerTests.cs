@@ -22,15 +22,15 @@ namespace Hackathon.Tests.Integration.Team
         {
             var eventModel = TestFaker.GetEventModels(1).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-            var createEventResponse = await ApiService.Events.Create(eventRequest);
+            var createEventResponse = await EventsApi.Create(eventRequest);
 
-            await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
+            await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
 
-            var teamCreateResponse = await ApiService.Teams.Create(new CreateTeamRequest
+            var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
             {
                 Name = Guid.NewGuid().ToString()[..4],
                 EventId = createEventResponse.Id
@@ -49,15 +49,15 @@ namespace Hackathon.Tests.Integration.Team
         {
             var eventModel = TestFaker.GetEventModels(1).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-            var createEventResponse = await ApiService.Events.Create(eventRequest);
+            var createEventResponse = await EventsApi.Create(eventRequest);
 
-            await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
+            await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
 
-            var teamCreateResponse = await ApiService.Teams.Create(new CreateTeamRequest
+            var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
             {
                 Name = Guid.NewGuid().ToString()[..4],
                 EventId = createEventResponse.Id
@@ -65,11 +65,11 @@ namespace Hackathon.Tests.Integration.Team
 
             var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
 
-            var createUserResponse = await ApiService.Users.SignUpAsync(fakeRequest);
+            var createUserResponse = await UsersApi.SignUpAsync(fakeRequest);
 
             await FluentActions.Invoking(async () =>
             {
-                await ApiService.Teams.AddMember(new TeamAddMemberRequest
+                await TeamsApi.AddMember(new TeamAddMemberRequest
                 {
                     TeamId = teamCreateResponse.Id,
                     UserId = createUserResponse.Id

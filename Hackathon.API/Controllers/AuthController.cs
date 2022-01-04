@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
@@ -12,7 +13,7 @@ namespace Hackathon.API.Controllers
     /// <summary>
     /// Авторизация и аутентификация
     /// </summary>
-    public class AuthController: BaseController
+    public class AuthController: BaseController, IAuthApi
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;

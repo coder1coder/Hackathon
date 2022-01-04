@@ -1,27 +1,22 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using System;
 using Hackathon.Jobs;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.API.Extensions
 {
     public static class UseJobsExtension
     {
-        public static IApplicationBuilder UseJobs(this IApplicationBuilder app)
+        public static IApplicationBuilder UseJobs(this IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            var container = app.ApplicationServices.GetAutofacRoot();
-
             app.UseHangfireDashboard("/jobs", new DashboardOptions());
-
-            RegisterJob<IChangeEventStatusJob>(container);
-
+            RegisterJob<IChangeEventStatusJob>(serviceProvider);
             return app;
         }
-
-        private static void RegisterJob<T>(IComponentContext container) where T: IJob
+        private static void RegisterJob<T>(IServiceProvider serviceProvider) where T: IJob
         {
-            var job = container.Resolve<T>();
+            var job = (T)serviceProvider.GetRequiredService(typeof(T));
             RecurringJob.RemoveIfExists(job.Name);
             RecurringJob.AddOrUpdate(job.Name, () => job.Execute(), job.CronInterval);
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Hackathon.MessageQueue
+﻿namespace Hackathon.MessageQueue
 {
     public static class TopicNames
     {

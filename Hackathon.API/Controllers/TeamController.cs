@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
@@ -6,12 +7,11 @@ using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
-    public class TeamController : BaseController
+    public class TeamController : BaseController, ITeamApi
     {
         private readonly IMapper _mapper;
         private readonly ITeamService _teamService;

@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
 {
-    public class ProjectController: BaseController
+    public class ProjectController: BaseController, IProjectApi
     {
         private readonly IProjectService _projectService;
         private readonly IMapper _mapper;

@@ -22,7 +22,7 @@ namespace Hackathon.Tests.Integration.Event
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
-            eventModel = await ApiService.Events.Get(eventId);
+            eventModel = await EventsApi.Get(eventId);
 
             Assert.NotNull(eventModel);
 
@@ -44,7 +44,7 @@ namespace Hackathon.Tests.Integration.Event
             var eventId = await EventRepository.CreateAsync(createEventModel);
 
             await FluentActions
-                .Invoking(async () => await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
+                .Invoking(async () => await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
                 {
                     Id = eventId,
                     Status = EventStatus.Published
@@ -52,11 +52,11 @@ namespace Hackathon.Tests.Integration.Event
                 .Should()
                 .NotThrowAsync();
 
-            eventModel = await ApiService.Events.Get(eventId);
+            eventModel = await EventsApi.Get(eventId);
             eventModel.Status.Should().Be(EventStatus.Published);
 
             await FluentActions
-                .Invoking(async () => await ApiService.Events.SetStatus(new SetStatusRequest<EventStatus>
+                .Invoking(async () => await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
                 {
                     Id = eventId,
                     Status = EventStatus.Started
@@ -64,7 +64,7 @@ namespace Hackathon.Tests.Integration.Event
                 .Should()
                 .NotThrowAsync();
 
-            eventModel = await ApiService.Events.Get(eventId);
+            eventModel = await EventsApi.Get(eventId);
             eventModel.Status.Should().Be(EventStatus.Started);
         }
     }

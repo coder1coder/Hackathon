@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-beta4" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.9.5" />
     <PackageReference Include="Serilog" Version="2.11.0-dev-01377" />

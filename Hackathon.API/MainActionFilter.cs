@@ -1,6 +1,7 @@
 ﻿using Hackathon.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Hackathon.API
 {
@@ -25,7 +26,7 @@ namespace Hackathon.API
 
             switch (context.Exception)
             {
-                case FluentValidation.ValidationException or ValidationException:
+                case ValidationException or Common.Exceptions.ValidationException:
 
                     problemDetails = new ProblemDetails
                     {
@@ -35,7 +36,7 @@ namespace Hackathon.API
                         Status = 400
                     };
 
-                    if (context.Exception is FluentValidation.ValidationException fluentValidationException)
+                    if (context.Exception is ValidationException fluentValidationException)
                         problemDetails.Detail = string.Join('\n', fluentValidationException.Errors);
 
                     break;

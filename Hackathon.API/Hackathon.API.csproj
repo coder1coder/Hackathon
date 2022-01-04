@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +18,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Refit" Version="6.1.15" />
         <PackageReference Include="Serilog" Version="2.11.0-dev-01377" />
         <PackageReference Include="Serilog.AspNetCore" Version="4.1.1-dev-00241" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
@@ -25,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.SDK\Hackathon.API.SDK.csproj" />
       <ProjectReference Include="..\Hackathon.BL\Hackathon.BL.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
@@ -6,7 +7,6 @@ using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +15,7 @@ namespace Hackathon.API.Controllers
     /// <summary>
     /// События
     /// </summary>
-    public class EventController: BaseController
+    public class EventController: BaseController, IEventApi
     {
         private readonly IMapper _mapper;
         private readonly IEventService _eventService;
