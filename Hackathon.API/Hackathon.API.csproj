@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.API.SDK\Hackathon.API.SDK.csproj" />
       <ProjectReference Include="..\Hackathon.BL\Hackathon.BL.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
