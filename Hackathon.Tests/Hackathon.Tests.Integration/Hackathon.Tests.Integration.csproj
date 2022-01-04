@@ -1,32 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="33.1.1" />
-        <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.12" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="Bogus" Version="34.0.1" />
+        <PackageReference Include="FluentAssertions" Version="6.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-preview-20211130-02" />
+        <PackageReference Include="xunit" Version="2.4.2-pre.12" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="3.0.2">
+        <PackageReference Include="coverlet.collector" Version="3.1.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Hackathon.API.SDK\Hackathon.API.SDK.csproj" />
-      <ProjectReference Include="..\..\Hackathon.API\Hackathon.API.csproj" />
-      <ProjectReference Include="..\Hackathon.Tests.Common\Hackathon.Tests.Common.csproj" />
+        <ProjectReference Include="..\..\Hackathon.API.SDK\Hackathon.API.SDK.csproj" />
+        <ProjectReference Include="..\..\Hackathon.API\Hackathon.API.csproj" />
     </ItemGroup>
 
 </Project>
