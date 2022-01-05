@@ -1,10 +1,53 @@
-<app-nav-menu></app-nav-menu>
+<layout-default title="Профиль">
 
-<div *ngIf="currentUser != undefined">
-  <ul>
-    <li><b>id</b> {{ currentUser.id }}</li>
-    <li><b>userName</b> {{ currentUser.userName }}</li>
-    <li><b>email</b> {{ currentUser.email }}</li>
-    <li><b>fullName</b> {{ currentUser.fullName }}</li>
-  </ul>
-</div>
+<form [formGroup]="form" class="form-vertical profileForm" >
+
+  <div class="form-vertical__fields">
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput
+             id="id"
+             readonly
+             formControlName="id"
+             required
+             >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Имя пользователя</mat-label>
+      <input matInput
+             readonly
+             id="userName"
+             formControlName="userName"
+             required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput
+             type="email"
+             id="email"
+             formControlName="email"
+             readonly
+             required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Полное имя пользователя</mat-label>
+      <input matInput
+             id="fullName"
+             formControlName="fullName"
+             readonly
+             required>
+    </mat-form-field>
+
+  </div>
+  <div class="form-vertical__bottom">
+    <div class="form-vertical__buttons">
+      <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+    </div>
+  </div>
+</form>
+
+</layout-default>

@@ -6,12 +6,14 @@ import {Observable} from "rxjs";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {EventModel} from "../models/EventModel";
 import {PageSettings} from "../models/PageSettings";
+import {CreateEvent} from "../models/Event/CreateEvent";
+import {BaseCreateResponse} from "../models/BaseCreateResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class EventsService {
+export class EventService {
 
   api = environment.api;
   storage = sessionStorage;
@@ -38,6 +40,10 @@ export class EventsService {
 
   getById(eventId:number){
     return this.http.get<EventModel>(this.api+'/Event/'+eventId);
+  }
+
+  create(createEvent:CreateEvent):Observable<BaseCreateResponse>{
+    return this.http.post<BaseCreateResponse>(this.api + "/Event",createEvent);
   }
 
 }

@@ -24,9 +24,14 @@ import {TeamsComponent} from "./components/teams/teams.component";
 import {MatTableModule} from "@angular/material/table";
 import {TeamComponent} from "./components/team/team.component";
 import {ProfileComponent} from "./components/profile/profile.component";
-import {AuthInterceptor} from "./services/auth.interceptor";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {Pagination} from "./common/Pagination";
+import {EventsNewComponent} from "./components/events/new/events.new.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ConnectionRefusedInterceptor} from "./interceptors/connectionRefused.interceptor";
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import {DefaultLayoutComponent} from "./components/layouts/default/default.layout.component";
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -39,11 +44,14 @@ import {Pagination} from "./common/Pagination";
 
     EventsComponent,
     EventComponent,
+    EventsNewComponent,
 
     TeamsComponent,
     TeamComponent,
 
-    NotFoundComponent
+    NotFoundComponent,
+
+    DefaultLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -58,12 +66,19 @@ import {Pagination} from "./common/Pagination";
     MatButtonModule,
     MatSnackBarModule,
     MatListModule,
+    MatToolbarModule,
     ReactiveFormsModule,
     MatMenuModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatCheckboxModule
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ConnectionRefusedInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

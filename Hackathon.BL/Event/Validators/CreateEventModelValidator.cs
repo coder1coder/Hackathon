@@ -9,6 +9,8 @@ namespace Hackathon.BL.Event.Validators
     {
         public CreateEventModelValidator()
         {
+            CascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MinimumLength(5)

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {EventModel} from "../../models/EventModel";
-import {EventsService} from "../../services/events.service";
+import {EventService} from "../../services/event.service";
 import {BaseCollectionModel} from "../../models/BaseCollectionModel";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TeamModel} from "../../models/Team/TeamModel";
@@ -20,7 +20,7 @@ export class EventsComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'start', 'status'];
   pageSettings: PageEvent = new PageEvent();
 
-  constructor(private eventsService: EventsService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private eventsService: EventService, private router: Router, private snackBar: MatSnackBar) {
 
     this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
     this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
@@ -42,7 +42,7 @@ export class EventsComponent implements AfterViewInit {
   }
 
   handleRowClick(team: TeamModel){
-    this.router.navigate(['/event/'+team.id]);
+    this.router.navigate(['/events/'+team.id]);
   }
 
   setPageSettings(event:PageEvent){
@@ -52,5 +52,9 @@ export class EventsComponent implements AfterViewInit {
 
   getEventStatus(status:EventStatus){
     return EventStatus[status];
+  }
+
+  showCreateEventPage(){
+    this.router.navigate(['/events/new']);
   }
 }

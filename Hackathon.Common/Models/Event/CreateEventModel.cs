@@ -16,7 +16,12 @@ namespace Hackathon.Common.Models.Event
         /// <summary>
         /// Дата и время начала
         /// </summary>
-        public DateTime Start { get; set; }
+        private DateTime _start;
+        public DateTime Start
+        {
+            get => _start;
+            set => _start = DateTime.SpecifyKind(value, DateTimeKind.Utc);
+        }
 
         /// <summary>
         /// Продолжительность формированя команд в минутах
@@ -29,7 +34,7 @@ namespace Hackathon.Common.Models.Event
         public int DevelopmentMinutes { get; set; }
 
         /// <summary>
-        /// Продолжительность выступленя каждой команды в минутах
+        /// Продолжительность выступления каждой команды в минутах
         /// </summary>
         public int TeamPresentationMinutes { get; set; }
 

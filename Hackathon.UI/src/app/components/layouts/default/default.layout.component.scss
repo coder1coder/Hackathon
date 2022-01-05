@@ -1,0 +1,13 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.layout-default {
+  &__title{
+    font-weight: normal;
+  }
+
+  &__toolbar {
+    margin-bottom: 1em;
+  }
+}

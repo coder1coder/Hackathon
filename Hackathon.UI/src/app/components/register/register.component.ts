@@ -34,9 +34,6 @@ export class RegisterComponent implements AfterViewInit  {
               private location: Location,
               private authService: AuthService,
               private snackbar: MatSnackBar) {
-    //if user is logged redirect to homepage
-    if (this.authService.isLoggedIn())
-      router.navigate(['/profile']);
   }
   ngAfterViewInit(): void {
 
@@ -59,7 +56,7 @@ export class RegisterComponent implements AfterViewInit  {
 
     this.authService.register(createUser)
       .subscribe(r=>{
-        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${r.id}`);
+        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${r.id}`, "ok", { duration: 4 * 1000 });
         setTimeout(()=>{
           this.router.navigate(['/login']);
         },1000);

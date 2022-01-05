@@ -1,0 +1,28 @@
+.eventsNewForm {
+
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  box-sizing: border-box;
+
+  .welcomeText {
+    padding-bottom: 35px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: lighter;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  &__buttons {
+    display: flex;
+    column-gap: 10px;
+  }
+}

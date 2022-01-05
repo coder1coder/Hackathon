@@ -7,8 +7,6 @@ using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.Jobs;
 using Hackathon.MessageQueue.Hubs;
-using Hangfire;
-using Hangfire.PostgreSql;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
@@ -35,12 +33,7 @@ namespace Hackathon.API
 
             var config = new TypeAdapterConfig();
 
-            config.Apply(new IRegister[]
-            {
-                new EventEntityMapping(),
-                new TeamEntityMapping(),
-                new UserEntityMapping()
-            });
+            config.Apply(new EventEntityMapping(), new TeamEntityMapping(), new UserEntityMapping());
 
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
@@ -80,23 +73,17 @@ namespace Hackathon.API
                 opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
-            services
-                .AddHangfire(configuration =>
-                {
-                    configuration
-                        .UsePostgreSqlStorage(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
-                })
-                .AddHangfireServer();
-
+            services.AddJobs(Configuration);
             services.AddSignalR();
-
             services.AddAuthentication(Configuration);
-
             services.AddSwagger();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, ApplicationDbContext dbContext)
         {
+            dbContext.Database.Migrate();
+            dbContext.Database.ExecuteSqlRaw("SET TimeZone='UTC'");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -9,6 +9,7 @@ import {TeamsComponent} from "./components/teams/teams.component";
 import {TeamComponent} from "./components/team/team.component";
 import {AuthGuard} from "./services/auth.guard";
 import {ProfileComponent} from "./components/profile/profile.component";
+import {EventsNewComponent} from "./components/events/new/events.new.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'event/:eventId', component: EventComponent, canActivate: [AuthGuard] },
+  { path: 'events/new', component: EventsNewComponent, canActivate: [AuthGuard] },
+  { path: 'events/:eventId', component: EventComponent, canActivate: [AuthGuard] },
   { path: 'events', component: EventsComponent, canActivate: [AuthGuard] },
   { path: 'team/:eventId', component: TeamComponent, canActivate: [AuthGuard] },
   { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard] },

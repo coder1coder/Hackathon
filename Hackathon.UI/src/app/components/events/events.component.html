@@ -1,45 +1,48 @@
-<app-nav-menu></app-nav-menu>
+<layout-default title="События">
 
-<div class="container-full">
-  <h1>События</h1>
+  <div class="mb-1-5em">
+    <button mat-raised-button color="primary" (click)="showCreateEventPage()">Добавить новое событие</button>
+  </div>
 
-  <table mat-table [dataSource]="events" class="mat-elevation-z8">
+  <div *ngIf="events.length > 0">
+    <table mat-table [dataSource]="events">
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> ID </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Название</th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Название</th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="start">
-      <th mat-header-cell *matHeaderCellDef>Начало</th>
-      <td mat-cell *matCellDef="let element"> {{element.start}} </td>
-    </ng-container>
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef>Начало</th>
+        <td mat-cell *matCellDef="let element"> {{element.start}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Статус</th>
-      <td mat-cell *matCellDef="let element">{{ getEventStatus(element.status) }} </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Статус</th>
+        <td mat-cell *matCellDef="let element">{{ getEventStatus(element.status) }} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        (click)="handleRowClick(row)"
-    ></tr>
-  </table>
-</div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          (click)="handleRowClick(row)"
+      ></tr>
+    </table>
 
-<mat-paginator [length]="pageSettings.length"
-               [pageSize]="pageSettings.pageSize"
-               [pageSizeOptions]="[5, 10, 25, 100]"
-               (page)="setPageSettings($event)"
-               aria-label="Select page">
-</mat-paginator>
+    <mat-paginator [length]="pageSettings.length"
+                   [pageSize]="pageSettings.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="setPageSettings($event)"
+                   aria-label="Select page">
+    </mat-paginator>
+  </div>
 
+  <div *ngIf="events.length == 0">
+    Нет событий
+  </div>
 
-
-
-
+</layout-default>

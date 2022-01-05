@@ -1,6 +1,6 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {EventModel} from "../../models/EventModel";
-import {EventsService} from "../../services/events.service";
+import {EventService} from "../../services/event.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 
@@ -16,7 +16,7 @@ export class EventComponent implements AfterViewInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private eventsService: EventsService,
+    private eventsService: EventService,
     private snackBar: MatSnackBar) {
 
     this.eventId = activateRoute.snapshot.params['eventId'];

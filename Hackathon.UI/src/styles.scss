@@ -7,8 +7,38 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  box-sizing: border-box;
 
   &-full {
+    max-width: 100%;
     padding: 0 1em;
+  }
+}
+
+.mb-1-5em {
+  margin-bottom: 1.5em;
+}
+
+.form {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &-vertical {
+    &__fields {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      width: 300px;
+    }
+
+    &__buttons {
+      display: flex;
+      column-gap: 10px;
+    }
   }
 }
