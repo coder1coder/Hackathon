@@ -18,6 +18,18 @@ namespace Hackathon.Tests.Integration.Event
         }
 
         [Fact]
+        public async Task ExistAsync_ShouldReturn_Success()
+        {
+            var newEventEntity = TestFaker.GetEventEntities(1, UserId).First();
+
+            await DbContext.Events.AddAsync(newEventEntity);
+            await DbContext.SaveChangesAsync();
+
+            var isExist = await EventRepository.ExistAsync(newEventEntity.Id);
+            isExist.Should().BeTrue();
+        }
+
+        [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
             var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();

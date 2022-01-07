@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
-using Hackathon.DAL.Services;
+using System.Linq;
 using Hackathon.Jobs;
 using Hackathon.MessageQueue.Hubs;
 using Mapster;
@@ -80,15 +79,14 @@ namespace Hackathon.API
         }
 
         public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IServiceProvider serviceProvider,
-            ApplicationDbContext context,
-            ILogger<Startup> logger)
+        IApplicationBuilder app, 
+        IWebHostEnvironment env, 
+        IServiceProvider serviceProvider, 
+        ApplicationDbContext dbContext)
         {
-            context.Database.Migrate();
+            dbContext.Database.Migrate();
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
 
             app.UseSwagger();
@@ -96,6 +94,7 @@ namespace Hackathon.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
             });
+            }
 
             //not need for proxy server
             // app.UseHttpsRedirection();
@@ -110,8 +109,6 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
-
-            DbInitializer.Seed(context, logger);
 
             app.UseEndpoints(endpoints =>
             {
