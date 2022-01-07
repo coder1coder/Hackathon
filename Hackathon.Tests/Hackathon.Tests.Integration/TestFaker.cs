@@ -33,15 +33,15 @@ namespace Hackathon.Tests.Integration
             return faker.Generate(count);
         }
 
-        public IEnumerable<EventModel> GetEventModels(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
         {
-            var eventEntities = GetEventEntities(count, eventStatus);
+            var eventEntities = GetEventEntities(count, userId, eventStatus);
             return _mapper.Map<List<EventModel>>(eventEntities);
         }
 
-        public IEnumerable<CreateEventModel> GetCreateEventModels(int count)
+        public IEnumerable<CreateEventModel> GetCreateEventModels(int count, long userId)
         {
-            var eventEntities = GetEventEntities(count);
+            var eventEntities = GetEventEntities(count, userId);
             return _mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
@@ -72,7 +72,7 @@ namespace Hackathon.Tests.Integration
 
         #region Entities
 
-        public IEnumerable<EventEntity> GetEventEntities(int count, EventStatus? eventStatus = null)
+        public IEnumerable<EventEntity> GetEventEntities(int count, long userId, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventEntity>();
 
@@ -85,6 +85,7 @@ namespace Hackathon.Tests.Integration
                 .RuleFor(x => x.MaxEventMembers, _=>30)
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
+                .RuleFor(x => x.UserId, userId)
                 ;
 
             return faker.Generate(count);

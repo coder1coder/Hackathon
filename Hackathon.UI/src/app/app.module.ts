@@ -19,7 +19,6 @@ import {EventsComponent} from "./components/events/events.component";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
-import {EventComponent} from "./components/event/event.component";
 import {TeamsComponent} from "./components/teams/teams.component";
 import {MatTableModule} from "@angular/material/table";
 import {TeamComponent} from "./components/team/team.component";
@@ -32,6 +31,7 @@ import {ConnectionRefusedInterceptor} from "./interceptors/connectionRefused.int
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {DefaultLayoutComponent} from "./components/layouts/default/default.layout.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {EventsViewComponent} from "./components/events/view/events.view.component";
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     ProfileComponent,
 
     EventsComponent,
-    EventComponent,
+    EventsViewComponent,
     EventsNewComponent,
 
     TeamsComponent,

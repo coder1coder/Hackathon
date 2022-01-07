@@ -15,7 +15,7 @@ namespace Hackathon.Tests.Integration.Project
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
-            var teamModel = await CreateTeamWithEvent();
+            var teamModel = await CreateTeamWithEvent(UserId);
             var projectCreateModel = TestFaker.GetProjectCreateModel(1).First();
             projectCreateModel.TeamId = teamModel.Id;
 

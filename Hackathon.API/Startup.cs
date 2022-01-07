@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
@@ -25,7 +24,7 @@ namespace Hackathon.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -69,20 +68,19 @@ namespace Hackathon.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new MainActionFilter());
-            }).AddJsonOptions(opt => {
-                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services.AddJobs(Configuration);
             services.AddSignalR();
+
             services.AddAuthentication(Configuration);
+            services.AddAuthorization();
             services.AddSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, ApplicationDbContext dbContext)
         {
             dbContext.Database.Migrate();
-            dbContext.Database.ExecuteSqlRaw("SET TimeZone='UTC'");
 
             if (env.IsDevelopment())
             {

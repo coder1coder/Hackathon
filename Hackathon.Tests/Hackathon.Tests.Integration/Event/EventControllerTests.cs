@@ -18,7 +18,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task Get_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1, UserId).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
@@ -38,7 +38,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task SetStatus_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1, UserId).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);

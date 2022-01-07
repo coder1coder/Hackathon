@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Responses\Event" />
+  </ItemGroup>
+
 </Project>

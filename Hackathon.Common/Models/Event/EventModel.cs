@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hackathon.Common.Models.Team;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.Common.Models.Event
 {
@@ -60,6 +61,9 @@ namespace Hackathon.Common.Models.Event
         /// Статус события
         /// </summary>
         public EventStatus Status { get; set; }
+
+        public long UserId { get; set; }
+        public UserModel User { get; set; }
 
         /// <summary>
         /// Список команд связанных с событием

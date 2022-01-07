@@ -40,6 +40,7 @@ namespace Hackathon.DAL.Repositories
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
                 .Include(x=>x.Teams)
+                .Include(x=>x.User)
                 .FirstOrDefaultAsync(x => x.Id == eventId);
 
             return _mapper.Map<EventModel>(eventEntity);

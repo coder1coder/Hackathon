@@ -11,6 +11,12 @@ namespace Hackathon.DAL.Entities
     public class EventEntity: BaseEntity
     {
         /// <summary>
+        /// Кто создал событие
+        /// </summary>
+        public long UserId { get; set; }
+        public UserEntity User { get; set; }
+
+        /// <summary>
         /// Наименование события
         /// </summary>
         public string Name { get; set; }

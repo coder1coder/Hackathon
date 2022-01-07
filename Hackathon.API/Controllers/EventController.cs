@@ -35,10 +35,11 @@ namespace Hackathon.API.Controllers
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {
             var createEventModel = _mapper.Map<CreateEventModel>(createEventRequest);
-            var eventId = await _eventService.CreateAsync(createEventModel);
+            createEventModel.UserId = UserId;
+
             return new BaseCreateResponse
             {
-                Id = eventId,
+                Id = await _eventService.CreateAsync(createEventModel),
             };
         }
 

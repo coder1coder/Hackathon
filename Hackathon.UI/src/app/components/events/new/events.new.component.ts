@@ -57,10 +57,8 @@ export class EventsNewComponent implements AfterViewInit  {
 
     this.eventService.create(createEvent)
       .subscribe(_=>{
+          this.router.navigate(['/events']);
           this.snackBar.open(`Новое событие добавлено`, Actions.OK, { duration: 4 * 1000 });
-          setTimeout(()=>{
-            this.router.navigate(['/events']);
-          },1000);
         },
         error=>{
 

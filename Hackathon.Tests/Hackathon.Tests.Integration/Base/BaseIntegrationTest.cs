@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
+using Hackathon.Contracts.Requests.User;
 using Hackathon.DAL;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,6 +30,8 @@ namespace Hackathon.Tests.Integration.Base
 
         protected readonly ApplicationDbContext DbContext;
         protected readonly TestFaker TestFaker;
+
+        protected long UserId { get; set; }
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
@@ -59,11 +62,21 @@ namespace Hackathon.Tests.Integration.Base
             EventsApi = RestService.For<IEventApi>(httpClient);
             TeamsApi = RestService.For<ITeamApi>(httpClient);
             ProjectsApi = RestService.For<IProjectApi>(httpClient);
+
+            InitialData().GetAwaiter().GetResult();
         }
 
-        protected async Task<TeamModel> CreateTeamWithEvent()
+        private async Task InitialData()
         {
-            var eventModel = TestFaker.GetCreateEventModels(1).First();
+            var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
+            var response = await UsersApi.SignUp(fakeRequest);
+
+            UserId = response.Id;
+        }
+
+        protected async Task<TeamModel> CreateTeamWithEvent(long userId)
+        {
+            var eventModel = TestFaker.GetCreateEventModels(1, userId).First();
             var eventId = await EventRepository.CreateAsync(eventModel);
 
             var createTeamModel = TestFaker.GetCreateTeamModels(1).First();

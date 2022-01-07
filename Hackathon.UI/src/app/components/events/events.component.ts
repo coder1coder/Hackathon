@@ -17,7 +17,7 @@ import {EventStatus} from "../../models/EventStatus";
 export class EventsComponent implements AfterViewInit {
 
   events: EventModel[] = [];
-  displayedColumns: string[] = ['id', 'name', 'start', 'status'];
+  displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user'];
   pageSettings: PageEvent = new PageEvent();
 
   constructor(private eventsService: EventService, private router: Router, private snackBar: MatSnackBar) {

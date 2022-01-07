@@ -20,7 +20,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task ExistAsync_ShouldReturn_Success()
         {
-            var newEventEntity = TestFaker.GetEventEntities(1).First();
+            var newEventEntity = TestFaker.GetEventEntities(1, UserId).First();
 
             await DbContext.Events.AddAsync(newEventEntity);
             await DbContext.SaveChangesAsync();
@@ -32,7 +32,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
-            var createEventModel = TestFaker.GetCreateEventModels(1).FirstOrDefault();
+            var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
             var createdEventId = await EventRepository.CreateAsync(createEventModel);
             createdEventId.Should().BeGreaterThan(0);
         }
@@ -40,7 +40,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task GetAsync_ShouldReturn_NotNull()
         {
-            var createEventModel = TestFaker.GetCreateEventModels(1).FirstOrDefault();
+            var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
             var eventId = await EventRepository.CreateAsync(createEventModel);
             var eventModel = await EventRepository.GetAsync(eventId);
             eventModel.Should().NotBeNull();
@@ -51,10 +51,10 @@ namespace Hackathon.Tests.Integration.Event
         {
             var list = new List<EventEntity>
             {
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft }
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId},
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId },
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId },
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId }
             };
 
             await DbContext.AddRangeAsync(list);
@@ -76,13 +76,15 @@ namespace Hackathon.Tests.Integration.Event
                     options.Using<DateTime>(x=>
                         x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(10)))
                         .WhenTypeIs<DateTime>()
-                        .Excluding(x=>x.Teams));
+                        .Excluding(x=>x.Teams)
+                        .Excluding(x=>x.User)
+                    );
         }
 
         [Fact]
         public async Task UpdateAsync_ShouldReturn_Success()
         {
-            var createEventModel = TestFaker.GetCreateEventModels(1).FirstOrDefault();
+            var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
             var eventId = await EventRepository.CreateAsync(createEventModel);
 
             var eventModel = await EventRepository.GetAsync(eventId);
@@ -99,7 +101,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task DeleteAsync_ShouldDelete()
         {
-            var createEventModel = TestFaker.GetCreateEventModels(1).FirstOrDefault();
+            var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
             var eventId = await EventRepository.CreateAsync(createEventModel);
             DbContext.ChangeTracker.Clear();
             await EventRepository.DeleteAsync(eventId);

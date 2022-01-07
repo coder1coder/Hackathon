@@ -16,7 +16,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task ExistAsync_ById_ShouldReturn_True()
         {
-            var createdTeamModel = await CreateTeamWithEvent();
+            var createdTeamModel = await CreateTeamWithEvent(UserId);
             var isExist = await TeamRepository.ExistAsync(createdTeamModel.Id);
             isExist.Should().BeTrue();
         }
@@ -24,7 +24,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task ExistAsync_ByName_ShouldReturn_Success()
         {
-            var teamModel = await CreateTeamWithEvent();
+            var teamModel = await CreateTeamWithEvent(UserId);
             var isExist = await TeamRepository.ExistAsync(teamModel.Name);
             isExist.Should().BeTrue();
         }
@@ -32,14 +32,14 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
-            var createdTeamModel = await CreateTeamWithEvent();
+            var createdTeamModel = await CreateTeamWithEvent(UserId);
             createdTeamModel.Id.Should().BeGreaterThan(0);
         }
 
         [Fact]
         public async Task GetAsync_ShouldReturn_NotNull()
         {
-            var createdTeamModel = await CreateTeamWithEvent();
+            var createdTeamModel = await CreateTeamWithEvent(UserId);
             var teamModel = await TeamRepository.GetAsync(createdTeamModel.Id);
             teamModel.Should().NotBeNull();
         }
@@ -47,7 +47,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task AddMemberAsync_ShouldReturn_Success()
         {
-            var createdTeamModel = await CreateTeamWithEvent();
+            var createdTeamModel = await CreateTeamWithEvent(UserId);
 
             var signUpModel = TestFaker.GetSignUpModels(1).First();
             var createdUserId = await UserRepository.CreateAsync(signUpModel);

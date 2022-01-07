@@ -1,15 +1,15 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {EventModel} from "../../models/EventModel";
-import {EventService} from "../../services/event.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
+import {EventModel} from "../../../models/EventModel";
+import {EventService} from "../../../services/event.service";
 
 @Component({
   selector: 'team',
-  templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss']
+  templateUrl: './events.view.component.html',
+  styleUrls: ['./events.view.component.scss']
 })
-export class EventComponent implements AfterViewInit {
+export class EventsViewComponent implements AfterViewInit {
 
   eventId: number;
   event: EventModel | undefined;

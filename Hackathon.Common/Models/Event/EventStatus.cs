@@ -1,5 +1,8 @@
-﻿namespace Hackathon.Common.Models.Event
+﻿using System.Text.Json.Serialization;
+
+namespace Hackathon.Common.Models.Event
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EventStatus
     {
         Draft = default,

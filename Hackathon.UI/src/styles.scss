@@ -36,6 +36,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       width: 300px;
     }
 
+    &__bottom {
+      padding-top: 1em;
+    }
+
     &__buttons {
       display: flex;
       column-gap: 10px;

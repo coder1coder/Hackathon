@@ -57,5 +57,10 @@ namespace Hackathon.Common.Models.Event
         /// Список сообщений высылаемых командам при смене статусов
         /// </summary>
         public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; } = new();
+
+        /// <summary>
+        /// Кто создал событие
+        /// </summary>
+        public long UserId { get; set; }
     }
 }

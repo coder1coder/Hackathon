@@ -21,7 +21,7 @@ namespace Hackathon.Tests.Integration.Project
         [Fact]
         public async Task Create_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1, UserId).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 

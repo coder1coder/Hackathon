@@ -1,4 +1,5 @@
 import {EventStatus} from "./EventStatus";
+import {UserModel} from "./User/UserModel";
 
 export interface EventModel {
   id: number;
@@ -12,5 +13,7 @@ export interface EventModel {
   isCreateTeamsAutomatically: boolean;
   changeEventStatusMessages: any[];
   status: EventStatus;
+  userId: number;
+  user: UserModel;
   teams: any[]
 }

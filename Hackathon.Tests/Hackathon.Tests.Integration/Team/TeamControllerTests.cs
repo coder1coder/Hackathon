@@ -20,7 +20,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task Create_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1, UserId).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 
@@ -47,7 +47,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task AddMember_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1).First();
+            var eventModel = TestFaker.GetEventModels(1, UserId).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 
