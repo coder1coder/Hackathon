@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Hackathon.DAL;
 using Hackathon.DAL.Entities;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -15,10 +16,10 @@ public static class DbInitializer
             {
                 var user = new UserEntity
                 {
-                    UserName = "User_1",
-                    PasswordHash = "password123",
-                    Email = "email@email.com",
-                    FullName = "UserFullName"
+                    UserName = "User_123",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("qwerty123"),
+                    Email = "email123@email.com",
+                    FullName = "UserFullName123"
                 };
                 context.Add(user);
                 context.SaveChanges();
@@ -28,6 +29,5 @@ public static class DbInitializer
         {
             logger.LogError(e, "Can't seed data");
         }
-
     }
 }

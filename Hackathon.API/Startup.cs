@@ -109,6 +109,8 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
+            
+            DbInitializer.Seed(dbContext, logger);
 
             app.UseEndpoints(endpoints =>
             {
