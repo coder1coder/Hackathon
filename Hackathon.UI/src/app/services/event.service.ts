@@ -8,6 +8,7 @@ import {EventModel} from "../models/EventModel";
 import {PageSettings} from "../models/PageSettings";
 import {CreateEvent} from "../models/Event/CreateEvent";
 import {BaseCreateResponse} from "../models/BaseCreateResponse";
+import {EventStatus} from "../models/EventStatus";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class EventService {
   api = environment.api;
   storage = sessionStorage;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient) {
 
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
@@ -44,6 +45,13 @@ export class EventService {
 
   create(createEvent:CreateEvent):Observable<BaseCreateResponse>{
     return this.http.post<BaseCreateResponse>(this.api + "/Event",createEvent);
+  }
+
+  setStatus(eventId:number, status:EventStatus) {
+    return this.http.put(this.api + "/Event/SetStatus", {
+      id: eventId,
+      status: status
+    });
   }
 
 }

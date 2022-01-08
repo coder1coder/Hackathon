@@ -9,7 +9,9 @@ import {Component, Input} from "@angular/core";
 export class DefaultLayoutComponent {
 
   @Input() title!: string;
+  @Input() isLoading: boolean = false;
 
   constructor() {
   }
 }
+

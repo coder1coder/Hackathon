@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 

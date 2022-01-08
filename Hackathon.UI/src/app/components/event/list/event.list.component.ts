@@ -1,23 +1,23 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {EventModel} from "../../models/EventModel";
-import {EventService} from "../../services/event.service";
-import {BaseCollectionModel} from "../../models/BaseCollectionModel";
+import {AfterViewInit, Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {TeamModel} from "../../models/Team/TeamModel";
 import {Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
-import {PageSettings, PageSettingsDefaults} from "../../models/PageSettings";
-import {EventStatus} from "../../models/EventStatus";
+import {PageSettings, PageSettingsDefaults} from "../../../models/PageSettings";
+import {EventService} from "../../../services/event.service";
+import {EventModel} from "../../../models/EventModel";
+import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {TeamModel} from "../../../models/Team/TeamModel";
+import {EventStatus} from "../../../models/EventStatus";
 
 @Component({
-  selector: 'events',
-  templateUrl: './events.component.html',
-  styleUrls: ['./events.component.scss']
+  selector: 'event-list',
+  templateUrl: './event.list.component.html',
+  styleUrls: ['./event.list.component.scss']
 })
-export class EventsComponent implements AfterViewInit {
+export class EventListComponent implements AfterViewInit {
 
   events: EventModel[] = [];
-  displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user'];
+  displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user', 'teams', 'members'];
   pageSettings: PageEvent = new PageEvent();
 
   constructor(private eventsService: EventService, private router: Router, private snackBar: MatSnackBar) {
@@ -51,7 +51,13 @@ export class EventsComponent implements AfterViewInit {
   }
 
   getEventStatus(status:EventStatus){
-    return EventStatus[status];
+    return EventStatus[status].toLowerCase();
+  }
+
+  getUsersCount(event:EventModel){
+    let i = 0;
+    event.teams.forEach(x=> i += x.users?.length ?? 0);
+    return i;
   }
 
   showCreateEventPage(){

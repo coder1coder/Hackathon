@@ -2,7 +2,6 @@
 
 namespace Hackathon.Common.Models.Event
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EventStatus
     {
         Draft = default,

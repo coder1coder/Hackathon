@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../environments/environment";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {TeamModel} from "../models/Team/TeamModel";
-import {catchError, Observable, of, throwError} from "rxjs";
+import {Observable} from "rxjs";
 import {Router} from "@angular/router";
+import {CreateTeamModel} from "../models/Team/CreateTeamModel";
+import {BaseCreateResponse} from "../models/BaseCreateResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,10 @@ export class TeamsService {
     http.options(this.api, {
       'headers': headers
     });
+  }
+
+  create(createTeamModel:CreateTeamModel): Observable<BaseCreateResponse>{
+    return this.http.post<BaseCreateResponse>(this.api+'/Team', createTeamModel);
   }
 
   getAll():Observable<BaseCollectionModel<TeamModel>>{

@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Новая команда</h1>
+<div mat-dialog-content>
+
+  <form [formGroup]="form" class="form-vertical" >
+    <div class="vertical__fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Название команды</mat-label>
+        <input matInput autocomplete="off"
+               id="name" formControlName="name"
+               required>
+      </mat-form-field>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="createTeam()">OK</button>
+  <button mat-button mat-dialog-close="">Отмена</button>
+</div>

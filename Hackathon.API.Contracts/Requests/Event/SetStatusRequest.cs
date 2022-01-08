@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Hackathon.Contracts.Requests.Event
 {
@@ -6,6 +7,7 @@ namespace Hackathon.Contracts.Requests.Event
     {
         public long Id { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public T Status { get; set; }
     }
 }

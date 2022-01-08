@@ -15,7 +15,6 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {EventsComponent} from "./components/events/events.component";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
@@ -25,13 +24,16 @@ import {TeamComponent} from "./components/team/team.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {Pagination} from "./common/Pagination";
-import {EventsNewComponent} from "./components/events/new/events.new.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ConnectionRefusedInterceptor} from "./interceptors/connectionRefused.interceptor";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {DefaultLayoutComponent} from "./components/layouts/default/default.layout.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {EventsViewComponent} from "./components/events/view/events.view.component";
+import {TeamNewComponent} from "./components/team/new/team.new.component";
+import {MatDialogModule} from "@angular/material/dialog";
+import {EventListComponent} from "./components/event/list/event.list.component";
+import {EventNewComponent} from "./components/event/new/event.new.component";
+import {EventViewComponent} from "./components/event/view/event.view.component";
 
 @NgModule({
   declarations: [
@@ -42,12 +44,13 @@ import {EventsViewComponent} from "./components/events/view/events.view.componen
     RegisterComponent,
     ProfileComponent,
 
-    EventsComponent,
-    EventsViewComponent,
-    EventsNewComponent,
+    EventListComponent,
+    EventViewComponent,
+    EventNewComponent,
 
     TeamsComponent,
     TeamComponent,
+    TeamNewComponent,
 
     NotFoundComponent,
 
@@ -71,7 +74,8 @@ import {EventsViewComponent} from "./components/events/view/events.view.componen
     MatMenuModule,
     MatTableModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDialogModule
   ],
   providers: [
     {

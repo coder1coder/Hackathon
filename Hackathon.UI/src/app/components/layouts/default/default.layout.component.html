@@ -27,3 +27,8 @@
 <div class="container container-full">
   <ng-content></ng-content>
 </div>
+
+<div class="layout-default__loader" *ngIf="isLoading">
+  <mat-progress-spinner color="primary" mode="indeterminate">
+  </mat-progress-spinner>
+</div>

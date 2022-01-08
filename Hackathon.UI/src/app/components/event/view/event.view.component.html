@@ -1,0 +1,42 @@
+<layout-default title="Событие" [isLoading]="isLoading">
+
+  <div class="mb-1-5em">
+    <button mat-raised-button color="primary" (click)="createNewTeam()">Добавить команду</button>
+    <button *ngIf="event?.status == 0" mat-button (click)="setPublished()">Опубликовать</button>
+  </div>
+  <h1>{{event?.name}}</h1>
+
+  Начало: {{ event?.start }},
+  Статус: {{ event?.status }},
+  Организатор: {{ event?.user?.userName }}
+
+  <br/><br/>
+
+  Участники: от {{ event?.minTeamMembers }} до {{ event?.maxEventMembers }}
+  <br/><br/>
+
+  Продолжительность этапов:<br/>
+  <ol>
+    <li>формирование команд {{ event?.memberRegistrationMinutes }}</li>
+    <li>разработка {{ event?.developmentMinutes }}</li>
+    <li>выступление команды {{ event?.teamPresentationMinutes }}</li>
+  </ol>
+
+  <mat-checkbox [checked]="event?.isCreateTeamsAutomatically ?? false" disabled>
+    Создавать команды автоматически
+  </mat-checkbox>
+  <br/><br/>
+
+  Команды:
+
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let team of event?.teams">
+      {{ team.name }}(id:{{team.id}})
+    </mat-list-item>
+  </mat-list>
+
+</layout-default>
+
+
+
+

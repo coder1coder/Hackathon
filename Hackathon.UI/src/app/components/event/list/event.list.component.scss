@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+
+  tr {
+    cursor: pointer;
+  }
+}
+.mat-column-status {
+  mat-icon {
+    font-size: 10px;
+    height: 10px;
+    width: 10px;
+    margin-right: 5px;
+
+    color: lightgray;
+
+    &.mat-icon {
+      &-published {
+        color: seagreen;
+      }
+    }
+  }
+}

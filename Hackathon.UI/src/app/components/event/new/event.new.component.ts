@@ -8,12 +8,12 @@ import {CreateEvent} from "../../../models/Event/CreateEvent";
 import {Actions} from "../../../common/Actions";
 
 @Component({
-  selector: 'events-new',
-  templateUrl: './events.new.component.html',
-  styleUrls: ['./events.new.component.scss']
+  selector: 'event-new',
+  templateUrl: './event.new.component.html',
+  styleUrls: ['./event.new.component.scss']
 })
 
-export class EventsNewComponent implements AfterViewInit  {
+export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
 
