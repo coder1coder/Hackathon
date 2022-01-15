@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Hackathon.Common.Models.Event
+﻿namespace Hackathon.Common.Models.Event
 {
     public enum EventStatus
     {

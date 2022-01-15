@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Microsoft.Extensions.Options;
 
 namespace Hackathon.API
 {
@@ -32,7 +33,7 @@ namespace Hackathon.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
-            services.Configure<AdminOptions>(Configuration.GetSection(nameof(AdminOptions)));
+            services.Configure<AdministratorDefaults>(Configuration.GetSection(nameof(AdministratorDefaults)));
 
             var config = new TypeAdapterConfig();
 
@@ -86,6 +87,7 @@ namespace Hackathon.API
         ApplicationDbContext dbContext)
         {
             dbContext.Database.Migrate();
+            DbInitializer.Seed(dbContext, logger, administratorDefaultsConfig.Value);
 
             if (env.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
@@ -110,8 +112,9 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
-            
             DbInitializer.Seed(dbContext, logger, Configuration.GetValue<AdminOptions>("AdminOptions"));
+
+
 
             app.UseEndpoints(endpoints =>
             {

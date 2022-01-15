@@ -1,15 +1,14 @@
 ﻿using System.Linq;
 using Hackathon.Common.Configuration;
-using Hackathon.DAL;
 using Hackathon.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Npgsql;
 
 namespace Hackathon.DAL.Services;
 
 public static class DbInitializer
 {
-    public static void Seed(ApplicationDbContext context, ILogger logger, AdminOptions adminOptions)
+    public static void Seed(ApplicationDbContext context, ILogger logger, AdministratorDefaults administratorDefaults)
     {
         try
         {
@@ -17,20 +16,18 @@ public static class DbInitializer
             {
                 var user = new UserEntity
                 {
-                    UserName = adminOptions.Name,
-                    PasswordHash = adminOptions.PasswordHash,
-                    //UserName = "User_123",
-                    //PasswordHash = BCrypt.Net.BCrypt.HashPassword("qwerty123"),
-                    Email = "email123@email.com",
-                    FullName = "UserFullName123"
+                    UserName = administratorDefaults.Login,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
+                    FullName = administratorDefaults.Login
                 };
                 context.Add(user);
                 context.SaveChanges();
             }
         }
-        catch (NpgsqlException e)
+        catch (DbUpdateException e)
         {
-            logger.LogError(e, "Can't seed data");
+            logger.LogError(e, "Невозможно выполнить первоначальную инициализацию данных");
+            throw;
         }
     }
 }
