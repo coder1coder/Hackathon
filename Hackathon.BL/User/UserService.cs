@@ -9,6 +9,7 @@ using Hackathon.BL.User.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -72,10 +73,17 @@ namespace Hackathon.BL.User
             return GenerateToken(user.Id);
         }
 
+        /// <inheritdoc cref="IUserService.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
             await _userExistValidator.ValidateAndThrowAsync(userId);
             return await _userRepository.GetAsync(userId);
+        }
+
+        /// <inheritdoc cref="IUserService.GetAsync"/>
+        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
+        {
+            return await _userRepository.GetAsync(getFilterModel);
         }
 
         public AuthTokenModel GenerateToken(long userId)
