@@ -32,6 +32,7 @@ namespace Hackathon.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
+            services.Configure<AdminOptions>(Configuration.GetSection(nameof(AdminOptions)));
 
             var config = new TypeAdapterConfig();
 
