@@ -1,8 +1,10 @@
 <layout-default title="Событие" [isLoading]="isLoading">
 
   <div class="mb-1-5em">
-    <button mat-raised-button color="primary" (click)="createNewTeam()">Добавить команду</button>
+    <button *ngIf="!isAlreadyInEvent()" mat-button (click)="enterToEvent()">Принять участие</button>
+    <button *ngIf="!this.event?.isCreateTeamsAutomatically" mat-raised-button color="primary" (click)="createNewTeam()">Добавить команду</button>
     <button *ngIf="event?.status == 0" mat-button (click)="setPublished()">Опубликовать</button>
+    <button *ngIf="canStartEvent" mat-button (click)="startEvent()">Начать событие</button>
   </div>
   <h1>{{event?.name}}</h1>
 
@@ -28,12 +30,13 @@
   <br/><br/>
 
   Команды:
-
   <mat-list role="list">
     <mat-list-item role="listitem" *ngFor="let team of event?.teams">
       {{ team.name }}(id:{{team.id}})
     </mat-list-item>
   </mat-list>
+
+  <b *ngIf="isAlreadyInEvent()">Вы принимаете участие в этом мероприятии</b>
 
 </layout-default>
 

@@ -9,7 +9,5 @@ namespace Hackathon.API.Abstraction
     {
         [Post("/api/Team")]
         Task<BaseCreateResponse> Create([Body] CreateTeamRequest createTeamRequest);
-        [Post("/api/Team/AddMember")]
-        Task AddMember([Body] TeamAddMemberRequest teamAddMemberRequest);
     }
 }

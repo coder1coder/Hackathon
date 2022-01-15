@@ -68,6 +68,12 @@ namespace Hackathon.API.Controllers
             return await _eventService.GetAsync(id);
         }
 
+        [HttpPost("{eventId:long}/Join")]
+        public async Task Join(long eventId)
+        {
+            await _eventService.JoinAsync(eventId, UserId);
+        }
+
         /// <summary>
         /// Задать статус события
         /// </summary>

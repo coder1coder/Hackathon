@@ -34,6 +34,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {EventListComponent} from "./components/event/list/event.list.component";
 import {EventNewComponent} from "./components/event/new/event.new.component";
 import {EventViewComponent} from "./components/event/view/event.view.component";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import {EventViewComponent} from "./components/event/view/event.view.component";
     MatTableModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers: [
     {

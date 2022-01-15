@@ -5,6 +5,6 @@ import {CreateTeamModel} from "./CreateTeamModel";
 export interface TeamModel extends CreateTeamModel {
   id: number,
   event: EventModel,
-  users: UserModel[], //TODO: add typed
+  users: UserModel[]
   project: any //TODO: add typed
 }

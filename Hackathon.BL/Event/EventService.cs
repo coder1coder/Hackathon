@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.BL.Event.Validators;
@@ -7,6 +8,7 @@ using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Team;
 using Hackathon.MessageQueue;
 using Hackathon.MessageQueue.Messages;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
@@ -20,13 +22,15 @@ namespace Hackathon.BL.Event
         private readonly IValidator<GetFilterModel<EventFilterModel>> _getFilterModelValidator;
         private readonly EventExistValidator _eventExistValidator;
         private readonly IMessageHub<EventMessage> _eventMessageHub;
+        private readonly ITeamService _teamService;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
             EventExistValidator eventExistValidator,
             IValidator<GetFilterModel<EventFilterModel>> getFilterModelValidator,
             IEventRepository eventRepository,
-            IMessageHub<EventMessage> eventMessageHub
+            IMessageHub<EventMessage> eventMessageHub,
+            ITeamService teamService
             )
         {
             _createEventModelValidator = createEventModelValidator;
@@ -34,6 +38,7 @@ namespace Hackathon.BL.Event
             _eventExistValidator = eventExistValidator;
             _eventRepository = eventRepository;
             _eventMessageHub = eventMessageHub;
+            _teamService = teamService;
         }
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
@@ -87,6 +92,36 @@ namespace Hackathon.BL.Event
 
             foreach (var eventModel in eventModels.Items)
                 await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
+        }
+
+        public async Task JoinAsync(long eventId, long userId)
+        {
+            var eventModel = await _eventRepository.GetAsync(eventId);
+
+            var notFullTeams = eventModel.Teams
+                .Where(x => x.Users.Count < eventModel.MinTeamMembers)
+                .ToArray();
+
+            long teamId;
+
+            if (notFullTeams.Any())
+            {
+                teamId = notFullTeams.First().Id;
+            }
+            else
+            {
+                teamId = await _teamService.CreateAsync(new CreateTeamModel
+                {
+                    EventId = eventId,
+                    Name = "Team-" + Guid.NewGuid().ToString()[..4]
+                });
+            }
+
+            await _teamService.AddMemberAsync(new TeamAddMemberModel
+            {
+                TeamId = teamId,
+                UserId = userId
+            });
         }
 
         public async Task DeleteAsync(long eventId)

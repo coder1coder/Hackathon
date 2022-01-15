@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -126,13 +127,18 @@ namespace Hackathon.DAL.Repositories
                 .FirstOrDefaultAsync(x=>x.Id == teamAddMemberModel.TeamId);
 
             if (teamEntity == null)
-                throw new Exception("Команда с указаным индентификатором не найдена");
+                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
 
             var userEntity = await _dbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == teamAddMemberModel.UserId);
 
-            teamEntity.Users.Add(userEntity);
+            if (userEntity == null)
+                throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
+
+            userEntity.Teams.Add(teamEntity);
+
+            _dbContext.Update(userEntity);
             await _dbContext.SaveChangesAsync();
         }
     }

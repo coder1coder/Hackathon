@@ -1,5 +1,4 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {PageSettings, PageSettingsDefaults} from "../../../models/PageSettings";
@@ -20,7 +19,7 @@ export class EventListComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user', 'teams', 'members'];
   pageSettings: PageEvent = new PageEvent();
 
-  constructor(private eventsService: EventService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private eventsService: EventService, private router: Router) {
 
     this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
     this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;

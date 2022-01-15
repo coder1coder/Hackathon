@@ -1,6 +1,5 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
@@ -52,6 +51,10 @@ export class EventService {
       id: eventId,
       status: status
     });
+  }
+
+  join(eventId:number){
+    return this.http.post(`${this.api}/Event/${eventId}/Join`, {})
   }
 
 }

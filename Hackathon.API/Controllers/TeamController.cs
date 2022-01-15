@@ -39,17 +39,6 @@ namespace Hackathon.API.Controllers
         }
 
         /// <summary>
-        /// Регистрация пользователя в команде
-        /// </summary>
-        /// <param name="teamAddMemberRequest"></param>
-        [HttpPost(nameof(AddMember))]
-        public async Task AddMember(TeamAddMemberRequest teamAddMemberRequest)
-        {
-            var teamAddMemberModel = _mapper.Map<TeamAddMemberModel>(teamAddMemberRequest);
-            await _teamService.AddMemberAsync(teamAddMemberModel);
-        }
-
-        /// <summary>
         /// Получить команду по идентификатору
         /// </summary>
         /// <param name="id"></param>

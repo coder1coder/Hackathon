@@ -8,6 +8,8 @@ import {TeamNewComponent} from "../../team/new/team.new.component";
 import {EventStatus} from "../../../models/EventStatus";
 import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
+import {AuthService} from "../../../services/auth.service";
+import {ProblemDetails} from "../../../models/ProblemDetails";
 
 @Component({
   selector: 'event-view',
@@ -23,6 +25,7 @@ export class EventViewComponent implements AfterViewInit {
   constructor(
     private activateRoute: ActivatedRoute,
     private eventsService: EventService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog) {
 
@@ -62,18 +65,31 @@ export class EventViewComponent implements AfterViewInit {
       },
     });
 
-    createNewTeamDialog.afterClosed().subscribe(r => {
-
-      if (r === true)
-        this.fetchEvent();
-    });
+    createNewTeamDialog.afterClosed()
+      .subscribe(r => {
+        if (r === true)
+          this.fetchEvent();
+      });
   }
 
-  setPublished(){
-    this.eventsService.setStatus(this.eventId, EventStatus.Published)
+  isAlreadyInEvent(){
+    if (this.event === undefined)
+      return false;
+
+    let userId:number = this.authService.getUserId() ?? 0;
+
+    return this.event!
+      .teams?.filter(t => t
+        .users?.filter(u => u.id == userId)
+        .length > 0
+      ).length > 0;
+  }
+
+  enterToEvent(){
+    this.eventsService.join(this.eventId)
       .subscribe({
         next: (_) =>  {
-          this.snackBar.open(`Статус успешно изменен`, Actions.OK, { duration: 4000 });
+          this.snackBar.open(`Вы зарегистрировались на мероприятии`, Actions.OK, { duration: 4000 });
 
           this.fetchEvent();
         },
@@ -81,5 +97,35 @@ export class EventViewComponent implements AfterViewInit {
           this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
         }
       });
+  }
+
+  setPublished(){
+    this.eventsService.setStatus(this.eventId, EventStatus.Published)
+      .subscribe({
+        next: (_) =>  {
+          this.snackBar.open(`Статус успешно изменен`, Actions.OK, { duration: 4000 });
+          this.fetchEvent();
+        },
+        error: (err) => {
+          this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
+        }
+      });
+  }
+
+  canStartEvent(){
+    return this.event?.status == EventStatus.Published;
+  }
+
+  startEvent(){
+    this.eventsService.setStatus(this.eventId, EventStatus.Started)
+      .subscribe(
+        _=>{
+          this.snackBar.open("Выполнено", Actions.OK, { duration: 4000 });
+        },
+        error => {
+          let problemDetails: ProblemDetails = <ProblemDetails>error.error;
+          this.snackBar.open(problemDetails.detail, Actions.OK, { duration: 4000 });
+        }
+      )
   }
 }

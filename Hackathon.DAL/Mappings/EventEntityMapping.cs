@@ -10,7 +10,7 @@ namespace Hackathon.DAL.Mappings
         {
             TypeAdapterConfig<EventEntity, EventModel>.NewConfig()
                 .IgnoreNullValues(true)
-                .MaxDepth(2)
+                .MaxDepth(3)
                 ;
         }
     }

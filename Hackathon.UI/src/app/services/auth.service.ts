@@ -19,13 +19,6 @@ export class AuthService {
   storage = sessionStorage;
 
   constructor(private http: HttpClient) {
-
-    // const headers = new HttpHeaders()
-    //   .set('content-type', 'application/json');
-    //
-    // http.options(this.api, {
-    //   'headers': headers
-    // });
   }
 
   isLoggedIn() {
@@ -70,6 +63,11 @@ export class AuthService {
   logout(){
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
+  }
+
+  getUserId():number | undefined{
+    let tokenInfo = this.#getTokenInfo();
+    return tokenInfo?.userId;
   }
 
   getCurrentUser(): Observable<UserModel> | undefined{

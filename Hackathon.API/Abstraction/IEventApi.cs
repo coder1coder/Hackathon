@@ -16,5 +16,8 @@ namespace Hackathon.API.Abstraction
 
         [Get("/api/Event/{id}")]
         Task<EventModel> Get(long id);
+
+        [Post("/api/Event/{id}/join")]
+        Task Join(long id);
     }
 }

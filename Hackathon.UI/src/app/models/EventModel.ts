@@ -16,7 +16,5 @@ export class EventModel {
   status!: EventStatus;
   userId!: number;
   user!: UserModel;
-  teams!: TeamModel[]
-
-
+  teams: TeamModel[] = []
 }

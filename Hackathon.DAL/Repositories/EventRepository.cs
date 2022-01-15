@@ -40,6 +40,7 @@ namespace Hackathon.DAL.Repositories
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
                 .Include(x=>x.Teams)
+                    .ThenInclude(x=>x.Users)
                 .Include(x=>x.User)
                 .FirstOrDefaultAsync(x => x.Id == eventId);
 
@@ -51,6 +52,7 @@ namespace Hackathon.DAL.Repositories
             var query = _dbContext.Events
                 .AsNoTracking()
                 .Include(x=>x.Teams)
+                    .ThenInclude(x=>x.Users)
                 .AsQueryable();
 
             if (getFilterModel.Filter != null)
