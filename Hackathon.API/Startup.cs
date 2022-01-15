@@ -111,7 +111,7 @@ namespace Hackathon.API
 
             app.UseCors("default");
             
-            DbInitializer.Seed(dbContext, logger);
+            DbInitializer.Seed(dbContext, logger, Configuration.GetValue<AdminOptions>("AdminOptions"));
 
             app.UseEndpoints(endpoints =>
             {
