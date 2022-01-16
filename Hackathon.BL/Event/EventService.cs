@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
@@ -20,13 +19,11 @@ namespace Hackathon.BL.Event
         private readonly IValidator<CreateEventModel> _createEventModelValidator;
         private readonly IEventRepository _eventRepository;
         private readonly IValidator<GetFilterModel<EventFilterModel>> _getFilterModelValidator;
-        private readonly EventExistValidator _eventExistValidator;
         private readonly IMessageHub<EventMessage> _eventMessageHub;
         private readonly ITeamService _teamService;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
-            EventExistValidator eventExistValidator,
             IValidator<GetFilterModel<EventFilterModel>> getFilterModelValidator,
             IEventRepository eventRepository,
             IMessageHub<EventMessage> eventMessageHub,
@@ -35,7 +32,6 @@ namespace Hackathon.BL.Event
         {
             _createEventModelValidator = createEventModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
-            _eventExistValidator = eventExistValidator;
             _eventRepository = eventRepository;
             _eventMessageHub = eventMessageHub;
             _teamService = teamService;
@@ -48,7 +44,9 @@ namespace Hackathon.BL.Event
 
         public async Task<EventModel> GetAsync(long eventId)
         {
-            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
+            if (!await _eventRepository.ExistAsync(eventId))
+                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
+
             return await _eventRepository.GetAsync(eventId);
         }
 
@@ -60,7 +58,8 @@ namespace Hackathon.BL.Event
 
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
-            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
+            if (!await _eventRepository.ExistAsync(eventId))
+                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
 
             var eventModel = await _eventRepository.GetAsync(eventId);
 
@@ -70,28 +69,6 @@ namespace Hackathon.BL.Event
                 throw new ValidationException(ErrorMessages.CantSetEventStatus);
 
             await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
-        }
-
-        public async Task SetStatusAsync(long[] eventsIds, EventStatus eventStatus)
-        {
-            await _eventExistValidator.ValidateAndThrowAsync(eventsIds);
-
-            var eventModels = await _eventRepository.GetAsync(new GetFilterModel<EventFilterModel>
-            {
-                Filter = new EventFilterModel
-                {
-                    Ids = eventsIds,
-                    Status = eventStatus - 1
-                }
-            });
-
-            var canChangeStatus = eventModels.TotalCount == eventsIds.Length;
-
-            if (!canChangeStatus)
-                throw new ValidationException(ErrorMessages.CantSetEventsStatus);
-
-            foreach (var eventModel in eventModels.Items)
-                await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
         }
 
         public async Task JoinAsync(long eventId, long userId)
@@ -126,7 +103,9 @@ namespace Hackathon.BL.Event
 
         public async Task DeleteAsync(long eventId)
         {
-            await _eventExistValidator.ValidateAndThrowAsync(new []{ eventId });
+            if (!await _eventRepository.ExistAsync(eventId))
+                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
+
             await _eventRepository.DeleteAsync(eventId);
         }
 

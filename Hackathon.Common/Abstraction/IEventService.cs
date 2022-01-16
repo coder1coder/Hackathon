@@ -11,7 +11,6 @@ namespace Hackathon.Common.Abstraction
         Task<EventModel> GetAsync(long eventId);
         Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel);
         Task SetStatusAsync(long eventId, EventStatus eventStatus);
-        Task SetStatusAsync(long[] eventsIds, EventStatus eventStatus);
         Task JoinAsync(long eventId, long userId);
         Task DeleteAsync(long eventId);
     }

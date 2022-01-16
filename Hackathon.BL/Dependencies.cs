@@ -43,7 +43,6 @@ namespace Hackathon.BL
 
                 .AddScoped<IValidator<CreateEventModel>, CreateEventModelValidator>()
                 .AddScoped<IValidator<GetFilterModel<EventFilterModel>>,GetFilterModelValidator<EventFilterModel>>()
-                .AddScoped<EventExistValidator>()
                 .AddScoped<IEventService, EventService>();
         }
     }
