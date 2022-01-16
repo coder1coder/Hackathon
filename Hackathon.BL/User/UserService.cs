@@ -5,9 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.BL.User.Validators;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
@@ -21,14 +21,12 @@ namespace Hackathon.BL.User
     {
         private readonly IValidator<SignUpModel> _signUpModelValidator;
         private readonly IValidator<SignInModel> _signInModelValidator;
-        private readonly UserExistValidator _userExistValidator;
 
         private readonly IUserRepository _userRepository;
         private readonly AuthOptions _authConfig;
 
         public UserService(
             IOptions<AuthOptions> authOptions,
-            UserExistValidator userExistValidator,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
             IUserRepository userRepository
@@ -38,7 +36,6 @@ namespace Hackathon.BL.User
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _userRepository = userRepository;
-            _userExistValidator = userExistValidator;
         }
 
         public async Task<long> CreateAsync(SignUpModel signUpModel)
@@ -76,7 +73,9 @@ namespace Hackathon.BL.User
         /// <inheritdoc cref="IUserService.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
-            await _userExistValidator.ValidateAndThrowAsync(userId);
+            if (!await _userRepository.ExistAsync(userId))
+                throw new EntityNotFoundException("Пользователя с указанным идентификатором не существует");
+
             return await _userRepository.GetAsync(userId);
         }
 

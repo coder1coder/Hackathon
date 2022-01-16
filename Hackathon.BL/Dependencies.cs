@@ -37,7 +37,6 @@ namespace Hackathon.BL
 
                 .AddScoped<IValidator<SignUpModel>,SignUpModelValidator>()
                 .AddScoped<IValidator<SignInModel>,SignInModelValidator>()
-                .AddScoped<UserExistValidator>()
                 .AddScoped<IUserService,UserService>()
                 .AddScoped<IValidator<GetFilterModel<UserFilterModel>>,GetFilterModelValidator<UserFilterModel>>()
 
