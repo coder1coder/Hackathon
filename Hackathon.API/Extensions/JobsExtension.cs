@@ -16,9 +16,6 @@ namespace Hackathon.API.Extensions
             return services.AddHangfire(configuration =>
             {
                 configuration
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
                     .UsePostgreSqlStorage(connectionString);
 
             }).AddHangfireServer();

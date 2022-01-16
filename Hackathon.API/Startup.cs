@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Hackathon.API
 {
@@ -50,16 +52,13 @@ namespace Hackathon.API
                 .AddApiDependencies()
                 .AddJobsDependencies();
 
+            var origins = Configuration.GetSection(nameof(OriginsOptions)).Get<OriginsOptions>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("default", builder =>
                     builder
-                        .WithOrigins(
-                            "http://localhost:5000",
-                            "https://localhost:5001",
-                            "https://localhost:5002",
-                            "http://localhost:5003",
-                            "http://localhost:4200")
+                        .WithOrigins(origins.AllowUrls)
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .WithMethods("GET", "POST", "PUT", "OPTIONS"));
@@ -83,16 +82,16 @@ namespace Hackathon.API
             dbContext.Database.Migrate();
 
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
-                });
-            }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
+            });
+
+            //not need for proxy server
+            // app.UseHttpsRedirection();
 
             app.UseJobs(serviceProvider);
 

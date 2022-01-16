@@ -32,4 +32,9 @@
       <ProjectReference Include="..\Hackathon.Jobs\Hackathon.Jobs.csproj" />
     </ItemGroup>
 
+    <PropertyGroup>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
 </Project>

@@ -5,13 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-beta4" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.9.5" />
-    <PackageReference Include="Serilog" Version="2.11.0-dev-01377" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
 
 </Project>
