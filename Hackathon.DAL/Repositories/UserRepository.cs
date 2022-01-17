@@ -46,13 +46,18 @@ namespace Hackathon.DAL.Repositories
 
         public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
         {
-            var query = _dbContext.Users.AsNoTracking();
+            var query = _dbContext.Users
+                .AsNoTracking()
+                .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Username))
-                query = query.Where(x=>x.UserName.ToLower() == getFilterModel.Filter.Username.ToLower());
+            if (getFilterModel.Filter != null)
+            {
+                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Username))
+                    query = query.Where(x => x.UserName == getFilterModel.Filter.Username);
 
-            if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Email))
-                query = query.Where(x=>x.Email.ToLower() == getFilterModel.Filter.Email.ToLower());
+                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Email))
+                    query = query.Where(x => x.Email == getFilterModel.Filter.Email);
+            }
 
             var totalCount = await query.LongCountAsync();
 
@@ -68,6 +73,10 @@ namespace Hackathon.DAL.Repositories
                         ? query.OrderBy(x => x.Email)
                         : query.OrderByDescending(x => x.Email),
 
+                    nameof(UserEntity.FullName) => getFilterModel.SortOrder == SortOrder.Asc
+                        ? query.OrderBy(x => x.FullName)
+                        : query.OrderByDescending(x => x.FullName),
+
                     _ => getFilterModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
@@ -77,14 +86,15 @@ namespace Hackathon.DAL.Repositories
             var page = getFilterModel.Page ?? 1;
             var pageSize = getFilterModel.PageSize ?? 1000;
 
+            var userModels = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectToType<UserModel>()
+                .ToListAsync();
+
             return new BaseCollectionModel<UserModel>
             {
-                Items = await query
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ProjectToType<UserModel>()
-                    .ToListAsync(),
-
+                Items = userModels,
                 TotalCount = totalCount
             };
         }

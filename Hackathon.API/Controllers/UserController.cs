@@ -1,11 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
+using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.API.Controllers
@@ -41,11 +44,30 @@ namespace Hackathon.API.Controllers
             };
         }
 
+        /// <summary>
+        /// Получить информацию о пользователе
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{userId:long}")]
         public async Task<UserModel> Get([FromRoute] long userId)
         {
             return await _userService.GetAsync(userId);
         }
+
+        /// <summary>
+        /// Получить информацию о пользователях
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserModel>))]
+        public async Task<IActionResult> GetAsync([FromQuery] GetFilterRequest<UserFilterModel> filterRequest)
+        {
+            var getFilterModel = _mapper.Map<GetFilterModel<UserFilterModel>>(filterRequest);
+            var collectionModel = await _userService.GetAsync(getFilterModel);
+            return Ok(_mapper.Map<BaseCollectionResponse<UserModel>>(collectionModel));
+        }
+
     }
 }
