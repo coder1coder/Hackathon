@@ -21,8 +21,22 @@ export class EventListComponent implements AfterViewInit {
 
   constructor(private eventsService: EventService, private router: Router) {
 
-    this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
-    this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
+    let pageSettingsJson = sessionStorage.getItem(`${EventListComponent.name}${PageEvent.name}`);
+
+    if (pageSettingsJson != null)
+      this.pageSettings = JSON.parse(pageSettingsJson)
+    else
+    {
+      this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
+      this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
+    }
+  }
+
+  setPageSettings(event:PageEvent){
+    this.pageSettings = event;
+    sessionStorage.setItem(`${EventListComponent.name}${PageEvent.name}`, JSON.stringify(event));
+
+    this.fetch();
   }
 
   ngAfterViewInit(): void {
@@ -42,11 +56,6 @@ export class EventListComponent implements AfterViewInit {
 
   handleRowClick(event: EventModel){
     this.router.navigate(['/events/'+event.id]);
-  }
-
-  setPageSettings(event:PageEvent){
-    this.pageSettings = event;
-    this.fetch();
   }
 
   getEventStatus(status:EventStatus){
