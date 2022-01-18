@@ -16,7 +16,7 @@ import {EventStatus} from "../../../models/EventStatus";
 export class EventListComponent implements AfterViewInit {
 
   events: EventModel[] = [];
-  displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user', 'teams', 'members'];
+  displayedColumns: string[] = ['id', 'name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
   pageSettings: PageEvent = new PageEvent();
 
   constructor(private eventsService: EventService, private router: Router) {
@@ -40,8 +40,8 @@ export class EventListComponent implements AfterViewInit {
       });
   }
 
-  handleRowClick(team: TeamModel){
-    this.router.navigate(['/events/'+team.id]);
+  handleRowClick(event: EventModel){
+    this.router.navigate(['/events/'+event.id]);
   }
 
   setPageSettings(event:PageEvent){

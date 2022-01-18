@@ -27,18 +27,17 @@ namespace Hackathon.BL.Team.Validators
                 .GreaterThan(0)
                 .CustomAsync(async (eventId, context, _) =>
                 {
-                    var isEventExist = await eventRepository.ExistAsync(eventId);
-
-                    if (!isEventExist)
-                        context.AddFailure("События с таким идентификатором не существует");
-
                     var eventModel = await eventRepository.GetAsync(eventId);
 
-                    if (eventModel.Status != EventStatus.Published)
-                        context.AddFailure("Зарегистрировать команду возможно только для опубликованного события");
+                    if (eventModel == null)
+                        context.AddFailure("События с таким идентификатором не существует");
+                    else
+                    {
+                        if (eventModel.Status != EventStatus.Published)
+                            context.AddFailure("Зарегистрировать команду возможно только для опубликованного события");
+                    }
+
                 });
-
-
         }
     }
 }

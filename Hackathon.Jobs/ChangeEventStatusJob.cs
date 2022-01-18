@@ -40,7 +40,7 @@ namespace Hackathon.Jobs
             if (publishedEvents.TotalCount > 0)
             {
                 var memberRegistrationEndedEvents = publishedEvents.Items
-                    .Where(x => x.Start.AddMinutes(x.MemberRegistrationMinutes) >= DateTime.UtcNow)
+                    .Where(x => x.Start.AddMinutes(x.MemberRegistrationMinutes) >= DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc))
                     .ToImmutableList();
 
                 foreach (var eventModel in memberRegistrationEndedEvents)

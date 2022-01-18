@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -122,7 +123,18 @@ namespace Hackathon.DAL.Repositories
         public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
         {
             var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
-            _dbContext.UpdateRange(eventEntities);
+            _dbContext.Events.UpdateRange(eventEntities);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
+        {
+            var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
+
+            if (eventEntity == null)
+                throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
+
+            eventEntity.Status = eventStatus;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -134,29 +146,6 @@ namespace Hackathon.DAL.Repositories
 
             _dbContext.Remove(eventEntity);
             await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<bool> ExistAsync(long eventId)
-        {
-            return await _dbContext.Events
-                .AsNoTracking()
-                .AnyAsync(x => x.Id == eventId);
-        }
-
-        /// <summary>
-        /// Проверяет существование событий по идентификаторам
-        /// </summary>
-        /// <param name="eventsIds">Список идентификаторов событий</param>
-        /// <returns>Возвращает True, если все события существуют</returns>
-        public async Task<bool> ExistAsync(long[] eventsIds)
-        {
-            var distinctIds = eventsIds.Distinct();
-
-            var existCount = await _dbContext.Events
-                .AsNoTracking()
-                .LongCountAsync(x => distinctIds.Contains(x.Id));
-
-            return distinctIds.LongCount() == existCount;
         }
     }
 }

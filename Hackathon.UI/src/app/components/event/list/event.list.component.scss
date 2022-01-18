@@ -15,9 +15,20 @@ table {
     color: lightgray;
 
     &.mat-icon {
+
       &-published {
+        color: #eb832b;
+      }
+
+      &-started {
         color: seagreen;
       }
     }
+  }
+}
+
+.mat-cell {
+  &.mat-column-actions {
+    width: 40px;
   }
 }

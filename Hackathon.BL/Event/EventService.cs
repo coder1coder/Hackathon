@@ -44,10 +44,8 @@ namespace Hackathon.BL.Event
 
         public async Task<EventModel> GetAsync(long eventId)
         {
-            if (!await _eventRepository.ExistAsync(eventId))
-                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
-
-            return await _eventRepository.GetAsync(eventId);
+            var eventModel = await _eventRepository.GetAsync(eventId);
+            return eventModel ?? throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
         }
 
         public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
@@ -58,10 +56,10 @@ namespace Hackathon.BL.Event
 
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
-            if (!await _eventRepository.ExistAsync(eventId))
-                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
-
             var eventModel = await _eventRepository.GetAsync(eventId);
+
+            if (eventModel == null)
+                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
 
             var canChangeStatus = (int) eventModel.Status == (int) eventStatus - 1;
 
@@ -103,7 +101,9 @@ namespace Hackathon.BL.Event
 
         public async Task DeleteAsync(long eventId)
         {
-            if (!await _eventRepository.ExistAsync(eventId))
+            var eventModel = await _eventRepository.GetAsync(eventId);
+
+            if (eventModel == null)
                 throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
 
             await _eventRepository.DeleteAsync(eventId);
@@ -111,8 +111,7 @@ namespace Hackathon.BL.Event
 
         private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
         {
-            eventModel.Status = eventStatus;
-            await _eventRepository.UpdateAsync(new []{ eventModel });
+            await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
             var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
                 .FirstOrDefault(x => x.Status == eventStatus);

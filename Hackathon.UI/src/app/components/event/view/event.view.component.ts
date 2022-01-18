@@ -72,6 +72,22 @@ export class EventViewComponent implements AfterViewInit {
       });
   }
 
+  isCanPublishEvent(){
+    return this.event?.status == EventStatus.Draft;
+  }
+
+  isCanStartEvent(){
+    return this.event?.status == EventStatus.Published;
+  }
+
+  isCanAddTeam(){
+    return this.event?.status == EventStatus.Published && !this.event?.isCreateTeamsAutomatically
+  }
+
+  isCanJoinToEvent() {
+    return this.event?.status == EventStatus.Published && !this.isAlreadyInEvent()
+  }
+
   isAlreadyInEvent(){
     if (this.event === undefined)
       return false;
@@ -117,15 +133,17 @@ export class EventViewComponent implements AfterViewInit {
   }
 
   startEvent(){
+
     this.eventsService.setStatus(this.eventId, EventStatus.Started)
-      .subscribe(
-        _=>{
-          this.snackBar.open("Выполнено", Actions.OK, { duration: 4000 });
+      .subscribe({
+        next: (_) =>  {
+          this.snackBar.open(`Выполнено`, Actions.OK, { duration: 4000 });
+          this.fetchEvent();
         },
-        error => {
-          let problemDetails: ProblemDetails = <ProblemDetails>error.error;
-          this.snackBar.open(problemDetails.detail, Actions.OK, { duration: 4000 });
+        error: (err) => {
+          this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
         }
-      )
+      });
+
   }
 }
