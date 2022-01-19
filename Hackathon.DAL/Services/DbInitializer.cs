@@ -12,7 +12,7 @@ public static class DbInitializer
     {
         try
         {
-            if (!context.Users.Any())
+            if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
             {
                 var user = new UserEntity
                 {

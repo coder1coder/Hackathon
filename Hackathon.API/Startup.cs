@@ -82,11 +82,11 @@ namespace Hackathon.API
         }
 
         public void Configure(
-        IApplicationBuilder app, 
-        IWebHostEnvironment env, 
-        IServiceProvider serviceProvider, 
+        IApplicationBuilder app,
+        IWebHostEnvironment env,
+        IServiceProvider serviceProvider,
         ApplicationDbContext dbContext,
-        ILogger<Startup> logger)
+        ILogger<Startup> logger, IOptions<AdministratorDefaults> administratorDefaultsOptions)
         {
             dbContext.Database.Migrate();
 
@@ -113,7 +113,7 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
-            DbInitializer.Seed(dbContext, logger, Configuration.GetValue<AdministratorDefaults>("AdministratorDefaults"));
+            DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {
