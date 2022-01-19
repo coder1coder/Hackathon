@@ -5,12 +5,13 @@ using FluentAssertions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Team;
+using Hackathon.Contracts.Requests.User;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Team
 {
-    public class TeamControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class TeamControllerTests : BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
     {
         public TeamControllerTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -43,7 +44,7 @@ namespace Hackathon.Tests.Integration.Team
             teamExist.Should().BeTrue();
         }
 
-        [Fact]
+      /*  [Fact]
         public async Task AddMember_Should_Success()
         {
             var eventModel = TestFaker.GetEventModels(1, UserId).First();
@@ -67,14 +68,14 @@ namespace Hackathon.Tests.Integration.Team
             var createUserResponse = await UsersApi.SignUp(fakeRequest);
 
             await FluentActions.Invoking(async () =>
-            {
-                await TeamsApi.AddMember(new TeamAddMemberRequest
                 {
-                    TeamId = teamCreateResponse.Id,
-                    UserId = createUserResponse.Id
-                });
-            })
-            .Should().NotThrowAsync<Exception>();
-        }
+                    await TeamsApi.AddMember(new TeamAddMemberRequest
+                    {
+                        TeamId = teamCreateResponse.Id,
+                        UserId = createUserResponse.Id
+                    });
+                })
+                .Should().NotThrowAsync<Exception>();
+        }*/
     }
 }

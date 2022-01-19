@@ -16,17 +16,15 @@ namespace Hackathon.Tests.Integration.Event
         public EventRepositoryTests(TestWebApplicationFactory factory) : base(factory)
         {
         }
-
+        
         [Fact]
         public async Task ExistAsync_ShouldReturn_Success()
         {
-            var newEventEntity = TestFaker.GetEventEntities(1, UserId).First();
+            var signUpModel = TestFaker.GetSignUpModels(1).First();
+            var createdUserId = await UserRepository.CreateAsync(signUpModel);
 
-            await DbContext.Events.AddAsync(newEventEntity);
-            await DbContext.SaveChangesAsync();
-
-            var isExist = await EventRepository.ExistAsync(newEventEntity.Id);
-            isExist.Should().BeTrue();
+            var exist = await UserRepository.ExistAsync(createdUserId);
+            exist.Should().BeTrue();
         }
 
         [Fact]
