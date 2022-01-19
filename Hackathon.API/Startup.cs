@@ -3,6 +3,7 @@ using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
+using Hackathon.DAL.Services;
 using Hackathon.DAL.Mappings;
 using System.Linq;
 using Hackathon.Jobs;
@@ -84,10 +85,10 @@ namespace Hackathon.API
         IApplicationBuilder app, 
         IWebHostEnvironment env, 
         IServiceProvider serviceProvider, 
-        ApplicationDbContext dbContext)
+        ApplicationDbContext dbContext,
+        ILogger<Startup> logger)
         {
             dbContext.Database.Migrate();
-            DbInitializer.Seed(dbContext, logger, administratorDefaultsConfig.Value);
 
             if (env.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
@@ -112,9 +113,7 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
-            DbInitializer.Seed(dbContext, logger, Configuration.GetValue<AdminOptions>("AdminOptions"));
-
-
+            DbInitializer.Seed(dbContext, logger, Configuration.GetValue<AdministratorDefaults>("AdministratorDefaults"));
 
             app.UseEndpoints(endpoints =>
             {
