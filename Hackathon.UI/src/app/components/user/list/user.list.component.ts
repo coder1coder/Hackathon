@@ -4,14 +4,11 @@ import {PageSettings, PageSettingsDefaults} from "../../../models/PageSettings";
 import {UserService} from "../../../services/user.service";
 import {UserModel} from "../../../models/User/UserModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {PageUserSettings, PageUserSettingsDefaults} from "../../../models/PageUserSettings";
-import {PageUser} from "@angular/material/paginator";
-//import {PageUser} from "@angular/core";
 import {PageEvent} from "@angular/material/paginator";
+
 
 @Component({
   selector: 'user-list',
-  //template: `<h2>user list</h2>`,
   templateUrl: './user.list.component.html',
   styleUrls: ['./user.list.component.scss']
 })
@@ -19,26 +16,25 @@ export class UserListComponent implements AfterViewInit {
 
   users: UserModel[] = [];
   displayedColumns: string[] = ['id', 'userName', 'email', 'fullName', 'actions'];
-  //pageSettings: PageUser = new PageUser();
-  pageUserSettings: PageUser = new PageUser();
+  pageSettings: PageEvent = new PageEvent();
 
   constructor(private usersService: UserService, private router: Router) {
 
-    let pageSettingsJson = sessionStorage.getItem(`${UserListComponent.name}${PageUser.name}`);
+    let pageSettingsJson = sessionStorage.getItem(`${UserListComponent.name}${PageEvent.name}`);
 
 
     if (pageSettingsJson != null)
-      this.pageUserSettings = JSON.parse(pageSettingsJson)
+      this.pageSettings = JSON.parse(pageSettingsJson)
     else
     {
-      this.pageUserSettings.pageSize = PageSettingsDefaults.PageSize;
-      this.pageUserSettings.pageIndex = PageSettingsDefaults.PageIndex;
+      this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
+      this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
     }
   }
 
-  setPageSettings(user:PageUser){
-    this.pageUserSettings = user;
-    sessionStorage.setItem(`${UserListComponent.name}${PageUser.name}`, JSON.stringify(user));
+  setPageSettings(pageEvent:PageEvent){
+    this.pageSettings = pageEvent;
+    sessionStorage.setItem(`${UserListComponent.name}${PageEvent.name}`, JSON.stringify(pageEvent));
 
     this.fetch();
   }
@@ -48,11 +44,11 @@ export class UserListComponent implements AfterViewInit {
   }
 
   fetch(){
-    this.usersService.getAll(new PageUserSettings(this.pageUserSettings))
+    this.usersService.getAll(new PageSettings(this.pageSettings))
       .subscribe({
         next: (r: BaseCollectionModel<UserModel>) =>  {
           this.users = r.items;
-          this.pageUserSettings.length = r.totalCount;
+          this.pageSettings.length = r.totalCount;
         },
         error: () => {}
       });
