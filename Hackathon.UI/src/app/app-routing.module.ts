@@ -10,6 +10,7 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {EventListComponent} from "./components/event/list/event.list.component";
 import {EventViewComponent} from "./components/event/view/event.view.component";
 import {EventNewComponent} from "./components/event/new/event.new.component";
+import {UserListComponent} from "./components/user/list/user.list.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'events', component: EventListComponent, canActivate: [AuthGuard] },
   { path: 'team/:eventId', component: TeamComponent, canActivate: [AuthGuard] },
   { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard] },
+  { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] }
 ];
 

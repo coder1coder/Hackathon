@@ -35,6 +35,7 @@ import {EventListComponent} from "./components/event/list/event.list.component";
 import {EventNewComponent} from "./components/event/new/event.new.component";
 import {EventViewComponent} from "./components/event/view/event.view.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {UserListComponent} from "./components/user/list/user.list.component";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     TeamsComponent,
     TeamComponent,
     TeamNewComponent,
+
+    UserListComponent,
 
     NotFoundComponent,
 
