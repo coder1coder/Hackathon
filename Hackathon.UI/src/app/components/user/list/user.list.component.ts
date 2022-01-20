@@ -19,7 +19,8 @@ export class UserListComponent implements AfterViewInit {
 
   users: UserModel[] = [];
   displayedColumns: string[] = ['id', 'userName', 'email', 'fullName', 'actions'];
-  pageSettings: PageUser = new PageUser();
+  //pageSettings: PageUser = new PageUser();
+  pageUserSettings: PageUser = new PageUser();
 
   constructor(private usersService: UserService, private router: Router) {
 
@@ -27,16 +28,16 @@ export class UserListComponent implements AfterViewInit {
 
 
     if (pageSettingsJson != null)
-      this.pageSettings = JSON.parse(pageSettingsJson)
+      this.pageUserSettings = JSON.parse(pageSettingsJson)
     else
     {
-      this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
-      this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
+      this.pageUserSettings.pageSize = PageSettingsDefaults.PageSize;
+      this.pageUserSettings.pageIndex = PageSettingsDefaults.PageIndex;
     }
   }
 
   setPageSettings(user:PageUser){
-    this.pageSettings = user;
+    this.pageUserSettings = user;
     sessionStorage.setItem(`${UserListComponent.name}${PageUser.name}`, JSON.stringify(user));
 
     this.fetch();
@@ -51,7 +52,7 @@ export class UserListComponent implements AfterViewInit {
       .subscribe({
         next: (r: BaseCollectionModel<UserModel>) =>  {
           this.users = r.items;
-          this.pageSettings.length = r.totalCount;
+          this.pageUserSettings.length = r.totalCount;
         },
         error: () => {}
       });
