@@ -4,7 +4,7 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {UserModel} from "../models/User/UserModel";
-import {PageUserSettings} from "../models/PageUserSettings";
+import {PageSettings} from "../models/PageSettings";
 
 @Injectable({
   providedIn: 'root'
@@ -25,17 +25,12 @@ export class UserService {
     });
   }
 
-  // getAll():Observable<BaseCollectionModel<UserModel>>{
-  //   return this.http.get<BaseCollectionModel<UserModel>>(this.api+'/User');
-  // }
-
-
-  getAll(pageUserSettings?:PageUserSettings):Observable<BaseCollectionModel<UserModel>>{
+  getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<UserModel>>{
 
     let endpoint = this.api+'/User';
 
-    if (PageUserSettings != undefined)
-      endpoint += `?${PageUserSettings.toQueryArgs()}`;
+    if (pageSettings != undefined)
+      endpoint += `?${pageSettings.toQueryArgs()}`;
 
     return this.http.get<BaseCollectionModel<UserModel>>(endpoint);
   }
