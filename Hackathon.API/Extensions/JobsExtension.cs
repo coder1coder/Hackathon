@@ -1,4 +1,5 @@
 ﻿using System;
+using Hackathon.DAL;
 using Hackathon.Jobs;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -15,18 +16,21 @@ namespace Hackathon.API.Extensions
             var connectionString = config.GetConnectionString("JobsDatabaseConnectionString");
             return services.AddHangfire(configuration =>
             {
-                configuration
-                    .UsePostgreSqlStorage(connectionString);
-
-            }).AddHangfireServer();
+                configuration.UsePostgreSqlStorage(connectionString);
+            });
         }
 
         public static IApplicationBuilder UseJobs(this IApplicationBuilder app, IServiceProvider serviceProvider)
         {
+            var hangfireContext = serviceProvider.GetRequiredService<HangFireDbContext>();
+
+            hangfireContext.Database.EnsureCreated();
+
             app.UseHangfireDashboard("/jobs", new DashboardOptions());
             RegisterJob<IChangeEventStatusJob>(serviceProvider);
             return app;
         }
+
         private static void RegisterJob<T>(IServiceProvider serviceProvider) where T: IJob
         {
             var job = (T)serviceProvider.GetRequiredService(typeof(T));

@@ -39,6 +39,11 @@ namespace Hackathon.API
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
 
+            services.AddDbContext<HangFireDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
