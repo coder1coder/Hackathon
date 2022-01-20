@@ -4,7 +4,6 @@ using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
-using Hackathon.DAL.Services;
 using Hackathon.Jobs;
 using Hackathon.MessageQueue.Hubs;
 using Mapster;

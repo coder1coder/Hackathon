@@ -68,8 +68,7 @@ export class EventNewComponent implements AfterViewInit  {
         });
   }
   cancel(){
-    this.router.navigate(['/events']);
-
+    history.go(-1)
   }
 
 }
