@@ -4,7 +4,7 @@ using Hackathon.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Hackathon.DAL.Services;
+namespace Hackathon.DAL;
 
 public static class DbInitializer
 {

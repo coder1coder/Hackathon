@@ -67,5 +67,8 @@ export class EventNewComponent implements AfterViewInit  {
 
         });
   }
+  cancel(){
+    history.go(-1)
+  }
 
 }

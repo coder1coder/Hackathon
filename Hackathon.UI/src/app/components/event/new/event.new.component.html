@@ -79,13 +79,15 @@
                     required>
         Создавать команды автоматически
       </mat-checkbox>
-
     </div>
+
     <div class="form-vertical__bottom">
       <div class="eventsNewForm__buttons">
         <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+        <button mat-button (click)="cancel()">Назад</button>
       </div>
     </div>
+
   </form>
 
   <div class="loader" *ngIf="isLoading">
