@@ -57,8 +57,4 @@ export class UserListComponent implements AfterViewInit {
   handleRowClick(user: UserModel){
     this.router.navigate(['/users/'+user.id]);
   }
-
-  // showUserPage(user: UserModel){
-  //   this.router.navigate(['/user/'+user.id]);
-  // }
 }
