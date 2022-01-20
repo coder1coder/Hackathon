@@ -24,11 +24,11 @@ export class UserListComponent implements AfterViewInit {
 
 
     if (pageSettingsJson != null)
-      this.pageSettings = JSON.parse(pageSettingsJson)
+      this.pageUserSettings = JSON.parse(pageSettingsJson)
     else
     {
-      this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
-      this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
+      this.pageUserSettings.pageSize = PageSettingsDefaults.PageSize;
+      this.pageUserSettings.pageIndex = PageSettingsDefaults.PageIndex;
     }
   }
 
@@ -48,7 +48,7 @@ export class UserListComponent implements AfterViewInit {
       .subscribe({
         next: (r: BaseCollectionModel<UserModel>) =>  {
           this.users = r.items;
-          this.pageSettings.length = r.totalCount;
+          this.pageUserSettings.length = r.totalCount;
         },
         error: () => {}
       });
