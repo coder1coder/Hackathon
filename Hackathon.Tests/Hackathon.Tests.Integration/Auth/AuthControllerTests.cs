@@ -33,5 +33,17 @@ namespace Hackathon.Tests.Integration.Auth
             signInResponse.Expires.Should().BeGreaterThan(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             signInResponse.Token.Should().NotBeNullOrWhiteSpace();
         }
+
+        [Fact]
+        public async Task Should_Create_DefaultAdministratorUser()
+        {
+            var adminSignInResponse =  await AuthApi.SignIn(new SignInRequest()
+            {
+                UserName = AdministratorDefaultsConfig.Login,
+                Password = AdministratorDefaultsConfig.Password,
+            });
+
+            Assert.NotNull(adminSignInResponse);
+        }
     }
 }

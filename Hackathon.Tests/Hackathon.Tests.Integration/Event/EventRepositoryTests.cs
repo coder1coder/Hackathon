@@ -96,5 +96,15 @@ namespace Hackathon.Tests.Integration.Event
             var eventModel = await EventRepository.GetAsync(eventId);
             eventModel.Should().BeNull();
         }
+
+        [Fact]
+        public async Task ExistAsync_ShouldReturn_Success()
+        {
+            var signUpModel = TestFaker.GetSignUpModels(1).First();
+            var createdUserId = await UserRepository.CreateAsync(signUpModel);
+
+            var exist = await UserRepository.ExistAsync(createdUserId);
+            exist.Should().BeTrue();
+        }
     }
 }

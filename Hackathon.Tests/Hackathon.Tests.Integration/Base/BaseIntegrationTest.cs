@@ -4,12 +4,14 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.DAL;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Refit;
 
 namespace Hackathon.Tests.Integration.Base
@@ -31,10 +33,14 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly ApplicationDbContext DbContext;
         protected readonly TestFaker TestFaker;
 
+        protected readonly AdministratorDefaults AdministratorDefaultsConfig;
+
         protected long UserId { get; set; }
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
+            AdministratorDefaultsConfig = factory.Services.GetRequiredService<IOptions<AdministratorDefaults>>().Value;
+
             DbContext = factory.Services.GetRequiredService<ApplicationDbContext>();
 
             UserRepository = factory.Services.GetRequiredService<IUserRepository>();

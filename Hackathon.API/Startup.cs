@@ -1,10 +1,10 @@
 using System;
-using System.Linq;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
+using Hackathon.DAL.Services;
 using Hackathon.Jobs;
 using Hackathon.MessageQueue.Hubs;
 using Mapster;
@@ -15,7 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Hackathon.API
 {
@@ -31,6 +32,7 @@ namespace Hackathon.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
+            services.Configure<AdministratorDefaults>(Configuration.GetSection(nameof(AdministratorDefaults)));
 
             var config = new TypeAdapterConfig();
 
@@ -82,7 +84,12 @@ namespace Hackathon.API
             services.AddSwagger();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, ApplicationDbContext dbContext)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IServiceProvider serviceProvider,
+            ApplicationDbContext dbContext,
+            ILogger<Startup> logger, IOptions<AdministratorDefaults> administratorDefaultsOptions)
         {
             dbContext.Database.Migrate();
 
@@ -108,6 +115,8 @@ namespace Hackathon.API
             var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
             app.UseCors("default");
+
+            DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {
