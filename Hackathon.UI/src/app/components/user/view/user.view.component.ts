@@ -46,4 +46,7 @@ export class UserViewComponent implements AfterViewInit {
         }
       });
   }
+  cancel(){
+    history.go(-1)
+  }
 }
