@@ -1,15 +1,12 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators
 {
     public class CreateTeamModelValidator : AbstractValidator<CreateTeamModel>
     {
-        public CreateTeamModelValidator(
-            IEventRepository eventRepository,
-            ITeamRepository teamRepository)
+        public CreateTeamModelValidator(ITeamRepository teamRepository)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -21,22 +18,6 @@ namespace Hackathon.BL.Team.Validators
 
                     if (isSameNameExist)
                         context.AddFailure("Команда с таким названием уже существует");
-                });
-
-            RuleFor(x => x.EventId)
-                .GreaterThan(0)
-                .CustomAsync(async (eventId, context, _) =>
-                {
-                    var eventModel = await eventRepository.GetAsync(eventId);
-
-                    if (eventModel == null)
-                        context.AddFailure("События с таким идентификатором не существует");
-                    else
-                    {
-                        if (eventModel.Status != EventStatus.Published)
-                            context.AddFailure("Зарегистрировать команду возможно только для опубликованного события");
-                    }
-
                 });
         }
     }

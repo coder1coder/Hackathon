@@ -21,8 +21,7 @@ namespace Hackathon.DAL.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.EventId)
-                .IsRequired();
+                .Property(x => x.EventId);
 
             builder
                 .HasMany(x => x.Users)
