@@ -1,2 +1,32 @@
-<app-nav-menu></app-nav-menu>
-404
+<layout-default>
+
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>404</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:700,900" rel="stylesheet">
+  </head>
+
+  <body>
+
+  <div id="notfound">
+    <div class="notfound">
+      <h2>Страница не найдена</h2>
+      <p>Неправильный адрес или такой страницы больше не существует.</p>
+      <div class="form-vertical__bottom">
+        <div class="eventsNewForm__buttons">
+          <button mat-raised-button color="primary" (click)="home()">Главная</button>
+          <button mat-button (click)="back()">Назад</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </body>
+  </html>
+</layout-default>

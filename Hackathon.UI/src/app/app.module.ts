@@ -37,6 +37,7 @@ import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {TeamViewComponent} from "./components/team/view/team.component";
 
     NotFoundComponent,
 
-    DefaultLayoutComponent
+    DefaultLayoutComponent,
+      PagenotfoundComponent
   ],
   imports: [
     BrowserModule,
