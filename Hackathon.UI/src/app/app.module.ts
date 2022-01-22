@@ -18,9 +18,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
-import {TeamsComponent} from "./components/teams/teams.component";
 import {MatTableModule} from "@angular/material/table";
-import {TeamComponent} from "./components/team/team.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {Pagination} from "./common/Pagination";
@@ -37,9 +35,12 @@ import {EventViewComponent} from "./components/event/view/event.view.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
+import {TeamListComponent} from "./components/team/list/team.list.component";
+import {TeamViewComponent} from "./components/team/view/team.component";
 
 @NgModule({
   declarations: [
+
     AppComponent,
     NavMenuComponent,
     HomeComponent,
@@ -51,9 +52,9 @@ import {UserViewComponent} from "./components/user/view/user.view.component";
     EventViewComponent,
     EventNewComponent,
 
-    TeamsComponent,
-    TeamComponent,
+    TeamViewComponent,
     TeamNewComponent,
+    TeamListComponent,
 
     UserListComponent,
     UserViewComponent,

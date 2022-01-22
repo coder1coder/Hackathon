@@ -1,6 +1,10 @@
-<layout-default title="Пользователи">
+<layout-default title="Команды">
 
-  <div *ngIf="items.length > 0">
+  <div class="mb-1-5em">
+    <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
+  </div>
+
+  <div *ngIf="this.items.length > 0">
     <table mat-table [dataSource]="items">
 
       <ng-container matColumnDef="id">
@@ -8,19 +12,9 @@
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.id}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef>Имя пользователя</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.userName}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.email}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="fullName">
-        <th mat-header-cell *matHeaderCellDef>Полное имя пользователя</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.fullName}} </td>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Название</th>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -55,7 +49,7 @@
   </div>
 
   <div *ngIf="items.length == 0">
-    Нет пользователей
+    Нет элементов для отображения
   </div>
 
 </layout-default>

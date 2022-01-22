@@ -7,12 +7,13 @@ import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {BaseCreateResponse} from "../models/BaseCreateResponse";
+import {PageSettings} from "../models/PageSettings";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class TeamsService {
+export class TeamService {
 
   api = environment.api;
   storage = sessionStorage;
@@ -31,8 +32,14 @@ export class TeamsService {
     return this.http.post<BaseCreateResponse>(this.api+'/Team', createTeamModel);
   }
 
-  getAll():Observable<BaseCollectionModel<TeamModel>>{
-    return this.http.get<BaseCollectionModel<TeamModel>>(this.api+'/Team');
+  getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<TeamModel>>{
+
+    let endpoint = this.api+'/Team';
+
+    if (pageSettings != undefined)
+      endpoint += `?${pageSettings.toQueryArgs()}`;
+
+    return this.http.get<BaseCollectionModel<TeamModel>>(endpoint);
   }
 
   getById(eventId:number){
