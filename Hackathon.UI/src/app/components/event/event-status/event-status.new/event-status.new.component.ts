@@ -12,8 +12,9 @@ import { EventStatus, EventStatusLabelMapping } from 'src/app/models/EventStatus
 
 export class EventNewStatusDialog implements AfterViewInit {
 
-  public eventStatusLabelMapping = EventStatusLabelMapping;
-  public statuses = Object.values(EventStatus);
+  eventStatusLabelMapping = EventStatusLabelMapping;
+  statuses = Object.values(this.eventStatusLabelMapping);
+  selectedOption!: EventStatus;
 
   form = new FormGroup({
     status: new FormControl(this.statuses),
@@ -23,29 +24,26 @@ export class EventNewStatusDialog implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<EventNewStatusDialog>,
     @Inject(MAT_DIALOG_DATA) private dialogData: any) {
-     // this.statuses = dialogData.statuses;
-      this.statuses = Object.values(EventStatus).filter(value => typeof value === 'string');
-      console.log('this.statuses: ', this.statuses);
+     this.statuses = this.dialogData.statuses;
   }
 
   ngAfterViewInit(): void {
   }
 
   createStatus() {
-
-    //this.statuses = Object.keys(EventStatus).filter(value => typeof value === 'number');
-
-    //this.statuses = Object.keys(EventStatus).filter((key, value) => !isNaN(Number(EventStatus[value])));
-
     let createTeamModel = new ChangeEventStatusMessage();
-    createTeamModel.status =  this.form.get('status')?.value;
+    createTeamModel.status =  this.selectedOption;
     createTeamModel.message =  this.form.get('message')?.value;
 
     this.dialogRef.close(createTeamModel);
   }
 
   getEnumValue(status: string) : string {
-    for(let key in EventStatus) if (EventStatus[key] === status) return key;
+    for(let key in EventStatus)
+    if (EventStatus[key] === status) {
+      return EventStatus[key];
+    }
+
     return status!;
   }
 }

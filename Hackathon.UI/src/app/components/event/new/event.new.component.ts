@@ -91,23 +91,19 @@ export class EventNewComponent implements AfterViewInit  {
   AddStatus() {
     const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialog, {
       data: {
-        status: this.status,
-        message: this.message
+        statuses: Object.values(EventStatus)
       }
     });
 
-    createEventNewStatusDialog.afterClosed();
+    createEventNewStatusDialog
+                        .afterClosed()
+                        .subscribe(result => {
+                          console.log('result: ', result);
+                        if( typeof result === typeof ChangeEventStatusMessage){
+                          this.eventStatuses.push(result);
+                        }
+                      });
 
-    // createEventNewStatusDialog.afterClosed((result) => {
-
-    //   if(typeof result === 'ChangeEventStatusMessage') {
-
-    //   }
-
-
-    // });
-
-    this.eventStatuses.push(new ChangeEventStatusMessage());
     this.table.renderRows();
   }
 
