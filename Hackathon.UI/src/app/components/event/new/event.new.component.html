@@ -2,89 +2,122 @@
 
   <form [formGroup]="form" class="eventsNewForm" >
 
-    <div class="eventsNewForm__fields">
+    <div class="eventsNewForm__container">
 
-      <mat-form-field appearance="fill">
-        <mat-label>Наименование события</mat-label>
-        <input matInput autocomplete="off"
-               id="name"
-               formControlName="name"
-               required>
-      </mat-form-field>
+      <div class="eventsNewForm__fields">
+        <mat-form-field appearance="fill">
+          <mat-label>Наименование события</mat-label>
+          <input matInput autocomplete="off"
+                 id="name"
+                 formControlName="name"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Дата и время начала</mat-label>
-        <input matInput
-               type="datetime-local"
-               autocomplete="off"
-               id="start"
-               formControlName="start"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Дата и время начала</mat-label>
+          <input matInput
+                 type="datetime-local"
+                 autocomplete="off"
+                 id="start"
+                 formControlName="start"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Продолжительность формированя команд в минутах</mat-label>
-        <input matInput
-               type="number"
-               min="1"
-               id="memberRegistrationMinutes"
-               formControlName="memberRegistrationMinutes"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Продолжительность формированя команд в минутах</mat-label>
+          <input matInput
+                 type="number"
+                 min="1"
+                 id="memberRegistrationMinutes"
+                 formControlName="memberRegistrationMinutes"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Продолжительность этапа разработки в минутах</mat-label>
-        <input matInput
-               min="1"
-               type="number"
-               id="developmentMinutes"
-               formControlName="developmentMinutes"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Продолжительность этапа разработки в минутах</mat-label>
+          <input matInput
+                 min="1"
+                 type="number"
+                 id="developmentMinutes"
+                 formControlName="developmentMinutes"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Продолжительность выступления каждой команды в минутах</mat-label>
-        <input matInput
-               type="number"
-               min="1"
-               id="teamPresentationMinutes"
-               formControlName="teamPresentationMinutes"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Продолжительность выступления каждой команды в минутах</mat-label>
+          <input matInput
+                 type="number"
+                 min="1"
+                 id="teamPresentationMinutes"
+                 formControlName="teamPresentationMinutes"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Минимальное количество участников</mat-label>
-        <input matInput
-               type="number"
-               min="1"
-               id="minTeamMembers"
-               formControlName="minTeamMembers"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Минимальное количество участников</mat-label>
+          <input matInput
+                 type="number"
+                 min="1"
+                 id="minTeamMembers"
+                 formControlName="minTeamMembers"
+                 required>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Максимальное количество участников</mat-label>
-        <input matInput
-               autocomplete="off"
-               type="number"
-               min="2"
-               id="maxEventMembers"
-               formControlName="maxEventMembers"
-               required>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Максимальное количество участников</mat-label>
+          <input matInput
+                 autocomplete="off"
+                 type="number"
+                 min="2"
+                 id="maxEventMembers"
+                 formControlName="maxEventMembers"
+                 required>
+        </mat-form-field>
 
-      <mat-checkbox id="isCreateTeamsAutomatically"
-                    formControlName="isCreateTeamsAutomatically"
-                    value="false"
-                    required>
-        Создавать команды автоматически
-      </mat-checkbox>
+        <mat-checkbox id="isCreateTeamsAutomatically"
+                      formControlName="isCreateTeamsAutomatically"
+                      value="false"
+                      required>
+          Создавать команды автоматически
+        </mat-checkbox>
+      </div>
+
+      <div class="eventsNewForm__status">
+
+        <div class="eventsNewForm__status-button">
+          <button [disabled]="isCanAddStatus()"
+          mat-raised-button color="basic"
+          (click)="AddStatus()"
+           class="button-status">Добавить статус</button>
+
+          <button mat-raised-button
+          [disabled]="!eventStatuses.length"
+          (click)="removeStatus()"
+          class="button-status">Удалить статус</button>
+        </div>
+
+        <table mat-table [dataSource]="eventStatuses" class="mat-elevation-z8 status-table">
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Статус</th>
+            <td mat-cell *matCellDef="let element">{{element.status}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef>Сообщение</th>
+            <td mat-cell *matCellDef="let element">{{element.message}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
     </div>
 
     <div class="form-vertical__bottom">
       <div class="eventsNewForm__buttons">
         <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
-        <button mat-button (click)="cancel()">Назад</button>
+        <button mat-raised-button mat-button (click)="goBack()">Назад</button>
       </div>
     </div>
 

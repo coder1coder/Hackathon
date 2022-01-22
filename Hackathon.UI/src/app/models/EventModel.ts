@@ -1,5 +1,7 @@
 import {EventStatus} from "./EventStatus";
 import {UserModel} from "./User/UserModel";
+import {TeamModel} from "./Team/TeamModel";
+import { ChangeEventStatusMessage } from "./Event/ChangeEventStatusMessage";
 import {TeamEventModel} from "./Team/TeamEventModel";
 
 export class EventModel {
@@ -12,7 +14,7 @@ export class EventModel {
   maxEventMembers!: number;
   minTeamMembers!: number;
   isCreateTeamsAutomatically!: boolean;
-  changeEventStatusMessages!: any[];
+  changeEventStatusMessages!: ChangeEventStatusMessage[];
   status!: EventStatus;
   userId!: number;
   user!: UserModel;

@@ -35,6 +35,8 @@ import {EventViewComponent} from "./components/event/view/event.view.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
+import {EventNewStatusDialog} from './components/event/event-status/event-status.new/event-status.new.component';
+import { MatSelectModule } from '@angular/material/select';
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
 
@@ -51,6 +53,7 @@ import {TeamViewComponent} from "./components/team/view/team.component";
     EventListComponent,
     EventViewComponent,
     EventNewComponent,
+    EventNewStatusDialog,
 
     TeamViewComponent,
     TeamNewComponent,
@@ -83,7 +86,8 @@ import {TeamViewComponent} from "./components/team/view/team.component";
     MatPaginatorModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSelectModule
   ],
   providers: [
     {

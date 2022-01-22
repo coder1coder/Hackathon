@@ -10,3 +10,15 @@ export enum EventStatus
   Award = 7,
   Finished = 8,
 }
+
+export const EventStatusLabelMapping: Record<EventStatus, string> = {
+  [EventStatus.Draft]: "Draft",
+  [EventStatus.Published]: "Published",
+  [EventStatus.Started]: "Started",
+  [EventStatus.Development]: "Development",
+  [EventStatus.Prepare]: "Prepare",
+  [EventStatus.Presentation]: "Presentation",
+  [EventStatus.Decision]: "Decision",
+  [EventStatus.Award]: "Award",
+  [EventStatus.Finished]: "Finished",
+};

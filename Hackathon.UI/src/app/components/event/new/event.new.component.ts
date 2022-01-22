@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from "@angular/core";
+import {AfterViewInit, Component, ViewChild} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
 import {EventService} from "../../../services/event.service";
 import {ProblemDetails} from "../../../models/ProblemDetails";
@@ -6,6 +6,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {CreateEvent} from "../../../models/Event/CreateEvent";
 import {Actions} from "../../../common/Actions";
+import {EventStatus} from "src/app/models/EventStatus";
+import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
+import { MatTable } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
+import { EventNewStatusDialog } from "../event-status/event-status.new/event-status.new.component";
 
 @Component({
   selector: 'event-new',
@@ -16,6 +21,13 @@ import {Actions} from "../../../common/Actions";
 export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
+  displayedColumns: string[] = ['status', 'message'];
+  eventStatuses: ChangeEventStatusMessage[] = [];
+  message!: string;
+  status!: string;
+
+  @ViewChild(MatTable)
+  table!: MatTable<ChangeEventStatusMessage>;
 
   form = new FormGroup({
     name: new FormControl(''),
@@ -25,8 +37,7 @@ export class EventNewComponent implements AfterViewInit  {
     teamPresentationMinutes: new FormControl('10'),
     maxEventMembers: new FormControl('50'),
     minTeamMembers: new FormControl('2'),
-    isCreateTeamsAutomatically: new FormControl(false),
-    //List<ChangeEventStatusMessage>
+    isCreateTeamsAutomatically: new FormControl(false)
   })
 
   getEventStartDefault(){
@@ -40,7 +51,11 @@ export class EventNewComponent implements AfterViewInit  {
   ngAfterViewInit(): void {
   }
 
-  constructor(private eventService: EventService, private snackBar: MatSnackBar, private router: Router) {
+  constructor(
+    private eventService: EventService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private dialog: MatDialog) {
   }
 
   submit(){
@@ -54,6 +69,7 @@ export class EventNewComponent implements AfterViewInit  {
     createEvent.minTeamMembers = this.form.get('minTeamMembers')?.value;
     createEvent.start = this.form.get('start')?.value;
     createEvent.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
+    createEvent.changeEventMessage = this.eventStatuses;
 
     this.eventService.create(createEvent)
       .subscribe(_=>{
@@ -67,8 +83,40 @@ export class EventNewComponent implements AfterViewInit  {
 
         });
   }
-  cancel(){
-    history.go(-1)
+
+  isCanAddStatus() {
+    return false;
   }
 
+  AddStatus() {
+    const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialog, {
+      data: {
+        status: this.status,
+        message: this.message
+      }
+    });
+
+    createEventNewStatusDialog.afterClosed();
+
+    // createEventNewStatusDialog.afterClosed((result) => {
+
+    //   if(typeof result === 'ChangeEventStatusMessage') {
+
+    //   }
+
+
+    // });
+
+    this.eventStatuses.push(new ChangeEventStatusMessage());
+    this.table.renderRows();
+  }
+
+  removeStatus() {
+    this.eventStatuses.pop();
+    this.table.renderRows();
+  }
+
+  goBack(){
+    history.go(-1)
+  }
 }
