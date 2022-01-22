@@ -4,27 +4,27 @@
     <button mat-raised-button color="primary" (click)="showCreateEventPage()">Добавить новое событие</button>
   </div>
 
-  <div *ngIf="events.length > 0">
-    <table mat-table [dataSource]="events">
+  <div *ngIf="items.length > 0">
+    <table mat-table [dataSource]="items">
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)"> {{element.id}} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Название</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)"> {{element.name}} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="start">
         <th mat-header-cell *matHeaderCellDef>Начало</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)"> {{element.start}} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.start}} </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>Статус</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)">
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
           <mat-icon class="mat-icon-{{ getEventStatus(element.status) }}">circle</mat-icon>
           {{ getEventStatus(element.status) }}
         </td>
@@ -32,17 +32,17 @@
 
       <ng-container matColumnDef="teams">
         <th mat-header-cell *matHeaderCellDef>Команды</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)">{{element.teams.length}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{element.teams.length}}</td>
       </ng-container>
 
       <ng-container matColumnDef="members">
         <th mat-header-cell *matHeaderCellDef>Участники</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)">{{ getUsersCount(element) }} / {{element.maxEventMembers}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ getUsersCount(element) }} / {{element.maxEventMembers}}</td>
       </ng-container>
 
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef>Организатор</th>
-        <td mat-cell *matCellDef="let element" (click)="handleRowClick(element)">{{ element.user.userName }} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.user.userName }} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -64,8 +64,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
+      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
     </table>
 
     <mat-paginator [length]="pageSettings.length"
@@ -76,7 +76,7 @@
     </mat-paginator>
   </div>
 
-  <div *ngIf="events.length == 0">
+  <div *ngIf="items.length == 0">
     Нет событий
   </div>
 

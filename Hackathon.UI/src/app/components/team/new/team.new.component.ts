@@ -6,7 +6,7 @@ import {Actions} from "../../../common/Actions";
 import {ProblemDetails} from "../../../models/ProblemDetails";
 import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {TeamsService} from "../../../services/teams.service";
+import {TeamService} from "../../../services/team.service";
 
 @Component({
   selector: 'team',
@@ -23,7 +23,7 @@ export class TeamNewComponent implements AfterViewInit
   })
 
   constructor(
-    private teamService:TeamsService,
+    private teamService:TeamService,
     private snackBar:MatSnackBar,
     public dialogRef: MatDialogRef<TeamNewComponent>,
     @Inject(MAT_DIALOG_DATA) private dialogData: any) {

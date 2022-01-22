@@ -6,6 +6,14 @@ b {
   font-weight: 500;
 }
 
+table {
+  width: 100%;
+
+  tr {
+    cursor: pointer;
+  }
+}
+
 .container {
   width: 100%;
   max-width: 1200px;
