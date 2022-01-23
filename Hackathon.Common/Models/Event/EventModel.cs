@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 
@@ -69,6 +68,6 @@ namespace Hackathon.Common.Models.Event
         /// <summary>
         /// Список команд связанных с событием
         /// </summary>
-        public List<TeamModel> Teams { get; set; } = new();
+        public List<TeamEventModel> TeamEvents { get; set; } = new();
     }
 }

@@ -7,6 +7,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities;
+using Hackathon.DAL.Mappings;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +37,8 @@ namespace Hackathon.DAL.Repositories
         {
             var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
-                .Include(x=>x.Event)
+                .Include(x=>x.TeamEvents)
                 .Include(x=>x.Users)
-                .Include(x=> x.Project)
                 .FirstOrDefaultAsync(x=>x.Id == teamId);
 
             if (teamEntity == null)
@@ -49,7 +49,8 @@ namespace Hackathon.DAL.Repositories
 
         public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
         {
-            var query = _dbContext.Teams.AsNoTracking();
+            var query = _dbContext.Teams
+                .AsNoTracking();
 
             if (getFilterModel.Filter != null)
             {
@@ -60,10 +61,10 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => x.Name == getFilterModel.Filter.Name);
 
                 if (getFilterModel.Filter.EventId.HasValue)
-                    query = query.Where(x => x.EventId == getFilterModel.Filter.EventId);
+                    query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getFilterModel.Filter.EventId));
 
                 if (getFilterModel.Filter.ProjectId.HasValue)
-                    query = query.Where(x => x.ProjectId == getFilterModel.Filter.ProjectId);
+                    query = query.Where(x => x.TeamEvents.Any(s => s.ProjectId == getFilterModel.Filter.ProjectId));
             }
 
             var totalCount = await query.LongCountAsync();
@@ -75,14 +76,6 @@ namespace Hackathon.DAL.Repositories
                     nameof(TeamEntity.Name) => getFilterModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Name)
                         : query.OrderByDescending(x => x.Name),
-
-                    nameof(TeamEntity.EventId) => getFilterModel.SortOrder == SortOrder.Asc
-                        ? query.OrderBy(x => x.EventId)
-                        : query.OrderByDescending(x => x.EventId),
-
-                    nameof(TeamEntity.ProjectId) => getFilterModel.SortOrder == SortOrder.Asc
-                        ? query.OrderBy(x => x.ProjectId)
-                        : query.OrderByDescending(x => x.ProjectId),
 
                     _ => getFilterModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
@@ -96,7 +89,7 @@ namespace Hackathon.DAL.Repositories
             var teamModels = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ProjectToType<TeamModel>()
+                .ProjectToType<TeamModel>(_mapper.Config)
                 .ToListAsync();
 
             return new BaseCollectionModel<TeamModel>

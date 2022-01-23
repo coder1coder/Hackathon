@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Models.Event;
+﻿using System.Linq;
+using Hackathon.Common.Models.Event;
 using Hackathon.DAL.Entities;
 using Mapster;
 
@@ -8,10 +9,11 @@ namespace Hackathon.DAL.Mappings
     {
         public void Register(TypeAdapterConfig config)
         {
-            TypeAdapterConfig<EventEntity, EventModel>.NewConfig()
+            config.ForType<EventEntity, EventModel>()
                 .IgnoreNullValues(true)
-                .MaxDepth(3)
-                ;
+                .Map(x=>x.TeamEvents, s=>s.TeamEvents)
+                //Attention! Max depth is 3 because in case when it equal 4 and more, we will have exception "circular json"
+                .MaxDepth(3);
         }
     }
 }

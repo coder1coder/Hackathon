@@ -73,7 +73,7 @@ namespace Hackathon.BL.Event
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
 
-            var notFullTeams = eventModel.Teams
+            var notFullTeams = eventModel.TeamEvents.Select(x=>x.Team)
                 .Where(x => x.Users.Count < eventModel.MinTeamMembers)
                 .ToArray();
 

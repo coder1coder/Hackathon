@@ -5,6 +5,7 @@ import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {TeamModel} from "../../../models/Team/TeamModel";
 import {TeamService} from "../../../services/team.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'team-list',
@@ -15,11 +16,18 @@ import {TeamService} from "../../../services/team.service";
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<TeamModel> {
 
-  constructor(private teamService: TeamService, private router: Router) {
+  public userId:number | undefined;
+
+  constructor(
+    private teamService: TeamService,
+    private authService: AuthService,
+    private router: Router) {
     super(TeamListComponent.name);
+    this.userId = authService.getUserId();
   }
 
   createNewItem(){
+    this.router.navigate(['/teams/new']);
   }
 
   override fetch(){
@@ -34,9 +42,10 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   }
 
   rowClick(item: TeamModel){
+
   }
 
   getDisplayColumns(): string[] {
-    return ['id', 'name', 'actions'];
+    return ['id', 'name', 'owner', 'actions'];
   }
 }

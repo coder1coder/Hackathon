@@ -6,6 +6,7 @@ import {EventModel} from "../../../models/EventModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {EventStatus} from "../../../models/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
+import {TeamModel} from "../../../models/Team/TeamModel";
 
 @Component({
   selector: 'event-list',
@@ -44,11 +45,15 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
 
   getUsersCount(event:EventModel){
     let i = 0;
-    event.teams.forEach(x=> i += x.users?.length ?? 0);
+    this.getEventTeams(event)?.forEach(x=> i += x.users?.length ?? 0);
     return i;
   }
 
   showCreateEventPage(){
     this.router.navigate(['/events/new']);
+  }
+
+  getEventTeams(event:EventModel):TeamModel[] | undefined{
+    return event?.teamEvents?.map(x=>x.team);
   }
 }

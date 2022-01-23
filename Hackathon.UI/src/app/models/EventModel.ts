@@ -1,6 +1,6 @@
 import {EventStatus} from "./EventStatus";
 import {UserModel} from "./User/UserModel";
-import {TeamModel} from "./Team/TeamModel";
+import {TeamEventModel} from "./Team/TeamEventModel";
 
 export class EventModel {
   id!: number;
@@ -16,5 +16,5 @@ export class EventModel {
   status!: EventStatus;
   userId!: number;
   user!: UserModel;
-  teams: TeamModel[] = []
+  teamEvents: TeamEventModel[] = []
 }

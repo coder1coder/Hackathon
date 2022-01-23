@@ -1,15 +1,13 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EventModel} from "../../../models/EventModel";
 import {EventService} from "../../../services/event.service";
-import {MatDialog} from "@angular/material/dialog";
-import {TeamNewComponent} from "../../team/new/team.new.component";
 import {EventStatus} from "../../../models/EventStatus";
 import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
-import {ProblemDetails} from "../../../models/ProblemDetails";
+import {TeamModel} from "../../../models/Team/TeamModel";
 
 @Component({
   selector: 'event-view',
@@ -27,7 +25,7 @@ export class EventViewComponent implements AfterViewInit {
     private eventsService: EventService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog) {
+    private router: Router) {
 
     this.eventId = activateRoute.snapshot.params['eventId'];
 
@@ -46,9 +44,16 @@ export class EventViewComponent implements AfterViewInit {
       .subscribe({
         next: (r: EventModel) =>  {
           this.event = r;
+          console.log(this.event)
         },
         error: () => {}
       });
+  }
+
+  getEventTeams():TeamModel[] | undefined{
+    return this.event?.teamEvents?.map(x=>{
+      return x.team
+    });
   }
 
   createNewTeam(){
@@ -59,17 +64,7 @@ export class EventViewComponent implements AfterViewInit {
       return;
     }
 
-    const createNewTeamDialog = this.dialog.open(TeamNewComponent, {
-      data: {
-        eventId: this.eventId
-      },
-    });
-
-    createNewTeamDialog.afterClosed()
-      .subscribe(r => {
-        if (r === true)
-          this.fetchEvent();
-      });
+    this.router.navigate(["/teams/new"], { queryParams: { eventId: this.eventId } });
   }
 
   isCanPublishEvent(){
@@ -95,7 +90,7 @@ export class EventViewComponent implements AfterViewInit {
     let userId:number = this.authService.getUserId() ?? 0;
 
     return this.event!
-      .teams?.filter(t => t
+      .teamEvents?.filter(t => t.team
         .users?.filter(u => u.id == userId)
         .length > 0
       ).length > 0;

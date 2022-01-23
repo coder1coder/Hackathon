@@ -70,6 +70,6 @@ namespace Hackathon.DAL.Entities
         /// <summary>
         /// Команды связанные с событием
         /// </summary>
-        public ICollection<TeamEntity> Teams { get; set; }
+        public ICollection<TeamEventEntity> TeamEvents { get; set; }
     }
 }

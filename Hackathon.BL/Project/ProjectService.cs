@@ -21,6 +21,23 @@ namespace Hackathon.BL.Project
         public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
         {
             await _projectCreateModelValidator.ValidateAndThrowAsync(projectCreateModel);
+
+            // var team = await teamRepository.GetAsync(teamId);
+            //
+            // if (team == null)
+            // {
+            //     context.AddFailure("Команды с указаным идентификатором не существует");
+            // }
+            // else
+            // {
+            //     if (Team)
+            //         if (team.Project != null)
+            //             context.AddFailure("Команда уже имеет проект");
+            //
+            //     if (team.Event.Status != EventStatus.Published)
+            //         context.AddFailure("Невозможно добавить проект пока событие не опубликовано");
+            // }
+
             return await _projectRepository.CreateAsync(projectCreateModel);
         }
     }

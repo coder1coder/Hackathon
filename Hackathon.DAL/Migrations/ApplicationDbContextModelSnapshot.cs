@@ -90,12 +90,12 @@ namespace Hackathon.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("TeamId")
+                    b.Property<long>("TeamEventId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeamId")
+                    b.HasIndex("TeamEventId")
                         .IsUnique();
 
                     b.ToTable("Projects", (string)null);
@@ -109,24 +109,47 @@ namespace Hackathon.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("EventId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long?>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Teams", (string)null);
+                });
+
+            modelBuilder.Entity("Hackathon.DAL.Entities.TeamEventEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("ProjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TeamId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("TeamId");
 
-                    b.ToTable("Teams", (string)null);
+                    b.ToTable("TeamEvents", (string)null);
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.UserEntity", b =>
@@ -187,22 +210,41 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.DAL.Entities.ProjectEntity", b =>
                 {
-                    b.HasOne("Hackathon.DAL.Entities.TeamEntity", "Team")
+                    b.HasOne("Hackathon.DAL.Entities.TeamEventEntity", "TeamEvent")
                         .WithOne("Project")
-                        .HasForeignKey("Hackathon.DAL.Entities.ProjectEntity", "TeamId")
+                        .HasForeignKey("Hackathon.DAL.Entities.ProjectEntity", "TeamEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Team");
+                    b.Navigation("TeamEvent");
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.TeamEntity", b =>
                 {
+                    b.HasOne("Hackathon.DAL.Entities.UserEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Hackathon.DAL.Entities.TeamEventEntity", b =>
+                {
                     b.HasOne("Hackathon.DAL.Entities.EventEntity", "Event")
-                        .WithMany("Teams")
-                        .HasForeignKey("EventId");
+                        .WithMany("TeamEvents")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hackathon.DAL.Entities.TeamEntity", "Team")
+                        .WithMany("TeamEvents")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Event");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("UserTeam", b =>
@@ -222,10 +264,15 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.DAL.Entities.EventEntity", b =>
                 {
-                    b.Navigation("Teams");
+                    b.Navigation("TeamEvents");
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.TeamEntity", b =>
+                {
+                    b.Navigation("TeamEvents");
+                });
+
+            modelBuilder.Entity("Hackathon.DAL.Entities.TeamEventEntity", b =>
                 {
                     b.Navigation("Project");
                 });

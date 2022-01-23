@@ -1,5 +1,4 @@
-<h1 mat-dialog-title>Новая команда</h1>
-<div mat-dialog-content>
+<layout-default title="Новая команда">
 
   <form [formGroup]="form" class="form-vertical" >
     <div class="vertical__fields">
@@ -10,10 +9,14 @@
                required>
       </mat-form-field>
     </div>
+
+    <div class="form-vertical__bottom">
+      <div class="eventsNewForm__buttons">
+        <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+        <button mat-button (click)="goBack()">Назад</button>
+      </div>
+    </div>
+
   </form>
 
-</div>
-<div mat-dialog-actions>
-  <button mat-button color="primary" (click)="createTeam()">OK</button>
-  <button mat-button mat-dialog-close="">Отмена</button>
-</div>
+</layout-default>

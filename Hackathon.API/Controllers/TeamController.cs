@@ -31,6 +31,9 @@ namespace Hackathon.API.Controllers
         public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
         {
             var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
+
+            //attach user who creates it
+            createTeamModel.OwnerId = UserId;
             var teamId = await _teamService.CreateAsync(createTeamModel);
             return new BaseCreateResponse
             {

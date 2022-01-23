@@ -25,10 +25,6 @@ namespace Hackathon.DAL.Configurations
             builder.Property(x => x.ChangeEventStatusMessages);
 
             builder
-                .HasMany(x => x.Teams)
-                .WithOne(x => x.Event);
-
-            builder
                 .HasOne(x => x.User)
                 .WithMany(x => x.Events)
                 .HasForeignKey(x => x.UserId);

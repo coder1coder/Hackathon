@@ -11,6 +11,7 @@ import {EventNewComponent} from "./components/event/new/event.new.component";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
 import {TeamListComponent} from "./components/team/list/team.list.component";
+import {TeamNewComponent} from "./components/team/new/team.new.component";
 
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'events/:eventId', component: EventViewComponent, canActivate: [AuthGuard] },
   { path: 'events', component: EventListComponent, canActivate: [AuthGuard] },
   // { path: 'team/:eventId', component: TeamComponent, canActivate: [AuthGuard] },
+  { path: 'teams/new', component: TeamNewComponent, canActivate: [AuthGuard] },
   { path: 'teams', component: TeamListComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: 'users/:userId', component: UserViewComponent, canActivate: [AuthGuard] },

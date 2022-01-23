@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using FluentValidation;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators
@@ -10,8 +9,7 @@ namespace Hackathon.BL.Team.Validators
     {
         public TeamAddMemberModelValidator(
             ITeamRepository teamRepository,
-            IUserRepository userRepository,
-            IEventRepository eventRepository
+            IUserRepository userRepository
             )
         {
             RuleFor(x => x.TeamId)
@@ -36,13 +34,6 @@ namespace Hackathon.BL.Team.Validators
                 .CustomAsync(async (model, context, _) =>
                 {
                     var teamModel = await teamRepository.GetAsync(model.TeamId);
-                    var eventModel = await eventRepository.GetAsync(teamModel.EventId);
-
-                    if (eventModel == null)
-                        context.AddFailure("События с таким идентификатором не найдено");
-                    else
-                        if (eventModel.Status != EventStatus.Published)
-                            context.AddFailure("Невозможно добавить участника в команду. Событие не опубликовано.");
 
                     if (teamModel.Users.Any(x => x.Id == model.UserId))
                         context.AddFailure("Пользователь уже добавлен в эту команду");

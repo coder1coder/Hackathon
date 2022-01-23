@@ -5,7 +5,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public TeamEntity Team { get; set; }
-        public long TeamId { get; set; }
+        public TeamEventEntity TeamEvent { get; set; }
+        public long TeamEventId { get; set; }
     }
 }

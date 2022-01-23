@@ -36,7 +36,6 @@ export class LoginComponent implements AfterViewInit  {
     this.profileForm.controls['password'].setErrors({ 'incorrect': false });
 
     setTimeout(() => this.inputLogin?.nativeElement.focus())
-
   }
 
   welcomeText: string = 'Добро пожаловать в систему Hackathon';
@@ -64,11 +63,16 @@ export class LoginComponent implements AfterViewInit  {
           this.router.navigate(['/profile']);
         },
         error => {
-          let details: ProblemDetails = <ProblemDetails>error.error;
+
+          let errorMessage = "Неизвестная ошибка";
+
+          if (error.error.details !== undefined) {
+            let details: ProblemDetails = <ProblemDetails>error.error;
+            errorMessage = details.detail;
+          }
 
           this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
-
-          this.snackBar.open(details.detail, "ok", { duration: 5 * 1000 });
+          this.snackBar.open(errorMessage, "ok", { duration: 5 * 1000 });
         });
   }
 

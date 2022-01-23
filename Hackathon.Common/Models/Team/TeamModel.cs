@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.Common.Models.Team
@@ -9,10 +7,10 @@ namespace Hackathon.Common.Models.Team
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public long EventId { get; set; }
-
-        public EventModel Event { get; set; }
         public List<UserModel> Users { get; set; }
-        public ProjectModel Project { get; set; }
+
+        public UserModel Owner { get; set; }
+        public long? OwnerId { get; set; }
+        public List<TeamEventModel> TeamEvents { get; set; }
     }
 }

@@ -12,8 +12,7 @@ namespace Hackathon.DAL.Mappings
                 .ForType<SignUpModel, UserEntity>()
                 .PreserveReference(true)
                 .Map(x => x.PasswordHash, s => s.Password)
-                ;
-
+                    .MaxDepth(2);
         }
     }
 }

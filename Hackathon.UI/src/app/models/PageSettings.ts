@@ -4,7 +4,7 @@ export class PageSettings {
 
   page:number = 0;
   pageSize:number = PageSettingsDefaults.PageSize;
-  sortBy:string | undefined;
+  sortBy!:string;
   sortOrder:SortOrder = SortOrder.ASC;
 
   constructor(pageEvent:PageEvent) {
@@ -13,7 +13,7 @@ export class PageSettings {
   }
 
   toQueryArgs(){
-    return `&Page=${this.page+1}&PageSize=${this.pageSize}&SortBy=${this.sortBy}&SortOrder=${this.sortOrder}`;
+    return `&Page=${this.page+1}&PageSize=${this.pageSize}&SortBy=${this.sortBy ?? ''}&SortOrder=${this.sortOrder}`;
   }
 }
 

@@ -64,7 +64,7 @@ namespace Hackathon.Tests.Integration.Event
                     options.Using<DateTime>(x=>
                         x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(10)))
                         .WhenTypeIs<DateTime>()
-                        .Excluding(x=>x.Teams)
+                        .Excluding(x=>x.TeamEvents)
                         .Excluding(x=>x.User)
                     );
         }

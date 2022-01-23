@@ -21,9 +21,6 @@ namespace Hackathon.DAL.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.EventId);
-
-            builder
                 .HasMany(x => x.Users)
                 .WithMany(x => x.Teams)
                 .UsingEntity<Dictionary<string, object>>("UserTeam",
@@ -32,9 +29,7 @@ namespace Hackathon.DAL.Configurations
                 x => x.ToTable("UserTeam"));
 
             builder
-                .HasOne(x => x.Project)
-                .WithOne(x => x.Team)
-                .HasForeignKey<ProjectEntity>(x => x.TeamId);
+                .HasOne(x => x.Owner);
         }
     }
 }

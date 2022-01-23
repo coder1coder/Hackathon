@@ -40,10 +40,12 @@ namespace Hackathon.DAL.Repositories
         {
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
-                .Include(x=>x.Teams)
-                    .ThenInclude(x=>x.Users)
+                .Include(x=>x.TeamEvents)
+                    .ThenInclude(x=>x.Team)
+                .Include(x=>x.TeamEvents)
+                    .ThenInclude(x=>x.Project)
                 .Include(x=>x.User)
-                .FirstOrDefaultAsync(x => x.Id == eventId);
+                .SingleOrDefaultAsync(x => x.Id == eventId);
 
             return _mapper.Map<EventModel>(eventEntity);
         }
@@ -52,8 +54,9 @@ namespace Hackathon.DAL.Repositories
         {
             var query = _dbContext.Events
                 .AsNoTracking()
-                .Include(x=>x.Teams)
-                    .ThenInclude(x=>x.Users)
+                .Include(x=>x.TeamEvents)
+                    .ThenInclude(x=>x.Team)
+                        .ThenInclude(x=>x.Users)
                 .AsQueryable();
 
             if (getFilterModel.Filter != null)
@@ -110,7 +113,7 @@ namespace Hackathon.DAL.Repositories
             var eventModels = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ProjectToType<EventModel>()
+                .ProjectToType<EventModel>(_mapper.Config)
                 .ToListAsync();
 
             return new BaseCollectionModel<EventModel>
