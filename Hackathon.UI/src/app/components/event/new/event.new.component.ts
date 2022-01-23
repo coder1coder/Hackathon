@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild} from "@angular/core";
+import {AfterViewInit, Component} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
 import {EventService} from "../../../services/event.service";
 import {ProblemDetails} from "../../../models/ProblemDetails";
@@ -8,7 +8,7 @@ import {CreateEvent} from "../../../models/Event/CreateEvent";
 import {Actions} from "../../../common/Actions";
 import {EventStatus} from "src/app/models/EventStatus";
 import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
-import { MatTable } from "@angular/material/table";
+import {MatTableDataSource} from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { EventNewStatusDialog } from "../event-status/event-status.new/event-status.new.component";
 
@@ -21,13 +21,11 @@ import { EventNewStatusDialog } from "../event-status/event-status.new/event-sta
 export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
-  displayedColumns: string[] = ['status', 'message'];
-  eventStatuses: ChangeEventStatusMessage[] = [];
+  displayedColumns: string[] = ['status', 'message', 'actions'];
   message!: string;
   status!: string;
 
-  @ViewChild(MatTable)
-  table!: MatTable<ChangeEventStatusMessage>;
+  eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
 
   form = new FormGroup({
     name: new FormControl(''),
@@ -69,7 +67,7 @@ export class EventNewComponent implements AfterViewInit  {
     createEvent.minTeamMembers = this.form.get('minTeamMembers')?.value;
     createEvent.start = this.form.get('start')?.value;
     createEvent.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
-    createEvent.changeEventMessage = this.eventStatuses;
+    createEvent.changeEventMessages = this.eventStatusDataSource.data;
 
     this.eventService.create(createEvent)
       .subscribe(_=>{
@@ -88,28 +86,36 @@ export class EventNewComponent implements AfterViewInit  {
     return false;
   }
 
-  AddStatus() {
+  addStatus() {
+
+    let eventStatusValues = Object.values(EventStatus).filter(x=>!isNaN(Number(x)));
+
     const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialog, {
       data: {
-        statuses: Object.values(EventStatus)
+        statuses: eventStatusValues
       }
     });
 
     createEventNewStatusDialog
-                        .afterClosed()
-                        .subscribe(result => {
-                          console.log('result: ', result);
-                        if( typeof result === typeof ChangeEventStatusMessage){
-                          this.eventStatuses.push(result);
-                        }
-                      });
-
-    this.table.renderRows();
+      .afterClosed()
+      .subscribe(result => {
+        let changeEventStatusMessage = <ChangeEventStatusMessage> result;
+        if(changeEventStatusMessage?.status !== undefined){
+          this.eventStatusDataSource.data.push(result);
+          this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+        }
+      });
   }
 
-  removeStatus() {
-    this.eventStatuses.pop();
-    this.table.renderRows();
+  getEventStatus(status:EventStatus){
+    return EventStatus[status].toLowerCase();
+  }
+
+  removeStatus(item: ChangeEventStatusMessage) {
+    const index = this.eventStatusDataSource.data.indexOf(item);
+    if (index > -1)
+      this.eventStatusDataSource.data.splice(index, 1);
+    this.eventStatusDataSource.data = this.eventStatusDataSource.data;
   }
 
   goBack(){

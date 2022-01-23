@@ -19,7 +19,6 @@ table {
 
 .container {
   width: 100%;
-  max-width: 1400px;
   margin: 0 auto;
   box-sizing: border-box;
 
@@ -59,4 +58,14 @@ table {
       column-gap: 10px;
     }
   }
+}
+
+.table-list-actions-column {
+  width: 40px;
+}
+
+.not-elements-found-message {
+  margin-bottom: 10px;
+  font-size: .9em;
+  opacity: .5;
 }

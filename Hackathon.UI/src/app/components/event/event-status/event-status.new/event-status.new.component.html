@@ -1,14 +1,16 @@
 <h1 mat-dialog-title>Новый статус</h1>
 <div mat-dialog-content>
 
-  <form [formGroup]="form" class="form-vertical" >
-    <div class="vertical__fields">
+  <form [formGroup]="form" class="form-vertical">
+    <div class="form-vertical__fields">
 
       <mat-form-field appearance="fill">
         <mat-label>Статусы</mat-label>
-        <mat-select [(ngModel)]="selectedOption">
+        <mat-select [(ngModel)]="selectedStatusValue"
+                    formControlName="status"
+        >
           <mat-option *ngFor="let status of statuses"
-          [value]="status">{{getEnumValue(status)}}
+          [value]="status">{{ getEventStatusName(status) }}
           </mat-option>
         </mat-select>
       </mat-form-field>
