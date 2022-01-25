@@ -9,8 +9,8 @@ import {Actions} from "../../../common/Actions";
 import {EventStatus} from "src/app/models/EventStatus";
 import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
 import {MatTableDataSource} from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
-import { EventNewStatusDialog } from "../event-status/event-status.new/event-status.new.component";
+import {MatDialog} from "@angular/material/dialog";
+import {EventNewStatusDialogComponent} from "../status/event-new-status-dialog.component";
 
 @Component({
   selector: 'event-new',
@@ -21,7 +21,6 @@ import { EventNewStatusDialog } from "../event-status/event-status.new/event-sta
 export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
-  filteredEventStatusValues!: (string | EventStatus)[];
   displayedColumns: string[] = ['status', 'message', 'actions'];
   eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
@@ -80,15 +79,15 @@ export class EventNewComponent implements AfterViewInit  {
   }
 
   addStatus() {
-    this.filteredEventStatusValues = this.eventStatusValues;
+    let filteredEventStatusValues = this.eventStatusValues;
 
     if(this.eventStatusDataSource.data.length > 0) {
-      this.filteredEventStatusValues = this.filteredEventStatusValues.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
+      filteredEventStatusValues = filteredEventStatusValues.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
     }
 
-    const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialog, {
+    const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialogComponent, {
       data: {
-        statuses: this.filteredEventStatusValues
+        statuses: filteredEventStatusValues
       }
     });
 

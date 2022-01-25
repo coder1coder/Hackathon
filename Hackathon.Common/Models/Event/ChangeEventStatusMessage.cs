@@ -1,7 +1,7 @@
 ﻿namespace Hackathon.Common.Models.Event
 {
     /// <summary>
-    /// Сообщение высылаемое командам при смене статуса
+    /// Сообщение высылаемое командам при смене статуса ивента
     /// </summary>
     public class ChangeEventStatusMessage
     {

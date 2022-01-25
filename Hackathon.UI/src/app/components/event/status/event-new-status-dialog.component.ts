@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { EventStatus } from 'src/app/models/EventStatus';
 
 @Component({
-  selector: 'event-status',
-  templateUrl: './event-status.new.component.html',
-  styleUrls: ['./event-status.new.component.scss']
+  selector: 'app-event-new-status-dialog',
+  templateUrl: './event-new-status-dialog.component.html',
+  styleUrls: ['./event-new-status-dialog.component.scss']
 })
 
-export class EventNewStatusDialog implements AfterViewInit {
+export class EventNewStatusDialogComponent {
 
   statuses: EventStatus[];
   selectedStatusValue!: number;
@@ -21,15 +21,12 @@ export class EventNewStatusDialog implements AfterViewInit {
   })
 
   constructor(
-    public dialogRef: MatDialogRef<EventNewStatusDialog>,
+    public dialogRef: MatDialogRef<EventNewStatusDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private dialogData: any) {
      this.statuses = this.dialogData.statuses;
 
      if (this.statuses?.length > 0)
        this.selectedStatusValue = this.statuses[0];
-  }
-
-  ngAfterViewInit(): void {
   }
 
   createStatus() {
