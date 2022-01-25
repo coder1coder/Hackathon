@@ -11,8 +11,10 @@ namespace Hackathon.DAL.Mappings
         {
             config.ForType<EventEntity, EventModel>()
                 .IgnoreNullValues(true)
-                .Map(x=>x.TeamEvents, s=>s.TeamEvents)
-                //Attention! Max depth is 3 because in case when it equal 4 and more, we will have exception "circular json"
+                .MaxDepth(3);
+            
+            TypeAdapterConfig<EventEntity, CreateEventModel>.NewConfig()
+                .IgnoreNullValues(true)
                 .MaxDepth(3);
         }
     }

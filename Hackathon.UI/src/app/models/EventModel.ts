@@ -14,7 +14,7 @@ export class EventModel {
   maxEventMembers!: number;
   minTeamMembers!: number;
   isCreateTeamsAutomatically!: boolean;
-  changeEventStatusMessages!: ChangeEventStatusMessage[];
+  ChangeEventStatusMessages!: ChangeEventStatusMessage[];
   status!: EventStatus;
   userId!: number;
   user!: UserModel;

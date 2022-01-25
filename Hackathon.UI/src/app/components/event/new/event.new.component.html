@@ -102,7 +102,7 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="removeStatus(element)">
+                <button mat-menu-item (click)="removeStatus(element)" (click)="isCanAddStatus()">
                   <mat-icon color="accent">delete_outline</mat-icon>
                   <span>Удалить</span>
                 </button>

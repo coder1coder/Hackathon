@@ -29,7 +29,7 @@ namespace Hackathon.DAL.Repositories
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             var eventEntity = _mapper.Map<EventEntity>(createEventModel);
-
+            
             await _dbContext.AddAsync(eventEntity);
             await _dbContext.SaveChangesAsync();
 

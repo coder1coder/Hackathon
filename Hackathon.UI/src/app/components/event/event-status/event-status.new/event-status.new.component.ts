@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import { EventStatus, EventStatusLabelMapping } from 'src/app/models/EventStatus';
+import { EventStatus } from 'src/app/models/EventStatus';
 
 @Component({
   selector: 'event-status',

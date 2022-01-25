@@ -10,5 +10,5 @@ export class CreateEvent
   minTeamMembers: number | undefined;
   start: Date | undefined;
   teamPresentationMinutes: number | undefined;
-  changeEventMessages!: ChangeEventStatusMessage[];
+  changeEventStatusMessages!: ChangeEventStatusMessage[] | undefined;
 }

@@ -21,11 +21,10 @@ import { EventNewStatusDialog } from "../event-status/event-status.new/event-sta
 export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
+  filteredEventStatusValues!: (string | EventStatus)[];
   displayedColumns: string[] = ['status', 'message', 'actions'];
-  message!: string;
-  status!: string;
-
   eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
   form = new FormGroup({
     name: new FormControl(''),
@@ -67,7 +66,7 @@ export class EventNewComponent implements AfterViewInit  {
     createEvent.minTeamMembers = this.form.get('minTeamMembers')?.value;
     createEvent.start = this.form.get('start')?.value;
     createEvent.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
-    createEvent.changeEventMessages = this.eventStatusDataSource.data;
+    createEvent.changeEventStatusMessages = this.eventStatusDataSource.data;
 
     this.eventService.create(createEvent)
       .subscribe(_=>{
@@ -75,24 +74,21 @@ export class EventNewComponent implements AfterViewInit  {
           this.snackBar.open(`Новое событие добавлено`, Actions.OK, { duration: 4 * 1000 });
         },
         error=>{
-
           let problemDetails: ProblemDetails = <ProblemDetails>error.error;
           this.snackBar.open(problemDetails.detail,Actions.OK, { duration: 4 * 1000 });
-
         });
   }
 
-  isCanAddStatus() {
-    return false;
-  }
-
   addStatus() {
+    this.filteredEventStatusValues = this.eventStatusValues;
 
-    let eventStatusValues = Object.values(EventStatus).filter(x=>!isNaN(Number(x)));
+    if(this.eventStatusDataSource.data.length > 0) {
+      this.filteredEventStatusValues = this.filteredEventStatusValues.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
+    }
 
     const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialog, {
       data: {
-        statuses: eventStatusValues
+        statuses: this.filteredEventStatusValues
       }
     });
 
@@ -101,7 +97,7 @@ export class EventNewComponent implements AfterViewInit  {
       .subscribe(result => {
         let changeEventStatusMessage = <ChangeEventStatusMessage> result;
         if(changeEventStatusMessage?.status !== undefined){
-          this.eventStatusDataSource.data.push(result);
+          this.eventStatusDataSource.data.push(changeEventStatusMessage);
           this.eventStatusDataSource.data = this.eventStatusDataSource.data;
         }
       });
@@ -116,6 +112,16 @@ export class EventNewComponent implements AfterViewInit  {
     if (index > -1)
       this.eventStatusDataSource.data.splice(index, 1);
     this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+  }
+
+  isCanAddStatus() {
+    let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
+                            .map(x => x.status).sort(function(a, b) { return a - b; });
+
+    return Array.isArray(this.eventStatusValues) &&
+           Array.isArray(dataValues) &&
+           this.eventStatusValues.length === dataValues.length &&
+           this.eventStatusValues.every((val, index) => val === dataValues[index]);
   }
 
   goBack(){
