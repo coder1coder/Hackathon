@@ -36,24 +36,29 @@ namespace Hackathon.BL.Event
             _eventMessageHub = eventMessageHub;
             _teamService = teamService;
         }
+        
+        /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             await _createEventModelValidator.ValidateAndThrowAsync(createEventModel);
             return await _eventRepository.CreateAsync(createEventModel);
         }
 
+        /// <inheritdoc cref="IEventService.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
             return eventModel ?? throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
         }
 
+        /// <inheritdoc cref="IEventService.GetAsync(GetFilterModel{EventFilterModel})"/>
         public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getFilterModel);
             return await _eventRepository.GetAsync(getFilterModel);
         }
 
+        /// <inheritdoc cref="IEventService.SetStatusAsync(long, EventStatus)"/>
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -69,6 +74,7 @@ namespace Hackathon.BL.Event
             await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
         }
 
+        /// <inheritdoc cref="IEventService.JoinAsync(long, long)"/>
         public async Task JoinAsync(long eventId, long userId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -99,6 +105,7 @@ namespace Hackathon.BL.Event
             });
         }
 
+        /// <inheritdoc cref="IEventService.DeleteAsync(long)"/>
         public async Task DeleteAsync(long eventId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);

@@ -18,6 +18,7 @@ namespace Hackathon.BL.Project
             _projectCreateModelValidator = projectCreateModelValidator;
         }
 
+        /// <inheritdoc cref="IProjecService.CreateAsync(ProjectCreateModel)"/>
         public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
         {
             await _projectCreateModelValidator.ValidateAndThrowAsync(projectCreateModel);

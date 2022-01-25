@@ -25,6 +25,7 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
+        /// <inheritdoc cref="IUserRepository.CreateAsync(SignUpModel)"/>
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
@@ -35,6 +36,7 @@ namespace Hackathon.DAL.Repositories
             return entity.Id;
         }
 
+        /// <inheritdoc cref="IUserRepository.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
             var entity = await _dbContext.Users
@@ -44,6 +46,7 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<UserModel>(entity);
         }
 
+        /// <inheritdoc cref="IUserRepository.GetAsync(GetFilterModel{UserFilterModel})"/>
         public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
         {
             var query = _dbContext.Users
@@ -99,6 +102,7 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
+        /// <inheritdoc cref="IUserRepository.ExistAsync(long)"/>
         public async Task<bool> ExistAsync(long userId)
         {
             return await _dbContext.Users
