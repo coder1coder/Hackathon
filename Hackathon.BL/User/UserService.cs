@@ -38,6 +38,7 @@ namespace Hackathon.BL.User
             _userRepository = userRepository;
         }
 
+        /// <inheritdoc cref="IUserService.CreateAsync(SignUpModel)"/>
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             await _signUpModelValidator.ValidateAndThrowAsync(signUpModel);
@@ -48,6 +49,7 @@ namespace Hackathon.BL.User
             return await _userRepository.CreateAsync(signUpModel);
         }
 
+        /// <inheritdoc cref="IUserService.SignInAsync(signInModel)"/>
         public async Task<AuthTokenModel> SignInAsync(SignInModel signInModel)
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
@@ -85,6 +87,7 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(getFilterModel);
         }
 
+        /// <inheritdoc cref="IUserService.GenerateToken(long)"/>
         public AuthTokenModel GenerateToken(long userId)
         {
             var expires = DateTimeOffset.UtcNow.AddMinutes(_authConfig.LifeTime);

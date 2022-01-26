@@ -31,24 +31,28 @@ namespace Hackathon.BL.Team
             _getFilterModelValidator = getFilterModelValidator;
         }
 
+        /// <inheritdoc cref="ITeamService.CreateAsync(CreateTeamModel)"/>
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
             return await _teamRepository.CreateAsync(createTeamModel);
         }
 
+        /// <inheritdoc cref="ITeamService.AddMemberAsync(TeamAddMemberModel)"/>
         public async Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel)
         {
             await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamAddMemberModel);
             await _teamRepository.AddMemberAsync(teamAddMemberModel);
         }
 
+        /// <inheritdoc cref="ITeamService.GetAsync(long)"/>
         public async Task<TeamModel> GetAsync(long teamId)
         {
             await _teamExistValidator.ValidateAndThrowAsync(teamId);
             return await _teamRepository.GetAsync(teamId);
         }
 
+        /// <inheritdoc cref="ITeamService.GetAsync(GetFilterModel{TeamFilterModel})"/>
         public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getFilterModel);

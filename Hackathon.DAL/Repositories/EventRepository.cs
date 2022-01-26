@@ -26,6 +26,8 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
+        
+        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             var eventEntity = _mapper.Map<EventEntity>(createEventModel);
@@ -36,6 +38,7 @@ namespace Hackathon.DAL.Repositories
             return eventEntity.Id;
         }
 
+        /// <inheritdoc cref="IEventRepository.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
         {
             var eventEntity = await _dbContext.Events
@@ -50,6 +53,7 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<EventModel>(eventEntity);
         }
 
+        /// <inheritdoc cref="IEventRepository.GetAsync(GetFilterModel{EventFilterModel})"/>
         public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
         {
             var query = _dbContext.Events
@@ -123,6 +127,7 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
+        /// <inheritdoc cref="IEventRepository.UpdateAsync(IEnumerable{EventModel})"/>
         public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
         {
             var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
@@ -130,6 +135,7 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        /// <inheritdoc cref="IEventRepository.SetStatusAsync(long, EventStatus)"/>
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
             var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
@@ -141,6 +147,7 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        /// <inheritdoc cref="IEventRepository.DeleteAsync(long)"/>
         public async Task DeleteAsync(long eventId)
         {
             var eventEntity = await _dbContext.Events

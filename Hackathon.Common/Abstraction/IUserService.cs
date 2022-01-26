@@ -14,6 +14,11 @@ namespace Hackathon.Common.Abstraction
         /// <returns></returns>
         Task<long> CreateAsync(SignUpModel signUpModel);
 
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
+        /// <param name="signInModel"></param>
+        /// <returns></returns>
         Task<AuthTokenModel> SignInAsync(SignInModel signInModel);
 
         /// <summary>
@@ -30,6 +35,11 @@ namespace Hackathon.Common.Abstraction
         /// <returns></returns>
         Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel);
 
+        /// <summary>
+        /// Сгенерировать токен
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <returns></returns>
         AuthTokenModel GenerateToken(long userId);
     }
 }

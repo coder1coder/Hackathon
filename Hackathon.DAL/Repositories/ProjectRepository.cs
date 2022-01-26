@@ -21,6 +21,8 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
+        
+        /// <inheritdoc cref="IProjectRepository.CreateAsync(ProjectCreateModel)"/>
         public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
         {
             var projectEntity = _mapper.Map<ProjectEntity>(projectCreateModel);
