@@ -18,6 +18,7 @@ namespace Hackathon.Tests.Integration.Project
             var teamModel = await CreateTeamWithEvent(UserId);
             var projectCreateModel = TestFaker.GetProjectCreateModel(1).First();
             projectCreateModel.TeamId = teamModel.Id;
+            projectCreateModel.EventId = teamModel.TeamEvents.First().EventId;
 
             var createdProjectId = await ProjectRepository.CreateAsync(projectCreateModel);
             createdProjectId.Should().BeGreaterThan(0);

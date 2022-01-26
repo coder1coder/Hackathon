@@ -41,7 +41,8 @@ namespace Hackathon.Tests.Integration.Project
             {
                 TeamId = teamCreateResponse.Id,
                 Name = Guid.NewGuid().ToString()[..8],
-                Description = Guid.NewGuid().ToString()
+                Description = Guid.NewGuid().ToString(),
+                EventId = createEventResponse.Id
             });
 
             Assert.NotNull(createProjectResponse);

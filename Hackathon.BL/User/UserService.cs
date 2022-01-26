@@ -79,7 +79,7 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(userId);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync"/>
+        /// <inheritdoc cref="IUserService.GetAsync(GetFilterModel{UserFilterModel})"/>
         public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
         {
             return await _userRepository.GetAsync(getFilterModel);

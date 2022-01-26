@@ -19,9 +19,23 @@ namespace Hackathon.DAL.Mappings
                 {
                     new TeamEventEntity()
                     {
-                        EventId = s.EventId
+                        EventId = s.EventId.Value
                     }
-                }, c =>c.EventId > 0);
+                }, c =>c.EventId.HasValue && c.EventId > 0);
+
+            config
+                .ForType<CreateTeamModel, TeamModel>()
+                .PreserveReference(true)
+                .IgnoreNullValues(true)
+                .Map(x => x.Name, s => s.Name)
+                .Map(x => x.OwnerId, s => s.OwnerId)
+                .Map(x => x.TeamEvents, s =>  new List<TeamEventEntity>()
+                {
+                    new TeamEventEntity()
+                    {
+                        EventId = s.EventId.Value
+                    }
+                }, c =>c.EventId.HasValue && c.EventId > 0);
 
             config
                 .ForType<TeamEventEntity, TeamEventModel>()

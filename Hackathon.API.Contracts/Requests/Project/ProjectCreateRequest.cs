@@ -12,5 +12,8 @@ namespace Hackathon.Contracts.Requests.Project
 
         [Required]
         public long TeamId { get; set; }
+
+        [Required]
+        public long EventId { get; set; }
     }
 }
