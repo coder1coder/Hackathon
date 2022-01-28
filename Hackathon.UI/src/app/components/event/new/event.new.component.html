@@ -24,33 +24,36 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Продолжительность формированя команд в минутах</mat-label>
+          <mat-label>Продолжительность формированя команд</mat-label>
           <input matInput
                  type="number"
                  min="1"
                  id="memberRegistrationMinutes"
                  formControlName="memberRegistrationMinutes"
                  required>
+          <span matSuffix> мин</span>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Продолжительность этапа разработки в минутах</mat-label>
+          <mat-label>Продолжительность этапа разработки</mat-label>
           <input matInput
                  min="1"
                  type="number"
                  id="developmentMinutes"
                  formControlName="developmentMinutes"
                  required>
+          <span matSuffix> мин</span>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Продолжительность выступления каждой команды в минутах</mat-label>
+          <mat-label>Продолжительность выступления каждой команды</mat-label>
           <input matInput
                  type="number"
                  min="1"
                  id="teamPresentationMinutes"
                  formControlName="teamPresentationMinutes"
                  required>
+          <span matSuffix> мин</span>
         </mat-form-field>
 
         <mat-form-field appearance="fill">

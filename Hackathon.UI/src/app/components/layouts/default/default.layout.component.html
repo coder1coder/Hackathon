@@ -6,13 +6,16 @@
   <span *ngIf="title" class="layout-default__title">: {{ title }}</span>
   <span class="spacer"></span>
   <app-nav-menu></app-nav-menu>
+  <button mat-icon-button>
+    <mat-icon>notifications_none</mat-icon>
+  </button>
   <button mat-icon-button [matMenuTriggerFor]="profileMenu">
     <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #profileMenu="matMenu" yPosition="below">
     <button mat-menu-item routerLink="/profile">
       <mat-icon>account_circle</mat-icon>
-      Открыть
+      Профиль
     </button>
     <button mat-menu-item routerLink="/logout">
       <mat-icon>logout</mat-icon>
