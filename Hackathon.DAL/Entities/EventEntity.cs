@@ -65,7 +65,7 @@ namespace Hackathon.DAL.Entities
         /// Список сообщений высылаемых командам при смене статусов
         /// </summary>
         [Column(TypeName = "jsonb")]
-        public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; } = new();
+        public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
 
         /// <summary>
         /// Команды связанные с событием

@@ -6,6 +6,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {CreateEvent} from "../../../models/Event/CreateEvent";
 import {Actions} from "../../../common/Actions";
+import {EventStatus} from "src/app/models/EventStatus";
+import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {EventNewStatusDialogComponent} from "../status/event-new-status-dialog.component";
 
 @Component({
   selector: 'event-new',
@@ -16,6 +21,9 @@ import {Actions} from "../../../common/Actions";
 export class EventNewComponent implements AfterViewInit  {
 
   isLoading: boolean = false;
+  displayedColumns: string[] = ['status', 'message', 'actions'];
+  eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
   form = new FormGroup({
     name: new FormControl(''),
@@ -25,8 +33,7 @@ export class EventNewComponent implements AfterViewInit  {
     teamPresentationMinutes: new FormControl('10'),
     maxEventMembers: new FormControl('50'),
     minTeamMembers: new FormControl('2'),
-    isCreateTeamsAutomatically: new FormControl(false),
-    //List<ChangeEventStatusMessage>
+    isCreateTeamsAutomatically: new FormControl(false)
   })
 
   getEventStartDefault(){
@@ -40,7 +47,11 @@ export class EventNewComponent implements AfterViewInit  {
   ngAfterViewInit(): void {
   }
 
-  constructor(private eventService: EventService, private snackBar: MatSnackBar, private router: Router) {
+  constructor(
+    private eventService: EventService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private dialog: MatDialog) {
   }
 
   submit(){
@@ -54,6 +65,7 @@ export class EventNewComponent implements AfterViewInit  {
     createEvent.minTeamMembers = this.form.get('minTeamMembers')?.value;
     createEvent.start = this.form.get('start')?.value;
     createEvent.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
+    createEvent.changeEventStatusMessages = this.eventStatusDataSource.data;
 
     this.eventService.create(createEvent)
       .subscribe(_=>{
@@ -61,14 +73,57 @@ export class EventNewComponent implements AfterViewInit  {
           this.snackBar.open(`Новое событие добавлено`, Actions.OK, { duration: 4 * 1000 });
         },
         error=>{
-
           let problemDetails: ProblemDetails = <ProblemDetails>error.error;
           this.snackBar.open(problemDetails.detail,Actions.OK, { duration: 4 * 1000 });
-
         });
   }
-  cancel(){
-    history.go(-1)
+
+  addStatus() {
+    let filteredEventStatusValues = this.eventStatusValues;
+
+    if(this.eventStatusDataSource.data.length > 0) {
+      filteredEventStatusValues = filteredEventStatusValues.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
+    }
+
+    const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialogComponent, {
+      data: {
+        statuses: filteredEventStatusValues
+      }
+    });
+
+    createEventNewStatusDialog
+      .afterClosed()
+      .subscribe(result => {
+        let changeEventStatusMessage = <ChangeEventStatusMessage> result;
+        if(changeEventStatusMessage?.status !== undefined){
+          this.eventStatusDataSource.data.push(changeEventStatusMessage);
+          this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+        }
+      });
   }
 
+  getEventStatus(status:EventStatus){
+    return EventStatus[status].toLowerCase();
+  }
+
+  removeStatus(item: ChangeEventStatusMessage) {
+    const index = this.eventStatusDataSource.data.indexOf(item);
+    if (index > -1)
+      this.eventStatusDataSource.data.splice(index, 1);
+    this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+  }
+
+  isCanAddStatus() {
+    let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
+                            .map(x => x.status).sort(function(a, b) { return a - b; });
+
+    return Array.isArray(this.eventStatusValues) &&
+           Array.isArray(dataValues) &&
+           this.eventStatusValues.length === dataValues.length &&
+           this.eventStatusValues.every((val, index) => val === dataValues[index]);
+  }
+
+  goBack(){
+    history.go(-1)
+  }
 }

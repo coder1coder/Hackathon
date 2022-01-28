@@ -14,7 +14,20 @@
     font-weight: lighter;
   }
 
+  &__container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 50px;
+  }
+
   &__fields {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  &__status {
     display: flex;
     flex-direction: column;
     max-width: 600px;
@@ -25,4 +38,12 @@
     display: flex;
     column-gap: 10px;
   }
+}
+
+.status-table {
+  margin: 15px 0 15px 0;
+}
+
+.button-status {
+  margin-right: 10px;
 }

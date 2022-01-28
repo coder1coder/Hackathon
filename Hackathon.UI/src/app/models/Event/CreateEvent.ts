@@ -1,3 +1,5 @@
+import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
+
 export class CreateEvent
 {
   name: string | undefined;
@@ -8,4 +10,5 @@ export class CreateEvent
   minTeamMembers: number | undefined;
   start: Date | undefined;
   teamPresentationMinutes: number | undefined;
+  changeEventStatusMessages!: ChangeEventStatusMessage[] | undefined;
 }

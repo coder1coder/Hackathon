@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
 import {NavMenuComponent} from "./components/nav-menu/nav-menu.component";
 import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
@@ -35,8 +35,10 @@ import {EventViewComponent} from "./components/event/view/event.view.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
+import {MatSelectModule} from '@angular/material/select';
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
+import {EventNewStatusDialogComponent} from './components/event/status/event-new-status-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import {TeamViewComponent} from "./components/team/view/team.component";
     EventListComponent,
     EventViewComponent,
     EventNewComponent,
+    EventNewStatusDialogComponent,
 
     TeamViewComponent,
     TeamNewComponent,
@@ -61,7 +64,7 @@ import {TeamViewComponent} from "./components/team/view/team.component";
 
     NotFoundComponent,
 
-    DefaultLayoutComponent
+    DefaultLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,8 @@ import {TeamViewComponent} from "./components/team/view/team.component";
     MatPaginatorModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSelectModule
   ],
   providers: [
     {

@@ -3,7 +3,7 @@
   <div class="mb-1-5em">
     <button *ngIf="isCanJoinToEvent()" mat-button (click)="enterToEvent()">Принять участие</button>
     <button *ngIf="isCanAddTeam()" mat-raised-button color="primary" (click)="createNewTeam()">Добавить команду</button>
-    <button *ngIf="isCanPublishEvent()" mat-button (click)="setPublished()">Опубликовать</button>
+    <button *ngIf="isCanPublishEvent()" mat-raised-button mat-button (click)="setPublished()">Опубликовать</button>
     <button *ngIf="isCanStartEvent()" mat-button (click)="startEvent()">Начать событие</button>
   </div>
   <h1>{{event?.name}}</h1>

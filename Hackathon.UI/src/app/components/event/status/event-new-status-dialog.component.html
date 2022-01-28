@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Новый статус</h1>
+<div mat-dialog-content>
+
+  <form [formGroup]="form" class="form-vertical">
+    <div class="form-vertical__fields">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Статусы</mat-label>
+        <mat-select [(ngModel)]="selectedStatusValue"
+                    formControlName="status"
+        >
+          <mat-option *ngFor="let status of statuses"
+          [value]="status">{{ getEventStatusName(status) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Сообщение</mat-label>
+        <input matInput
+               autocomplete="off"
+               id="message"
+               formControlName="message"
+               required>
+      </mat-form-field>
+
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="createStatus()" [disabled]="this.form.invalid">OK</button>
+  <button mat-button mat-dialog-close="">Отмена</button>
+</div>
+
+
