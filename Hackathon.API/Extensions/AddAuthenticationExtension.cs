@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Hackathon.Common.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,7 @@ namespace Hackathon.API.Extensions
 {
     public static class AddAuthenticationExtension
     {
-        public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthentication(this IServiceCollection services, AppSettings appSettings)
         {
             services
                 .AddAuthentication(x =>
@@ -23,12 +24,12 @@ namespace Hackathon.API.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AuthOptions:Secret"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.AuthOptions.Secret)),
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ValidIssuer = configuration["AuthOptions:Issuer"],
-                        ValidAudience = configuration["AuthOptions:Audience"],
+                        ValidIssuer = appSettings.AuthOptions.Issuer,
+                        ValidAudience = appSettings.AuthOptions.Audience,
                         ClockSkew = TimeSpan.Zero,
                     };
                 });

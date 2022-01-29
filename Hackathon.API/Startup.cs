@@ -4,12 +4,11 @@ using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
-using Hackathon.Jobs;
-using Hackathon.MessageQueue.Hubs;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,17 +20,20 @@ namespace Hackathon.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _environment;
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
 
         private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
-            services.Configure<AdministratorDefaults>(Configuration.GetSection(nameof(AdministratorDefaults)));
+            var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+
+            services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
 
             var config = new TypeAdapterConfig();
 
@@ -40,31 +42,30 @@ namespace Hackathon.API
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
 
-            services.AddDbContext<HangFireDbContext>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
-            });
+            // services.AddDbContext<HangFireDbContext>(options =>
+            // {
+            //     options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
+            // });
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
-                options.EnableSensitiveDataLogging();
-                options.LogTo(Console.WriteLine);
+
+                if (appConfig.EnableSensitiveDataLogging == true)
+                    options.EnableSensitiveDataLogging();
             });
 
             services
                 .AddDalDependencies()
                 .AddBlDependencies()
-                .AddApiDependencies()
-                .AddJobsDependencies();
-
-            var origins = Configuration.GetSection(nameof(OriginsOptions)).Get<OriginsOptions>();
+                .AddApiDependencies();
+                // .AddJobsDependencies();
 
             services.AddCors(options =>
             {
                 options.AddPolicy("default", builder =>
                     builder
-                        .WithOrigins(origins.AllowUrls)
+                        .WithOrigins(appConfig.OriginsOptions.AllowUrls)
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .WithMethods("GET", "POST", "PUT", "OPTIONS"));
@@ -75,53 +76,57 @@ namespace Hackathon.API
                 options.Filters.Add(new MainActionFilter());
             });
 
-            services.AddJobs(Configuration);
+            // services.AddJobs(Configuration);
             services.AddSignalR();
 
-            services.AddAuthentication(Configuration);
+            services.AddAuthentication(appConfig);
             services.AddAuthorization();
             services.AddSwagger();
         }
 
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
             IServiceProvider serviceProvider,
             ApplicationDbContext dbContext,
-            ILogger<Startup> logger, IOptions<AdministratorDefaults> administratorDefaultsOptions)
+            ILogger<Startup> logger,
+            IOptions<AppSettings> appSettings)
         {
-            if (env.EnvironmentName == "Tests")
-            {
-                dbContext.Database.EnsureDeleted();
-                dbContext.Database.EnsureCreated();
-            }
+            var appConfig = appSettings.Value;
 
-            dbContext.Database.Migrate();
+            if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
+                app.UsePathBase(appConfig.PathBase);
 
-            if (env.IsDevelopment())
+            if (_environment.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackathon.API v1");
+                c.SwaggerEndpoint($"{appConfig?.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
             });
 
-            //not need for proxy server
-            // app.UseHttpsRedirection();
-
-            app.UseJobs(serviceProvider);
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
+            // var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
 
-            app.UseCors("default");
+            // app.UseCors("default");
+            app.UseCors(x =>
+            {
+                x
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+            });
 
-            DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
+            //DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {

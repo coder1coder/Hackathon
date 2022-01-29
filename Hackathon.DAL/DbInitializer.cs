@@ -12,17 +12,17 @@ public static class DbInitializer
     {
         try
         {
-            if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
-            {
-                var user = new UserEntity
-                {
-                    UserName = administratorDefaults.Login,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
-                    FullName = administratorDefaults.Login
-                };
-                context.Add(user);
-                context.SaveChanges();
-            }
+            // if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
+            // {
+            //     var user = new UserEntity
+            //     {
+            //         UserName = administratorDefaults.Login,
+            //         PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
+            //         FullName = administratorDefaults.Login
+            //     };
+            //     context.Add(user);
+            //     context.SaveChanges();
+            // }
         }
         catch (DbUpdateException e)
         {

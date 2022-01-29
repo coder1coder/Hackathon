@@ -12,10 +12,16 @@ namespace Hackathon.API
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host
+                .CreateDefaultBuilder(args)
                 .UseSerilog((context, _, configuration) => configuration
                     .ReadFrom.Configuration(context.Configuration)
                     .WriteTo.Console())
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseKestrel()
+                        .UseStartup<Startup>();
+                });
     }
 }

@@ -20,7 +20,7 @@ namespace Hackathon.Tests.Integration
 
         #region Models
 
-        public IEnumerable<SignUpModel> GetSignUpModels(int count)
+        public static IEnumerable<SignUpModel> GetSignUpModels(int count)
         {
             var faker = new Faker<SignUpModel>();
 
@@ -45,7 +45,7 @@ namespace Hackathon.Tests.Integration
             return _mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
-        public IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
+        public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
         {
             var faker = new Faker<CreateTeamModel>();
 
@@ -56,7 +56,7 @@ namespace Hackathon.Tests.Integration
             return faker.Generate(count);
         }
 
-        public IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
+        public static IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
         {
             var faker = new Faker<ProjectCreateModel>();
 
@@ -72,7 +72,7 @@ namespace Hackathon.Tests.Integration
 
         #region Entities
 
-        public IEnumerable<EventEntity> GetEventEntities(int count, long userId, EventStatus? eventStatus = null)
+        private static IEnumerable<EventEntity> GetEventEntities(int count, long userId, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventEntity>();
 
@@ -92,7 +92,7 @@ namespace Hackathon.Tests.Integration
             return faker.Generate(count);
         }
 
-        public IEnumerable<UserEntity> GetUserEntities(int count)
+        public static IEnumerable<UserEntity> GetUserEntities(int count)
         {
             var faker = new Faker<UserEntity>();
 

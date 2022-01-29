@@ -64,7 +64,7 @@ namespace Hackathon.Tests.Integration.Base
             });
 
             var authToken = userService.GenerateToken(1);
-            httpClient.BaseAddress = new Uri("https://localhost:7001/");
+            // httpClient.BaseAddress = new Uri("https://localhost:7001/");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.Token);
 
             AuthApi = RestService.For<IAuthApi>(httpClient);
