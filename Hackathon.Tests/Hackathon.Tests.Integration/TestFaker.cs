@@ -86,6 +86,7 @@ namespace Hackathon.Tests.Integration
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
                 .RuleFor(x => x.UserId, userId)
+                .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
                 ;
 
             return faker.Generate(count);
