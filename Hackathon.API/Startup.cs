@@ -90,6 +90,12 @@ namespace Hackathon.API
             ApplicationDbContext dbContext,
             ILogger<Startup> logger, IOptions<AdministratorDefaults> administratorDefaultsOptions)
         {
+            if (env.EnvironmentName == "Tests")
+            {
+                dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureCreated();
+            }
+
             dbContext.Database.Migrate();
 
             if (env.IsDevelopment())
@@ -120,7 +126,7 @@ namespace Hackathon.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<EventMessageHub>(messageHubPrefix);
+                // endpoints.MapHub<EventMessageHub>(messageHubPrefix);
             });
         }
     }

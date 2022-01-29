@@ -9,7 +9,7 @@ namespace Hackathon.Tests.Integration
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
-            builder.ConfigureKestrel(x => x.ListenLocalhost(7100));
+            // builder.ConfigureKestrel(x => x.ListenLocalhost(7100));
             builder.UseEnvironment("Tests");
         }
     }
