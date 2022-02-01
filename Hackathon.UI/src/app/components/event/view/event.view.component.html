@@ -9,7 +9,7 @@
   <h1>{{event?.name}}</h1>
 
   Начало: {{ event?.start }},
-  Статус: {{ event?.status }},
+  Статус: {{ getTranslatedEventStatusValue(getTranslatedEventStatus((event?.status)))}},
   Организатор: {{ event?.user?.userName }}
 
   <br/><br/>

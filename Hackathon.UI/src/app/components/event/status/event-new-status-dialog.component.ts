@@ -47,7 +47,7 @@ export class EventNewStatusDialogComponent {
     if ( e == 1) {
       return  TranslatedEventStatus.Опубликовано;}
     if ( e == 2) {
-      return  TranslatedEventStatus.Начато;}
+      return  TranslatedEventStatus.Началось;}
     if ( e == 3) {
       return  TranslatedEventStatus.Разработка;}
     if ( e == 4) {
@@ -55,7 +55,7 @@ export class EventNewStatusDialogComponent {
     if ( e == 5) {
       return  TranslatedEventStatus.Презентация;}
     if ( e == 6) {
-      return  TranslatedEventStatus.Решение;}
+      return  TranslatedEventStatus["Выбор победителя"];}
     if ( e == 7) {
       return  TranslatedEventStatus.Награждение;}
     else
