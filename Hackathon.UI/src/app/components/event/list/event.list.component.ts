@@ -4,7 +4,7 @@ import {PageSettings} from "../../../models/PageSettings";
 import {EventService} from "../../../services/event.service";
 import {EventModel} from "../../../models/EventModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {EventStatus} from "../../../models/EventStatus";
+import {EventStatus, TranslatedEventStatus} from "../../../models/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {TeamModel} from "../../../models/Team/TeamModel";
 
@@ -55,5 +55,30 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
 
   getEventTeams(event:EventModel):TeamModel[] | undefined{
     return event?.teamEvents?.map(x=>x.team);
+  }
+
+  public getTranslatedEventStatus = (e: EventStatus | undefined) : TranslatedEventStatus => {
+    if ( e == 0) {
+      return  TranslatedEventStatus.Черновик;}
+    if ( e == 1) {
+      return  TranslatedEventStatus.Опубликовано;}
+    if ( e == 2) {
+      return  TranslatedEventStatus.Началось;}
+    if ( e == 3) {
+      return  TranslatedEventStatus.Разработка;}
+    if ( e == 4) {
+      return  TranslatedEventStatus.Подготовка;}
+    if ( e == 5) {
+      return  TranslatedEventStatus.Презентация;}
+    if ( e == 6) {
+      return  TranslatedEventStatus["Выбор победителя"];}
+    if ( e == 7) {
+      return  TranslatedEventStatus.Награждение;}
+    else
+      return  TranslatedEventStatus.Закончено;
+  }
+
+  public getTranslatedEventStatusValue(status:TranslatedEventStatus){
+    return TranslatedEventStatus[status];
   }
 }
