@@ -2,7 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import { EventStatus } from 'src/app/models/EventStatus';
+import {EventStatus, TranslatedEventStatus} from "../../../models/EventStatus";
+
 
 @Component({
   selector: 'app-event-new-status-dialog',
@@ -39,4 +40,31 @@ export class EventNewStatusDialogComponent {
   getEventStatusName(status:EventStatus){
     return EventStatus[status];
   }
+
+ public getTranslatedEventStatus = (e: EventStatus | undefined) : TranslatedEventStatus => {
+    if ( e == 0) {
+      return  TranslatedEventStatus.Черновик;}
+    if ( e == 1) {
+      return  TranslatedEventStatus.Опубликовано;}
+    if ( e == 2) {
+      return  TranslatedEventStatus.Начато;}
+    if ( e == 3) {
+      return  TranslatedEventStatus.Разработка;}
+    if ( e == 4) {
+      return  TranslatedEventStatus.Подготовка;}
+    if ( e == 5) {
+      return  TranslatedEventStatus.Презентация;}
+    if ( e == 6) {
+      return  TranslatedEventStatus.Решение;}
+    if ( e == 7) {
+      return  TranslatedEventStatus.Награждение;}
+    else
+      return  TranslatedEventStatus.Закончено;
+    }
+
+  public getTranslatedEventStatusValue(status:TranslatedEventStatus){
+    return TranslatedEventStatus[status];
+  }
 }
+
+
