@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import {EventStatus, TranslatedEventStatus} from "../../../models/EventStatus";
+import {Status, EventStatus} from "../../../models/EventStatus";
 
 
 @Component({
@@ -15,6 +15,7 @@ export class EventNewStatusDialogComponent {
 
   statuses: EventStatus[];
   selectedStatusValue!: number;
+  Status = Status;
 
   form = new FormGroup({
     status: new FormControl(),
@@ -35,35 +36,6 @@ export class EventNewStatusDialogComponent {
       this.selectedStatusValue,
       this.form.get('message')?.value)
     );
-  }
-
-  getEventStatusName(status:EventStatus){
-    return EventStatus[status];
-  }
-
- public getTranslatedEventStatus = (e: EventStatus | undefined) : TranslatedEventStatus => {
-    if ( e == 0) {
-      return  TranslatedEventStatus.Черновик;}
-    if ( e == 1) {
-      return  TranslatedEventStatus.Опубликовано;}
-    if ( e == 2) {
-      return  TranslatedEventStatus.Началось;}
-    if ( e == 3) {
-      return  TranslatedEventStatus.Разработка;}
-    if ( e == 4) {
-      return  TranslatedEventStatus.Подготовка;}
-    if ( e == 5) {
-      return  TranslatedEventStatus.Презентация;}
-    if ( e == 6) {
-      return  TranslatedEventStatus["Выбор победителя"];}
-    if ( e == 7) {
-      return  TranslatedEventStatus.Награждение;}
-    else
-      return  TranslatedEventStatus.Закончено;
-    }
-
-  public getTranslatedEventStatusValue(status:TranslatedEventStatus){
-    return TranslatedEventStatus[status];
   }
 }
 

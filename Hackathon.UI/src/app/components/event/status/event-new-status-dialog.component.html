@@ -10,9 +10,7 @@
                     formControlName="status"
         >
           <mat-option *ngFor="let status of statuses"
-                      [value]="status">{{ getTranslatedEventStatusValue(getTranslatedEventStatus((status))) }}
-<!--          [value]="status">{{ getEventStatusName(status) }}-->
-
+                      [value]="status">{{ Status.getTranslatedStatusValue(Status.getTranslatedStatus(status)) }}
 
           </mat-option>
         </mat-select>

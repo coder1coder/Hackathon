@@ -25,8 +25,8 @@
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>Статус</th>
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          <mat-icon class="mat-icon-{{ getTranslatedEventStatusValue(getTranslatedEventStatus((element.status)) )}}">circle</mat-icon>
-          {{ getTranslatedEventStatusValue(getTranslatedEventStatus((element.status))) }}
+          <mat-icon class="mat-icon-{{ Status.getTranslatedStatusValue(Status.getTranslatedStatus(element.status)) }}">circle</mat-icon>
+          {{ Status.getTranslatedStatusValue(Status.getTranslatedStatus(element.status)) }}
         </td>
       </ng-container>
 

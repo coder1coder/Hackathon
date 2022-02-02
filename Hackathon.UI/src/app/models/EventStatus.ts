@@ -24,3 +24,36 @@ export enum TranslatedEventStatus
   Награждение = 7,
   Закончено = 8,
 }
+
+export class Status{
+
+  public static getTranslatedStatus = (e: EventStatus | undefined) : TranslatedEventStatus => {
+    if ( e == 0) {
+      return  TranslatedEventStatus.Черновик;}
+    if ( e == 1) {
+      return  TranslatedEventStatus.Опубликовано;}
+    if ( e == 2) {
+      return  TranslatedEventStatus.Началось;}
+    if ( e == 3) {
+      return  TranslatedEventStatus.Разработка;}
+    if ( e == 4) {
+      return  TranslatedEventStatus.Подготовка;}
+    if ( e == 5) {
+      return  TranslatedEventStatus.Презентация;}
+    if ( e == 6) {
+      return  TranslatedEventStatus["Выбор победителя"];}
+    if ( e == 7) {
+      return  TranslatedEventStatus.Награждение;}
+    else
+      return  TranslatedEventStatus.Закончено;
+  }
+
+  public static getTranslatedStatusValue(status:TranslatedEventStatus){
+    return TranslatedEventStatus[status];
+  }
+
+}
+
+
+
+

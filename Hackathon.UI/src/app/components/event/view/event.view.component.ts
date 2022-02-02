@@ -3,11 +3,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EventModel} from "../../../models/EventModel";
 import {EventService} from "../../../services/event.service";
-import {EventStatus, TranslatedEventStatus} from "../../../models/EventStatus";
+import {Status, EventStatus} from "../../../models/EventStatus";
 import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {TeamModel} from "../../../models/Team/TeamModel";
+
 
 @Component({
   selector: 'event-view',
@@ -16,9 +17,11 @@ import {TeamModel} from "../../../models/Team/TeamModel";
 })
 export class EventViewComponent implements AfterViewInit {
 
+
   eventId: number;
   event: EventModel | undefined;
   isLoading: boolean = true;
+  Status = Status;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -26,9 +29,7 @@ export class EventViewComponent implements AfterViewInit {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router) {
-
     this.eventId = activateRoute.snapshot.params['eventId'];
-
     this.eventsService = eventsService;
     this.snackBar = snackBar;
   }
@@ -139,30 +140,5 @@ export class EventViewComponent implements AfterViewInit {
           this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
         }
       });
-  }
-
-  public getTranslatedEventStatus = (e: EventStatus | undefined) : TranslatedEventStatus => {
-    if ( e == 0) {
-      return  TranslatedEventStatus.Черновик;}
-    if ( e == 1) {
-      return  TranslatedEventStatus.Опубликовано;}
-    if ( e == 2) {
-      return  TranslatedEventStatus.Началось;}
-    if ( e == 3) {
-      return  TranslatedEventStatus.Разработка;}
-    if ( e == 4) {
-      return  TranslatedEventStatus.Подготовка;}
-    if ( e == 5) {
-      return  TranslatedEventStatus.Презентация;}
-    if ( e == 6) {
-      return  TranslatedEventStatus["Выбор победителя"];}
-    if ( e == 7) {
-      return  TranslatedEventStatus.Награждение;}
-    else
-      return  TranslatedEventStatus.Закончено;
-  }
-
-  public getTranslatedEventStatusValue(status:TranslatedEventStatus){
-    return TranslatedEventStatus[status];
   }
 }
