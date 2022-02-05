@@ -9,10 +9,10 @@ namespace Hackathon.DAL.Configurations
 {
     public class UserEntityConfiguration: IEntityTypeConfiguration<UserEntity>
     {
-        private readonly AdministratorDefaults _administratorDefaults;
-        public UserEntityConfiguration(IOptions<AdministratorDefaults> administratorDefaults)
+        private readonly AppSettings _appSettings;
+        public UserEntityConfiguration(IOptions<AppSettings> appSettings)
         {
-            _administratorDefaults = administratorDefaults.Value;
+            _appSettings = appSettings.Value;
         }
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
@@ -29,14 +29,14 @@ namespace Hackathon.DAL.Configurations
                 .Property(x => x.PasswordHash)
                 .IsRequired();
 
-            if (_administratorDefaults != null)
+            if (_appSettings.AdministratorDefaults != null)
                 builder.HasData(new List<UserEntity>
                 {
                     new()
                     {
-                        UserName = _administratorDefaults.Login,
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword(_administratorDefaults.Password),
-                        FullName = _administratorDefaults.Login
+                        UserName = _appSettings.AdministratorDefaults.Login,
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword(_appSettings.AdministratorDefaults.Password),
+                        FullName = _appSettings.AdministratorDefaults.Login
                     }
                 });
         }
