@@ -46,6 +46,6 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   }
 
   getDisplayColumns(): string[] {
-    return ['id', 'name', 'owner', 'actions'];
+    return ['id', 'name', 'owner', 'users', 'actions'];
   }
 }
