@@ -1,5 +1,3 @@
-using Hackathon.Common.Configuration;
-
 namespace Hackathon.Common.Configuration;
 
 public class AppSettings

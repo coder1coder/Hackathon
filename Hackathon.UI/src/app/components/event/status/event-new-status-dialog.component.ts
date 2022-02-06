@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import {Status, EventStatus} from "../../../models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
 
 
 @Component({
@@ -15,7 +15,7 @@ export class EventNewStatusDialogComponent {
 
   statuses: EventStatus[];
   selectedStatusValue!: number;
-  Status = Status;
+  EventStatusTranslator = EventStatusTranslator;
 
   form = new FormGroup({
     status: new FormControl(),

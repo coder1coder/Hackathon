@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
@@ -47,8 +46,6 @@ namespace Hackathon.API
             // {
             //     options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
             // });
-
-            bool? isEnableSensitiveDataLogging = Configuration.GetValue<bool>("EnableSensitiveDataLogging");
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -105,12 +102,7 @@ namespace Hackathon.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{appConfig?.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
-            });
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                c.SwaggerEndpoint($"{appConfig.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
             });
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions

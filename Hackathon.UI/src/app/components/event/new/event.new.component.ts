@@ -6,7 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {CreateEvent} from "../../../models/Event/CreateEvent";
 import {Actions} from "../../../common/Actions";
-import {Status, EventStatus} from "src/app/models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "src/app/models/EventStatus";
 import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
@@ -25,7 +25,7 @@ export class EventNewComponent implements AfterViewInit {
   displayedColumns: string[] = ['status', 'message', 'actions'];
   eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
-  Status = Status;
+  EventStatusTranslator = EventStatusTranslator;
 
   form = new FormGroup({
     name: new FormControl(''),

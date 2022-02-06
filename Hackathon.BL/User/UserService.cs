@@ -23,16 +23,16 @@ namespace Hackathon.BL.User
         private readonly IValidator<SignInModel> _signInModelValidator;
 
         private readonly IUserRepository _userRepository;
-        private readonly AuthOptions _authConfig;
+        private readonly AppSettings _appSettings;
 
         public UserService(
-            IOptions<AuthOptions> authOptions,
+            IOptions<AppSettings> appSettings,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
             IUserRepository userRepository
             )
         {
-            _authConfig = authOptions.Value;
+            _appSettings = appSettings.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _userRepository = userRepository;
@@ -90,7 +90,7 @@ namespace Hackathon.BL.User
         /// <inheritdoc cref="IUserService.GenerateToken(long)"/>
         public AuthTokenModel GenerateToken(long userId)
         {
-            var expires = DateTimeOffset.UtcNow.AddMinutes(_authConfig.LifeTime);
+            var expires = DateTimeOffset.UtcNow.AddMinutes(_appSettings.AuthOptions.LifeTime);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -100,10 +100,10 @@ namespace Hackathon.BL.User
                     new (ClaimTypes.NameIdentifier, userId.ToString()),
                 }),
                 Expires = expires.UtcDateTime,
-                Issuer = _authConfig.Issuer,
-                Audience = _authConfig.Audience,
+                Issuer = _appSettings.AuthOptions.Issuer,
+                Audience = _appSettings.AuthOptions.Audience,
                 SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authConfig.Secret)),
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.AuthOptions.Secret)),
                     SecurityAlgorithms.HmacSha256Signature)
             };
 

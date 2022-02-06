@@ -3,7 +3,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EventModel} from "../../../models/EventModel";
 import {EventService} from "../../../services/event.service";
-import {Status, EventStatus} from "../../../models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
 import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
@@ -21,7 +21,7 @@ export class EventViewComponent implements AfterViewInit {
   eventId: number;
   event: EventModel | undefined;
   isLoading: boolean = true;
-  Status = Status;
+  EventStatusTranslator = EventStatusTranslator;
 
   constructor(
     private activateRoute: ActivatedRoute,
