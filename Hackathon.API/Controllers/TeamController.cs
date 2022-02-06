@@ -54,8 +54,8 @@ namespace Hackathon.API.Controllers
         /// <summary>
         /// Получить все команды
         /// </summary>
-        [HttpGet]
-        public async Task<BaseCollectionResponse<TeamModel>> Get([FromQuery] GetFilterRequest<TeamFilterModel> filterRequest)
+        [HttpPost("getTeams")]
+        public async Task<BaseCollectionResponse<TeamModel>> Get([FromBody] GetFilterRequest<TeamFilterModel> filterRequest)
         {
             var getFilterModel = _mapper.Map<GetFilterModel<TeamFilterModel>>(filterRequest);
             var collectionModel = await _teamService.GetAsync(getFilterModel);

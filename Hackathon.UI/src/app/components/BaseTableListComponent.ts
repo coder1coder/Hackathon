@@ -1,6 +1,7 @@
 import {PageEvent} from "@angular/material/paginator";
 import {AfterViewInit, Directive} from "@angular/core";
 import {PageSettingsDefaults} from "../models/PageSettings";
+import { GetFilterModel } from "../models/GetFilterModel";
 
 @Directive()
 export abstract class BaseTableListComponent<T> implements AfterViewInit {
@@ -27,7 +28,7 @@ export abstract class BaseTableListComponent<T> implements AfterViewInit {
 
   abstract getDisplayColumns():string[];
   abstract rowClick(item: T):any;
-  abstract fetch():any;
+  abstract fetch(getFilterModel?: GetFilterModel<T>):any;
 
   ngAfterViewInit(): void {
     this.fetch();

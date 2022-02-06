@@ -1,7 +1,40 @@
 <layout-default title="Команды">
 
-  <div class="mb-1-5em">
-    <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
+  <div class="filter-group">
+    <form [formGroup]="form" class="filter-form">
+      <div class="filter-form__container">
+        <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
+
+        <mat-icon class="filter-form__icon">search</mat-icon>
+
+        <div class="filter-form__fields">
+          <mat-form-field class="filter-form__input">
+            <mat-label>Наименование команды</mat-label>
+            <input matInput autocomplete="off"
+                   id="teamName"
+                   formControlName="teamName">
+          </mat-form-field>
+
+          <mat-form-field class="filter-form__input">
+            <mat-label>Владелец</mat-label>
+            <input matInput autocomplete="off"
+                   id="owner"
+                   formControlName="owner">
+          </mat-form-field>
+
+          <mat-form-field class="filter-form__input">
+            <mat-label>Количество участников</mat-label>
+            <input matInput
+                   autocomplete="off"
+                   type="number"
+                   id="quantityMembers"
+                   formControlName="quantityMembers">
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="fetch()">Применить фильтр</button>
+        </div>
+      </div>
+    </form>
   </div>
 
   <div *ngIf="this.items.length > 0">

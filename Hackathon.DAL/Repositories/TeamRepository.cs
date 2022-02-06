@@ -54,6 +54,8 @@ namespace Hackathon.DAL.Repositories
         public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
         {
             var query = _dbContext.Teams
+                .Include(x => x.Users)
+                .Include(x => x.TeamEvents)
                 .AsNoTracking();
 
             if (getFilterModel.Filter != null)
@@ -62,7 +64,13 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => getFilterModel.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Name))
-                    query = query.Where(x => x.Name == getFilterModel.Filter.Name);
+                    query = query.Where(x => x.Name.ToLower().Contains(getFilterModel.Filter.Name.ToLower().Trim()));
+
+                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Owner))
+                    query = query.Where(x => x.Owner.FullName.ToLower().Contains(getFilterModel.Filter.Owner.ToLower().Trim()));
+
+                if (getFilterModel.Filter.QuantityMembers.HasValue)
+                    query = query.Where(x => x.TeamEvents.Any(s => s.Team.Users.Count == getFilterModel.Filter.QuantityMembers));
 
                 if (getFilterModel.Filter.EventId.HasValue)
                     query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getFilterModel.Filter.EventId));
@@ -88,7 +96,7 @@ namespace Hackathon.DAL.Repositories
             }
 
             var page = getFilterModel.Page ?? 1;
-            var pageSize = getFilterModel.PageSize ?? 1000;
+            var pageSize = getFilterModel.PageSize ?? 300;
 
             var teamModels = await query
                 .Skip((page - 1) * pageSize)

@@ -12,6 +12,7 @@ export class PageSettings {
     this.pageSize = pageEvent.pageSize;
   }
 
+  //TODO Необходимо избавится от всех toQueryArgs
   toQueryArgs(){
     return `&Page=${this.page+1}&PageSize=${this.pageSize}&SortBy=${this.sortBy ?? ''}&SortOrder=${this.sortOrder}`;
   }

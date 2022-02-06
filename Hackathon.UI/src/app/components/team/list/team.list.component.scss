@@ -25,3 +25,20 @@
     width: 40px;
   }
 }
+
+.filter-form {
+  &__icon {
+    margin-left: 15px;
+  }
+
+  &__input {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+  }
+}

@@ -1,5 +1,5 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {TeamModel} from "../models/Team/TeamModel";
@@ -7,7 +7,8 @@ import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {BaseCreateResponse} from "../models/BaseCreateResponse";
-import {PageSettings} from "../models/PageSettings";
+import {TeamFilterModel} from '../models/Team/TeamFilterModel';
+import { GetFilterModel } from '../models/GetFilterModel';
 
 @Injectable({
   providedIn: 'root'
@@ -32,16 +33,6 @@ export class TeamService {
     return this.http.post<BaseCreateResponse>(this.api+'/Team', createTeamModel);
   }
 
-  getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<TeamModel>>{
-
-    let endpoint = this.api+'/Team';
-
-    if (pageSettings != undefined)
-      endpoint += `?${pageSettings.toQueryArgs()}`;
-
-    return this.http.get<BaseCollectionModel<TeamModel>>(endpoint);
-  }
-
   getById(eventId:number){
     return this.http.get<TeamModel>(this.api+'/Team/'+eventId);
   }
@@ -51,4 +42,8 @@ export class TeamService {
       this.router.navigate(['/login']);
   }
 
+  getByFilter(getFilterModel: GetFilterModel<TeamFilterModel>):Observable<BaseCollectionModel<TeamModel>>{
+    let endpoint = this.api+'/Team/getTeams';
+    return this.http.post<BaseCollectionModel<TeamModel>>(endpoint, getFilterModel);
+  }
 }

@@ -1,11 +1,13 @@
 import {Component, Injectable} from '@angular/core';
 import {Router} from "@angular/router";
-import {PageSettings} from "../../../models/PageSettings";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {TeamModel} from "../../../models/Team/TeamModel";
 import {TeamService} from "../../../services/team.service";
 import {AuthService} from "../../../services/auth.service";
+import {GetFilterModel} from 'src/app/models/GetFilterModel';
+import {FormControl, FormGroup} from '@angular/forms';
+import { TeamFilterModel } from 'src/app/models/Team/TeamFilterModel';
 
 @Component({
   selector: 'team-list',
@@ -17,6 +19,12 @@ import {AuthService} from "../../../services/auth.service";
 export class TeamListComponent extends BaseTableListComponent<TeamModel> {
 
   public userId:number | undefined;
+
+  form = new FormGroup({
+    teamName: new FormControl(),
+    owner: new FormControl(),
+    quantityMembers: new FormControl()
+  })
 
   constructor(
     private teamService: TeamService,
@@ -31,7 +39,17 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   }
 
   override fetch(){
-    this.teamService.getAll(new PageSettings(this.pageSettings))
+    let teamFilterModel = new TeamFilterModel();
+    teamFilterModel.name =  this.form.get('teamName')?.value;
+    teamFilterModel.owner =  this.form.get('owner')?.value;
+    teamFilterModel.quantityMembers =  this.form.get('quantityMembers')?.value;
+
+    let getFilterModel = new GetFilterModel<TeamFilterModel>();
+    getFilterModel.Page = this.pageSettings.pageIndex;
+    getFilterModel.PageSize = this.pageSettings.pageSize;
+    getFilterModel.Filter = teamFilterModel;
+
+    this.teamService.getByFilter(getFilterModel)
       .subscribe({
         next: (r: BaseCollectionModel<TeamModel>) =>  {
           this.items = r.items;

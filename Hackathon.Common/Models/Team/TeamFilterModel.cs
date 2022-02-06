@@ -6,6 +6,8 @@ namespace Hackathon.Common.Models.Team
     {
         public long[] Ids { get; set; }
         public string Name { get; set; }
+        public string Owner { get; set; }
+        public long? QuantityMembers { get; set; }
         public long? EventId { get; set; }
         public long? ProjectId { get; set; }
     }
