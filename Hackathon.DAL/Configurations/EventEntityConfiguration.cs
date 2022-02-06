@@ -23,11 +23,6 @@ namespace Hackathon.DAL.Configurations
             builder.Property(x => x.UserId).IsRequired();
 
             builder.Property(x => x.ChangeEventStatusMessages);
-
-            builder
-                .HasOne(x => x.User)
-                .WithMany(x => x.Events)
-                .HasForeignKey(x => x.UserId);
         }
     }
 }

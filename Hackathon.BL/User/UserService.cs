@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -49,7 +50,7 @@ namespace Hackathon.BL.User
             return await _userRepository.CreateAsync(signUpModel);
         }
 
-        /// <inheritdoc cref="IUserService.SignInAsync(signInModel)"/>
+        /// <inheritdoc cref="IUserService.SignInAsync(SignInModel)"/>
         public async Task<AuthTokenModel> SignInAsync(SignInModel signInModel)
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
@@ -69,7 +70,7 @@ namespace Hackathon.BL.User
             if (!verified)
                 throw new ValidationException("Неправильное имя пользователя или пароль");
 
-            return GenerateToken(user.Id);
+            return GenerateToken(user);
         }
 
         /// <inheritdoc cref="IUserService.GetAsync(long)"/>
@@ -87,8 +88,8 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(getFilterModel);
         }
 
-        /// <inheritdoc cref="IUserService.GenerateToken(long)"/>
-        public AuthTokenModel GenerateToken(long userId)
+        /// <inheritdoc cref="IUserService.GenerateToken(UserModel)"/>
+        public AuthTokenModel GenerateToken(UserModel user)
         {
             var expires = DateTimeOffset.UtcNow.AddMinutes(_appSettings.AuthOptions.LifeTime);
 
@@ -97,7 +98,8 @@ namespace Hackathon.BL.User
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new (ClaimTypes.NameIdentifier, userId.ToString()),
+                    new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new (ClaimTypes.Role, ((int)user.Role).ToString())
                 }),
                 Expires = expires.UtcDateTime,
                 Issuer = _appSettings.AuthOptions.Issuer,
@@ -112,9 +114,10 @@ namespace Hackathon.BL.User
 
             return new AuthTokenModel
             {
-                UserId = userId,
+                UserId = user.Id,
                 Expires = expires.ToUnixTimeMilliseconds(),
-                Token = tokenString
+                Token = tokenString,
+                Role = user.Role
             };
         }
     }

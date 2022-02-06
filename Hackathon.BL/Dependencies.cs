@@ -1,5 +1,4 @@
 using FluentValidation;
-using Hackathon.BL.Auth;
 using Hackathon.BL.Common.Validators;
 using Hackathon.BL.Event;
 using Hackathon.BL.Event.Validators;
@@ -24,8 +23,6 @@ namespace Hackathon.BL
         public static IServiceCollection AddBlDependencies(this IServiceCollection services)
         {
             return services
-                .AddScoped<IAuthService, AuthService>()
-
                 .AddScoped<IValidator<ProjectCreateModel>, ProjectCreateModelValidator>()
                 .AddScoped<IProjectService, ProjectService>()
 

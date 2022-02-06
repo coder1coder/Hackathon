@@ -1,7 +1,9 @@
 using System;
+using System.Security.Claims;
 using Hackathon.API.Extensions;
 using Hackathon.BL;
 using Hackathon.Common.Configuration;
+using Hackathon.Common.Models.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Mapster;
@@ -68,7 +70,7 @@ namespace Hackathon.API
                         .WithOrigins(appConfig.OriginsOptions.AllowUrls)
                         .AllowCredentials()
                         .AllowAnyHeader()
-                        .WithMethods("GET", "POST", "PUT", "OPTIONS"));
+                        .AllowAnyMethod());
             });
 
             services.AddControllers(options =>
@@ -80,7 +82,14 @@ namespace Hackathon.API
             services.AddSignalR();
 
             services.AddAuthentication(appConfig);
-            services.AddAuthorization();
+            services.AddAuthorization(x =>
+            {
+                x.AddPolicy(nameof(UserRole.Administrator), p =>
+                    p
+                        .RequireAuthenticatedUser()
+                        .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
+                    );
+            });
             services.AddSwagger();
         }
 
