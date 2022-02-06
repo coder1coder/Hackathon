@@ -7,7 +7,6 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities;
-using Hackathon.DAL.Mappings;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -69,9 +68,14 @@ namespace Hackathon.DAL.Repositories
                 if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Owner))
                     query = query.Where(x => x.Owner.FullName.ToLower().Contains(getFilterModel.Filter.Owner.ToLower().Trim()));
 
-                if (getFilterModel.Filter.QuantityMembers.HasValue)
-                    query = query.Where(x => x.TeamEvents.Any(s => s.Team.Users.Count == getFilterModel.Filter.QuantityMembers));
+                if (getFilterModel.Filter.QuantityFrom.HasValue)
+                    query = query.Where(x =>
+                        x.TeamEvents.Any(s => s.Team.Users.Count >= getFilterModel.Filter.QuantityFrom));
 
+                if (getFilterModel.Filter.QuantityTo.HasValue)
+                    query = query.Where(x =>
+                        x.TeamEvents.Any(s => s.Team.Users.Count <= getFilterModel.Filter.QuantityTo));
+                
                 if (getFilterModel.Filter.EventId.HasValue)
                     query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getFilterModel.Filter.EventId));
 

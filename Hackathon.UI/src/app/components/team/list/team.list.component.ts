@@ -23,7 +23,8 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   form = new FormGroup({
     teamName: new FormControl(),
     owner: new FormControl(),
-    quantityMembers: new FormControl()
+    QuantityFrom: new FormControl(),
+    QuantityTo: new FormControl()
   })
 
   constructor(
@@ -42,7 +43,8 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
     let teamFilterModel = new TeamFilterModel();
     teamFilterModel.name =  this.form.get('teamName')?.value;
     teamFilterModel.owner =  this.form.get('owner')?.value;
-    teamFilterModel.quantityMembers =  this.form.get('quantityMembers')?.value;
+    teamFilterModel.QuantityFrom =  this.form.get('QuantityFrom')?.value;
+    teamFilterModel.QuantityTo =  this.form.get('QuantityTo')?.value;
 
     let getFilterModel = new GetFilterModel<TeamFilterModel>();
     getFilterModel.Page = this.pageSettings.pageIndex;
@@ -57,6 +59,14 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
         },
         error: () => {}
       });
+  }
+
+  clearFilter() {
+    this.form.reset('teamName');
+    this.form.reset('owner');
+    this.form.reset('QuantityFrom');
+    this.form.reset('QuantityTo');
+    this.fetch();
   }
 
   rowClick(item: TeamModel){

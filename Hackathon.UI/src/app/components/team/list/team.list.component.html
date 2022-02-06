@@ -4,8 +4,7 @@
     <form [formGroup]="form" class="filter-form">
       <div class="filter-form__container">
         <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
-
-        <mat-icon class="filter-form__icon">search</mat-icon>
+        <mat-icon>search</mat-icon>
 
         <div class="filter-form__fields">
           <mat-form-field class="filter-form__input">
@@ -23,15 +22,25 @@
           </mat-form-field>
 
           <mat-form-field class="filter-form__input">
-            <mat-label>Количество участников</mat-label>
+            <mat-label>Кол-во участников от:</mat-label>
             <input matInput
                    autocomplete="off"
                    type="number"
-                   id="quantityMembers"
-                   formControlName="quantityMembers">
+                   id="QuantityFrom"
+                   formControlName="QuantityFrom">
+          </mat-form-field>
+
+          <mat-form-field class="filter-form__input">
+            <mat-label>Кол-во участников до:</mat-label>
+            <input matInput
+                   autocomplete="off"
+                   type="number"
+                   id="QuantityTo"
+                   formControlName="QuantityTo">
           </mat-form-field>
 
           <button mat-raised-button color="primary" (click)="fetch()">Применить фильтр</button>
+          <button mat-raised-button color="primary" (click)="clearFilter()">Очистить фильтр</button>
         </div>
       </div>
     </form>
