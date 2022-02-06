@@ -10,3 +10,29 @@ export enum EventStatus
   Award = 7,
   Finished = 8,
 }
+
+export class EventStatusTranslator{
+
+  public static GetName = (e:EventStatus) : string => EventStatus[e];
+
+  public static Translate = (e: EventStatus) : string => {
+
+    switch (e) {
+      case EventStatus.Draft: return 'Черновик'
+      case EventStatus.Published: return 'Опубликовано'
+      case EventStatus.Started: return 'Начато'
+      case EventStatus.Development: return 'Разработка'
+      case EventStatus.Prepare: return 'Подготовка'
+      case EventStatus.Presentation: return 'Презентация'
+      case EventStatus.Decision: return 'Выбор победителя'
+      case EventStatus.Award: return 'Награждение'
+      case EventStatus.Finished: return 'Завершено'
+
+      default: return EventStatus[e];
+    }
+  }
+}
+
+
+
+

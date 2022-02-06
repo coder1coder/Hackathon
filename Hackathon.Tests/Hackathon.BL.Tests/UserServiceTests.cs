@@ -21,7 +21,7 @@ public class UserServiceTests
     public async Task GetAsync_ShouldReturn_UserModelCollection()
     {
         //arrange
-        var authConfigMock = new Mock<IOptions<AuthOptions>>();
+        var appSettingsMock = new Mock<IOptions<AppSettings>>();
         var signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
         var signInValidatorMock = new Mock<IValidator<SignInModel>>();
         var userRepositoryMock = new Mock<IUserRepository>();
@@ -39,7 +39,7 @@ public class UserServiceTests
             });
 
         var sut = new UserService(
-            authConfigMock.Object,
+            appSettingsMock.Object,
             signUpValidatorMock.Object,
             signInValidatorMock.Object,
             userRepositoryMock.Object

@@ -3,11 +3,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EventModel} from "../../../models/EventModel";
 import {EventService} from "../../../services/event.service";
-import {EventStatus} from "../../../models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
 import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {TeamModel} from "../../../models/Team/TeamModel";
+
 
 @Component({
   selector: 'event-view',
@@ -16,9 +17,11 @@ import {TeamModel} from "../../../models/Team/TeamModel";
 })
 export class EventViewComponent implements AfterViewInit {
 
+
   eventId: number;
   event: EventModel | undefined;
   isLoading: boolean = true;
+  EventStatusTranslator = EventStatusTranslator;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -26,9 +29,7 @@ export class EventViewComponent implements AfterViewInit {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router) {
-
     this.eventId = activateRoute.snapshot.params['eventId'];
-
     this.eventsService = eventsService;
     this.snackBar = snackBar;
   }
@@ -139,6 +140,5 @@ export class EventViewComponent implements AfterViewInit {
           this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
         }
       });
-
   }
 }

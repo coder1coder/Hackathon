@@ -102,7 +102,7 @@ namespace Hackathon.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{appConfig?.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
+                c.SwaggerEndpoint($"{appConfig.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
             });
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions

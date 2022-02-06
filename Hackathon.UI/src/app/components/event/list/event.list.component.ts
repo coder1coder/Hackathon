@@ -4,7 +4,7 @@ import {PageSettings} from "../../../models/PageSettings";
 import {EventService} from "../../../services/event.service";
 import {EventModel} from "../../../models/EventModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {EventStatus} from "../../../models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {TeamModel} from "../../../models/Team/TeamModel";
 
@@ -15,6 +15,8 @@ import {TeamModel} from "../../../models/Team/TeamModel";
 })
 
 export class EventListComponent extends BaseTableListComponent<EventModel>{
+
+  EventStatusTranslator = EventStatusTranslator;
 
   override getDisplayColumns(): string[] {
     return ['id', 'name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
