@@ -29,6 +29,10 @@ namespace Hackathon.DAL.Configurations
                 .Property(x => x.PasswordHash)
                 .IsRequired();
 
+            builder
+                .Property(x => x.Role)
+                .HasDefaultValue(0);
+
             if (_appSettings.AdministratorDefaults != null)
                 builder.HasData(new List<UserEntity>
                 {

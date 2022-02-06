@@ -57,7 +57,6 @@ namespace Hackathon.Tests.Integration.User
                 .BeEquivalentTo(userEntities.First(), options=>
                     options
                         .Excluding(x=>x.Teams)
-                        .Excluding(x=>x.Events)
                     );
         }
 

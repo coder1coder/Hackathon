@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.DAL.Entities
 {
@@ -9,8 +10,8 @@ namespace Hackathon.DAL.Entities
         public string Email { get; set; }
         public string FullName { get; set; }
 
-        public List<TeamEntity> Teams { get; set; } = new ();
+        public UserRole Role { get; set; }
 
-        public ICollection<EventEntity> Events { get; set; } = new List<EventEntity>();
+        public List<TeamEntity> Teams { get; set; } = new ();
     }
 }
