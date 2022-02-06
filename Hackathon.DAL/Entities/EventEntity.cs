@@ -65,11 +65,11 @@ namespace Hackathon.DAL.Entities
         /// Список сообщений высылаемых командам при смене статусов
         /// </summary>
         [Column(TypeName = "jsonb")]
-        public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
+        public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; } = new();
 
         /// <summary>
         /// Команды связанные с событием
         /// </summary>
-        public ICollection<TeamEventEntity> TeamEvents { get; set; }
+        public List<TeamEventEntity> TeamEvents { get; set; } = new();
     }
 }
