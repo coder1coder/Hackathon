@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests;
@@ -55,9 +55,9 @@ namespace Hackathon.API.Controllers
         /// Получить все команды
         /// </summary>
         [HttpPost("getTeams")]
-        public async Task<BaseCollectionResponse<TeamModel>> Get([FromBody] GetFilterRequest<TeamFilterModel> filterRequest)
+        public async Task<BaseCollectionResponse<TeamModel>> Get([FromBody] GetListRequest<TeamFilterModel> listRequest)
         {
-            var getFilterModel = _mapper.Map<GetFilterModel<TeamFilterModel>>(filterRequest);
+            var getFilterModel = _mapper.Map<GetListModel<TeamFilterModel>>(listRequest);
             var collectionModel = await _teamService.GetAsync(getFilterModel);
             return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
         }

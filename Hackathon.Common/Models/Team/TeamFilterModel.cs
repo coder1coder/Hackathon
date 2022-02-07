@@ -2,7 +2,7 @@
 
 namespace Hackathon.Common.Models.Team
 {
-    public class TeamFilterModel: IFilterModel
+    public class TeamFilterModel
     {
         public long[] Ids { get; set; }
 

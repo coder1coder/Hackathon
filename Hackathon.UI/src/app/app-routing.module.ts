@@ -12,6 +12,7 @@ import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamNewComponent} from "./components/team/new/team.new.component";
+import {NotificationListComponent} from "./components/notification/list/notification.list.component";
 import {RedirectService} from "./services/redirect.service";
 
 
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'teams', component: TeamListComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: 'users/:userId', component: UserViewComponent, canActivate: [AuthGuard] },
+  { path: 'notifications', component: NotificationListComponent, canActivate: [AuthGuard]},
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] }
 ];
 

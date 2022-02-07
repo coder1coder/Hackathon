@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.Base;
 
 namespace Hackathon.BL.Common.Validators
 {
-    public class GetFilterModelValidator<T>: AbstractValidator<GetFilterModel<T>> where T: IFilterModel
+    public class GetFilterModelValidator<T>: AbstractValidator<GetListModel<T>> where T: class
     {
         public GetFilterModelValidator()
         {

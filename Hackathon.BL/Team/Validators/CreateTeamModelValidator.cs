@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators

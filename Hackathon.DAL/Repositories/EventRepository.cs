@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL.Repositories
 {
-    public class EventRepository: IEventRepository
+    public class EventRepository : IEventRepository
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _dbContext;
@@ -21,17 +21,17 @@ namespace Hackathon.DAL.Repositories
         public EventRepository(
             IMapper mapper,
             ApplicationDbContext dbContext
-            )
+        )
         {
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        
+
         /// <inheritdoc cref="IEventRepository.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             var eventEntity = _mapper.Map<EventEntity>(createEventModel);
-            
+
             await _dbContext.AddAsync(eventEntity);
             await _dbContext.SaveChangesAsync();
 
@@ -43,80 +43,77 @@ namespace Hackathon.DAL.Repositories
         {
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
-                .Include(x=>x.TeamEvents)
-                    .ThenInclude(x=>x.Team)
-                .Include(x=>x.TeamEvents)
-                    .ThenInclude(x=>x.Project)
-                .Include(x=>x.User)
+                .Include(x => x.TeamEvents)
+                .ThenInclude(x => x.Team)
+                .Include(x => x.TeamEvents)
+                .ThenInclude(x => x.Project)
+                .Include(x => x.User)
                 .SingleOrDefaultAsync(x => x.Id == eventId);
 
             return _mapper.Map<EventModel>(eventEntity);
         }
 
-        /// <inheritdoc cref="IEventRepository.GetAsync(GetFilterModel{EventFilterModel})"/>
-        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
+        /// <inheritdoc cref="IEventRepository.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetListModel<EventFilterModel> getListModel)
         {
             var query = _dbContext.Events
                 .AsNoTracking()
-                .Include(x=>x.TeamEvents)
-                    .ThenInclude(x=>x.Team)
-                        .ThenInclude(x=>x.Users)
+                .Include(x => x.TeamEvents)
+                .ThenInclude(x => x.Team)
+                .ThenInclude(x => x.Users)
                 .AsQueryable();
 
-            if (getFilterModel.Filter != null)
+            if (getListModel.Filter != null)
             {
-                if (getFilterModel.Filter.Ids != null)
-                    query = query.Where(x => getFilterModel.Filter.Ids.Contains(x.Id));
+                if (getListModel.Filter.Ids != null)
+                    query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
 
-                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Name))
-                    query = query.Where(x => x.Name == getFilterModel.Filter.Name);
+                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Name))
+                    query = query.Where(x => x.Name == getListModel.Filter.Name);
 
-                if (getFilterModel.Filter.Status.HasValue)
-                    query = query.Where(x => x.Status == getFilterModel.Filter.Status);
+                if (getListModel.Filter.Status.HasValue)
+                    query = query.Where(x => x.Status == getListModel.Filter.Status);
 
-                if (getFilterModel.Filter.StartFrom.HasValue)
+                if (getListModel.Filter.StartFrom.HasValue)
                 {
-                    var startFrom = getFilterModel.Filter.StartFrom.Value.Date;
+                    var startFrom = getListModel.Filter.StartFrom.Value.Date;
                     query = query.Where(x => x.Start >= startFrom);
                 }
 
-                if (getFilterModel.Filter.StartTo.HasValue)
+                if (getListModel.Filter.StartTo.HasValue)
                 {
-                    var startTo = getFilterModel.Filter.StartTo.Value.Date.AddDays(1);
+                    var startTo = getListModel.Filter.StartTo.Value.Date.AddDays(1);
                     query = query.Where(x => x.Start < startTo);
                 }
             }
 
             var totalCount = await query.LongCountAsync();
 
-            if (!string.IsNullOrWhiteSpace(getFilterModel.SortBy))
+            if (!string.IsNullOrWhiteSpace(getListModel.SortBy))
             {
-                query = getFilterModel.SortBy switch
+                query = getListModel.SortBy switch
                 {
-                    nameof(EventEntity.Name) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(EventEntity.Name) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Name)
                         : query.OrderByDescending(x => x.Name),
 
-                    nameof(EventEntity.Start) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(EventEntity.Start) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Start)
                         : query.OrderByDescending(x => x.Start),
 
-                    nameof(EventEntity.Status) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(EventEntity.Status) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Status)
                         : query.OrderByDescending(x => x.Status),
 
-                    _ => getFilterModel.SortOrder == SortOrder.Asc
+                    _ => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
                 };
             }
 
-            var page = getFilterModel.Page ?? 1;
-            var pageSize = getFilterModel.PageSize ?? 1000;
-
             var eventModels = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((getListModel.Page - 1) * getListModel.PageSize)
+                .Take(getListModel.PageSize)
                 .ProjectToType<EventModel>(_mapper.Config)
                 .ToListAsync();
 
@@ -131,7 +128,7 @@ namespace Hackathon.DAL.Repositories
         public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
         {
             var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
-            _dbContext.Events.UpdateRange(eventEntities);
+            _dbContext.Set<EventEntity>().UpdateRange(eventEntities);
             await _dbContext.SaveChangesAsync();
         }
 

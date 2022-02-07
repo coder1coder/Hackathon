@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -14,14 +14,14 @@ namespace Hackathon.BL.Team
         private readonly ITeamRepository _teamRepository;
         private readonly IValidator<long> _teamExistValidator;
         private readonly IValidator<TeamAddMemberModel> _teamAddMemberModelValidator;
-        private readonly IValidator<GetFilterModel<TeamFilterModel>> _getFilterModelValidator;
+        private readonly IValidator<GetListModel<TeamFilterModel>> _getFilterModelValidator;
 
         public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
             IValidator<TeamAddMemberModel> teamAddMemberModelValidator,
             IValidator<long> teamExistValidator,
             ITeamRepository teamRepository,
-            IValidator<GetFilterModel<TeamFilterModel>> getFilterModelValidator)
+            IValidator<GetListModel<TeamFilterModel>> getFilterModelValidator)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
@@ -52,11 +52,11 @@ namespace Hackathon.BL.Team
             return await _teamRepository.GetAsync(teamId);
         }
 
-        /// <inheritdoc cref="ITeamService.GetAsync(GetFilterModel{TeamFilterModel})"/>
-        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
+        /// <inheritdoc cref="ITeamService.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel)
         {
-            await _getFilterModelValidator.ValidateAndThrowAsync(getFilterModel);
-            return await _teamRepository.GetAsync(getFilterModel);
+            await _getFilterModelValidator.ValidateAndThrowAsync(getListModel);
+            return await _teamRepository.GetAsync(getListModel);
         }
     }
 }

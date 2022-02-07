@@ -6,6 +6,8 @@ using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
+using Hackathon.Notification;
+using Hackathon.Notification.IntegrationEvent;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +41,7 @@ namespace Hackathon.API
 
             var config = new TypeAdapterConfig();
 
-            config.Apply(new EventEntityMapping(), new TeamEntityMapping(), new UserEntityMapping());
+            config.Scan(typeof(EventEntityMapping).Assembly, typeof(NotificationMapping).Assembly);
 
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
@@ -49,6 +51,7 @@ namespace Hackathon.API
             //     options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
             // });
 
+            //Databases
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
@@ -60,7 +63,8 @@ namespace Hackathon.API
             services
                 .AddDalDependencies()
                 .AddBlDependencies()
-                .AddApiDependencies();
+                .AddApiDependencies()
+                .AddNotificationDependencies();
                 // .AddJobsDependencies();
 
             services.AddCors(options =>
@@ -100,6 +104,15 @@ namespace Hackathon.API
             ILogger<Startup> logger,
             IOptions<AppSettings> appSettings)
         {
+            try
+            {
+                dbContext.Database.Migrate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
             var appConfig = appSettings.Value;
 
             if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
@@ -124,23 +137,21 @@ namespace Hackathon.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // var messageHubPrefix = Configuration.GetValue<string>("MessageHubPrefix");
-
-            // app.UseCors("default");
-            app.UseCors(x =>
-            {
-                x
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin();
-            });
+            app.UseCors("default");
+            // app.UseCors(x =>
+            // {
+            //     x
+            //         .AllowAnyHeader()
+            //         .AllowAnyMethod()
+            //         .AllowAnyOrigin();
+            // });
 
             //DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                // endpoints.MapHub<EventMessageHub>(messageHubPrefix);
+                endpoints.MapHub<IntegrationEventHub<NotificationPublishedIntegrationEvent>>(appConfig.NotificationsHubName);
             });
         }
     }

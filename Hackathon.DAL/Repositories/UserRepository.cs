@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
@@ -30,7 +30,7 @@ namespace Hackathon.DAL.Repositories
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
 
-            await _dbContext.Users.AddAsync(entity);
+            await _dbContext.Set<UserEntity>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
             return entity.Id;
@@ -46,52 +46,49 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<UserModel>(entity);
         }
 
-        /// <inheritdoc cref="IUserRepository.GetAsync(GetFilterModel{UserFilterModel})"/>
-        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
+        /// <inheritdoc cref="IUserRepository.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
         {
             var query = _dbContext.Users
                 .AsNoTracking()
                 .AsQueryable();
 
-            if (getFilterModel.Filter != null)
+            if (getListModel.Filter != null)
             {
-                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Username))
-                    query = query.Where(x => x.UserName == getFilterModel.Filter.Username);
+                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Username))
+                    query = query.Where(x => x.UserName == getListModel.Filter.Username);
 
-                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Email))
-                    query = query.Where(x => x.Email == getFilterModel.Filter.Email);
+                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Email))
+                    query = query.Where(x => x.Email == getListModel.Filter.Email);
             }
 
             var totalCount = await query.LongCountAsync();
 
-            if (!string.IsNullOrWhiteSpace(getFilterModel.SortBy))
+            if (!string.IsNullOrWhiteSpace(getListModel.SortBy))
             {
-                query = getFilterModel.SortBy switch
+                query = getListModel.SortBy switch
                 {
-                    nameof(UserEntity.UserName) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.UserName) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.UserName)
                         : query.OrderByDescending(x => x.UserName),
 
-                    nameof(UserEntity.Email) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.Email) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Email)
                         : query.OrderByDescending(x => x.Email),
 
-                    nameof(UserEntity.FullName) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.FullName) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.FullName)
                         : query.OrderByDescending(x => x.FullName),
 
-                    _ => getFilterModel.SortOrder == SortOrder.Asc
+                    _ => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
                 };
             }
 
-            var page = getFilterModel.Page ?? 1;
-            var pageSize = getFilterModel.PageSize ?? 1000;
-
             var userModels = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((getListModel.Page - 1) * getListModel.PageSize)
+                .Take(getListModel.PageSize)
                 .ProjectToType<UserModel>()
                 .ToListAsync();
 

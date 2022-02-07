@@ -1,0 +1,27 @@
+.mat-column-status {
+  mat-icon {
+    font-size: 10px;
+    height: 10px;
+    width: 10px;
+    margin-right: 5px;
+
+    color: lightgray;
+
+    &.mat-icon {
+
+      &-published {
+        color: #eb832b;
+      }
+
+      &-started {
+        color: seagreen;
+      }
+    }
+  }
+}
+
+.mat-cell {
+  &.mat-column-actions {
+    width: 40px;
+  }
+}

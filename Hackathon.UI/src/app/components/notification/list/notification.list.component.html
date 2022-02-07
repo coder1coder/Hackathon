@@ -1,0 +1,50 @@
+<layout-default title="Уведомления">
+
+  <div class="mb-1-5em">
+  </div>
+
+  <div *ngIf="items.length > 0">
+    <table mat-table [dataSource]="items">
+
+      <ng-container matColumnDef="ownerId">
+        <th mat-header-cell *matHeaderCellDef>Владелец</th>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.ownerId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Тип</th>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.type}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon color="accent">delete_outline</mat-icon>
+              <span>Удалить</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
+      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
+    </table>
+
+    <mat-paginator [length]="pageSettings.length"
+                   [pageSize]="pageSettings.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="setPageSettings($event)"
+                   aria-label="Select page">
+    </mat-paginator>
+  </div>
+
+  <div *ngIf="items.length == 0">
+    Нет уведомлений
+  </div>
+
+</layout-default>

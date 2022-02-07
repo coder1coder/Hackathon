@@ -2,8 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
 using FluentValidation;
+using Hackathon.Abstraction;
 using Hackathon.BL.User;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -31,7 +31,7 @@ public class UserServiceTests
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .Generate();
 
-        userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetFilterModel<UserFilterModel>>()))
+        userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListModel<UserFilterModel>>()))
             .ReturnsAsync(new BaseCollectionModel<UserModel>
             {
                 Items = new[] {fakeUser},
@@ -42,11 +42,12 @@ public class UserServiceTests
             appSettingsMock.Object,
             signUpValidatorMock.Object,
             signInValidatorMock.Object,
+            null,
             userRepositoryMock.Object
             );
 
         //act
-        var result = await sut.GetAsync(new GetFilterModel<UserFilterModel>()
+        var result = await sut.GetAsync(new GetListModel<UserFilterModel>()
         {
             Filter = new UserFilterModel
             {

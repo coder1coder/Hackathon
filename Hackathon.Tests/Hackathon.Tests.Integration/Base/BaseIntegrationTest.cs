@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;

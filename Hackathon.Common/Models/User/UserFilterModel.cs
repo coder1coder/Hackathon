@@ -2,7 +2,7 @@
 
 namespace Hackathon.Common.Models.User
 {
-    public class UserFilterModel: IFilterModel
+    public class UserFilterModel
     {
         public string Username { get; set; }
         public string Email { get; set; }
