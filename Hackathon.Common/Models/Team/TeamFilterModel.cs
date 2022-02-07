@@ -10,12 +10,15 @@ namespace Hackathon.Common.Models.Team
 
         public string Owner { get; set; }
 
-        public long? QuantityFrom { get; set; }
+        public long? QuantityUsersFrom { get; set; }
 
-        public long? QuantityTo { get; set; }
+        public long? QuantityUsersTo { get; set; }
 
         public long? EventId { get; set; }
 
         public long? ProjectId { get; set; }
+
+        public long? OwnerId { get; set; }
+
     }
 }

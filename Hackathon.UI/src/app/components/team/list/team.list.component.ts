@@ -23,8 +23,8 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   form = new FormGroup({
     teamName: new FormControl(),
     owner: new FormControl(),
-    QuantityFrom: new FormControl(),
-    QuantityTo: new FormControl()
+    QuantityUsersFrom: new FormControl(),
+    QuantityUsersTo: new FormControl()
   })
 
   constructor(
@@ -43,8 +43,8 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
     let teamFilterModel = new TeamFilterModel();
     teamFilterModel.name =  this.form.get('teamName')?.value;
     teamFilterModel.owner =  this.form.get('owner')?.value;
-    teamFilterModel.QuantityFrom =  this.form.get('QuantityFrom')?.value;
-    teamFilterModel.QuantityTo =  this.form.get('QuantityTo')?.value;
+    teamFilterModel.QuantityUsersFrom =  this.form.get('QuantityUsersFrom')?.value;
+    teamFilterModel.QuantityUsersTo =  this.form.get('QuantityUsersTo')?.value;
 
     let getFilterModel = new GetFilterModel<TeamFilterModel>();
     getFilterModel.Page = this.pageSettings.pageIndex;

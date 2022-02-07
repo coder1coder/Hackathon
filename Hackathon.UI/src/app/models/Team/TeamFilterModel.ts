@@ -2,8 +2,8 @@ export class TeamFilterModel {
   ids!: number[];
   name!: string;
   owner!: string;
-  QuantityFrom!: number;
-  QuantityTo!: number;
+  QuantityUsersFrom!: number;
+  QuantityUsersTo!: number;
   eventId!: number;
   projectId!: number;
   ownerId!: number;

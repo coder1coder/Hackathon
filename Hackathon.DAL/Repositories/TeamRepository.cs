@@ -68,19 +68,22 @@ namespace Hackathon.DAL.Repositories
                 if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Owner))
                     query = query.Where(x => x.Owner.FullName.ToLower().Contains(getFilterModel.Filter.Owner.ToLower().Trim()));
 
-                if (getFilterModel.Filter.QuantityFrom.HasValue)
+                if (getFilterModel.Filter.QuantityUsersFrom.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count >= getFilterModel.Filter.QuantityFrom));
+                        x.TeamEvents.Any(s => s.Team.Users.Count >= getFilterModel.Filter.QuantityUsersFrom));
 
-                if (getFilterModel.Filter.QuantityTo.HasValue)
+                if (getFilterModel.Filter.QuantityUsersTo.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count <= getFilterModel.Filter.QuantityTo));
+                        x.TeamEvents.Any(s => s.Team.Users.Count <= getFilterModel.Filter.QuantityUsersTo));
                 
                 if (getFilterModel.Filter.EventId.HasValue)
                     query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getFilterModel.Filter.EventId));
 
                 if (getFilterModel.Filter.ProjectId.HasValue)
                     query = query.Where(x => x.TeamEvents.Any(s => s.ProjectId == getFilterModel.Filter.ProjectId));
+
+                if (getFilterModel.Filter.OwnerId.HasValue)
+                    query = query.Where(x => x.OwnerId == getFilterModel.Filter.OwnerId);
             }
 
             var totalCount = await query.LongCountAsync();
