@@ -61,6 +61,7 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Policy = nameof(UserRole.Administrator))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserModel>))]
         public async Task<IActionResult> GetAsync([FromQuery] GetFilterRequest<UserFilterModel> filterRequest)
         {

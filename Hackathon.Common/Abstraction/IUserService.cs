@@ -38,8 +38,8 @@ namespace Hackathon.Common.Abstraction
         /// <summary>
         /// Сгенерировать токен
         /// </summary>
-        /// <param name="userId">Идентификатор пользователя</param>
+        /// <param name="user">Пользователь</param>
         /// <returns></returns>
-        AuthTokenModel GenerateToken(long userId);
+        AuthTokenModel GenerateToken(UserModel user);
     }
 }

@@ -6,6 +6,7 @@ using Hackathon.API.Abstraction;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.Team;
+using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
@@ -63,7 +64,11 @@ namespace Hackathon.Tests.Integration.Base
                 HandleCookies = false
             });
 
-            var authToken = userService.GenerateToken(1);
+            var authToken = userService.GenerateToken(new UserModel()
+            {
+                Id = 1,
+                Role = UserRole.Administrator
+            });
             // httpClient.BaseAddress = new Uri("https://localhost:7001/");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.Token);
 
