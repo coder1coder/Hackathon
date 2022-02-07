@@ -32,7 +32,7 @@ namespace Hackathon.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<List<ChangeEventStatusMessage>>("ChangeEventStatusMessages")
+                    b.Property<ICollection<ChangeEventStatusMessage>>("ChangeEventStatusMessages")
                         .HasColumnType("jsonb");
 
                     b.Property<int>("DevelopmentMinutes")
@@ -72,6 +72,34 @@ namespace Hackathon.DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Events", (string)null);
+                });
+
+            modelBuilder.Entity("Hackathon.DAL.Entities.NotificationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("jsonb");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.ProjectEntity", b =>
@@ -167,17 +195,24 @@ namespace Hackathon.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Role")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("UserTeam", b =>

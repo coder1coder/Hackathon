@@ -63,7 +63,7 @@ namespace Hackathon.Common.Models.Event
         public EventStatus Status { get; set; }
 
         public long UserId { get; set; }
-        public UserModel User { get; set; } 
+        public UserModel User { get; set; }
 
         /// <summary>
         /// Список команд связанных с событием

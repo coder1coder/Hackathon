@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -22,7 +22,7 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        
+
         /// <inheritdoc cref="ITeamRepository.CreateAsync(CreateTeamModel)"/>
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
@@ -49,65 +49,62 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<TeamModel>(teamEntity);
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetAsync(GetFilterModel{TeamFilterModel})"/>
-        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetFilterModel<TeamFilterModel> getFilterModel)
+        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel)
         {
             var query = _dbContext.Teams
                 .Include(x => x.Users)
                 .Include(x => x.TeamEvents)
                 .AsNoTracking();
 
-            if (getFilterModel.Filter != null)
+            if (getListModel.Filter != null)
             {
-                if (getFilterModel.Filter.Ids != null)
-                    query = query.Where(x => getFilterModel.Filter.Ids.Contains(x.Id));
+                if (getListModel.Filter.Ids != null)
+                    query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
 
-                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Name))
-                    query = query.Where(x => x.Name.ToLower().Contains(getFilterModel.Filter.Name.ToLower().Trim()));
+                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Name))
+                    query = query.Where(x => x.Name.ToLower().Contains(getListModel.Filter.Name.ToLower().Trim()));
 
-                if (!string.IsNullOrWhiteSpace(getFilterModel.Filter.Owner))
-                    query = query.Where(x => x.Owner.FullName.ToLower().Contains(getFilterModel.Filter.Owner.ToLower().Trim()));
+                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Owner))
+                    query = query.Where(x => x.Owner.FullName.ToLower().Contains(getListModel.Filter.Owner.ToLower().Trim()));
 
-                if (getFilterModel.Filter.QuantityUsersFrom.HasValue)
+                if (getListModel.Filter.QuantityUsersFrom.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count >= getFilterModel.Filter.QuantityUsersFrom));
+                        x.TeamEvents.Any(s => s.Team.Users.Count >= getListModel.Filter.QuantityUsersFrom));
 
-                if (getFilterModel.Filter.QuantityUsersTo.HasValue)
+                if (getListModel.Filter.QuantityUsersTo.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count <= getFilterModel.Filter.QuantityUsersTo));
-                
-                if (getFilterModel.Filter.EventId.HasValue)
-                    query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getFilterModel.Filter.EventId));
+                        x.TeamEvents.Any(s => s.Team.Users.Count <= getListModel.Filter.QuantityUsersTo));
 
-                if (getFilterModel.Filter.ProjectId.HasValue)
-                    query = query.Where(x => x.TeamEvents.Any(s => s.ProjectId == getFilterModel.Filter.ProjectId));
+                if (getListModel.Filter.EventId.HasValue)
+                    query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getListModel.Filter.EventId));
 
-                if (getFilterModel.Filter.OwnerId.HasValue)
-                    query = query.Where(x => x.OwnerId == getFilterModel.Filter.OwnerId);
+                if (getListModel.Filter.ProjectId.HasValue)
+                    query = query.Where(x => x.TeamEvents.Any(s => s.ProjectId == getListModel.Filter.ProjectId));
+
+                if (getListModel.Filter.OwnerId.HasValue)
+                    query = query.Where(x => x.OwnerId == getListModel.Filter.OwnerId);
             }
 
             var totalCount = await query.LongCountAsync();
 
-            if (!string.IsNullOrWhiteSpace(getFilterModel.SortBy))
+            if (!string.IsNullOrWhiteSpace(getListModel.SortBy))
             {
-                query = getFilterModel.SortBy switch
+                query = getListModel.SortBy switch
                 {
-                    nameof(TeamEntity.Name) => getFilterModel.SortOrder == SortOrder.Asc
+                    nameof(TeamEntity.Name) => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Name)
                         : query.OrderByDescending(x => x.Name),
 
-                    _ => getFilterModel.SortOrder == SortOrder.Asc
+                    _ => getListModel.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
                 };
             }
 
-            var page = getFilterModel.Page ?? 1;
-            var pageSize = getFilterModel.PageSize ?? 300;
-
             var teamModels = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((getListModel.Page - 1) * getListModel.PageSize)
+                .Take(getListModel.PageSize)
                 .ProjectToType<TeamModel>(_mapper.Config)
                 .ToListAsync();
 

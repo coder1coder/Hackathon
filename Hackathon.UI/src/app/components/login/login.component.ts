@@ -6,6 +6,7 @@ import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {ProblemDetails} from "../../models/ProblemDetails";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent implements AfterViewInit  {
   constructor(private router: Router, private authService: AuthService,
               private snackBar: MatSnackBar) {
 
-    this.siteKey = '6Lew_2YeAAAAAFuRFhML7FxNeiD4wZnrX6x9GF_a';
+    this.siteKey = environment.reCaptchaKey;
 
     if (router.url === '/logout')
       this.#logout();

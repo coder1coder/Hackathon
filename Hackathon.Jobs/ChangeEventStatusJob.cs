@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hangfire;
@@ -29,7 +29,7 @@ namespace Hackathon.Jobs
 
         public async Task Execute()
         {
-            var publishedEvents = await _eventService.GetAsync(new GetFilterModel<EventFilterModel>
+            var publishedEvents = await _eventService.GetAsync(new GetListModel<EventFilterModel>
             {
                 Filter = new EventFilterModel
                 {

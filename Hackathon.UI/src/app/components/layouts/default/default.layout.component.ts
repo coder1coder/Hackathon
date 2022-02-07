@@ -1,4 +1,5 @@
 import {Component, Input} from "@angular/core";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'layout-default',
@@ -11,7 +12,10 @@ export class DefaultLayoutComponent {
   @Input() title!: string;
   @Input() isLoading: boolean = false;
 
-  constructor() {
+  constructor(private notificationService:NotificationService) {
+    notificationService.onPublished = (x) => {
+      console.log(x)
+    };
   }
 }
 

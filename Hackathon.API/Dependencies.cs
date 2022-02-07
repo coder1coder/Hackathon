@@ -1,6 +1,5 @@
-﻿using Hackathon.MessageQueue;
-using Hackathon.MessageQueue.Hubs;
-using Hackathon.MessageQueue.Messages;
+﻿using Hackathon.Notification;
+using Hackathon.Notification.IntegrationEvent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.API
@@ -11,7 +10,7 @@ namespace Hackathon.API
         {
             return services
                 // .AddScoped<IMapper, Mapper>()
-                .AddScoped<IMessageHub<EventMessage>, EventMessageHub>();
+                .AddScoped<IMessageHub<NotificationPublishedIntegrationEvent>, IntegrationEventHub<NotificationPublishedIntegrationEvent>>();
         }
     }
 }

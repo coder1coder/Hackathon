@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests;
@@ -63,9 +63,9 @@ namespace Hackathon.API.Controllers
         [HttpGet]
         [Authorize(Policy = nameof(UserRole.Administrator))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserModel>))]
-        public async Task<IActionResult> GetAsync([FromQuery] GetFilterRequest<UserFilterModel> filterRequest)
+        public async Task<IActionResult> GetAsync([FromQuery] GetListRequest<UserFilterModel> listRequest)
         {
-            var getFilterModel = _mapper.Map<GetFilterModel<UserFilterModel>>(filterRequest);
+            var getFilterModel = _mapper.Map<GetListModel<UserFilterModel>>(listRequest);
             var collectionModel = await _userService.GetAsync(getFilterModel);
             return Ok(_mapper.Map<BaseCollectionResponse<UserModel>>(collectionModel));
         }

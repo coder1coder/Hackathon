@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models.Project;
 
 namespace Hackathon.BL.Project

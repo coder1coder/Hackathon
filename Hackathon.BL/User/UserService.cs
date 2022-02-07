@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
+using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -26,16 +26,20 @@ namespace Hackathon.BL.User
         private readonly IUserRepository _userRepository;
         private readonly AppSettings _appSettings;
 
+        private readonly INotificationService _notificationService;
+
         public UserService(
             IOptions<AppSettings> appSettings,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
+            INotificationService notificationService,
             IUserRepository userRepository
             )
         {
             _appSettings = appSettings.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
+            _notificationService = notificationService;
             _userRepository = userRepository;
         }
 
@@ -55,7 +59,7 @@ namespace Hackathon.BL.User
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
 
-            var users = await _userRepository.GetAsync(new GetFilterModel<UserFilterModel>
+            var users = await _userRepository.GetAsync(new GetListModel<UserFilterModel>
             {
                 Filter = new UserFilterModel
                 {
@@ -70,7 +74,20 @@ namespace Hackathon.BL.User
             if (!verified)
                 throw new ValidationException("Неправильное имя пользователя или пароль");
 
-            return GenerateToken(user);
+            var token = GenerateToken(user);
+
+            await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
+            {
+                Type = NotificationType.Information,
+                UserId = user.Id,
+                OwnerId = 0,
+                Data = new InfoNotificationData()
+                {
+                    Message = $"Сгенерирован новый токен: {token.Token[..10]}"
+                }
+            });
+
+            return token;
         }
 
         /// <inheritdoc cref="IUserService.GetAsync(long)"/>
@@ -82,10 +99,10 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(userId);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync(GetFilterModel{UserFilterModel})"/>
-        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetFilterModel<UserFilterModel> getFilterModel)
+        /// <inheritdoc cref="IUserService.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
         {
-            return await _userRepository.GetAsync(getFilterModel);
+            return await _userRepository.GetAsync(getListModel);
         }
 
         /// <inheritdoc cref="IUserService.GenerateToken(UserModel)"/>

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Responses;

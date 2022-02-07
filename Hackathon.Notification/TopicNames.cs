@@ -1,7 +1,7 @@
-﻿namespace Hackathon.MessageQueue
+﻿namespace Hackathon.Notification
 {
     public static class TopicNames
     {
-        public const string EventChangeStatus = nameof(EventChangeStatus);
+        public const string NotificationPublished = nameof(NotificationPublished);
     }
 }

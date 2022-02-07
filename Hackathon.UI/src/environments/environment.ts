@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  api: "https://localhost:5001/api"
+  api: "http://localhost:5000/api",
+  messageHub: "http://localhost:5000/notifications",
+  reCaptchaKey: "6Lew_2YeAAAAAFuRFhML7FxNeiD4wZnrX6x9GF_a"
 };
 
 /*

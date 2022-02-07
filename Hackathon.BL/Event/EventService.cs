@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
-using Hackathon.MessageQueue;
-using Hackathon.MessageQueue.Messages;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.Event
@@ -18,25 +16,22 @@ namespace Hackathon.BL.Event
     {
         private readonly IValidator<CreateEventModel> _createEventModelValidator;
         private readonly IEventRepository _eventRepository;
-        private readonly IValidator<GetFilterModel<EventFilterModel>> _getFilterModelValidator;
-        private readonly IMessageHub<EventMessage> _eventMessageHub;
+        private readonly IValidator<GetListModel<EventFilterModel>> _getFilterModelValidator;
         private readonly ITeamService _teamService;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
-            IValidator<GetFilterModel<EventFilterModel>> getFilterModelValidator,
+            IValidator<GetListModel<EventFilterModel>> getFilterModelValidator,
             IEventRepository eventRepository,
-            IMessageHub<EventMessage> eventMessageHub,
             ITeamService teamService
             )
         {
             _createEventModelValidator = createEventModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
             _eventRepository = eventRepository;
-            _eventMessageHub = eventMessageHub;
             _teamService = teamService;
         }
-        
+
         /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
@@ -51,11 +46,11 @@ namespace Hackathon.BL.Event
             return eventModel ?? throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
         }
 
-        /// <inheritdoc cref="IEventService.GetAsync(GetFilterModel{EventFilterModel})"/>
-        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetFilterModel<EventFilterModel> getFilterModel)
+        /// <inheritdoc cref="IEventService.GetAsync(GetListModel{T})"/>
+        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetListModel<EventFilterModel> getListModel)
         {
-            await _getFilterModelValidator.ValidateAndThrowAsync(getFilterModel);
-            return await _eventRepository.GetAsync(getFilterModel);
+            await _getFilterModelValidator.ValidateAndThrowAsync(getListModel);
+            return await _eventRepository.GetAsync(getListModel);
         }
 
         /// <inheritdoc cref="IEventService.SetStatusAsync(long, EventStatus)"/>
@@ -123,10 +118,10 @@ namespace Hackathon.BL.Event
             var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
                 .FirstOrDefault(x => x.Status == eventStatus);
 
-            if (changeEventStatusMessage != null)
-                await _eventMessageHub.Publish(
-                    TopicNames.EventChangeStatus,
-                    new EventMessage(eventModel.Id, changeEventStatusMessage.Message));
+            // if (changeEventStatusMessage != null)
+            //     await _eventMessageHub.Publish(
+            //         TopicNames.EventChangeStatus,
+            //         new EventIntegrationEvent(eventModel.Id, changeEventStatusMessage.Message));
         }
     }
 }

@@ -1,0 +1,21 @@
+.notify{
+
+  &__info {
+    &-message {
+      font-size: 14px;
+    }
+  }
+
+  &-createdAt {
+    color: #bbb;
+    font-size: 12px;
+  }
+
+  &__check-icon{
+    color: #bbb;
+  }
+}
+
+::ng-deep .mat-menu-panel.notify__menu {
+  min-width: 400px;
+}

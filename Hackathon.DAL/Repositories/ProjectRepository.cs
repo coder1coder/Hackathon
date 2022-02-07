@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.Common.Models.Project;
 using Hackathon.DAL.Entities;
 using MapsterMapper;
@@ -21,7 +21,7 @@ namespace Hackathon.DAL.Repositories
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        
+
         /// <inheritdoc cref="IProjectRepository.CreateAsync(ProjectCreateModel)"/>
         public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
         {

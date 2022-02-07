@@ -1,4 +1,4 @@
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.DAL.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +12,9 @@ namespace Hackathon.DAL
                 .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<ITeamRepository, TeamRepository>()
-                .AddScoped<IProjectRepository, ProjectRepository>();
+                .AddScoped<IProjectRepository, ProjectRepository>()
+                .AddScoped<INotificationRepository, NotificationRepository>()
+                ;
         }
     }
 }

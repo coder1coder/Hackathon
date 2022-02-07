@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests;
@@ -49,9 +49,9 @@ namespace Hackathon.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventModel>))]
-        public async Task<IActionResult> Get([FromQuery] GetFilterRequest<EventFilterModel> filterRequest)
+        public async Task<IActionResult> Get([FromQuery] GetListRequest<EventFilterModel> listRequest)
         {
-            var getFilterModel = _mapper.Map<GetFilterModel<EventFilterModel>>(filterRequest);
+            var getFilterModel = _mapper.Map<GetListModel<EventFilterModel>>(listRequest);
             var collectionModel = await _eventService.GetAsync(getFilterModel);
             return Ok(_mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel));
         }

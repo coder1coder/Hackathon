@@ -1,6 +1,5 @@
 using System.Linq;
 using Hackathon.Common.Configuration;
-using Hackathon.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

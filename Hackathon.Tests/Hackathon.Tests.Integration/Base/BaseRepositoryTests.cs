@@ -1,5 +1,5 @@
 using System;
-using Hackathon.Common.Abstraction;
+using Hackathon.Abstraction;
 using Hackathon.DAL;
 using Hackathon.DAL.Repositories;
 using MapsterMapper;

@@ -7,5 +7,5 @@ public class AppSettings
     public OriginsOptions OriginsOptions { get; set; }
     public bool? EnableSensitiveDataLogging { get; set; }
     public string PathBase { get; set; }
-    public string MessageHubPrefix { get; set; }
+    public string NotificationsHubName { get; set; }
 }

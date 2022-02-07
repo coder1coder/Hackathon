@@ -40,6 +40,9 @@ import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
 import {EventNewStatusDialogComponent} from './components/event/status/event-new-status-dialog.component';
 import {RecaptchaModule} from 'ng-recaptcha';
+import {NotificationBellComponent} from "./components/notification-bell/notification-bell.component";
+import {MatBadgeModule} from "@angular/material/badge";
+import {NotificationListComponent} from "./components/notification/list/notification.list.component";
 
 @NgModule({
   declarations: [
@@ -65,7 +68,10 @@ import {RecaptchaModule} from 'ng-recaptcha';
 
     NotFoundComponent,
 
-    DefaultLayoutComponent,
+    NotificationBellComponent,
+    NotificationListComponent,
+
+    DefaultLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -89,8 +95,8 @@ import {RecaptchaModule} from 'ng-recaptcha';
     MatDialogModule,
     MatTooltipModule,
     MatSelectModule,
-
-    RecaptchaModule
+    RecaptchaModule,
+    MatBadgeModule
   ],
   providers: [
     {

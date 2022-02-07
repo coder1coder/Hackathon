@@ -21,6 +21,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task CreateAsync_ShouldReturn_Id()
         {
             var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
+            Assert.NotNull(createEventModel);
             var createdEventId = await EventRepository.CreateAsync(createEventModel);
             createdEventId.Should().BeGreaterThan(0);
         }
@@ -29,6 +30,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task GetAsync_ShouldReturn_NotNull()
         {
             var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
+            Assert.NotNull(createEventModel);
             var eventId = await EventRepository.CreateAsync(createEventModel);
             var eventModel = await EventRepository.GetAsync(eventId);
             eventModel.Should().NotBeNull();
@@ -48,7 +50,7 @@ namespace Hackathon.Tests.Integration.Event
             await DbContext.AddRangeAsync(list);
             await DbContext.SaveChangesAsync();
 
-            var response = await EventRepository.GetAsync(new GetFilterModel<EventFilterModel>
+            var response = await EventRepository.GetAsync(new GetListModel<EventFilterModel>
             {
                 Filter = new EventFilterModel
                 {
@@ -73,6 +75,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task UpdateAsync_ShouldReturn_Success()
         {
             var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
+            Assert.NotNull(createEventModel);
             var eventId = await EventRepository.CreateAsync(createEventModel);
 
             var eventModel = await EventRepository.GetAsync(eventId);
@@ -90,6 +93,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task DeleteAsync_ShouldDelete()
         {
             var createEventModel = TestFaker.GetCreateEventModels(1, UserId).FirstOrDefault();
+            Assert.NotNull(createEventModel);
             var eventId = await EventRepository.CreateAsync(createEventModel);
             DbContext.ChangeTracker.Clear();
             await EventRepository.DeleteAsync(eventId);

@@ -1,5 +1,5 @@
-export interface BaseCollectionModel<T>
+export class BaseCollectionModel<T>
 {
-  items: T[];
-  totalCount: number;
+  items: T[] = [];
+  totalCount: number = 0;
 }

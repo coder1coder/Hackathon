@@ -6,7 +6,7 @@
     public class ChangeEventStatusMessage
     {
         /// <summary>
-        /// Статус ивента 
+        /// Статус ивента
         /// </summary>
         public EventStatus Status { get; set; }
 
