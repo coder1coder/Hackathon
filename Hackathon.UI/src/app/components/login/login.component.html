@@ -21,6 +21,11 @@
       </mat-icon>
     </mat-form-field>
   </div>
+
+  <div class="re-captcha">
+    <re-captcha (resolved)="getCaptchaResponse($event)" siteKey="{{siteKey}}"></re-captcha>
+  </div>
+
   <div class="loginForm__bottom">
     <div class="loginForm__buttons">
       <button mat-raised-button color="primary" (click)="signIn()">Войти</button>
