@@ -51,7 +51,9 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   signIn(){
-    if (!this.profileForm.valid || this.captcha === "" || this.captcha.length === 0) {
+    if (!this.profileForm.valid) return;
+
+    if (this.captcha === "" || this.captcha.length === 0) {
       this.snackBar.open("Докажите, что вы не робот!", "ok", { duration: 5 * 500 });
       return;
     }
