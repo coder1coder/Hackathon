@@ -84,5 +84,4 @@ export class AuthService {
         .append('Authorization', 'Bearer '+tokenInfo.token)
       });
   }
-
 }

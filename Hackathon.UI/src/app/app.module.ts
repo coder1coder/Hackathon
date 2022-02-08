@@ -39,6 +39,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
 import {EventNewStatusDialogComponent} from './components/event/status/event-new-status-dialog.component';
+import {RecaptchaModule} from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,9 @@ import {EventNewStatusDialogComponent} from './components/event/status/event-new
     MatCheckboxModule,
     MatDialogModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+
+    RecaptchaModule
   ],
   providers: [
     {
