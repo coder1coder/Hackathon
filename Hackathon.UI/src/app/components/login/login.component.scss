@@ -35,18 +35,23 @@
     font-weight: lighter;
   }
 
-&__fields {
-   display: flex;
-   flex-direction: column;
-   max-width: 400px;
-   width: 300px;
- }
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    width: 300px;
+  }
 
-&__buttons {
-   display: flex;
-   justify-content: center;
-   column-gap: 10px;
- }
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
+  }
+
+  .re-captcha {
+    margin-bottom: 18px;
+  }
+
 }
 
 .loader {
