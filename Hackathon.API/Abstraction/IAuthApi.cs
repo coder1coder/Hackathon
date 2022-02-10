@@ -7,7 +7,7 @@ namespace Hackathon.API.Abstraction
 {
     public interface IAuthApi
     {
-        [Post($"/api/Auth/{nameof(SignIn)}")]
+        [Post($"/v1/Auth/{nameof(SignIn)}")]
         public Task<AuthTokenModel> SignIn([Body] SignInRequest request);
     }
 }

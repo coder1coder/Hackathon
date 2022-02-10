@@ -7,7 +7,7 @@ namespace Hackathon.API.Abstraction
 {
     public interface IProjectApi
     {
-        [Post("/api/Project")]
+        [Post("/v1/Project")]
         Task<BaseCreateResponse> Create([Body] ProjectCreateRequest projectCreateRequest);
     }
 }

@@ -8,10 +8,10 @@ namespace Hackathon.API.Abstraction
 {
     public interface IUserApi
     {
-        [Post("/api/User")]
+        [Post("/v1/User")]
         Task<BaseCreateResponse> SignUp([Body] SignUpRequest request);
 
-        [Get("/api/User/{userId})")]
+        [Get("/v1/User/{userId})")]
         public Task<UserModel> Get(long userId);
     }
 }

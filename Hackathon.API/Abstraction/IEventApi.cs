@@ -8,16 +8,16 @@ namespace Hackathon.API.Abstraction
 {
     public interface IEventApi
     {
-        [Post("/api/Event")]
+        [Post("/v1/Event")]
         Task<BaseCreateResponse> Create([Body] CreateEventRequest createEventRequest);
 
-        [Put("/api/Event/SetStatus")]
+        [Put("/v1/Event/SetStatus")]
         Task SetStatus([Body] SetStatusRequest<EventStatus> setStatusRequest);
 
-        [Get("/api/Event/{id}")]
+        [Get("/v1/Event/{id}")]
         Task<EventModel> Get(long id);
 
-        [Post("/api/Event/{id}/join")]
+        [Post("/v1/Event/{id}/join")]
         Task Join(long id);
     }
 }

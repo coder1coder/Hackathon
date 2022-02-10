@@ -7,7 +7,7 @@ namespace Hackathon.API.Abstraction
 {
     public interface ITeamApi
     {
-        [Post("/api/Team")]
+        [Post("/v1/Team")]
         Task<BaseCreateResponse> Create([Body] CreateTeamRequest createTeamRequest);
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hackathon.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [Authorize]
     public class BaseController: ControllerBase
     {
