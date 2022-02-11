@@ -12,13 +12,14 @@ import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamNewComponent} from "./components/team/new/team.new.component";
+import {RedirectService} from "./services/redirect.service";
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'login', component: LoginComponent, canActivate: [RedirectService] },
   { path: 'logout', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'register', component: RegisterComponent , canActivate: [RedirectService]},
 
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'events/new', component: EventNewComponent, canActivate: [AuthGuard] },
