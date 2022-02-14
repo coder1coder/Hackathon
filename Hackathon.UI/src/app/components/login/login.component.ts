@@ -1,6 +1,6 @@
 import '@angular/compiler';
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormGroup, FormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -72,10 +72,9 @@ export class LoginComponent implements AfterViewInit  {
           this.router.navigate(['/profile']);
         },
         error => {
-
           let errorMessage = "Неизвестная ошибка";
 
-          if (error.error.details !== undefined) {
+          if (error.error.detail !== undefined) {
             let details: ProblemDetails = <ProblemDetails>error.error;
             errorMessage = details.detail;
           }
