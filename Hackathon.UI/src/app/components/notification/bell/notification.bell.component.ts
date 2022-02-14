@@ -1,16 +1,16 @@
-import {AfterViewInit, Component} from "@angular/core";
-import {NotificationService} from "../../services/notification.service";
-import {BaseCollectionModel} from "../../models/BaseCollectionModel";
-import {NotificationModel} from "../../models/Notification/NotificationModel";
-import {Notification} from "../../models/Notification/Notification";
+import {AfterViewInit, Component, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
-import {NotificationFilterModel} from "../../models/Notification/NotificationFilterModel";
-import {GetFilterModel, SortOrder} from "../../models/GetFilterModel";
+import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {NotificationModel} from "../../../models/Notification/NotificationModel";
+import {NotificationService} from "../../../services/notification.service";
+import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
+import {GetFilterModel, SortOrder} from "../../../models/GetFilterModel";
+import {Notification} from "../../../models/Notification/Notification";
 
 @Component({
   selector: 'notification-bell',
-  templateUrl: './notification-bell.component.html',
-  styleUrls: ['./notification-bell.component.scss'],
+  templateUrl: './notification.bell.component.html',
+  styleUrls: ['./notification.bell.component.scss'],
 })
 
 export class NotificationBellComponent implements AfterViewInit
@@ -23,6 +23,7 @@ export class NotificationBellComponent implements AfterViewInit
   }
 
   ngAfterViewInit(): void {
+
     this.notificationService.onPublished = _ => {
       this.updateUnreadNotificationsCount();
       this.fetch();
@@ -63,4 +64,16 @@ export class NotificationBellComponent implements AfterViewInit
       this.markAllAsRead();
   }
 
+  remove(event:MouseEvent, ids:string[]){
+      event.stopPropagation();
+      this.notificationService.remove(ids).subscribe(_=>{
+        this.notifications.items = this.notifications.items.filter(x=> x.id !== undefined && !ids.includes(x.id));
+        this.notifications.totalCount = this.notifications.totalCount - ids.length;
+      });
+  }
+
+  removeAll(event:MouseEvent){
+    let ids = this.notifications.items.map(x=>x.id!);
+    this.remove(event, ids);
+  }
 }

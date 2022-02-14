@@ -52,11 +52,11 @@ public class NotificationController: BaseController
     }
 
     /// <summary>
-    /// Отметить уведомления пользователя как удаленные
+    /// Удалить уведомление пользователя
     /// </summary>
     /// <param name="ids"></param>
     /// <returns></returns>
-    [HttpDelete]
+    [HttpPost("remove")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public async Task Delete([FromBody] Guid[] ids)

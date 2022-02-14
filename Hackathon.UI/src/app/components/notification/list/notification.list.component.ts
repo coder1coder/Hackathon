@@ -1,10 +1,13 @@
 import {Component} from '@angular/core';
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {NotificationModel} from "../../../models/Notification/NotificationModel";
 import {NotificationService} from "../../../services/notification.service";
 import {GetFilterModel} from "../../../models/GetFilterModel";
 import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
+import {Notification} from "../../../models/Notification/Notification";
+import {PageEvent} from "@angular/material/paginator";
+import {BaseTableListComponent} from "../../BaseTableListComponent";
+import {TeamFilterModel} from "../../../models/Team/TeamFilterModel";
 
 @Component({
   selector: 'notification-list',
@@ -16,30 +19,36 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
 
   Notification = Notification;
 
-  override getDisplayColumns(): string[] {
-    return ['type', 'ownerId', 'actions'];
-  }
-
   constructor(private notificationService: NotificationService) {
     super(NotificationListComponent.name);
   }
 
-  fetch(){
+  override fetch(){
 
     let model = new GetFilterModel<NotificationFilterModel>();
+
     model.Page = this.pageSettings.pageIndex;
     model.PageSize = this.pageSettings.pageSize;
 
     this.notificationService.getNotifications(model)
       .subscribe({
         next: (r: BaseCollectionModel<NotificationModel>) =>  {
-          this.items = r.items;
-          this.pageSettings.length = r.totalCount;
-        },
-        error: () => {}
+          this.items = r.items
+          this.pageSettings.length = r.totalCount
+        }
       });
   }
 
   rowClick(notification: NotificationModel){
+  }
+
+  remove(ids:string[]){
+    this.notificationService.remove(ids).subscribe(_=>{
+      this.items = this.items?.filter(x=> x.id !== undefined && !ids.includes(x.id));
+    });
+  }
+
+  getDisplayColumns(): string[] {
+    return ['notify','type', 'createdAt'];
   }
 }
