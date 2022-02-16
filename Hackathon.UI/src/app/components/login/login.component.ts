@@ -1,12 +1,11 @@
 import '@angular/compiler';
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {ProblemDetails} from "../../models/ProblemDetails";
-import {environment} from "../../../environments/environment";
+import {GoogleSigninService} from 'src/app/services/google-signin.service';
+import {GoogleUserModel} from 'src/app/models/GoogleUserModel';
 
 @Component({
   selector: 'app-login',
@@ -14,57 +13,48 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./login.component.scss'],
 })
 
-export class LoginComponent implements AfterViewInit  {
+export class LoginComponent implements OnInit  {
 
   @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
 
   welcomeText: string = 'Добро пожаловать в систему Hackathon';
-
-  profileForm = new FormGroup({
-    login: new FormControl(''),
-    password: new FormControl('')
-  })
-
   isLoading: boolean = false;
-  isPassFieldHide: boolean = true;
-  siteKey!: string;
-  captcha: string = "";
+  googleUser = new GoogleUserModel();
 
-  constructor(private router: Router, private authService: AuthService,
-              private snackBar: MatSnackBar) {
-
-    this.siteKey = environment.reCaptchaKey;
+  constructor (private router: Router,
+              private snackBar: MatSnackBar,
+              private googleSigninService: GoogleSigninService) {
 
     if (router.url === '/logout')
-      this.#logout();
+      this.SignOut();
 
-    //if user is logged redirect to homepage
-    if (this.authService.isLoggedIn())
+    if (this.googleUser.isLoggedIn)
       this.router.navigate(['/profile']);
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    this.googleSigninService.Observable().subscribe(user => {
+      if(user != undefined) {
+        var profile = user.getBasicProfile();
+        this.googleUser.id = profile.getId();
+        this.googleUser.fullName = profile.getName();
+        this.googleUser.givenName = profile.getGivenName();
+        this.googleUser.imageUrl = profile.getImageUrl();
+        this.googleUser.email = profile.getEmail();
+        var authResponse = user.getAuthResponse();
+        this.googleUser.accessToken = authResponse.access_token;
+        this.googleUser.expiresAt = authResponse.expires_at;
+        this.googleUser.expiresIn = authResponse.expires_in;
+        this.googleUser.firstIssuedAt = authResponse.first_issued_at;
+        this.googleUser.idToken = authResponse.id_token;
+        this.googleUser.loginHint = authResponse.login_hint;
 
-    this.profileForm.controls['login'].setErrors({ 'incorrect': false });
-    this.profileForm.controls['password'].setErrors({ 'incorrect': false });
+        console.log(this.googleUser);
+      }
+    })
 
-    setTimeout(() => this.inputLogin?.nativeElement.focus())
-  }
-
-  signIn(){
-    if (!this.profileForm.valid) return;
-
-    if (this.captcha === "" || this.captcha.length === 0) {
-      this.snackBar.open("Докажите, что вы не робот!", "ok", { duration: 5 * 500 });
-      return;
-    }
-
-    this.setLoading(true);
-
-    let login = this.profileForm.controls['login'].value;
-    let password = this.profileForm.controls['password'].value;
-
-    this.authService.login(login, password)
+    if(this.googleUser.isLoggedIn) {
+      this.googleSigninService.login(this.googleUser)
       .pipe(
         finalize(() => this.setLoading(false))
       )
@@ -78,18 +68,17 @@ export class LoginComponent implements AfterViewInit  {
             let details: ProblemDetails = <ProblemDetails>error.error;
             errorMessage = details.detail;
           }
-
-          this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
           this.snackBar.open(errorMessage, "ok", { duration: 5 * 1000 });
         });
+    }
   }
 
-  signUp(){
-    this.router.navigate(['/register']);
+  SignIn() {
+    this.googleSigninService.signIn();
   }
 
-  #logout(){
-    this.authService.logout();
+  SignOut() {
+    this.googleSigninService.signOut();
     this.router.navigate(['login']);
   }
 
@@ -98,9 +87,4 @@ export class LoginComponent implements AfterViewInit  {
       this.isLoading = isLoading;
     })
   }
-
-  getCaptchaResponse(captchaResponse: string) {
-    this.captcha = captchaResponse;
-  }
-
 }
