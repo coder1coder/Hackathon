@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   api: "http://localhost:5000/api",
   messageHub: "http://localhost:5000/notifications",
-  reCaptchaKey: "6Lew_2YeAAAAAFuRFhML7FxNeiD4wZnrX6x9GF_a"
+  reCaptchaKey: "6Lew_2YeAAAAAFuRFhML7FxNeiD4wZnrX6x9GF_a",
+  googleClientId: "47513176100-ti42tnck4g0eo8uqenebo74gb37so4l0.apps.googleusercontent.com"
 };
 
 /*
