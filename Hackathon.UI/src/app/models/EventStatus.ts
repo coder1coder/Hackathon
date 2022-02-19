@@ -32,7 +32,3 @@ export class EventStatusTranslator{
     }
   }
 }
-
-
-
-
