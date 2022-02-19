@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {ProblemDetails} from "../../models/ProblemDetails";
 import {GoogleSigninService} from 'src/app/services/google-signin.service';
-import {GoogleUserModel} from 'src/app/models/GoogleUserModel';
+import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit  {
     this.googleSigninService.Observable().subscribe(user => {
       if(user != undefined) {
         var profile = user.getBasicProfile();
-        this.googleUser.id = profile.getId();
+        this.googleUser.id = Number.parseInt(profile.getId());
         this.googleUser.fullName = profile.getName();
         this.googleUser.givenName = profile.getGivenName();
         this.googleUser.imageUrl = profile.getImageUrl();
@@ -46,31 +46,30 @@ export class LoginComponent implements OnInit  {
         this.googleUser.expiresAt = authResponse.expires_at;
         this.googleUser.expiresIn = authResponse.expires_in;
         this.googleUser.firstIssuedAt = authResponse.first_issued_at;
-        this.googleUser.idToken = authResponse.id_token;
+        this.googleUser.TokenId = authResponse.id_token;
         this.googleUser.loginHint = authResponse.login_hint;
+        this.googleUser.isLoggedIn = true;
+      }
 
-        console.log(this.googleUser);
+      if (this.googleUser.isLoggedIn) {
+        this.googleSigninService.login(this.googleUser)
+          .pipe(
+            finalize(() => this.setLoading(false))
+          )
+          .subscribe(_ => {
+              this.router.navigate(['/profile']);
+            },
+            error => {
+              let errorMessage = "Неизвестная ошибка";
+
+              if (error.error.detail !== undefined) {
+                let details: ProblemDetails = <ProblemDetails>error.error;
+                errorMessage = details.detail;
+              }
+              this.snackBar.open(errorMessage, "ok", { duration: 5 * 1000 });
+            });
       }
     })
-
-    if(this.googleUser.isLoggedIn) {
-      this.googleSigninService.login(this.googleUser)
-      .pipe(
-        finalize(() => this.setLoading(false))
-      )
-      .subscribe(_ => {
-          this.router.navigate(['/profile']);
-        },
-        error => {
-          let errorMessage = "Неизвестная ошибка";
-
-          if (error.error.detail !== undefined) {
-            let details: ProblemDetails = <ProblemDetails>error.error;
-            errorMessage = details.detail;
-          }
-          this.snackBar.open(errorMessage, "ok", { duration: 5 * 1000 });
-        });
-    }
   }
 
   SignIn() {

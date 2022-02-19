@@ -1,5 +1,6 @@
-export class GoogleUserModel {
-  id!: string;
+export class GoogleUserModel
+{
+  id!: number;
   fullName!: string;
   givenName! : string;
   imageUrl!: string;
@@ -8,7 +9,7 @@ export class GoogleUserModel {
   expiresAt!: number;
   expiresIn!: number;
   firstIssuedAt!: number;
-  idToken!: string;
+  TokenId!: string;
   loginHint!: string;
   isLoggedIn!: boolean;
 }
