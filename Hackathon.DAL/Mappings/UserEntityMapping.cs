@@ -13,6 +13,8 @@ namespace Hackathon.DAL.Mappings
                 .PreserveReference(true)
                 .Map(x => x.PasswordHash, s => s.Password)
                     .MaxDepth(2);
+
+            config.ForType<GoogleAccountEntity, GoogleAccountModel>();
         }
     }
 }

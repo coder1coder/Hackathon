@@ -18,16 +18,16 @@ namespace Hackathon.Tests.Integration.User
         public async Task CreateAsync_ShouldReturn_Id()
         {
             var signUpModel = TestFaker.GetSignUpModels(1).First();
-            var createdUserId = await UserRepository.CreateAsync(signUpModel);
-            createdUserId.Should().BeGreaterThan(default);
+            var createdUser = await UserRepository.CreateAsync(signUpModel);
+            createdUser.Id.Should().BeGreaterThan(default);
         }
 
         [Fact]
         public async Task GetAsync_ShouldReturn_Success()
         {
             var signUpModel = TestFaker.GetSignUpModels(1).First();
-            var createdUserId = await UserRepository.CreateAsync(signUpModel);
-            var userModel = await UserRepository.GetAsync(createdUserId);
+            var createdUser = await UserRepository.CreateAsync(signUpModel);
+            var userModel = await UserRepository.GetAsync(createdUser.Id);
             userModel.Should().BeEquivalentTo(signUpModel, options=>
                 options.Excluding(x=>x.Password)
                 );
@@ -64,9 +64,9 @@ namespace Hackathon.Tests.Integration.User
         public async Task ExistAsync_ShouldReturn_Success()
         {
             var signUpModel = TestFaker.GetSignUpModels(1).First();
-            var createdUserId = await UserRepository.CreateAsync(signUpModel);
+            var createdUser = await UserRepository.CreateAsync(signUpModel);
 
-            var exist = await UserRepository.ExistAsync(createdUserId);
+            var exist = await UserRepository.ExistAsync(createdUser.Id);
             exist.Should().BeTrue();
         }
     }

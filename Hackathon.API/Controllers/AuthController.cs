@@ -46,13 +46,8 @@ namespace Hackathon.API.Controllers
         [HttpPost(nameof(SignInByGoogle))]
         public async Task<AuthTokenModel> SignInByGoogle([FromBody] SignInGoogleRequest request)
         {
-            var googleSignInRequest = new SignInModel()
-            {
-                UserName = request.GiveName,
-                Password = request.Email
-            };
-            
-            return await _userService.SignInAsync(googleSignInRequest);
+            var signInByGoogleModel = _mapper.Map<SignInByGoogleModel>(request);
+            return await _userService.SignInByGoogle(signInByGoogleModel);
         }
     }
 }
