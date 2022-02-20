@@ -7,6 +7,8 @@ namespace Hackathon.DAL
     public class ApplicationDbContext: DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<GoogleAccountEntity> GoogleAccounts { get; set; }
+
         public DbSet<EventEntity> Events { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
         public DbSet<ProjectEntity> Projects { get; set; }

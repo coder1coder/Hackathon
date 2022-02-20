@@ -26,24 +26,49 @@ namespace Hackathon.DAL.Repositories
         }
 
         /// <inheritdoc cref="IUserRepository.CreateAsync(SignUpModel)"/>
-        public async Task<long> CreateAsync(SignUpModel signUpModel)
+        public async Task<UserModel> CreateAsync(SignUpModel signUpModel)
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
 
             await _dbContext.Set<UserEntity>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            return entity.Id;
+            return _mapper.Map<UserModel>(entity);
         }
 
         /// <inheritdoc cref="IUserRepository.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
             var entity = await _dbContext.Users
+                .Include(x=>x.GoogleAccount)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == userId);
 
             return _mapper.Map<UserModel>(entity);
+        }
+
+        /// <inheritdoc cref="IUserRepository.GetByGoogleIdAsync(string)"/>
+        public async Task<UserModel> GetByGoogleIdAsync(string googleId)
+        {
+            var entity = await _dbContext.Users
+                .Include(x=>x.GoogleAccount)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.GoogleAccountId == googleId);
+
+            return entity != null ? _mapper.Map<UserModel>(entity) : null;
+        }
+
+        /// <inheritdoc cref="IUserRepository.UpdateGoogleAccount"/>
+        public async Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel)
+        {
+            var entity = await _dbContext.GoogleAccounts
+                .FirstOrDefaultAsync(x => x.Id == googleAccountModel.Id);
+
+            if (entity != null)
+            {
+                _mapper.Map(googleAccountModel, entity);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         /// <inheritdoc cref="IUserRepository.GetAsync(GetListModel{T})"/>

@@ -12,6 +12,12 @@ namespace Hackathon.DAL.Entities
         public string Email { get; set; }
         public string FullName { get; set; }
 
+        /// <summary>
+        /// Идентификатор пользователя социальной сети Google
+        /// </summary>
+        public string GoogleAccountId { get; set; }
+        public GoogleAccountEntity GoogleAccount { get; set; }
+
         public UserRole Role { get; set; }
 
         public List<TeamEntity> Teams { get; set; } = new ();

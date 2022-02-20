@@ -11,7 +11,7 @@ namespace Hackathon.Abstraction
         /// </summary>
         /// <param name="signUpModel"></param>
         /// <returns></returns>
-        Task<long> CreateAsync(SignUpModel signUpModel);
+        Task<UserModel> CreateAsync(SignUpModel signUpModel);
 
         /// <summary>
         /// Получить информацию о пользователе по идентификатору
@@ -33,5 +33,19 @@ namespace Hackathon.Abstraction
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns><c> true </c> если пользователь есть, иначе <c> false </c></returns>
         Task<bool> ExistAsync(long userId);
+
+        /// <summary>
+        /// Получить информацию о пользователе по Google Id
+        /// </summary>
+        /// <param name="googleId"></param>
+        /// <returns></returns>
+        Task<UserModel?> GetByGoogleIdAsync(string googleId);
+
+        /// <summary>
+        /// Обновить информацию о Google аккаунте
+        /// </summary>
+        /// <param name="googleAccountModel"></param>
+        /// <returns></returns>
+        Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel);
     }
 }

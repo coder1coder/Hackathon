@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -12,6 +13,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
+using MapsterMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
@@ -27,20 +29,21 @@ namespace Hackathon.BL.User
         private readonly AppSettings _appSettings;
 
         private readonly INotificationService _notificationService;
+        private readonly IMapper _mapper;
 
         public UserService(
             IOptions<AppSettings> appSettings,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
             INotificationService notificationService,
-            IUserRepository userRepository
-            )
+            IUserRepository userRepository, IMapper mapper)
         {
             _appSettings = appSettings.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _notificationService = notificationService;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         /// <inheritdoc cref="IUserService.CreateAsync(SignUpModel)"/>
@@ -51,7 +54,8 @@ namespace Hackathon.BL.User
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(signUpModel.Password);
             signUpModel.Password = passwordHash;
 
-            return await _userRepository.CreateAsync(signUpModel);
+            var userModel = await _userRepository.CreateAsync(signUpModel);
+            return userModel.Id;
         }
 
         /// <inheritdoc cref="IUserService.SignInAsync(SignInModel)"/>
@@ -74,6 +78,11 @@ namespace Hackathon.BL.User
             if (!verified)
                 throw new ValidationException("Неправильное имя пользователя или пароль");
 
+            return await GenerateTokenAndPushEvent(user);
+        }
+
+        private async Task<AuthTokenModel> GenerateTokenAndPushEvent(UserModel user)
+        {
             var token = GenerateToken(user);
 
             await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
@@ -88,6 +97,31 @@ namespace Hackathon.BL.User
             });
 
             return token;
+        }
+
+        /// <inheritdoc cref="IUserService.SignInByGoogle"/>
+        public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
+        {
+            var userModel = await _userRepository.GetByGoogleIdAsync(signInByGoogleModel.Id);
+
+            if (userModel != null)
+            {
+                userModel.GoogleAccount = _mapper.Map<GoogleAccountModel>(signInByGoogleModel);
+                await _userRepository.UpdateGoogleAccount(userModel.GoogleAccount);
+            }
+            else
+            {
+                userModel = await _userRepository.CreateAsync(new SignUpModel()
+                {
+                    Email = signInByGoogleModel.Email,
+                    UserName = signInByGoogleModel.Email,
+                    FullName = signInByGoogleModel.FullName,
+                    Password = signInByGoogleModel.Id,
+                    GoogleAccount = signInByGoogleModel
+                });
+            }
+
+            return await GenerateTokenAndPushEvent(userModel);
         }
 
         /// <inheritdoc cref="IUserService.GetAsync(long)"/>
@@ -111,13 +145,16 @@ namespace Hackathon.BL.User
             var expires = DateTimeOffset.UtcNow.AddMinutes(_appSettings.AuthOptions.LifeTime);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Role, ((int) user.Role).ToString()),
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new (ClaimTypes.Role, ((int)user.Role).ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = expires.UtcDateTime,
                 Issuer = _appSettings.AuthOptions.Issuer,
                 Audience = _appSettings.AuthOptions.Audience,

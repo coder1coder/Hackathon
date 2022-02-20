@@ -14,11 +14,18 @@ namespace Hackathon.Abstraction
         Task<long> CreateAsync(SignUpModel signUpModel);
 
         /// <summary>
-        /// Регистрация пользователя
+        /// Авторизация пользователя
         /// </summary>
         /// <param name="signInModel"></param>
         /// <returns></returns>
         Task<AuthTokenModel> SignInAsync(SignInModel signInModel);
+
+        /// <summary>
+        /// Авторизация пользователя через Google
+        /// </summary>
+        /// <param name="signInByGoogleModel"></param>
+        /// <returns></returns>
+        Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel);
 
         /// <summary>
         /// Получить информацию о пользователе по идентификатору
