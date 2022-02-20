@@ -7,7 +7,7 @@ import {TeamService} from "../../../services/team.service";
 import {AuthService} from "../../../services/auth.service";
 import {GetFilterModel} from 'src/app/models/GetFilterModel';
 import {FormControl, FormGroup} from '@angular/forms';
-import { TeamFilterModel } from 'src/app/models/Team/TeamFilterModel';
+import {TeamFilterModel} from 'src/app/models/Team/TeamFilterModel';
 
 @Component({
   selector: 'team-list',

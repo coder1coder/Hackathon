@@ -1,40 +1,147 @@
 <layout-default title="Событие" [isLoading]="isLoading">
 
-  <div class="mb-1-5em">
-    <button *ngIf="isCanJoinToEvent()" mat-button (click)="enterToEvent()">Принять участие</button>
+  <div class="event-buttons">
+    <button *ngIf="isCanJoinToEvent()" mat-raised-button (click)="enterToEvent()">Принять участие</button>
     <button *ngIf="isCanAddTeam()" mat-raised-button color="primary" (click)="createNewTeam()">Добавить команду</button>
     <button *ngIf="isCanPublishEvent()" mat-raised-button mat-button (click)="setPublished()">Опубликовать</button>
-    <button *ngIf="isCanStartEvent()" mat-button (click)="startEvent()">Начать событие</button>
+    <button *ngIf="isCanStartEvent()" mat-raised-button (click)="startEvent()">Начать событие</button>
   </div>
-  <h1>{{event?.name}}</h1>
 
-  Начало: {{ event?.start }},
-  Статус: {{ EventStatusTranslator.Translate(event?.status ?? -1) }},
-  Организатор: {{ event?.user?.userName }}
+  <div class="event-tables">
+    <div class="event-table event-mainContent">
+      <div class="event-title">Информация о событии</div>
+      <div *ngIf="this.eventDataSource.data.length > 0">
+          <table mat-table [dataSource]="eventDataSource">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
 
-  <br/><br/>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Название </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
 
-  Участники: от {{ event?.minTeamMembers }} до {{ event?.maxEventMembers }}
-  <br/><br/>
+            <ng-container matColumnDef="organizer">
+              <th mat-header-cell *matHeaderCellDef> Организатор </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.user.userName }}
+              </td>
+            </ng-container>
 
-  Продолжительность этапов:<br/>
-  <ol>
-    <li>формирование команд {{ event?.memberRegistrationMinutes }}</li>
-    <li>разработка {{ event?.developmentMinutes }}</li>
-    <li>выступление команды {{ event?.teamPresentationMinutes }}</li>
-  </ol>
+            <ng-container matColumnDef="start">
+              <th mat-header-cell *matHeaderCellDef> Дата начала </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.start | date:'dd.MM.yyyy, hh:mm z' }}
+              </td>
+            </ng-container>
 
-  <mat-checkbox [checked]="event?.isCreateTeamsAutomatically ?? false" disabled>
-    Создавать команды автоматически
-  </mat-checkbox>
-  <br/><br/>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> Статус события </th>
+              <td mat-cell *matCellDef="let element">
+                {{ EventStatusTranslator.Translate(element.status ?? -1) }}
+              </td>
+            </ng-container>
 
-  Команды:
-  <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let team of getEventTeams()">
-      {{ team.name }}(id:{{team.id}})
-    </mat-list-item>
-  </mat-list>
+            <ng-container matColumnDef="members">
+              <th mat-header-cell *matHeaderCellDef> Участники </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element?.minTeamMembers }} до {{ element?.maxEventMembers }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="autoCreateTeams">
+              <th mat-header-cell *matHeaderCellDef> Создавать команды автоматически </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox
+                  [checked]="element.isCreateTeamsAutomatically ?? false" disabled>
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayCommonColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: getDisplayCommonColumns();"></tr>
+          </table>
+      </div>
+      <div class="event-title__nodata" *ngIf="this.eventDataSource.data.length == 0">
+        Нет информации о событии
+     </div>
+    </div>
+
+    <div class="event-table event-statuses">
+      <div class="event-title">Статусы события и описание сообщений участникам</div>
+      <div *ngIf="this.eventStatuseDataSource.data.length > 0">
+          <table mat-table [dataSource]="eventStatuseDataSource">
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> Статус</th>
+              <td mat-cell *matCellDef="let element"> {{ EventStatusTranslator.Translate(element.status) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="message">
+              <th mat-header-cell *matHeaderCellDef> Сообщение </th>
+              <td mat-cell *matCellDef="let element"> {{element.message}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayStatusesColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: getDisplayStatusesColumns();"></tr>
+          </table>
+      </div>
+      <div class="event-title__nodata" *ngIf="this.eventStatuseDataSource.data.length == 0">
+         Статусы не указаны
+      </div>
+    </div>
+
+    <div class="event-table event-teams">
+      <div class="event-title"> Команды </div>
+      <div *ngIf="this.eventTeamsDataSource.data.length > 0">
+          <table mat-table [dataSource]="eventTeamsDataSource">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Название </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayTeamsColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: getDisplayTeamsColumns();"></tr>
+          </table>
+      </div>
+      <div class="event-title__nodata" *ngIf="this.eventTeamsDataSource.data.length == 0">
+        Команды не добавлены
+     </div>
+    </div>
+
+    <div class="event-table event-stageDuration">
+      <div class="event-title">Продолжительность этапов</div>
+      <div *ngIf="this.eventDataSource.data.length > 0">
+          <table mat-table [dataSource]="eventDataSource">
+            <ng-container matColumnDef="building">
+              <th mat-header-cell *matHeaderCellDef> Формирование команд </th>
+              <td mat-cell *matCellDef="let element"> {{element.memberRegistrationMinutes}} мин.</td>
+            </ng-container>
+
+            <ng-container matColumnDef="development">
+              <th mat-header-cell *matHeaderCellDef> Разработка </th>
+              <td mat-cell *matCellDef="let element"> {{element.developmentMinutes}} мин.</td>
+            </ng-container>
+
+            <ng-container matColumnDef="performance">
+              <th mat-header-cell *matHeaderCellDef> Выступление команды </th>
+              <td mat-cell *matCellDef="let element"> {{element.teamPresentationMinutes}} мин.</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayStageDurationColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: getDisplayStageDurationColumns();"></tr>
+          </table>
+      </div>
+      <div class="event-title__nodata" *ngIf="this.eventDataSource.data.length == 0">
+        Продолжительность этапов не указано
+     </div>
+    </div>
+  </div>
 
   <b *ngIf="isAlreadyInEvent()">Вы принимаете участие в этом мероприятии</b>
 
