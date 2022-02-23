@@ -1,0 +1,53 @@
+.event {
+  &-title {
+    font-size: 16px;
+    margin-left: 24px;
+    font-weight: 400;
+
+    &__nodata {
+      margin-left: 24px;
+      padding-top: 30px;
+      font-weight: 500;
+    }
+  }
+
+  &-tables {
+    display: flex;
+    justify-content: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  &-buttons {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    button {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  &-table {
+    margin-top: 25px;
+    margin-bottom: 10px;
+  }
+
+  &-mainContent {
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  &-stageDuration {
+    flex-basis: 33%;
+  }
+
+  &-statuses {
+    flex-basis: 33%;
+  }
+
+  &-teams {
+    flex-basis: 33%;
+  }
+}

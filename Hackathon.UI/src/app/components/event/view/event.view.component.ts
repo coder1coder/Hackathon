@@ -8,7 +8,8 @@ import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {TeamModel} from "../../../models/Team/TeamModel";
-
+import {MatTableDataSource} from "@angular/material/table";
+import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
 
 @Component({
   selector: 'event-view',
@@ -17,11 +18,13 @@ import {TeamModel} from "../../../models/Team/TeamModel";
 })
 export class EventViewComponent implements AfterViewInit {
 
-
   eventId: number;
   event: EventModel | undefined;
   isLoading: boolean = true;
   EventStatusTranslator = EventStatusTranslator;
+  eventDataSource = new MatTableDataSource<EventModel>([]);
+  eventStatuseDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  eventTeamsDataSource = new MatTableDataSource<TeamModel>([]);
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -45,20 +48,17 @@ export class EventViewComponent implements AfterViewInit {
       .subscribe({
         next: (r: EventModel) =>  {
           this.event = r;
-          console.log(this.event)
+          this.eventDataSource.data.push(this.event);
+          this.eventStatuseDataSource.data = this.event?.changeEventStatusMessages;
+          this.eventTeamsDataSource.data = this.event?.teamEvents?.map(x=>{
+            return x.team
+          });
         },
         error: () => {}
       });
   }
 
-  getEventTeams():TeamModel[] | undefined{
-    return this.event?.teamEvents?.map(x=>{
-      return x.team
-    });
-  }
-
   createNewTeam(){
-
     if (this.event?.status !== EventStatus.Published)
     {
       this.snackBar.open('Событие должно быть опубликовано', Actions.OK, { duration: 4 * 1000 })
@@ -102,7 +102,6 @@ export class EventViewComponent implements AfterViewInit {
       .subscribe({
         next: (_) =>  {
           this.snackBar.open(`Вы зарегистрировались на мероприятии`, Actions.OK, { duration: 4000 });
-
           this.fetchEvent();
         },
         error: (err) => {
@@ -129,7 +128,6 @@ export class EventViewComponent implements AfterViewInit {
   }
 
   startEvent(){
-
     this.eventsService.setStatus(this.eventId, EventStatus.Started)
       .subscribe({
         next: (_) =>  {
@@ -140,5 +138,21 @@ export class EventViewComponent implements AfterViewInit {
           this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
         }
       });
+  }
+
+  getDisplayCommonColumns(): string[] {
+    return ['id', 'name', 'organizer', 'start', 'status', 'members', 'autoCreateTeams'];
+  }
+
+  getDisplayStageDurationColumns(): string[] {
+    return ['building', 'development', 'performance'];
+  }
+
+  getDisplayStatusesColumns(): string[] {
+    return ['status', 'message'];
+  }
+
+  getDisplayTeamsColumns(): string[] {
+    return ['id', 'name'];
   }
 }

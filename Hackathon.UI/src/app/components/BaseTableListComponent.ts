@@ -1,7 +1,7 @@
 import {PageEvent} from "@angular/material/paginator";
 import {AfterViewInit, Directive} from "@angular/core";
 import {PageSettingsDefaults} from "../models/PageSettings";
-import { GetFilterModel } from "../models/GetFilterModel";
+import {GetFilterModel} from "../models/GetFilterModel";
 
 @Directive()
 export abstract class BaseTableListComponent<T> implements AfterViewInit {
