@@ -3,7 +3,11 @@
   <div class="filter-group">
     <form [formGroup]="form" class="filter-form">
       <div class="filter-form__container">
-        <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
+
+        <div class="filter-form__buttons">
+          <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
+        </div>
+
         <mat-icon>search</mat-icon>
 
         <div class="filter-form__fields">
@@ -38,10 +42,13 @@
                    id="QuantityTo"
                    formControlName="QuantityUsersTo">
           </mat-form-field>
+        </div>
 
+        <div class="filter-form__buttons">
           <button mat-raised-button color="primary" (click)="fetch()">Применить фильтр</button>
           <button mat-raised-button color="primary" (click)="clearFilter()">Очистить фильтр</button>
         </div>
+
       </div>
     </form>
   </div>

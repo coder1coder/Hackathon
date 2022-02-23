@@ -33,6 +33,12 @@
     margin-right: 10px;
   }
 
+  &__fields{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   &__container {
     display: flex;
     justify-content: left;
