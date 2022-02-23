@@ -5,9 +5,7 @@ import {NotificationService} from "../../../services/notification.service";
 import {GetFilterModel} from "../../../models/GetFilterModel";
 import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
 import {Notification} from "../../../models/Notification/Notification";
-import {PageEvent} from "@angular/material/paginator";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {TeamFilterModel} from "../../../models/Team/TeamFilterModel";
 
 @Component({
   selector: 'notification-list',
@@ -44,7 +42,7 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
 
   remove(ids:string[]){
     this.notificationService.remove(ids).subscribe(_=>{
-      this.items = this.items?.filter(x=> x.id !== undefined && !ids.includes(x.id));
+      this.items = this.items.filter(x=> x.id !== undefined && !ids.includes(x.id));
     });
   }
 
