@@ -12,6 +12,8 @@ namespace Hackathon.DAL
         public DbSet<ProjectEntity> Projects { get; set; }
         public DbSet<NotificationEntity> Notifications { get; set; }
 
+        public DbSet<FileStorageEntity> StorageFiles { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }

@@ -1,8 +1,11 @@
+using Amazon.S3;
 using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.FileStorage;
 using Hackathon.BL.Common.Validators;
 using Hackathon.BL.Event;
 using Hackathon.BL.Event.Validators;
+using Hackathon.BL.FileStorage;
 using Hackathon.BL.Notification;
 using Hackathon.BL.Project;
 using Hackathon.BL.Project.Validators;
@@ -10,6 +13,7 @@ using Hackathon.BL.Team;
 using Hackathon.BL.Team.Validators;
 using Hackathon.BL.User;
 using Hackathon.BL.User.Validators;
+using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
@@ -21,7 +25,7 @@ namespace Hackathon.BL
 {
     public static class Dependencies
     {
-        public static IServiceCollection AddBlDependencies(this IServiceCollection services)
+        public static IServiceCollection AddBlDependencies(this IServiceCollection services, AppSettings appSettings)
         {
             return services
                 .AddScoped<IValidator<ProjectCreateModel>, ProjectCreateModelValidator>()
@@ -43,7 +47,17 @@ namespace Hackathon.BL
                 .AddScoped<IEventService, EventService>()
 
                 .AddScoped<INotificationService, NotificationService>()
-                ;
+
+                .AddSingleton(new AmazonS3Client(
+                    appSettings.S3Options.AccessKey,
+                    appSettings.S3Options.SecretKey,
+                    new AmazonS3Config()
+                    {
+                        UseHttp = appSettings.S3Options.UseHttp,
+                        ServiceURL = appSettings.S3Options.ServiceUrl,
+                        ForcePathStyle = appSettings.S3Options.ForcePathStyle
+                    }))
+                .AddScoped<IFileStorageService, FileStorageService>();
         }
     }
 }
