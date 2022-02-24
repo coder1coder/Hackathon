@@ -20,7 +20,7 @@ public interface INotificationService
     /// <inheritdoc cref="INotificationRepository.Delete(long, Guid[])"/>
     Task Delete(long userId, Guid[]? ids = null);
 
-    Task Push<T>(CreateNotificationModel<T> model);
+    Task Push<T>(CreateNotificationModel<T> model) where T : class;
 
     Task<long> GetUnreadNotificationsCount(long userId);
 }

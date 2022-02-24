@@ -16,7 +16,8 @@ namespace Hackathon.API.Controllers
         private readonly IMapper _mapper;
         private readonly ITeamService _teamService;
 
-        public TeamController(ITeamService teamService, IMapper mapper)
+        public TeamController(
+            ITeamService teamService, IMapper mapper)
         {
             _teamService = teamService;
             _mapper = mapper;
@@ -32,7 +33,6 @@ namespace Hackathon.API.Controllers
         {
             var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
-            //attach user who creates it
             createTeamModel.OwnerId = UserId;
             var teamId = await _teamService.CreateAsync(createTeamModel);
             return new BaseCreateResponse
@@ -60,6 +60,12 @@ namespace Hackathon.API.Controllers
             var getFilterModel = _mapper.Map<GetListModel<TeamFilterModel>>(listRequest);
             var collectionModel = await _teamService.GetAsync(getFilterModel);
             return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
+        }
+
+        [HttpGet(nameof(My))]
+        public async Task<TeamModel> My()
+        {
+            return await _teamService.GetUserTeam(UserId);
         }
     }
 }

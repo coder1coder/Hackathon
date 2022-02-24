@@ -1,0 +1,15 @@
+.eventsNewForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  box-sizing: border-box;
+
+  &__vertical-fields {
+    padding-top: 1em;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+  }
+}

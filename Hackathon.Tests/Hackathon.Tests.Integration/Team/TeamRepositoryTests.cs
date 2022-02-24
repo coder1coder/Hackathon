@@ -53,7 +53,7 @@ namespace Hackathon.Tests.Integration.Team
             var createdUser = await UserRepository.CreateAsync(signUpModel);
 
             await FluentActions
-                .Invoking(async () => await TeamRepository.AddMemberAsync(new TeamAddMemberModel()
+                .Invoking(async () => await TeamRepository.AddMemberAsync(new TeamMemberModel()
                 {
                     TeamId = createdTeamModel.Id,
                     UserId = createdUser.Id

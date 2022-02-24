@@ -783,7 +783,7 @@ namespace Hackathon.Common
         /// <exception cref="ArgumentNullException" />
         public static string GetMimeType(string str)
         {
-            return MimeTypeMap.TryGetMimeType(str, out var result) ? result : DefaultMimeType;
+            return TryGetMimeType(str, out var result) ? result : DefaultMimeType;
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ public interface INotificationRepository
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    Task<Guid> Push<T>(CreateNotificationModel<T> model);
+    Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class;
 
     /// <summary>
     /// Получить список уведомлений пользователя по заданным параметрам фильтрации и пагинации

@@ -1,7 +1,7 @@
 using System;
 using System.Security.Claims;
+using Autofac;
 using Hackathon.API.Extensions;
-using Hackathon.BL;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL;
@@ -47,11 +47,6 @@ namespace Hackathon.API
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
 
-            // services.AddDbContext<HangFireDbContext>(options =>
-            // {
-            //     options.UseNpgsql(Configuration.GetConnectionString("JobsDatabaseConnectionString"));
-            // });
-
             //Databases
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -60,13 +55,6 @@ namespace Hackathon.API
                 if (appConfig.EnableSensitiveDataLogging == true)
                     options.EnableSensitiveDataLogging();
             });
-
-            services
-                .AddDalDependencies()
-                .AddBlDependencies(appConfig)
-                .AddApiDependencies()
-                .AddNotificationDependencies();
-                // .AddJobsDependencies();
 
             services.AddCors(options =>
             {
@@ -84,7 +72,6 @@ namespace Hackathon.API
                 options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             });
 
-            // services.AddJobs(Configuration);
             services.AddSignalR();
 
             services.AddAuthentication(appConfig);
@@ -99,6 +86,16 @@ namespace Hackathon.API
             services.AddSwagger();
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+            
+            builder.RegisterModule(new Module());
+            builder.RegisterModule(new BL.Module(appConfig));
+            builder.RegisterModule(new DAL.Module());
+            builder.RegisterModule(new Jobs.Module());
+        }
+
         public void Configure(
             IApplicationBuilder app,
             IServiceProvider serviceProvider,
@@ -106,16 +103,17 @@ namespace Hackathon.API
             ILogger<Startup> logger,
             IOptions<AppSettings> appSettings)
         {
+            var appConfig = appSettings.Value;
+            
             try
             {
                 dbContext.Database.Migrate();
+                DbInitializer.Seed(dbContext, logger, appConfig.AdministratorDefaults);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-
-            var appConfig = appSettings.Value;
 
             if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
                 app.UsePathBase(appConfig.PathBase);
@@ -140,8 +138,6 @@ namespace Hackathon.API
             app.UseAuthorization();
 
             app.UseCors("default");
-
-            //DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
             app.UseEndpoints(endpoints =>
             {

@@ -27,28 +27,13 @@
 }
 
 .filter-form {
-
-  &__input {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
+  display: flex;
+  column-gap: 10px;
 
   &__fields{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-  }
-
-  &__container {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-
-    mat-icon{
-      font-size: 30px;
-      margin-left: 15px;
-      margin-right: 5px;
-    }
   }
 
   button {

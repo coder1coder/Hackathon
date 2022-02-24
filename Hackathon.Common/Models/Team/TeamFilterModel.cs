@@ -1,6 +1,4 @@
-﻿using Hackathon.Common.Models.Base;
-
-namespace Hackathon.Common.Models.Team
+﻿namespace Hackathon.Common.Models.Team
 {
     public class TeamFilterModel
     {

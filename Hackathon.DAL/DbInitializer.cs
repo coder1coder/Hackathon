@@ -1,5 +1,7 @@
 using System.Linq;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Configuration;
+using Hackathon.Common.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -11,17 +13,18 @@ public static class DbInitializer
     {
         try
         {
-            // if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
-            // {
-            //     var user = new UserEntity
-            //     {
-            //         UserName = administratorDefaults.Login,
-            //         PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
-            //         FullName = administratorDefaults.Login
-            //     };
-            //     context.Add(user);
-            //     context.SaveChanges();
-            // }
+            if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
+            {
+                var user = new UserEntity
+                {
+                    UserName = administratorDefaults.Login,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
+                    FullName = administratorDefaults.Login,
+                    Role = UserRole.Administrator
+                };
+                context.Add(user);
+                context.SaveChanges();
+            }
         }
         catch (DbUpdateException e)
         {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Hackathon.Common.Models.Event
 {
     /// <summary>
-    /// Модель нового события
+    /// Модель события для создания и обновления
     /// </summary>
     public class CreateEventModel
     {
@@ -16,12 +16,7 @@ namespace Hackathon.Common.Models.Event
         /// <summary>
         /// Дата и время начала
         /// </summary>
-        private DateTime _start;
-        public DateTime Start
-        {
-            get => _start;
-            set => _start = DateTime.SpecifyKind(value, DateTimeKind.Utc);
-        }
+        public DateTime Start { get; set; }
 
         /// <summary>
         /// Продолжительность формированя команд в минутах

@@ -34,7 +34,12 @@ export abstract class BaseTableListComponent<T> implements AfterViewInit {
     this.fetch();
   }
 
-  public setPageSettings(event:PageEvent){
+  public paginatorChanges(event:PageEvent){
+    this.setPageSettings(event);
+    this.fetch();
+  }
+
+  setPageSettings(event:PageEvent){
     this.pageSettings = event;
     sessionStorage.setItem(`${this.componentName}${PageEvent.name}`, JSON.stringify(event));
     this.fetch();

@@ -1,10 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .spacer {
   flex: 1 1 auto;
 }
 
 .layout-default {
+
   &__title{
     font-weight: normal;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   &__toolbar {

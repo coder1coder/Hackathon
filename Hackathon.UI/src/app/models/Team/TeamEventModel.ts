@@ -1,4 +1,4 @@
-import {EventModel} from "../EventModel";
+import { EventModel } from "../Event/EventModel";
 import {TeamModel} from "./TeamModel";
 
 export interface TeamEventModel{

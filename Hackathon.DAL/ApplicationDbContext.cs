@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Hackathon.DAL.Entities;
+﻿using Hackathon.Abstraction.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL
@@ -23,10 +22,7 @@ namespace Hackathon.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            var assembly = Assembly.GetAssembly(typeof(ApplicationDbContext));
-            if (assembly != null)
-                modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }
 }

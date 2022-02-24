@@ -43,13 +43,20 @@ namespace Hackathon.API.Controllers
             };
         }
 
+        [HttpPut]
+        public async Task Update(UpdateEventRequest eventRequest)
+        {
+            var createEventModel = _mapper.Map<UpdateEventModel>(eventRequest);
+            await _eventService.UpdateAsync(createEventModel);
+        }
+
         /// <summary>
         /// Получить все события
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost("list")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventModel>))]
-        public async Task<IActionResult> Get([FromQuery] GetListRequest<EventFilterModel> listRequest)
+        public async Task<IActionResult> GetList([FromBody] GetListRequest<EventFilterModel> listRequest)
         {
             var getFilterModel = _mapper.Map<GetListModel<EventFilterModel>>(listRequest);
             var collectionModel = await _eventService.GetAsync(getFilterModel);
@@ -68,10 +75,17 @@ namespace Hackathon.API.Controllers
             return await _eventService.GetAsync(id);
         }
 
+        ///<inheritdoc cref="IEventApi.Join"/>
         [HttpPost("{eventId:long}/Join")]
-        public async Task Join(long eventId)
+        public async Task Join(long eventId) => await _eventService.JoinAsync(eventId, UserId);
+        
+        [HttpPost("{eventId:long}/leave")]
+        public async Task Leave(long eventId) => await _eventService.LeaveAsync(eventId, UserId);
+
+        [HttpPost("{eventId:long}/join/team")]
+        public async Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
         {
-            await _eventService.JoinAsync(eventId, UserId);
+            await _eventService.JoinTeamAsync(eventId, teamId, UserId);
         }
 
         /// <summary>

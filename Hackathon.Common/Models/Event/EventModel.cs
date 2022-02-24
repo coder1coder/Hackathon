@@ -23,6 +23,11 @@ namespace Hackathon.Common.Models.Event
         public DateTime Start { get; set; }
 
         /// <summary>
+        /// Этапы
+        /// </summary>
+        public List<EventStage> Stages { get; set; }= new();
+
+        /// <summary>
         /// Продолжительность формированя команд в минутах
         /// </summary>
         public int MemberRegistrationMinutes { get; set; }

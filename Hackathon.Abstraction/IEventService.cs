@@ -14,6 +14,13 @@ namespace Hackathon.Abstraction
         Task<long> CreateAsync(CreateEventModel createEventModel);
 
         /// <summary>
+        /// Редактирование события
+        /// </summary>
+        /// <param name="updateEventModel"></param>
+        /// <returns></returns>
+        Task UpdateAsync(UpdateEventModel updateEventModel);
+
+        /// <summary>
         /// Получение информации о событии по идентификатору
         /// </summary>
         /// <param name="eventId">Идентификатор события</param>
@@ -42,6 +49,24 @@ namespace Hackathon.Abstraction
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
         Task JoinAsync(long eventId, long userId);
+
+        Task JoinTeamAsync(long eventId, long teamId, long userId);
+
+        /// <summary>
+        /// Покинуть событие
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task LeaveAsync(long eventId, long userId);
+        
+        /// <summary>
+        /// Покинуть событие командой
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task LeaveTeamAsync(long eventId, long teamId);
 
         /// <summary>
         /// Удаление события

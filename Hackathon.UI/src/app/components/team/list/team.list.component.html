@@ -1,60 +1,60 @@
 <layout-default title="Команды">
 
-  <div class="filter-group">
-    <form [formGroup]="form" class="filter-form">
-      <div class="filter-form__container">
-
-        <div class="filter-form__buttons">
-          <button mat-raised-button color="primary" (click)="createNewItem()">Добавить новую команду</button>
-        </div>
-
-        <mat-icon>search</mat-icon>
-
-        <div class="filter-form__fields">
-          <mat-form-field class="filter-form__input">
-            <mat-label>Наименование команды</mat-label>
-            <input matInput autocomplete="off"
-                   id="teamName"
-                   formControlName="teamName">
-          </mat-form-field>
-
-          <mat-form-field class="filter-form__input">
-            <mat-label>Владелец</mat-label>
-            <input matInput autocomplete="off"
-                   id="owner"
-                   formControlName="owner">
-          </mat-form-field>
-
-          <mat-form-field class="filter-form__input">
-            <mat-label>Кол-во участников от:</mat-label>
-            <input matInput
-                   autocomplete="off"
-                   type="number"
-                   id="QuantityFrom"
-                   formControlName="QuantityUsersFrom">
-          </mat-form-field>
-
-          <mat-form-field class="filter-form__input">
-            <mat-label>Кол-во участников до:</mat-label>
-            <input matInput
-                   autocomplete="off"
-                   type="number"
-                   id="QuantityTo"
-                   formControlName="QuantityUsersTo">
-          </mat-form-field>
-        </div>
-
-        <div class="filter-form__buttons">
-          <button mat-raised-button color="primary" (click)="fetch()">Применить фильтр</button>
-          <button mat-raised-button color="primary" (click)="clearFilter()">Очистить фильтр</button>
-        </div>
-
-      </div>
-    </form>
+  <div actions>
+    <button mat-button color="primary" (click)="createNewItem()">
+      <mat-icon>add</mat-icon>
+      Добавить новую команду
+    </button>
   </div>
 
-  <div *ngIf="this.items.length > 0">
-    <table mat-table [dataSource]="items">
+  <div class="mb-1-5em">
+    <form [formGroup]="form" class="filter-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Наименование команды</mat-label>
+          <input matInput autocomplete="off"
+                 id="teamName"
+                 formControlName="teamName">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Владелец</mat-label>
+          <input matInput autocomplete="off"
+                 id="owner"
+                 formControlName="owner">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Кол-во участников от:</mat-label>
+          <input matInput
+                 autocomplete="off"
+                 type="number"
+                 min="0"
+                 id="QuantityFrom"
+                 formControlName="QuantityUsersFrom">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Кол-во участников до:</mat-label>
+          <input matInput
+                 autocomplete="off"
+                 type="number"
+                 min="1"
+                 id="QuantityTo"
+                 formControlName="QuantityUsersTo">
+        </mat-form-field>
+    </form>
+
+    <div style="display: flex; column-gap: 10px;">
+      <button mat-flat-button color="primary"
+              (click)="fetch()"
+              [disabled]="!this.form.dirty">Применить</button>
+      <button mat-flat-button
+              (click)="clearFilter()"
+              [disabled]="!this.form.dirty">Отменить</button>
+    </div>
+  </div>
+
+    <table mat-table [dataSource]="items" [class.empty]="items.length == 0">
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -109,10 +109,5 @@
                    (page)="setPageSettings($event)"
                    aria-label="Select page">
     </mat-paginator>
-  </div>
-
-  <div *ngIf="items.length == 0">
-    Нет элементов для отображения
-  </div>
 
 </layout-default>

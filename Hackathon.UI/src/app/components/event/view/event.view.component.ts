@@ -1,15 +1,16 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, Router} from "@angular/router";
-import {EventModel} from "../../../models/EventModel";
+import {ActivatedRoute} from "@angular/router";
 import {EventService} from "../../../services/event.service";
 import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
-import {Actions} from "../../../common/Actions";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {TeamModel} from "../../../models/Team/TeamModel";
 import {MatTableDataSource} from "@angular/material/table";
 import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
+import {SnackService} from "../../../services/snack.service";
+import { EventModel } from 'src/app/models/Event/EventModel';
+import {ProblemDetails} from "../../../models/ProblemDetails";
+import {RouterService} from "../../../services/router.service";
 
 @Component({
   selector: 'event-view',
@@ -19,22 +20,28 @@ import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMe
 export class EventViewComponent implements AfterViewInit {
 
   eventId: number;
-  event: EventModel | undefined;
+  event: EventModel = new EventModel();
+  EventModel = EventModel
   isLoading: boolean = true;
   EventStatusTranslator = EventStatusTranslator;
   eventDataSource = new MatTableDataSource<EventModel>([]);
-  eventStatuseDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   eventTeamsDataSource = new MatTableDataSource<TeamModel>([]);
+
+  eventStagesDataSource = new MatTableDataSource<{ key:string, value:number }>([]);
+
+  userId:number;
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private eventsService: EventService,
+    public eventsService: EventService,
     private authService: AuthService,
-    private snackBar: MatSnackBar,
-    private router: Router) {
+    private snack: SnackService,
+    public router: RouterService) {
     this.eventId = activateRoute.snapshot.params['eventId'];
     this.eventsService = eventsService;
-    this.snackBar = snackBar;
+    this.snack = snack;
+    this.userId = authService.getUserId() ?? 0;
   }
 
   ngAfterViewInit(): void {
@@ -48,11 +55,16 @@ export class EventViewComponent implements AfterViewInit {
       .subscribe({
         next: (r: EventModel) =>  {
           this.event = r;
-          this.eventDataSource.data.push(this.event);
-          this.eventStatuseDataSource.data = this.event?.changeEventStatusMessages;
-          this.eventTeamsDataSource.data = this.event?.teamEvents?.map(x=>{
-            return x.team
-          });
+          this.eventDataSource.data = [this.event];
+
+          this.eventStagesDataSource.data = [
+            { key: "Регистрация участников", value: this.event.memberRegistrationMinutes},
+            { key: "Разработка", value: this.event.developmentMinutes},
+            { key: "Презентация", value: this.event.teamPresentationMinutes}
+          ];
+
+          this.eventStatusesDataSource.data = this.event.changeEventStatusMessages;
+          this.eventTeamsDataSource.data = this.event.teamEvents?.map(x=> x.team);
         },
         error: () => {}
       });
@@ -61,91 +73,71 @@ export class EventViewComponent implements AfterViewInit {
   createNewTeam(){
     if (this.event?.status !== EventStatus.Published)
     {
-      this.snackBar.open('Событие должно быть опубликовано', Actions.OK, { duration: 4 * 1000 })
+      this.snack.open('Событие должно быть опубликовано')
       return;
     }
 
-    this.router.navigate(["/teams/new"], { queryParams: { eventId: this.eventId } });
-  }
-
-  isCanPublishEvent(){
-    return this.event?.status == EventStatus.Draft;
-  }
-
-  isCanStartEvent(){
-    return this.event?.status == EventStatus.Published;
-  }
-
-  isCanAddTeam(){
-    return this.event?.status == EventStatus.Published && !this.event?.isCreateTeamsAutomatically
-  }
-
-  isCanJoinToEvent() {
-    return this.event?.status == EventStatus.Published && !this.isAlreadyInEvent()
-  }
-
-  isAlreadyInEvent(){
-    if (this.event === undefined)
-      return false;
-
-    let userId:number = this.authService.getUserId() ?? 0;
-
-    return this.event!
-      .teamEvents?.filter(t => t.team
-        .users?.filter(u => u.id == userId)
-        .length > 0
-      ).length > 0;
+    this.router.Teams.New(this.eventId);
   }
 
   enterToEvent(){
     this.eventsService.join(this.eventId)
       .subscribe({
-        next: (_) =>  {
-          this.snackBar.open(`Вы зарегистрировались на мероприятии`, Actions.OK, { duration: 4000 });
+        next: (_) => {
+          this.snack.open(`Вы зарегистрировались на мероприятии`);
           this.fetchEvent();
         },
         error: (err) => {
-          this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          this.snack.open(problemDetails.detail);
         }
       });
   }
 
-  setPublished(){
-    this.eventsService.setStatus(this.eventId, EventStatus.Published)
+  leaveFromEvent(){
+    this.eventsService.leave(this.eventId)
       .subscribe({
-        next: (_) =>  {
-          this.snackBar.open(`Статус успешно изменен`, Actions.OK, { duration: 4000 });
+        next: (_) => {
+          this.snack.open(`Вы покиинули мероприятие`);
           this.fetchEvent();
         },
         error: (err) => {
-          this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          this.snack.open(problemDetails.detail);
         }
       });
-  }
-
-  canStartEvent(){
-    return this.event?.status == EventStatus.Published;
   }
 
   startEvent(){
     this.eventsService.setStatus(this.eventId, EventStatus.Started)
       .subscribe({
         next: (_) =>  {
-          this.snackBar.open(`Выполнено`, Actions.OK, { duration: 4000 });
+          this.snack.open(`Событие начато`);
           this.fetchEvent();
         },
         error: (err) => {
-          this.snackBar.open(err.message, Actions.OK, { duration: 4000 });
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          this.snack.open(problemDetails.detail);
+        }
+      });
+  }
+
+  finishEvent(){
+    this.eventsService.setStatus(this.eventId, EventStatus.Finished)
+      .subscribe({
+        next: (_) =>  {
+          this.snack.open(`Событие завершено`);
+          this.fetchEvent();
+        },
+        error: (err) => {
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          this.snack.open(problemDetails.detail);
         }
       });
   }
 
   getDisplayCommonColumns(): string[] {
-    return ['id', 'name', 'organizer', 'start', 'status', 'members', 'autoCreateTeams'];
-  }
-
-  getDisplayStageDurationColumns(): string[] {
-    return ['building', 'development', 'performance'];
+    return [ 'id', 'name', 'organizer', 'start', 'status', 'members', 'autoCreateTeams'];
   }
 
   getDisplayStatusesColumns(): string[] {

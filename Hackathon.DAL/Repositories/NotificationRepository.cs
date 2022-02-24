@@ -2,10 +2,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ public class NotificationRepository: INotificationRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> Push<T>(CreateNotificationModel<T> model)
+    public async Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class
     {
         var notification = _mapper.Map<NotificationEntity>(model);
         await _dbContext.Notifications.AddAsync(notification);

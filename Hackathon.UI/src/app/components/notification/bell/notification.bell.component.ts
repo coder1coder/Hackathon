@@ -1,11 +1,12 @@
-import {AfterViewInit, Component, ViewChild} from "@angular/core";
-import {Router} from "@angular/router";
+import {AfterViewInit, Component} from "@angular/core";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {NotificationModel} from "../../../models/Notification/NotificationModel";
 import {NotificationService} from "../../../services/notification.service";
 import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
 import {GetFilterModel, SortOrder} from "../../../models/GetFilterModel";
 import {Notification} from "../../../models/Notification/Notification";
+import {RouterService} from "../../../services/router.service";
+import {AudioService} from "../../../services/audio.service";
 
 @Component({
   selector: 'notification-bell',
@@ -19,14 +20,18 @@ export class NotificationBellComponent implements AfterViewInit
   notifications:BaseCollectionModel<NotificationModel> = new BaseCollectionModel<NotificationModel>();
   unreadNotificationsCount:number = 0;
 
-  constructor(private notificationService: NotificationService, private router: Router) {
-  }
+  constructor(
+    private notificationService: NotificationService,
+    private router: RouterService,
+    private audioService: AudioService
+    ) {}
 
   ngAfterViewInit(): void {
 
     this.notificationService.onPublished = _ => {
       this.updateUnreadNotificationsCount();
       this.fetch();
+      // this.audioService.playOnReceiveMessage();
     };
 
     this.updateUnreadNotificationsCount();
@@ -55,9 +60,7 @@ export class NotificationBellComponent implements AfterViewInit
       .subscribe(x=> this.notifications = x);
   }
 
-  viewAll(){
-    this.router.navigate(['notifications']);
-  }
+  viewAll = () => this.router.Notifications.List();
 
   menuOpened(){
     if (this.unreadNotificationsCount > 0)

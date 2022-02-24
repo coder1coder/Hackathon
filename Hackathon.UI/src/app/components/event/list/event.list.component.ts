@@ -1,12 +1,15 @@
-import {Component} from '@angular/core';
-import {Router} from "@angular/router";
-import {PageSettings} from "../../../models/PageSettings";
+import {Component, ViewChild} from '@angular/core';
 import {EventService} from "../../../services/event.service";
-import {EventModel} from "../../../models/EventModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
+import {EventStatus, EventStatusTranslator} from "../../../models/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {FormControl, FormGroup} from "@angular/forms";
+import {EventFilterModel} from "../../../models/Event/EventFilterModel";
+import {GetFilterModel} from "../../../models/GetFilterModel";
+import {EventModel} from 'src/app/models/Event/EventModel';
+import * as moment from "moment/moment";
+import {RouterService} from "../../../services/router.service";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'event-list',
@@ -17,17 +20,43 @@ import {TeamModel} from "../../../models/Team/TeamModel";
 export class EventListComponent extends BaseTableListComponent<EventModel>{
 
   EventStatusTranslator = EventStatusTranslator;
+  EventModel = EventModel;
+  moment = moment
+
+  filterForm = new FormGroup({
+    name: new FormControl(),
+    startFrom: new FormControl(),
+    startTo: new FormControl(),
+    statuses: new FormControl(),
+  })
+
+  @ViewChild('statuses') statusesSelect!: MatSelect;
 
   override getDisplayColumns(): string[] {
     return ['id', 'name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
   }
 
-  constructor(private eventsService: EventService, private router: Router) {
+  constructor(
+    public eventsService: EventService,
+    public router: RouterService
+  ) {
     super(EventListComponent.name);
   }
 
   fetch(){
-    this.eventsService.getAll(new PageSettings(this.pageSettings))
+
+    let params = new GetFilterModel<EventFilterModel>();
+
+    if (this.pageSettings != undefined)
+    {
+      params.Page = this.pageSettings.pageIndex+1;
+      params.PageSize = this.pageSettings.pageSize;
+    }
+
+    params.Filter = new EventFilterModel();
+    params.Filter = this.filterForm.value;
+
+      this.eventsService.getAll(params)
       .subscribe({
         next: (r: BaseCollectionModel<EventModel>) =>  {
           this.items = r.items;
@@ -37,25 +66,39 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
       });
   }
 
+  statusesToggleAll(event:any){
+
+    if (event.target.tag == 0 || event.target.tag == undefined)
+    {
+      let all = this.statusesSelect?.options.map(x=>x.value);
+      this.filterForm.controls['statuses'].patchValue(all);
+      event.target.tag = 1;
+    } else {
+      this.filterForm.controls['statuses'].patchValue([]);
+      event.target.tag = 0;
+    }
+  }
+
+  clearFilter(){
+    this.filterForm.reset();
+    this.fetch();
+  }
+
   rowClick(event: EventModel){
-    this.router.navigate(['/events/'+event.id]);
+    if (event.status == EventStatus.Draft)
+      this.router.Events.Edit(event.id);
+    else
+      this.router.Events.View(event.id);
   }
 
   getEventStatus(status:EventStatus){
     return EventStatus[status].toLowerCase();
   }
 
-  getUsersCount(event:EventModel){
-    let i = 0;
-    this.getEventTeams(event)?.forEach(x=> i += x.users?.length ?? 0);
-    return i;
-  }
-
-  showCreateEventPage(){
-    this.router.navigate(['/events/new']);
-  }
-
-  getEventTeams(event:EventModel):TeamModel[] | undefined{
-    return event?.teamEvents?.map(x=>x.team);
+  getAllEventStatuses():any[]{
+    return Object
+      .keys(EventStatus)
+      .filter(k => !isNaN(Number(k)))
+      .map(x => Number(x));
   }
 }

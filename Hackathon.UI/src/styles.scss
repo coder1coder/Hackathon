@@ -69,3 +69,27 @@ table {
   font-size: .9em;
   opacity: .5;
 }
+
+.mat-table {
+  &.empty {
+    position: relative;
+    padding-bottom: 5em;
+
+    & .mat-header-row{
+      //display: none;
+    }
+
+    &::after {
+      color: dimgray;
+      padding: 2em 0;
+      content: 'Нет элементов для отображения';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+  }
+}

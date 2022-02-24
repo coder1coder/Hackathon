@@ -14,7 +14,7 @@ where TIntegrationEvent: IIntegrationEvent
     {
         _contextHub = contextHub;
     }
-
+    
     public async Task Publish(string topic, TIntegrationEvent message)
     {
         var serializedObject = JsonSerializer.Serialize(message);

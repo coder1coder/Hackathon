@@ -4,11 +4,11 @@ import {environment} from "../../environments/environment";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {TeamModel} from "../models/Team/TeamModel";
 import {Observable} from "rxjs";
-import {Router} from "@angular/router";
 import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {BaseCreateResponse} from "../models/BaseCreateResponse";
 import {TeamFilterModel} from '../models/Team/TeamFilterModel';
 import { GetFilterModel } from '../models/GetFilterModel';
+import {RouterService} from "./router.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class TeamService {
   api = environment.api;
   storage = sessionStorage;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: RouterService) {
 
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
@@ -39,8 +39,10 @@ export class TeamService {
 
   errorHandler(error: HttpErrorResponse) {
     if (error.status == 401)
-      this.router.navigate(['/login']);
+      this.router.Profile.Login();
   }
+
+  getMyTeam = () => this.http.get<TeamModel>(`${this.api}/Team/My`);
 
   getByFilter(getFilterModel: GetFilterModel<TeamFilterModel>):Observable<BaseCollectionModel<TeamModel>>{
     let endpoint = this.api+'/Team/getTeams';

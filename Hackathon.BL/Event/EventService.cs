@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -15,21 +16,29 @@ namespace Hackathon.BL.Event
     public class EventService: IEventService
     {
         private readonly IValidator<CreateEventModel> _createEventModelValidator;
+        private readonly IValidator<UpdateEventModel> _updateEventModelValidator;
         private readonly IEventRepository _eventRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IValidator<GetListModel<EventFilterModel>> _getFilterModelValidator;
         private readonly ITeamService _teamService;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
+            IValidator<UpdateEventModel> updateEventModelValidator,
             IValidator<GetListModel<EventFilterModel>> getFilterModelValidator,
             IEventRepository eventRepository,
-            ITeamService teamService
-            )
+            ITeamService teamService, 
+            IUserRepository userRepository, 
+            ITeamRepository teamRepository)
         {
             _createEventModelValidator = createEventModelValidator;
+            _updateEventModelValidator = updateEventModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
             _eventRepository = eventRepository;
             _teamService = teamService;
+            _userRepository = userRepository;
+            _teamRepository = teamRepository;
         }
 
         /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
@@ -39,11 +48,17 @@ namespace Hackathon.BL.Event
             return await _eventRepository.CreateAsync(createEventModel);
         }
 
+        /// <inheritdoc cref="IEventService.UpdateAsync(UpdateEventModel)"/>
+        public async Task UpdateAsync(UpdateEventModel updateEventModel)
+        {
+            await _updateEventModelValidator.ValidateAndThrowAsync(updateEventModel);
+            await _eventRepository.UpdateAsync(updateEventModel);
+        }
+
         /// <inheritdoc cref="IEventService.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
         {
-            var eventModel = await _eventRepository.GetAsync(eventId);
-            return eventModel ?? throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
+            return await _eventRepository.GetAsync(eventId);
         }
 
         /// <inheritdoc cref="IEventService.GetAsync(GetListModel{T})"/>
@@ -61,11 +76,11 @@ namespace Hackathon.BL.Event
             if (eventModel == null)
                 throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
 
-            var canChangeStatus = (int) eventModel.Status == (int) eventStatus - 1;
+            var validationResult = await new ChangeEventStatusValidator().ValidateAsync(eventModel, eventStatus);
 
-            if (!canChangeStatus)
-                throw new ValidationException(ErrorMessages.CantSetEventStatus);
-
+            if (!validationResult.isValid)
+                throw new ValidationException(validationResult.errorMessage);
+            
             await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
         }
 
@@ -74,30 +89,77 @@ namespace Hackathon.BL.Event
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
 
-            var notFullTeams = eventModel.TeamEvents.Select(x=>x.Team)
+            if (eventModel.Status != EventStatus.Published)
+                throw new ValidationException("Нельзя присоединиться к событию");
+            
+            var notFullTeams = eventModel
+                .TeamEvents
+                .Select(x=>x.Team)
                 .Where(x => x.Users.Count < eventModel.MinTeamMembers)
                 .ToArray();
 
-            long teamId;
+             var teamId = notFullTeams.Any()
+                    ? notFullTeams.First().Id
+                    : eventModel.IsCreateTeamsAutomatically
+                        ? await _teamService.CreateAsync(new CreateTeamModel
+                        {
+                            EventId = eventId,
+                            Name = $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}"
+                        })
+                        : throw new ValidationException("Невозможно присоединиться к событию");
 
-            if (notFullTeams.Any())
-            {
-                teamId = notFullTeams.First().Id;
-            }
-            else
-            {
-                teamId = await _teamService.CreateAsync(new CreateTeamModel
-                {
-                    EventId = eventId,
-                    Name = "Team-" + Guid.NewGuid().ToString()[..4]
-                });
-            }
-
-            await _teamService.AddMemberAsync(new TeamAddMemberModel
+            await _teamService.AddMemberAsync(new TeamMemberModel
             {
                 TeamId = teamId,
                 UserId = userId
             });
+        }
+
+        public Task JoinTeamAsync(long eventId, long teamId, long userId)
+        {
+            //validate userId
+            //validate eventId
+            //validate teamId
+            
+            //check event state
+            //check event users count
+            //check user team owner
+            
+            throw new NotImplementedException();
+        }
+
+        public async Task LeaveAsync(long eventId, long userId)
+        {
+            var eventModel = await _eventRepository.GetAsync(eventId);
+
+            if (eventModel == null)
+                throw new ValidationException("События не существует");
+
+            if (eventModel.Status != EventStatus.Published)
+                throw new ValidationException("Нельзя покидать событие, когда оно уже начато");
+
+            var userExists = await _userRepository.ExistAsync(userId);
+
+            if (!userExists)
+                throw new ValidationException("Пользователь не существует");
+
+            var userTeam = GetTeamContainsMember(eventModel, userId);
+            if (userTeam == null)
+                throw new ValidationException("Пользователь не состоит в событии");
+
+            if (userTeam.OwnerId.HasValue)
+                throw new ValidationException("Нельзя покинуть событие, если вступили командой");
+
+            await _teamRepository.RemoveMemberAsync(new TeamMemberModel
+            {
+                TeamId = userTeam.Id,
+                UserId = userId
+            });
+        }
+
+        public Task LeaveTeamAsync(long eventId, long teamId)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IEventService.DeleteAsync(long)"/>
@@ -115,13 +177,20 @@ namespace Hackathon.BL.Event
         {
             await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
-            var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
-                .FirstOrDefault(x => x.Status == eventStatus);
+            // var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
+            //     .FirstOrDefault(x => x.Status == eventStatus);
 
             // if (changeEventStatusMessage != null)
             //     await _eventMessageHub.Publish(
             //         TopicNames.EventChangeStatus,
             //         new EventIntegrationEvent(eventModel.Id, changeEventStatusMessage.Message));
+        }
+
+        private TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
+        {
+            return eventModel.TeamEvents
+                .Select(x => x.Team)
+                .SingleOrDefault(x => x.Users.Any(s=>s.Id == userId));
         }
     }
 }

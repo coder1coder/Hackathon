@@ -1,15 +1,14 @@
 <layout-default title="Пользователь" [isLoading]="isLoading">
 
-  <h1>{{user?.userName}}</h1>
-
-  <mat-list>
-    <mat-list-item> {{ user?.fullName }} </mat-list-item>
-    <mat-list-item> {{ user?.email }} </mat-list-item>
-   </mat-list>
-
-  <div class="userForm__buttons">
-    <button mat-button (click)="goBack()">Назад</button>
-  </div>
+  <mat-tab-group *ngIf="user !== undefined">
+    <mat-tab label="Общая информация">
+      <mat-list>
+        <mat-list-item>Имя пользователя: {{ user.userName }}</mat-list-item>
+        <mat-list-item>Полное имя: {{ user.fullName }}</mat-list-item>
+        <mat-list-item>Email: {{ user.email }}</mat-list-item>
+      </mat-list>
+    </mat-tab>
+  </mat-tab-group>
 
 </layout-default>
 

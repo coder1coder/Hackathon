@@ -5,7 +5,7 @@ using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators
 {
-    public class TeamAddMemberModelValidator: AbstractValidator<TeamAddMemberModel>
+    public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
     {
         public TeamAddMemberModelValidator(
             ITeamRepository teamRepository,

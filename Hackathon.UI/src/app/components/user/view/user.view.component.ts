@@ -5,6 +5,7 @@ import {UserModel} from "../../../models/User/UserModel";
 import {UserService} from "../../../services/user.service";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
+import {SnackService} from "../../../services/snack.service";
 
 @Component({
   selector: 'user-view',
@@ -14,18 +15,16 @@ import {AuthService} from "../../../services/auth.service";
 export class UserViewComponent implements AfterViewInit {
 
   userId: number;
-  user: UserModel | undefined;
+  user?: UserModel;
   isLoading: boolean = true;
 
   constructor(
     private activateRoute: ActivatedRoute,
     private usersService: UserService,
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private snackBar: SnackService,
   ) {
-
     this.userId = activateRoute.snapshot.params['userId'];
-
     this.usersService = usersService;
     this.snackBar = snackBar;
   }
@@ -45,9 +44,5 @@ export class UserViewComponent implements AfterViewInit {
         error: () => {
         }
       });
-  }
-
-  goBack(){
-    history.go(-1)
   }
 }

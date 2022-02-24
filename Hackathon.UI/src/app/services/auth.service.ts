@@ -70,14 +70,14 @@ export class AuthService {
     return tokenInfo?.userId;
   }
 
-  getCurrentUser(): Observable<UserModel> | undefined{
+  getCurrentUser(): Observable<UserModel> | null{
     if (!this.isLoggedIn())
-      return undefined;
+      return null;
 
     let tokenInfo = this.#getTokenInfo();
 
     if (tokenInfo == undefined)
-      return undefined;
+      return null;
 
     return this.http.get<UserModel>(this.api+'/User/'+tokenInfo.userId, {
       headers: new HttpHeaders()

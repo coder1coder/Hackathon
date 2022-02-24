@@ -85,16 +85,8 @@ namespace Hackathon.BL.User
         {
             var token = GenerateToken(user);
 
-            await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
-            {
-                Type = NotificationType.Information,
-                UserId = user.Id,
-                OwnerId = 0,
-                Data = new InfoNotificationData()
-                {
-                    Message = $"Сгенерирован новый токен: {token.Token[..10]}"
-                }
-            });
+            await _notificationService.Push(NotificationFactory
+                .InfoNotification($"Сгенерирован новый токен: {token.Token[..10]}", user.Id));
 
             return token;
         }
