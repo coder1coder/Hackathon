@@ -52,11 +52,11 @@ public class NotificationController: BaseController
     }
 
     /// <summary>
-    /// Отметить уведомления пользователя как удаленные
+    /// Удалить уведомления пользователя
     /// </summary>
     /// <param name="ids"></param>
     /// <returns></returns>
-    [HttpDelete]
+    [HttpDelete("remove")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public async Task Delete([FromBody] Guid[] ids)
@@ -65,11 +65,11 @@ public class NotificationController: BaseController
     }
 
     [HttpPost("push/info")]
-    public async Task PushInformationNotification([FromBody] string message, [Required] long toUserId)
+    public async Task PushInformationNotification([FromBody] string message, [Required] long to)
     {
         await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>()
         {
-            UserId = toUserId,
+            UserId = to,
             OwnerId = UserId,
             Type = NotificationType.Information,
             Data = new InfoNotificationData()

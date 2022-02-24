@@ -1,4 +1,14 @@
-.notify{
+.notify {
+
+  &__item {
+    display: flex;
+    column-gap: 1em;
+
+
+    .mat-list-item-content {
+      background: green;
+    }
+  }
 
   &__info {
     &-message {

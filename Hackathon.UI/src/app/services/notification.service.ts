@@ -48,6 +48,10 @@ export class NotificationService
     return this.http.get<number>(this.api + "/notification/unread/count");
   }
 
+  remove(ids?:string[]):Observable<any>{
+    return this.http.post(this.api + "/notification/remove", ids);
+  }
+
   initSignalR(){
     this._signalR = new signalR.HubConnectionBuilder()
       .withUrl(environment.messageHub)
@@ -75,5 +79,4 @@ export class NotificationService
       setTimeout(this.startConnection, 5000);
     }
   }
-
 }

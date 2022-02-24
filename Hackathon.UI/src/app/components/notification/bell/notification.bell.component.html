@@ -12,27 +12,28 @@
   <ng-template [ngIf]="notifications.items != undefined && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
     <mat-list role="list">
       <div mat-subheader>Уведомления</div>
-      <mat-list-item role="listitem" *ngFor="let notify of notifications?.items">
-          <div [ngSwitch]="notify.type">
-            <div *ngSwitchCase="0" class="notify__info-message">
-              <div mat-line>{{ Notification.getParsedData(notify.data)?.Message }}</div>
-            </div>
-            <div mat-line>
-              <div class="notify-createdAt">
-                {{ notify.createdAt?.toLocaleString() | date:'EEEE dd.MM.y' }}
-              </div>
-            </div>
-          </div>
+      <mat-list-item class="notify__item" role="listitem" *ngFor="let notify of notifications?.items">
+        <div [ngSwitch]="notify.type">
+          <notification-info-view *ngSwitchCase="0" [notify]="notify"></notification-info-view>
+        </div>
+        <button mat-icon-button class="notify__item__remove" (click)="remove($event, [notify.id!])">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
       </mat-list-item>
     </mat-list>
   </ng-template>
-  <button class="mat-button mat-primary" (click)="viewAll()" style="margin-top: 1em;">Все уведомления</button>
+  <button
+    *ngIf="notifications.items.length > 0"
+    class="mat-button mat-primary" (click)="viewAll()" style="margin-top: 1em;">Все уведомления</button>
+  <button
+    *ngIf="notifications.items.length > 0"
+    class="mat-button mat-accent" (click)="removeAll($event)">Удалить все</button>
 </mat-menu>
 
 <ng-template #notificationsEmpty>
   <mat-list role="list">
     <mat-list-item role="listitem">
-      Нет новых уведомлений
+      Нет уведомлений
     </mat-list-item>
   </mat-list>
 </ng-template>

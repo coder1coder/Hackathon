@@ -40,9 +40,11 @@ import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamViewComponent} from "./components/team/view/team.component";
 import {EventNewStatusDialogComponent} from './components/event/status/event-new-status-dialog.component';
 import {RecaptchaModule} from 'ng-recaptcha';
-import {NotificationBellComponent} from "./components/notification-bell/notification-bell.component";
+import {NotificationBellComponent} from "./components/notification/bell/notification.bell.component";
 import {MatBadgeModule} from "@angular/material/badge";
 import {NotificationListComponent} from "./components/notification/list/notification.list.component";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {NotificationInfoViewComponent} from "./components/notification/templates/info/notification.info.view.component";
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import {NotificationListComponent} from "./components/notification/list/notifica
 
     NotificationBellComponent,
     NotificationListComponent,
+    NotificationInfoViewComponent,
 
     DefaultLayoutComponent
   ],
@@ -96,7 +99,8 @@ import {NotificationListComponent} from "./components/notification/list/notifica
     MatTooltipModule,
     MatSelectModule,
     RecaptchaModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatGridListModule
   ],
   providers: [
     {
