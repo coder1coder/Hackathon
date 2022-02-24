@@ -13,6 +13,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,7 +63,7 @@ namespace Hackathon.API
 
             services
                 .AddDalDependencies()
-                .AddBlDependencies()
+                .AddBlDependencies(appConfig)
                 .AddApiDependencies()
                 .AddNotificationDependencies();
                 // .AddJobsDependencies();
@@ -80,6 +81,7 @@ namespace Hackathon.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new MainActionFilter());
+                options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             });
 
             // services.AddJobs(Configuration);
@@ -138,13 +140,6 @@ namespace Hackathon.API
             app.UseAuthorization();
 
             app.UseCors("default");
-            // app.UseCors(x =>
-            // {
-            //     x
-            //         .AllowAnyHeader()
-            //         .AllowAnyMethod()
-            //         .AllowAnyOrigin();
-            // });
 
             //DbInitializer.Seed(dbContext, logger, administratorDefaultsOptions.Value);
 
