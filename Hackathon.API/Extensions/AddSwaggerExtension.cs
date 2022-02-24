@@ -24,6 +24,8 @@ namespace Hackathon.API.Extensions
                     Scheme = "Bearer"
                 });
 
+                c.OperationFilter<FileUploadFilter>();
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {

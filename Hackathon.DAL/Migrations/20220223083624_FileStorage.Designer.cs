@@ -5,6 +5,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220223083624_FileStorage")]
+    partial class FileStorage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,49 +105,6 @@ namespace Hackathon.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StorageFiles");
-                });
-
-            modelBuilder.Entity("Hackathon.DAL.Entities.GoogleAccountEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AccessToken")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<long>("ExpiresAt")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ExpiresIn")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FirstIssuedAt")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("GiveName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LoginHint")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TokenId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GoogleAccounts", (string)null);
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.NotificationEntity", b =>
@@ -268,9 +227,6 @@ namespace Hackathon.DAL.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("GoogleAccountId")
-                        .HasColumnType("text");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -285,9 +241,6 @@ namespace Hackathon.DAL.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GoogleAccountId")
-                        .IsUnique();
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -360,15 +313,6 @@ namespace Hackathon.DAL.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.UserEntity", b =>
-                {
-                    b.HasOne("Hackathon.DAL.Entities.GoogleAccountEntity", "GoogleAccount")
-                        .WithOne("User")
-                        .HasForeignKey("Hackathon.DAL.Entities.UserEntity", "GoogleAccountId");
-
-                    b.Navigation("GoogleAccount");
-                });
-
             modelBuilder.Entity("UserTeam", b =>
                 {
                     b.HasOne("Hackathon.DAL.Entities.TeamEntity", null)
@@ -387,11 +331,6 @@ namespace Hackathon.DAL.Migrations
             modelBuilder.Entity("Hackathon.DAL.Entities.EventEntity", b =>
                 {
                     b.Navigation("TeamEvents");
-                });
-
-            modelBuilder.Entity("Hackathon.DAL.Entities.GoogleAccountEntity", b =>
-                {
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.TeamEntity", b =>
