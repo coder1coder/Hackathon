@@ -1,4 +1,6 @@
-﻿using Hackathon.Common.Models;
+﻿using System.Linq.Expressions;
+using Hackathon.Abstraction.Entities;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 
@@ -9,9 +11,9 @@ namespace Hackathon.Abstraction
         /// <summary>
         /// Создание события
         /// </summary>
-        /// <param name="createEventModel">Модель создаваемого события</param>
+        /// <param name="createUpdateEventModel">Модель создаваемого события</param>
         /// <returns></returns>
-        Task<long> CreateAsync(CreateEventModel createEventModel);
+        Task<long> CreateAsync(CreateEventModel createUpdateEventModel);
 
         /// <summary>
         /// Получение информации о событии по идентификатору
@@ -28,11 +30,18 @@ namespace Hackathon.Abstraction
         Task<BaseCollectionModel<EventModel>> GetAsync(GetListModel<EventFilterModel> getListModel);
 
         /// <summary>
+        /// As queryable
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression);
+
+        /// <summary>
         /// Обновление события
         /// </summary>
         /// <param name="eventModels">Событие</param>
         /// <returns></returns>
-        Task UpdateAsync(IEnumerable<EventModel> eventModels);
+        Task UpdateAsync(UpdateEventModel updateEventModel);
 
         /// <summary>
         /// Изменение статуса события

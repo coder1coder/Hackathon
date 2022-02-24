@@ -14,7 +14,6 @@ export class DefaultLayoutComponent {
 
   constructor(private notificationService:NotificationService) {
     notificationService.onPublished = (x) => {
-      console.log(x)
     };
   }
 }

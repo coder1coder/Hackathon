@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Project;
-using Hackathon.DAL.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 

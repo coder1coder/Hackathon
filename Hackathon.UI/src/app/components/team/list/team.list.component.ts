@@ -1,5 +1,4 @@
 import {Component, Injectable} from '@angular/core';
-import {Router} from "@angular/router";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {TeamModel} from "../../../models/Team/TeamModel";
@@ -8,6 +7,7 @@ import {AuthService} from "../../../services/auth.service";
 import {GetFilterModel} from 'src/app/models/GetFilterModel';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TeamFilterModel} from 'src/app/models/Team/TeamFilterModel';
+import {RouterService} from "../../../services/router.service";
 
 @Component({
   selector: 'team-list',
@@ -18,7 +18,7 @@ import {TeamFilterModel} from 'src/app/models/Team/TeamFilterModel';
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<TeamModel> {
 
-  public userId:number | undefined;
+  userId!:number | undefined;
 
   form = new FormGroup({
     teamName: new FormControl(),
@@ -30,13 +30,13 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   constructor(
     private teamService: TeamService,
     private authService: AuthService,
-    private router: Router) {
+    private router: RouterService) {
     super(TeamListComponent.name);
     this.userId = authService.getUserId();
   }
 
   createNewItem(){
-    this.router.navigate(['/teams/new']);
+    this.router.Teams.New();
   }
 
   override fetch(){
@@ -69,11 +69,6 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
     this.fetch();
   }
 
-  rowClick(item: TeamModel){
-
-  }
-
-  getDisplayColumns(): string[] {
-    return ['id', 'name', 'owner', 'users', 'actions'];
-  }
+  rowClick = (item: TeamModel) => this.router.Teams.View(item.id);
+  getDisplayColumns = (): string[] => ['id', 'name', 'owner', 'users', 'actions'];
 }

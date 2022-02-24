@@ -1,4 +1,6 @@
-﻿using Hackathon.Common.Models;
+﻿using System.Linq.Expressions;
+using Hackathon.Abstraction.Entities;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 
@@ -44,8 +46,12 @@ namespace Hackathon.Abstraction
         /// <summary>
         /// Добавление пользователя в команду
         /// </summary>
-        /// <param name="teamAddMemberModel">Команда, пользователь</param>
+        /// <param name="teamMemberModel">Команда, пользователь</param>
         /// <returns></returns>
-        Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel);
+        Task AddMemberAsync(TeamMemberModel teamMemberModel);
+
+        Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
+
+        Task<TeamModel[]> GetByExpression(Expression<Func<TeamEntity, bool>> expression);
     }
 }

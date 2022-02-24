@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction;
 using Hackathon.Common.Models;
@@ -12,20 +13,17 @@ namespace Hackathon.BL.Team
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
-        private readonly IValidator<long> _teamExistValidator;
-        private readonly IValidator<TeamAddMemberModel> _teamAddMemberModelValidator;
+        private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
         private readonly IValidator<GetListModel<TeamFilterModel>> _getFilterModelValidator;
 
         public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
-            IValidator<TeamAddMemberModel> teamAddMemberModelValidator,
-            IValidator<long> teamExistValidator,
+            IValidator<TeamMemberModel> teamAddMemberModelValidator,
             ITeamRepository teamRepository,
             IValidator<GetListModel<TeamFilterModel>> getFilterModelValidator)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
-            _teamExistValidator = teamExistValidator;
 
             _teamRepository = teamRepository;
             _getFilterModelValidator = getFilterModelValidator;
@@ -35,20 +33,33 @@ namespace Hackathon.BL.Team
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
+
+            var teams = await _teamRepository.GetAsync(new GetListModel<TeamFilterModel>()
+            {
+                Filter = new TeamFilterModel
+                {
+                    OwnerId = createTeamModel.OwnerId
+                },
+                Page = 0,
+                PageSize = 1
+            });
+
+            if (teams.Items.Any())
+                throw new ValidationException("Пользователь уже является владельцем команды");
+            
             return await _teamRepository.CreateAsync(createTeamModel);
         }
 
-        /// <inheritdoc cref="ITeamService.AddMemberAsync(TeamAddMemberModel)"/>
-        public async Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel)
+        /// <inheritdoc cref="ITeamService.AddMemberAsync(TeamMemberModel)"/>
+        public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
         {
-            await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamAddMemberModel);
-            await _teamRepository.AddMemberAsync(teamAddMemberModel);
+            await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamMemberModel);
+            await _teamRepository.AddMemberAsync(teamMemberModel);
         }
 
         /// <inheritdoc cref="ITeamService.GetAsync(long)"/>
         public async Task<TeamModel> GetAsync(long teamId)
         {
-            await _teamExistValidator.ValidateAndThrowAsync(teamId);
             return await _teamRepository.GetAsync(teamId);
         }
 
@@ -57,6 +68,13 @@ namespace Hackathon.BL.Team
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getListModel);
             return await _teamRepository.GetAsync(getListModel);
+        }
+
+        public async Task<TeamModel> GetUserTeam(long userId)
+        {
+            return (await _teamRepository.GetByExpression(x =>
+                x.Users.Any(u => u.Id == userId)
+                || x.OwnerId == userId)).FirstOrDefault();
         }
     }
 }

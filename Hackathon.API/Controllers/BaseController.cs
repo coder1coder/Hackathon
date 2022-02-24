@@ -7,7 +7,7 @@ namespace Hackathon.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class BaseController: ControllerBase
+    public abstract class BaseController: ControllerBase
     {
         protected long UserId
         {

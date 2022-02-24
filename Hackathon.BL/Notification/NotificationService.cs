@@ -39,14 +39,10 @@ public class NotificationService: INotificationService
         await _notificationRepository.Delete(userId, ids);
     }
 
-    public async Task Push<T>(CreateNotificationModel<T> model)
+    public async Task Push<T>(CreateNotificationModel<T> model) where T: class
     {
         await _notificationRepository.Push(model);
-
-        await _notificationsHub.Publish(TopicNames.NotificationPublished, new NotificationPublishedIntegrationEvent()
-        {
-            Message = Guid.NewGuid().ToString()
-        });
+        await _notificationsHub.Publish(TopicNames.NotificationPublished, new NotificationPublishedIntegrationEvent());
     }
 
     public async Task<long> GetUnreadNotificationsCount(long userId)

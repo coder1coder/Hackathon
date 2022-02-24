@@ -1,4 +1,4 @@
-<layout-default title="Профиль">
+<layout-default title="Профиль" xmlns="http://www.w3.org/1999/html">
 
 <form [formGroup]="form" class="form-vertical profileForm" >
 
@@ -38,6 +38,15 @@
       <input matInput
              id="fullName"
              formControlName="fullName"
+             readonly
+             required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Роль</mat-label>
+      <input matInput
+             id="role"
+             formControlName="role"
              readonly
              required>
     </mat-form-field>

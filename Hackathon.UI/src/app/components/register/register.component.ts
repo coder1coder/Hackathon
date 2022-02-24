@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { CreateUser } from 'src/app/models/CreateUser';
 import {AuthService} from "../../services/auth.service";
 import {Location} from "@angular/common";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ProblemDetails} from "../../models/ProblemDetails";
+import {SnackService} from "../../services/snack.service";
 
 @Component({
   selector: 'app-register',
@@ -33,7 +33,7 @@ export class RegisterComponent implements AfterViewInit  {
   constructor(private router: Router,
               private location: Location,
               private authService: AuthService,
-              private snackbar: MatSnackBar) {
+              private snackbar: SnackService) {
   }
   ngAfterViewInit(): void {
 
@@ -56,7 +56,7 @@ export class RegisterComponent implements AfterViewInit  {
 
     this.authService.register(createUser)
       .subscribe(r=>{
-        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${r.id}`, "ok", { duration: 4 * 1000 });
+        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${r.id}`);
         setTimeout(()=>{
           this.router.navigate(['/login']);
         },1000);
@@ -64,7 +64,7 @@ export class RegisterComponent implements AfterViewInit  {
         error=>{
 
           let problemDetails: ProblemDetails = <ProblemDetails>error.error;
-          this.snackbar.open(problemDetails.detail,"OK");
+          this.snackbar.open(problemDetails.detail);
 
         });
   }

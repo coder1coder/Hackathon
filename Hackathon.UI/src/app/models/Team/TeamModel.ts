@@ -1,12 +1,12 @@
-import {EventModel} from "../EventModel";
 import {UserModel} from "../User/UserModel";
-import {CreateTeamModel} from "./CreateTeamModel";
+import {EventModel} from "../Event/EventModel";
+import {TeamEventModel} from "./TeamEventModel";
 
-export interface TeamModel {
-  id: number,
-  name: string,
-  events: EventModel[],
-  users: UserModel[],
-  owner: UserModel,
+export class TeamModel {
+  id!: number;
+  name?: string;
+  teamEvents:TeamEventModel[] = [];
+  users: UserModel[] = [];
+  owner?: UserModel;
   project: any //TODO: add typed
 }

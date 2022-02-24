@@ -7,9 +7,10 @@ import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TeamService} from "../../../services/team.service";
 import {ActivatedRoute, Route, Router} from "@angular/router";
+import {SnackService} from "../../../services/snack.service";
 
 @Component({
-  selector: 'team',
+  selector: 'team-new',
   templateUrl: 'team.new.component.html',
   styleUrls: ['team.new.component.scss']
 })
@@ -27,7 +28,7 @@ export class TeamNewComponent
 
   constructor(
     private teamService:TeamService,
-    private snackBar:MatSnackBar,
+    private snackBar:SnackService,
     private route: ActivatedRoute
   ) {
     this.eventId = Number(route.snapshot.queryParamMap.get('eventId'));
@@ -42,12 +43,12 @@ export class TeamNewComponent
 
     this.teamService.create(createTeamModel)
       .subscribe(_=>{
-          this.snackBar.open(`Новая команда добавлена`, Actions.OK, { duration: 4 * 1000 });
+          this.snackBar.open(`Новая команда добавлена`);
           this.goBack();
         },
         error=>{
           let problemDetails: ProblemDetails = <ProblemDetails>error.error;
-          this.snackBar.open(problemDetails.detail,Actions.OK, { duration: 4 * 1000 });
+          this.snackBar.open(problemDetails.detail);
         });
   }
 

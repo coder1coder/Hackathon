@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Exceptions;
+using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +30,10 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateEventModel)"/>
-        public async Task<long> CreateAsync(CreateEventModel createEventModel)
+        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateUpdateEventModel)"/>
+        public async Task<long> CreateAsync(CreateEventModel createUpdateEventModel)
         {
-            var eventEntity = _mapper.Map<EventEntity>(createEventModel);
+            var eventEntity = _mapper.Map<EventEntity>(createUpdateEventModel);
 
             await _dbContext.AddAsync(eventEntity);
             await _dbContext.SaveChangesAsync();
@@ -44,9 +47,10 @@ namespace Hackathon.DAL.Repositories
             var eventEntity = await _dbContext.Events
                 .AsNoTracking()
                 .Include(x => x.TeamEvents)
-                .ThenInclude(x => x.Team)
+                    .ThenInclude(x => x.Team)
+                        .ThenInclude(x=>x.Users)
                 .Include(x => x.TeamEvents)
-                .ThenInclude(x => x.Project)
+                    .ThenInclude(x => x.Project)
                 .Include(x => x.User)
                 .SingleOrDefaultAsync(x => x.Id == eventId);
 
@@ -59,8 +63,8 @@ namespace Hackathon.DAL.Repositories
             var query = _dbContext.Events
                 .AsNoTracking()
                 .Include(x => x.TeamEvents)
-                .ThenInclude(x => x.Team)
-                .ThenInclude(x => x.Users)
+                    .ThenInclude(x => x.Team)
+                        .ThenInclude(x => x.Users)
                 .AsQueryable();
 
             if (getListModel.Filter != null)
@@ -69,21 +73,21 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(getListModel.Filter.Name))
-                    query = query.Where(x => x.Name == getListModel.Filter.Name);
+                    query = query.Where(x => x.Name.ToLower().Contains(getListModel.Filter.Name));
 
-                if (getListModel.Filter.Status.HasValue)
-                    query = query.Where(x => x.Status == getListModel.Filter.Status);
+                if (getListModel.Filter.Statuses != null && getListModel.Filter.Statuses.Any())
+                    query = query.Where(x => getListModel.Filter.Statuses.Contains(x.Status));
 
                 if (getListModel.Filter.StartFrom.HasValue)
                 {
-                    var startFrom = getListModel.Filter.StartFrom.Value.Date;
-                    query = query.Where(x => x.Start >= startFrom);
+                    var startFrom = getListModel.Filter.StartFrom.Value.ToUtcWithoutSeconds();
+                    query = query.Where(x => x.Start.Date >= startFrom);
                 }
 
                 if (getListModel.Filter.StartTo.HasValue)
                 {
-                    var startTo = getListModel.Filter.StartTo.Value.Date.AddDays(1);
-                    query = query.Where(x => x.Start < startTo);
+                    var startTo = getListModel.Filter.StartTo.Value.ToUtcWithoutSeconds();
+                    query = query.Where(x => x.Start <= startTo);
                 }
             }
 
@@ -124,11 +128,19 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        /// <inheritdoc cref="IEventRepository.UpdateAsync(IEnumerable{EventModel})"/>
-        public async Task UpdateAsync(IEnumerable<EventModel> eventModels)
+        public async Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
         {
-            var eventEntities = _mapper.Map<List<EventEntity>>(eventModels);
-            _dbContext.Set<EventEntity>().UpdateRange(eventEntities);
+            return await _dbContext.Events.Where(expression)
+                .Where(expression)
+                .ProjectToType<EventModel>(_mapper.Config)
+                .ToArrayAsync();
+        }
+
+        /// <inheritdoc cref="IEventRepository.UpdateAsync(IEnumerable{EventModel})"/>
+        public async Task UpdateAsync(UpdateEventModel updateEventModel)
+        {
+            var eventForUpdate = _mapper.Map<EventEntity>(updateEventModel);
+            _dbContext.Events.Update(eventForUpdate);
             await _dbContext.SaveChangesAsync();
         }
 

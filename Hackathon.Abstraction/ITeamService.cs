@@ -16,9 +16,9 @@ namespace Hackathon.Abstraction
         /// <summary>
         /// Добавление пользователя в команду
         /// </summary>
-        /// <param name="teamAddMemberModel">Команда, пользователь</param>
+        /// <param name="teamMemberModel">Команда, пользователь</param>
         /// <returns></returns>
-        Task AddMemberAsync(TeamAddMemberModel teamAddMemberModel);
+        Task AddMemberAsync(TeamMemberModel teamMemberModel);
 
         /// <summary>
         /// Получение информации о команде по идентификатору
@@ -33,5 +33,7 @@ namespace Hackathon.Abstraction
         /// <param name="getListModel">Фильтр, пагинация</param>
         /// <returns></returns>
         Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel);
+
+        Task<TeamModel> GetUserTeam(long userId);
     }
 }

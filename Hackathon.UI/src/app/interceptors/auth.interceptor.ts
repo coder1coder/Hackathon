@@ -8,15 +8,15 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {Router} from '@angular/router';
 import {AuthConstants} from "../services/auth.constants";
+import {RouterService} from "../services/router.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   storage = sessionStorage;
 
-  constructor(private router: Router) {}
+  constructor(private router: RouterService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -40,10 +40,9 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe( tap(() => {},
       (err: any) => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status !== 401) {
-            return;
-          }
-          this.router.navigate(['login']);
+          if (err.status !== 401) return;
+
+          this.router.Profile.Login();
         }
       }));
   }

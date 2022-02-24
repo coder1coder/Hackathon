@@ -1,9 +1,12 @@
 <mat-toolbar class="layout-default__toolbar">
-<!--  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">-->
-<!--    <mat-icon>menu</mat-icon>-->
-<!--  </button>-->
+
   <span>Hackathon</span>
   <span *ngIf="title" class="layout-default__title">: {{ title }}</span>
+
+  <div class="layout-default__actions">
+    <ng-content select="[actions]"></ng-content>
+  </div>
+
   <span class="spacer"></span>
   <app-nav-menu></app-nav-menu>
   <notification-bell></notification-bell>

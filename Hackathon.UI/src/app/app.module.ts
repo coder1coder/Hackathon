@@ -6,7 +6,6 @@ import {AppComponent} from './app.component';
 import {NavMenuComponent} from "./components/nav-menu/nav-menu.component";
 import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
-import {HomeComponent} from "./components/home/home.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -30,14 +29,13 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {TeamNewComponent} from "./components/team/new/team.new.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {EventListComponent} from "./components/event/list/event.list.component";
-import {EventNewComponent} from "./components/event/new/event.new.component";
+import {EventFormComponent} from "./components/event/form/event.form.component";
 import {EventViewComponent} from "./components/event/view/event.view.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {UserViewComponent} from "./components/user/view/user.view.component";
 import {MatSelectModule} from '@angular/material/select';
 import {TeamListComponent} from "./components/team/list/team.list.component";
-import {TeamViewComponent} from "./components/team/view/team.component";
 import {EventNewStatusDialogComponent} from './components/event/status/event-new-status-dialog.component';
 import {RecaptchaModule} from 'ng-recaptcha';
 import {NotificationBellComponent} from "./components/notification/bell/notification.bell.component";
@@ -45,25 +43,30 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {NotificationListComponent} from "./components/notification/list/notification.list.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {NotificationInfoViewComponent} from "./components/notification/templates/info/notification.info.view.component";
+import {MatTabsModule} from "@angular/material/tabs";
+import {UserTeamComponent} from "./components/team/user/userTeam.component";
+import {TeamViewComponent} from "./components/team/view/team.view.component";
+import {TeamComponent} from "./components/team/team/team.component";
 
 @NgModule({
   declarations: [
 
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
 
     EventListComponent,
     EventViewComponent,
-    EventNewComponent,
+    EventFormComponent,
     EventNewStatusDialogComponent,
 
     TeamViewComponent,
+    TeamComponent,
     TeamNewComponent,
     TeamListComponent,
+    UserTeamComponent,
 
     UserListComponent,
     UserViewComponent,
@@ -76,32 +79,33 @@ import {NotificationInfoViewComponent} from "./components/notification/templates
 
     DefaultLayoutComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
 
-    MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatToolbarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatSelectModule,
-    RecaptchaModule,
-    MatBadgeModule,
-    MatGridListModule
-  ],
+        MatInputModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatToolbarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatSelectModule,
+        RecaptchaModule,
+        MatBadgeModule,
+        MatGridListModule,
+        MatTabsModule
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

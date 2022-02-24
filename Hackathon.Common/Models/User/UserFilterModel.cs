@@ -1,6 +1,4 @@
-﻿using Hackathon.Common.Models.Base;
-
-namespace Hackathon.Common.Models.User
+﻿namespace Hackathon.Common.Models.User
 {
     public class UserFilterModel
     {

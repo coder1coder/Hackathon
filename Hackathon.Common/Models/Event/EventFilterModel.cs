@@ -1,5 +1,4 @@
 ﻿using System;
-using Hackathon.Common.Models.Base;
 
 namespace Hackathon.Common.Models.Event
 {
@@ -9,6 +8,6 @@ namespace Hackathon.Common.Models.Event
         public string Name { get; set; }
         public DateTime? StartFrom { get; set; }
         public DateTime? StartTo { get; set; }
-        public EventStatus? Status { get; set; }
+        public EventStatus[] Statuses { get; set; } = Array.Empty<EventStatus>();
     }
 }

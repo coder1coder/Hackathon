@@ -1,0 +1,156 @@
+<layout-default title="{{ editMode ? 'Событие' : 'Новое событие' }}">
+
+  <div actions>
+    <button mat-button color="primary" (click)="submit()">Сохранить</button>
+    <button mat-button (click)="deleteEvent()" *ngIf="isCanDeleteEvent()">Удалить</button>
+    <button mat-button (click)="setPublish()" *ngIf="isCanPublish()">Опубликовать</button>
+  </div>
+
+  <form [formGroup]="form" class="eventsNewForm">
+
+    <mat-tab-group animationDuration="0" dynamicHeight>
+
+      <mat-tab label="Общая информация">
+        <div class="eventsNewForm__vertical-fields">
+          <mat-form-field appearance="fill">
+            <mat-label>Наименование события</mat-label>
+            <input matInput autocomplete="off"
+                   id="name"
+                   formControlName="name"
+                   required>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Дата и время начала</mat-label>
+            <input matInput
+                   type="datetime-local"
+                   autocomplete="off"
+                   id="start"
+                   formControlName="start"
+                   required>
+
+          </mat-form-field>
+        </div>
+
+      </mat-tab>
+
+      <mat-tab label="Этапы">
+        <div class="eventsNewForm__vertical-fields">
+          <mat-form-field appearance="fill">
+            <mat-label>Продолжительность формированя команд</mat-label>
+            <input matInput
+                   type="number"
+                   min="1"
+                   id="memberRegistrationMinutes"
+                   formControlName="memberRegistrationMinutes"
+                   required>
+            <span matSuffix> мин</span>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Продолжительность этапа разработки</mat-label>
+            <input matInput
+                   min="1"
+                   type="number"
+                   id="developmentMinutes"
+                   formControlName="developmentMinutes"
+                   required>
+            <span matSuffix> мин</span>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Продолжительность выступления каждой команды</mat-label>
+            <input matInput
+                   type="number"
+                   min="1"
+                   id="teamPresentationMinutes"
+                   formControlName="teamPresentationMinutes"
+                   required>
+            <span matSuffix> мин</span>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Команды">
+        <div class="eventsNewForm__vertical-fields">
+        <mat-form-field appearance="fill">
+          <mat-label>Минимальное количество участников</mat-label>
+          <input matInput
+                 type="number"
+                 min="1"
+                 id="minTeamMembers"
+                 formControlName="minTeamMembers"
+                 required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Максимальное количество участников</mat-label>
+          <input matInput
+                 autocomplete="off"
+                 type="number"
+                 min="2"
+                 id="maxEventMembers"
+                 formControlName="maxEventMembers"
+                 required>
+        </mat-form-field>
+
+        <mat-checkbox id="isCreateTeamsAutomatically"
+                      formControlName="isCreateTeamsAutomatically"
+                      value="false"
+                      required>
+          Создавать команды автоматически
+        </mat-checkbox>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Уведомления">
+
+        <div class="eventsNewForm__vertical-fields">
+
+          <table mat-table [dataSource]="eventStatusDataSource" [class.empty]="eventStatusDataSource.data.length == 0">
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Статус</th>
+              <td mat-cell *matCellDef="let element">{{EventStatusTranslator.Translate(element.status)}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="message">
+              <th mat-header-cell *matHeaderCellDef>Сообщение</th>
+              <td mat-cell *matCellDef="let element">{{element.message}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="table-list-actions-column">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="removeStatus(element)" *ngIf="isCanAddStatus()">
+                    <mat-icon color="accent">delete_outline</mat-icon>
+                    <span>Удалить</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <button [disabled]="isCanAddStatus()"
+                  mat-button
+                  (click)="addStatus()">Добавить новый статус</button>
+
+        </div>
+
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </form>
+
+  <div class="loader" *ngIf="isLoading">
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+</layout-default>

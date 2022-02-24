@@ -1,9 +1,12 @@
 import '@angular/compiler';
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {ProblemDetails} from "../../models/ProblemDetails";
+import {environment} from "../../../environments/environment";
+import {SnackService} from "../../services/snack.service";
 import {GoogleSigninService} from 'src/app/services/google-signin.service';
 import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
 
@@ -18,17 +21,30 @@ export class LoginComponent implements OnInit  {
   @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
 
   welcomeText: string = 'Добро пожаловать в систему Hackathon';
+
+  profileForm = new FormGroup({
+    login: new FormControl(''),
+    password: new FormControl('')
+  })
+
   isLoading: boolean = false;
   googleUser = new GoogleUserModel();
+  isPassFieldHide: boolean = true;
+  siteKey!: string;
+
+  captchaEnabled:boolean = true
+  captcha: string = "";
 
   constructor (private router: Router,
               private snackBar: MatSnackBar,
+               private authService: AuthService,
               private googleSigninService: GoogleSigninService) {
 
     if (router.url === '/logout')
       this.SignOut();
 
-    if (this.googleUser.isLoggedIn)
+    //if user is logged redirect to homepage
+    if (this.authService.isLoggedIn())
       this.router.navigate(['/profile']);
   }
 
@@ -51,33 +67,54 @@ export class LoginComponent implements OnInit  {
         this.googleUser.isLoggedIn = true;
       }
 
-      if (this.googleUser.isLoggedIn) {
-        this.googleSigninService.login(this.googleUser)
-          .pipe(
-            finalize(() => this.setLoading(false))
-          )
-          .subscribe(_ => {
-              this.router.navigate(['/profile']);
-            },
-            error => {
-              let errorMessage = "Неизвестная ошибка";
+  ngAfterViewInit(): void {
 
-              if (error.error.detail !== undefined) {
-                let details: ProblemDetails = <ProblemDetails>error.error;
-                errorMessage = details.detail;
-              }
-              this.snackBar.open(errorMessage, "ok", { duration: 5 * 1000 });
-            });
-      }
-    })
+    this.profileForm.controls['login'].setErrors({ 'incorrect': false });
+    this.profileForm.controls['password'].setErrors({ 'incorrect': false });
+
+    setTimeout(() => this.inputLogin?.nativeElement.focus())
   }
 
-  SignIn() {
-    this.googleSigninService.signIn();
+  signIn(){
+    if (!this.profileForm.valid) return;
+
+    if (this.captchaEnabled && (this.captcha === "" || this.captcha.length === 0)) {
+      this.snackBar.open("Докажите, что вы не робот!");
+      return;
+    }
+
+    this.setLoading(true);
+
+    let login = this.profileForm.controls['login'].value;
+    let password = this.profileForm.controls['password'].value;
+
+    this.authService.login(login, password)
+      .pipe(
+        finalize(() => this.setLoading(false))
+      )
+      .subscribe(_ => {
+          this.router.navigate(['/profile']);
+        },
+        error => {
+          let errorMessage = "Неизвестная ошибка";
+
+          if (error.error.detail !== undefined) {
+            let details: ProblemDetails = <ProblemDetails>error.error;
+            errorMessage = details.detail;
+          }
+
+          this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
+          this.snackBar.open(errorMessage);
+        });
+  }
+
+  signUp(){
+    this.router.navigate(['/register']);
   }
 
   SignOut() {
-    this.googleSigninService.signOut();
+    //this.googleSigninService.signOut();
+    this.authService.logout();
     this.router.navigate(['login']);
   }
 
@@ -86,4 +123,9 @@ export class LoginComponent implements OnInit  {
       this.isLoading = isLoading;
     })
   }
+
+  getCaptchaResponse(captchaResponse: string) {
+    this.captcha = captchaResponse;
+  }
+
 }

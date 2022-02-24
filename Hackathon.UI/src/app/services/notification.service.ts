@@ -3,11 +3,9 @@ import {environment} from "../../environments/environment";
 import {HubConnection} from "@microsoft/signalr";
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "./auth.service";
 import {Observable} from "rxjs";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {NotificationModel} from "../models/Notification/NotificationModel";
-import {PageSettings} from "../models/PageSettings";
 import {GetFilterModel} from "../models/GetFilterModel";
 import {NotificationFilterModel} from "../models/Notification/NotificationFilterModel";
 
@@ -24,7 +22,7 @@ export class NotificationService
 
   public onPublished?:(x:any) => void
 
-  constructor(private http:HttpClient, private authService:AuthService) {
+  constructor(private http:HttpClient) {
 
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
@@ -49,7 +47,7 @@ export class NotificationService
   }
 
   remove(ids?:string[]):Observable<any>{
-    return this.http.post(this.api + "/notification/remove", ids);
+    return this.http.request('delete', this.api + "/notification/remove", { body: ids});
   }
 
   initSignalR(){
@@ -71,7 +69,7 @@ export class NotificationService
 
   startConnection() {
     try {
-      this._signalR.start().then(x=>{
+      this._signalR.start().then(_=>{
         console.log("SignalR Connected.");
       });
     } catch (err) {
