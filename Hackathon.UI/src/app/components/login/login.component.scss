@@ -54,7 +54,7 @@
   &-google {
 
     &__button {
-      margin: 20px;
+      margin: 0 20px 20px 20px;
     }
 
     &__block {
@@ -62,7 +62,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-around;
-      width: 85px;
+      width: 200px;
     }
 
     &__title {
@@ -73,6 +73,37 @@
 
     &__svg {
       margin-top: 12px
+    }
+  }
+
+  &_or {
+    display: inline-block;
+    margin: 20px 20px 10px 20px;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    font-weight: lighter;
+
+    span::after {
+      content: "";
+      position: absolute;
+      bottom: 45%;
+      left: 36px;
+      width: 100px;
+      height: 4%;
+      background-color: rgb(0 0 0 / 10%);
+      z-index: -1;
+    }
+
+    span::before {
+      content: "";
+      position: absolute;
+      bottom: 45%;
+      left: -106px;
+      width: 100px;
+      height: 4%;
+      background-color: rgb(0 0 0 / 10%);
+      z-index: -1;
     }
   }
 }
