@@ -1,6 +1,6 @@
 export class GoogleUserModel
 {
-  id!: number;
+  id!: string;
   fullName!: string;
   givenName! : string;
   imageUrl!: string;
