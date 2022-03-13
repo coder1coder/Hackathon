@@ -1,14 +1,13 @@
 import '@angular/compiler';
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {ProblemDetails} from "../../models/ProblemDetails";
 import {environment} from "../../../environments/environment";
-import {SnackService} from "../../services/snack.service";
-import {GoogleSigninService} from 'src/app/services/google-signin.service';
 import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +15,9 @@ import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
   styleUrls: ['./login.component.scss'],
 })
 
-export class LoginComponent implements OnInit  {
+export class LoginComponent implements AfterViewInit  {
 
   @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
-
   welcomeText: string = 'Добро пожаловать в систему Hackathon';
 
   profileForm = new FormGroup({
@@ -28,50 +26,28 @@ export class LoginComponent implements OnInit  {
   })
 
   isLoading: boolean = false;
-  googleUser = new GoogleUserModel();
   isPassFieldHide: boolean = true;
   siteKey!: string;
 
-  captchaEnabled:boolean = true
+  captchaEnabled:boolean = environment.captchaEnabled;
   captcha: string = "";
 
   constructor (private router: Router,
               private snackBar: MatSnackBar,
-               private authService: AuthService,
-              private googleSigninService: GoogleSigninService) {
+              private authService: AuthService,
+              ) {
 
     if (router.url === '/logout')
-      this.SignOut();
+      this.signOut();
 
     //if user is logged redirect to homepage
     if (this.authService.isLoggedIn())
       this.router.navigate(['/profile']);
   }
 
-  ngOnInit(): void {
-    this.googleSigninService.Observable().subscribe(user => {
-      if(user != undefined) {
-        var profile = user.getBasicProfile();
-        this.googleUser.id = Number.parseInt(profile.getId());
-        this.googleUser.fullName = profile.getName();
-        this.googleUser.givenName = profile.getGivenName();
-        this.googleUser.imageUrl = profile.getImageUrl();
-        this.googleUser.email = profile.getEmail();
-        var authResponse = user.getAuthResponse();
-        this.googleUser.accessToken = authResponse.access_token;
-        this.googleUser.expiresAt = authResponse.expires_at;
-        this.googleUser.expiresIn = authResponse.expires_in;
-        this.googleUser.firstIssuedAt = authResponse.first_issued_at;
-        this.googleUser.TokenId = authResponse.id_token;
-        this.googleUser.loginHint = authResponse.login_hint;
-        this.googleUser.isLoggedIn = true;
-      }
-
   ngAfterViewInit(): void {
-
     this.profileForm.controls['login'].setErrors({ 'incorrect': false });
     this.profileForm.controls['password'].setErrors({ 'incorrect': false });
-
     setTimeout(() => this.inputLogin?.nativeElement.focus())
   }
 
@@ -112,8 +88,7 @@ export class LoginComponent implements OnInit  {
     this.router.navigate(['/register']);
   }
 
-  SignOut() {
-    //this.googleSigninService.signOut();
+  signOut() {
     this.authService.logout();
     this.router.navigate(['login']);
   }
@@ -128,4 +103,54 @@ export class LoginComponent implements OnInit  {
     this.captcha = captchaResponse;
   }
 
+  signInByGoogle() {
+    this.authService.signInByGoogle()
+      .then(user => {
+        let googleUser = this.initGoogleUser(user);
+        if(googleUser.isLoggedIn) {
+          this.authService.loginByGoogle(googleUser)
+          .subscribe(_ => {
+              this.router.navigate(['/profile']);
+            },
+            error => {
+              let errorMessage = "Неизвестная ошибка при авторизация через Google сервис";
+              if (error.error.detail !== undefined) {
+                let details: ProblemDetails = <ProblemDetails>error.error;
+                errorMessage = details.detail;
+              }
+              this.snackBar.open(errorMessage);
+            });
+        }
+      })
+  }
+
+  singOutByGoogle() {
+    this.authService.signOutByGoogle()
+    .then(() => {
+      this.router.navigate(['login']);
+      this.snackBar.open("Вы успешно вышли из системы!", "ok", { duration: 5 * 500 });
+    });
+  }
+
+  initGoogleUser(user: any): GoogleUserModel {
+    let googleUser = new GoogleUserModel();
+    if(user != undefined) {
+      let profile = user.getBasicProfile();
+      googleUser.id = profile.getId();
+      googleUser.fullName = profile.getName();
+      googleUser.givenName = profile.getGivenName();
+      googleUser.imageUrl = profile.getImageUrl();
+      googleUser.email = profile.getEmail();
+      let authResponse = user.getAuthResponse();
+      googleUser.accessToken = authResponse.access_token;
+      googleUser.expiresAt = authResponse.expires_at;
+      googleUser.expiresIn = authResponse.expires_in;
+      googleUser.firstIssuedAt = authResponse.first_issued_at;
+      googleUser.TokenId = authResponse.id_token;
+      googleUser.loginHint = authResponse.login_hint;
+      googleUser.isLoggedIn = true;
+    }
+
+    return googleUser;
+  }
 }

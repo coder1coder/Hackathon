@@ -2,7 +2,7 @@
   margin: 0 auto;
 }
 
-.login {
+.loginForm {
   height: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -11,17 +11,51 @@
   align-items: center;
   justify-content: center;
 
-  &-title {
+  &__messages{
+    font-size: .9em;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+  }
 
-    &__text {
+  &__message {
+    &.info { color: blue; }
+    &.warn { color: orange; }
+    &.error { color: red; }
+  }
+
+  &__title {
     padding-bottom: 35px;
     text-align: center;
     font-size: 24px;
     font-weight: lighter;
-    }
   }
 
-  &-button{
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    width: 300px;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
+  }
+
+  .re-captcha {
+    margin-bottom: 18px;
+  }
+
+  &-google {
+
+    &__button {
+      margin: 20px;
+    }
 
     &__block {
       display: flex;
