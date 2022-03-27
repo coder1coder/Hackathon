@@ -80,7 +80,7 @@ export class LoginComponent implements AfterViewInit  {
           }
 
           this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
-          this.snackBar.open(errorMessage);
+          this.snackBar.open(errorMessage, "ok", { duration: 5 * 500 });
         });
   }
 
@@ -118,7 +118,7 @@ export class LoginComponent implements AfterViewInit  {
                 let details: ProblemDetails = <ProblemDetails>error.error;
                 errorMessage = details.detail;
               }
-              this.snackBar.open(errorMessage);
+              this.snackBar.open(errorMessage, "ok", { duration: 5 * 500 });
             });
         }
       })

@@ -25,3 +25,9 @@
     width: 40px;
   }
 }
+
+.notification-button {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 10px;
+}
