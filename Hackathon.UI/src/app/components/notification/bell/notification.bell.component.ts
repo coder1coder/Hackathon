@@ -30,13 +30,11 @@ export class NotificationBellComponent implements AfterViewInit
 
   ngAfterViewInit(): void {
 
-    this.notificationService.onPublished = _ => {
+    this.notificationService.onChanged = (x) => {
       if(this.authService.isLoggedIn()) {
         this.updateUnreadNotificationsCount();
         this.fetch();
-        // this.audioService.playOnReceiveMessage();
       }
-
     };
 
     this.updateUnreadNotificationsCount();

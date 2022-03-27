@@ -6,6 +6,7 @@ import {GetFilterModel} from "../../../models/GetFilterModel";
 import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
 import {Notification} from "../../../models/Notification/Notification";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'notification-list',
@@ -17,8 +18,18 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
 
   Notification = Notification;
 
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: NotificationService, private authService: AuthService) {
     super(NotificationListComponent.name);
+  }
+
+  override ngAfterViewInit() {
+
+    this.notificationService.onChanged = _ => {
+      if (this.authService.isLoggedIn())
+        this.fetch();
+    }
+
+    super.ngAfterViewInit();
   }
 
   override fetch() {

@@ -142,7 +142,7 @@ namespace Hackathon.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<IntegrationEventHub<NotificationPublishedIntegrationEvent>>(appConfig.NotificationsHubName);
+                endpoints.MapHub<IntegrationEventHub<NotificationChangedIntegrationEvent>>(appConfig.NotificationsHubName);
             });
         }
     }

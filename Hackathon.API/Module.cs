@@ -8,8 +8,8 @@ public class Module: Autofac.Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<IntegrationEventHub<NotificationPublishedIntegrationEvent>>()
-            .As<IMessageHub<NotificationPublishedIntegrationEvent>>()
+        builder.RegisterType<IntegrationEventHub<NotificationChangedIntegrationEvent>>()
+            .As<IMessageHub<NotificationChangedIntegrationEvent>>()
             .InstancePerLifetimeScope();
     }
 }

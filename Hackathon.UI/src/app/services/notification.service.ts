@@ -8,6 +8,9 @@ import {BaseCollectionModel} from "../models/BaseCollectionModel";
 import {NotificationModel} from "../models/Notification/NotificationModel";
 import {GetFilterModel} from "../models/GetFilterModel";
 import {NotificationFilterModel} from "../models/Notification/NotificationFilterModel";
+import {
+  NotificationChangedIntegrationEventModel
+} from "../models/IntegrationEvent/NotificationChangedIntegrationEventModel";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +23,7 @@ export class NotificationService
 
   private _signalR!: HubConnection;
 
-  public onPublished?:(x:any) => void
+  public onChanged?:(x:NotificationChangedIntegrationEventModel) => void
 
   constructor(private http:HttpClient) {
 
@@ -57,10 +60,10 @@ export class NotificationService
 
     this._signalR.onclose(()=>this.startConnection());
 
-    this._signalR.on("NotificationPublished", (x) => {
+    this._signalR.on("NotificationChanged", (x: NotificationChangedIntegrationEventModel) => {
 
-      if (this.onPublished)
-        this.onPublished(x)
+      if (this.onChanged)
+        this.onChanged(x)
 
     });
 
