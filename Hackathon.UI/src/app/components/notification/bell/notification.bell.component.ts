@@ -7,6 +7,7 @@ import {GetFilterModel, SortOrder} from "../../../models/GetFilterModel";
 import {Notification} from "../../../models/Notification/Notification";
 import {RouterService} from "../../../services/router.service";
 import {AudioService} from "../../../services/audio.service";
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
   selector: 'notification-bell',
@@ -23,15 +24,19 @@ export class NotificationBellComponent implements AfterViewInit
   constructor(
     private notificationService: NotificationService,
     private router: RouterService,
-    private audioService: AudioService
+    private audioService: AudioService,
+    private authService: AuthService
     ) {}
 
   ngAfterViewInit(): void {
 
     this.notificationService.onPublished = _ => {
-      this.updateUnreadNotificationsCount();
-      this.fetch();
-      // this.audioService.playOnReceiveMessage();
+      if(this.authService.isLoggedIn()) {
+        this.updateUnreadNotificationsCount();
+        this.fetch();
+        // this.audioService.playOnReceiveMessage();
+      }
+
     };
 
     this.updateUnreadNotificationsCount();

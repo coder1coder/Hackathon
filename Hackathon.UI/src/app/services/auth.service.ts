@@ -17,22 +17,22 @@ import {GoogleUserModel} from '../models/User/GoogleUserModel';
 
 export class AuthService {
 
-  api = environment.api;
-  storage = sessionStorage;
+  private api = environment.api;
+  private storage = sessionStorage;
 
   constructor(private http: HttpClient,
     private googleSigninService: GoogleSigninService) {
   }
 
-  isLoggedIn() {
-    let tokenInfo = this.#getTokenInfo();
+  public isLoggedIn() : boolean {
+    let tokenInfo = this.getTokenInfo();
     if (tokenInfo == undefined)
       return false;
 
     return tokenInfo.expires >= Date.now();
   }
 
-  #getTokenInfo(){
+  private getTokenInfo() : GetTokenResponse | undefined {
     let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
     if (authInfo == undefined)
       return undefined;
@@ -41,7 +41,7 @@ export class AuthService {
     return auth;
   }
 
-  login(login: string, password: string): Observable<GetTokenResponse> {
+  public login(login: string, password: string) : Observable<GetTokenResponse> {
     return this.http.post<GetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
       .pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
@@ -49,7 +49,7 @@ export class AuthService {
       }));
   }
 
-  register(createUser:CreateUser): Observable<BaseCreateResponse>{
+  register(createUser:CreateUser) : Observable<BaseCreateResponse> {
     return this.http.post<BaseCreateResponse>(this.api+"/User", {
       userName: createUser.userName,
       password: createUser.password,
@@ -58,21 +58,21 @@ export class AuthService {
     })
   }
 
-  logout(){
+  public logout() : void {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
   }
 
-  getUserId():number | undefined{
-    let tokenInfo = this.#getTokenInfo();
+  public getUserId() : number | undefined {
+    let tokenInfo = this.getTokenInfo();
     return tokenInfo?.userId;
   }
 
-  getCurrentUser(): Observable<UserModel> | null{
+  public getCurrentUser() : Observable<UserModel> | null {
     if (!this.isLoggedIn())
       return null;
 
-    let tokenInfo = this.#getTokenInfo();
+    let tokenInfo = this.getTokenInfo();
     if (tokenInfo == undefined)
       return null;
 
@@ -82,7 +82,7 @@ export class AuthService {
       });
   }
 
-  loginByGoogle(googleUserModel: GoogleUserModel): Observable<GetTokenResponse> {
+  public loginByGoogle(googleUserModel: GoogleUserModel) : Observable<GetTokenResponse> {
     return this.http.post<GetTokenResponse>(this.api+"/Auth/SignInByGoogle", {
       id: googleUserModel.id,
       fullName: googleUserModel.fullName,
@@ -96,17 +96,17 @@ export class AuthService {
       TokenId: googleUserModel.TokenId,
       loginHint: googleUserModel.loginHint,
       isLoggedIn: googleUserModel.isLoggedIn
-  }).pipe(map(r=>{
-      this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
-      return r;
-    }));
-}
+    }).pipe(map(r=>{
+        this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
+        return r;
+      }));
+  }
 
-  signInByGoogle() {
+  public signInByGoogle() : Promise<void | gapi.auth2.GoogleUser> {
     return this.googleSigninService.signIn();
   }
 
-  signOutByGoogle() {
+  public signOutByGoogle() : any {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
     return this.googleSigninService.signOut();
