@@ -12,11 +12,11 @@ namespace Hackathon.BL.Notification;
 public class NotificationService: INotificationService
 {
     private readonly INotificationRepository _notificationRepository;
-    private readonly IMessageHub<NotificationPublishedIntegrationEvent> _notificationsHub;
+    private readonly IMessageHub<NotificationChangedIntegrationEvent> _notificationsHub;
 
     public NotificationService(
         INotificationRepository notificationRepository,
-        IMessageHub<NotificationPublishedIntegrationEvent> notificationsHub)
+        IMessageHub<NotificationChangedIntegrationEvent> notificationsHub)
     {
         _notificationRepository = notificationRepository;
         _notificationsHub = notificationsHub;
@@ -37,12 +37,15 @@ public class NotificationService: INotificationService
     public async Task Delete(long userId, Guid[] ids = null)
     {
         await _notificationRepository.Delete(userId, ids);
+        await _notificationsHub.Publish(TopicNames.NotificationChanged, 
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Deleted, ids));
     }
 
     public async Task Push<T>(CreateNotificationModel<T> model) where T: class
     {
-        await _notificationRepository.Push(model);
-        await _notificationsHub.Publish(TopicNames.NotificationPublished, new NotificationPublishedIntegrationEvent());
+        var notificationId = await _notificationRepository.Push(model);
+        await _notificationsHub.Publish(TopicNames.NotificationChanged, 
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, new []{ notificationId }));
     }
 
     public async Task<long> GetUnreadNotificationsCount(long userId)

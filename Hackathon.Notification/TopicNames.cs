@@ -2,6 +2,6 @@
 {
     public static class TopicNames
     {
-        public const string NotificationPublished = nameof(NotificationPublished);
+        public const string NotificationChanged = nameof(NotificationChanged);
     }
 }
