@@ -21,8 +21,7 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
     super(NotificationListComponent.name);
   }
 
-  override fetch(){
-
+  override fetch() {
     let model = new GetFilterModel<NotificationFilterModel>();
 
     model.Page = this.pageSettings.pageIndex;
@@ -30,23 +29,32 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
 
     this.notificationService.getNotifications(model)
       .subscribe({
-        next: (r: BaseCollectionModel<NotificationModel>) =>  {
+        next: (r: BaseCollectionModel<NotificationModel>) => {
           this.items = r.items
           this.pageSettings.length = r.totalCount
         }
       });
   }
 
-  rowClick(notification: NotificationModel){
-  }
+  rowClick(notification: NotificationModel) {}
 
-  remove(ids:string[]){
+  public remove(event:MouseEvent, ids:string[]) {
+    event.stopPropagation();
     this.notificationService.remove(ids).subscribe(_=>{
-      this.items = this.items.filter(x=> x.id !== undefined && !ids.includes(x.id));
+      this.items = this.items.filter(x => x.id !== undefined && !ids.includes(x.id));
     });
   }
 
-  getDisplayColumns(): string[] {
-    return ['notify','type', 'createdAt'];
+  public getDisplayColumns(): string[] {
+    return ['notify', 'type', 'createdAt', 'actions'];
+  }
+
+  public removeAll(event:MouseEvent) {
+    let ids = this.items.map(x => x.id!);
+    this.remove(event, ids);
+  }
+
+  public get isNotificationsExists() : boolean {
+    return  this.items.length === 0 ? true : false;
   }
 }

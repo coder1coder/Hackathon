@@ -1,8 +1,14 @@
 <layout-default title="Уведомления">
 
-  <div class="mb-1-5em"></div>
-
   <ng-template [ngIf]="items != undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
+
+    <div class="button notification-button">
+      <button mat-flat-button color="primary"
+              (click)="removeAll($event)"
+              [disabled]="false">
+              Удалить все уведомления
+      </button>
+    </div>
 
     <table mat-table [dataSource]="items">
 
@@ -39,7 +45,7 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="remove([notify.id!])">
+            <button mat-menu-item (click)="remove($event, [notify.id!])">
               <mat-icon color="accent">delete_outline</mat-icon>
               <span>Удалить</span>
             </button>
