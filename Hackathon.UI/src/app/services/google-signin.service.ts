@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {environment} from 'src/environments/environment.prod';
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable, ReplaySubject} from 'rxjs';
 import {ProblemDetails} from '../models/ProblemDetails';
 
@@ -10,12 +8,10 @@ import {ProblemDetails} from '../models/ProblemDetails';
 })
 export class GoogleSigninService {
 
-  auth2!: gapi.auth2.GoogleAuth;
-  subject = new ReplaySubject<gapi.auth2.GoogleUser>(1);
-  storage = sessionStorage;
-  api = "http://localhost:5000/api";
+  private auth2!: gapi.auth2.GoogleAuth;
+  private subject = new ReplaySubject<gapi.auth2.GoogleUser>(1);
 
-  constructor(private snackBar: MatSnackBar, private http: HttpClient) {
+  constructor() {
     gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id: environment.googleClientId
@@ -23,7 +19,7 @@ export class GoogleSigninService {
     })
   }
 
-  async signIn() {
+  public async signIn() : Promise<void | gapi.auth2.GoogleUser>{
      return this.auth2.signIn({
       scope: 'https://www.googleapis.com/auth/gmail.readonly'
      }).then(user => {
@@ -38,7 +34,7 @@ export class GoogleSigninService {
      });
   }
 
-  signOut() {
+  public signOut() : any {
     return this.auth2.signOut();
   }
 
