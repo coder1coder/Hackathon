@@ -35,11 +35,12 @@ namespace Hackathon.Abstraction
         Task<bool> ExistAsync(long userId);
 
         /// <summary>
-        /// Получить информацию о пользователе по Google Id
+        /// Получить информацию о пользователе по GoogleId или Email
         /// </summary>
-        /// <param name="googleId"></param>
+        /// <param name="googleId">GoogleId</param>
+        /// <param name="email">Email</param>
         /// <returns></returns>
-        Task<UserModel?> GetByGoogleIdAsync(string googleId);
+        Task<UserModel?> GetByGoogleIdOrEmailAsync(string googleId, string email);
 
         /// <summary>
         /// Обновить информацию о Google аккаунте

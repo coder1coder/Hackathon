@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace Hackathon.API
 {
@@ -55,6 +56,8 @@ namespace Hackathon.API
                 if (appConfig.EnableSensitiveDataLogging == true)
                     options.EnableSensitiveDataLogging();
             });
+            
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
 
             services.AddCors(options =>
             {
@@ -72,7 +75,7 @@ namespace Hackathon.API
                 options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             });
 
-            services.AddSignalR();
+            services.AddSignalR(x=>x.EnableDetailedErrors = true);
 
             services.AddAuthentication(appConfig);
             services.AddAuthorization(x =>
@@ -142,7 +145,8 @@ namespace Hackathon.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<IntegrationEventHub<NotificationChangedIntegrationEvent>>(appConfig.NotificationsHubName);
+                endpoints.MapHub<IntegrationEventHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);
+                endpoints.MapHub<IntegrationEventHub<ChatMessageChangedIntegrationEvent>>(appConfig.Hubs.Chat);
             });
         }
     }

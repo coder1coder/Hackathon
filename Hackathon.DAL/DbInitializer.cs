@@ -20,6 +20,7 @@ public static class DbInitializer
                     UserName = administratorDefaults.Login,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
                     FullName = administratorDefaults.Login,
+                    Email = "administrator@administrator.ru",
                     Role = UserRole.Administrator
                 };
                 context.Add(user);

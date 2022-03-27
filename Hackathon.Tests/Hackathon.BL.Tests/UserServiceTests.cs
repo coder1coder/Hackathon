@@ -8,7 +8,6 @@ using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
-using MapsterMapper;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -43,7 +42,6 @@ public class UserServiceTests
             appSettingsMock.Object,
             signUpValidatorMock.Object,
             signInValidatorMock.Object,
-            null,
             userRepositoryMock.Object,
             null
             );

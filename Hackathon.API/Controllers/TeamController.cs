@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
@@ -46,10 +46,8 @@ namespace Hackathon.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpGet("{id:long}")]
-        public Task<TeamModel> Get([FromRoute] long id)
-        {
-            return _teamService.GetAsync(id);
-        }
+        public async Task<TeamModel> Get([FromRoute] long id)
+            => await _teamService.GetAsync(id);
 
         /// <summary>
         /// Получить все команды
@@ -64,8 +62,6 @@ namespace Hackathon.API.Controllers
 
         [HttpGet(nameof(My))]
         public async Task<TeamModel> My()
-        {
-            return await _teamService.GetUserTeam(UserId);
-        }
+            => await _teamService.GetUserTeam(UserId);
     }
 }
