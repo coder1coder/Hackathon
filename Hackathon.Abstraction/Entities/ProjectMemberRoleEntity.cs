@@ -5,7 +5,7 @@ namespace Hackathon.Abstraction.Entities;
 /// <summary>
 /// Роль участника проекта
 /// </summary>
-public class ProjectUserRoleEntity : BaseEntity
+public class ProjectMemberRoleEntity : BaseEntity
 {
     /// <summary>
     /// Наименование роли участника проекта
@@ -15,5 +15,5 @@ public class ProjectUserRoleEntity : BaseEntity
     /// <summary>
     /// Участники проекта 
     /// </summary>
-    public List<ProjectUserEntity>? ProjectUsers { get; set; } = new ();
+    public List<ProjectMemberEntity>? ProjectUsers { get; set; } = new ();
 }

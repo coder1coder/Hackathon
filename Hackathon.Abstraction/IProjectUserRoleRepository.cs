@@ -1,34 +1,34 @@
 namespace Hackathon.Abstraction;
 
-public interface IProjectUserRoleRepository
+public interface IProjectMemberRoleRepository
 {
     /// <summary>
     /// Создание роли участника
     /// </summary>
-    /// <param name="createProjectUserRoleModel">Команда</param>
+    /// <param name="createProjectMemberRoleModel">Команда</param>
     /// <returns></returns>
-    Task<long> CreateAsync(CreateProjectUserRoleModel createProjectUserRoleModel);
+    Task<long> CreateAsync(CreateProjectMemberRoleModel createProjectMemberRoleModel);
     
     /// <summary>
     /// Получение информации о роли участника по идентификатору
     /// </summary>
-    /// <param name="ProjectUserRoleId">Идентификатор роли участника</param>
+    /// <param name="ProjectMemberRoleId">Идентификатор роли участника</param>
     /// <returns></returns>
-    Task<ProjectUserRoleModel> GetAsync(long projectUserRoleId);
+    Task<ProjectMemberRoleModel> GetAsync(long projectMemberRoleId);
     
     /// <summary>
     /// Проверка наличия роли по имени
     /// </summary>
-    /// <param name="ProjectUserRoleName">Имя роли участника</param>
+    /// <param name="ProjectMemberRoleName">Имя роли участника</param>
     /// <returns><c> true </c> если роль есть, иначе <c> false </c></returns>
-    Task<bool> ExistAsync(string projectUserRoleName);
+    Task<bool> ExistAsync(string projectMemberRoleName);
     
     /// <summary>
     /// Добавление участника с такой же ролью
     /// </summary>
-    /// <param name="ProjectUserRoleModel">Роль, участник</param>
+    /// <param name="ProjectMemberRoleModel">Роль, участник</param>
     /// <returns></returns>
-    Task AddMemberAsync(ProjectUserRoleModel projectUserRole);
+    Task AddMemberAsync(ProjectMemberRoleModel projectMemberRole);
 
-    Task RemoveMemberAsync(ProjectUserRoleModel projectUserRole);
+    Task RemoveMemberAsync(ProjectMemberRoleModel projectMemberRole);
 }
