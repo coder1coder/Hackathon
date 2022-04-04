@@ -98,7 +98,7 @@ export class EventViewComponent implements AfterViewInit {
     this.eventsService.leave(this.eventId)
       .subscribe({
         next: (_) => {
-          this.snack.open(`Вы покиинули мероприятие`);
+          this.snack.open(`Вы покинули мероприятие`);
           this.fetchEvent();
         },
         error: (err) => {

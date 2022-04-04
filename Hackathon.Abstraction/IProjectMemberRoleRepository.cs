@@ -1,3 +1,5 @@
+using Hackathon.Common.Models.ProjectMemberRole;
+
 namespace Hackathon.Abstraction;
 
 public interface IProjectMemberRoleRepository
