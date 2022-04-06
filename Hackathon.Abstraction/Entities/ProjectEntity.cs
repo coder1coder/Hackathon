@@ -9,5 +9,8 @@ namespace Hackathon.Abstraction.Entities
 
         public TeamEventEntity? TeamEvent { get; set; }
         public long TeamEventId { get; set; }
+        
+        public ICollection<ProjectMemberEntity> ProjectMembers { get; set; } = new List<ProjectMemberEntity>();
+
     }
 }

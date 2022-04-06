@@ -3,15 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<GoogleAccountEntity> GoogleAccounts { get; set; }
-        public DbSet<EventEntity> Events { get; set; }
         public DbSet<TeamEntity> Teams { get; set; }
-        public DbSet<ProjectEntity> Projects { get; set; }
-        public DbSet<NotificationEntity> Notifications { get; set; }
 
+        public DbSet<ProjectEntity> Projects { get; set; }
+        public DbSet<EventEntity> Events { get; set; }
+
+        public DbSet<ProjectMemberEntity> ProjectMembers { get; set; }
+        public DbSet<GoogleAccountEntity> GoogleAccounts { get; set; }
+        public DbSet<NotificationEntity> Notifications { get; set; }
         public DbSet<FileStorageEntity> StorageFiles { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

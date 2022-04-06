@@ -19,8 +19,4 @@ public interface IProjectMemberRepository
     /// <param name="projectMemberId">Идентификатор роли участника</param>
     /// <returns></returns>
     Task<ProjectMemberModel> GetAsync(long projectMemberId);
-    
-    Task RemoveProjectMemberAsync(ProjectMemberModel projectMemberModel);
-
-    Task<ProjectMemberModel[]> GetByExpression(Expression<Func<ProjectMemberEntity, bool>> expression);
 }
