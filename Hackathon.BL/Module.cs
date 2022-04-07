@@ -4,12 +4,14 @@ using FluentValidation;
 using Hackathon.BL.Common.Validators;
 using Hackathon.BL.Event.Validators;
 using Hackathon.BL.Project.Validators;
+using Hackathon.BL.ProjectMember.Validators;
 using Hackathon.BL.Team.Validators;
 using Hackathon.BL.User.Validators;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
+using Hackathon.Common.Models.ProjectMember;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 
@@ -25,6 +27,9 @@ public class Module: Autofac.Module
     
     protected override void Load(ContainerBuilder builder)
     {
+        
+        builder.RegisterType<ProjectMemberModelValidator>().As<IValidator<ProjectMemberModel>>().InstancePerLifetimeScope();
+        builder.RegisterType<CreateProjectMemberModelValidator>().As<IValidator<CreateProjectMemberModel>>().InstancePerLifetimeScope();
         builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateModel>>().InstancePerLifetimeScope();
         builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>().InstancePerLifetimeScope();
         builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamMemberModel>>().InstancePerLifetimeScope();
