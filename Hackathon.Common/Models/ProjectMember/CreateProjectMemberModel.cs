@@ -10,7 +10,7 @@ public class CreateProjectMemberModel
 
     public long ProjectId { get; set; }
 
-    public long? EventId { get; set; }
+    public long EventId { get; set; }
     
     public List<string>? ProjectMemberRoles { get; set; }
 }

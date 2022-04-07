@@ -28,7 +28,6 @@ public class ProjectMemberController: BaseController, IProjectMemberApi
     /// <param name="createProjectMemberRequest"></param>
     /// <returns></returns>
     [HttpPost]
-    [AllowAnonymous]
     public async Task<BaseCreateResponse> Create(CreateProjectMemberRequest createProjectMemberRequest)
     {
         var createProjectMemberModel = _mapper.Map<CreateProjectMemberModel>(createProjectMemberRequest);

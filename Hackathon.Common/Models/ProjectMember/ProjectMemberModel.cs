@@ -8,6 +8,8 @@ namespace Hackathon.Common.Models.ProjectMember;
 
 public class ProjectMemberModel
 {
+    
+    public long ProjectMemberId { get; set; }
     public long UserId { get; set; }
     
     public long TeamId { get; set; }

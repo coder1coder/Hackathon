@@ -237,7 +237,7 @@ namespace Hackathon.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProjectMembers");
+                    b.ToTable("ProjectMembers", (string)null);
                 });
 
             modelBuilder.Entity("Hackathon.Abstraction.Entities.TeamEntity", b =>
