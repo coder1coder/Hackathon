@@ -11,7 +11,6 @@ using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
 using MapsterMapper;
 using Microsoft.Extensions.Options;
@@ -28,20 +27,18 @@ namespace Hackathon.BL.User
         private readonly IUserRepository _userRepository;
         private readonly AppSettings _appSettings;
 
-        private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
 
         public UserService(
             IOptions<AppSettings> appSettings,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
-            INotificationService notificationService,
-            IUserRepository userRepository, IMapper mapper)
+            IUserRepository userRepository, 
+            IMapper mapper)
         {
             _appSettings = appSettings.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
-            _notificationService = notificationService;
             _userRepository = userRepository;
             _mapper = mapper;
         }
@@ -78,23 +75,13 @@ namespace Hackathon.BL.User
             if (!verified)
                 throw new ValidationException("Неправильное имя пользователя или пароль");
 
-            return await GenerateTokenAndPushEvent(user);
-        }
-
-        private async Task<AuthTokenModel> GenerateTokenAndPushEvent(UserModel user)
-        {
-            var token = GenerateToken(user);
-
-            await _notificationService.Push(NotificationFactory
-                .InfoNotification($"Сгенерирован новый токен: {token.Token[..10]}", user.Id));
-
-            return token;
+            return GenerateToken(user);
         }
 
         /// <inheritdoc cref="IUserService.SignInByGoogle"/>
         public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
         {
-            var userModel = await _userRepository.GetByGoogleIdAsync(signInByGoogleModel.Id);
+            var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(signInByGoogleModel.Id, signInByGoogleModel.Email);
 
             if (userModel != null)
             {
@@ -103,7 +90,7 @@ namespace Hackathon.BL.User
             }
             else
             {
-                userModel = await _userRepository.CreateAsync(new SignUpModel()
+                userModel = await _userRepository.CreateAsync(new SignUpModel
                 {
                     Email = signInByGoogleModel.Email,
                     UserName = signInByGoogleModel.Email,
@@ -113,7 +100,7 @@ namespace Hackathon.BL.User
                 });
             }
 
-            return await GenerateTokenAndPushEvent(userModel);
+            return GenerateToken(userModel);
         }
 
         /// <inheritdoc cref="IUserService.GetAsync(long)"/>
@@ -141,8 +128,11 @@ namespace Hackathon.BL.User
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new(ClaimTypes.Role, ((int) user.Role).ToString()),
+                new(ClaimTypes.Role, ((int) user.Role).ToString())
             };
+
+            if (user.GoogleAccount != null)
+                claims.Add(new Claim(AppClaimTypes.GoogleId, user.GoogleAccount.Id));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -163,8 +153,14 @@ namespace Hackathon.BL.User
                 UserId = user.Id,
                 Expires = expires.ToUnixTimeMilliseconds(),
                 Token = tokenString,
-                Role = user.Role
+                Role = user.Role,
+                GoogleId = user.GoogleAccount?.Id
             };
+        }
+
+        private static class AppClaimTypes
+        {
+            public const string GoogleId = nameof(GoogleId);
         }
     }
 }

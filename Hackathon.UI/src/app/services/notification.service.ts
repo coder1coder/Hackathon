@@ -55,7 +55,7 @@ export class NotificationService
 
   initSignalR(){
     this._signalR = new signalR.HubConnectionBuilder()
-      .withUrl(environment.messageHub)
+      .withUrl(environment.hubs.notification)
       .build();
 
     this._signalR.onclose(()=>this.startConnection());

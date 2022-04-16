@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Autofac;
 using Hackathon.Notification;
 using Hackathon.Notification.IntegrationEvent;
@@ -10,6 +12,10 @@ public class Module: Autofac.Module
     {
         builder.RegisterType<IntegrationEventHub<NotificationChangedIntegrationEvent>>()
             .As<IMessageHub<NotificationChangedIntegrationEvent>>()
+            .InstancePerLifetimeScope();
+        
+        builder.RegisterType<IntegrationEventHub<ChatMessageChangedIntegrationEvent>>()
+            .As<IMessageHub<ChatMessageChangedIntegrationEvent>>()
             .InstancePerLifetimeScope();
     }
 }

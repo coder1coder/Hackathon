@@ -47,6 +47,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {TeamComponent} from "./components/team/team/team.component";
+import {TeamChatComponent} from "./components/team/chat/team.chat.component";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -66,6 +68,7 @@ import {TeamComponent} from "./components/team/team/team.component";
     TeamComponent,
     TeamNewComponent,
     TeamListComponent,
+    TeamChatComponent,
     UserTeamComponent,
 
     UserListComponent,
@@ -79,33 +82,34 @@ import {TeamComponent} from "./components/team/team/team.component";
 
     DefaultLayoutComponent
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        FormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
 
-        MatInputModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatToolbarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatTooltipModule,
-        MatSelectModule,
-        RecaptchaModule,
-        MatBadgeModule,
-        MatGridListModule,
-        MatTabsModule
-    ],
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatListModule,
+    MatToolbarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatSelectModule,
+    RecaptchaModule,
+    MatBadgeModule,
+    MatGridListModule,
+    MatTabsModule,
+    MatCardModule
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
