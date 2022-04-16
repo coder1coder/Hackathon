@@ -1,0 +1,26 @@
+<mat-card class="team-chat" *ngIf="isCanView" [class.opened]="isOpened">
+  <div class="team-chat__header" (click)="this.scrollChatToLastMessage(); isOpened = !isOpened; ">
+    <div>Чат команды</div>
+    <div class="team-chat__header-closer" *ngIf="isOpened">&times;</div>
+  </div>
+  <div class="team-chat__body" #scrollMe *ngIf="isOpened">
+    <div class="team-chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
+      <div class="team-chat__message-image" *ngIf="message.ownerId !== currentUserId"></div>
+      <div class="team-chat__message-main" [class.your]="message.ownerId == currentUserId">
+        <div class="team-chat__message-owner">{{ message.ownerFullName }}</div>
+        <div class="team-chat__message-text">{{ message.message }} </div>
+        <div class="team-chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="team-chat__footer" *ngIf="isOpened">
+    <form [formGroup]="form">
+        <mat-form-field appearance="outline">
+          <mat-label>Сообщение</mat-label>
+          <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
+          <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
+        </mat-form-field>
+    </form>
+  </div>
+</mat-card>

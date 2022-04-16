@@ -1,5 +1,5 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {Observable} from 'rxjs/internal/Observable';
 import {environment} from "../../environments/environment";
 import {map} from "rxjs/operators";
@@ -19,6 +19,8 @@ export class AuthService {
 
   private api = environment.api;
   private storage = sessionStorage;
+
+  authChange: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private http: HttpClient,
     private googleSigninService: GoogleSigninService) {
@@ -45,6 +47,7 @@ export class AuthService {
     return this.http.post<GetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
       .pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
+        this.authChange.emit(true);
         return r;
       }));
   }
@@ -61,6 +64,7 @@ export class AuthService {
   public logout() : void {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
+    this.authChange.emit(false);
   }
 
   public getUserId() : number | undefined {
@@ -98,6 +102,7 @@ export class AuthService {
       isLoggedIn: googleUserModel.isLoggedIn
     }).pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
+      this.authChange.emit(true);
         return r;
       }));
   }

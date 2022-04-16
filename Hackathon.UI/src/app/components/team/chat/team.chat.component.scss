@@ -1,0 +1,95 @@
+.team-chat {
+  position: fixed;
+  right: 1vh;
+  bottom: 1vh;
+  padding: 0;
+  overflow: hidden;
+
+  &__header {
+    background: #3f51b5;
+    color: #fff;
+    padding: 3px 10px;
+    min-height: 40px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-closer {
+      font-size: 24px;
+      font-weight: lighter;
+    }
+  }
+
+  &__body {
+    padding: 10px;
+    min-height: 50vh;
+    max-height: 50vh;
+    width: 30vw;
+    overflow-y: scroll;
+  }
+
+  &__footer {
+    padding: 3px 10px;
+
+    form {
+      width: 100%;
+
+      .mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+
+  &__message
+  {
+    display: flex;
+    column-gap: 10px;
+    margin-bottom: 10px;
+
+    &.your
+    {
+      justify-content: right;
+    }
+
+    &-image{
+      min-width: 35px;
+      min-height: 35px;
+      width: 35px;
+      height: 35px;
+      background: lightgray;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    &-main{
+      display: flex;
+      flex-direction: column;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #f8f8f8;
+      min-width: 40%;
+
+      &.your {
+        background: #3f51b5;
+        color: #f8f8f8;
+      }
+    }
+
+    &-meta {
+      padding-top: 3px;
+      color: #333;
+      font-size: .8em;
+
+      &.your {
+        color: #fff;
+      }
+    }
+  }
+
+}
