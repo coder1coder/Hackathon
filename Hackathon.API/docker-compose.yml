@@ -18,11 +18,11 @@ services:
     container_name: redis
     image: 'bitnami/redis:latest'
     environment:
-     - ALLOW_EMPTY_PASSWORD=yes
+     - REDIS_PASSWORD=redis
     expose:
       - "9379"
     ports:
-        - '9379:6379'
+      - '9379:6379'
 
   minio:
     container_name: minio
