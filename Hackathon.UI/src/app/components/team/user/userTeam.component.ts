@@ -2,6 +2,7 @@ import {AfterViewInit, Component} from "@angular/core";
 import {RouterService} from "../../../services/router.service";
 import {TeamService} from "../../../services/team.service";
 import {TeamModel} from "../../../models/Team/TeamModel";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'userTeam',
@@ -15,12 +16,14 @@ export class UserTeamComponent implements AfterViewInit
 
   constructor(
     public router:RouterService,
-    private teamService: TeamService
+    private teamService: TeamService,
+    private authService:AuthService
 
   ) {}
 
   ngAfterViewInit(): void {
-    this.teamService.getMyTeam().subscribe(r => this.team = r);
+    if (this.authService.isLoggedIn())
+      this.teamService.getMyTeam().subscribe(r => this.team = r);
   }
 
 }

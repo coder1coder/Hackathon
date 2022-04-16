@@ -124,14 +124,6 @@ export class LoginComponent implements AfterViewInit  {
       })
   }
 
-  singOutByGoogle() {
-    this.authService.signOutByGoogle()
-    .then(() => {
-      this.router.navigate(['login']);
-      this.snackBar.open("Вы успешно вышли из системы!", "ok", { duration: 5 * 500 });
-    });
-  }
-
   initGoogleUser(user: any): GoogleUserModel {
     let googleUser = new GoogleUserModel();
     if(user != undefined) {

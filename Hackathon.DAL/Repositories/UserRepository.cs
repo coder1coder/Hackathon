@@ -47,13 +47,15 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<UserModel>(entity);
         }
 
-        /// <inheritdoc cref="IUserRepository.GetByGoogleIdAsync(string)"/>
-        public async Task<UserModel> GetByGoogleIdAsync(string googleId)
+        /// <inheritdoc cref="IUserRepository.GetByGoogleIdOrEmailAsync"/>
+        public async Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email)
         {
             var entity = await _dbContext.Users
                 .Include(x=>x.GoogleAccount)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.GoogleAccountId == googleId);
+                .SingleOrDefaultAsync(x => 
+                    x.GoogleAccountId == googleId
+                    || x.Email.ToLower() == email.ToLower());
 
             return entity != null ? _mapper.Map<UserModel>(entity) : null;
         }
