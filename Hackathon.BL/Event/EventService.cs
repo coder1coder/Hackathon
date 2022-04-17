@@ -9,6 +9,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
+using Hackathon.Notification;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.Event
@@ -179,7 +180,7 @@ namespace Hackathon.BL.Event
 
             // var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
             //     .FirstOrDefault(x => x.Status == eventStatus);
-
+            //
             // if (changeEventStatusMessage != null)
             //     await _eventMessageHub.Publish(
             //         TopicNames.EventChangeStatus,
