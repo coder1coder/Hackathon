@@ -11,6 +11,7 @@ import {AuthService} from "./auth.service";
 import {GetFilterModel} from "../models/GetFilterModel";
 import {EventFilterModel} from "../models/Event/EventFilterModel";
 import {EventModel} from "../models/Event/EventModel";
+import {User} from "../models/User";
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,6 @@ export class EventService {
   isCanJoinToEvent(event:EventModel) {
     let userId = this.authService.getUserId();
     return userId !== undefined
-      && this.isEventOwner(event)
       && !this.isAlreadyInEvent(event, userId)
       && event.status == EventStatus.Published
   }
@@ -97,7 +97,9 @@ export class EventService {
   isCanStartEvent(event:EventModel){
     //TODO: check members count
     //TODO: check teams count (auto & manual added)
-    return event.status == EventStatus.Published;
+
+    return this.isEventOwner(event)
+      && event.status == EventStatus.Published;
   }
 
   isCanLeave(event:EventModel)

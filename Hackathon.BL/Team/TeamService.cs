@@ -34,18 +34,25 @@ namespace Hackathon.BL.Team
         {
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
 
-            var teams = await _teamRepository.GetAsync(new GetListModel<TeamFilterModel>()
+            // Проверяем, является ли пользователь, который создает команду,
+            // владельцем команды которая уже существует
+            // В случае, когда команда создается автоматически системой
+            // OwnerId = null
+            if (createTeamModel.OwnerId.HasValue)
             {
-                Filter = new TeamFilterModel
+                var teams = await _teamRepository.GetAsync(new GetListModel<TeamFilterModel>()
                 {
-                    OwnerId = createTeamModel.OwnerId
-                },
-                Page = 0,
-                PageSize = 1
-            });
+                    Filter = new TeamFilterModel
+                    {
+                        OwnerId = createTeamModel.OwnerId
+                    },
+                    Page = 0,
+                    PageSize = 1
+                });
 
-            if (teams.Items.Any())
-                throw new ValidationException("Пользователь уже является владельцем команды");
+                if (teams.Items.Any())
+                    throw new ValidationException("Пользователь уже является владельцем команды");
+            }
             
             return await _teamRepository.CreateAsync(createTeamModel);
         }
