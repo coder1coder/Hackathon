@@ -4,7 +4,7 @@ import { UserModel } from "../../models/User/UserModel";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
 import { UserService } from "src/app/services/user.service";
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { map } from "rxjs";
 
 @Component({
@@ -45,12 +45,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.userService.getProfileImage(fileId)
       .pipe(
         map((res: ArrayBuffer) => {
-          let TYPED_ARRAY = new Uint8Array(res);
-          const STRING_CHAR = TYPED_ARRAY.reduce((data, byte)=> {
-            return data + String.fromCharCode(byte);
-          }, '');
-          let base64String = btoa(STRING_CHAR);
-          return this.sanitazer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
+          return this.getSafeUrlFromByteArray(res);
         })
       )
       .subscribe(response => {
@@ -82,5 +77,15 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         role: this.currentUser?.role,
        });
     }
+  }
+
+  private getSafeUrlFromByteArray(buffer: ArrayBuffer): SafeUrl {
+    let TYPED_ARRAY = new Uint8Array(buffer);
+    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte)=> {
+      return data + String.fromCharCode(byte);
+    }, '');
+    let base64String = btoa(STRING_CHAR);
+
+    return this.sanitazer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
   }
 }
