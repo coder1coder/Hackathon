@@ -1,32 +1,33 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
-import {Observable} from 'rxjs/internal/Observable';
-import {environment} from "../../environments/environment";
-import {map} from "rxjs/operators";
-import {CreateUser} from '../models/CreateUser';
-import {GetTokenResponse} from "../models/GetTokenResponse";
-import {BaseCreateResponse} from "../models/BaseCreateResponse";
-import {UserModel} from "../models/User/UserModel";
-import {AuthConstants} from "./auth.constants";
-import {GoogleSigninService} from './google-signin.service';
-import {GoogleUserModel} from '../models/User/GoogleUserModel';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { environment } from "../../environments/environment";
+import { map } from "rxjs/operators";
+import { CreateUser } from '../models/CreateUser';
+import { GetTokenResponse } from "../models/GetTokenResponse";
+import { BaseCreateResponse } from "../models/BaseCreateResponse";
+import { UserModel } from "../models/User/UserModel";
+import { AuthConstants } from "./auth.constants";
+import { GoogleSigninService } from './google-signin.service';
+import { GoogleUserModel } from '../models/User/GoogleUserModel';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
+  public authChange: EventEmitter<boolean> = new EventEmitter();
 
-  private api = environment.api;
-  private storage = sessionStorage;
+  private api: string = environment.api;
+  private storage: Storage = sessionStorage;
 
-  authChange: EventEmitter<boolean> = new EventEmitter();
-
-  constructor(private http: HttpClient,
-    private googleSigninService: GoogleSigninService) {
+  constructor(
+    private http: HttpClient,
+    private googleSigninService: GoogleSigninService
+    ) {
   }
 
-  public isLoggedIn() : boolean {
+  public isLoggedIn(): boolean {
     let tokenInfo = this.getTokenInfo();
     if (tokenInfo == undefined)
       return false;
@@ -34,16 +35,7 @@ export class AuthService {
     return tokenInfo.expires >= Date.now();
   }
 
-  private getTokenInfo() : GetTokenResponse | undefined {
-    let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
-    if (authInfo == undefined)
-      return undefined;
-
-    let auth:GetTokenResponse = JSON.parse(authInfo);
-    return auth;
-  }
-
-  public login(login: string, password: string) : Observable<GetTokenResponse> {
+  public login(login: string, password: string): Observable<GetTokenResponse> {
     return this.http.post<GetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
       .pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
@@ -52,7 +44,7 @@ export class AuthService {
       }));
   }
 
-  register(createUser:CreateUser) : Observable<BaseCreateResponse> {
+  public register(createUser:CreateUser): Observable<BaseCreateResponse> {
     return this.http.post<BaseCreateResponse>(this.api+"/User", {
       userName: createUser.userName,
       password: createUser.password,
@@ -61,18 +53,18 @@ export class AuthService {
     })
   }
 
-  public logout() : void {
+  public logout(): void {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
     this.authChange.emit(false);
   }
 
-  public getUserId() : number | undefined {
+  public getUserId(): number | undefined {
     let tokenInfo = this.getTokenInfo();
     return tokenInfo?.userId;
   }
 
-  public getCurrentUser() : Observable<UserModel> | null {
+  public getCurrentUser(): Observable<UserModel> | null {
     if (!this.isLoggedIn())
       return null;
 
@@ -107,13 +99,22 @@ export class AuthService {
       }));
   }
 
-  public signInByGoogle() : Promise<void | gapi.auth2.GoogleUser> {
+  public signInByGoogle(): Promise<void | gapi.auth2.GoogleUser> {
     return this.googleSigninService.signIn();
   }
 
-  public signOutByGoogle() : any {
+  public signOutByGoogle(): any {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
     return this.googleSigninService.signOut();
+  }
+
+  private getTokenInfo() : GetTokenResponse | undefined {
+    let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
+    if (authInfo == undefined)
+      return undefined;
+
+    let auth:GetTokenResponse = JSON.parse(authInfo);
+    return auth;
   }
 }
