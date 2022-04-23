@@ -72,6 +72,9 @@ namespace Hackathon.BL.FileStorage
         {
             var fileInfo = await _fileStorageRepository.Get(storageFileId);
 
+            if (fileInfo is null)
+                return null;
+
             using var storageFile = await _s3Client.GetObjectAsync(
                 fileInfo.BucketName,
                 storageFileId.ToString());
