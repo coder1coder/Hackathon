@@ -1,7 +1,7 @@
 export class CreateUser
 {
-  userName: string | undefined;
-  password: string | undefined;
+  userName!: string;
+  password!: string;
   fullname: string | undefined;
   email: string | undefined;
 }
