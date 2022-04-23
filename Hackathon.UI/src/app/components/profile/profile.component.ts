@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     // TODO Реализовать кнопку загрузки аватара (файла),
     // TODO хранить id файла в userModel,
     // TODO при инициализации компонента передавать fileId user в getProfileImage();
-    const fileId = 'f2a4d265-e8d5-4970-8b68-1f73fa8276ec';
+    const fileId = '08cba3ac-4068-4b38-a08e-7b427afdcd9d';
 
     this.userService.getProfileImage(fileId)
       .pipe(
@@ -55,6 +55,22 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   public submit(): void {
 
+  }
+
+  public onFileSelected(): void {
+    const inputNode: any = document.querySelector('#file');
+
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        //TODO: загрузить файл 
+        // http://localhost:5000/hackathon/api/api/filestorage/Upload?bucket=0
+        this.image = this.getSafeUrlFromByteArray(e.target.result);
+      };
+
+      reader.readAsArrayBuffer(inputNode.files[0]);
+    }
   }
 
   private initForm(): void {

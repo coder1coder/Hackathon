@@ -5,6 +5,9 @@
   <div class="form-vertical__fields">
     <img [src]="image"/>
 
+    <button type="button" mat-raised-button (click)="fileInput.click()">Выбрать аватарку</button>
+    <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> 
+    
     <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
       <input matInput
