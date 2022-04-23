@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { BaseCollectionModel } from "../models/BaseCollectionModel";
 import { UserModel } from "../models/User/UserModel";
 import { PageSettings } from "../models/PageSettings";
+import { UploadedFileStorage } from '../models/FileStorage/UploadedFileStorage';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +39,9 @@ export class UserService {
 
   public getProfileImage(id: string): Observable<ArrayBuffer> {
     return this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' });
+  }
+
+  public uploadProfileImage(file:ArrayBuffer): Observable<UploadedFileStorage>{
+    return this.http.post<UploadedFileStorage>(this.api+'/api/filestorage/Upload?bucket=0', file);
   }
 }
