@@ -3,8 +3,7 @@ namespace Hackathon.Common.Models.Notification;
 public static class NotificationFactory
 {
     public static CreateNotificationModel<InfoNotificationData> InfoNotification(string message, long userId, long? ownerId = null)
-    {
-        return new CreateNotificationModel<InfoNotificationData>
+        => new()
         {
             Type = NotificationType.Information,
             Data = new InfoNotificationData
@@ -14,5 +13,4 @@ public static class NotificationFactory
             OwnerId = ownerId,
             UserId = userId
         };
-    }
 }

@@ -8,12 +8,15 @@ using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
-using Hackathon.Notification;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.Event
 {
+    /// <summary>
+    /// События
+    /// </summary>
     public class EventService: IEventService
     {
         private readonly IValidator<CreateEventModel> _createEventModelValidator;
@@ -23,6 +26,7 @@ namespace Hackathon.BL.Event
         private readonly ITeamRepository _teamRepository;
         private readonly IValidator<GetListModel<EventFilterModel>> _getFilterModelValidator;
         private readonly ITeamService _teamService;
+        private readonly INotificationService _notificationService;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
@@ -31,7 +35,8 @@ namespace Hackathon.BL.Event
             IEventRepository eventRepository,
             ITeamService teamService, 
             IUserRepository userRepository, 
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            INotificationService notificationService)
         {
             _createEventModelValidator = createEventModelValidator;
             _updateEventModelValidator = updateEventModelValidator;
@@ -40,6 +45,7 @@ namespace Hackathon.BL.Event
             _teamService = teamService;
             _userRepository = userRepository;
             _teamRepository = teamRepository;
+            _notificationService = notificationService;
         }
 
         /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
@@ -174,24 +180,38 @@ namespace Hackathon.BL.Event
             await _eventRepository.DeleteAsync(eventId);
         }
 
+        /// <summary>
+        /// Меняет статус события и отправляет сообщение в шину с уведомлением участников события
+        /// </summary>
+        /// <param name="eventModel"></param>
+        /// <param name="eventStatus"></param>
         private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
         {
             await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
-            // var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
-            //     .FirstOrDefault(x => x.Status == eventStatus);
-            //
-            // if (changeEventStatusMessage != null)
-            //     await _eventMessageHub.Publish(
-            //         TopicNames.EventChangeStatus,
-            //         new EventIntegrationEvent(eventModel.Id, changeEventStatusMessage.Message));
+            var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
+                                               .FirstOrDefault(x => x.Status == eventStatus)
+                                               ?.Message
+                                           ?? eventStatus.ToDefaultChangedEventStatusMessage(eventModel.Name);
+
+            var usersIds = eventModel.TeamEvents
+                .SelectMany(x => x.Team.Users.Select(z => z.Id))
+                .ToArray();
+
+            if (usersIds.Any())
+            {
+                var notificationModels = usersIds.Select(x =>
+                    NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+                
+                await _notificationService.PushMany(notificationModels);
+            }
         }
 
-        private TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
+        private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
         {
             return eventModel.TeamEvents
                 .Select(x => x.Team)
-                .SingleOrDefault(x => x.Users.Any(s=>s.Id == userId));
+                .FirstOrDefault(x => x.Users.Any(s=>s.Id == userId));
         }
     }
 }
