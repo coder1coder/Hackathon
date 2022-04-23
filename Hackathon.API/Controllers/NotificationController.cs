@@ -72,7 +72,7 @@ public class NotificationController: BaseController
             UserId = to,
             OwnerId = UserId,
             Type = NotificationType.Information,
-            Data = new InfoNotificationData()
+            Data = new InfoNotificationData
             {
                 Message = message
             }

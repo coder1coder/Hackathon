@@ -21,6 +21,7 @@ public interface INotificationService
     Task Delete(long userId, Guid[]? ids = null);
 
     Task Push<T>(CreateNotificationModel<T> model) where T : class;
+    Task PushMany<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class;
 
     Task<long> GetUnreadNotificationsCount(long userId);
 }

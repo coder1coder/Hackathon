@@ -13,6 +13,9 @@ public class NotificationModel
     public string Data { get; set; }
 }
 
+/// <summary>
+/// Тип уведомления
+/// </summary>
 public enum NotificationType
 {
     Information = 0,
