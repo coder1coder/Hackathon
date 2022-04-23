@@ -1,4 +1,5 @@
-import {Component, Input} from "@angular/core";
+import {AfterViewInit, Component, Input} from "@angular/core";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'layout-default',
@@ -6,12 +7,21 @@ import {Component, Input} from "@angular/core";
   styleUrls: ['./default.layout.component.scss'],
 })
 
-export class DefaultLayoutComponent {
+export class DefaultLayoutComponent implements AfterViewInit {
 
   @Input() title!: string;
   @Input() isLoading: boolean = false;
 
-  constructor() {
+  UserName:string | undefined;
+
+  constructor(private authService:AuthService) {
+  }
+
+  ngAfterViewInit(): void {
+    this.authService.getCurrentUser()?.subscribe(x=>{
+      if (x != null)
+        this.UserName = x.fullName ?? x.userName
+    })
   }
 }
 
