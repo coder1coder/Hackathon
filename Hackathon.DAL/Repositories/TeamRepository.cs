@@ -51,7 +51,7 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<TeamModel>(teamEntity);
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListModel{T})"/>
+        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListModel{TeamFilterModel})"/>
         public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel)
         {
             var query = _dbContext.Teams
@@ -86,6 +86,9 @@ namespace Hackathon.DAL.Repositories
 
                 if (getListModel.Filter.OwnerId.HasValue)
                     query = query.Where(x => x.OwnerId == getListModel.Filter.OwnerId);
+                
+                if (getListModel.Filter.HasOwner.HasValue)
+                    query = query.Where(x => x.OwnerId != null);
             }
 
             var totalCount = await query.LongCountAsync();
@@ -177,13 +180,11 @@ namespace Hackathon.DAL.Repositories
         }
 
         public async Task<TeamModel[]> GetByExpression(Expression<Func<TeamEntity, bool>> expression)
-        {
-            return await _dbContext.Teams
+            => await _dbContext.Teams
                 .Where(expression)
                 .Include(x => x.Users)
                 .ProjectToType<TeamModel>(_mapper.Config)
                 .AsNoTracking()
                 .ToArrayAsync();
-        }
     }
 }
