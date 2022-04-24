@@ -64,12 +64,12 @@ namespace Hackathon.API.Controllers
         /// Получить информацию о пользователях
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost("list")]
         [Authorize(Policy = nameof(UserRole.Administrator))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserResponse>))]
-        public async Task<IActionResult> GetAsync([FromQuery] GetListRequest<UserFilterModel> listRequest)
+        public async Task<IActionResult> GetAsync([FromBody] GetListRequest<UserFilterModel> request)
         {
-            var getFilterModel = _mapper.Map<GetListModel<UserFilterModel>>(listRequest);
+            var getFilterModel = _mapper.Map<GetListModel<UserFilterModel>>(request);
             var collectionModel = await _userService.GetAsync(getFilterModel);
             return Ok(_mapper.Map<BaseCollectionResponse<UserResponse>>(collectionModel));
         }
