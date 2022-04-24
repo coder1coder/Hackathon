@@ -1,14 +1,14 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
 
-export class CreateEvent
+export interface CreateEvent
 {
-  name: string | undefined;
-  developmentMinutes: number | undefined;
-  isCreateTeamsAutomatically: boolean | undefined;
-  maxEventMembers: number | undefined;
-  memberRegistrationMinutes: number | undefined;
-  minTeamMembers: number | undefined;
-  start: Date | undefined;
-  teamPresentationMinutes: number | undefined;
-  changeEventStatusMessages!: ChangeEventStatusMessage[] | undefined;
+  name: string;
+  developmentMinutes: number;
+  isCreateTeamsAutomatically: boolean;
+  maxEventMembers: number;
+  memberRegistrationMinutes: number;
+  minTeamMembers: number;
+  start: Date;
+  teamPresentationMinutes: number;
+  changeEventStatusMessages: ChangeEventStatusMessage[];
 }

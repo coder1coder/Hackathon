@@ -125,7 +125,11 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="removeStatus(element)" *ngIf="isCanAddStatus()">
+                  <button mat-menu-item (click)="editStatus(element)">
+                    <mat-icon color="primary">edit</mat-icon>
+                    <span>Редактировать</span>
+                  </button>
+                  <button mat-menu-item (click)="removeStatus(element)">
                     <mat-icon color="accent">delete_outline</mat-icon>
                     <span>Удалить</span>
                   </button>
