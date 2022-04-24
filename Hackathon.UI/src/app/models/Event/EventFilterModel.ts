@@ -5,5 +5,6 @@ export class EventFilterModel {
   name?: string;
   startFrom?: Date;
   startTo?: Date;
-  statuses: EventStatus[] = [];
+  statuses?: EventStatus[];
+  excludeOtherUsersDraftedEvents?: boolean;
 }
