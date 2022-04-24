@@ -59,7 +59,7 @@ namespace Hackathon.API.Controllers
         public async Task<IActionResult> GetList([FromBody] GetListRequest<EventFilterModel> listRequest)
         {
             var getFilterModel = _mapper.Map<GetListModel<EventFilterModel>>(listRequest);
-            var collectionModel = await _eventService.GetAsync(getFilterModel);
+            var collectionModel = await _eventService.GetAsync(UserId, getFilterModel);
             return Ok(_mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel));
         }
 
@@ -71,22 +71,20 @@ namespace Hackathon.API.Controllers
         [HttpGet("{id:long}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
         public async Task<EventModel> Get([FromRoute] long id)
-        {
-            return await _eventService.GetAsync(id);
-        }
+            => await _eventService.GetAsync(id);
 
         ///<inheritdoc cref="IEventApi.Join"/>
         [HttpPost("{eventId:long}/Join")]
-        public async Task Join(long eventId) => await _eventService.JoinAsync(eventId, UserId);
+        public async Task Join(long eventId) 
+            => await _eventService.JoinAsync(eventId, UserId);
         
         [HttpPost("{eventId:long}/leave")]
-        public async Task Leave(long eventId) => await _eventService.LeaveAsync(eventId, UserId);
+        public async Task Leave(long eventId) 
+            => await _eventService.LeaveAsync(eventId, UserId);
 
         [HttpPost("{eventId:long}/join/team")]
         public async Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
-        {
-            await _eventService.JoinTeamAsync(eventId, teamId, UserId);
-        }
+            => await _eventService.JoinTeamAsync(eventId, teamId, UserId);
 
         /// <summary>
         /// Задать статус события
@@ -94,9 +92,7 @@ namespace Hackathon.API.Controllers
         /// <param name="setStatusRequest"></param>
         [HttpPut(nameof(SetStatus))]
         public async Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
-        {
-            await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
-        }
+            => await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
 
         /// <summary>
         /// Полное удаление события
@@ -104,9 +100,6 @@ namespace Hackathon.API.Controllers
         /// <param name="id"></param>
         [HttpDelete("{id:long}")]
         public async Task Delete([FromRoute] long id)
-        {
-            await _eventService.DeleteAsync(id);
-        }
-
+            => await _eventService.DeleteAsync(id);
     }
 }
