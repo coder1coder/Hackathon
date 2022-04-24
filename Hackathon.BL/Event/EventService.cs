@@ -62,11 +62,11 @@ namespace Hackathon.BL.Event
             return await _eventRepository.GetAsync(eventId);
         }
 
-        /// <inheritdoc cref="IEventService.GetAsync(GetListModel{T})"/>
-        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetListModel<EventFilterModel> getListModel)
+        /// <inheritdoc cref="IEventService.GetAsync(long, GetListModel{EventFilterModel})"/>
+        public async Task<BaseCollectionModel<EventModel>> GetAsync(long userId, GetListModel<EventFilterModel> getListModel)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getListModel);
-            return await _eventRepository.GetAsync(getListModel);
+            return await _eventRepository.GetAsync(userId, getListModel);
         }
 
         /// <inheritdoc cref="IEventService.SetStatusAsync(long, EventStatus)"/>

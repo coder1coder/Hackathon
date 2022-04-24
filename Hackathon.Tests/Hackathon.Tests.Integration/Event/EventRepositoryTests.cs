@@ -50,7 +50,7 @@ namespace Hackathon.Tests.Integration.Event
             await DbContext.AddRangeAsync(list);
             await DbContext.SaveChangesAsync();
 
-            var response = await EventRepository.GetAsync(new GetListModel<EventFilterModel>
+            var response = await EventRepository.GetAsync(UserId, new GetListModel<EventFilterModel>
             {
                 Filter = new EventFilterModel
                 {

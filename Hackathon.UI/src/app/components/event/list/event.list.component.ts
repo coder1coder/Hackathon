@@ -43,7 +43,7 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
     super(EventListComponent.name);
   }
 
-  fetch(){
+  override fetch(){
 
     let params = new GetFilterModel<EventFilterModel>();
 
@@ -55,6 +55,8 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
 
     params.Filter = new EventFilterModel();
     params.Filter = this.filterForm.value;
+
+    params.Filter.excludeOtherUsersDraftedEvents = true;
 
       this.eventsService.getAll(params)
       .subscribe({
