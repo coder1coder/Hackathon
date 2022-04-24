@@ -2,6 +2,7 @@
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
+using Hackathon.Contracts.Responses.User;
 using Refit;
 
 namespace Hackathon.API.Abstraction
@@ -12,6 +13,6 @@ namespace Hackathon.API.Abstraction
         Task<BaseCreateResponse> SignUp([Body] SignUpRequest request);
 
         [Get("/api/User/{userId})")]
-        public Task<UserModel> Get(long userId);
+        public Task<UserResponse> Get(long userId);
     }
 }
