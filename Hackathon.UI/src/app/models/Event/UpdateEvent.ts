@@ -1,7 +1,7 @@
 import {CreateEvent} from "./CreateEvent";
 
-export class UpdateEvent extends CreateEvent
+export interface UpdateEvent extends CreateEvent
 {
-  id!:number
-  userId!: number
+  id: number;
+  userId: number;
 }
