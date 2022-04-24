@@ -78,10 +78,8 @@ namespace Hackathon.BL.Team
         }
 
         public async Task<TeamModel> GetUserTeam(long userId)
-        {
-            return (await _teamRepository.GetByExpression(x =>
-                x.Users.Any(u => u.Id == userId)
+            => (await _teamRepository.GetByExpression(x =>
+                (x.Users.Any(u => u.Id == userId) && x.OwnerId != null)
                 || x.OwnerId == userId)).FirstOrDefault();
-        }
     }
 }
