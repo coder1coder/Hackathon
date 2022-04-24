@@ -117,11 +117,9 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(userId);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync(GetListModel{T})"/>
+        /// <inheritdoc cref="IUserService.GetAsync(GetListModel{UserFilterModel})"/>
         public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
-        {
-            return await _userRepository.GetAsync(getListModel);
-        }
+            => await _userRepository.GetAsync(getListModel);
 
         /// <inheritdoc cref="IUserService.GenerateToken(UserModel)"/>
         public AuthTokenModel GenerateToken(UserModel user)

@@ -88,6 +88,12 @@ namespace Hackathon.DAL.Repositories
 
                 if (!string.IsNullOrWhiteSpace(getListModel.Filter.Email))
                     query = query.Where(x => string.Equals(x.Email, getListModel.Filter.Email, StringComparison.CurrentCultureIgnoreCase));
+
+                if (getListModel.Filter.Ids != null)
+                    query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
+                
+                if (getListModel.Filter.ExcludeIds?.Length > 0)
+                    query = query.Where(x => !getListModel.Filter.ExcludeIds.Contains(x.Id));
             }
 
             var totalCount = await query.LongCountAsync();

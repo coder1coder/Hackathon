@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { BaseCollectionModel } from "../models/BaseCollectionModel";
-import { PageSettings } from "../models/PageSettings";
+import { GetFilterModel } from "../models/GetFilterModel";
+import { UserFilterModel } from "../models/User/UserFilterModel";
 import {IUserModel} from "../models/User/IUserModel";
 
 @Injectable({
@@ -24,12 +25,8 @@ export class UserService {
     });
   }
 
-  public getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<IUserModel>>{
-    let endpoint = this.api+'/User';
-    if (pageSettings != undefined)
-      endpoint += `?${pageSettings.toQueryArgs()}`;
-
-    return this.http.get<BaseCollectionModel<IUserModel>>(endpoint);
+  getList(getFilterModel:GetFilterModel<UserFilterModel>):Observable<BaseCollectionModel<IUserModel>>{
+    return this.http.post<BaseCollectionModel<IUserModel>>(this.api+'/User/list', getFilterModel);
   }
 
   public getById(userId:number): Observable<IUserModel> {
