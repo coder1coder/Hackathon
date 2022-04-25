@@ -6,6 +6,7 @@ import { BaseCollectionModel } from "../models/BaseCollectionModel";
 import { UserModel } from "../models/User/UserModel";
 import { PageSettings } from "../models/PageSettings";
 import { UploadedFileStorage } from '../models/FileStorage/UploadedFileStorage';
+import { Bucket } from '../common/Bucket';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,12 @@ export class UserService {
     return this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' });
   }
 
-  public uploadProfileImage(file:ArrayBuffer): Observable<UploadedFileStorage>{
-    return this.http.post<UploadedFileStorage>(this.api+'/api/filestorage/Upload?bucket=0', file);
+  public setProfileImage(file: File): Observable<UploadedFileStorage> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.post<UploadedFileStorage>(this.api+'/FileStorage/Upload/'+Bucket.Avatars, formData, {
+      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+    })
   }
 }

@@ -19,6 +19,9 @@ public class FileStorageController: BaseController
     [HttpPost("upload/{bucket:int}")]
     public async Task<IActionResult> Upload([FromRoute] int bucket, IFormFile file)
     {
+        if (file is null)
+            return BadRequest($"{nameof(file)} cannot be null.");
+
         await using var stream = file.OpenReadStream();
         return Ok(await _fileStorageService.Upload(stream, (Bucket)bucket, file.FileName, UserId));
     }
