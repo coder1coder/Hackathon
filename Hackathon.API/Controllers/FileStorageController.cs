@@ -1,9 +1,7 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.FileStorage;
-using Hackathon.Common.Models.FileStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,11 +16,11 @@ public class FileStorageController: BaseController
         _fileStorageService = fileStorageService;
     }
 
-    [HttpPost(nameof(Upload))]
-    public async Task<StorageFile> Upload([Required] IFormFile file, [Required] Bucket bucket)
+    [HttpPost("upload/{bucket:int}")]
+    public async Task<IActionResult> Upload([FromRoute] int bucket, IFormFile file)
     {
         await using var stream = file.OpenReadStream();
-        return await _fileStorageService.Upload(stream, bucket, file.FileName);
+        return Ok(await _fileStorageService.Upload(stream, (Bucket)bucket, file.FileName, UserId));
     }
 
     [HttpGet]
