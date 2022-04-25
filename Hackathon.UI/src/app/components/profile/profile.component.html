@@ -60,4 +60,10 @@
   </div>
 </form>
 
+  <input type="file" #selectedFile (change)="selectFile($event)" class="fileSelector">
+  <button mat-mini-fab color="primary"
+          (click)="selectedFile.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+
 </layout-default>

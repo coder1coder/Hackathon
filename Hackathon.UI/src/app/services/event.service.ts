@@ -113,7 +113,7 @@ export class EventService {
   isCanAddTeam(event:EventModel){
     return this.isEventOwner(event)
       && event.status == EventStatus.Published
-      && event.isCreateTeamsAutomatically
+      && !event.isCreateTeamsAutomatically
   }
 
   isAlreadyInEvent(event:EventModel, userId:number){

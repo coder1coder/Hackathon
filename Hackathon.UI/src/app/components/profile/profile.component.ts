@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ViewChild, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
 import { UserModel } from "../../models/User/UserModel";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
-import { UserService } from "src/app/services/user.service";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { map } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../../environments/environment";
+import { Bucket } from "../../common/Bucket";
 
 @Component({
   templateUrl: './profile.component.html',
@@ -15,8 +15,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public image: any;
   public form = new FormGroup({})
 
-  private currentUser: UserModel = new UserModel();
-  private UserRoleTranslator: UserRoleTranslator = UserRoleTranslator;
+  api = environment.api;
+
+  currentUser:UserModel = new UserModel();
+  UserRoleTranslator = UserRoleTranslator;
 
   constructor(
     private authService: AuthService,
@@ -26,8 +28,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     ) {
   }
 
-  ngOnInit(): void {
-    this.initForm();
+  @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
+
+  constructor(private authService: AuthService, private http:HttpClient) {
   }
 
   ngAfterViewInit(): void {
@@ -87,5 +90,22 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     let base64String = btoa(STRING_CHAR);
 
     return this.sanitazer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
+  }
+
+  selectFile(event:any) {
+
+    if (event?.target?.files?.length > 0)
+    {
+      let file = event.target.files[0];
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      this.http.post(this.api+'/FileStorage/Upload/'+Bucket.Avatars, formData, {
+        headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+      }).subscribe(x=>{
+        console.log(x)
+      })
+    }
   }
 }
