@@ -1,11 +1,9 @@
-import { AfterViewInit, Component, ViewChild, OnInit } from "@angular/core";
+import { Component, ViewChild, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
 import { UserModel } from "../../models/User/UserModel";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
-import { Bucket } from "../../common/Bucket";
 import { UserService } from "src/app/services/user.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { map, mergeMap } from "rxjs";
@@ -39,13 +37,15 @@ export class ProfileComponent implements OnInit {
       ?.subscribe((user: UserModel) => {
         this.currentUser = user;
         this.loadForm();
+
+        if (this.currentUser.profileImageId != undefined) {
+          this.loadImage(this.currentUser.profileImageId);
+        }
       })
 
-    // TODO Реализовать кнопку загрузки аватара (файла),
-    // TODO хранить id файла в userModel,
+    // TODO Реализовать кнопку загрузки аватара (файла), +/- Done
+    // TODO хранить id файла в userModel, +/- Done
     // TODO при инициализации компонента передавать fileId user в getProfileImage();
-    const fileId = '08cba3ac-4068-4b38-a08e-7b427afdcd9d';
-    this.loadImage(fileId);
   }
 
   @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
@@ -104,10 +104,10 @@ export class ProfileComponent implements OnInit {
       } 
       
       //<!-- 200x200 размер картинки-->
-      this.userService.setProfileImage(file)
+      this.userService.setProfileImage(file, this.currentUser.id)
       .pipe(
-        mergeMap( (res : UploadedFileStorage) => {
-          return this.userService.getProfileImage(res.id)
+        mergeMap( (res : UserModel) => {
+          return this.userService.getProfileImage(res.profileImageId!)
           .pipe(
             map((res: ArrayBuffer) => {
               return this.getSafeUrlFromByteArray(res);

@@ -6,4 +6,5 @@ export class UserModel{
   email?: string;
   fullName?: string;
   role:UserRole = UserRole.Default;
+  profileImageId?: string
 }

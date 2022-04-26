@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
@@ -26,6 +28,7 @@ namespace Hackathon.BL.User
 
         private readonly IUserRepository _userRepository;
         private readonly AppSettings _appSettings;
+        private readonly IFileStorageService _fileStorageService;
 
         private readonly IMapper _mapper;
 
@@ -33,13 +36,15 @@ namespace Hackathon.BL.User
             IOptions<AppSettings> appSettings,
             IValidator<SignUpModel> signUpModelValidator,
             IValidator<SignInModel> signInModelValidator,
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
+            IFileStorageService fileStorageService,
             IMapper mapper)
         {
             _appSettings = appSettings.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _userRepository = userRepository;
+            _fileStorageService = fileStorageService;
             _mapper = mapper;
         }
 
@@ -156,6 +161,17 @@ namespace Hackathon.BL.User
                 Role = user.Role,
                 GoogleId = user.GoogleAccount?.Id
             };
+        }
+
+        public async Task<UserModel> UploadProfileImageAsync(long userId, string filename, Stream stream)
+        {
+            var uploadResult = await _fileStorageService.Upload(stream, Bucket.Avatars, filename, userId);
+
+            /*var existedUserModel = await GetAsync(userId);
+
+            existedUserModel.ProfileImageId = uploadResult.Id.ToString();*/
+
+            return await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id.ToString());
         }
 
         private static class AppClaimTypes

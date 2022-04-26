@@ -133,5 +133,18 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == userId);
         }
+
+        public async Task<UserModel> UpdateProfileImageAsync(long userId, string ProfileImageId)
+        {
+            var entity = await _dbContext.Users
+                .FirstOrDefaultAsync(x=> x.Id == userId);
+
+            if (entity != null)
+            {
+                entity.ProfileImageId = ProfileImageId; 
+                await _dbContext.SaveChangesAsync();
+            }
+            return entity != null ? _mapper.Map<UserEntity, UserModel>(entity) : null;
+        }
     }
 }

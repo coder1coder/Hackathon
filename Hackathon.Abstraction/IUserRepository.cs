@@ -48,5 +48,12 @@ namespace Hackathon.Abstraction
         /// <param name="googleAccountModel"></param>
         /// <returns></returns>
         Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel);
+
+        /// <summary>
+        /// Обновить картинку пользователя.
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        Task<UserModel> UpdateProfileImageAsync(long userId, string ProfileImageId);
     }
 }

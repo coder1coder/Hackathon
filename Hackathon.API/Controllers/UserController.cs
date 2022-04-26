@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.FileStorage;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
@@ -18,7 +19,7 @@ namespace Hackathon.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        
+
         /// <summary>
         /// Пользователи
         /// </summary>
@@ -74,5 +75,17 @@ namespace Hackathon.API.Controllers
             return Ok(_mapper.Map<BaseCollectionResponse<UserResponse>>(collectionModel));
         }
 
+        [HttpPost]
+        [Route("uploadProfileImage/{userId:long}")]
+        public async Task<IActionResult> UploadProfileImage([FromRoute] long userId, IFormFile file)
+        {
+            if (file is null)
+                return BadRequest($"{nameof(file)} cannot be null.");
+
+            await using var stream = file.OpenReadStream();
+
+            var result = await _userService.UploadProfileImageAsync(userId, file.FileName, stream);
+            return Ok(_mapper.Map<UserResponse>(result));
+        }
     }
 }
