@@ -3,7 +3,7 @@
   <form [formGroup]="form" class="form-vertical profileForm">
 
     <div class="form-vertical__fields">
-      <img [src]="image" class="profileImage"/>
+      <img [src]="image ||'assets/img/pic_user.png'" class="profileImage"/>
       
       <input type="file" #selectedFile (change)="selectFile($event)" class="fileSelector">
       <button class="fileSelector_button" mat-raised-button (click)="selectedFile.click()">
