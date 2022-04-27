@@ -77,6 +77,8 @@ namespace Hackathon.API.Controllers
 
         [HttpPost]
         [Route("uploadProfileImage/{userId:long}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> UploadProfileImage([FromRoute] long userId, IFormFile file)
         {
             if (file is null)
@@ -85,7 +87,7 @@ namespace Hackathon.API.Controllers
             await using var stream = file.OpenReadStream();
 
             var result = await _userService.UploadProfileImageAsync(userId, file.FileName, stream);
-            return Ok(_mapper.Map<UserResponse>(result));
+            return Ok(_mapper.Map<UserModel, UserResponse>(result));
         }
     }
 }
