@@ -7,16 +7,15 @@ import { environment } from "../../../environments/environment";
 import { UserService } from "src/app/services/user.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { map, mergeMap } from "rxjs";
-import { UploadedFileStorage } from "src/app/models/FileStorage/UploadedFileStorage";
+import { SnackService } from "src/app/services/snack.service";
 
 @Component({
   templateUrl: './profile.component.html',
   styleUrls:['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  public image: any;
   public form = new FormGroup({})
-
+  public image: any;
   api = environment.api;
 
   currentUser:UserModel = new UserModel();
@@ -26,7 +25,8 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private userService: UserService,
-    private sanitazer: DomSanitizer
+    private sanitazer: DomSanitizer,
+    private snackBar:SnackService
     ) {
   }
 
@@ -42,10 +42,6 @@ export class ProfileComponent implements OnInit {
           this.loadImage(this.currentUser.profileImageId);
         }
       })
-
-    // TODO Реализовать кнопку загрузки аватара (файла), +/- Done
-    // TODO хранить id файла в userModel, +/- Done
-    // TODO при инициализации компонента передавать fileId user в getProfileImage();
   }
 
   @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
@@ -76,49 +72,38 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private getSafeUrlFromByteArray(buffer: ArrayBuffer): SafeUrl {
-    let TYPED_ARRAY = new Uint8Array(buffer);
-    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte)=> {
-      return data + String.fromCharCode(byte);
-    }, '');
-    let base64String = btoa(STRING_CHAR);
-
-    return this.sanitazer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
-  }
-
   public selectFile(event:any) {
-    if (event?.target?.files?.length > 0)
-    {
-      let file:File = event.target.files[0];
-      //формат файла - картика
-      if (this.isFileImage(file) == false)
-      {
-        //вывести что эта картинка не подоходит.
-        return;
-      }
+    if ( !(event?.target?.files?.length > 0) )
+      return;
+    
+    let file:File = event.target.files[0];
 
-      //ограничить размер в ~2МБ,
-      if (file.size/1024 > 2000) //2000КБ
-      {
-        //вывести что объем файла больше 2000КБ
-      } 
-      
-      //<!-- 200x200 размер картинки-->
-      this.userService.setProfileImage(file, this.currentUser.id)
-      .pipe(
-        mergeMap( (res : UserModel) => {
-          return this.userService.getProfileImage(res.profileImageId!)
-          .pipe(
-            map((res: ArrayBuffer) => {
-              return this.getSafeUrlFromByteArray(res);
-            })
-          )
-        })
-      )
-      .subscribe( (res : SafeUrl) => {
-        this.image = res;
-      })
+    if (this.isFileImage(file) == false)
+    {
+      this.snackBar.open('Файл не является картинкой.');
+      return;
     }
+
+    if (file.size/1024 > 2048)
+    {
+      this.snackBar.open('Максимальный объем файла 2МБ.');
+      return;
+    } 
+    
+    this.userService.setProfileImage(file, this.currentUser.id)
+    .pipe(
+      mergeMap( (res : UserModel) => {
+        return this.userService.getProfileImage(res.profileImageId!)
+        .pipe(
+          map((res: ArrayBuffer) => {
+            return this.getSafeUrlFromByteArray(res);
+          })
+        )
+      })
+    )
+    .subscribe( (res : SafeUrl) => {
+      this.image = res;
+    })
   }
 
   public loadImage(imageId : string): void {
@@ -134,6 +119,16 @@ export class ProfileComponent implements OnInit {
   }
 
   private isFileImage(file: File) : boolean {
-        return file && file['type'].split('/')[0] === 'image';
+    return file && file['type'].split('/')[0] === 'image';
+  }
+
+  private getSafeUrlFromByteArray(buffer: ArrayBuffer): SafeUrl {
+    let TYPED_ARRAY = new Uint8Array(buffer);
+    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte)=> {
+      return data + String.fromCharCode(byte);
+    }, '');
+    let base64String = btoa(STRING_CHAR);
+
+    return this.sanitazer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
   }
 }

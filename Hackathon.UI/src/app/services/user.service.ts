@@ -5,8 +5,6 @@ import { Observable } from "rxjs";
 import { BaseCollectionModel } from "../models/BaseCollectionModel";
 import { UserModel } from "../models/User/UserModel";
 import { PageSettings } from "../models/PageSettings";
-import { UploadedFileStorage } from '../models/FileStorage/UploadedFileStorage';
-import { Bucket } from '../common/Bucket';
 
 @Injectable({
   providedIn: 'root'
