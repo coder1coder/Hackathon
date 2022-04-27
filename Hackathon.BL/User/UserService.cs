@@ -167,10 +167,7 @@ namespace Hackathon.BL.User
         {
             var uploadResult = await _fileStorageService.Upload(stream, Bucket.Avatars, filename, userId);
 
-            /*var existedUserModel = await GetAsync(userId);
-
-            existedUserModel.ProfileImageId = uploadResult.Id.ToString();*/
-
+            //TODO: Удалить предыдущую картинку.
             return await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id.ToString());
         }
 

@@ -86,5 +86,6 @@ namespace Hackathon.BL.FileStorage
             return ms;
         }
 
+        // TODO: Реализовать метод удаления файла.
     }
 }
