@@ -163,11 +163,11 @@ namespace Hackathon.BL.User
             };
         }
 
+        /// <inheritdoc cref="IUserService.UploadProfileImageAsync(long, string, Stream)"/>
         public async Task<UserModel> UploadProfileImageAsync(long userId, string filename, Stream stream)
         {
             var uploadResult = await _fileStorageService.Upload(stream, Bucket.Avatars, filename, userId);
 
-            //TODO: Удалить предыдущую картинку.
             var existedUser = await GetAsync(userId);
             if (existedUser.ProfileImageId is not null) { 
                 await _fileStorageService.Delete(existedUser.ProfileImageId.Value);

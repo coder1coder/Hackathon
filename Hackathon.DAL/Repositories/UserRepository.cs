@@ -135,6 +135,7 @@ namespace Hackathon.DAL.Repositories
                 .AnyAsync(x => x.Id == userId);
         }
 
+        /// <inheritdoc cref="IUserRepository.UpdateProfileImageAsync(long, Guid)"/>
         public async Task<UserModel> UpdateProfileImageAsync(long userId, Guid ProfileImageId)
         {
             var entity = await _dbContext.Users

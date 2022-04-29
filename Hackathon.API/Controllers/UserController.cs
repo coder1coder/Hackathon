@@ -74,6 +74,11 @@ namespace Hackathon.API.Controllers
             return Ok(_mapper.Map<BaseCollectionResponse<UserResponse>>(collectionModel));
         }
 
+        /// <summary>
+        /// Загрузить картинку профиля пользователя.
+        /// </summary>
+        /// <param name="file">Файл картинка.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("uploadProfileImage")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
