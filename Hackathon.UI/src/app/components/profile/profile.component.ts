@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
   public selectFile(event:any) {
     if ( !(event?.target?.files?.length > 0) )
       return;
-    
+
     let file:File = event.target.files[0];
 
     if (this.isFileImage(file) == false)
@@ -88,9 +88,9 @@ export class ProfileComponent implements OnInit {
     {
       this.snackBar.open('Максимальный объем файла 2МБ.');
       return;
-    } 
-    
-    this.userService.setProfileImage(file, this.currentUser.id)
+    }
+
+    this.userService.setProfileImage(file)
     .pipe(
       mergeMap( (res : UserModel) => {
         return this.userService.getProfileImage(res.profileImageId!)
