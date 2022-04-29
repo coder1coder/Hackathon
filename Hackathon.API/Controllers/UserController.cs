@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Abstraction;
-using Hackathon.Abstraction.FileStorage;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;

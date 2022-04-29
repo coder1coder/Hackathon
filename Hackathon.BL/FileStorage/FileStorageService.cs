@@ -8,6 +8,7 @@ using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
+using Hackathon.Common.Exceptions;
 
 namespace Hackathon.BL.FileStorage
 {
@@ -56,7 +57,7 @@ namespace Hackathon.BL.FileStorage
                     MimeType = mimeType,
                     OwnerId = ownerId
                 };
-
+                
                 await _fileStorageRepository.Add(storageFile);
 
                 return storageFile;
@@ -86,6 +87,20 @@ namespace Hackathon.BL.FileStorage
             return ms;
         }
 
-        // TODO: Реализовать метод удаления файла.
+        public async Task<bool> Delete(Guid storageFileId)
+        {
+            var fileInfo = await _fileStorageRepository.Get(storageFileId);
+
+            if (fileInfo is null)
+                throw new FileInfoNotFoundException("Не найдена информаци о файле в бд.");
+
+            await _fileStorageRepository.Remove(fileInfo.Id);
+
+            var deleteObjectResponse = await _s3Client.DeleteObjectAsync(
+                fileInfo.BucketName,
+                storageFileId.ToString());
+
+            return true;
+        }
     }
 }

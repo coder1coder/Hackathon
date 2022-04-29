@@ -13,5 +13,5 @@ public class UserResponse
     public GoogleAccountModel GoogleAccount { get; set; }
     public UserRole Role { get; set; } = UserRole.Default;
 
-    public Guid ProfileImageId { get; set; }
+    public Guid? ProfileImageId { get; set; }
 }
