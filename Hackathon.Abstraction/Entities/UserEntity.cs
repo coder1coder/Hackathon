@@ -19,6 +19,6 @@ namespace Hackathon.Abstraction.Entities
         public UserRole Role { get; set; }
 
         public List<TeamEntity> Teams { get; set; } = new ();
-        public string? ProfileImageId { get; set; }
+        public Guid? ProfileImageId { get; set; }
     }
 }

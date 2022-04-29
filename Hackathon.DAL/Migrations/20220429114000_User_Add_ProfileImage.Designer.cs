@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220426165520_User_Add_ProfileImage")]
+    [Migration("20220429114000_User_Add_ProfileImage")]
     partial class User_Add_ProfileImage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -278,8 +278,8 @@ namespace Hackathon.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ProfileImageId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ProfileImageId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()

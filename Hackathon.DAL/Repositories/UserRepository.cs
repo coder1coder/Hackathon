@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
@@ -134,7 +135,7 @@ namespace Hackathon.DAL.Repositories
                 .AnyAsync(x => x.Id == userId);
         }
 
-        public async Task<UserModel> UpdateProfileImageAsync(long userId, string ProfileImageId)
+        public async Task<UserModel> UpdateProfileImageAsync(long userId, Guid ProfileImageId)
         {
             var entity = await _dbContext.Users
                 .FirstOrDefaultAsync(x=> x.Id == userId);

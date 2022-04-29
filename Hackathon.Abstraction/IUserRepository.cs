@@ -54,6 +54,6 @@ namespace Hackathon.Abstraction
         /// </summary>
         /// <param name="userModel"></param>
         /// <returns></returns>
-        Task<UserModel> UpdateProfileImageAsync(long userId, string ProfileImageId);
+        Task<UserModel> UpdateProfileImageAsync(long userId, Guid ProfileImageId);
     }
 }

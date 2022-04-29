@@ -276,8 +276,8 @@ namespace Hackathon.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ProfileImageId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ProfileImageId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()

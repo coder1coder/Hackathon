@@ -6,4 +6,5 @@ public interface IFileStorageService
 {
     Task<StorageFile> Upload(Stream stream, Bucket bucket, string fileName, long? ownerId = null);
     Task<Stream> Get(Guid storageFileId);
+    Task<bool> Delete(Guid storageFileId);
 }
