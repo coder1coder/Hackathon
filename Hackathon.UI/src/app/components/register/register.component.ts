@@ -8,7 +8,7 @@ import { Location } from "@angular/common";
 import { ProblemDetails } from "../../models/ProblemDetails";
 import { SnackService } from "../../services/snack.service";
 import { ComponentBase } from 'src/app/common/base-components/base.component';
-import { debounceTime, takeUntil } from 'rxjs';
+import { auditTime, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -50,11 +50,15 @@ export class RegisterComponent extends ComponentBase implements OnInit {
       .subscribe({
         next: (res) =>{
           this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
-          this.router.navigate(['/login']);
         },
         error: (err) => {
           let problemDetails: ProblemDetails = <ProblemDetails>err.error;
           this.snackbar.open(problemDetails.detail);
+        },
+        complete: () => {
+          setTimeout(()=>{
+            this.router.navigate(['/login']);
+          }, 1000);
         }
       });
   }
