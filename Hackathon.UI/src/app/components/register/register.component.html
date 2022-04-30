@@ -1,10 +1,12 @@
-<form [formGroup]="registerForm" class="registerForm" >
+<form [formGroup]="form" class="registerForm" >
   <div class="welcomeText">{{ welcomeText }}</div>
   <div class="registerForm__fields">
     <mat-form-field appearance="fill">
       <mat-label>Имя пользователя</mat-label>
       <input matInput autocomplete="off"
-             id="login" #login formControlName="login"
+             id="login"
+             #login
+             formControlName="login"
              required>
     </mat-form-field>
 
@@ -12,18 +14,27 @@
       <mat-label>Пароль</mat-label>
       <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
              autocomplete="off"
-             id="password" #password formControlName="password"
+             id="password"
+             #password
+             formControlName="password"
              required
       >
-      <mat-icon matSuffix (click)="isPassFieldHide = !isPassFieldHide" [attr.aria-pressed]="isPassFieldHide" style="cursor: pointer;">
-        {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
+      <mat-icon class="password__icon"
+      (click)="isPassFieldHide = !isPassFieldHide"
+      matSuffix
+      [attr.aria-pressed]="isPassFieldHide"
+      >
+      {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
       </mat-icon>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>E-mail</mat-label>
-      <input matInput autocomplete="off"
-             id="email" #email formControlName="email"
+      <input matInput
+             autocomplete="off"
+             id="email"
+             #email
+             formControlName="email"
              required>
     </mat-form-field>
 
@@ -31,14 +42,19 @@
       <mat-label>Полное имя</mat-label>
       <input matInput
              autocomplete="off"
-             id="fullname" #fullname formControlName="fullname"
+             id="fullname"
+             #fullname
+             formControlName="fullname"
              required>
     </mat-form-field>
   </div>
   <div class="registerForm__bottom">
     <div class="registerForm__buttons">
-      <button mat-raised-button color="primary" (click)="signUp()">Регистрация</button>
-      <button mat-button (click)="goBack()" >Отмена</button>
+      <button mat-raised-button color="primary"
+       disabled="{{!isValid()}}"
+       (click)="signUp()">Регистрация</button>
+      <button mat-button
+      (click)="goBack()">Отмена</button>
     </div>
   </div>
 </form>

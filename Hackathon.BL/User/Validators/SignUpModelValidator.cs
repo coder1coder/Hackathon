@@ -32,25 +32,29 @@ namespace Hackathon.BL.User.Validators
                 .MinimumLength(6)
                 .MaximumLength(100);
 
-            When(x => !string.IsNullOrWhiteSpace(x.Email), () =>
-            {
-                RuleFor(x => x.Email)
-                    .EmailAddress()
-                    .CustomAsync(async (email, context, _) =>
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .MinimumLength(3)
+                .MaximumLength(100)
+                .EmailAddress()
+                .CustomAsync(async (email, context, _) =>
+                {
+                    var users = await userRepository.GetAsync(new GetListModel<UserFilterModel>
                     {
-                        var users = await userRepository.GetAsync(new GetListModel<UserFilterModel>
+                        Filter = new UserFilterModel
                         {
-                            Filter = new UserFilterModel
-                            {
-                                Email = email
-                            }
-                        });
-
-                        if (users.TotalCount > 0)
-                            context.AddFailure("Пользователь с таким Email уже зарегистрирован");
+                            Email = email
+                        }
                     });
-            });
 
+                    if (users.TotalCount > 0)
+                        context.AddFailure($"Пользователь с таким Email уже зарегистрирован");
+                });
+
+            RuleFor(x => x.FullName)
+                .NotEmpty()
+                .MinimumLength(2)
+                .MaximumLength(100);
         }
     }
 }
