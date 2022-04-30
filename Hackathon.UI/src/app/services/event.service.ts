@@ -1,28 +1,29 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
-import {BaseCollectionModel} from "../models/BaseCollectionModel";
-import {CreateEvent} from "../models/Event/CreateEvent";
-import {UpdateEvent} from "../models/Event/UpdateEvent";
-import {BaseCreateResponse} from "../models/BaseCreateResponse";
-import {EventStatus} from "../models/EventStatus";
-import {AuthService} from "./auth.service";
-import {GetFilterModel} from "../models/GetFilterModel";
-import {EventFilterModel} from "../models/Event/EventFilterModel";
-import {EventModel} from "../models/Event/EventModel";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from "../../environments/environment";
+import { Observable } from "rxjs";
+import { BaseCollectionModel } from "../models/BaseCollectionModel";
+import { CreateEvent } from "../models/Event/CreateEvent";
+import { UpdateEvent } from "../models/Event/UpdateEvent";
+import { BaseCreateResponse } from "../models/BaseCreateResponse";
+import { EventStatus } from "../models/EventStatus";
+import { AuthService } from "./auth.service";
+import { GetFilterModel } from "../models/GetFilterModel";
+import { EventFilterModel } from "../models/Event/EventFilterModel";
+import { EventModel } from "../models/Event/EventModel";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class EventService {
+  private api: string = environment.api;
+  private storage: Storage = sessionStorage;
 
-  api = environment.api;
-  storage = sessionStorage;
-
-  constructor(private http: HttpClient, private authService: AuthService) {
-
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+    ) {
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
 
@@ -31,69 +32,67 @@ export class EventService {
     });
   }
 
-  getAll(params?:GetFilterModel<EventFilterModel>):Observable<BaseCollectionModel<EventModel>>{
-
-    let endpoint = this.api+'/event/list';
-    return this.http.post<BaseCollectionModel<EventModel>>(endpoint, params);
+  public getAll(params?:GetFilterModel<EventFilterModel>): Observable<BaseCollectionModel<EventModel>> {
+    return this.http.post<BaseCollectionModel<EventModel>>(`${this.api}/event/list`, params);
   }
 
-  getById(eventId:number){
-    return this.http.get<EventModel>(this.api+'/Event/'+eventId);
+  public getById(eventId:number): Observable<EventModel> {
+    return this.http.get<EventModel>(`${this.api}/event/${eventId}`);
   }
 
-  create(createEvent:CreateEvent):Observable<BaseCreateResponse>{
-    return this.http.post<BaseCreateResponse>(this.api + "/Event",createEvent);
+  public create(createEvent:CreateEvent): Observable<BaseCreateResponse> {
+    return this.http.post<BaseCreateResponse>(`${this.api}/event`, createEvent);
   }
 
-  update(updateEvent:UpdateEvent):Observable<any> {
-    return this.http.put<any>(this.api + "/Event", updateEvent);
+  public update(updateEvent:UpdateEvent): Observable<any> {
+    return this.http.put<any>(`${this.api}/event`, updateEvent);
   }
 
-  remove(eventId:number){
-    return this.http.delete(`${this.api}/Event/${eventId}`);
+  public remove(eventId:number): Observable<any> {
+    return this.http.delete(`${this.api}/event/${eventId}`);
   }
 
-  setStatus(eventId:number, status:EventStatus) {
-    return this.http.put(this.api + "/Event/SetStatus", {
+  public setStatus(eventId:number, status:EventStatus) {
+    return this.http.put(`${this.api}/event/SetStatus`, {
       id: eventId,
       status: status
     });
   }
 
-  join(eventId:number){
+  public join(eventId:number){
     return this.http.post(`${this.api}/Event/${eventId}/Join`, {})
   }
 
-  leave(eventId:number){
+  public leave(eventId:number){
     return this.http.post(`${this.api}/Event/${eventId}/leave`, {});
   }
 
-  isCanJoinToEvent(event:EventModel) {
+  public isCanJoinToEvent(event:EventModel): boolean {
     let userId = this.authService.getUserId();
     return userId !== undefined
       && !this.isAlreadyInEvent(event, userId)
       && event.status == EventStatus.Published
   }
 
-  isCanDeleteEvent(event:EventModel) {
+  public isCanDeleteEvent(event:EventModel): boolean {
     let userId = this.authService.getUserId();
     return userId !== undefined
       && this.isEventOwner(event)
       && event.status == EventStatus.Draft
   }
 
-  isCanFinishEvent(event:EventModel){
+  public isCanFinishEvent(event:EventModel): boolean {
     return this.isEventOwner(event)
       && event.status != EventStatus.Finished
       && event.status != EventStatus.Draft
   }
 
-  isCanPublishEvent(event:EventModel){
+  public isCanPublishEvent(event:EventModel): boolean {
     return this.isEventOwner(event)
       && event.status == EventStatus.Draft;
   }
 
-  isCanStartEvent(event:EventModel){
+  public isCanStartEvent(event:EventModel): boolean {
     //TODO: check members count
     //TODO: check teams count (auto & manual added)
 
@@ -101,28 +100,27 @@ export class EventService {
       && event.status == EventStatus.Published;
   }
 
-  isCanLeave(event:EventModel)
-  {
+  public isCanLeave(event:EventModel): boolean {
     let userId = this.authService.getUserId();
     return event.status != EventStatus.Finished
       && userId !== undefined
       && this.isAlreadyInEvent(event, userId);
   }
 
-  isCanAddTeam(event:EventModel){
+  public isCanAddTeam(event:EventModel): boolean {
     return this.isEventOwner(event)
       && event.status == EventStatus.Published
       && !event.isCreateTeamsAutomatically
   }
 
-  isAlreadyInEvent(event:EventModel, userId:number){
+  public isAlreadyInEvent(event:EventModel, userId:number): boolean {
     return event.teamEvents?.filter(t => t.team
         .users?.filter(u => u.id == userId)
         .length > 0
       ).length > 0;
   }
 
-  isEventOwner(event:EventModel){
+  public isEventOwner(event:EventModel): boolean {
     return event.userId == this.authService.getUserId();
   }
 

@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {TeamModel} from "../../../models/Team/TeamModel";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Actions} from "../../../common/Actions";
 import {ProblemDetails} from "../../../models/ProblemDetails";
 import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
 import {MatSnackBar} from "@angular/material/snack-bar";

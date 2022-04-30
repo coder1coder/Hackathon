@@ -30,10 +30,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public form = new FormGroup({});
+  public dateFormat: string = 'yyyy-MM-DDTHH:mm';
+  public minDate = moment(new Date()).format(this.dateFormat).toString();
 
   private eventId?: number;
   private event?: EventModel;
-  private dateFormat: string = 'yyyy-MM-DDTHH:mm';
   private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
   constructor(
@@ -50,7 +51,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-     this.initForm();
+    this.initForm();
   }
 
   ngAfterViewInit(): void {

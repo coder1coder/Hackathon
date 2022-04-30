@@ -1,15 +1,18 @@
-import {Component, ViewChild} from '@angular/core';
-import {EventService} from "../../../services/event.service";
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {EventStatus, EventStatusTranslator} from "../../../models/EventStatus";
-import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {FormControl, FormGroup} from "@angular/forms";
-import {EventFilterModel} from "../../../models/Event/EventFilterModel";
-import {GetFilterModel} from "../../../models/GetFilterModel";
-import {EventModel} from 'src/app/models/Event/EventModel';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EventService } from "../../../services/event.service";
+import { BaseCollectionModel } from "../../../models/BaseCollectionModel";
+import { EventStatus, EventStatusTranslator}  from "../../../models/EventStatus";
+import { BaseTableListComponent } from "../../BaseTableListComponent";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { EventFilterModel } from "../../../models/Event/EventFilterModel";
+import { GetFilterModel } from "../../../models/GetFilterModel";
+import { EventModel } from 'src/app/models/Event/EventModel';
 import * as moment from "moment/moment";
-import {RouterService} from "../../../services/router.service";
-import {MatSelect} from "@angular/material/select";
+import { RouterService } from "../../../services/router.service";
+import { MatSelect } from "@angular/material/select";
+import { MatDialog } from '@angular/material/dialog';
+import {SnackService} from "../../../services/snack.service";
+import {CustomDialog, ICustomDialogData} from "../../custom/custom-dialog/custom-dialog.component";
 
 @Component({
   selector: 'event-list',
@@ -17,34 +20,36 @@ import {MatSelect} from "@angular/material/select";
   styleUrls: ['./event.list.component.scss']
 })
 
-export class EventListComponent extends BaseTableListComponent<EventModel>{
+export class EventListComponent extends BaseTableListComponent<EventModel> implements OnInit {
+  public filterForm: FormGroup = this.fb.group({});
+  public eventStatusTranslator = EventStatusTranslator;
+  public eventModel = EventModel;
+  public moment = moment;
 
-  EventStatusTranslator = EventStatusTranslator;
-  EventModel = EventModel;
-  moment = moment
-
-  filterForm = new FormGroup({
-    name: new FormControl(),
-    startFrom: new FormControl(),
-    startTo: new FormControl(),
-    statuses: new FormControl(),
-  })
+  private dateFormat = 'DD.MM.YYYY HH:mm'
+  private eventStatus = EventStatus;
 
   @ViewChild('statuses') statusesSelect!: MatSelect;
 
-  override getDisplayColumns(): string[] {
+  public override getDisplayColumns(): string[] {
     return ['id', 'name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
   }
 
   constructor(
-    public eventsService: EventService,
-    public router: RouterService
+    private eventsService: EventService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private snackbar: SnackService,
+    public serviceRouter: RouterService
   ) {
     super(EventListComponent.name);
   }
 
-  override fetch(){
+  ngOnInit(): void {
+    this.initFilterForm();
+  }
 
+  override fetch(){
     let params = new GetFilterModel<EventFilterModel>();
 
     if (this.pageSettings != undefined)
@@ -52,13 +57,10 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
       params.Page = this.pageSettings.pageIndex+1;
       params.PageSize = this.pageSettings.pageSize;
     }
-
     params.Filter = new EventFilterModel();
     params.Filter = this.filterForm.value;
-
     params.Filter.excludeOtherUsersDraftedEvents = true;
-
-      this.eventsService.getAll(params)
+    this.eventsService.getAll(params)
       .subscribe({
         next: (r: BaseCollectionModel<EventModel>) =>  {
           this.items = r.items;
@@ -68,8 +70,11 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
       });
   }
 
-  statusesToggleAll(event:any){
+  public isEventOwner(event: EventModel): boolean {
+    return this.eventsService.isEventOwner(event) && this.eventStatus.Draft === event.status;
+  }
 
+  public statusesToggleAll(event:any): void {
     if (event.target.tag == 0 || event.target.tag == undefined)
     {
       let all = this.statusesSelect?.options.map(x=>x.value);
@@ -81,26 +86,62 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
     }
   }
 
-  clearFilter(){
+  public clearFilter(): void {
     this.filterForm.reset();
     this.fetch();
   }
 
-  rowClick(event: EventModel){
-    if (event.status == EventStatus.Draft)
-      this.router.Events.Edit(event.id);
-    else
-      this.router.Events.View(event.id);
+  public rowClick(event: EventModel): void {
+    this.serviceRouter.Events.View(event.id);
   }
 
-  getEventStatus(status:EventStatus){
-    return EventStatus[status].toLowerCase();
-  }
-
-  getAllEventStatuses():any[]{
+  public getAllEventStatuses(): any[]{
     return Object
       .keys(EventStatus)
       .filter(k => !isNaN(Number(k)))
       .map(x => Number(x));
+  }
+
+  public edit(event: EventModel): void {
+    this.serviceRouter.Events.Edit(event.id);
+  }
+
+  public remove(event: EventModel): void {
+    let data: ICustomDialogData = {
+      header: 'Удаление события',
+      content: `Вы уверены, что хотите удалить событие: ${event.name}?<br> Это действие будет невозможно отменить.`,
+      acceptButtonText: `Удалить`,
+      acceptButtonColor: `warn`
+    };
+
+    this.dialog.open(CustomDialog, { data })
+      .afterClosed()
+      .subscribe(x => {
+        if (x) {
+          this.eventsService
+            .remove(event.id)
+            .subscribe({
+              next: () =>  {
+                this.snackbar.open(`Событие ${event.name} успешно удалено`);
+                this.fetch();
+                },
+              error: () =>
+                this.snackbar.open('Ошибка удаления')
+        });
+      }
+    });
+  }
+
+  public dateFormatter(date: Date): string {
+    return moment(date).local().format(this.dateFormat)
+  }
+
+  private initFilterForm(): void {
+    this.filterForm = this.fb.group({
+      name: [null],
+      startFrom: [null],
+      startTo: [null],
+      statuses: [null],
+    })
   }
 }
