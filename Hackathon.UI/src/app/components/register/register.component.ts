@@ -46,14 +46,16 @@ export class RegisterComponent extends ComponentBase implements OnInit {
     };
 
     this.authService.register(createUser)
-      .pipe(debounceTime(1000))
-      .subscribe(res =>{
-        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
-        this.router.navigate(['/login']);
-      },
-      (error) => {
-        let problemDetails: ProblemDetails = <ProblemDetails>error.error;
-        this.snackbar.open(problemDetails.detail);
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) =>{
+          this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          this.snackbar.open(problemDetails.detail);
+        }
       });
   }
 
