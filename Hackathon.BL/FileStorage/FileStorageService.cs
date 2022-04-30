@@ -74,7 +74,7 @@ namespace Hackathon.BL.FileStorage
             var fileInfo = await _fileStorageRepository.Get(storageFileId);
 
             if (fileInfo is null)
-                return null;
+                throw new FileNotNullException("Файл не может быть пустым.");
 
             using var storageFile = await _s3Client.GetObjectAsync(
                 fileInfo.BucketName,
@@ -92,7 +92,10 @@ namespace Hackathon.BL.FileStorage
             var fileInfo = await _fileStorageRepository.Get(storageFileId);
 
             if (fileInfo is null)
-                throw new FileInfoNotFoundException("Не найдена информаци о файле в бд.");
+            {
+                _logger.LogError($"Файл с индентификатором {storageFileId} не найден в бд.");
+                throw new FileInfoNotFoundException($"Файл с индентификатором {storageFileId} не найден в бд.");
+            }
 
             await _fileStorageRepository.Remove(fileInfo.Id);
 

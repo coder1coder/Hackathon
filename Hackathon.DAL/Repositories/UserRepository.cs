@@ -136,17 +136,16 @@ namespace Hackathon.DAL.Repositories
         }
 
         /// <inheritdoc cref="IUserRepository.UpdateProfileImageAsync(long, Guid)"/>
-        public async Task<UserModel> UpdateProfileImageAsync(long userId, Guid ProfileImageId)
+        public async Task UpdateProfileImageAsync(long userId, Guid profileImageId)
         {
             var entity = await _dbContext.Users
                 .FirstOrDefaultAsync(x=> x.Id == userId);
 
             if (entity != null)
             {
-                entity.ProfileImageId = ProfileImageId; 
+                entity.ProfileImageId = profileImageId; 
                 await _dbContext.SaveChangesAsync();
             }
-            return entity != null ? _mapper.Map<UserEntity, UserModel>(entity) : null;
         }
     }
 }

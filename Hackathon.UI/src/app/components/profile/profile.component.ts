@@ -30,6 +30,8 @@ export class ProfileComponent implements OnInit {
     ) {
   }
 
+  readonly maxFileSize : number = 2048;
+
   ngOnInit(): void {
     this.initForm();
 
@@ -72,6 +74,11 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  private convertBytesToKiloByte(size:number):number
+  {
+    return size/1024;
+  }
+
   public selectFile(event:any) {
     if ( !(event?.target?.files?.length > 0) )
       return;
@@ -80,20 +87,20 @@ export class ProfileComponent implements OnInit {
 
     if (this.isFileImage(file) == false)
     {
-      this.snackBar.open('Файл не является картинкой.');
+      this.snackBar.open('Файл не является картинкой');
       return;
     }
 
-    if (file.size/1024 > 2048)
+    if (this.convertBytesToKiloByte(file.size) > this.maxFileSize)
     {
-      this.snackBar.open('Максимальный объем файла 2МБ.');
+      this.snackBar.open('Максимальный объем файла 2МБ');
       return;
     }
 
     this.userService.setProfileImage(file)
     .pipe(
-      mergeMap( (res : UserModel) => {
-        return this.userService.getProfileImage(res.profileImageId!)
+      mergeMap( (res : string) => {
+        return this.userService.getProfileImage(res)
         .pipe(
           map((res: ArrayBuffer) => {
             return this.getSafeUrlFromByteArray(res);

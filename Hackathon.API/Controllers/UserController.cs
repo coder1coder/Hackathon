@@ -86,12 +86,13 @@ namespace Hackathon.API.Controllers
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
             if (file is null)
-                return BadRequest($"{nameof(file)} cannot be null.");
+                return BadRequest($"Файл не может быть пустым.");
 
             await using var stream = file.OpenReadStream();
 
-            var result = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
-            return Ok(_mapper.Map<UserModel, UserResponse>(result));
+            var newProfileImageId = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
+            
+            return Ok(newProfileImageId);
         }
     }
 }

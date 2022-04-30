@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.FileStorage;
@@ -20,7 +20,7 @@ public class FileStorageController: BaseController
     public async Task<IActionResult> Upload([FromRoute] int bucket, IFormFile file)
     {
         if (file is null)
-            return BadRequest($"{nameof(file)} cannot be null.");
+            return BadRequest($"Файл не может быть пустым.");
 
         await using var stream = file.OpenReadStream();
         return Ok(await _fileStorageService.Upload(stream, (Bucket)bucket, file.FileName, UserId));

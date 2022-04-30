@@ -40,11 +40,11 @@ export class UserService {
     return this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' });
   }
 
-  public setProfileImage(file: File): Observable<UserModel> {
+  public setProfileImage(file: File): Observable<string> {
     const formData = new FormData();
     formData.append("file", file);
 
-    return this.http.post<UserModel>(this.api+'/User/uploadProfileImage', formData, {
+    return this.http.post<string>(this.api+'/User/uploadProfileImage', formData, {
       headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
     })
   }

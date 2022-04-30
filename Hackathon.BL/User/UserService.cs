@@ -164,16 +164,18 @@ namespace Hackathon.BL.User
         }
 
         /// <inheritdoc cref="IUserService.UploadProfileImageAsync(long, string, Stream)"/>
-        public async Task<UserModel> UploadProfileImageAsync(long userId, string filename, Stream stream)
+        public async Task<Guid> UploadProfileImageAsync(long userId, string filename, Stream stream)
         {
+            var existedUser = await GetAsync(userId);
+
             var uploadResult = await _fileStorageService.Upload(stream, Bucket.Avatars, filename, userId);
 
-            var existedUser = await GetAsync(userId);
             if (existedUser.ProfileImageId is not null) { 
                 await _fileStorageService.Delete(existedUser.ProfileImageId.Value);
             }
 
-            return await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);
+            await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);
+            return uploadResult.Id;
         }
 
         private static class AppClaimTypes
