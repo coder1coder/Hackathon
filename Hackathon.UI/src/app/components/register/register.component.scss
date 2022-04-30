@@ -64,3 +64,9 @@
     &.error { color: red; }
   }
 }
+
+.password {
+  &__icon {
+    cursor: pointer;
+  }
+}

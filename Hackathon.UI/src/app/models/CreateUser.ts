@@ -1,7 +1,7 @@
-export class CreateUser
+export interface ICreateUser
 {
-  userName!: string;
-  password!: string;
-  fullname: string | undefined;
-  email: string | undefined;
+  userName: string;
+  password: string;
+  fullname: string;
+  email:    string;
 }
