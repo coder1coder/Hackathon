@@ -7,6 +7,7 @@ export class RouterService
   constructor(
     public Events: EventsRouter,
     public Teams:TeamsRouter,
+    public Users:UsersRouter,
     public Profile:ProfileRouter,
     public Notifications: NotificationsRouter) {
   }
@@ -29,6 +30,13 @@ export class TeamsRouter
   New = (eventId?:number) => this.router.navigate(["/teams/new"], { queryParams: { eventId: eventId } })
   View = (teamId:number) => this.router.navigateByUrl(`team/${teamId}`)
   List = () => this.router.navigate([`teams`])
+}
+
+@Injectable({ providedIn: 'root' })
+export class UsersRouter
+{
+  constructor(protected router: Router) {}
+  View = (userId:number) => this.router.navigateByUrl(`users/${userId}`)
 }
 
 @Injectable({ providedIn: 'root' })

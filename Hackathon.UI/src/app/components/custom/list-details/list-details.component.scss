@@ -1,0 +1,13 @@
+table {
+  tr > td {
+    padding-bottom: 10px;
+  }
+
+  tr > td:first-child{
+    color: #9FA2B4;
+
+    width: 1px;
+    white-space: nowrap;
+    padding-right: 2em;
+  }
+}
