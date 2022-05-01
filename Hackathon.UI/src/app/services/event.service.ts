@@ -11,7 +11,6 @@ import {AuthService} from "./auth.service";
 import {GetFilterModel} from "../models/GetFilterModel";
 import {EventFilterModel} from "../models/Event/EventFilterModel";
 import {EventModel} from "../models/Event/EventModel";
-import {User} from "../models/User";
 
 @Injectable({
   providedIn: 'root'

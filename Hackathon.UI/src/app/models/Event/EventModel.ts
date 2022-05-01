@@ -1,8 +1,8 @@
 import {ChangeEventStatusMessage} from "./ChangeEventStatusMessage";
-import {UserModel} from "../User/UserModel";
 import {TeamEventModel} from "../Team/TeamEventModel";
 import {EventStatus} from "../EventStatus";
 import {TeamModel} from "../Team/TeamModel";
+import {IUserModel} from "../User/IUserModel";
 
 export class EventModel {
   id!: number;
@@ -17,7 +17,7 @@ export class EventModel {
   changeEventStatusMessages!: ChangeEventStatusMessage[];
   status!: EventStatus;
   userId?: number;
-  user!: UserModel;
+  user!: IUserModel
   teamEvents: TeamEventModel[] = []
   stages: any[] = []
 
