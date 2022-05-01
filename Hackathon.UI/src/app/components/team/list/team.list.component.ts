@@ -43,6 +43,7 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
     let teamFilterModel = new TeamFilterModel();
     teamFilterModel.name =  this.form.get('teamName')?.value;
     teamFilterModel.owner =  this.form.get('owner')?.value;
+    teamFilterModel.hasOwner = true;
     teamFilterModel.QuantityUsersFrom =  this.form.get('QuantityUsersFrom')?.value;
     teamFilterModel.QuantityUsersTo =  this.form.get('QuantityUsersTo')?.value;
 

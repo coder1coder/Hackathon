@@ -1,12 +1,14 @@
 import '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreateUser } from 'src/app/models/CreateUser';
-import {AuthService} from "../../services/auth.service";
-import {Location} from "@angular/common";
-import {ProblemDetails} from "../../models/ProblemDetails";
-import {SnackService} from "../../services/snack.service";
+import { ICreateUser } from 'src/app/models/CreateUser';
+import { AuthService } from "../../services/auth.service";
+import { Location } from "@angular/common";
+import { ProblemDetails } from "../../models/ProblemDetails";
+import { SnackService } from "../../services/snack.service";
+import { ComponentBase } from 'src/app/common/base-components/base.component';
+import { auditTime, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -14,69 +16,73 @@ import {SnackService} from "../../services/snack.service";
   styleUrls: ['./register.component.scss'],
 })
 
-export class RegisterComponent implements AfterViewInit  {
+export class RegisterComponent extends ComponentBase implements OnInit {
+  public override form: FormGroup = this.fb.group({});
+  public welcomeText: string = 'Регистрация в системе Hackathon';
+  public isLoading: boolean = false;
+  public isPassFieldHide: boolean = true;
 
-  isLoading: boolean = false;
-  isPassFieldHide: boolean = true;
+  @ViewChild('login', {static: true}) inputLogin: ElementRef | undefined;
 
-  welcomeText: string = 'Регистрация в системе Hackathon';
-
-  registerForm = new FormGroup({
-    login: new FormControl(''),
-    password: new FormControl(''),
-    email: new FormControl(''),
-    fullname: new FormControl(''),
-  })
-
-  @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
-
-  constructor(private router: Router,
-              private location: Location,
-              private authService: AuthService,
-              private snackbar: SnackService) {
-  }
-  ngAfterViewInit(): void {
-
-    this.registerForm.controls['login'].setErrors({ 'incorrect': false });
-    this.registerForm.controls['password'].setErrors({ 'incorrect': false });
-    this.registerForm.controls['email'].setErrors({ 'incorrect': false });
-    this.registerForm.controls['fullname'].setErrors({ 'incorrect': false });
-
-    setTimeout((_: any) => {
-      this.inputLogin?.nativeElement.focus();
-    })
+  constructor(
+    private router: Router,
+    private location: Location,
+    private authService: AuthService,
+    private snackbar: SnackService,
+    private fb: FormBuilder) {
+    super();
   }
 
-  signUp(){
-    let createUser = new CreateUser();
-    createUser.userName = this.registerForm.get("login")?.value;
-    createUser.password = this.registerForm.get("password")?.value;
-    createUser.email = this.registerForm.get("email")?.value;
-    createUser.fullname = this.registerForm.get("fullname")?.value;
+  ngOnInit(): void {
+    this.initForm();
+  }
+
+  public signUp(): void {
+    const createUser: ICreateUser = {
+      userName: this.getFormControl('login').value,
+      password: this.getFormControl('password').value,
+      email: this.getFormControl('email').value,
+      fullname: this.getFormControl('fullname').value
+    };
 
     this.authService.register(createUser)
-      .subscribe(r=>{
-        this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${r.id}`);
-        setTimeout(()=>{
-          this.router.navigate(['/login']);
-        },1000);
-      },
-        error=>{
-
-          let problemDetails: ProblemDetails = <ProblemDetails>error.error;
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) =>{
+          this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
+        },
+        error: (err) => {
+          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
           this.snackbar.open(problemDetails.detail);
-
-        });
+        },
+        complete: () => {
+          setTimeout(()=>{
+            this.router.navigate(['/login']);
+          }, 1000);
+        }
+      });
   }
 
-  goBack(){
+  public goBack(): void {
     this.location.back();
   }
 
-  setLoading(isLoading:boolean){
-    setTimeout(()=>{
-      this.isLoading = isLoading;
-    })
+  public isValid(): boolean {
+    return this.form.valid;
   }
 
+  private initForm(): void {
+    this.form = this.fb.group({
+      login: [null, [Validators.required]],
+      password: [null, [Validators.required]],
+      email: [null, [Validators.required, Validators.email]],
+      fullname: [null, [Validators.required]],
+    });
+
+    this.form.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.isValid();
+      })
+  }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateUpdateEventModel)"/>
+        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createUpdateEventModel)
         {
             var eventEntity = _mapper.Map<EventEntity>(createUpdateEventModel);
@@ -57,8 +56,8 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<EventModel>(eventEntity);
         }
 
-        /// <inheritdoc cref="IEventRepository.GetAsync(GetListModel{T})"/>
-        public async Task<BaseCollectionModel<EventModel>> GetAsync(GetListModel<EventFilterModel> getListModel)
+        /// <inheritdoc cref="IEventRepository.GetAsync(long, GetListModel{EventFilterModel})"/>
+        public async Task<BaseCollectionModel<EventModel>> GetAsync(long userId, GetListModel<EventFilterModel> getListModel)
         {
             var query = _dbContext.Events
                 .AsNoTracking()
@@ -75,8 +74,12 @@ namespace Hackathon.DAL.Repositories
                 if (!string.IsNullOrWhiteSpace(getListModel.Filter.Name))
                     query = query.Where(x => x.Name.ToLower().Contains(getListModel.Filter.Name));
 
-                if (getListModel.Filter.Statuses != null && getListModel.Filter.Statuses.Any())
+                if (getListModel.Filter.Statuses != null)
                     query = query.Where(x => getListModel.Filter.Statuses.Contains(x.Status));
+                
+                if (getListModel.Filter.ExcludeOtherUsersDraftedEvents)
+                    query = query.Where(x =>
+                        !(x.UserId != userId && x.Status == EventStatus.Draft));
 
                 if (getListModel.Filter.StartFrom.HasValue)
                 {
@@ -136,7 +139,7 @@ namespace Hackathon.DAL.Repositories
                 .ToArrayAsync();
         }
 
-        /// <inheritdoc cref="IEventRepository.UpdateAsync(IEnumerable{EventModel})"/>
+        /// <inheritdoc cref="IEventRepository.UpdateAsync(UpdateEventModel)"/>
         public async Task UpdateAsync(UpdateEventModel updateEventModel)
         {
             var eventForUpdate = _mapper.Map<EventEntity>(updateEventModel);

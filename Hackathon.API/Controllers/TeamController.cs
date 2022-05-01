@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
 using Hackathon.API.Abstraction;
@@ -16,6 +17,9 @@ namespace Hackathon.API.Controllers
         private readonly IMapper _mapper;
         private readonly ITeamService _teamService;
 
+        /// <summary>
+        /// Команды
+        /// </summary>
         public TeamController(
             ITeamService teamService, IMapper mapper)
         {
@@ -60,7 +64,13 @@ namespace Hackathon.API.Controllers
             return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
         }
 
+        /// <summary>
+        /// Получить команду в которой состоит авторизованный пользователь
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(nameof(My))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(TeamModel), (int)HttpStatusCode.OK)]
         public async Task<TeamModel> My()
             => await _teamService.GetUserTeam(UserId);
     }

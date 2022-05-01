@@ -1,21 +1,21 @@
-import {AfterViewInit, Component} from "@angular/core";
-import {FormControl, FormGroup} from "@angular/forms";
-import {EventService} from "../../../services/event.service";
-import {ProblemDetails} from "../../../models/ProblemDetails";
-import {ActivatedRoute} from "@angular/router";
-import {CreateEvent} from "../../../models/Event/CreateEvent";
-import {UpdateEvent} from "../../../models/Event/UpdateEvent";
-import {EventStatusTranslator, EventStatus} from "src/app/models/EventStatus";
-import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {EventNewStatusDialogComponent} from "../status/event-new-status-dialog.component";
-import {SnackService} from "../../../services/snack.service";
-import {Observable} from "rxjs";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { EventService } from "../../../services/event.service";
+import { ProblemDetails } from "../../../models/ProblemDetails";
+import { ActivatedRoute } from "@angular/router";
+import { CreateEvent } from "../../../models/Event/CreateEvent";
+import { UpdateEvent } from "../../../models/Event/UpdateEvent";
+import { EventStatusTranslator, EventStatus } from "src/app/models/EventStatus";
+import { ChangeEventStatusMessage } from "src/app/models/Event/ChangeEventStatusMessage";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
+import { EventNewStatusDialogComponent } from "../status/event-new-status-dialog.component";
+import { SnackService } from "../../../services/snack.service";
+import { Observable } from "rxjs";
 import * as moment from "moment/moment";
-import {EventModel} from "../../../models/Event/EventModel";
-import {AuthService} from "../../../services/auth.service";
-import {RouterService} from "../../../services/router.service";
+import { EventModel } from "../../../models/Event/EventModel";
+import { AuthService } from "../../../services/auth.service";
+import { RouterService } from "../../../services/router.service";
 
 @Component({
   selector: 'event-form',
@@ -23,28 +23,18 @@ import {RouterService} from "../../../services/router.service";
   styleUrls: ['./event.form.component.scss']
 })
 
-export class EventFormComponent implements AfterViewInit {
+export class EventFormComponent implements OnInit, AfterViewInit {
+  public editMode: boolean = false;
+  public isLoading: boolean = false;
+  public EventStatusTranslator = EventStatusTranslator;
+  public displayedColumns: string[] = ['status', 'message', 'actions'];
+  public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  public form = new FormGroup({});
 
-  eventId?:number
-  event?:EventModel
-  editMode:boolean = false
-
-  isLoading: boolean = false;
-  displayedColumns: string[] = ['status', 'message', 'actions'];
-  eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
-  eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
-  EventStatusTranslator = EventStatusTranslator;
-
-  form = new FormGroup({
-    name: new FormControl(''),
-    start: new FormControl(this.getEventStartDefault()),
-    memberRegistrationMinutes: new FormControl('10'),
-    developmentMinutes: new FormControl('10'),
-    teamPresentationMinutes: new FormControl('10'),
-    maxEventMembers: new FormControl('50'),
-    minTeamMembers: new FormControl('2'),
-    isCreateTeamsAutomatically: new FormControl(false),
-  })
+  private eventId?: number;
+  private event?: EventModel;
+  private dateFormat: string = 'yyyy-MM-DDTHH:mm';
+  private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -52,65 +42,29 @@ export class EventFormComponent implements AfterViewInit {
     private authService: AuthService,
     private snackBar: SnackService,
     private router: RouterService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private fb: FormBuilder
+    ) {
     this.eventId = activateRoute.snapshot.params['eventId'];
     this.editMode = this.eventId !== undefined && !isNaN(Number(this.eventId));
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+     this.initForm();
+  }
 
+  ngAfterViewInit(): void {
     if (this.editMode)
       this.fetch();
-
   }
 
-  getEventStartDefault(){
-    let now = new Date();
-    const offset = new Date().getTimezoneOffset() * 1000 * 60
-    now.setHours( now.getHours() + 1 );
-    now.setMilliseconds(now.getMilliseconds() - offset);
-    return (new Date(now.getTime())).toISOString().slice(0, -8);
-  }
-
-  fetch(){
-
-    if (this.eventId == undefined)
-      return;
-
-    this.eventService.getById(this.eventId)
-      .subscribe(r=>{
-
-          this.event = r;
-
-          this.form = new FormGroup({
-            id: new FormControl(r.id),
-            name: new FormControl(r.name),
-            start: new FormControl(moment(r.start).local().format('yyyy-MM-DDTHH:mm')),
-            memberRegistrationMinutes: new FormControl(r.memberRegistrationMinutes),
-            developmentMinutes: new FormControl(r.developmentMinutes),
-            teamPresentationMinutes: new FormControl(r.teamPresentationMinutes),
-            maxEventMembers: new FormControl(r.maxEventMembers),
-            minTeamMembers: new FormControl(r.minTeamMembers),
-            isCreateTeamsAutomatically: new FormControl(r.isCreateTeamsAutomatically),
-            userId: new FormControl(r.userId)
-          })
-
-          this.eventStatusDataSource.data = r.changeEventStatusMessages;
-
-        },
-        error=>{
-          let problemDetails: ProblemDetails = <ProblemDetails>error.error;
-          this.snackBar.open(problemDetails.detail);
-        });
-  }
-
-  isCanPublish(){
+  public isCanPublish(): boolean {
     return this.editMode
       && this.event !== undefined
       && this.eventService.isCanPublishEvent(this.event);
   }
 
-  setPublish(){
+  public setPublish(): void {
     this.eventService.setStatus(this.eventId!, EventStatus.Published)
       .subscribe({
         next: (_) =>  {
@@ -123,47 +77,43 @@ export class EventFormComponent implements AfterViewInit {
       });
   }
 
-  submit(){
-    let request:Observable<any>;
+  public submit(): void {
+    let request: Observable<any>;
 
-    if (!this.editMode)
-    {
-      let event = new CreateEvent();
+    if (!this.editMode) {
+      let event: CreateEvent = {
+        name: this.form.get('name')?.value,
+        developmentMinutes: this.form.get('developmentMinutes')?.value,
+        isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
+        maxEventMembers: this.form.get('maxEventMembers')?.value,
+        memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
+        minTeamMembers: this.form.get('minTeamMembers')?.value,
+        start: this.form.get('start')?.value,
+        teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
+        changeEventStatusMessages: this.eventStatusDataSource.data,
+      };
 
-      event.name = this.form.get('name')?.value;
-      event.developmentMinutes = this.form.get('developmentMinutes')?.value;
-      event.isCreateTeamsAutomatically = this.form.get('isCreateTeamsAutomatically')?.value;
-      event.maxEventMembers = this.form.get('maxEventMembers')?.value;
-      event.memberRegistrationMinutes = this.form.get('memberRegistrationMinutes')?.value;
-      event.minTeamMembers = this.form.get('minTeamMembers')?.value;
-      event.start = this.form.get('start')?.value;
-      event.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
-
-      event.changeEventStatusMessages = this.eventStatusDataSource.data;
-      request = this.eventService.create(event)
-
+      request = this.eventService.create(event);
     } else {
-      let event = new UpdateEvent();
+      let event: UpdateEvent = {
+        id: Number(this.event?.id),
+        name: this.form.get('name')?.value,
+        developmentMinutes: this.form.get('developmentMinutes')?.value,
+        isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
+        maxEventMembers: this.form.get('maxEventMembers')?.value,
+        memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
+        minTeamMembers: this.form.get('minTeamMembers')?.value,
+        start: this.form.get('start')?.value,
+        teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
+        userId: Number(this.event?.userId),
+        changeEventStatusMessages: this.eventStatusDataSource.data,
+      };
 
-      event.id = this.form.get('id')?.value;
-      event.name = this.form.get('name')?.value;
-      event.developmentMinutes = this.form.get('developmentMinutes')?.value;
-      event.isCreateTeamsAutomatically = this.form.get('isCreateTeamsAutomatically')?.value;
-      event.maxEventMembers = this.form.get('maxEventMembers')?.value;
-      event.memberRegistrationMinutes = this.form.get('memberRegistrationMinutes')?.value;
-      event.minTeamMembers = this.form.get('minTeamMembers')?.value;
-      event.start = this.form.get('start')?.value;
-      event.teamPresentationMinutes = this.form.get('teamPresentationMinutes')?.value;
-      event.userId = this.form.get('userId')?.value;
-
-      event.changeEventStatusMessages = this.eventStatusDataSource.data;
-
-      request = this.eventService.update(event)
+      request = this.eventService.update(event);
     }
 
     request.subscribe({
-      next: r=>{
-
+      next: r => {
         let eventId = (this.editMode) ? this.eventId : r.id;
 
         if (this.editMode)
@@ -175,42 +125,31 @@ export class EventFormComponent implements AfterViewInit {
             this.snackBar.open(`Новое событие добавлено`)
           )
       },
-      error: err=>{
+      error: err => {
         let problemDetails: ProblemDetails = <ProblemDetails>err.error;
         this.snackBar.open(problemDetails.detail);
       }
     });
   }
 
-  addStatus() {
-    let filteredEventStatusValues = this.eventStatusValues;
-
-    if(this.eventStatusDataSource.data.length > 0) {
-      filteredEventStatusValues = filteredEventStatusValues.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
-    }
-
-    const createEventNewStatusDialog = this.dialog.open(EventNewStatusDialogComponent, {
+  public addStatus(): void {
+    let filteredEventStatusValues = this.getAvlStatutes();
+    this.dialog.open(EventNewStatusDialogComponent, {
       data: {
         statuses: filteredEventStatusValues
       }
+    })
+    .afterClosed()
+    .subscribe(result => {
+      let changeEventStatusMessage = <ChangeEventStatusMessage> result;
+      if(changeEventStatusMessage?.status !== undefined){
+        this.eventStatusDataSource.data.push(changeEventStatusMessage);
+        this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+      }
     });
-
-    createEventNewStatusDialog
-      .afterClosed()
-      .subscribe(result => {
-        let changeEventStatusMessage = <ChangeEventStatusMessage> result;
-        if(changeEventStatusMessage?.status !== undefined){
-          this.eventStatusDataSource.data.push(changeEventStatusMessage);
-          this.eventStatusDataSource.data = this.eventStatusDataSource.data;
-        }
-      });
   }
 
-  getEventStatus(status:EventStatus){
-    return EventStatus[status].toLowerCase();
-  }
-
-  deleteEvent(){
+  public deleteEvent(): void {
     this.eventService.remove(this.eventId!)
       .subscribe({
       next: (_) => {
@@ -224,21 +163,40 @@ export class EventFormComponent implements AfterViewInit {
     });
   }
 
-  removeStatus(item: ChangeEventStatusMessage) {
+  public removeStatus(item: ChangeEventStatusMessage): void {
     const index = this.eventStatusDataSource.data.indexOf(item);
     if (index > -1)
       this.eventStatusDataSource.data.splice(index, 1);
-    this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+      this.eventStatusDataSource.data = this.eventStatusDataSource.data;
   }
 
-  isCanDeleteEvent(){
+  public editStatus(item: ChangeEventStatusMessage): void {
+    let filteredEventStatusValues = this.getAvlStatutes();
+    filteredEventStatusValues.push(item.status);
+    this.dialog.open(EventNewStatusDialogComponent, {
+      data: {
+        statuses: filteredEventStatusValues,
+        editStatus: item
+      }
+    })
+    .afterClosed()
+    .subscribe(result => {
+      if(result) {
+        let updateStatusIndex = this.eventStatusDataSource.data.indexOf(item);
+        this.eventStatusDataSource.data[updateStatusIndex] = result;
+        this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+      }
+    });
+  }
+
+  public isCanDeleteEvent(): boolean {
     let userId = this.authService.getUserId();
     return this.eventId != null
       && userId !== null
       && this.event?.userId == userId
   }
 
-  isCanAddStatus() {
+  public isCanAddStatus(): boolean {
     let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
                             .map(x => x.status).sort(function(a, b) { return a - b; });
 
@@ -246,5 +204,55 @@ export class EventFormComponent implements AfterViewInit {
            Array.isArray(dataValues) &&
            this.eventStatusValues.length === dataValues.length &&
            this.eventStatusValues.every((val, index) => val === dataValues[index]);
+  }
+
+  private fetch(): void {
+    if (this.eventId == undefined)
+      return;
+
+    this.eventService.getById(this.eventId)
+      .subscribe((res: EventModel) => {
+        this.event = res;
+        this.form.patchValue({
+          ...res,
+          start: moment(res.start).local().format(this.dateFormat)
+         });
+
+        this.eventStatusDataSource.data = res.changeEventStatusMessages;
+      },
+      (error) => {
+        let problemDetails: ProblemDetails = <ProblemDetails>error.error;
+        this.snackBar.open(problemDetails.detail);
+      });
+  }
+
+  private initForm(): void {
+    this.form = this.fb.group({
+      name: [null],
+      start: [this.getEventStartDefault()],
+      memberRegistrationMinutes: [10],
+      developmentMinutes: [10],
+      teamPresentationMinutes: [10],
+      maxEventMembers: [50],
+      minTeamMembers: [2],
+      isCreateTeamsAutomatically: [false]
+    });
+  }
+
+  private getEventStartDefault(): string {
+    let now = new Date();
+    const offset = new Date().getTimezoneOffset() * 1000 * 60
+    now.setHours( now.getHours() + 1 );
+    now.setMilliseconds(now.getMilliseconds() - offset);
+    return (new Date(now.getTime())).toISOString().slice(0, -8);
+  }
+
+  private getAvlStatutes(): (string | EventStatus)[] {
+    let avlStatutes = this.eventStatusValues;
+    if(this.eventStatusDataSource.data.length > 0) {
+      avlStatutes = avlStatutes.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
+    }
+
+    return avlStatutes;
   }
 }

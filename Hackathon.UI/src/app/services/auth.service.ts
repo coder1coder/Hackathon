@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from "../../environments/environment";
 import { map } from "rxjs/operators";
-import { CreateUser } from '../models/CreateUser';
+import { ICreateUser}  from '../models/CreateUser';
 import { GetTokenResponse } from "../models/GetTokenResponse";
 import { BaseCreateResponse } from "../models/BaseCreateResponse";
 import { UserModel } from "../models/User/UserModel";
@@ -35,7 +35,7 @@ export class AuthService {
     return tokenInfo.expires >= Date.now();
   }
 
-  public login(login: string, password: string): Observable<GetTokenResponse> {
+  public login(login: string, password: string) : Observable<GetTokenResponse> {
     return this.http.post<GetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
       .pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
@@ -44,13 +44,8 @@ export class AuthService {
       }));
   }
 
-  public register(createUser:CreateUser): Observable<BaseCreateResponse> {
-    return this.http.post<BaseCreateResponse>(this.api+"/User", {
-      userName: createUser.userName,
-      password: createUser.password,
-      FullName: createUser.fullname,
-      email: createUser.email
-    })
+  public register(createUser: ICreateUser): Observable<BaseCreateResponse> {
+    return this.http.post<BaseCreateResponse>(this.api+"/User", createUser);
   }
 
   public logout(): void {
