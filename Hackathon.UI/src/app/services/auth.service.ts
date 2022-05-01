@@ -27,7 +27,7 @@ export class AuthService {
     ) {
   }
 
-  public isLoggedIn() : boolean {
+  public isLoggedIn(): boolean {
     let tokenInfo = this.getTokenInfo();
     if (tokenInfo == undefined)
       return false;
@@ -48,18 +48,18 @@ export class AuthService {
     return this.http.post<BaseCreateResponse>(this.api+"/User", createUser);
   }
 
-  public logout() : void {
+  public logout(): void {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
     this.authChange.emit(false);
   }
 
-  public getUserId() : number | undefined {
+  public getUserId(): number | undefined {
     let tokenInfo = this.getTokenInfo();
     return tokenInfo?.userId;
   }
 
-  public getCurrentUser() : Observable<UserModel> | null {
+  public getCurrentUser(): Observable<UserModel> | null {
     if (!this.isLoggedIn())
       return null;
 
@@ -94,11 +94,11 @@ export class AuthService {
       }));
   }
 
-  public signInByGoogle() : Promise<void | gapi.auth2.GoogleUser> {
+  public signInByGoogle(): Promise<void | gapi.auth2.GoogleUser> {
     return this.googleSigninService.signIn();
   }
 
-  public signOutByGoogle() : any {
+  public signOutByGoogle(): any {
     this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
     this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
     return this.googleSigninService.signOut();

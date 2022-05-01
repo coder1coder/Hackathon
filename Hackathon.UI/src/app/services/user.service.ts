@@ -1,10 +1,10 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
-import {BaseCollectionModel} from "../models/BaseCollectionModel";
-import {UserModel} from "../models/User/UserModel";
-import {PageSettings} from "../models/PageSettings";
+import { environment } from "../../environments/environment";
+import { Observable } from "rxjs";
+import { BaseCollectionModel } from "../models/BaseCollectionModel";
+import { UserModel } from "../models/User/UserModel";
+import { PageSettings } from "../models/PageSettings";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,10 @@ import {PageSettings} from "../models/PageSettings";
 
 export class UserService {
 
-  api = environment.api;
-  storage = sessionStorage;
+  private api: string = environment.api;
+  private storage: Storage = sessionStorage;
 
   constructor(private http: HttpClient) {
-
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
 
@@ -25,18 +24,28 @@ export class UserService {
     });
   }
 
-  getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<UserModel>>{
-
+  public getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<UserModel>>{
     let endpoint = this.api+'/User';
-
     if (pageSettings != undefined)
       endpoint += `?${pageSettings.toQueryArgs()}`;
 
     return this.http.get<BaseCollectionModel<UserModel>>(endpoint);
   }
 
-  getById(userId:number){
+  public getById(userId:number): Observable<UserModel> {
     return this.http.get<UserModel>(this.api+'/User/'+ userId);
   }
 
+  public getProfileImage(id: string): Observable<ArrayBuffer> {
+    return this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' });
+  }
+
+  public setProfileImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
+      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+    })
+  }
 }

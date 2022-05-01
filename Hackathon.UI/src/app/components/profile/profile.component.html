@@ -1,68 +1,67 @@
 <layout-default title="Профиль" xmlns="http://www.w3.org/1999/html">
 
-<form [formGroup]="form" class="form-vertical profileForm" >
+  <form [formGroup]="form" class="form-vertical profileForm">
 
-  <div class="form-vertical__fields">
+    <div class="form-vertical__fields">
+      <img [src]="image ||'assets/img/pic_user.png'" class="profileImage"/>
+      
+      <input type="file" #selectedFile (change)="selectFile($event)" class="fileSelector">
+      <button class="fileSelector_button" mat-raised-button (click)="selectedFile.click()">
+        <mat-icon>attach_file</mat-icon> Выбрать аватарку
+      </button>
 
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput
-             id="id"
-             readonly
-             formControlName="id"
-             required
-             >
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>ID</mat-label>
+        <input matInput
+              id="id"
+              readonly
+              formControlName="id"
+              required
+              >
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Имя пользователя</mat-label>
-      <input matInput
-             readonly
-             id="userName"
-             formControlName="userName"
-             required>
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Имя пользователя</mat-label>
+        <input matInput
+              readonly
+              id="userName"
+              formControlName="userName"
+              required>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput
-             type="email"
-             id="email"
-             formControlName="email"
-             readonly
-             required>
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput
+              type="email"
+              id="email"
+              formControlName="email"
+              readonly
+              required>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Полное имя пользователя</mat-label>
-      <input matInput
-             id="fullName"
-             formControlName="fullName"
-             readonly
-             required>
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Полное имя пользователя</mat-label>
+        <input matInput
+              id="fullName"
+              formControlName="fullName"
+              readonly
+              required>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Роль</mat-label>
-      <input matInput
-             id="role"
-             formControlName="role"
-             readonly
-             required>
-    </mat-form-field>
-
-  </div>
-  <div class="form-vertical__bottom">
-    <div class="form-vertical__buttons">
-      <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+      <mat-form-field appearance="fill">
+        <mat-label>Роль</mat-label>
+        <input matInput
+              id="role"
+              formControlName="role"
+              readonly
+              required>
+      </mat-form-field>
     </div>
-  </div>
-</form>
 
-  <input type="file" #selectedFile (change)="selectFile($event)" class="fileSelector">
-  <button mat-mini-fab color="primary"
-          (click)="selectedFile.click()">
-    <mat-icon>attach_file</mat-icon>
-  </button>
-
+    <div class="form-vertical__bottom">
+      <div class="form-vertical__buttons">
+        <button mat-raised-button color="primary" (click)="submit()">Сохранить</button>
+      </div>
+    </div>
+  </form>
 </layout-default>

@@ -47,5 +47,14 @@ namespace Hackathon.Abstraction
         /// <param name="user">Пользователь</param>
         /// <returns></returns>
         AuthTokenModel GenerateToken(UserModel user);
+
+        /// <summary>
+        /// Загрузить картинку профиля пользователя
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <param name="filename">Имя файла картинки</param>
+        /// <param name="stream">Новая картинка профиля</param>
+        /// <returns></returns>
+        Task<Guid> UploadProfileImageAsync(long userId, string filename, Stream stream);
     }
 }
