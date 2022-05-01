@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.FileStorage;
 using Hackathon.BL.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
@@ -14,24 +15,33 @@ using Xunit;
 
 namespace Hackathon.BL.Tests;
 
-public class UserServiceTests
+public class UserServiceTests: BaseUnitTest
 {
+    private Mock<IFileStorageService> _fileStorageMock;
+    private Mock<IOptions<AppSettings>> _appSettingsMock;
+    private Mock<IValidator<SignUpModel>> _signUpValidatorMock;
+    private Mock<IValidator<SignInModel>> _signInValidatorMock;
+    private Mock<IUserRepository> _userRepositoryMock;
+
+    public UserServiceTests()
+    {
+        _fileStorageMock = new Mock<IFileStorageService>();
+        _appSettingsMock = new Mock<IOptions<AppSettings>>();
+        _signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
+        _signInValidatorMock = new Mock<IValidator<SignInModel>>();
+        _userRepositoryMock = new Mock<IUserRepository>();
+    }
 
     [Fact]
     public async Task GetAsync_ShouldReturn_UserModelCollection()
     {
         //arrange
-        var appSettingsMock = new Mock<IOptions<AppSettings>>();
-        var signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
-        var signInValidatorMock = new Mock<IValidator<SignInModel>>();
-        var userRepositoryMock = new Mock<IUserRepository>();
-
         var fakeUser = new Faker<UserModel>()
             .RuleFor(x => x.UserName, f => f.Name.FirstName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .Generate();
 
-        userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListModel<UserFilterModel>>()))
+        _userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListModel<UserFilterModel>>()))
             .ReturnsAsync(new BaseCollectionModel<UserModel>
             {
                 Items = new[] {fakeUser},
@@ -39,11 +49,12 @@ public class UserServiceTests
             });
 
         var sut = new UserService(
-            appSettingsMock.Object,
-            signUpValidatorMock.Object,
-            signInValidatorMock.Object,
-            userRepositoryMock.Object,
-            null
+            _appSettingsMock.Object,
+            _signUpValidatorMock.Object,
+            _signInValidatorMock.Object,
+            _userRepositoryMock.Object,
+            _fileStorageMock.Object,
+            Mapper
             );
 
         //act

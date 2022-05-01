@@ -47,7 +47,7 @@ namespace Hackathon.API
                         Type = "https://example.com/entity-not-found",
                         Detail = context.Exception.Message,
                         Title = "Объект не найден",
-                        Status = 400
+                        Status = 404
                     };
                     break;
             }

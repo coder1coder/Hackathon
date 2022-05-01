@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.Jobs;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Event;
@@ -28,9 +29,9 @@ namespace Hackathon.Jobs.Services
         public async Task Execute()
         {
             var now = DateTime.UtcNow.AddMinutes(5).ToUtcWithoutSeconds();
-            
+
             var events = await _eventRepository.GetByExpression(x =>
-                DateTime.Compare(now, x.Start) == 0
+                DateTime.Compare(now, x.Start) == 0 
                 && x.Status == EventStatus.Published);
             
             if (events.Any())
