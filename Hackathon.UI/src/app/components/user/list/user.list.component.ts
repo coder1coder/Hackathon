@@ -2,9 +2,9 @@ import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {PageSettings} from "../../../models/PageSettings";
 import {UserService} from "../../../services/user.service";
-import {UserModel} from "../../../models/User/UserModel";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
+import {IUserModel} from "../../../models/User/IUserModel";
 
 @Component({
   selector: 'user-list',
@@ -12,7 +12,7 @@ import {BaseTableListComponent} from "../../BaseTableListComponent";
   styleUrls: ['./user.list.component.scss']
 })
 
-export class UserListComponent extends BaseTableListComponent<UserModel>{
+export class UserListComponent extends BaseTableListComponent<IUserModel>{
 
   constructor(private usersService: UserService, private router: Router) {
     super(UserListComponent.name);
@@ -25,7 +25,7 @@ export class UserListComponent extends BaseTableListComponent<UserModel>{
   fetch(){
     this.usersService.getAll(new PageSettings(this.pageSettings))
       .subscribe({
-        next: (r: BaseCollectionModel<UserModel>) =>  {
+        next: (r: BaseCollectionModel<IUserModel>) =>  {
           this.items = r.items;
           this.pageSettings.length = r.totalCount;
         },
@@ -33,7 +33,7 @@ export class UserListComponent extends BaseTableListComponent<UserModel>{
       });
   }
 
-  rowClick(user: UserModel){
+  rowClick(user: IUserModel){
     this.router.navigate(['/users/'+user.id]);
   }
 }

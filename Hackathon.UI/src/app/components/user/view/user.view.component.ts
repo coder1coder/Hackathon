@@ -1,11 +1,10 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
-import {UserModel} from "../../../models/User/UserModel";
 import {UserService} from "../../../services/user.service";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {SnackService} from "../../../services/snack.service";
+import {IUserModel} from "../../../models/User/IUserModel";
 
 @Component({
   selector: 'user-view',
@@ -15,7 +14,7 @@ import {SnackService} from "../../../services/snack.service";
 export class UserViewComponent implements AfterViewInit {
 
   userId: number;
-  user?: UserModel;
+  user?: IUserModel;
   isLoading: boolean = true;
 
   constructor(
@@ -38,7 +37,7 @@ export class UserViewComponent implements AfterViewInit {
     this.usersService.getById(this.userId)
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
-        next: (r: UserModel) => {
+        next: (r: IUserModel) => {
           this.user = r;
         },
         error: () => {

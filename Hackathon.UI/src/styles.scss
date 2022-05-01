@@ -5,6 +5,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 b {
   font-weight: 500;
 }
@@ -91,5 +92,42 @@ table {
       right: 0;
       z-index: 1;
     }
+  }
+}
+
+.mat-list-base .mat-list-item{
+  font-size: 14px;
+}
+
+mat-tab-group.vertical-tabs {
+
+  display: flex;
+  flex-direction: row;
+  column-gap: 2em;
+
+  mat-tab-header{
+    border: 0;
+  }
+
+  mat-ink-bar {
+    display: none;
+  }
+
+  .mat-tab-labels {
+    flex-direction: column;
+
+    .mat-tab-label{
+      justify-content: left;
+    }
+  }
+
+  .mat-tab-label-active{
+    opacity: 1;
+  }
+
+  .mat-tab-body-wrapper {
+    flex: 1 1 auto;
+    box-shadow: -20px 0px 20px 0px rgb(248 248 248);
+    padding-left: 1em;
   }
 }

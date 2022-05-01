@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { BaseCollectionModel } from "../models/BaseCollectionModel";
-import { UserModel } from "../models/User/UserModel";
 import { PageSettings } from "../models/PageSettings";
+import {IUserModel} from "../models/User/IUserModel";
 
 @Injectable({
   providedIn: 'root'
@@ -24,16 +24,16 @@ export class UserService {
     });
   }
 
-  public getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<UserModel>>{
+  public getAll(pageSettings?:PageSettings):Observable<BaseCollectionModel<IUserModel>>{
     let endpoint = this.api+'/User';
     if (pageSettings != undefined)
       endpoint += `?${pageSettings.toQueryArgs()}`;
 
-    return this.http.get<BaseCollectionModel<UserModel>>(endpoint);
+    return this.http.get<BaseCollectionModel<IUserModel>>(endpoint);
   }
 
-  public getById(userId:number): Observable<UserModel> {
-    return this.http.get<UserModel>(this.api+'/User/'+ userId);
+  public getById(userId:number): Observable<IUserModel> {
+    return this.http.get<IUserModel>(this.api+'/User/'+ userId);
   }
 
   public getProfileImage(id: string): Observable<ArrayBuffer> {

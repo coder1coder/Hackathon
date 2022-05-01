@@ -11,6 +11,8 @@ import {SnackService} from "../../../services/snack.service";
 import { EventModel } from 'src/app/models/Event/EventModel';
 import {ProblemDetails} from "../../../models/ProblemDetails";
 import {RouterService} from "../../../services/router.service";
+import {KeyValuePair} from "../../../common/KeyValuePair";
+import {IUserModel} from "../../../models/User/IUserModel";
 
 @Component({
   selector: 'event-view',
@@ -27,8 +29,12 @@ export class EventViewComponent implements AfterViewInit {
   eventDataSource = new MatTableDataSource<EventModel>([]);
   eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   eventTeamsDataSource = new MatTableDataSource<TeamModel>([]);
+  eventStages: KeyValuePair[] = [];
+  eventDetails: KeyValuePair[] = [];
 
-  eventStagesDataSource = new MatTableDataSource<{ key:string, value:number }>([]);
+  membersDataSource = new MatTableDataSource<IUserModel>([]);
+
+  selectedTabIndex = 0;
 
   userId:number;
 
@@ -57,14 +63,28 @@ export class EventViewComponent implements AfterViewInit {
           this.event = r;
           this.eventDataSource.data = [this.event];
 
-          this.eventStagesDataSource.data = [
-            { key: "Регистрация участников", value: this.event.memberRegistrationMinutes},
-            { key: "Разработка", value: this.event.developmentMinutes},
-            { key: "Презентация", value: this.event.teamPresentationMinutes}
+          this.eventDetails = [
+            { key: "ID", value: this.event.id },
+            { key: "Название", value: this.event.name },
+            { key: "Организатор", value: this.event.user.userName },
+            { key: "Дата начала", value: this.event.start.toLocaleString('dd.MM.yyyy, hh:mm z') },
+            { key: "Статус события", value: EventStatusTranslator.Translate(this.event.status ?? -1) },
+            { key: "Участники", value: EventModel.getUsersCount(this.event) / this.event?.maxEventMembers },
+            { key: "Создавать команды автоматически", value: this.event.isCreateTeamsAutomatically ? 'Да' : 'Нет'},
+          ]
+
+          this.eventStages = [
+            { key: "Регистрация участников", value: this.event.memberRegistrationMinutes + ' мин'},
+            { key: "Разработка", value: this.event.developmentMinutes + ' мин'},
+            { key: "Презентация", value: this.event.teamPresentationMinutes + ' мин'}
           ];
 
           this.eventStatusesDataSource.data = this.event.changeEventStatusMessages;
-          this.eventTeamsDataSource.data = this.event.teamEvents?.map(x=> x.team);
+          this.eventTeamsDataSource.data = this.event.teamEvents?.map(x => x.team);
+          this.membersDataSource.data = this.event?.teamEvents
+            ?.map(x => x.team?.users)
+            .reduce((x,y) =>
+              x?.concat(y));
         },
         error: () => {}
       });
@@ -136,15 +156,11 @@ export class EventViewComponent implements AfterViewInit {
       });
   }
 
-  getDisplayCommonColumns(): string[] {
-    return [ 'id', 'name', 'organizer', 'start', 'status', 'members', 'autoCreateTeams'];
-  }
-
   getDisplayStatusesColumns(): string[] {
     return ['status', 'message'];
   }
 
   getDisplayTeamsColumns(): string[] {
-    return ['id', 'name'];
+    return ['name', 'members'];
   }
 }

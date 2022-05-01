@@ -1,0 +1,18 @@
+.mat-column-members{
+  cursor: default;
+
+  & > .member{
+    display: inline-block;
+
+    &:hover{
+      color: #3f51b5;
+      cursor: pointer;
+    }
+
+    &:not(:last-child):after {
+      display: inline-block;
+      content: ', ';
+      padding-right: 5px;
+    }
+  }
+}

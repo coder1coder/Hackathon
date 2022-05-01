@@ -1,13 +1,13 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
-import { UserModel } from "../../models/User/UserModel";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
 import { environment } from "../../../environments/environment";
 import { UserService } from "src/app/services/user.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { map, mergeMap } from "rxjs";
 import { SnackService } from "src/app/services/snack.service";
+import {IUserModel} from "../../models/User/IUserModel";
 
 @Component({
   templateUrl: './profile.component.html',
@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit {
   public image: any;
   api = environment.api;
 
-  currentUser:UserModel = new UserModel();
+  currentUser?: IUserModel;
   UserRoleTranslator = UserRoleTranslator;
 
   constructor(
@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
     this.initForm();
 
     this.authService.getCurrentUser()
-      ?.subscribe((user: UserModel) => {
+      ?.subscribe((user: IUserModel) => {
         this.currentUser = user;
         this.loadForm();
 
@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private convertBytesToKiloByte(size:number):number
+  private static convertBytesToKiloByte(size:number):number
   {
     return size/1024;
   }
@@ -85,13 +85,13 @@ export class ProfileComponent implements OnInit {
 
     let file:File = event.target.files[0];
 
-    if (this.isFileImage(file) == false)
+    if (!ProfileComponent.isFileImage(file))
     {
       this.snackBar.open('Файл не является картинкой');
       return;
     }
 
-    if (this.convertBytesToKiloByte(file.size) > this.maxFileSize)
+    if (ProfileComponent.convertBytesToKiloByte(file.size) > this.maxFileSize)
     {
       this.snackBar.open('Максимальный объем файла 2МБ');
       return;
@@ -125,7 +125,7 @@ export class ProfileComponent implements OnInit {
         });
   }
 
-  private isFileImage(file: File) : boolean {
+  private static isFileImage(file: File) : boolean {
     return file && file['type'].split('/')[0] === 'image';
   }
 

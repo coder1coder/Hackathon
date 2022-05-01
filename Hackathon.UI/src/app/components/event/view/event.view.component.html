@@ -10,123 +10,57 @@
     <button *ngIf="eventsService.isCanFinishEvent(event)" mat-button (click)="finishEvent()">Завершить событие</button>
   </div>
 
-  <mat-tab-group animationDuration="0ms" dynamicHeight>
+  <mat-tab-group animationDuration="0ms"
+                 dynamicHeight
+                 class="vertical-tabs">
+
     <mat-tab label="Общая информация">
-
-      <div *ngIf="eventDataSource.data.length > 0">
-        <table mat-table [dataSource]="eventDataSource">
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Название</th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="organizer">
-            <th mat-header-cell *matHeaderCellDef>Организатор</th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.user.userName }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="start">
-            <th mat-header-cell *matHeaderCellDef> Дата начала </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.start | date:'dd.MM.yyyy, hh:mm z' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Статус события </th>
-            <td mat-cell *matCellDef="let element">
-              {{ EventStatusTranslator.Translate(element.status ?? -1) }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="members">
-            <th mat-header-cell *matHeaderCellDef> Участники </th>
-            <td mat-cell *matCellDef="let element">
-              {{ EventModel.getUsersCount(event) }} / {{ element?.maxEventMembers }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="autoCreateTeams">
-            <th mat-header-cell *matHeaderCellDef> Создавать команды автоматически </th>
-            <td mat-cell *matCellDef="let element">
-              <mat-checkbox
-                [checked]="element.isCreateTeamsAutomatically ?? false" disabled>
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="getDisplayCommonColumns()"></tr>
-          <tr mat-row *matRowDef="let row; columns: getDisplayCommonColumns();"></tr>
-        </table>
-      </div>
-
+      <list-details [items]="eventDetails"></list-details>
     </mat-tab>
     <mat-tab label="Этапы">
-
-      <div *ngIf="this.eventStagesDataSource.data.length > 0">
-        <table mat-table [dataSource]="eventStagesDataSource.data">
-
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Наименование</th>
-            <td mat-cell *matCellDef="let element"> {{ element.key }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="time">
-            <th mat-header-cell *matHeaderCellDef>Время</th>
-            <td mat-cell *matCellDef="let element"> {{element.value}} мин.</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="['name','time']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['name','time']"></tr>
-
-        </table>
-      </div>
-
+      <list-details [items]="eventStages"></list-details>
     </mat-tab>
-
     <mat-tab label="Команды">
-        <table mat-table [dataSource]="eventTeamsDataSource" [class.empty]="eventTeamsDataSource.data.length == 0">
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let element" (click)="router.Teams.View(element.id)"> {{element.id}}</td>
-          </ng-container>
+      <table mat-table [dataSource]="eventTeamsDataSource" [class.empty]="eventTeamsDataSource.data.length == 0">
 
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Название </th>
-            <td mat-cell *matCellDef="let element" (click)="router.Teams.View(element.id)"> {{element.name}}</td>
-          </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Название </th>
+          <td mat-cell *matCellDef="let element"
+              (click)="router.Teams.View(element.id)"
+              [innerText]="element.name"></td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="getDisplayTeamsColumns()"></tr>
-          <tr mat-row *matRowDef="let row; columns: getDisplayTeamsColumns();"></tr>
-        </table>
+        <ng-container matColumnDef="members">
+          <th mat-header-cell *matHeaderCellDef> Участники </th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngFor="let member of element.users" class="member"
+                 (click)="this.router.Users.View(element.id)"
+                 [innerText]="member.fullName"></div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="getDisplayTeamsColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayTeamsColumns();"></tr>
+      </table>
     </mat-tab>
-
     <mat-tab label="Уведомления">
 
-        <table mat-table [dataSource]="eventStatusesDataSource" [class.empty]="eventStatusesDataSource.data.length == 0">
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Статус</th>
-            <td mat-cell *matCellDef="let element"> {{ EventStatusTranslator.Translate(element.status) }}</td>
-          </ng-container>
+      <table mat-table [dataSource]="eventStatusesDataSource" [class.empty]="eventStatusesDataSource.data.length == 0">
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Статус</th>
+          <td mat-cell *matCellDef="let element" [innerText]="EventStatusTranslator.Translate(element.status)"></td>
+        </ng-container>
 
-          <ng-container matColumnDef="message">
-            <th mat-header-cell *matHeaderCellDef> Сообщение </th>
-            <td mat-cell *matCellDef="let element"> {{element.message}}</td>
-          </ng-container>
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef> Сообщение </th>
+          <td mat-cell *matCellDef="let element" [innerText]="element.message"></td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="getDisplayStatusesColumns()"></tr>
-          <tr mat-row *matRowDef="let row; columns: getDisplayStatusesColumns();"></tr>
-        </table>
+        <tr mat-header-row *matHeaderRowDef="getDisplayStatusesColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayStatusesColumns();"></tr>
+      </table>
 
     </mat-tab>
-
   </mat-tab-group>
 
 </layout-default>

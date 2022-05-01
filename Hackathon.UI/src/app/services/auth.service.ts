@@ -1,15 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { environment } from "../../environments/environment";
-import { map } from "rxjs/operators";
-import { ICreateUser}  from '../models/CreateUser';
-import { GetTokenResponse } from "../models/GetTokenResponse";
-import { BaseCreateResponse } from "../models/BaseCreateResponse";
-import { UserModel } from "../models/User/UserModel";
-import { AuthConstants } from "./auth.constants";
-import { GoogleSigninService } from './google-signin.service';
-import { GoogleUserModel } from '../models/User/GoogleUserModel';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Observable} from 'rxjs/internal/Observable';
+import {environment} from "../../environments/environment";
+import {map} from "rxjs/operators";
+import {ICreateUser} from '../models/CreateUser';
+import {GetTokenResponse} from "../models/GetTokenResponse";
+import {BaseCreateResponse} from "../models/BaseCreateResponse";
+import {AuthConstants} from "./auth.constants";
+import {GoogleSigninService} from './google-signin.service';
+import {GoogleUserModel} from '../models/User/GoogleUserModel';
+import {IUserModel} from "../models/User/IUserModel";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +59,7 @@ export class AuthService {
     return tokenInfo?.userId;
   }
 
-  public getCurrentUser(): Observable<UserModel> | null {
+  public getCurrentUser(): Observable<IUserModel> | null {
     if (!this.isLoggedIn())
       return null;
 
@@ -67,7 +67,7 @@ export class AuthService {
     if (tokenInfo == undefined)
       return null;
 
-    return this.http.get<UserModel>(this.api+'/User/'+tokenInfo.userId, {
+    return this.http.get<IUserModel>(this.api+'/User/'+tokenInfo.userId, {
       headers: new HttpHeaders()
         .append('Authorization', 'Bearer '+tokenInfo.token)
       });
@@ -98,18 +98,17 @@ export class AuthService {
     return this.googleSigninService.signIn();
   }
 
-  public signOutByGoogle(): any {
-    this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
-    this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
-    return this.googleSigninService.signOut();
-  }
+  // public signOutByGoogle(): any {
+  //   this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
+  //   this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
+  //   return this.googleSigninService.signOut();
+  // }
 
   private getTokenInfo() : GetTokenResponse | undefined {
     let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
     if (authInfo == undefined)
       return undefined;
 
-    let auth:GetTokenResponse = JSON.parse(authInfo);
-    return auth;
+    return JSON.parse(authInfo);
   }
 }
