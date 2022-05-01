@@ -1,4 +1,6 @@
-﻿namespace Hackathon.Common.Models.User
+﻿using System;
+
+namespace Hackathon.Common.Models.User
 {
     public class UserModel
     {
@@ -10,5 +12,7 @@
 
         public GoogleAccountModel GoogleAccount { get; set; }
         public UserRole Role { get; set; } = UserRole.Default;
+
+        public Guid? ProfileImageId { get; set; }
     }
 }

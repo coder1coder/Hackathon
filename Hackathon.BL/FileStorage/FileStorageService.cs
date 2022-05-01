@@ -56,7 +56,7 @@ namespace Hackathon.BL.FileStorage
                     MimeType = mimeType,
                     OwnerId = ownerId
                 };
-
+                
                 await _fileStorageRepository.Add(storageFile);
 
                 return storageFile;
@@ -72,6 +72,12 @@ namespace Hackathon.BL.FileStorage
         {
             var fileInfo = await _fileStorageRepository.Get(storageFileId);
 
+            if (fileInfo is null)
+            {
+                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
+            }
+
             using var storageFile = await _s3Client.GetObjectAsync(
                 fileInfo.BucketName,
                 storageFileId.ToString());
@@ -83,5 +89,23 @@ namespace Hackathon.BL.FileStorage
             return ms;
         }
 
+        public async Task<bool> Delete(Guid storageFileId)
+        {
+            var fileInfo = await _fileStorageRepository.Get(storageFileId);
+
+            if (fileInfo is null)
+            {
+                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
+            }
+
+            await _fileStorageRepository.Remove(fileInfo.Id);
+
+            var deleteObjectResponse = await _s3Client.DeleteObjectAsync(
+                fileInfo.BucketName,
+                storageFileId.ToString());
+
+            return true;
+        }
     }
 }

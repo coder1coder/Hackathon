@@ -1,4 +1,5 @@
 using Hackathon.Common.Models.User;
+using System;
 
 namespace Hackathon.Contracts.Responses.User;
 
@@ -11,4 +12,6 @@ public class UserResponse
 
     public GoogleAccountModel GoogleAccount { get; set; }
     public UserRole Role { get; set; } = UserRole.Default;
+
+    public Guid? ProfileImageId { get; set; }
 }

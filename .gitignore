@@ -36,3 +36,5 @@ Desktop.ini
 
 ./Hackathon.Infrastucture/minio/
 ./minio/
+/minio/
+minio/
