@@ -44,7 +44,7 @@ export class UserService {
     const formData = new FormData();
     formData.append("file", file);
 
-    return this.http.post<string>(this.api+'/User/uploadProfileImage', formData, {
+    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
       headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
     })
   }

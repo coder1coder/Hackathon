@@ -8,7 +8,6 @@ using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
-using Hackathon.Common.Exceptions;
 
 namespace Hackathon.BL.FileStorage
 {
@@ -74,7 +73,10 @@ namespace Hackathon.BL.FileStorage
             var fileInfo = await _fileStorageRepository.Get(storageFileId);
 
             if (fileInfo is null)
-                throw new FileNotNullException("Файл не может быть пустым.");
+            {
+                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
+            }
 
             using var storageFile = await _s3Client.GetObjectAsync(
                 fileInfo.BucketName,
@@ -93,8 +95,8 @@ namespace Hackathon.BL.FileStorage
 
             if (fileInfo is null)
             {
-                _logger.LogError($"Файл с индентификатором {storageFileId} не найден в бд.");
-                throw new FileInfoNotFoundException($"Файл с индентификатором {storageFileId} не найден в бд.");
+                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
             }
 
             await _fileStorageRepository.Remove(fileInfo.Id);

@@ -80,7 +80,7 @@ namespace Hackathon.API.Controllers
         /// <param name="file">Файл картинка.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("uploadProfileImage")]
+        [Route("profile/image/upload")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
