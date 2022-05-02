@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
+using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
@@ -26,6 +26,7 @@ public class NotificationRepository: INotificationRepository
         _dbContext = dbContext;
     }
 
+    /// <inheritdoc cref="INotificationRepository.Push{T}"/> 
     public async Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class
     {
         var notification = _mapper.Map<NotificationEntity>(model);
@@ -34,6 +35,7 @@ public class NotificationRepository: INotificationRepository
         return notification.Id;
     }
 
+    /// <inheritdoc cref="INotificationRepository.GetList"/> 
     public async Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> model, long userId)
     {
         var query = _dbContext.Notifications
@@ -42,11 +44,8 @@ public class NotificationRepository: INotificationRepository
 
         var total = query.Count();
 
-        if (model.Filter != null)
-        {
-            if (model.Filter.IsRead.HasValue)
-                query = query.Where(x => x.IsRead == model.Filter.IsRead.Value);
-        }
+        if (model.Filter?.IsRead != null)
+            query = query.Where(x => x.IsRead == model.Filter.IsRead.Value);
 
         if (!string.IsNullOrWhiteSpace(model.SortBy))
         {
@@ -69,17 +68,21 @@ public class NotificationRepository: INotificationRepository
         };
     }
 
+    /// <inheritdoc cref="INotificationRepository.GetUnreadNotificationsCount"/> 
     public async Task<long> GetUnreadNotificationsCount(long userId)
-    {
-        return await _dbContext.Notifications.CountAsync(x => x.UserId == userId && x.IsRead == false);
-    }
+        => await _dbContext.Notifications
+            .AsNoTracking()
+            .CountAsync(x => x.UserId == userId && x.IsRead == false);
 
     /// <inheritdoc cref="INotificationRepository.MarkAsRead"/>
     public async Task MarkAsRead(long userId, Guid[] ids = null)
     {
-        await _dbContext.Notifications
-            .Where(x => x.UserId == userId)
-            .ForEachAsync(x => x.IsRead = true);
+        var query = _dbContext.Notifications.Where(x => x.UserId == userId);
+            
+        if (ids != null)
+            query = query.Where(x=>ids.Contains(x.Id));
+                
+        await query.ForEachAsync(x => x.IsRead = true);
 
         await _dbContext.SaveChangesAsync();
     }

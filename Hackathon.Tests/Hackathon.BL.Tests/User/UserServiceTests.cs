@@ -2,8 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
 using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.FileStorage;
+using Hackathon.Abstraction.User;
 using Hackathon.BL.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
@@ -13,15 +13,15 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace Hackathon.BL.Tests;
+namespace Hackathon.BL.Tests.User;
 
 public class UserServiceTests: BaseUnitTest
 {
-    private Mock<IFileStorageService> _fileStorageMock;
-    private Mock<IOptions<AppSettings>> _appSettingsMock;
-    private Mock<IValidator<SignUpModel>> _signUpValidatorMock;
-    private Mock<IValidator<SignInModel>> _signInValidatorMock;
-    private Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IFileStorageService> _fileStorageMock;
+    private readonly Mock<IOptions<AppSettings>> _appSettingsMock;
+    private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock;
+    private readonly Mock<IValidator<SignInModel>> _signInValidatorMock;
+    private readonly Mock<IUserRepository> _userRepositoryMock;
 
     public UserServiceTests()
     {

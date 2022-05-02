@@ -2,7 +2,7 @@
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 
-namespace Hackathon.Abstraction
+namespace Hackathon.Abstraction.User
 {
     public interface IUserRepository
     {
@@ -53,7 +53,7 @@ namespace Hackathon.Abstraction
         /// Обновить картинку пользователя
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
-        /// <param name="ProfileImageId">Идентификатор картинки в хранилище</param>
+        /// <param name="profileImageId">Идентификатор картинки в хранилище</param>
         /// <returns></returns>
         Task UpdateProfileImageAsync(long userId, Guid profileImageId);
     }

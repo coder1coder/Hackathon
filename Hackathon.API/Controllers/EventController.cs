@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using Hackathon.Abstraction;
+﻿using System;
+using System.Threading.Tasks;
+using Hackathon.Abstraction.Event;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
@@ -43,12 +44,13 @@ namespace Hackathon.API.Controllers
             };
         }
 
+        /// <summary>
+        /// Обновить событие
+        /// </summary>
+        /// <param name="eventRequest"></param>
         [HttpPut]
         public async Task Update(UpdateEventRequest eventRequest)
-        {
-            var createEventModel = _mapper.Map<UpdateEventModel>(eventRequest);
-            await _eventService.UpdateAsync(createEventModel);
-        }
+            => await _eventService.UpdateAsync(_mapper.Map<UpdateEventModel>(eventRequest));
 
         /// <summary>
         /// Получить все события
@@ -83,8 +85,8 @@ namespace Hackathon.API.Controllers
             => await _eventService.LeaveAsync(eventId, UserId);
 
         [HttpPost("{eventId:long}/join/team")]
-        public async Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
-            => await _eventService.JoinTeamAsync(eventId, teamId, UserId);
+        public Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
+            => throw new NotImplementedException();
 
         /// <summary>
         /// Задать статус события

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
+using Hackathon.Abstraction.Event;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;

@@ -1,8 +1,8 @@
 ﻿using Hackathon.Common.Models.Project;
 
-namespace Hackathon.Abstraction
+namespace Hackathon.Abstraction.Project
 {
-    public interface IProjectService
+    public interface IProjectRepository
     {
         /// <summary>
         /// Создание проекта

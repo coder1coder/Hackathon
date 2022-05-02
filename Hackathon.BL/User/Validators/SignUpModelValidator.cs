@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
+using Hackathon.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

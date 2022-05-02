@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Chat;
 using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
@@ -13,17 +14,18 @@ namespace Hackathon.DAL.Repositories;
 
 public class ChatRepository: RedisRepository, IChatRepository
 {
-    public ChatRepository(
-        IConnectionMultiplexer connectionMultiplexer):base(connectionMultiplexer)
+    public ChatRepository(IConnectionMultiplexer connectionMultiplexer):base(connectionMultiplexer)
     {
     }
     
-    public async Task Add(ChatMessageEntity entity)
+    /// <inheritdoc cref="IChatRepository.AddMessage"/>
+    public async Task AddMessage(ChatMessageEntity entity)
     {
         var value = JsonSerializer.Serialize(entity);
         await RedisDatabase.SetAddAsync(GetRedisKey(entity), new RedisValue(value));
     }
 
+    /// <inheritdoc cref="IChatRepository.GetTeamChatMessages"/>
     public async Task<BaseCollectionModel<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300)
     {
         var items = RedisDatabase.SetScan(GetRedisKey(new ChatMessageEntity
@@ -41,7 +43,7 @@ public class ChatRepository: RedisRepository, IChatRepository
         {
             Items = items
                 .Skip(offset)
-                .Take(300)
+                .Take(limit)
                 .Select(x=>x.ToTeamChatMessage())
                 .OrderBy(x=>x.Timestamp)
                 .ToArray(),

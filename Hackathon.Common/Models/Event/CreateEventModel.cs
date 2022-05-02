@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Hackathon.Common.Models.Event
 {
     /// <summary>
-    /// Модель события для создания и обновления
+    /// Модель события для создания
     /// </summary>
     public class CreateEventModel
     {

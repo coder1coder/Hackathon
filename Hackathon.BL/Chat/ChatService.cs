@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Chat;
 using Hackathon.Abstraction.Entities;
+using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Notification;
@@ -24,6 +26,7 @@ public class ChatService: IChatService
         _userRepository = userRepository;
     }
     
+    /// <inheritdoc cref="IChatService.SendMessage"/>
     public async Task SendMessage(ICreateChatMessage createChatMessage)
     {
         var entity = new ChatMessageEntity
@@ -49,7 +52,7 @@ public class ChatService: IChatService
             entity.UserFullName = user.FullName;
         }
         
-        await _chatRepository.Add(entity);
+        await _chatRepository.AddMessage(entity);
         await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, new ChatMessageChangedIntegrationEvent
         {
             Context = createChatMessage.Context,
@@ -59,6 +62,7 @@ public class ChatService: IChatService
         });
     }
 
+    /// <inheritdoc cref="IChatService.GetTeamMessages"/>
     public async Task<BaseCollectionModel<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
         => await _chatRepository.GetTeamChatMessages(teamId, offset, limit);
 }
