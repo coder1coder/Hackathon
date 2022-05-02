@@ -1,5 +1,5 @@
 import {ChangeEventStatusMessage} from "./ChangeEventStatusMessage";
-import {TeamEventModel} from "../Team/TeamEventModel";
+import {ITeamEventModel} from "../Team/ITeamEventModel";
 import {EventStatus} from "../EventStatus";
 import {TeamModel} from "../Team/TeamModel";
 import {IUserModel} from "../User/IUserModel";
@@ -18,7 +18,7 @@ export class EventModel {
   status!: EventStatus;
   userId?: number;
   user!: IUserModel
-  teamEvents: TeamEventModel[] = []
+  teamEvents: ITeamEventModel[] = []
   stages: any[] = []
 
   public static getUsersCount(event:EventModel):number{

@@ -1,14 +1,14 @@
 import '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ICreateUser } from 'src/app/models/CreateUser';
 import { AuthService } from "../../services/auth.service";
 import { Location } from "@angular/common";
-import { ProblemDetails } from "../../models/ProblemDetails";
+import { IProblemDetails } from "../../models/IProblemDetails";
 import { SnackService } from "../../services/snack.service";
-import { ComponentBase } from 'src/app/common/base-components/base.component';
-import { auditTime, debounceTime, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import {ComponentBase} from "../ComponentBase";
+import {RouterService} from "../../services/router.service";
 
 @Component({
   selector: 'app-register',
@@ -25,7 +25,7 @@ export class RegisterComponent extends ComponentBase implements OnInit {
   @ViewChild('login', {static: true}) inputLogin: ElementRef | undefined;
 
   constructor(
-    private router: Router,
+    private routerService: RouterService,
     private location: Location,
     private authService: AuthService,
     private snackbar: SnackService,
@@ -52,12 +52,12 @@ export class RegisterComponent extends ComponentBase implements OnInit {
           this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snackbar.open(problemDetails.detail);
         },
         complete: () => {
           setTimeout(()=>{
-            this.router.navigate(['/login']);
+            this.routerService.Profile.Login();
           }, 1000);
         }
       });

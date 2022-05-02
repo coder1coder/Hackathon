@@ -9,10 +9,10 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
 import {SnackService} from "../../../services/snack.service";
 import { EventModel } from 'src/app/models/Event/EventModel';
-import {ProblemDetails} from "../../../models/ProblemDetails";
+import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
-import {KeyValuePair} from "../../../common/KeyValuePair";
 import {IUserModel} from "../../../models/User/IUserModel";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'event-view',
@@ -29,8 +29,8 @@ export class EventViewComponent implements AfterViewInit {
   eventDataSource = new MatTableDataSource<EventModel>([]);
   eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   eventTeamsDataSource = new MatTableDataSource<TeamModel>([]);
-  eventStages: KeyValuePair[] = [];
-  eventDetails: KeyValuePair[] = [];
+  eventStages: KeyValue<string,any>[] = [];
+  eventDetails: KeyValue<string,any>[] = [];
 
   membersDataSource = new MatTableDataSource<IUserModel>([]);
 
@@ -81,8 +81,8 @@ export class EventViewComponent implements AfterViewInit {
 
           this.eventStatusesDataSource.data = this.event.changeEventStatusMessages;
           this.eventTeamsDataSource.data = this.event.teamEvents?.map(x => x.team);
-          this.membersDataSource.data = this.event?.teamEvents
-            ?.map(x => x.team?.users)
+          this.membersDataSource.data = this.event.teamEvents
+            .map(x => x.team.users)
             .reduce((x,y) =>
               x?.concat(y));
         },
@@ -108,7 +108,7 @@ export class EventViewComponent implements AfterViewInit {
           this.fetchEvent();
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snack.open(problemDetails.detail);
         }
       });
@@ -122,7 +122,7 @@ export class EventViewComponent implements AfterViewInit {
           this.fetchEvent();
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snack.open(problemDetails.detail);
         }
       });
@@ -136,7 +136,7 @@ export class EventViewComponent implements AfterViewInit {
           this.fetchEvent();
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snack.open(problemDetails.detail);
         }
       });
@@ -150,7 +150,7 @@ export class EventViewComponent implements AfterViewInit {
           this.fetchEvent();
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snack.open(problemDetails.detail);
         }
       });

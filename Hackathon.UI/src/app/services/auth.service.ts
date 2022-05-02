@@ -4,8 +4,8 @@ import {Observable} from 'rxjs/internal/Observable';
 import {environment} from "../../environments/environment";
 import {map} from "rxjs/operators";
 import {ICreateUser} from '../models/CreateUser';
-import {GetTokenResponse} from "../models/GetTokenResponse";
-import {BaseCreateResponse} from "../models/BaseCreateResponse";
+import {IGetTokenResponse} from "../models/IGetTokenResponse";
+import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {AuthConstants} from "./auth.constants";
 import {GoogleSigninService} from './google-signin.service';
 import {GoogleUserModel} from '../models/User/GoogleUserModel';
@@ -35,8 +35,8 @@ export class AuthService {
     return tokenInfo.expires >= Date.now();
   }
 
-  public login(login: string, password: string) : Observable<GetTokenResponse> {
-    return this.http.post<GetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
+  public login(login: string, password: string) : Observable<IGetTokenResponse> {
+    return this.http.post<IGetTokenResponse>(this.api+"/Auth/SignIn", {username: login, password: password})
       .pipe(map(r=>{
         this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
         this.authChange.emit(true);
@@ -44,8 +44,8 @@ export class AuthService {
       }));
   }
 
-  public register(createUser: ICreateUser): Observable<BaseCreateResponse> {
-    return this.http.post<BaseCreateResponse>(this.api+"/User", createUser);
+  public register(createUser: ICreateUser): Observable<IBaseCreateResponse> {
+    return this.http.post<IBaseCreateResponse>(this.api+"/User", createUser);
   }
 
   public logout(): void {
@@ -73,8 +73,8 @@ export class AuthService {
       });
   }
 
-  public loginByGoogle(googleUserModel: GoogleUserModel) : Observable<GetTokenResponse> {
-    return this.http.post<GetTokenResponse>(this.api+"/Auth/SignInByGoogle", {
+  public loginByGoogle(googleUserModel: GoogleUserModel) : Observable<IGetTokenResponse> {
+    return this.http.post<IGetTokenResponse>(this.api+"/Auth/SignInByGoogle", {
       id: googleUserModel.id,
       fullName: googleUserModel.fullName,
       givenName: googleUserModel.givenName ,
@@ -104,7 +104,7 @@ export class AuthService {
   //   return this.googleSigninService.signOut();
   // }
 
-  private getTokenInfo() : GetTokenResponse | undefined {
+  private getTokenInfo() : IGetTokenResponse | undefined {
     let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
     if (authInfo == undefined)
       return undefined;

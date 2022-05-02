@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {KeyValuePair} from "../../../common/KeyValuePair";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'list-details',
@@ -10,7 +10,7 @@ import {KeyValuePair} from "../../../common/KeyValuePair";
 export class ListDetailsComponent
 {
   @Input()
-  public items: KeyValuePair[] = [];
+  public items: KeyValue<string, any>[] = [];
 
   constructor() {
   }

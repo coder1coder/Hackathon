@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EventService } from "../../../services/event.service";
-import { ProblemDetails } from "../../../models/ProblemDetails";
+import { IProblemDetails } from "../../../models/IProblemDetails";
 import { ActivatedRoute } from "@angular/router";
-import { CreateEvent } from "../../../models/Event/CreateEvent";
-import { UpdateEvent } from "../../../models/Event/UpdateEvent";
+import { ICreateEvent } from "../../../models/Event/ICreateEvent";
+import { IUpdateEvent } from "../../../models/Event/IUpdateEvent";
 import { EventStatusTranslator, EventStatus } from "src/app/models/EventStatus";
 import { ChangeEventStatusMessage } from "src/app/models/Event/ChangeEventStatusMessage";
 import { MatTableDataSource } from "@angular/material/table";
@@ -31,7 +31,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public form = new FormGroup({});
 
-  private eventId?: number;
+  private readonly eventId?: number;
   private event?: EventModel;
   private dateFormat: string = 'yyyy-MM-DDTHH:mm';
   private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
@@ -72,7 +72,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
             this.snackBar.open(`Событие опубликовано`))
         },
         error: (err) => {
-          let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snackBar.open(problemDetails.detail)}
       });
   }
@@ -81,7 +81,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     let request: Observable<any>;
 
     if (!this.editMode) {
-      let event: CreateEvent = {
+      let event: ICreateEvent = {
         name: this.form.get('name')?.value,
         developmentMinutes: this.form.get('developmentMinutes')?.value,
         isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
@@ -95,7 +95,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
       request = this.eventService.create(event);
     } else {
-      let event: UpdateEvent = {
+      let event: IUpdateEvent = {
         id: Number(this.event?.id),
         name: this.form.get('name')?.value,
         developmentMinutes: this.form.get('developmentMinutes')?.value,
@@ -126,7 +126,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           )
       },
       error: err => {
-        let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+        let problemDetails: IProblemDetails = <IProblemDetails>err.error;
         this.snackBar.open(problemDetails.detail);
       }
     });
@@ -157,7 +157,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           this.snackBar.open(`Событие удалено`))
       },
       error: (err) => {
-        let problemDetails: ProblemDetails = <ProblemDetails>err.error;
+        let problemDetails: IProblemDetails = <IProblemDetails>err.error;
         this.snackBar.open(problemDetails.detail);
       }
     });
@@ -221,7 +221,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         this.eventStatusDataSource.data = res.changeEventStatusMessages;
       },
       (error) => {
-        let problemDetails: ProblemDetails = <ProblemDetails>error.error;
+        let problemDetails: IProblemDetails = <IProblemDetails>error.error;
         this.snackBar.open(problemDetails.detail);
       });
   }
@@ -229,7 +229,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   private initForm(): void {
     this.form = this.fb.group({
       name: [null],
-      start: [this.getEventStartDefault()],
+      start: [EventFormComponent.getEventStartDefault()],
       memberRegistrationMinutes: [10],
       developmentMinutes: [10],
       teamPresentationMinutes: [10],
@@ -239,7 +239,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private getEventStartDefault(): string {
+  private static getEventStartDefault(): string {
     let now = new Date();
     const offset = new Date().getTimezoneOffset() * 1000 * 60
     now.setHours( now.getHours() + 1 );

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment.prod';
 import {Observable, ReplaySubject} from 'rxjs';
-import {ProblemDetails} from '../models/ProblemDetails';
+import {IProblemDetails} from '../models/IProblemDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class GoogleSigninService {
      }).catch((error) => {
         let errorMessage = "Неизвестная ошибка при авторизация через Google сервис";
         if (error.error.detail !== undefined) {
-          let details: ProblemDetails = <ProblemDetails>error.error;
+          let details: IProblemDetails = <IProblemDetails>error.error;
           errorMessage = details.detail;
         }
      });

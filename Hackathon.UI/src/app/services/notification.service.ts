@@ -9,8 +9,8 @@ import {NotificationModel} from "../models/Notification/NotificationModel";
 import {GetFilterModel} from "../models/GetFilterModel";
 import {NotificationFilterModel} from "../models/Notification/NotificationFilterModel";
 import {
-  NotificationChangedIntegrationEventModel
-} from "../models/IntegrationEvent/NotificationChangedIntegrationEventModel";
+  INotificationChangedIntegrationEventModel
+} from "../models/IntegrationEvent/INotificationChangedIntegrationEventModel";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class NotificationService
 
   private _signalR!: HubConnection;
 
-  public onChanged?:(x:NotificationChangedIntegrationEventModel) => void
+  public onChanged?:(x:INotificationChangedIntegrationEventModel) => void
 
   constructor(private http:HttpClient) {
 
@@ -60,7 +60,7 @@ export class NotificationService
 
     this._signalR.onclose(()=>this.startConnection());
 
-    this._signalR.on("NotificationChanged", (x: NotificationChangedIntegrationEventModel) => {
+    this._signalR.on("NotificationChanged", (x: INotificationChangedIntegrationEventModel) => {
 
       if (this.onChanged)
         this.onChanged(x)

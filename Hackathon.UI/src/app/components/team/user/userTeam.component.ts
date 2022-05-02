@@ -22,8 +22,10 @@ export class UserTeamComponent implements AfterViewInit
   ) {}
 
   ngAfterViewInit(): void {
-    if (this.authService.isLoggedIn())
-      this.teamService.getMyTeam().subscribe(r => this.team = r);
+    if (!this.authService.isLoggedIn())
+      return;
+
+    this.teamService.getMyTeam().subscribe(r => this.team = r);
   }
 
 }

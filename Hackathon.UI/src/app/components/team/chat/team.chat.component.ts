@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Injectable, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injectable, ViewChild} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment/moment";

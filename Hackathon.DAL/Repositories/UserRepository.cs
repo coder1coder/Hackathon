@@ -74,7 +74,7 @@ namespace Hackathon.DAL.Repositories
             }
         }
 
-        /// <inheritdoc cref="IUserRepository.GetAsync(GetListModel{T})"/>
+        /// <inheritdoc cref="IUserRepository.GetAsync(GetListModel{UserFilterModel})"/>
         public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
         {
             var query = _dbContext.Users
@@ -87,7 +87,7 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => x.UserName == getListModel.Filter.Username);
 
                 if (!string.IsNullOrWhiteSpace(getListModel.Filter.Email))
-                    query = query.Where(x => x.Email == getListModel.Filter.Email);
+                    query = query.Where(x => string.Equals(x.Email, getListModel.Filter.Email, StringComparison.CurrentCultureIgnoreCase));
             }
 
             var totalCount = await query.LongCountAsync();

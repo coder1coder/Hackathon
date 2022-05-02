@@ -1,6 +1,6 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
 
-export interface CreateEvent
+export interface ICreateEvent
 {
   name: string;
   developmentMinutes: number;

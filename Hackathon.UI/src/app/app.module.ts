@@ -50,6 +50,7 @@ import {TeamComponent} from "./components/team/team/team.component";
 import {TeamChatComponent} from "./components/team/chat/team.chat.component";
 import {MatCardModule} from "@angular/material/card";
 import {ListDetailsComponent} from "./components/custom/list-details/list-details.component";
+import {AlertComponent} from "./components/custom/alert/alert.component";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import {ListDetailsComponent} from "./components/custom/list-details/list-detail
     NotificationInfoViewComponent,
 
     DefaultLayoutComponent,
-    ListDetailsComponent
+    ListDetailsComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

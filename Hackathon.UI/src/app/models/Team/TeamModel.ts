@@ -1,10 +1,10 @@
-import {TeamEventModel} from "./TeamEventModel";
+import {ITeamEventModel} from "./ITeamEventModel";
 import {IUserModel} from "../User/IUserModel";
 
 export class TeamModel {
   id!: number;
   name?: string;
-  teamEvents:TeamEventModel[] = [];
+  teamEvents:ITeamEventModel[] = [];
   users: IUserModel[] = [];
   owner?: IUserModel;
   project: any //TODO: add typed

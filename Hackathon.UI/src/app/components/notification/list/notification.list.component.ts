@@ -66,6 +66,6 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
   }
 
   public get isNotificationsExists() : boolean {
-    return  this.items.length === 0 ? true : false;
+    return  this.items.length === 0;
   }
 }

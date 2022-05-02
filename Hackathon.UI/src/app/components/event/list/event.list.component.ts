@@ -33,7 +33,7 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
   @ViewChild('statuses') statusesSelect!: MatSelect;
 
   override getDisplayColumns(): string[] {
-    return ['id', 'name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
+    return ['name', 'start', 'status', 'user', 'teams', 'members', 'actions'];
   }
 
   constructor(

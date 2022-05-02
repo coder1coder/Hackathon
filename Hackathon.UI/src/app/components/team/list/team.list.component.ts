@@ -71,5 +71,5 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   }
 
   rowClick = (item: TeamModel) => this.router.Teams.View(item.id);
-  getDisplayColumns = (): string[] => ['id', 'name', 'owner', 'users', 'actions'];
+  getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'actions'];
 }

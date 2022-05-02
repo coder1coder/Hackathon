@@ -1,12 +1,10 @@
 import {Component} from "@angular/core";
 import {TeamModel} from "../../../models/Team/TeamModel";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Actions} from "../../../common/Actions";
-import {ProblemDetails} from "../../../models/ProblemDetails";
+import {IProblemDetails} from "../../../models/IProblemDetails";
 import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {TeamService} from "../../../services/team.service";
-import {ActivatedRoute, Route, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SnackService} from "../../../services/snack.service";
 
 @Component({
@@ -48,7 +46,7 @@ export class TeamNewComponent
         },
         error=>{
           console.log(error)
-          let problemDetails: ProblemDetails = <ProblemDetails>error.error;
+          let problemDetails: IProblemDetails = <IProblemDetails>error.error;
           this.snackBar.open(problemDetails.detail);
         });
   }

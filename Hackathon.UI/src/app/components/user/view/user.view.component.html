@@ -1,12 +1,13 @@
 <layout-default title="Пользователь" [isLoading]="isLoading">
 
-  <mat-tab-group *ngIf="user !== undefined">
+  <mat-tab-group *ngIf="user" class="vertical-tabs">
     <mat-tab label="Общая информация">
-      <mat-list>
-        <mat-list-item>Имя пользователя: {{ user.userName }}</mat-list-item>
-        <mat-list-item>Полное имя: {{ user.fullName }}</mat-list-item>
-        <mat-list-item>Email: {{ user.email }}</mat-list-item>
-      </mat-list>
+
+      <list-details [items]="[
+        { key: 'Имя пользователя', value: user.userName},
+        { key: 'Полное имя', value: user.fullName},
+        { key: 'Email', value: user.email},
+      ]"></list-details>
     </mat-tab>
   </mat-tab-group>
 
