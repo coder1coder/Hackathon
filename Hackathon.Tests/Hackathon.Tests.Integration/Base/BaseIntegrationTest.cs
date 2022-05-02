@@ -2,6 +2,10 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.Project;
+using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.Team;

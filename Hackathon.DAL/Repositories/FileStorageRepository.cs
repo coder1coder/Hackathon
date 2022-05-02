@@ -19,6 +19,7 @@ public class FileStorageRepository: IFileStorageRepository
         _mapper = mapper;
     }
 
+    /// <inheritdoc cref="IFileStorageRepository.Add"/>
     public async Task Add(StorageFile storageFile)
     {
         var entity = _mapper.Map<FileStorageEntity>(storageFile);
@@ -26,6 +27,7 @@ public class FileStorageRepository: IFileStorageRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    /// <inheritdoc cref="IFileStorageRepository.Get"/>
     public async Task<StorageFile> Get(Guid id)
     {
         var entity =  await _dbContext.StorageFiles
@@ -35,6 +37,7 @@ public class FileStorageRepository: IFileStorageRepository
         return _mapper.Map<StorageFile>(entity);
     }
 
+    /// <inheritdoc cref="IFileStorageRepository.Remove"/>
     public async Task Remove(Guid id)
     {
         var entity =  await _dbContext.StorageFiles

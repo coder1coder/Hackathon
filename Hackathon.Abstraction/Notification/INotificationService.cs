@@ -2,7 +2,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
 
-namespace Hackathon.Abstraction;
+namespace Hackathon.Abstraction.Notification;
 
 public interface INotificationService
 {
@@ -20,8 +20,26 @@ public interface INotificationService
     /// <inheritdoc cref="INotificationRepository.Delete(long, Guid[])"/>
     Task Delete(long userId, Guid[]? ids = null);
 
+    /// <summary>
+    /// Отправить уведомление
+    /// </summary>
+    /// <param name="model"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     Task Push<T>(CreateNotificationModel<T> model) where T : class;
+    
+    /// <summary>
+    /// Отправить несколько уведомлений
+    /// </summary>
+    /// <param name="models"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     Task PushMany<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class;
 
+    /// <summary>
+    /// Получить количество непрочитанных уведомлений
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     Task<long> GetUnreadNotificationsCount(long userId);
 }

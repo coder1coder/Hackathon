@@ -2,7 +2,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
 
-namespace Hackathon.Abstraction;
+namespace Hackathon.Abstraction.Notification;
 
 public interface INotificationRepository
 {

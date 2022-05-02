@@ -6,7 +6,7 @@ namespace Hackathon.BL.Tests;
 
 public abstract class BaseUnitTest
 {
-    protected Mapper Mapper;
+    protected readonly Mapper Mapper;
     
     protected BaseUnitTest()
     {

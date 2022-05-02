@@ -1,7 +1,7 @@
 ﻿namespace Hackathon.Common.Models.Event
 {
     /// <summary>
-    /// Модель события для создания и обновления
+    /// Модель события для обновления
     /// </summary>
     public class UpdateEventModel: CreateEventModel
     {

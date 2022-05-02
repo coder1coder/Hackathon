@@ -1,6 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Team;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;

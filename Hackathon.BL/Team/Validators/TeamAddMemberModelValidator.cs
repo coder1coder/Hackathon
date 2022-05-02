@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using FluentValidation;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Team.Validators

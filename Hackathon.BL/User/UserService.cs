@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction;
 using Hackathon.Abstraction.FileStorage;
+using Hackathon.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;

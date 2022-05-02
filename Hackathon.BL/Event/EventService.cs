@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Abstraction;
+using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.Notification;
+using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
@@ -23,7 +26,6 @@ namespace Hackathon.BL.Event
         private readonly IValidator<UpdateEventModel> _updateEventModelValidator;
         private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
-        private readonly ITeamRepository _teamRepository;
         private readonly IValidator<GetListModel<EventFilterModel>> _getFilterModelValidator;
         private readonly ITeamService _teamService;
         private readonly INotificationService _notificationService;
@@ -35,7 +37,6 @@ namespace Hackathon.BL.Event
             IEventRepository eventRepository,
             ITeamService teamService, 
             IUserRepository userRepository, 
-            ITeamRepository teamRepository,
             INotificationService notificationService)
         {
             _createEventModelValidator = createEventModelValidator;
@@ -44,7 +45,6 @@ namespace Hackathon.BL.Event
             _eventRepository = eventRepository;
             _teamService = teamService;
             _userRepository = userRepository;
-            _teamRepository = teamRepository;
             _notificationService = notificationService;
         }
 
@@ -64,9 +64,7 @@ namespace Hackathon.BL.Event
 
         /// <inheritdoc cref="IEventService.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
-        {
-            return await _eventRepository.GetAsync(eventId);
-        }
+            => await _eventRepository.GetAsync(eventId);
 
         /// <inheritdoc cref="IEventService.GetAsync(long, GetListModel{EventFilterModel})"/>
         public async Task<BaseCollectionModel<EventModel>> GetAsync(long userId, GetListModel<EventFilterModel> getListModel)
@@ -122,19 +120,12 @@ namespace Hackathon.BL.Event
             });
         }
 
-        public Task JoinTeamAsync(long eventId, long teamId, long userId)
-        {
-            //validate userId
-            //validate eventId
-            //validate teamId
-            
-            //check event state
-            //check event users count
-            //check user team owner
-            
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Покинуть событие
+        /// </summary>
+        /// <param name="eventId">Идентификатор события</param>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <exception cref="ValidationException"></exception>
         public async Task LeaveAsync(long eventId, long userId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -157,16 +148,11 @@ namespace Hackathon.BL.Event
             if (userTeam.OwnerId.HasValue)
                 throw new ValidationException("Нельзя покинуть событие, если вступили командой");
 
-            await _teamRepository.RemoveMemberAsync(new TeamMemberModel
+            await _teamService.RemoveMemberAsync(new TeamMemberModel
             {
                 TeamId = userTeam.Id,
                 UserId = userId
             });
-        }
-
-        public Task LeaveTeamAsync(long eventId, long teamId)
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IEventService.DeleteAsync(long)"/>
@@ -208,10 +194,8 @@ namespace Hackathon.BL.Event
         }
 
         private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
-        {
-            return eventModel.TeamEvents
+            => eventModel.TeamEvents
                 .Select(x => x.Team)
                 .FirstOrDefault(x => x.Users.Any(s=>s.Id == userId));
-        }
     }
 }

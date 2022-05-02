@@ -4,7 +4,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.Abstraction
+namespace Hackathon.Abstraction.Team
 {
     public interface ITeamRepository
     {
@@ -50,8 +50,18 @@ namespace Hackathon.Abstraction
         /// <returns></returns>
         Task AddMemberAsync(TeamMemberModel teamMemberModel);
 
+        /// <summary>
+        /// Удалить участника из команды
+        /// </summary>
+        /// <param name="teamMemberModel"></param>
+        /// <returns></returns>
         Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
 
+        /// <summary>
+        /// Получить команды в соответствии с выборкой
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         Task<TeamModel[]> GetByExpression(Expression<Func<TeamEntity, bool>> expression);
     }
 }

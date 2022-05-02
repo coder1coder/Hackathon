@@ -2,7 +2,7 @@
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 
-namespace Hackathon.Abstraction
+namespace Hackathon.Abstraction.User
 {
     public interface IUserService
     {

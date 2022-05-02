@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
+using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
@@ -23,6 +23,7 @@ public class NotificationService: INotificationService
         _notificationsHub = notificationsHub;
     }
 
+    /// <inheritdoc cref="INotificationService.GetList"/>
     public async Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> listModel, long userId)
         => await _notificationRepository.GetList(listModel, userId);
 
@@ -38,6 +39,7 @@ public class NotificationService: INotificationService
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Deleted, ids));
     }
 
+    /// <inheritdoc cref="INotificationService.Push{T}"/>
     public async Task Push<T>(CreateNotificationModel<T> model) where T: class
     {
         var notificationId = await _notificationRepository.Push(model);
@@ -45,6 +47,7 @@ public class NotificationService: INotificationService
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, new []{ notificationId }));
     }
 
+    /// <inheritdoc cref="INotificationService.PushMany{T}"/>
     public async Task PushMany<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
     {
         var ids = new List<Guid>();
@@ -55,6 +58,7 @@ public class NotificationService: INotificationService
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, ids.ToArray()));
     }
 
+    /// <inheritdoc cref="INotificationService.GetUnreadNotificationsCount(long)"/>
     public async Task<long> GetUnreadNotificationsCount(long userId)
         => await _notificationRepository.GetUnreadNotificationsCount(userId);
 }

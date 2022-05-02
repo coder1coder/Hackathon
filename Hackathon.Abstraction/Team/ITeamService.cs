@@ -2,7 +2,7 @@
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.Abstraction
+namespace Hackathon.Abstraction.Team
 {
     public interface ITeamService
     {
@@ -34,6 +34,18 @@ namespace Hackathon.Abstraction
         /// <returns></returns>
         Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel);
 
+        /// <summary>
+        /// Получить команду пользователя
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <returns></returns>
         Task<TeamModel> GetUserTeam(long userId);
+
+        /// <summary>
+        /// Удалить участника из команды
+        /// </summary>
+        /// <param name="teamMemberModel"></param>
+        /// <returns></returns>
+        Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
     }
 }

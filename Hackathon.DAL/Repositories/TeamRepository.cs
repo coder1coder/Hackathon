@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
+using Hackathon.Abstraction.Team;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -159,6 +160,7 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        /// <inheritdoc cref="ITeamRepository.RemoveMemberAsync(TeamMemberModel)"/>
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams

@@ -1,5 +1,9 @@
 using System;
 using Hackathon.Abstraction;
+using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.Project;
+using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Repositories;
 using MapsterMapper;

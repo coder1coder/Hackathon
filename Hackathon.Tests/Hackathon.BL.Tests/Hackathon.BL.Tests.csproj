@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="34.0.1" />
+        <PackageReference Include="FluentAssertions" Version="6.3.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="xunit" Version="2.4.1" />
@@ -25,10 +26,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Hackathon.BL\Hackathon.BL.csproj" />
       <ProjectReference Include="..\..\Hackathon.DAL\Hackathon.DAL.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="User" />
     </ItemGroup>
 
 </Project>
