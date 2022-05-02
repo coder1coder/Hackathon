@@ -16,6 +16,9 @@
 
     <mat-tab label="Общая информация">
       <list-details [items]="eventDetails"></list-details>
+
+      <alert *ngIf="eventsService.isEventOwner(event)">Вы являетесь организатором события</alert>
+
     </mat-tab>
     <mat-tab label="Этапы">
       <list-details [items]="eventStages"></list-details>

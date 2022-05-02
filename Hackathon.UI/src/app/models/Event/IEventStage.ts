@@ -1,6 +1,6 @@
 import {EventStatus} from "../EventStatus";
 
-export interface EventStage
+export interface IEventStage
 {
   Status:EventStatus,
   Duration:number

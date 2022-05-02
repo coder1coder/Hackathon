@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {UserRole} from "../../models/User/UserRole";
-import {TeamService} from "../../services/team.service";
 
 @Component({
   selector: 'app-nav-menu',
@@ -12,7 +11,7 @@ export class NavMenuComponent {
 
   items:MenuItem[] = []
 
-  constructor(authService:AuthService, teamService:TeamService) {
+  constructor(authService:AuthService) {
 
     authService.getCurrentUser()?.subscribe(x=>{
       this.items = [

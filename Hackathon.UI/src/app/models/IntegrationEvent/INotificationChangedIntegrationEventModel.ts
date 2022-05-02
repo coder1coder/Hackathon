@@ -1,4 +1,4 @@
-export interface NotificationChangedIntegrationEventModel
+export interface INotificationChangedIntegrationEventModel
 {
   notificationIds: string[],
   operation:NotificationChangedOperation

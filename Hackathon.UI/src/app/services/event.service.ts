@@ -3,9 +3,9 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {BaseCollectionModel} from "../models/BaseCollectionModel";
-import {CreateEvent} from "../models/Event/CreateEvent";
-import {UpdateEvent} from "../models/Event/UpdateEvent";
-import {BaseCreateResponse} from "../models/BaseCreateResponse";
+import {ICreateEvent} from "../models/Event/ICreateEvent";
+import {IUpdateEvent} from "../models/Event/IUpdateEvent";
+import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {EventStatus} from "../models/EventStatus";
 import {AuthService} from "./auth.service";
 import {GetFilterModel} from "../models/GetFilterModel";
@@ -41,11 +41,11 @@ export class EventService {
     return this.http.get<EventModel>(this.api+'/Event/'+eventId);
   }
 
-  create(createEvent:CreateEvent):Observable<BaseCreateResponse>{
-    return this.http.post<BaseCreateResponse>(this.api + "/Event",createEvent);
+  create(createEvent:ICreateEvent):Observable<IBaseCreateResponse>{
+    return this.http.post<IBaseCreateResponse>(this.api + "/Event",createEvent);
   }
 
-  update(updateEvent:UpdateEvent):Observable<any> {
+  update(updateEvent:IUpdateEvent):Observable<any> {
     return this.http.put<any>(this.api + "/Event", updateEvent);
   }
 
@@ -117,7 +117,7 @@ export class EventService {
 
   isAlreadyInEvent(event:EventModel, userId:number){
     return event.teamEvents?.filter(t => t.team
-        .users?.filter(u => u.id == userId)
+        .users?.filter(x => x.id == userId)
         .length > 0
       ).length > 0;
   }

@@ -1,26 +1,24 @@
-<mat-tab-group animationDuration="0ms" dynamicHeight *ngIf="team !== undefined">
+<mat-tab-group
+  animationDuration="0ms"
+  dynamicHeight *ngIf="team"
+  class="vertical-tabs">
+
   <mat-tab label="Общая информация">
 
-    <div style="padding: 20px 10px;">
-      Наименование: {{ team.name }}
-    </div>
+    <list-details [items]="[{ key: 'Наименование', value: team.name }]"></list-details>
 
   </mat-tab>
   <mat-tab label="Участники">
 
     <table mat-table [dataSource]="team.users" [class.empty]="team.users.length == 0">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}}</td>
-      </ng-container>
 
       <ng-container matColumnDef="fullName">
         <th mat-header-cell *matHeaderCellDef> Полное имя </th>
         <td mat-cell *matCellDef="let element"> {{element.fullName}}</td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['id','fullName']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['id','fullName'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['fullName']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['fullName'];"></tr>
     </table>
 
   </mat-tab>

@@ -4,10 +4,11 @@ import {Router} from '@angular/router';
 import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
-import {ProblemDetails} from "../../models/ProblemDetails";
+import {IProblemDetails} from "../../models/IProblemDetails";
 import {environment} from "../../../environments/environment";
 import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
 import {FormControl, FormGroup} from '@angular/forms';
+import {RouterService} from "../../services/router.service";
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,7 @@ export class LoginComponent implements AfterViewInit  {
   captcha: string = "";
 
   constructor (private router: Router,
+              private routerService: RouterService,
               private snackBar: MatSnackBar,
               private authService: AuthService,
               ) {
@@ -42,7 +44,7 @@ export class LoginComponent implements AfterViewInit  {
 
     //if user is logged redirect to homepage
     if (this.authService.isLoggedIn())
-      this.router.navigate(['/profile']);
+      this.routerService.Profile.View();
   }
 
   ngAfterViewInit(): void {
@@ -69,13 +71,13 @@ export class LoginComponent implements AfterViewInit  {
         finalize(() => this.setLoading(false))
       )
       .subscribe(_ => {
-          this.router.navigate(['/profile']);
+          this.routerService.Profile.View();
         },
         error => {
           let errorMessage = "Неизвестная ошибка";
 
           if (error.error.detail !== undefined) {
-            let details: ProblemDetails = <ProblemDetails>error.error;
+            let details: IProblemDetails = <IProblemDetails>error.error;
             errorMessage = details.detail;
           }
 
@@ -85,12 +87,12 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   signUp(){
-    this.router.navigate(['/register']);
+    this.routerService.Profile.Register();
   }
 
   signOut() {
     this.authService.logout();
-    this.router.navigate(['login']);
+    this.routerService.Profile.Login();
   }
 
   setLoading(isLoading:boolean){
@@ -110,12 +112,12 @@ export class LoginComponent implements AfterViewInit  {
         if(googleUser.isLoggedIn) {
           this.authService.loginByGoogle(googleUser)
           .subscribe(_ => {
-              this.router.navigate(['/profile']);
+              this.routerService.Profile.View();
             },
             error => {
               let errorMessage = "Неизвестная ошибка при авторизация через Google сервис";
               if (error.error.detail !== undefined) {
-                let details: ProblemDetails = <ProblemDetails>error.error;
+                let details: IProblemDetails = <IProblemDetails>error.error;
                 errorMessage = details.detail;
               }
               this.snackBar.open(errorMessage, "ok", { duration: 5 * 500 });

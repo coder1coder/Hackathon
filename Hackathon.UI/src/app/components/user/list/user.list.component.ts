@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
 import {PageSettings} from "../../../models/PageSettings";
 import {UserService} from "../../../services/user.service";
 import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {IUserModel} from "../../../models/User/IUserModel";
+import {RouterService} from "../../../services/router.service";
 
 @Component({
   selector: 'user-list',
@@ -14,12 +14,13 @@ import {IUserModel} from "../../../models/User/IUserModel";
 
 export class UserListComponent extends BaseTableListComponent<IUserModel>{
 
-  constructor(private usersService: UserService, private router: Router) {
+  constructor(private usersService: UserService,
+              private routerService: RouterService) {
     super(UserListComponent.name);
   }
 
   getDisplayColumns(): string[] {
-    return ['id', 'userName', 'email', 'fullName', 'actions'];
+    return ['userName', 'email', 'fullName', 'actions'];
   }
 
   fetch(){
@@ -34,6 +35,7 @@ export class UserListComponent extends BaseTableListComponent<IUserModel>{
   }
 
   rowClick(user: IUserModel){
-    this.router.navigate(['/users/'+user.id]);
+    if (user.id)
+      this.routerService.Users.View(user.id);
   }
 }
