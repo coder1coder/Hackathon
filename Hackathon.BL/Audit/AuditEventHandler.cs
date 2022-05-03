@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Audit;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Audit;
+using Hackathon.Entities;
 
 namespace Hackathon.BL.Audit;
 

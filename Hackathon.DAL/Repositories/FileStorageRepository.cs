@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common.Models.FileStorage;
+using Hackathon.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 

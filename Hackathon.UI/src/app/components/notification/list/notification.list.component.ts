@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {NotificationModel} from "../../../models/Notification/NotificationModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 import {NotificationService} from "../../../services/notification.service";
-import {GetFilterModel} from "../../../models/GetFilterModel";
-import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
+import {GetListParameters} from "../../../models/GetListParameters";
+import {NotificationFilter} from "../../../models/Notification/NotificationFilter";
 import {Notification} from "../../../models/Notification/Notification";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {AuthService} from "../../../services/auth.service";
@@ -14,7 +13,7 @@ import {AuthService} from "../../../services/auth.service";
   styleUrls: ['./notification.list.component.scss']
 })
 
-export class NotificationListComponent extends BaseTableListComponent<NotificationModel>{
+export class NotificationListComponent extends BaseTableListComponent<Notification>{
 
   Notification = Notification;
 
@@ -33,21 +32,21 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
   }
 
   override fetch() {
-    let model = new GetFilterModel<NotificationFilterModel>();
+    let model = new GetListParameters<NotificationFilter>();
 
-    model.Page = this.pageSettings.pageIndex;
-    model.PageSize = this.pageSettings.pageSize;
+    model.Offset = this.pageSettings.pageIndex;
+    model.Limit = this.pageSettings.pageSize;
 
     this.notificationService.getNotifications(model)
       .subscribe({
-        next: (r: BaseCollectionModel<NotificationModel>) => {
+        next: (r: BaseCollection<Notification>) => {
           this.items = r.items
           this.pageSettings.length = r.totalCount
         }
       });
   }
 
-  rowClick(notification: NotificationModel) {}
+  rowClick(notification: Notification) {}
 
   public remove(event:MouseEvent, ids:string[]) {
     event.stopPropagation();

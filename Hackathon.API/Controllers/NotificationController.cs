@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Notification;
@@ -34,7 +33,7 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(BaseCollectionResponse<NotificationModel>), StatusCodes.Status200OK)]
     public async Task<BaseCollectionResponse<NotificationModel>> GetList(GetListRequest<NotificationFilterModel> request)
     {
-        var filterModel = _mapper.Map<GetListModel<NotificationFilterModel>>(request);
+        var filterModel = _mapper.Map<GetListParameters<NotificationFilterModel>>(request);
         var collectionModel = await _notificationService.GetList(filterModel, UserId);
         return _mapper.Map<BaseCollectionResponse<NotificationModel>>(collectionModel);
     }
@@ -48,9 +47,7 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public async Task MarkAsRead([FromBody] Guid[] ids)
-    {
-        await _notificationService.MarkAsRead(UserId, ids);
-    }
+        => await _notificationService.MarkAsRead(UserId, ids);
 
     /// <summary>
     /// Удалить уведомления пользователя
@@ -68,7 +65,7 @@ public class NotificationController: BaseController
     [HttpPost("push/info")]
     public async Task PushInformationNotification([FromBody] string message, [Required] long to)
     {
-        await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>()
+        await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
         {
             UserId = to,
             OwnerId = UserId,
@@ -82,7 +79,5 @@ public class NotificationController: BaseController
 
     [HttpGet("unread/count")]
     public async Task<long> GetUnreadNotificationsCount()
-    {
-        return await _notificationService.GetUnreadNotificationsCount(UserId);
-    }
+        => await _notificationService.GetUnreadNotificationsCount(UserId);
 }

@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {ChatMessage} from "../../components/team/chat/team.chat.component";
 import {Observable} from "rxjs";
-import {BaseCollectionModel} from "../../models/BaseCollectionModel";
+import {BaseCollection} from "../../models/BaseCollection";
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +36,8 @@ export class ChatService
     return this.http.post(this.api + `/chat/team/${message.teamId}/send`, message);
   }
 
-  public getTeamMessages(teamId:number, offset:number = 0, limit:number = 300): Observable<BaseCollectionModel<ChatMessage>> {
-    return this.http.post<BaseCollectionModel<ChatMessage>>(this.api + `/chat/team/${teamId}/list?offset=${offset}&limit=${limit}`, null);
+  public getTeamMessages(teamId:number, offset:number = 0, limit:number = 300): Observable<BaseCollection<ChatMessage>> {
+    return this.http.post<BaseCollection<ChatMessage>>(this.api + `/chat/team/${teamId}/list?offset=${offset}&limit=${limit}`, null);
   }
 
   initSignalR(){

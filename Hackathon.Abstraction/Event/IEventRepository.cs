@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.Entities;
 
 namespace Hackathon.Abstraction.Event
 {
@@ -26,9 +26,9 @@ namespace Hackathon.Abstraction.Event
         /// Получение информации о событиях
         /// </summary>
         /// <param name="userId">Идентификатор авторизованного пользователя</param>
-        /// <param name="getListModel">Фильтр, пагинация</param>
+        /// <param name="parameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollectionModel<EventModel>> GetAsync(long userId, GetListModel<EventFilterModel> getListModel);
+        Task<BaseCollection<EventModel>> GetListAsync(long userId, GetListParameters<EventFilter> parameters);
 
         /// <summary>
         /// As queryable

@@ -1,6 +1,6 @@
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Entities;
 
 namespace Hackathon.Abstraction.Chat;
 
@@ -20,5 +20,5 @@ public interface IChatRepository
     /// <param name="offset">Смещение</param>
     /// <param name="limit">Лимит</param>
     /// <returns></returns>
-    Task<BaseCollectionModel<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300);
+    Task<BaseCollection<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300);
 }

@@ -16,10 +16,10 @@ public interface INotificationRepository
     /// <summary>
     /// Получить список уведомлений пользователя по заданным параметрам фильтрации и пагинации
     /// </summary>
-    /// <param name="getListModel">Модель фильтра и пагинации</param>
+    /// <param name="getListParameters">Модель фильтра и пагинации</param>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> getListModel, long userId);
+    Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> getListParameters, long userId);
 
     /// <summary>
     /// Отметить уведомления пользователя как прочтенные
@@ -27,7 +27,7 @@ public interface INotificationRepository
     /// <param name="userId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    Task MarkAsRead(long userId, Guid[]? ids = null);
+    Task MarkAsRead(long userId, Guid[] ids);
 
     /// <summary>
     /// Отметить уведомления пользователя как удаленные

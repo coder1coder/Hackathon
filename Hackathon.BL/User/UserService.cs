@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Configuration;
@@ -66,13 +65,17 @@ namespace Hackathon.BL.User
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
 
-            var users = await _userRepository.GetAsync(new GetListModel<UserFilterModel>
+            var users = await _userRepository.GetAsync(new GetListParameters<UserFilter>
             {
-                Filter = new UserFilterModel
+                Filter = new UserFilter
                 {
                     Username = signInModel.UserName
-                }
+                },
+                Limit = 1
             });
+
+            if (users.Items.Count == 0)
+                throw new EntityNotFoundException("Пользователь не найден");
 
             var user = users.Items.First();
 
@@ -118,9 +121,9 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(userId);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync(GetListModel{UserFilterModel})"/>
-        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
-            => await _userRepository.GetAsync(getListModel);
+        /// <inheritdoc cref="IUserService.GetAsync(GetListParameters{UserFilter})"/>
+        public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters)
+            => await _userRepository.GetAsync(getListParameters);
 
         /// <inheritdoc cref="IUserService.GenerateToken(UserModel)"/>
         public AuthTokenModel GenerateToken(UserModel user)

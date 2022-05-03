@@ -85,17 +85,17 @@
 
       <ng-container matColumnDef="teams">
         <th mat-header-cell *matHeaderCellDef>Команды</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ EventModel.getEventTeams(element).length }}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.teamsCount }}</td>
       </ng-container>
 
       <ng-container matColumnDef="members">
         <th mat-header-cell *matHeaderCellDef>Участники</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ EventModel.getUsersCount(element) }} / {{element.maxEventMembers}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.membersCount }} / {{element.maxEventMembers}}</td>
       </ng-container>
 
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef>Организатор</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.user.userName }} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)" [innerText]="element.ownerName"></td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

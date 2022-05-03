@@ -29,7 +29,7 @@ public class ChangeEventStatusValidator
     
     private (bool, string) IsEventStatusCanBeStarted(EventModel eventModel)
     {
-        var totalMembers = eventModel.TeamEvents.Sum(x => x.Team.Users.Count);
+        var totalMembers = eventModel.Teams.Sum(x => x.Members?.Count);
         var minimalMembers = eventModel.MinTeamMembers * 2;
 
         if (totalMembers < minimalMembers)

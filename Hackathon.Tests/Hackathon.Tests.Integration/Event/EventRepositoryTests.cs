@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
+using Hackathon.Entities;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
 
@@ -41,18 +41,18 @@ namespace Hackathon.Tests.Integration.Event
         {
             var list = new List<EventEntity>
             {
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId},
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, UserId = UserId }
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = UserId},
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = UserId },
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = UserId },
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = UserId }
             };
 
             await DbContext.AddRangeAsync(list);
             await DbContext.SaveChangesAsync();
 
-            var response = await EventRepository.GetAsync(UserId, new GetListModel<EventFilterModel>
+            var response = await EventRepository.GetListAsync(UserId, new GetListParameters<EventFilter>
             {
-                Filter = new EventFilterModel
+                Filter = new EventFilter
                 {
                     Name = list.First().Name
                 }
@@ -66,8 +66,8 @@ namespace Hackathon.Tests.Integration.Event
                     options.Using<DateTime>(x=>
                         x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(10)))
                         .WhenTypeIs<DateTime>()
-                        .Excluding(x=>x.TeamEvents)
-                        .Excluding(x=>x.User)
+                        .Excluding(x=>x.Teams)
+                        .Excluding(x=>x.Owner)
                     );
         }
 

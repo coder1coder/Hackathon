@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
 using Hackathon.Contracts.Responses.User;

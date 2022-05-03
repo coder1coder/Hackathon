@@ -1,4 +1,4 @@
-﻿using Hackathon.Abstraction.Entities;
+﻿using Hackathon.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL

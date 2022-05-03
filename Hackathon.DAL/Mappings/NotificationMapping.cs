@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Notification;
+using Hackathon.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings;

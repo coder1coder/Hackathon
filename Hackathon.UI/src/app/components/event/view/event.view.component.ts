@@ -4,14 +4,14 @@ import {EventService} from "../../../services/event.service";
 import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {MatTableDataSource} from "@angular/material/table";
 import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
 import {SnackService} from "../../../services/snack.service";
-import { EventModel } from 'src/app/models/Event/EventModel';
+import { Event } from 'src/app/models/Event/Event';
 import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
-import {IUserModel} from "../../../models/User/IUserModel";
+import {IUser} from "../../../models/User/IUser";
 import {KeyValue} from "@angular/common";
 
 @Component({
@@ -22,17 +22,16 @@ import {KeyValue} from "@angular/common";
 export class EventViewComponent implements AfterViewInit {
 
   eventId: number;
-  event: EventModel = new EventModel();
-  EventModel = EventModel
+  event: Event = new Event();
+  EventModel = Event
   isLoading: boolean = true;
   EventStatusTranslator = EventStatusTranslator;
-  eventDataSource = new MatTableDataSource<EventModel>([]);
+  eventDataSource = new MatTableDataSource<Event>([]);
   eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
-  eventTeamsDataSource = new MatTableDataSource<TeamModel>([]);
-  eventStages: KeyValue<string,any>[] = [];
+  eventTeamsDataSource = new MatTableDataSource<Team>([]);
   eventDetails: KeyValue<string,any>[] = [];
 
-  membersDataSource = new MatTableDataSource<IUserModel>([]);
+  membersDataSource = new MatTableDataSource<IUser>([]);
 
   selectedTabIndex = 0;
 
@@ -59,30 +58,28 @@ export class EventViewComponent implements AfterViewInit {
     this.eventsService.getById(this.eventId)
       .pipe(finalize(()=>this.isLoading = false))
       .subscribe({
-        next: (r: EventModel) =>  {
+        next: (r: Event) =>  {
           this.event = r;
           this.eventDataSource.data = [this.event];
 
           this.eventDetails = [
             { key: "ID", value: this.event.id },
             { key: "Название", value: this.event.name },
-            { key: "Организатор", value: this.event.user.userName },
+            { key: "Организатор", value: this.event.owner.userName },
             { key: "Дата начала", value: this.event.start.toLocaleString('dd.MM.yyyy, hh:mm z') },
             { key: "Статус события", value: EventStatusTranslator.Translate(this.event.status ?? -1) },
-            { key: "Участники", value: EventModel.getUsersCount(this.event) / this.event?.maxEventMembers },
+            { key: "Участники", value: Event.getUsersCount(this.event) / this.event?.maxEventMembers },
             { key: "Создавать команды автоматически", value: this.event.isCreateTeamsAutomatically ? 'Да' : 'Нет'},
-          ]
-
-          this.eventStages = [
+            { key: "", value: ""},
             { key: "Регистрация участников", value: this.event.memberRegistrationMinutes + ' мин'},
             { key: "Разработка", value: this.event.developmentMinutes + ' мин'},
             { key: "Презентация", value: this.event.teamPresentationMinutes + ' мин'}
-          ];
+          ]
 
           this.eventStatusesDataSource.data = this.event.changeEventStatusMessages;
-          this.eventTeamsDataSource.data = this.event.teamEvents?.map(x => x.team);
-          this.membersDataSource.data = this.event.teamEvents
-            .map(x => x.team.users)
+          this.eventTeamsDataSource.data = this.event.teams;
+          this.membersDataSource.data = this.event.teams
+            .map(x => x.members)
             .reduce((x,y) =>
               x?.concat(y));
         },

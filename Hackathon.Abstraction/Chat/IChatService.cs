@@ -19,5 +19,5 @@ public interface IChatService
     /// <param name="offset">Смещение</param>
     /// <param name="limit">Лимит</param>
     /// <returns></returns>
-    Task<BaseCollectionModel<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300);
+    Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300);
 }

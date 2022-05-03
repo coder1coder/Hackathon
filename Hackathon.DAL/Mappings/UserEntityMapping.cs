@@ -1,5 +1,5 @@
-﻿using Hackathon.Abstraction.Entities;
-using Hackathon.Common.Models.User;
+﻿using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings

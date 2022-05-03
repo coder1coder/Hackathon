@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {UserService} from "../../../services/user.service";
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {GetFilterModel} from "../../../models/GetFilterModel";
+import {GetListParameters} from "../../../models/GetListParameters";
 import {AuthService} from "../../../services/auth.service";
-import {UserFilterModel} from "../../../models/User/UserFilterModel";
-import {IUserModel} from "../../../models/User/IUserModel";
+import {UserFilter} from "../../../models/User/UserFilter";
+import {IUser} from "../../../models/User/IUser";
 import {RouterService} from "../../../services/router.service";
 
 @Component({
@@ -14,7 +14,7 @@ import {RouterService} from "../../../services/router.service";
   styleUrls: ['./user.list.component.scss']
 })
 
-export class UserListComponent extends BaseTableListComponent<IUserModel>{
+export class UserListComponent extends BaseTableListComponent<IUser>{
 
   constructor(private usersService: UserService,
               private routerService: RouterService,
@@ -28,20 +28,20 @@ export class UserListComponent extends BaseTableListComponent<IUserModel>{
 
   override fetch(){
 
-    let filter = new UserFilterModel();
+    let filter = new UserFilter();
 
     this.authService.getCurrentUser()?.subscribe(x => {
       if (x?.id != null)
         filter.excludeIds = [x.id];
 
-      let getFilterModel = new GetFilterModel<UserFilterModel>();
-      getFilterModel.Page = this.pageSettings.pageIndex;
-      getFilterModel.PageSize = this.pageSettings.pageSize;
+      let getFilterModel = new GetListParameters<UserFilter>();
+      getFilterModel.Offset = this.pageSettings.pageIndex;
+      getFilterModel.Limit = this.pageSettings.pageSize;
       getFilterModel.Filter = filter;
 
       this.usersService.getList(getFilterModel)
         .subscribe({
-          next: (r: BaseCollectionModel<IUserModel>) =>  {
+          next: (r: BaseCollection<IUser>) =>  {
             this.items = r.items;
             this.pageSettings.length = r.totalCount;
           },
@@ -51,7 +51,7 @@ export class UserListComponent extends BaseTableListComponent<IUserModel>{
     });
   }
 
-  rowClick(user: IUserModel){
+  rowClick(user: IUser){
     if (user.id)
       this.routerService.Users.View(user.id);
   }

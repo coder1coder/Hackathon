@@ -1,11 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Chat;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Entities;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -26,7 +25,7 @@ public class ChatRepository: RedisRepository, IChatRepository
     }
 
     /// <inheritdoc cref="IChatRepository.GetTeamChatMessages"/>
-    public async Task<BaseCollectionModel<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300)
+    public async Task<BaseCollection<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300)
     {
         var items = RedisDatabase.SetScan(GetRedisKey(new ChatMessageEntity
         {
@@ -39,7 +38,7 @@ public class ChatRepository: RedisRepository, IChatRepository
 
         var totalCount = items.Length;
 
-        return await Task.FromResult(new BaseCollectionModel<TeamChatMessage>
+        return await Task.FromResult(new BaseCollection<TeamChatMessage>
         {
             Items = items
                 .Skip(offset)

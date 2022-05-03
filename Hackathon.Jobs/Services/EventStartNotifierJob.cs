@@ -37,7 +37,7 @@ namespace Hackathon.Jobs.Services
             if (events.Any())
                 await _notificationService.PushMany(
                     events.Select(x => NotificationFactory
-                    .InfoNotification($"Событие '{x.Name}' скоро начнется", x.UserId)));
+                    .InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
         }
     }
 }

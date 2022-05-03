@@ -7,7 +7,7 @@ import { UserService } from "src/app/services/user.service";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { map, mergeMap } from "rxjs";
 import { SnackService } from "src/app/services/snack.service";
-import {IUserModel} from "../../models/User/IUserModel";
+import {IUser} from "../../models/User/IUser";
 
 @Component({
   templateUrl: './profile.component.html',
@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit {
   public image: any;
   api = environment.api;
 
-  currentUser?: IUserModel;
+  currentUser?: IUser;
   UserRoleTranslator = UserRoleTranslator;
 
   constructor(
@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
     this.initForm();
 
     this.authService.getCurrentUser()
-      ?.subscribe((user: IUserModel) => {
+      ?.subscribe((user: IUser) => {
         this.currentUser = user;
         this.loadForm();
 

@@ -1,9 +1,9 @@
 using System.Net;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Team;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Team;
@@ -39,6 +39,7 @@ namespace Hackathon.API.Controllers
             var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
             createTeamModel.OwnerId = UserId;
+            
             var teamId = await _teamService.CreateAsync(createTeamModel);
             return new BaseCreateResponse
             {
@@ -58,21 +59,40 @@ namespace Hackathon.API.Controllers
         /// Получить все команды
         /// </summary>
         [HttpPost("getTeams")]
-        public async Task<BaseCollectionResponse<TeamModel>> Get([FromBody] GetListRequest<TeamFilterModel> listRequest)
+        [ProducesResponseType(typeof(BaseCollectionResponse<TeamModel>), (int)HttpStatusCode.OK)]
+        public async Task<BaseCollectionResponse<TeamModel>> GetList([FromBody] GetListRequest<TeamFilter> listRequest)
         {
-            var getFilterModel = _mapper.Map<GetListModel<TeamFilterModel>>(listRequest);
+            var getFilterModel = _mapper.Map<GetListParameters<TeamFilter>>(listRequest);
             var collectionModel = await _teamService.GetAsync(getFilterModel);
             return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
         }
 
         /// <summary>
-        /// Получить команду в которой состоит авторизованный пользователь
+        /// Получить общую информацию команды в которой состоит авторизованный пользователь
         /// </summary>
         /// <returns></returns>
-        [HttpGet(nameof(My))]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(TeamModel), (int)HttpStatusCode.OK)]
-        public async Task<TeamModel> My()
+        [HttpGet("my")]
+        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
+        public async Task<TeamGeneral> GetUserTeam()
             => await _teamService.GetUserTeam(UserId);
+
+        /// <summary>
+        /// Получить события в которых участвовала команда
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{teamId:long}/events")]
+        [ProducesResponseType(typeof(BaseCollectionResponse<TeamEventListItem>), (int) HttpStatusCode.OK)]
+        public async Task<BaseCollectionResponse<TeamEventListItem>> GetTeamEvents([FromRoute] long teamId,
+            [FromBody] PaginationSort paginationSort)
+        {
+            var collection = await _teamService.GetTeamEvents(teamId, paginationSort);
+
+            return new BaseCollectionResponse<TeamEventListItem>
+            {
+                Items = collection.Items,
+                TotalCount = collection.TotalCount
+            };
+        }
     }
 }

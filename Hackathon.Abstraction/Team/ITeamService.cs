@@ -1,6 +1,8 @@
 ﻿using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
+using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.Abstraction.Team
 {
@@ -30,16 +32,16 @@ namespace Hackathon.Abstraction.Team
         /// <summary>
         /// Получение информации о командах
         /// </summary>
-        /// <param name="getListModel">Фильтр, пагинация</param>
+        /// <param name="getListParameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel);
+        Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> getListParameters);
 
         /// <summary>
         /// Получить команду пользователя
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
-        Task<TeamModel> GetUserTeam(long userId);
+        Task<TeamGeneral> GetUserTeam(long userId);
 
         /// <summary>
         /// Удалить участника из команды
@@ -47,5 +49,14 @@ namespace Hackathon.Abstraction.Team
         /// <param name="teamMemberModel"></param>
         /// <returns></returns>
         Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
+
+        /// <summary>
+        /// Получить список событий в которых принимала участие команда
+        /// список включает в себя данные о проекте
+        /// </summary>
+        /// <param name="teamId">Идентификатор команды</param>
+        /// <param name="paginationSort">Пагинация и сортировка</param>
+        /// <returns></returns>
+        Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort);
     }
 }

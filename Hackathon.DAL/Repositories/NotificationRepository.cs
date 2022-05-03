@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
+using Hackathon.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +36,7 @@ public class NotificationRepository: INotificationRepository
     }
 
     /// <inheritdoc cref="INotificationRepository.GetList"/> 
-    public async Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> model, long userId)
+    public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> parameters, long userId)
     {
         var query = _dbContext.Notifications
             .AsNoTracking()
@@ -44,24 +44,24 @@ public class NotificationRepository: INotificationRepository
 
         var total = query.Count();
 
-        if (model.Filter?.IsRead != null)
-            query = query.Where(x => x.IsRead == model.Filter.IsRead.Value);
+        if (parameters.Filter?.IsRead != null)
+            query = query.Where(x => x.IsRead == parameters.Filter.IsRead.Value);
 
-        if (!string.IsNullOrWhiteSpace(model.SortBy))
+        if (!string.IsNullOrWhiteSpace(parameters.SortBy))
         {
-            if (string.Equals(model.SortBy, nameof(NotificationEntity.CreatedAt), StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals(parameters.SortBy, nameof(NotificationEntity.CreatedAt), StringComparison.CurrentCultureIgnoreCase))
             {
-                query = model.SortOrder == SortOrder.Asc
+                query = parameters.SortOrder == SortOrder.Asc
                     ? query.OrderBy(x => x.CreatedAt)
                     : query.OrderByDescending(x => x.CreatedAt);
             }
         }
 
-        return new BaseCollectionModel<NotificationModel>
+        return new BaseCollection<NotificationModel>
         {
             Items = await query
-                .Skip((model.Page - 1) * model.PageSize)
-                .Take(model.PageSize)
+                .Skip(parameters.Offset)
+                .Take(parameters.Limit)
                 .ProjectToType<NotificationModel>()
                 .ToListAsync(),
             TotalCount = total
@@ -75,11 +75,11 @@ public class NotificationRepository: INotificationRepository
             .CountAsync(x => x.UserId == userId && x.IsRead == false);
 
     /// <inheritdoc cref="INotificationRepository.MarkAsRead"/>
-    public async Task MarkAsRead(long userId, Guid[] ids = null)
+    public async Task MarkAsRead(long userId, Guid[] ids)
     {
         var query = _dbContext.Notifications.Where(x => x.UserId == userId);
             
-        if (ids != null)
+        if (ids?.Length > 0)
             query = query.Where(x=>ids.Contains(x.Id));
                 
         await query.ForEachAsync(x => x.IsRead = true);

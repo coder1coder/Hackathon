@@ -1,3 +1,4 @@
+import { Event } from "../../../models/Event/Event";
 import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EventService } from "../../../services/event.service";
@@ -13,7 +14,6 @@ import { EventNewStatusDialogComponent } from "../status/event-new-status-dialog
 import { SnackService } from "../../../services/snack.service";
 import { Observable } from "rxjs";
 import * as moment from "moment/moment";
-import { EventModel } from "../../../models/Event/EventModel";
 import { AuthService } from "../../../services/auth.service";
 import { RouterService } from "../../../services/router.service";
 
@@ -32,7 +32,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   public form = new FormGroup({});
 
   private readonly eventId?: number;
-  private event?: EventModel;
+  private event?: Event;
   private dateFormat: string = 'yyyy-MM-DDTHH:mm';
   private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
@@ -105,7 +105,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         minTeamMembers: this.form.get('minTeamMembers')?.value,
         start: this.form.get('start')?.value,
         teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
-        userId: Number(this.event?.userId),
+        userId: Number(this.event?.ownerId),
         changeEventStatusMessages: this.eventStatusDataSource.data,
       };
 
@@ -193,7 +193,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     let userId = this.authService.getUserId();
     return this.eventId != null
       && userId !== null
-      && this.event?.userId == userId
+      && this.event?.ownerId == userId
   }
 
   public isCanAddStatus(): boolean {
@@ -211,7 +211,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       return;
 
     this.eventService.getById(this.eventId)
-      .subscribe((res: EventModel) => {
+      .subscribe((res: Event) => {
         this.event = res;
         this.form.patchValue({
           ...res,

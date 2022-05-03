@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Event;
+using Hackathon.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings

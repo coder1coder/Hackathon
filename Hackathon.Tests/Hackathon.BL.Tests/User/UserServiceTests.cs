@@ -41,8 +41,8 @@ public class UserServiceTests: BaseUnitTest
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .Generate();
 
-        _userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListModel<UserFilterModel>>()))
-            .ReturnsAsync(new BaseCollectionModel<UserModel>
+        _userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListParameters<UserFilter>>()))
+            .ReturnsAsync(new BaseCollection<UserModel>
             {
                 Items = new[] {fakeUser},
                 TotalCount = 1
@@ -58,9 +58,9 @@ public class UserServiceTests: BaseUnitTest
             );
 
         //act
-        var result = await sut.GetAsync(new GetListModel<UserFilterModel>()
+        var result = await sut.GetAsync(new GetListParameters<UserFilter>()
         {
-            Filter = new UserFilterModel
+            Filter = new UserFilter
             {
                 Username = fakeUser.UserName,
                 Email = fakeUser.Email

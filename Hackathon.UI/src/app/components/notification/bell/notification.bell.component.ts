@@ -1,9 +1,8 @@
 import {AfterViewInit, Component} from "@angular/core";
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
-import {NotificationModel} from "../../../models/Notification/NotificationModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 import {NotificationService} from "../../../services/notification.service";
-import {NotificationFilterModel} from "../../../models/Notification/NotificationFilterModel";
-import {GetFilterModel, SortOrder} from "../../../models/GetFilterModel";
+import {NotificationFilter} from "../../../models/Notification/NotificationFilter";
+import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {Notification} from "../../../models/Notification/Notification";
 import {RouterService} from "../../../services/router.service";
 import {AudioService} from "../../../services/audio.service";
@@ -18,7 +17,7 @@ import { AuthService } from "src/app/services/auth.service";
 export class NotificationBellComponent implements AfterViewInit
 {
   Notification = Notification
-  notifications:BaseCollectionModel<NotificationModel> = new BaseCollectionModel<NotificationModel>();
+  notifications:BaseCollection<Notification> = new BaseCollection<Notification>();
   unreadNotificationsCount:number = 0;
 
   constructor(
@@ -54,7 +53,7 @@ export class NotificationBellComponent implements AfterViewInit
   }
 
   fetch(){
-    let filter = new GetFilterModel<NotificationFilterModel>();
+    let filter = new GetListParameters<NotificationFilter>();
     filter.SortOrder = SortOrder.Desc;
     filter.SortBy = "createdAt";
 

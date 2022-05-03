@@ -37,9 +37,9 @@ namespace Hackathon.Abstraction.User
         /// <summary>
         /// Получить информацию о пользователях
         /// </summary>
-        /// <param name="getListModel">Фильтр, пагинация</param>
+        /// <param name="getListParameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel);
+        Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters);
 
         /// <summary>
         /// Сгенерировать токен

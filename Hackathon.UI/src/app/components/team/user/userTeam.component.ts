@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from "@angular/core";
 import {RouterService} from "../../../services/router.service";
 import {TeamService} from "../../../services/team.service";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {AuthService} from "../../../services/auth.service";
 
 @Component({
@@ -12,7 +12,7 @@ import {AuthService} from "../../../services/auth.service";
 
 export class UserTeamComponent implements AfterViewInit
 {
-  team?:TeamModel
+  team?:Team
 
   constructor(
     public router:RouterService,
