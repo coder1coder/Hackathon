@@ -10,6 +10,7 @@ using Hackathon.Notification;
 using Hackathon.Notification.IntegrationEvent;
 using Mapster;
 using MapsterMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -47,8 +48,25 @@ namespace Hackathon.API
 
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
+            
+            services.AddMassTransit(x =>
+            {
+                x.SetKebabCaseEndpointNameFormatter();
+                x.AddConsumer<AuditEventConsumer>();
+                
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.ConfigureEndpoints(context);
 
-            //Databases
+                    cfg.Host(new Uri(appConfig.RabbitMq.Host), host =>
+                    {
+                        host.Username(appConfig.RabbitMq.UserName);
+                        host.Password(appConfig.RabbitMq.Password);
+                    });
+                    
+                });
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));

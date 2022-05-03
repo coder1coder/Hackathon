@@ -8,7 +8,9 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Event;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Audit;
 using Hackathon.Common.Models.Event;
+using MassTransit;
 using Moq;
 using Xunit;
 
@@ -26,6 +28,8 @@ public class EventServiceTests: BaseUnitTest
     private Mock<IEventRepository> _eventRepositoryMock = new();
     private Mock<IUserRepository> _userRepositoryMock = new();
 
+    private Mock<IBus> _busMock = new();
+
     [Fact]
     public async Task Create_Should_Return_Positive_Id()
     {
@@ -42,8 +46,13 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock = new Mock<IEventRepository>();
         _userRepositoryMock = new Mock<IUserRepository>();
 
+        _busMock = new Mock<IBus>();
+
         _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<CreateEventModel>()))
             .ReturnsAsync(createdId);
+
+        _busMock.Setup(x => x.Publish(It.IsAny<AuditEventModel>(), default))
+            .Returns(Task.CompletedTask);
         
         var service = new EventService(
             _createValidatorMock.Object,
@@ -52,7 +61,8 @@ public class EventServiceTests: BaseUnitTest
             _eventRepositoryMock.Object,
             _teamServiceMock.Object,
             _userRepositoryMock.Object,
-            _notificationServiceMock.Object
+            _notificationServiceMock.Object,
+            _busMock.Object
         );
 
         //act

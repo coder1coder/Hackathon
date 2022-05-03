@@ -17,6 +17,7 @@ namespace Hackathon.Jobs.Services
     /// </summary>
     public class EventStartNotifierJob: IEventStartNotifierJob
     {
+        //TODO: заменить на сервис
         private readonly IEventRepository _eventRepository;
         private readonly INotificationService _notificationService;
 
