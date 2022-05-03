@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
+using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Abstraction.Team;
@@ -178,6 +180,10 @@ namespace Hackathon.BL.Event
 
             await _eventRepository.DeleteAsync(eventId);
         }
+
+        /// <inheritdoc cref="IEventService.GetByExpression(Expression{Func{EventEntity, bool}})"/>
+        public async Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
+            => await _eventRepository.GetByExpression(expression);
 
         /// <summary>
         /// Меняет статус события и отправляет сообщение в шину с уведомлением участников события

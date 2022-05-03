@@ -1,4 +1,6 @@
-﻿using Hackathon.Common.Models;
+﻿using System.Linq.Expressions;
+using Hackathon.Abstraction.Entities;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 
@@ -65,5 +67,12 @@ namespace Hackathon.Abstraction.Event
         /// <param name="eventId">Идентификатор события</param>
         /// <returns></returns>
         Task DeleteAsync(long eventId);
+        
+        /// <summary>
+        /// Получить события по выражению
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression);
     }
 }
