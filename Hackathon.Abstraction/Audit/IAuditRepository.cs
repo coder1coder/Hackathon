@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.Entities;
+using Hackathon.Entities;
 
 namespace Hackathon.Abstraction.Audit;
 

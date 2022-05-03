@@ -5,7 +5,7 @@ using Hackathon.Common.Models.Event;
 namespace Hackathon.Contracts.Requests.Event
 {
     /// <summary>
-    /// Контракт создания и обновления нового события
+    /// Контракт создания нового события
     /// </summary>
     public class CreateEventRequest
     {

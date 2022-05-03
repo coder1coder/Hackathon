@@ -24,11 +24,11 @@ public class NotificationService: INotificationService
     }
 
     /// <inheritdoc cref="INotificationService.GetList"/>
-    public async Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> listModel, long userId)
-        => await _notificationRepository.GetList(listModel, userId);
+    public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId)
+        => await _notificationRepository.GetList(listParameters, userId);
 
     /// <inheritdoc cref="INotificationService.MarkAsRead"/>
-    public async Task MarkAsRead(long userId, Guid[] ids = null)
+    public async Task MarkAsRead(long userId, Guid[] ids)
         => await _notificationRepository.MarkAsRead(userId, ids);
 
     /// <inheritdoc cref="INotificationService.Delete"/>

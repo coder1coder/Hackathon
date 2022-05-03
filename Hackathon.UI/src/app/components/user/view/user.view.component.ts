@@ -4,7 +4,7 @@ import {UserService} from "../../../services/user.service";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {SnackService} from "../../../services/snack.service";
-import {IUserModel} from "../../../models/User/IUserModel";
+import {IUser} from "../../../models/User/IUser";
 
 @Component({
   selector: 'user-view',
@@ -14,7 +14,7 @@ import {IUserModel} from "../../../models/User/IUserModel";
 export class UserViewComponent implements AfterViewInit {
 
   userId: number;
-  user?: IUserModel;
+  user?: IUser;
   isLoading: boolean = true;
 
   constructor(
@@ -37,7 +37,7 @@ export class UserViewComponent implements AfterViewInit {
     this.usersService.getById(this.userId)
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
-        next: (r: IUserModel) => {
+        next: (r: IUser) => {
           this.user = r;
         },
         error: () => {

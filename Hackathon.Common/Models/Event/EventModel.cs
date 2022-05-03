@@ -67,12 +67,12 @@ namespace Hackathon.Common.Models.Event
         /// </summary>
         public EventStatus Status { get; set; }
 
-        public long UserId { get; set; }
-        public UserModel User { get; set; }
+        public long OwnerId { get; set; }
+        public UserModel Owner { get; set; }
 
         /// <summary>
         /// Список команд связанных с событием
         /// </summary>
-        public List<TeamEventModel> TeamEvents { get; set; } = new();
+        public List<TeamModel> Teams { get; set; } = new();
     }
 }

@@ -20,11 +20,8 @@
       <alert *ngIf="eventsService.isEventOwner(event)">Вы являетесь организатором события</alert>
 
     </mat-tab>
-    <mat-tab label="Этапы">
-      <list-details [items]="eventStages"></list-details>
-    </mat-tab>
     <mat-tab label="Команды">
-      <table mat-table [dataSource]="eventTeamsDataSource" [class.empty]="eventTeamsDataSource.data.length == 0">
+      <table mat-table [dataSource]="eventTeamsDataSource" [class.empty]="eventTeamsDataSource?.data?.length == 0">
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Название </th>
@@ -36,7 +33,7 @@
         <ng-container matColumnDef="members">
           <th mat-header-cell *matHeaderCellDef> Участники </th>
           <td mat-cell *matCellDef="let element">
-            <div *ngFor="let member of element.users" class="member"
+            <div *ngFor="let member of element.members" class="member"
                  (click)="this.router.Users.View(element.id)"
                  [innerText]="member.fullName"></div>
           </td>

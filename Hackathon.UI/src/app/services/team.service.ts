@@ -1,13 +1,13 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {BaseCollectionModel} from "../models/BaseCollectionModel";
-import {TeamModel} from "../models/Team/TeamModel";
+import {BaseCollection} from "../models/BaseCollection";
+import {Team} from "../models/Team/Team";
 import {Observable} from "rxjs";
 import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
-import {TeamFilterModel} from '../models/Team/TeamFilterModel';
-import { GetFilterModel } from '../models/GetFilterModel';
+import {TeamFilter} from '../models/Team/TeamFilter';
+import { GetListParameters } from '../models/GetListParameters';
 import {RouterService} from "./router.service";
 import {Endpoints} from "../common/Endpoints";
 
@@ -37,7 +37,7 @@ export class TeamService {
   }
 
   getById(id:number){
-    return this.http.get<TeamModel>(this.endpoints.Team.GetById(id));
+    return this.http.get<Team>(this.endpoints.Team.GetById(id));
   }
 
   errorHandler(error: HttpErrorResponse) {
@@ -45,10 +45,10 @@ export class TeamService {
       this.router.Profile.Login();
   }
 
-  getMyTeam = () => this.http.get<TeamModel>(this.endpoints.Team.GetMy);
+  getMyTeam = () => this.http.get<Team>(this.endpoints.Team.GetMy);
 
-  getByFilter(getFilterModel: GetFilterModel<TeamFilterModel>):Observable<BaseCollectionModel<TeamModel>>
+  getByFilter(getFilterModel: GetListParameters<TeamFilter>):Observable<BaseCollection<Team>>
   {
-    return this.http.post<BaseCollectionModel<TeamModel>>(this.endpoints.Team.GetTeams, getFilterModel);
+    return this.http.post<BaseCollection<Team>>(this.endpoints.Team.GetTeams, getFilterModel);
   }
 }

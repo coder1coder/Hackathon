@@ -1,12 +1,12 @@
 import {Component, Injectable} from '@angular/core';
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {TeamService} from "../../../services/team.service";
 import {AuthService} from "../../../services/auth.service";
-import {GetFilterModel} from 'src/app/models/GetFilterModel';
+import {GetListParameters} from 'src/app/models/GetListParameters';
 import {FormControl, FormGroup} from '@angular/forms';
-import {TeamFilterModel} from 'src/app/models/Team/TeamFilterModel';
+import {TeamFilter} from 'src/app/models/Team/TeamFilter';
 import {RouterService} from "../../../services/router.service";
 
 @Component({
@@ -16,7 +16,7 @@ import {RouterService} from "../../../services/router.service";
 })
 
 @Injectable()
-export class TeamListComponent extends BaseTableListComponent<TeamModel> {
+export class TeamListComponent extends BaseTableListComponent<Team> {
 
   userId!:number | undefined;
 
@@ -40,21 +40,21 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
   }
 
   override fetch(){
-    let teamFilterModel = new TeamFilterModel();
+    let teamFilterModel = new TeamFilter();
     teamFilterModel.name =  this.form.get('teamName')?.value;
     teamFilterModel.owner =  this.form.get('owner')?.value;
     teamFilterModel.hasOwner = true;
-    teamFilterModel.QuantityUsersFrom =  this.form.get('QuantityUsersFrom')?.value;
-    teamFilterModel.QuantityUsersTo =  this.form.get('QuantityUsersTo')?.value;
+    teamFilterModel.quantityMembersFrom =  this.form.get('QuantityUsersFrom')?.value;
+    teamFilterModel.quantityMembersTo =  this.form.get('QuantityUsersTo')?.value;
 
-    let getFilterModel = new GetFilterModel<TeamFilterModel>();
-    getFilterModel.Page = this.pageSettings.pageIndex;
-    getFilterModel.PageSize = this.pageSettings.pageSize;
+    let getFilterModel = new GetListParameters<TeamFilter>();
+    getFilterModel.Offset = this.pageSettings.pageIndex;
+    getFilterModel.Limit = this.pageSettings.pageSize;
     getFilterModel.Filter = teamFilterModel;
 
     this.teamService.getByFilter(getFilterModel)
       .subscribe({
-        next: (r: BaseCollectionModel<TeamModel>) =>  {
+        next: (r: BaseCollection<Team>) =>  {
           this.items = r.items;
           this.pageSettings.length = r.totalCount;
         },
@@ -70,6 +70,6 @@ export class TeamListComponent extends BaseTableListComponent<TeamModel> {
     this.fetch();
   }
 
-  rowClick = (item: TeamModel) => this.router.Teams.View(item.id);
+  rowClick = (item: Team) => this.router.Teams.View(item.id);
   getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'actions'];
 }

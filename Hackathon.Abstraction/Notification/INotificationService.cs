@@ -9,13 +9,13 @@ public interface INotificationService
     /// <summary>
     /// Получить список уведомлений пользователя по заданным параметрам фильтрации и пагинации
     /// </summary>
-    /// <param name="listModel">Модель фильтра и пагинации</param>
+    /// <param name="listParameters">Модель фильтра и пагинации</param>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<BaseCollectionModel<NotificationModel>> GetList(GetListModel<NotificationFilterModel> listModel, long userId);
+    Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId);
 
-    /// <inheritdoc cref="INotificationRepository.MarkAsRead(long, Guid[])"/>
-    Task MarkAsRead(long userId, Guid[]? ids = null);
+    /// <inheritdoc cref="INotificationRepository.MarkAsRead"/>
+    Task MarkAsRead(long userId, Guid[] ids);
 
     /// <inheritdoc cref="INotificationRepository.Delete(long, Guid[])"/>
     Task Delete(long userId, Guid[]? ids = null);

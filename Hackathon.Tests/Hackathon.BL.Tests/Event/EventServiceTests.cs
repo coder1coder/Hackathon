@@ -20,7 +20,7 @@ public class EventServiceTests: BaseUnitTest
 {
     private Mock<IValidator<CreateEventModel>> _createValidatorMock = new();
     private Mock<IValidator<UpdateEventModel>> _updateValidatorMock = new();
-    private Mock<IValidator<GetListModel<EventFilterModel>>> _getListValidatorMock = new();
+    private Mock<IValidator<GetListParameters<EventFilter>>> _getListValidatorMock = new();
     
     private Mock<ITeamService> _teamServiceMock = new();
     private Mock<INotificationService> _notificationServiceMock = new ();
@@ -38,7 +38,7 @@ public class EventServiceTests: BaseUnitTest
         
         _createValidatorMock = new Mock<IValidator<CreateEventModel>>();
         _updateValidatorMock = new Mock<IValidator<UpdateEventModel>>();
-        _getListValidatorMock = new Mock<IValidator<GetListModel<EventFilterModel>>>();
+        _getListValidatorMock = new Mock<IValidator<GetListParameters<EventFilter>>>();
         
         _teamServiceMock = new Mock<ITeamService>();
         _notificationServiceMock = new Mock<INotificationService>();

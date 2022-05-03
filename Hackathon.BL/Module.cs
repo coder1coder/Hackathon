@@ -30,13 +30,13 @@ public class Module: Autofac.Module
         builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateModel>>().InstancePerLifetimeScope();
         builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>().InstancePerLifetimeScope();
         builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamMemberModel>>().InstancePerLifetimeScope();
-        builder.RegisterType<GetFilterModelValidator<TeamFilterModel>>().As<IValidator<GetListModel<TeamFilterModel>>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetFilterModelValidator<TeamFilter>>().As<IValidator<GetListParameters<TeamFilter>>>().InstancePerLifetimeScope();
         builder.RegisterType<SignUpModelValidator>().As<IValidator<SignUpModel>>().InstancePerLifetimeScope();
         builder.RegisterType<SignInModelValidator>().As<IValidator<SignInModel>>().InstancePerLifetimeScope();
-        builder.RegisterType<GetFilterModelValidator<UserFilterModel>>().As<IValidator<GetListModel<UserFilterModel>>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetFilterModelValidator<UserFilter>>().As<IValidator<GetListParameters<UserFilter>>>().InstancePerLifetimeScope();
         builder.RegisterType<CreateEventModelValidator>().As<IValidator<CreateEventModel>>().InstancePerLifetimeScope();
         builder.RegisterType<UpdateEventModelValidator>().As<IValidator<UpdateEventModel>>().InstancePerLifetimeScope();
-        builder.RegisterType<GetFilterModelValidator<EventFilterModel>>().As<IValidator<GetListModel<EventFilterModel>>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetFilterModelValidator<EventFilter>>().As<IValidator<GetListParameters<EventFilter>>>().InstancePerLifetimeScope();
 
         builder.RegisterType<AuditEventHandler>().As<IAuditEventHandler>().InstancePerLifetimeScope();
         

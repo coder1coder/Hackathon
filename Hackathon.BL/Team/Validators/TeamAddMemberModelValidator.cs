@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Team;
@@ -23,7 +22,7 @@ namespace Hackathon.BL.Team.Validators
                         context.AddFailure("Команды с таким идентификатором не существует");
                 });
 
-            RuleFor(x => x.UserId)
+            RuleFor(x => x.MemberId)
                 .GreaterThan(0)
                 .WithMessage("Идентификатор пользователя должен быть больше 0")
                 .CustomAsync(async (userId, context, _) =>
@@ -37,7 +36,7 @@ namespace Hackathon.BL.Team.Validators
                 {
                     var teamModel = await teamRepository.GetAsync(model.TeamId);
 
-                    if (teamModel.Users.Any(x => x.Id == model.UserId))
+                    if (teamModel.Members.Any(x => x.Id == model.MemberId))
                         context.AddFailure("Пользователь уже добавлен в эту команду");
                 });
         }

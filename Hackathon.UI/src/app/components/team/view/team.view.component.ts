@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {TeamService} from "../../../services/team.service";
 import {finalize} from "rxjs/operators";
 import {MatTableDataSource} from "@angular/material/table";
@@ -16,7 +16,7 @@ export class TeamViewComponent implements AfterViewInit {
 
   @Input() teamId?:number;
 
-  team?: TeamModel;
+  team?: Team;
   teamDataSource = new MatTableDataSource<KeyValue<string, string>>([]);
 
   isLoading: boolean = true;
@@ -39,7 +39,7 @@ export class TeamViewComponent implements AfterViewInit {
     this.teamsService.getById(this.teamId!)
       .pipe(finalize(()=>this.isLoading = false))
       .subscribe({
-        next: (r: TeamModel) =>  {
+        next: (r: Team) =>  {
           this.team = r;
           this.teamDataSource.data = [
             { key: 'Наименование',  value: this.team.name ?? '' }

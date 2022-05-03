@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Autofac;
 using Hackathon.Notification;
 using Hackathon.Notification.IntegrationEvent;

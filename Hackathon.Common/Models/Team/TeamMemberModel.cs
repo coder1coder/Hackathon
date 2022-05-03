@@ -3,6 +3,6 @@
     public class TeamMemberModel
     {
         public long TeamId { get; set; }
-        public long UserId { get; set; }
+        public long MemberId { get; set; }
     }
 }

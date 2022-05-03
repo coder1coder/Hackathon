@@ -1,7 +1,7 @@
 import {PageEvent} from "@angular/material/paginator";
 import {AfterViewInit, Directive} from "@angular/core";
 import {PageSettingsDefaults} from "../models/PageSettings";
-import {GetFilterModel} from "../models/GetFilterModel";
+import {GetListParameters} from "../models/GetListParameters";
 
 @Directive()
 export abstract class BaseTableListComponent<T> implements AfterViewInit {
@@ -21,14 +21,14 @@ export abstract class BaseTableListComponent<T> implements AfterViewInit {
       this.pageSettings = JSON.parse(pageSettingsJson)
     else
     {
-      this.pageSettings.pageSize = PageSettingsDefaults.PageSize;
-      this.pageSettings.pageIndex = PageSettingsDefaults.PageIndex;
+      this.pageSettings.pageSize = PageSettingsDefaults.Limit;
+      this.pageSettings.pageIndex = 0;
     }
   }
 
   abstract getDisplayColumns():string[];
   abstract rowClick(item: T):any;
-  abstract fetch(getFilterModel?: GetFilterModel<T>):any;
+  abstract fetch(getFilterModel?: GetListParameters<T>):any;
 
   ngAfterViewInit(): void {
     this.fetch();

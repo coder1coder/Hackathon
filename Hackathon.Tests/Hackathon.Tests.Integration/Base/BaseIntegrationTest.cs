@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
@@ -92,7 +91,7 @@ namespace Hackathon.Tests.Integration.Base
             UserId = response.Id;
         }
 
-        protected async Task<TeamModel> CreateTeamWithEvent(long userId)
+        protected async Task<(TeamModel Team, long EventId)> CreateTeamWithEvent(long userId)
         {
             var eventModel = TestFaker.GetCreateEventModels(1, userId).First();
             var eventId = await EventRepository.CreateAsync(eventModel);
@@ -103,7 +102,7 @@ namespace Hackathon.Tests.Integration.Base
             var teamModel = Mapper.Map<TeamModel>(createTeamModel);
 
             teamModel.Id = await TeamRepository.CreateAsync(createTeamModel);
-            return teamModel;
+            return (teamModel, eventId);
         }
     }
 }

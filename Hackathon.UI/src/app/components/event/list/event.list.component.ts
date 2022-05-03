@@ -1,15 +1,16 @@
 import {Component, ViewChild} from '@angular/core';
 import {EventService} from "../../../services/event.service";
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 import {EventStatus, EventStatusTranslator} from "../../../models/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {FormControl, FormGroup} from "@angular/forms";
-import {EventFilterModel} from "../../../models/Event/EventFilterModel";
-import {GetFilterModel} from "../../../models/GetFilterModel";
-import {EventModel} from 'src/app/models/Event/EventModel';
+import {EventFilter} from "../../../models/Event/EventFilter";
+import {GetListParameters} from "../../../models/GetListParameters";
+import {Event} from 'src/app/models/Event/Event';
 import * as moment from "moment/moment";
 import {RouterService} from "../../../services/router.service";
 import {MatSelect} from "@angular/material/select";
+import {IEventListItem} from "../../../models/Event/IEventListItem";
 
 @Component({
   selector: 'event-list',
@@ -17,10 +18,10 @@ import {MatSelect} from "@angular/material/select";
   styleUrls: ['./event.list.component.scss']
 })
 
-export class EventListComponent extends BaseTableListComponent<EventModel>{
+export class EventListComponent extends BaseTableListComponent<IEventListItem>{
 
   EventStatusTranslator = EventStatusTranslator;
-  EventModel = EventModel;
+  EventModel = Event;
   moment = moment
 
   filterForm = new FormGroup({
@@ -45,22 +46,22 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
 
   override fetch(){
 
-    let params = new GetFilterModel<EventFilterModel>();
+    let params = new GetListParameters<EventFilter>();
 
     if (this.pageSettings != undefined)
     {
-      params.Page = this.pageSettings.pageIndex+1;
-      params.PageSize = this.pageSettings.pageSize;
+      params.Offset = this.pageSettings.pageIndex * this.pageSettings.pageSize;
+      params.Limit = this.pageSettings.pageSize;
     }
 
-    params.Filter = new EventFilterModel();
+    params.Filter = new EventFilter();
     params.Filter = this.filterForm.value;
 
     params.Filter.excludeOtherUsersDraftedEvents = true;
 
-      this.eventsService.getAll(params)
+      this.eventsService.getList(params)
       .subscribe({
-        next: (r: BaseCollectionModel<EventModel>) =>  {
+        next: (r: BaseCollection<IEventListItem>) =>  {
           this.items = r.items;
           this.pageSettings.length = r.totalCount;
         },
@@ -86,7 +87,7 @@ export class EventListComponent extends BaseTableListComponent<EventModel>{
     this.fetch();
   }
 
-  rowClick(event: EventModel){
+  rowClick(event: IEventListItem){
     if (event.status == EventStatus.Draft)
       this.router.Events.Edit(event.id);
     else

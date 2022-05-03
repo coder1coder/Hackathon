@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 

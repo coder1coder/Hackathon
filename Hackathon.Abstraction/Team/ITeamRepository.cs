@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
+using Hackathon.Entities;
 
 namespace Hackathon.Abstraction.Team
 {
@@ -25,9 +25,9 @@ namespace Hackathon.Abstraction.Team
         /// <summary>
         /// Получение информации о командах
         /// </summary>
-        /// <param name="getListModel">Фильтр, пагинация</param>
+        /// <param name="parameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel);
+        Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters);
 
         /// <summary>
         /// Проверка наличия команды по имени
@@ -60,8 +60,8 @@ namespace Hackathon.Abstraction.Team
         /// <summary>
         /// Получить команды в соответствии с выборкой
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="expression">Выражение</param>
         /// <returns></returns>
-        Task<TeamModel[]> GetByExpression(Expression<Func<TeamEntity, bool>> expression);
+        Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression);
     }
 }

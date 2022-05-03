@@ -38,7 +38,7 @@ namespace Hackathon.BL.Event.Validators
                 .GreaterThan(0)
                 .WithMessage("Продолжительность этапа презентации должна быть больше 0 минут");
 
-            RuleFor(x => x.UserId)
+            RuleFor(x => x.OwnerId)
                 .GreaterThan(0)
                 .WithMessage("Идентификатор пользователя должен быть больше 0");
 

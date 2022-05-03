@@ -8,8 +8,8 @@ import {IGetTokenResponse} from "../models/IGetTokenResponse";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {AuthConstants} from "./auth.constants";
 import {GoogleSigninService} from './google-signin.service';
-import {GoogleUserModel} from '../models/User/GoogleUserModel';
-import {IUserModel} from "../models/User/IUserModel";
+import {GoogleUser} from '../models/User/GoogleUser';
+import {IUser} from "../models/User/IUser";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +59,7 @@ export class AuthService {
     return tokenInfo?.userId;
   }
 
-  public getCurrentUser(): Observable<IUserModel> | null {
+  public getCurrentUser(): Observable<IUser> | null {
     if (!this.isLoggedIn())
       return null;
 
@@ -67,13 +67,13 @@ export class AuthService {
     if (tokenInfo == undefined)
       return null;
 
-    return this.http.get<IUserModel>(this.api+'/User/'+tokenInfo.userId, {
+    return this.http.get<IUser>(this.api+'/User/'+tokenInfo.userId, {
       headers: new HttpHeaders()
         .append('Authorization', 'Bearer '+tokenInfo.token)
       });
   }
 
-  public loginByGoogle(googleUserModel: GoogleUserModel) : Observable<IGetTokenResponse> {
+  public loginByGoogle(googleUserModel: GoogleUser) : Observable<IGetTokenResponse> {
     return this.http.post<IGetTokenResponse>(this.api+"/Auth/SignInByGoogle", {
       id: googleUserModel.id,
       fullName: googleUserModel.fullName,

@@ -2,15 +2,16 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {BaseCollectionModel} from "../models/BaseCollectionModel";
+import {BaseCollection} from "../models/BaseCollection";
 import {ICreateEvent} from "../models/Event/ICreateEvent";
 import {IUpdateEvent} from "../models/Event/IUpdateEvent";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {EventStatus} from "../models/EventStatus";
 import {AuthService} from "./auth.service";
-import {GetFilterModel} from "../models/GetFilterModel";
-import {EventFilterModel} from "../models/Event/EventFilterModel";
-import {EventModel} from "../models/Event/EventModel";
+import {GetListParameters} from "../models/GetListParameters";
+import {EventFilter} from "../models/Event/EventFilter";
+import {Event} from "../models/Event/Event";
+import {IEventListItem} from "../models/Event/IEventListItem";
 
 @Injectable({
   providedIn: 'root'
@@ -31,14 +32,14 @@ export class EventService {
     });
   }
 
-  getAll(params?:GetFilterModel<EventFilterModel>):Observable<BaseCollectionModel<EventModel>>{
+  getList(params?:GetListParameters<EventFilter>):Observable<BaseCollection<IEventListItem>>{
 
     let endpoint = this.api+'/event/list';
-    return this.http.post<BaseCollectionModel<EventModel>>(endpoint, params);
+    return this.http.post<BaseCollection<IEventListItem>>(endpoint, params);
   }
 
   getById(eventId:number){
-    return this.http.get<EventModel>(this.api+'/Event/'+eventId);
+    return this.http.get<Event>(this.api+'/Event/'+eventId);
   }
 
   create(createEvent:ICreateEvent):Observable<IBaseCreateResponse>{
@@ -68,32 +69,32 @@ export class EventService {
     return this.http.post(`${this.api}/Event/${eventId}/leave`, {});
   }
 
-  isCanJoinToEvent(event:EventModel) {
+  isCanJoinToEvent(event:Event) {
     let userId = this.authService.getUserId();
     return userId !== undefined
       && !this.isAlreadyInEvent(event, userId)
       && event.status == EventStatus.Published
   }
 
-  isCanDeleteEvent(event:EventModel) {
+  isCanDeleteEvent(event:Event) {
     let userId = this.authService.getUserId();
     return userId !== undefined
       && this.isEventOwner(event)
       && event.status == EventStatus.Draft
   }
 
-  isCanFinishEvent(event:EventModel){
+  isCanFinishEvent(event:Event){
     return this.isEventOwner(event)
       && event.status != EventStatus.Finished
       && event.status != EventStatus.Draft
   }
 
-  isCanPublishEvent(event:EventModel){
+  isCanPublishEvent(event:Event){
     return this.isEventOwner(event)
       && event.status == EventStatus.Draft;
   }
 
-  isCanStartEvent(event:EventModel){
+  isCanStartEvent(event:Event){
     //TODO: check members count
     //TODO: check teams count (auto & manual added)
 
@@ -101,7 +102,7 @@ export class EventService {
       && event.status == EventStatus.Published;
   }
 
-  isCanLeave(event:EventModel)
+  isCanLeave(event:Event)
   {
     let userId = this.authService.getUserId();
     return event.status != EventStatus.Finished
@@ -109,21 +110,21 @@ export class EventService {
       && this.isAlreadyInEvent(event, userId);
   }
 
-  isCanAddTeam(event:EventModel){
+  isCanAddTeam(event:Event){
     return this.isEventOwner(event)
       && event.status == EventStatus.Published
       && !event.isCreateTeamsAutomatically
   }
 
-  isAlreadyInEvent(event:EventModel, userId:number){
-    return event.teamEvents?.filter(t => t.team
-        .users?.filter(x => x.id == userId)
+  isAlreadyInEvent(event:Event, userId:number){
+    return event.teams?.filter(t => t
+        .members?.filter(x => x.id == userId)
         .length > 0
       ).length > 0;
   }
 
-  isEventOwner(event:EventModel){
-    return event.userId == this.authService.getUserId();
+  isEventOwner(event:Event){
+    return event.ownerId == this.authService.getUserId();
   }
 
 }

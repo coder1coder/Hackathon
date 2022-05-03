@@ -1,10 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
+using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
+using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Hackathon.BL.Team
 {
@@ -13,21 +20,27 @@ namespace Hackathon.BL.Team
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IProjectRepository _projectRepository;
+
         private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
-        private readonly IValidator<GetListModel<TeamFilterModel>> _getFilterModelValidator;
+        private readonly IValidator<GetListParameters<TeamFilter>> _getFilterModelValidator;
 
         public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
             IValidator<TeamMemberModel> teamAddMemberModelValidator,
-            IValidator<GetListModel<TeamFilterModel>> getFilterModelValidator,
-            ITeamRepository teamRepository
-            )
+            IValidator<GetListParameters<TeamFilter>> getFilterModelValidator,
+            ITeamRepository teamRepository, 
+            IEventRepository eventRepository, 
+            IProjectRepository projectRepository)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
             
             _teamRepository = teamRepository;
+            _eventRepository = eventRepository;
+            _projectRepository = projectRepository;
         }
 
         /// <inheritdoc cref="ITeamService.CreateAsync(CreateTeamModel)"/>
@@ -41,14 +54,14 @@ namespace Hackathon.BL.Team
             // OwnerId = null
             if (createTeamModel.OwnerId.HasValue)
             {
-                var teams = await _teamRepository.GetAsync(new GetListModel<TeamFilterModel>
+                var teams = await _teamRepository.GetAsync(new GetListParameters<TeamFilter>
                 {
-                    Filter = new TeamFilterModel
+                    Filter = new TeamFilter
                     {
                         OwnerId = createTeamModel.OwnerId
                     },
-                    Page = 0,
-                    PageSize = 1
+                    Offset = 0,
+                    Limit = 1
                 });
 
                 if (teams.Items.Any())
@@ -67,25 +80,92 @@ namespace Hackathon.BL.Team
 
         /// <inheritdoc cref="ITeamService.GetAsync(long)"/>
         public async Task<TeamModel> GetAsync(long teamId)
-        {
-            return await _teamRepository.GetAsync(teamId);
-        }
+            => await _teamRepository.GetAsync(teamId);
 
-        /// <inheritdoc cref="ITeamService.GetAsync(GetListModel{TeamFilterModel})"/>
-        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel)
+        /// <inheritdoc cref="ITeamService.GetAsync(GetListParameters{TeamFilter})"/>
+        public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> getListParameters)
         {
-            await _getFilterModelValidator.ValidateAndThrowAsync(getListModel);
-            return await _teamRepository.GetAsync(getListModel);
+            await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
+            return await _teamRepository.GetAsync(getListParameters);
         }
 
         /// <inheritdoc cref="ITeamService.GetUserTeam(long)"/>
-        public async Task<TeamModel> GetUserTeam(long userId)
-            => (await _teamRepository.GetByExpression(x =>
-                (x.Users.Any(u => u.Id == userId) && x.OwnerId != null)
-                || x.OwnerId == userId)).FirstOrDefault();
+        public async Task<TeamGeneral> GetUserTeam(long userId)
+        {
+            var teams = await _teamRepository.GetByExpressionAsync(x =>
+                (x.Members.Any(u => u.Id == userId) && x.OwnerId != null)
+                || x.OwnerId == userId);
+
+            if (!teams.Any())
+                throw new EntityNotFoundException("Команда не найдена");
+
+            var userTeam = teams.First();
+            
+            return new TeamGeneral
+            {
+                Id = userTeam.Id,
+                Name = userTeam.Name,
+                Owner = userTeam.Owner,
+                Members = userTeam.Members.ToArray()
+            };
+        }
 
         /// <inheritdoc cref="ITeamService.RemoveMemberAsync(TeamMemberModel)"/>
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
             => await _teamRepository.RemoveMemberAsync(teamMemberModel);
+
+        /// <inheritdoc cref="ITeamService.GetTeamEvents(long, PaginationSort)"/>
+        public async Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort)
+        {
+            var isTeamExists = await _teamRepository.ExistAsync(teamId);
+
+            if (!isTeamExists)
+                throw new EntityNotFoundException("Команда не найдена");
+
+            var events = await _eventRepository.GetListAsync(1, new GetListParameters<EventFilter>
+            {
+                Filter = new EventFilter
+                {
+                    TeamsIds = new[] { teamId }
+                },
+                Limit = paginationSort.Limit
+            });
+
+            if (events.Items.Count == 0)
+                return  new BaseCollection<TeamEventListItem>
+                {
+                    Items = Array.Empty<TeamEventListItem>(),
+                    TotalCount = events.TotalCount
+                };
+
+            var eventsIds = events.Items.Select(x => x.Id).ToArray();
+
+            var projects = await _projectRepository.GetListAsync(new GetListParameters<ProjectFilter>
+            {
+                Filter = new ProjectFilter
+                {
+                    EventsIds = eventsIds,
+                    TeamsIds = new []{ teamId }
+                },
+                Limit = eventsIds.Length,
+                Offset = 0,
+                SortBy = paginationSort.SortBy,
+                SortOrder = paginationSort.SortOrder
+            });
+
+            return new BaseCollection<TeamEventListItem>
+            {
+                Items = projects.Items.Select(x => new TeamEventListItem
+                {
+                    EventId = x.EventId,
+                    EventName = x.EventName,
+                    ProjectId = x.Id,
+                    ProjectName = x.Name,
+                    TeamId = x.TeamId,
+                    TeamName = x.TeamName
+                }).ToArray(),
+                TotalCount = events.TotalCount
+            };
+        }
     }
 }
