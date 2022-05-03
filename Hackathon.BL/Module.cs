@@ -1,6 +1,8 @@
 using Amazon.S3;
 using Autofac;
 using FluentValidation;
+using Hackathon.Abstraction.Audit;
+using Hackathon.BL.Audit;
 using Hackathon.BL.Common.Validators;
 using Hackathon.BL.Event.Validators;
 using Hackathon.BL.Project.Validators;
@@ -35,6 +37,8 @@ public class Module: Autofac.Module
         builder.RegisterType<CreateEventModelValidator>().As<IValidator<CreateEventModel>>().InstancePerLifetimeScope();
         builder.RegisterType<UpdateEventModelValidator>().As<IValidator<UpdateEventModel>>().InstancePerLifetimeScope();
         builder.RegisterType<GetFilterModelValidator<EventFilterModel>>().As<IValidator<GetListModel<EventFilterModel>>>().InstancePerLifetimeScope();
+
+        builder.RegisterType<AuditEventHandler>().As<IAuditEventHandler>().InstancePerLifetimeScope();
         
         builder.RegisterAssemblyTypes(typeof(Module).Assembly)
             .Where(x=> !x.IsAbstract && x.Name.EndsWith("Service"))

@@ -9,10 +9,12 @@ using Hackathon.Abstraction.User;
 using Hackathon.BL.Event.Validators;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Audit;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
+using MassTransit;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.Event
@@ -29,6 +31,7 @@ namespace Hackathon.BL.Event
         private readonly IValidator<GetListModel<EventFilterModel>> _getFilterModelValidator;
         private readonly ITeamService _teamService;
         private readonly INotificationService _notificationService;
+        private readonly IBus _messageBus;
 
         public EventService(
             IValidator<CreateEventModel> createEventModelValidator,
@@ -37,7 +40,8 @@ namespace Hackathon.BL.Event
             IEventRepository eventRepository,
             ITeamService teamService, 
             IUserRepository userRepository, 
-            INotificationService notificationService)
+            INotificationService notificationService, 
+            IBus messageBus)
         {
             _createEventModelValidator = createEventModelValidator;
             _updateEventModelValidator = updateEventModelValidator;
@@ -46,13 +50,22 @@ namespace Hackathon.BL.Event
             _teamService = teamService;
             _userRepository = userRepository;
             _notificationService = notificationService;
+            _messageBus = messageBus;
         }
 
         /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
         public async Task<long> CreateAsync(CreateEventModel createEventModel)
         {
             await _createEventModelValidator.ValidateAndThrowAsync(createEventModel);
-            return await _eventRepository.CreateAsync(createEventModel);
+            var eventId = await _eventRepository.CreateAsync(createEventModel);
+            
+            await _messageBus.Publish(new AuditEventModel(
+                AuditEventType.Created,
+                $"Создано новое событие с идентификатором '{eventId}'",
+                createEventModel.UserId
+            ));
+            
+            return eventId;
         }
 
         /// <inheritdoc cref="IEventService.UpdateAsync(UpdateEventModel)"/>

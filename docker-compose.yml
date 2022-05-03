@@ -16,13 +16,20 @@ services:
   
   redis:
     container_name: redis
-    image: 'bitnami/redis:latest'
+    image: bitnami/redis:latest
     environment:
      - REDIS_PASSWORD=redis
     expose:
       - "9379"
     ports:
       - '9379:6379'
+        
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - "5676:5672"
+      - "15676:15672"
 
   minio:
     container_name: minio

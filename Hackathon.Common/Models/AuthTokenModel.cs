@@ -8,7 +8,7 @@ namespace Hackathon.Common.Models
         public string Token { get; set; }
         public long Expires { get; set; }
         
-        public string? GoogleId { get; set; }
+        public string GoogleId { get; set; }
         
         public UserRole Role { get; set; }
     }

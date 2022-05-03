@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
@@ -32,7 +31,7 @@ namespace Hackathon.DAL.Repositories
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
 
-            await _dbContext.Set<UserEntity>().AddAsync(entity);
+            await _dbContext.Users.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
             return _mapper.Map<UserModel>(entity);
@@ -46,7 +45,7 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == userId);
 
-            return _mapper.Map<UserModel>(entity);
+            return entity == null ? null : _mapper.Map<UserModel>(entity);
         }
 
         /// <inheritdoc cref="IUserRepository.GetByGoogleIdOrEmailAsync"/>
