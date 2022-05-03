@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -74,59 +74,59 @@ namespace Hackathon.DAL.Repositories
             }
         }
 
-        /// <inheritdoc cref="IUserRepository.GetAsync(GetListModel{UserFilterModel})"/>
-        public async Task<BaseCollectionModel<UserModel>> GetAsync(GetListModel<UserFilterModel> getListModel)
+        /// <inheritdoc cref="IUserRepository.GetAsync(GetListParameters{UserFilter})"/>
+        public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> parameters)
         {
             var query = _dbContext.Users
                 .AsNoTracking()
                 .AsQueryable();
 
-            if (getListModel.Filter != null)
+            if (parameters.Filter != null)
             {
-                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Username))
-                    query = query.Where(x => x.UserName == getListModel.Filter.Username);
+                if (!string.IsNullOrWhiteSpace(parameters.Filter.Username))
+                    query = query.Where(x => x.UserName == parameters.Filter.Username);
 
-                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Email))
-                    query = query.Where(x => string.Equals(x.Email, getListModel.Filter.Email, StringComparison.CurrentCultureIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(parameters.Filter.Email))
+                    query = query.Where(x => string.Equals(x.Email, parameters.Filter.Email, StringComparison.CurrentCultureIgnoreCase));
 
-                if (getListModel.Filter.Ids != null)
-                    query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
+                if (parameters.Filter.Ids != null)
+                    query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
                 
-                if (getListModel.Filter.ExcludeIds?.Length > 0)
-                    query = query.Where(x => !getListModel.Filter.ExcludeIds.Contains(x.Id));
+                if (parameters.Filter.ExcludeIds?.Length > 0)
+                    query = query.Where(x => !parameters.Filter.ExcludeIds.Contains(x.Id));
             }
 
             var totalCount = await query.LongCountAsync();
 
-            if (!string.IsNullOrWhiteSpace(getListModel.SortBy))
+            if (!string.IsNullOrWhiteSpace(parameters.SortBy))
             {
-                query = getListModel.SortBy switch
+                query = parameters.SortBy switch
                 {
-                    nameof(UserEntity.UserName) => getListModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.UserName) => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.UserName)
                         : query.OrderByDescending(x => x.UserName),
 
-                    nameof(UserEntity.Email) => getListModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.Email) => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Email)
                         : query.OrderByDescending(x => x.Email),
 
-                    nameof(UserEntity.FullName) => getListModel.SortOrder == SortOrder.Asc
+                    nameof(UserEntity.FullName) => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.FullName)
                         : query.OrderByDescending(x => x.FullName),
 
-                    _ => getListModel.SortOrder == SortOrder.Asc
+                    _ => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
                 };
             }
 
             var userModels = await query
-                .Skip((getListModel.Page - 1) * getListModel.PageSize)
-                .Take(getListModel.PageSize)
+                .Skip(parameters.Offset)
+                .Take(parameters.Limit)
                 .ProjectToType<UserModel>()
                 .ToListAsync();
 
-            return new BaseCollectionModel<UserModel>
+            return new BaseCollection<UserModel>
             {
                 Items = userModels,
                 TotalCount = totalCount

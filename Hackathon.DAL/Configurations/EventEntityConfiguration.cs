@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.Entities;
+using Hackathon.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,7 +20,7 @@ public class EventEntityConfiguration: IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.MinTeamMembers).IsRequired();
         builder.Property(x => x.MaxEventMembers).IsRequired();
         builder.Property(x => x.IsCreateTeamsAutomatically).IsRequired();
-        builder.Property(x => x.UserId).IsRequired();
+        builder.Property(x => x.OwnerId).IsRequired();
 
         builder.Property(x => x.ChangeEventStatusMessages);
     }

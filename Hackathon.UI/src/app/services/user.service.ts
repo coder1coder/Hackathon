@@ -2,10 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
-import { BaseCollectionModel } from "../models/BaseCollectionModel";
-import { GetFilterModel } from "../models/GetFilterModel";
-import { UserFilterModel } from "../models/User/UserFilterModel";
-import {IUserModel} from "../models/User/IUserModel";
+import { BaseCollection } from "../models/BaseCollection";
+import { GetListParameters } from "../models/GetListParameters";
+import { UserFilter } from "../models/User/UserFilter";
+import {IUser} from "../models/User/IUser";
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,12 @@ export class UserService {
     });
   }
 
-  getList(getFilterModel:GetFilterModel<UserFilterModel>):Observable<BaseCollectionModel<IUserModel>>{
-    return this.http.post<BaseCollectionModel<IUserModel>>(this.api+'/User/list', getFilterModel);
+  getList(getFilterModel:GetListParameters<UserFilter>):Observable<BaseCollection<IUser>>{
+    return this.http.post<BaseCollection<IUser>>(this.api+'/User/list', getFilterModel);
   }
 
-  public getById(userId:number): Observable<IUserModel> {
-    return this.http.get<IUserModel>(this.api+'/User/'+ userId);
+  public getById(userId:number): Observable<IUser> {
+    return this.http.get<IUser>(this.api+'/User/'+ userId);
   }
 
   public getProfileImage(id: string): Observable<ArrayBuffer> {

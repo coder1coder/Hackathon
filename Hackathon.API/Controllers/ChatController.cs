@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Chat;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Contracts.Responses;

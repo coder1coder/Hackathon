@@ -36,7 +36,7 @@ namespace Hackathon.API.Controllers
         public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
         {
             var createEventModel = _mapper.Map<CreateEventModel>(createEventRequest);
-            createEventModel.UserId = UserId;
+            createEventModel.OwnerId = UserId;
 
             return new BaseCreateResponse
             {
@@ -47,22 +47,24 @@ namespace Hackathon.API.Controllers
         /// <summary>
         /// Обновить событие
         /// </summary>
-        /// <param name="eventRequest"></param>
+        /// <param name="request"></param>
         [HttpPut]
-        public async Task Update(UpdateEventRequest eventRequest)
-            => await _eventService.UpdateAsync(_mapper.Map<UpdateEventModel>(eventRequest));
+        public async Task Update(UpdateEventRequest request)
+        {
+            var model = _mapper.Map<UpdateEventModel>(request);
+            await _eventService.UpdateAsync(model);
+        }
 
         /// <summary>
         /// Получить все события
         /// </summary>
         /// <returns></returns>
         [HttpPost("list")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventModel>))]
-        public async Task<IActionResult> GetList([FromBody] GetListRequest<EventFilterModel> listRequest)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventListItem>))]
+        public async Task<IActionResult> GetList([FromBody] GetListRequest<EventFilter> listRequest)
         {
-            var getFilterModel = _mapper.Map<GetListModel<EventFilterModel>>(listRequest);
-            var collectionModel = await _eventService.GetAsync(UserId, getFilterModel);
-            return Ok(_mapper.Map<BaseCollectionResponse<EventModel>>(collectionModel));
+            var getFilterModel = _mapper.Map<GetListParameters<EventFilter>>(listRequest);
+            return Ok(await _eventService.GetListAsync(UserId, getFilterModel));
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace Hackathon.API.Controllers
             => await _eventService.GetAsync(id);
 
         ///<inheritdoc cref="IEventApi.Join"/>
-        [HttpPost("{eventId:long}/Join")]
+        [HttpPost("{eventId:long}/join")]
         public async Task Join(long eventId) 
             => await _eventService.JoinAsync(eventId, UserId);
         

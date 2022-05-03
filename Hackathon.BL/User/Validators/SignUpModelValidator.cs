@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
@@ -16,9 +15,9 @@ namespace Hackathon.BL.User.Validators
                 .MaximumLength(100)
                 .CustomAsync(async (userName, context, _) =>
                 {
-                    var users = await userRepository.GetAsync(new GetListModel<UserFilterModel>
+                    var users = await userRepository.GetAsync(new GetListParameters<UserFilter>
                     {
-                        Filter = new UserFilterModel
+                        Filter = new UserFilter
                         {
                             Username = userName
                         }
@@ -40,9 +39,9 @@ namespace Hackathon.BL.User.Validators
                 .EmailAddress()
                 .CustomAsync(async (email, context, _) =>
                 {
-                    var users = await userRepository.GetAsync(new GetListModel<UserFilterModel>
+                    var users = await userRepository.GetAsync(new GetListParameters<UserFilter>
                     {
-                        Filter = new UserFilterModel
+                        Filter = new UserFilter
                         {
                             Email = email
                         }

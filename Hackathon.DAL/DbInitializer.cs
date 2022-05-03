@@ -1,7 +1,7 @@
 using System.Linq;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

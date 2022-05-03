@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {NotificationModel} from "../../../../models/Notification/NotificationModel";
 import {Notification} from "../../../../models/Notification/Notification";
 
 @Component({
@@ -11,7 +10,7 @@ import {Notification} from "../../../../models/Notification/Notification";
 export class NotificationInfoViewComponent{
 
   Notification = Notification;
-  @Input() notify: NotificationModel | undefined;
+  @Input() notify: Notification | undefined;
   @Input() hideDate: boolean = false;
 
   constructor() {

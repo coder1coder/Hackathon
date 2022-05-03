@@ -4,13 +4,13 @@ import {HubConnection} from "@microsoft/signalr";
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {BaseCollectionModel} from "../models/BaseCollectionModel";
-import {NotificationModel} from "../models/Notification/NotificationModel";
-import {GetFilterModel} from "../models/GetFilterModel";
-import {NotificationFilterModel} from "../models/Notification/NotificationFilterModel";
+import {BaseCollection} from "../models/BaseCollection";
+import {GetListParameters} from "../models/GetListParameters";
+import {Notification} from "../models/Notification/Notification";
+import {NotificationFilter} from "../models/Notification/NotificationFilter";
 import {
-  INotificationChangedIntegrationEventModel
-} from "../models/IntegrationEvent/INotificationChangedIntegrationEventModel";
+  INotificationChangedIntegrationEvent
+} from "../models/IntegrationEvent/INotificationChangedIntegrationEvent";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class NotificationService
 
   private _signalR!: HubConnection;
 
-  public onChanged?:(x:INotificationChangedIntegrationEventModel) => void
+  public onChanged?:(x:INotificationChangedIntegrationEvent) => void
 
   constructor(private http:HttpClient) {
 
@@ -41,8 +41,8 @@ export class NotificationService
     return this.http.post(this.api + '/notification/read', ids);
   }
 
-  getNotifications(filter:GetFilterModel<NotificationFilterModel>):Observable<BaseCollectionModel<NotificationModel>>{
-    return this.http.post<BaseCollectionModel<NotificationModel>>(this.api + "/notification/list", filter);
+  getNotifications(filter:GetListParameters<NotificationFilter>):Observable<BaseCollection<Notification>>{
+    return this.http.post<BaseCollection<Notification>>(this.api + "/notification/list", filter);
   }
 
   getUnreadNotificationsCount():Observable<number>{
@@ -60,7 +60,7 @@ export class NotificationService
 
     this._signalR.onclose(()=>this.startConnection());
 
-    this._signalR.on("NotificationChanged", (x: INotificationChangedIntegrationEventModel) => {
+    this._signalR.on("NotificationChanged", (x: INotificationChangedIntegrationEvent) => {
 
       if (this.onChanged)
         this.onChanged(x)

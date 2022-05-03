@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Hackathon.Abstraction;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Abstraction.Team;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
+using Hackathon.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +29,19 @@ namespace Hackathon.DAL.Repositories
         {
             var createTeamEntity = _mapper.Map<TeamEntity>(createTeamModel);
 
-            await _dbContext.AddAsync(createTeamEntity);
+            if (createTeamModel.EventId.HasValue)
+            {
+                var eventEntity = await _dbContext.Events
+                    .FirstOrDefaultAsync(x => 
+                        x.Id == createTeamModel.EventId.Value);
+                
+                eventEntity?.Teams.Add(createTeamEntity);
+            }
+            else
+            {
+                await _dbContext.AddAsync(createTeamEntity);    
+            }
+            
             await _dbContext.SaveChangesAsync();
 
             return createTeamEntity.Id;
@@ -41,9 +52,8 @@ namespace Hackathon.DAL.Repositories
         {
             var teamEntity = await _dbContext.Teams
                 .AsNoTracking()
-                .Include(x=>x.TeamEvents)
-                    .ThenInclude(x=>x.Event)
-                .Include(x=>x.Users)
+                .Include(x=>x.Owner)
+                .Include(x=>x.Members)
                 .SingleOrDefaultAsync(x=>x.Id == teamId);
 
             if (teamEntity == null)
@@ -52,69 +62,66 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<TeamModel>(teamEntity);
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListModel{TeamFilterModel})"/>
-        public async Task<BaseCollectionModel<TeamModel>> GetAsync(GetListModel<TeamFilterModel> getListModel)
+        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListParameters{TeamFilter})"/>
+        public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters)
         {
             var query = _dbContext.Teams
-                .Include(x => x.Users)
-                .Include(x => x.TeamEvents)
+                .Include(x => x.Members)
+                .Include(x => x.Events)
                 .AsNoTracking();
 
-            if (getListModel.Filter != null)
+            if (parameters.Filter != null)
             {
-                if (getListModel.Filter.Ids != null)
-                    query = query.Where(x => getListModel.Filter.Ids.Contains(x.Id));
+                if (parameters.Filter.Ids != null)
+                    query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
 
-                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Name))
-                    query = query.Where(x => x.Name.ToLower().Contains(getListModel.Filter.Name.ToLower().Trim()));
+                if (!string.IsNullOrWhiteSpace(parameters.Filter.Name))
+                    query = query.Where(x => x.Name.ToLower().Contains(parameters.Filter.Name.ToLower().Trim()));
 
-                if (!string.IsNullOrWhiteSpace(getListModel.Filter.Owner))
-                    query = query.Where(x => x.Owner.FullName.ToLower().Contains(getListModel.Filter.Owner.ToLower().Trim()));
+                if (!string.IsNullOrWhiteSpace(parameters.Filter.Owner))
+                    query = query.Where(x => x.Owner.FullName.ToLower().Contains(parameters.Filter.Owner.ToLower().Trim()));
 
-                if (getListModel.Filter.QuantityUsersFrom.HasValue)
+                if (parameters.Filter.QuantityUsersFrom.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count >= getListModel.Filter.QuantityUsersFrom));
+                        x.Members.Count >= parameters.Filter.QuantityUsersFrom);
 
-                if (getListModel.Filter.QuantityUsersTo.HasValue)
+                if (parameters.Filter.QuantityUsersTo.HasValue)
                     query = query.Where(x =>
-                        x.TeamEvents.Any(s => s.Team.Users.Count <= getListModel.Filter.QuantityUsersTo));
+                        x.Members.Count <= parameters.Filter.QuantityUsersTo);
 
-                if (getListModel.Filter.EventId.HasValue)
-                    query = query.Where(x => x.TeamEvents.Any(s => s.EventId == getListModel.Filter.EventId));
+                if (parameters.Filter.EventId.HasValue)
+                    query = query.Where(x => x.Events.Any(s => s.Id == parameters.Filter.EventId));
 
-                if (getListModel.Filter.ProjectId.HasValue)
-                    query = query.Where(x => x.TeamEvents.Any(s => s.ProjectId == getListModel.Filter.ProjectId));
-
-                if (getListModel.Filter.OwnerId.HasValue)
-                    query = query.Where(x => x.OwnerId == getListModel.Filter.OwnerId);
+                if (parameters.Filter.OwnerId.HasValue)
+                    query = query.Where(x => x.OwnerId == parameters.Filter.OwnerId);
                 
-                if (getListModel.Filter.HasOwner.HasValue)
+                if (parameters.Filter.HasOwner.HasValue)
                     query = query.Where(x => x.OwnerId != null);
             }
 
             var totalCount = await query.LongCountAsync();
 
-            if (!string.IsNullOrWhiteSpace(getListModel.SortBy))
+            if (!string.IsNullOrWhiteSpace(parameters.SortBy))
             {
-                query = getListModel.SortBy switch
+                query = parameters.SortBy switch
                 {
-                    nameof(TeamEntity.Name) => getListModel.SortOrder == SortOrder.Asc
+                    nameof(TeamEntity.Name) => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Name)
                         : query.OrderByDescending(x => x.Name),
 
-                    _ => getListModel.SortOrder == SortOrder.Asc
+                    _ => parameters.SortOrder == SortOrder.Asc
                         ? query.OrderBy(x => x.Id)
                         : query.OrderByDescending(x => x.Id)
                 };
             }
 
             var teamModels = await query
-                .Skip((getListModel.Page - 1) * getListModel.PageSize)
-                .Take(getListModel.PageSize)
+                .Skip(parameters.Offset)
+                .Take(parameters.Limit)
                 .ProjectToType<TeamModel>(_mapper.Config)
                 .ToListAsync();
 
-            return new BaseCollectionModel<TeamModel>
+            return new BaseCollection<TeamModel>
             {
                 Items = teamModels,
                 TotalCount = totalCount
@@ -123,19 +130,15 @@ namespace Hackathon.DAL.Repositories
 
         /// <inheritdoc cref="ITeamRepository.ExistAsync(string)"/>
         public async Task<bool> ExistAsync(string teamName)
-        {
-            return await _dbContext.Teams
+            => await _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Name.ToLower() == teamName.ToLower());
-        }
 
         /// <inheritdoc cref="ITeamRepository.ExistAsync(long)"/>
         public async Task<bool> ExistAsync(long teamId)
-        {
-            return await _dbContext.Teams
+            => await _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == teamId);
-        }
 
         /// <inheritdoc cref="ITeamRepository.AddMemberAsync(TeamMemberModel)"/>
         public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
@@ -150,12 +153,12 @@ namespace Hackathon.DAL.Repositories
                 throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
 
             var userEntity = await _dbContext.Users
-                .SingleOrDefaultAsync(x => x.Id == teamMemberModel.UserId);
+                .SingleOrDefaultAsync(x => x.Id == teamMemberModel.MemberId);
 
             if (userEntity == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
 
-            teamEntity.Users.Add(userEntity);
+            teamEntity.Members.Add(userEntity);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -164,27 +167,29 @@ namespace Hackathon.DAL.Repositories
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams
-                .Include(x=>x.Users)
-                .FirstOrDefaultAsync(x=>x.Id == teamMemberModel.TeamId);
+                .Include(x=>x.Members)
+                .FirstOrDefaultAsync(x=>
+                    x.Id == teamMemberModel.TeamId);
 
             if (team == null)
                 throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
 
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(x => x.Id == teamMemberModel.UserId);
+                .FirstOrDefaultAsync(x => x.Id == teamMemberModel.MemberId);
 
             if (user == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
             
-            team.Users.Remove(user);
+            team.Members.Remove(user);
             
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<TeamModel[]> GetByExpression(Expression<Func<TeamEntity, bool>> expression)
+        public async Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression)
             => await _dbContext.Teams
                 .Where(expression)
-                .Include(x => x.Users)
+                .Include(x=>x.Owner)
+                .Include(x => x.Members)
                 .ProjectToType<TeamModel>(_mapper.Config)
                 .AsNoTracking()
                 .ToArrayAsync();

@@ -14,5 +14,10 @@ namespace Hackathon.Common.Models.User
         public UserRole Role { get; set; } = UserRole.Default;
 
         public Guid? ProfileImageId { get; set; }
+
+        public override string ToString()
+            => string.IsNullOrWhiteSpace(FullName)
+                ? UserName
+                : $"{FullName} ({UserName})";
     }
 }

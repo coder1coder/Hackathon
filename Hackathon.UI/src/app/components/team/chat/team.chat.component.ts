@@ -4,9 +4,9 @@ import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment/moment";
 import {ChatService} from "../../../services/chat/chat.service";
 import {TeamService} from "../../../services/team.service";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {SnackService} from "../../../services/snack.service";
-import {BaseCollectionModel} from "../../../models/BaseCollectionModel";
+import {BaseCollection} from "../../../models/BaseCollection";
 
 @Component({
   selector: 'team-chat',
@@ -19,7 +19,7 @@ export class TeamChatComponent implements AfterViewInit {
 
   isCanView:boolean = false
   currentUserId:number = -1;
-  userTeam:TeamModel | null = null
+  userTeam:Team | null = null
   isOpened = false
 
   @ViewChild('scrollMe') private chatBody: ElementRef | undefined;
@@ -67,7 +67,7 @@ export class TeamChatComponent implements AfterViewInit {
       {
           this.chatService.getTeamMessages(this.userTeam.id)
             .subscribe({
-              next: (r: BaseCollectionModel<ChatMessage>) =>  {
+              next: (r: BaseCollection<ChatMessage>) =>  {
                 this.messages = r.items
                 this.scrollChatToLastMessage();
               },

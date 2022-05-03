@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.Entities;
+using Hackathon.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,5 +18,7 @@ public class ProjectEntityConfiguration: IEntityTypeConfiguration<ProjectEntity>
             .Property(x => x.Description)
             .HasMaxLength(1000);
 
+        builder.HasOne(x => x.Event);
+        builder.HasOne(x => x.Team);
     }
 }

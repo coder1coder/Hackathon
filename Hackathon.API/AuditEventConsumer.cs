@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Audit;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Audit;
 using MassTransit;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,5 @@
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

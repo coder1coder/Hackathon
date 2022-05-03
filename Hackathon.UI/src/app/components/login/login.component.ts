@@ -6,7 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {IProblemDetails} from "../../models/IProblemDetails";
 import {environment} from "../../../environments/environment";
-import {GoogleUserModel} from 'src/app/models/User/GoogleUserModel';
+import {GoogleUser} from 'src/app/models/User/GoogleUser';
 import {FormControl, FormGroup} from '@angular/forms';
 import {RouterService} from "../../services/router.service";
 
@@ -126,8 +126,8 @@ export class LoginComponent implements AfterViewInit  {
       })
   }
 
-  initGoogleUser(user: any): GoogleUserModel {
-    let googleUser = new GoogleUserModel();
+  initGoogleUser(user: any): GoogleUser {
+    let googleUser = new GoogleUser();
     if(user != undefined) {
       let profile = user.getBasicProfile();
       googleUser.id = profile.getId();

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Hackathon.Abstraction;
 using Hackathon.Abstraction.Team;
 using Hackathon.Common.Models.Project;
 

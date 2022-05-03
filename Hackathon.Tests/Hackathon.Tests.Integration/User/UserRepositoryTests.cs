@@ -41,9 +41,9 @@ namespace Hackathon.Tests.Integration.User
             await DbContext.Users.AddRangeAsync(userEntities);
             await DbContext.SaveChangesAsync();
 
-            var response = await UserRepository.GetAsync(new GetListModel<UserFilterModel>
+            var response = await UserRepository.GetAsync(new GetListParameters<UserFilter>
             {
-                Filter = new UserFilterModel
+                Filter = new UserFilter
                 {
                     Username = userEntities.First().UserName,
                     Email = userEntities.First().Email

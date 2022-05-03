@@ -2,25 +2,20 @@ import {PageEvent} from "@angular/material/paginator";
 
 export class PageSettings {
 
-  page:number = 0;
-  pageSize:number = PageSettingsDefaults.PageSize;
+  offset:number = PageSettingsDefaults.Offset;
+  limit:number = PageSettingsDefaults.Limit;
   sortBy!:string;
   sortOrder:SortOrder = SortOrder.ASC;
 
   constructor(pageEvent:PageEvent) {
-    this.page = pageEvent.pageIndex;
-    this.pageSize = pageEvent.pageSize;
-  }
-
-  //TODO Необходимо избавится от всех toQueryArgs
-  toQueryArgs(){
-    return `&Page=${this.page+1}&PageSize=${this.pageSize}&SortBy=${this.sortBy ?? ''}&SortOrder=${this.sortOrder}`;
+    this.offset = pageEvent.pageIndex;
+    this.limit = pageEvent.pageSize;
   }
 }
 
 export enum PageSettingsDefaults {
-  PageSize = 10,
-  PageIndex = 0
+  Limit = 15,
+  Offset = 0
 }
 
 export enum SortOrder {

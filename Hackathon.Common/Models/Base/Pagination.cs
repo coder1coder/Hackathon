@@ -2,13 +2,20 @@ namespace Hackathon.Common.Models.Base
 {
     public class Pagination
     {
-        private int _page = 1;
+        private int _offset;
 
-        public int Page
+        /// <summary>
+        /// Количество первых записей которые необходимо пропустить
+        /// </summary>
+        public int Offset
         {
-            get => _page;
-            set => _page = value > 0 ? value : 1;
+            get => _offset;
+            set => _offset = value > 0 ? value : 0;
         }
-        public int PageSize { get; set; } = 10;
+        
+        /// <summary>
+        /// Количество записей которые необходимо получить
+        /// </summary>
+        public int Limit { get; set; } = 15;
     }
 }

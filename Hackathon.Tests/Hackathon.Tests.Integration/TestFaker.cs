@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bogus;
-using Hackathon.Abstraction.Entities;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using MapsterMapper;
 
 namespace Hackathon.Tests.Integration
@@ -72,7 +72,7 @@ namespace Hackathon.Tests.Integration
 
         #region Entities
 
-        private static IEnumerable<EventEntity> GetEventEntities(int count, long userId, EventStatus? eventStatus = null)
+        private static IEnumerable<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)
         {
             var faker = new Faker<EventEntity>();
 
@@ -85,7 +85,7 @@ namespace Hackathon.Tests.Integration
                 .RuleFor(x => x.MaxEventMembers, _=>30)
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
-                .RuleFor(x => x.UserId, userId)
+                .RuleFor(x => x.OwnerId, ownerId)
                 .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
                 ;
 

@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {TeamModel} from "../../../models/Team/TeamModel";
+import {Team} from "../../../models/Team/Team";
 import {FormControl, FormGroup} from "@angular/forms";
 import {IProblemDetails} from "../../../models/IProblemDetails";
 import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
@@ -15,7 +15,7 @@ import {SnackService} from "../../../services/snack.service";
 
 export class TeamNewComponent
 {
-  team!: TeamModel;
+  team!: Team;
   eventId!: number;
 
   isLoading: boolean = false;
