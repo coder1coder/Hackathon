@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {Actions} from "../common/Actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Actions} from "../common/Actions";
 
 @Injectable({
   providedIn: 'root'
