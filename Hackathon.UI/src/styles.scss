@@ -22,6 +22,7 @@ table {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+  height: 100%;
 
   &-full {
     max-width: 100%;
@@ -104,6 +105,7 @@ mat-tab-group.vertical-tabs {
   display: flex;
   flex-direction: row;
   column-gap: 2em;
+  height: 100%;
 
   mat-tab-header{
     border: 0;
