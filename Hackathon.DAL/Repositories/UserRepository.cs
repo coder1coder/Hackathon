@@ -84,10 +84,12 @@ namespace Hackathon.DAL.Repositories
             if (parameters.Filter != null)
             {
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Username))
-                    query = query.Where(x => x.UserName == parameters.Filter.Username);
+                    query = query.Where(x => 
+                        x.UserName.ToLowerInvariant() == parameters.Filter.Username.ToLowerInvariant());
 
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Email))
-                    query = query.Where(x => string.Equals(x.Email, parameters.Filter.Email, StringComparison.InvariantCultureIgnoreCase));
+                    query = query.Where(x =>
+                        x.Email.ToLowerInvariant() == parameters.Filter.Email.ToLowerInvariant());
 
                 if (parameters.Filter.Ids != null)
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
