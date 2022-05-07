@@ -87,7 +87,7 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => x.UserName == parameters.Filter.Username);
 
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Email))
-                    query = query.Where(x => string.Equals(x.Email, parameters.Filter.Email, StringComparison.CurrentCultureIgnoreCase));
+                    query = query.Where(x => string.Equals(x.Email, parameters.Filter.Email, StringComparison.InvariantCultureIgnoreCase));
 
                 if (parameters.Filter.Ids != null)
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
