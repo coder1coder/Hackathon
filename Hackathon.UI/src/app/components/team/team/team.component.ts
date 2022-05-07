@@ -31,7 +31,6 @@ export class TeamComponent {
       getList.Filter = new EventFilter();
       getList.Filter.teamsIds = [ this.team.id ];
 
-
       this.eventService.getList(getList)
         .subscribe(x => this.teamEvents = x.items);
     }

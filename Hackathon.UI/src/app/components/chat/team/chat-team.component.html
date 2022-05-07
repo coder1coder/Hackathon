@@ -1,0 +1,25 @@
+<div class="chat" *ngIf="!isFloatMode else floatModeTemplate">
+  <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
+    <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
+      <div class="chat__message-image" *ngIf="message.ownerId !== currentUserId"></div>
+      <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
+        <div class="chat__message-owner">{{ message.ownerFullName }}</div>
+        <div class="chat__message-text">{{ message.message }} </div>
+        <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="chat__footer">
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>Сообщение</mat-label>
+        <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
+        <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+
+<ng-template #floatModeTemplate>
+  <div>floatmode...</div>
+</ng-template>

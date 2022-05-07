@@ -47,10 +47,10 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {TeamComponent} from "./components/team/team/team.component";
-import {TeamChatComponent} from "./components/team/chat/team.chat.component";
 import {MatCardModule} from "@angular/material/card";
 import {ListDetailsComponent} from "./components/custom/list-details/list-details.component";
 import {AlertComponent} from "./components/custom/alert/alert.component";
+import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
 
 @NgModule({
   declarations: [
@@ -70,13 +70,14 @@ import {AlertComponent} from "./components/custom/alert/alert.component";
     TeamComponent,
     TeamNewComponent,
     TeamListComponent,
-    TeamChatComponent,
     UserTeamComponent,
 
     UserListComponent,
     UserViewComponent,
 
     NotFoundComponent,
+
+    ChatTeamComponent,
 
     NotificationBellComponent,
     NotificationListComponent,
