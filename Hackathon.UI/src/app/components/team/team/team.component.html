@@ -1,6 +1,7 @@
 <mat-tab-group
+  *ngIf="team"
   animationDuration="0ms"
-  dynamicHeight *ngIf="team"
+  dynamicHeight
   class="vertical-tabs"
   (selectedTabChange)="tabChanged($event)"
 >
@@ -49,6 +50,10 @@
       <tr mat-row *matRowDef="let row; columns: ['name','start','project'];"></tr>
 
     </table>
+  </mat-tab>
+
+  <mat-tab label="Чат" class="mat-tab-body-position-absolute">
+    <chat-team [teamId]="team.id"></chat-team>
   </mat-tab>
 
 </mat-tab-group>

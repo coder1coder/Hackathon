@@ -3,9 +3,9 @@ import {HubConnection} from "@microsoft/signalr";
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
-import {ChatMessage} from "../../components/team/chat/team.chat.component";
 import {Observable} from "rxjs";
 import {BaseCollection} from "../../models/BaseCollection";
+import {ChatMessage} from "../../components/chat/team/chat-team.component";
 
 @Injectable({
   providedIn: 'root'

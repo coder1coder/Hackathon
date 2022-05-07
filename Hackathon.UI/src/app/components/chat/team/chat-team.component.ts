@@ -1,26 +1,29 @@
-import {AfterViewInit, Component, ElementRef, Injectable, ViewChild} from '@angular/core';
-import {AuthService} from "../../../services/auth.service";
+import {AfterViewInit, Component, ElementRef, Injectable, Input, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment/moment";
+import {AuthService} from "../../../services/auth.service";
 import {ChatService} from "../../../services/chat/chat.service";
-import {TeamService} from "../../../services/team.service";
-import {Team} from "../../../models/Team/Team";
-import {SnackService} from "../../../services/snack.service";
 import {BaseCollection} from "../../../models/BaseCollection";
 
 @Component({
-  selector: 'team-chat',
-  templateUrl: './team.chat.component.html',
-  styleUrls: ['./team.chat.component.scss']
+  selector: 'chat-team',
+  templateUrl: './chat-team.component.html',
+  styleUrls: ['./chat-team.component.scss']
 })
 
 @Injectable()
-export class TeamChatComponent implements AfterViewInit {
+export class ChatTeamComponent implements AfterViewInit {
 
   isCanView:boolean = false
   currentUserId:number = -1;
-  userTeam:Team | null = null
   isOpened = false
+
+  isFloatMode = false;
+
+  public chatHeaderText = 'Чат команды';
+
+  @Input()
+  public teamId?:number;
 
   @ViewChild('scrollMe') private chatBody: ElementRef | undefined;
 
@@ -32,9 +35,7 @@ export class TeamChatComponent implements AfterViewInit {
 
   constructor(
     private authService: AuthService,
-    private chatService:ChatService,
-    private teamService:TeamService,
-    private snack:SnackService) {
+    private chatService:ChatService) {
 
     authService.authChange.subscribe(_ => this.updateChatView())
     chatService.onPublished = (_=> this.fetch());
@@ -49,47 +50,36 @@ export class TeamChatComponent implements AfterViewInit {
     if (this.authService.isLoggedIn())
     {
       this.currentUserId = this.authService.getUserId() ?? 0;
-      this.teamService.getMyTeam().subscribe( r => {
-        this.userTeam = r;
-        this.isCanView = this.userTeam != null;
-        this.fetch()
-      });
+      this.isCanView = this.teamId != null;
+
+      this.fetch();
     }
   }
 
   fetch(){
     if (this.isCanView)
     {
-
-      this.currentUserId = this.authService.getUserId() ?? 0;
-
-      if (this.currentUserId >= 0 && this.userTeam != null)
-      {
-          this.chatService.getTeamMessages(this.userTeam.id)
-            .subscribe({
-              next: (r: BaseCollection<ChatMessage>) =>  {
-                this.messages = r.items
-                this.scrollChatToLastMessage();
-              },
-              error: () => {}
-            });
-      }
+      this.chatService.getTeamMessages(this.teamId!)
+        .subscribe({
+          next: (r: BaseCollection<ChatMessage>) =>  {
+            this.messages = r.items
+            this.scrollChatToLastMessage();
+          },
+          error: () => {}
+        });
     }
   }
 
   sendMessage(){
     //TODO: more validation
-    if (this.userTeam == null)
-    {
-      this.snack.open("Вы не состоите в команде, чтобы отправить сообщение");
+    if (this.teamId == null)
       return
-    }
 
     let message = this.form.controls['message'].value;
     let ownerId = this.authService.getUserId() ?? -1;
 
     let chatMessage = new ChatMessage(ChatMessageContext.TeamChat, ownerId, message);
-    chatMessage.teamId = this.userTeam?.id;
+    chatMessage.teamId = this.teamId;
     chatMessage.timestamp = moment.utc().toISOString();
 
     this.chatService.sendTeamMessage(chatMessage)

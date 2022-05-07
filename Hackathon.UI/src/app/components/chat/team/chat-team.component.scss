@@ -1,45 +1,30 @@
-.team-chat {
-  position: fixed;
-  right: 1vh;
-  bottom: 1vh;
-  padding: 0;
+:host {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
   overflow: hidden;
+  position: relative;
+  height: 100%;
+}
 
-  &__header {
-    background: #3f51b5;
-    color: #fff;
-    padding: 3px 10px;
-    min-height: 40px;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &-closer {
-      font-size: 24px;
-      font-weight: lighter;
-    }
-  }
+.chat {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  height: inherit;
+  padding-left: 1em;
+  padding-bottom: 1em;
 
   &__body {
-    padding: 10px;
-    min-height: 50vh;
-    max-height: 50vh;
-    width: 30vw;
+    flex: 1;
     overflow-y: scroll;
   }
 
   &__footer {
-    padding: 3px 10px;
-
-    form {
+    mat-form-field {
       width: 100%;
-
-      .mat-form-field {
-        width: 100%;
-      }
     }
   }
 
@@ -91,5 +76,13 @@
       }
     }
   }
+}
 
+.mat-tab-body.mat-tab-body-active :host {
+  /* fix team chat screen */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
