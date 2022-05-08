@@ -13,7 +13,7 @@ export enum EventStatus
 
 export class EventStatusTranslator{
 
-  public static GetName = (e:EventStatus) : string => EventStatus[e];
+  public static GetName = (e:EventStatus) : string => EventStatus[e].toLowerCase();
 
   public static Translate = (e: EventStatus) : string => {
 
