@@ -1,14 +1,8 @@
 <mat-toolbar class="layout-default__toolbar">
 
-  <span>Hackathon</span>
-  <span *ngIf="title" class="layout-default__title">: {{ title }}</span>
-
-  <div class="layout-default__actions">
-    <ng-content select="[actions]"></ng-content>
-  </div>
-
-  <span class="spacer"></span>
+  <div class="logo">Hackathon</div>
   <app-nav-menu></app-nav-menu>
+  <span class="spacer"></span>
   <notification-bell></notification-bell>
   <button mat-icon-button [matMenuTriggerFor]="profileMenu">
     <mat-icon>account_circle</mat-icon>
@@ -25,6 +19,11 @@
   </mat-menu>
 
 </mat-toolbar>
+
+<div class="layout-default__page-bar">
+  <div class="layout-default__title">{{ title }}</div>
+  <div class="layout-default__actions"><ng-content select="[actions]"></ng-content></div>
+</div>
 
 <div class="container container-full">
   <ng-content></ng-content>
