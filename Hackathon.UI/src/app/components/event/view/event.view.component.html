@@ -1,4 +1,4 @@
-<layout-default title="Событие" [isLoading]="isLoading">
+<layout-default [title]="'Событие: ' + event.name" [isLoading]="isLoading">
 
   <div actions>
     <button *ngIf="eventsService.isCanAddTeam(event)" mat-button color="primary" (click)="createNewTeam()">

@@ -64,7 +64,6 @@ export class EventViewComponent implements AfterViewInit {
 
           this.eventDetails = [
             { key: "ID", value: this.event.id },
-            { key: "Название", value: this.event.name },
             { key: "Организатор", value: this.event.owner.userName },
             { key: "Дата начала", value: this.event.start.toLocaleString('dd.MM.yyyy, hh:mm z') },
             { key: "Статус события", value: EventStatusTranslator.Translate(this.event.status ?? -1) },

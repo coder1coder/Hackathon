@@ -4,6 +4,7 @@ html, body { height: 100%; }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 400;
 }
 
 b {
@@ -26,7 +27,7 @@ table {
 
   &-full {
     max-width: 100%;
-    padding: 0 1em;
+    padding: 0 1em 0 2em;
   }
 }
 
