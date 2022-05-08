@@ -18,7 +18,6 @@ import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {MatTableModule} from "@angular/material/table";
-import {ProfileComponent} from "./components/profile/profile.component";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {Pagination} from "./common/Pagination";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -51,6 +50,7 @@ import {MatCardModule} from "@angular/material/card";
 import {ListDetailsComponent} from "./components/custom/list-details/list-details.component";
 import {AlertComponent} from "./components/custom/alert/alert.component";
 import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
+import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +59,8 @@ import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
     NavMenuComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent,
+
+    ProfileViewComponent,
 
     EventListComponent,
     EventViewComponent,

@@ -235,7 +235,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       teamPresentationMinutes: [10],
       maxEventMembers: [50],
       minTeamMembers: [2],
-      isCreateTeamsAutomatically: [false]
+      isCreateTeamsAutomatically: [true]
     });
   }
 

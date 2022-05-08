@@ -4,7 +4,6 @@ import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {AuthGuard} from "./services/auth.guard";
-import {ProfileComponent} from "./components/profile/profile.component";
 import {EventListComponent} from "./components/event/list/event.list.component";
 import {EventViewComponent} from "./components/event/view/event.view.component";
 import {EventFormComponent} from "./components/event/form/event.form.component";
@@ -16,6 +15,7 @@ import {NotificationListComponent} from "./components/notification/list/notifica
 import {RedirectService} from "./services/redirect.service";
 import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
+import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
 
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'logout', component: LoginComponent },
   { path: 'register', component: RegisterComponent , canActivate: [RedirectService]},
 
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileViewComponent, canActivate: [AuthGuard] },
   { path: 'events/new', component: EventFormComponent, canActivate: [AuthGuard] },
   { path: 'events/edit/:eventId', component: EventFormComponent, canActivate: [AuthGuard] },
   { path: 'events/:eventId', component: EventViewComponent, canActivate: [AuthGuard] },
