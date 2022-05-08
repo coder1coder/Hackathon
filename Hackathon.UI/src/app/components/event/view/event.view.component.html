@@ -34,7 +34,7 @@
           <th mat-header-cell *matHeaderCellDef> Участники </th>
           <td mat-cell *matCellDef="let element">
             <div *ngFor="let member of element.members" class="member"
-                 (click)="this.router.Users.View(element.id)"
+                 (click)="this.router.Users.View(member.id)"
                  [innerText]="member.fullName"></div>
           </td>
         </ng-container>
