@@ -101,19 +101,6 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let event">
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" >
-            <button mat-menu-item [disabled]="eventsService.isEventOwner(event)">
-              <mat-icon>edit</mat-icon>
-              <span>Редактировать</span>
-            </button>
-            <button mat-menu-item [disabled]="eventsService.isEventOwner(event)">
-              <mat-icon>delete_outline</mat-icon>
-              <span>Удалить</span>
-            </button>
-          </mat-menu>
         </td>
       </ng-container>
 
