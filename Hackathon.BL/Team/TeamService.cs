@@ -100,6 +100,7 @@ namespace Hackathon.BL.Team
                 throw new EntityNotFoundException("Команда не найдена");
 
             var userTeam = teams.First();
+            userTeam.Members.Add(userTeam.Owner);
             
             return new TeamGeneral
             {

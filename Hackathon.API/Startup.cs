@@ -125,7 +125,7 @@ namespace Hackathon.API
             IOptions<AppSettings> appSettings)
         {
             var appConfig = appSettings.Value;
-            
+
             try
             {
                 dbContext.Database.Migrate();

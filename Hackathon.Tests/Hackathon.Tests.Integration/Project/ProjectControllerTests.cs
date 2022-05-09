@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Project
 {
-    public class ProjectControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class ProjectControllerTests: BaseIntegrationTest
     {
         public ProjectControllerTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -21,7 +21,7 @@ namespace Hackathon.Tests.Integration.Project
         [Fact]
         public async Task Create_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, UserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 

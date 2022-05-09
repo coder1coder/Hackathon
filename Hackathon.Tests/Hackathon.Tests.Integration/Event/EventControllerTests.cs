@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Event
 {
-    public class EventControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class EventControllerTests: BaseIntegrationTest
     {
         public EventControllerTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -18,7 +18,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task Get_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, UserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
@@ -36,9 +36,9 @@ namespace Hackathon.Tests.Integration.Event
         }
 
         [Fact]
-        public async Task SetStatus_ShouldReturn_Success()
+        public async Task SetStatus_FromDraft_ToPublished_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, UserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
@@ -54,18 +54,6 @@ namespace Hackathon.Tests.Integration.Event
 
             eventModel = await EventsApi.Get(eventId);
             eventModel.Status.Should().Be(EventStatus.Published);
-
-            await FluentActions
-                .Invoking(async () => await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
-                {
-                    Id = eventId,
-                    Status = EventStatus.Started
-                }))
-                .Should()
-                .NotThrowAsync();
-
-            eventModel = await EventsApi.Get(eventId);
-            eventModel.Status.Should().Be(EventStatus.Started);
         }
     }
 }
