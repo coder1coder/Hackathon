@@ -35,7 +35,7 @@ export class EventViewComponent implements AfterViewInit {
 
   selectedTabIndex = 0;
 
-  userId:number;
+  public userId:number;
 
   constructor(
     private activateRoute: ActivatedRoute,
