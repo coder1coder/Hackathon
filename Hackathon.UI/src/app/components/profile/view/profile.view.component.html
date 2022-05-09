@@ -3,17 +3,7 @@
   <div class="profile">
 
     <div class="profile__left">
-      <div class="profile-image">
-
-        <div *ngIf="!image" [innerText]="userNameSymbols" class="username-symbols"></div>
-        <img *ngIf="image" [src]="image" alt="">
-
-        <input type="file" #selectedFile (change)="selectFile($event)" class="fileSelector">
-        <button class="profile-image__button" (click)="selectedFile.click()">
-          <mat-icon>photo_camera</mat-icon>
-        </button>
-
-      </div>
+      <profile-image canUpload></profile-image>
     </div>
 
     <div class="profile__right">

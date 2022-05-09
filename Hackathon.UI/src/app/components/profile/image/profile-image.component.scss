@@ -1,0 +1,58 @@
+:host {
+
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  border-radius: 50%;
+  background: #3f51b5;
+  color: rgba(255,255,255,.5);
+  overflow: hidden;
+
+  width: 150px;
+  height: 150px;
+
+  font-size: 62px;
+
+  & input[type=file] {
+    display: none;
+  }
+
+  & img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  & button {
+    height: 30%;
+
+    cursor: pointer;
+    opacity: 0;
+    border: 0;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0,0,0,.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    color: #fff;
+
+    transition: ease all .2s;
+  }
+
+  &:hover button {
+    opacity: 1;
+  }
+}
