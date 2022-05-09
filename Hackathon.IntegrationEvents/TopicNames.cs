@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Notification
+﻿namespace Hackathon.IntegrationEvents
 {
     public static class TopicNames
     {

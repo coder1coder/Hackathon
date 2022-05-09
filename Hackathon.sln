@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Tests", "Hackatho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Notification", "Hackathon.Notification\Hackathon.Notification.csproj", "{E0BC1D49-9625-4071-B95A-43A6F9B8D95C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.IntegrationEvents", "Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj", "{E0BC1D49-9625-4071-B95A-43A6F9B8D95C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Tests", "Hackathon.Tests\Hackathon.BL.Tests\Hackathon.BL.Tests.csproj", "{EC21951E-D09D-48FD-9736-B9D032335C92}"
 EndProject

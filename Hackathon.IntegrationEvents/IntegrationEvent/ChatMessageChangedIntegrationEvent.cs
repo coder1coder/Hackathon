@@ -1,6 +1,7 @@
+using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Common.Models.Chat;
 
-namespace Hackathon.Notification.IntegrationEvent;
+namespace Hackathon.IntegrationEvents.IntegrationEvent;
 
 public class ChatMessageChangedIntegrationEvent: IIntegrationEvent
 {
