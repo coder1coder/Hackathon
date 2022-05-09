@@ -1,6 +1,7 @@
 using System;
+using Hackathon.Abstraction.IntegrationEvents;
 
-namespace Hackathon.Notification.IntegrationEvent;
+namespace Hackathon.IntegrationEvents.IntegrationEvent;
 
 public class NotificationChangedIntegrationEvent: IIntegrationEvent
 {

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using Hackathon.Notification;
-using Hackathon.Notification.IntegrationEvent;
+using Hackathon.IntegrationEvents;
+using Hackathon.IntegrationEvents.IntegrationEvent;
 
 namespace Hackathon.BL.Notification;
 

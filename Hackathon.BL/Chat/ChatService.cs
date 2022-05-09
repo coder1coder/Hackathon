@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Chat;
+using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Entities;
-using Hackathon.Notification;
-using Hackathon.Notification.IntegrationEvent;
+using Hackathon.IntegrationEvents;
+using Hackathon.IntegrationEvents.IntegrationEvent;
 
 namespace Hackathon.BL.Chat;
 

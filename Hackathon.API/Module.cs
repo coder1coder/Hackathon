@@ -1,6 +1,7 @@
 using Autofac;
-using Hackathon.Notification;
-using Hackathon.Notification.IntegrationEvent;
+using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.IntegrationEvents;
+using Hackathon.IntegrationEvents.IntegrationEvent;
 
 namespace Hackathon.API;
 

@@ -1,8 +1,9 @@
 using System.Text.Json;
 using System.Threading.Tasks;
+using Hackathon.Abstraction.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Hackathon.Notification;
+namespace Hackathon.IntegrationEvents;
 
 public class IntegrationEventHub<TIntegrationEvent>: Hub, IMessageHub<TIntegrationEvent>
 where TIntegrationEvent: IIntegrationEvent
