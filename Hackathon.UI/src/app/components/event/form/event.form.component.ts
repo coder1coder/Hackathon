@@ -35,6 +35,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   private event?: Event;
   private dateFormat: string = 'yyyy-MM-DDTHH:mm';
   private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
+  public minDate = moment(new Date()).format(this.dateFormat).toString();
 
   constructor(
     private activateRoute: ActivatedRoute,
