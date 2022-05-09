@@ -21,7 +21,7 @@ namespace Hackathon.Tests.Integration.Project
         [Fact]
         public async Task Create_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 
@@ -30,6 +30,9 @@ namespace Hackathon.Tests.Integration.Project
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
+
+            var user = await RegisterUser();
+            SetToken(user.Token);
 
             var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
             {

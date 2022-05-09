@@ -16,7 +16,7 @@ namespace Hackathon.API.Controllers
     /// <summary>
     /// События
     /// </summary>
-    public class EventController: BaseController, IEventApi
+    public class EventController: BaseController
     {
         private readonly IMapper _mapper;
         private readonly IEventService _eventService;

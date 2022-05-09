@@ -25,11 +25,11 @@ namespace Hackathon.Tests.Integration.Base
 {
     public class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
     {
-        protected IAuthApi AuthApi;
-        protected IUserApi UsersApi;
-        protected IEventApi EventsApi;
-        protected ITeamApi TeamsApi;
-        protected IProjectApi ProjectsApi;
+        protected readonly IAuthApi AuthApi;
+        protected readonly IUserApi UsersApi;
+        protected readonly IEventApi EventsApi;
+        protected readonly ITeamApi TeamsApi;
+        protected readonly IProjectApi ProjectsApi;
 
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
@@ -45,8 +45,7 @@ namespace Hackathon.Tests.Integration.Base
         private readonly HttpClient _httpClient;
         private readonly IUserService _userService;
 
-        protected long TestUserId { get; set; }
-        private string _testUserToken = "";
+        protected (long Id, string Token) TestUser { get; set; }
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
@@ -77,17 +76,11 @@ namespace Hackathon.Tests.Integration.Base
                 Id = 1,
                 Role = UserRole.Administrator
             }).Token ?? "";
-            
-            InitRestServices(defaultToken);
-            InitData().GetAwaiter().GetResult();
-            
-            InitRestServices(_testUserToken);
-        }
 
-        private void InitRestServices(string authToken)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
+            TestUser = (1, defaultToken);
+            
+            SetToken(defaultToken);
+            
             AuthApi = RestService.For<IAuthApi>(_httpClient);
             UsersApi = RestService.For<IUserApi>(_httpClient);
             EventsApi = RestService.For<IEventApi>(_httpClient);
@@ -95,7 +88,12 @@ namespace Hackathon.Tests.Integration.Base
             ProjectsApi = RestService.For<IProjectApi>(_httpClient);
         }
 
-        private async Task InitData()
+        protected void SetToken(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        protected async Task<(long Id, string Token)> RegisterUser()
         {
             var fakeUser = TestFaker.GetSignUpModels(1).First();
             var fakeRequest = Mapper.Map<SignUpRequest>(fakeUser);
@@ -107,10 +105,8 @@ namespace Hackathon.Tests.Integration.Base
                 Role = UserRole.Default
             });
 
-            TestUserId = response.Id;
-            _testUserToken = authTokenModel.Token;
+            return (response.Id, authTokenModel.Token);
         }
-
         protected async Task<(TeamModel Team, long EventId)> CreateTeamWithEvent(long userId)
         {
             var eventModel = TestFaker.GetCreateEventModels(1, userId).First();
