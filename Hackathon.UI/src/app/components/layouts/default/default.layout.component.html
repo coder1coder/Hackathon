@@ -5,7 +5,7 @@
   <span class="spacer"></span>
   <notification-bell></notification-bell>
   <button mat-icon-button [matMenuTriggerFor]="profileMenu">
-    <mat-icon>account_circle</mat-icon>
+    <profile-image [style.width]="'40px'" [style.height]="'40px'" [style.font-size]="'18px'"></profile-image>
   </button>
   <mat-menu #profileMenu="matMenu" yPosition="below">
     <button mat-menu-item routerLink="/profile">

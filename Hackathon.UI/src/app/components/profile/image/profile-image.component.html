@@ -1,0 +1,7 @@
+<div *ngIf="!image" [innerText]="userNameSymbols"></div>
+<img *ngIf="image" [src]="image">
+
+<input type="file" #selectedFile (change)="selectFile($event)">
+<button (click)="selectedFile.click()" *ngIf="canUpload != null">
+  <mat-icon>photo_camera</mat-icon>
+</button>

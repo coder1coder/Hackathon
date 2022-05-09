@@ -51,6 +51,7 @@ import { ListDetailsComponent } from "./components/custom/list-details/list-deta
 import { AlertComponent } from "./components/custom/alert/alert.component";
 import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
+import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ProfileViewComponent } from "./components/profile/view/profile.view.com
     RegisterComponent,
 
     ProfileViewComponent,
+    ProfileImageComponent,
 
     EventListComponent,
     EventViewComponent,
