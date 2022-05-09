@@ -45,6 +45,7 @@ export class ProfileRouter
   constructor(protected router: Router) {}
   View = () => this.router.navigate(['profile'])
   Login = () => this.router.navigate(['login'])
+  Logout = () => this.router.navigate(['logout'])
   Register = () => this.router.navigate(['/register']);
 }
 

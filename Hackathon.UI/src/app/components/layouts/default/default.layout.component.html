@@ -12,7 +12,7 @@
       <mat-icon>account_circle</mat-icon>
       {{ UserName }}
     </button>
-    <button mat-menu-item routerLink="/logout">
+    <button mat-menu-item (click)="logout()">
       <mat-icon>logout</mat-icon>
       Выйти
     </button>
