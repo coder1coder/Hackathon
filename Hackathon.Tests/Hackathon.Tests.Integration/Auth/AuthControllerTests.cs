@@ -34,13 +34,13 @@ namespace Hackathon.Tests.Integration.Auth
             signInResponse.Token.Should().NotBeNullOrWhiteSpace();
         }
 
-        [Fact(Skip = "To fix")]
+        [Fact]
         public async Task Should_Create_DefaultAdministratorUser()
         {
-            var adminSignInResponse =  await AuthApi.SignIn(new SignInRequest()
+            var adminSignInResponse =  await AuthApi.SignIn(new SignInRequest
             {
-                UserName = AdministratorDefaultsConfig.Login,
-                Password = AdministratorDefaultsConfig.Password,
+                UserName = AppSettings.AdministratorDefaults.Login,
+                Password = AppSettings.AdministratorDefaults.Password,
             });
 
             Assert.NotNull(adminSignInResponse);

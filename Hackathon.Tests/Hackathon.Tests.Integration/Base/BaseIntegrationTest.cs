@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Event;
@@ -18,16 +19,17 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Refit;
+using Xunit;
 
 namespace Hackathon.Tests.Integration.Base
 {
-    public class BaseIntegrationTest
+    public class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
     {
-        protected readonly IAuthApi AuthApi;
-        protected readonly IUserApi UsersApi;
-        protected readonly IEventApi EventsApi;
-        protected readonly ITeamApi TeamsApi;
-        protected readonly IProjectApi ProjectsApi;
+        protected IAuthApi AuthApi;
+        protected IUserApi UsersApi;
+        protected IEventApi EventsApi;
+        protected ITeamApi TeamsApi;
+        protected IProjectApi ProjectsApi;
 
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
@@ -38,13 +40,17 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly ApplicationDbContext DbContext;
         protected readonly TestFaker TestFaker;
 
-        protected readonly AdministratorDefaults AdministratorDefaultsConfig;
+        protected readonly AppSettings AppSettings;
 
-        protected long UserId { get; set; }
+        private readonly HttpClient _httpClient;
+        private readonly IUserService _userService;
+
+        protected long TestUserId { get; set; }
+        private string _testUserToken = "";
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
-            AdministratorDefaultsConfig = factory.Services.GetRequiredService<IOptions<AdministratorDefaults>>().Value;
+            AppSettings = factory.Services.GetRequiredService<IOptions<AppSettings>>().Value;
 
             DbContext = factory.Services.GetRequiredService<ApplicationDbContext>();
 
@@ -53,42 +59,56 @@ namespace Hackathon.Tests.Integration.Base
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
             ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
 
-            var userService = factory.Services.GetRequiredService<IUserService>();
+            _userService = factory.Services.GetRequiredService<IUserService>();
 
             var config = new TypeAdapterConfig();
             config.Apply(new EventEntityMapping(), new TeamEntityMapping(), new UserEntityMapping());
             Mapper = new Mapper(config);
             TestFaker = new TestFaker(Mapper);
 
-            var httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
+            _httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
                 HandleCookies = false
             });
-
-            var authToken = userService.GenerateToken(new UserModel()
+            
+            var defaultToken = _userService.GenerateToken(new UserModel
             {
                 Id = 1,
                 Role = UserRole.Administrator
-            });
-            // httpClient.BaseAddress = new Uri("https://localhost:7001/");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.Token);
-
-            AuthApi = RestService.For<IAuthApi>(httpClient);
-            UsersApi = RestService.For<IUserApi>(httpClient);
-            EventsApi = RestService.For<IEventApi>(httpClient);
-            TeamsApi = RestService.For<ITeamApi>(httpClient);
-            ProjectsApi = RestService.For<IProjectApi>(httpClient);
-
-            InitialData().GetAwaiter().GetResult();
+            }).Token ?? "";
+            
+            InitRestServices(defaultToken);
+            InitData().GetAwaiter().GetResult();
+            
+            InitRestServices(_testUserToken);
         }
 
-        private async Task InitialData()
+        private void InitRestServices(string authToken)
         {
-            var fakeRequest = Mapper.Map<SignUpRequest>(TestFaker.GetSignUpModels(1).First());
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+
+            AuthApi = RestService.For<IAuthApi>(_httpClient);
+            UsersApi = RestService.For<IUserApi>(_httpClient);
+            EventsApi = RestService.For<IEventApi>(_httpClient);
+            TeamsApi = RestService.For<ITeamApi>(_httpClient);
+            ProjectsApi = RestService.For<IProjectApi>(_httpClient);
+        }
+
+        private async Task InitData()
+        {
+            var fakeUser = TestFaker.GetSignUpModels(1).First();
+            var fakeRequest = Mapper.Map<SignUpRequest>(fakeUser);
             var response = await UsersApi.SignUp(fakeRequest);
 
-            UserId = response.Id;
+            var authTokenModel = _userService.GenerateToken(new UserModel
+            {
+                Id = response.Id,
+                Role = UserRole.Default
+            });
+
+            TestUserId = response.Id;
+            _testUserToken = authTokenModel.Token;
         }
 
         protected async Task<(TeamModel Team, long EventId)> CreateTeamWithEvent(long userId)

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.User
 {
-    public class UserControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class UserControllerTests: BaseIntegrationTest
     {
         public UserControllerTests(TestWebApplicationFactory factory) : base(factory)
         {

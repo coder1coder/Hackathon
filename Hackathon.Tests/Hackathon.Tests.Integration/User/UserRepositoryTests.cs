@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.User
 {
-    public class UserRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class UserRepositoryTests: BaseIntegrationTest
     {
         public UserRepositoryTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -57,6 +57,7 @@ namespace Hackathon.Tests.Integration.User
                 .BeEquivalentTo(userEntities.First(), options=>
                     options
                         .Excluding(x=>x.Teams)
+                        .Excluding(x=>x.GoogleAccountId)
                     );
         }
 

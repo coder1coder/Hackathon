@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Project
 {
-    public class ProjectRepositoryTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class ProjectRepositoryTests: BaseIntegrationTest
     {
         public ProjectRepositoryTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -15,7 +15,7 @@ namespace Hackathon.Tests.Integration.Project
         [Fact]
         public async Task CreateAsync_ShouldReturn_Id()
         {
-            var (teamModel, eventId) = await CreateTeamWithEvent(UserId);
+            var (teamModel, eventId) = await CreateTeamWithEvent(TestUserId);
             var projectCreateModel = TestFaker.GetProjectCreateModel(1).First();
             projectCreateModel.TeamId = teamModel.Id;
             projectCreateModel.EventId = eventId;

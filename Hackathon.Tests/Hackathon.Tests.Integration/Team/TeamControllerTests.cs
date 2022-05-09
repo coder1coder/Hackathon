@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Team
 {
-    public class TeamControllerTests: BaseIntegrationTest, IClassFixture<TestWebApplicationFactory>
+    public class TeamControllerTests: BaseIntegrationTest
     {
         public TeamControllerTests(TestWebApplicationFactory factory) : base(factory)
         {
@@ -19,7 +19,7 @@ namespace Hackathon.Tests.Integration.Team
         [Fact]
         public async Task Create_Should_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, UserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
             var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
             var createEventResponse = await EventsApi.Create(eventRequest);
 
