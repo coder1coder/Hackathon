@@ -58,21 +58,25 @@ public class TeamServiceTests: BaseUnitTest
         result.Should().Be(createdId);
     }
     
-    [Fact]
-    public async Task GetAsync_ShouldReturn_TeamModelCollection()
+    [Theory]
+    [InlineData(1)]
+    [InlineData(5)]
+    [InlineData(9)]
+    public async Task GetAsync_ShouldReturn_Success(int teamCount)
     {
         //arrange
-        var fakeTeam = new Faker<TeamModel>()
-            .RuleFor(x => x.Name, f => f.Name.Suffix())
-            .RuleFor(x => x.OwnerId, f => f.PickRandom(0,11))
-            .Generate();
+        var fakeTeams = new Faker<TeamModel>()
+            .RuleFor(x => x.Id, f => f.PickRandom(0,1001))
+            .Generate(teamCount).ToArray();
         
         _teamRepositoryMock.Setup(x => 
-                x.GetAsync(It.IsAny<GetListParameters<TeamFilter>>()))
+                x.GetAsync(It.Is<GetListParameters<TeamFilter>>(
+                    x=>x.Filter.Ids.Contains(fakeTeams.First().Id)
+                    && x.Filter.Ids.Length == 1 )))
             .ReturnsAsync(new BaseCollection<TeamModel>
             {
-                Items = new[] {fakeTeam},
-                TotalCount = 1
+                Items = new []{fakeTeams.First()},
+                TotalCount = fakeTeams.Length
             });
         
         var service = new TeamService(
@@ -88,18 +92,16 @@ public class TeamServiceTests: BaseUnitTest
         {
             Filter = new TeamFilter
             {
-                Name = fakeTeam.Name,
-                OwnerId = fakeTeam.OwnerId
+                Ids = new [] {fakeTeams.First().Id}
             }
         });
 
         //assert
         Assert.NotNull(result);
-        Assert.Equal(1, result.TotalCount);
-        Assert.Equal(result.TotalCount, result.Items.Count);
+        Assert.Equal(fakeTeams.Length, result.TotalCount);
+        Assert.Equal(1, result.Items.Count);
 
         var first = result.Items.First();
-        Assert.Equal(fakeTeam.Name, first.Name);
-        Assert.Equal(fakeTeam.OwnerId, first.OwnerId);
+        Assert.Equal(fakeTeams.First().Id, first.Id);
     }
 }
