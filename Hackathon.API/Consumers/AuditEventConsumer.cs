@@ -5,7 +5,7 @@ using Hackathon.Common.Models.Audit;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Hackathon.API;
+namespace Hackathon.API.Consumers;
 
 public class AuditEventConsumer: IConsumer<AuditEventModel>
 {

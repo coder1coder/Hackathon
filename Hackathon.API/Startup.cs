@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using Autofac;
+using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
@@ -48,12 +49,12 @@ namespace Hackathon.API
 
             services.AddSingleton(config);
             services.AddSingleton<IMapper, ServiceMapper>();
-            
+
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
-                x.AddConsumer<AuditEventConsumer>();
-                
+                x.AddConsumers(typeof(AuditEventConsumer).Assembly);
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.ConfigureEndpoints(context);
@@ -63,7 +64,6 @@ namespace Hackathon.API
                         host.Username(appConfig.RabbitMq.UserName);
                         host.Password(appConfig.RabbitMq.Password);
                     });
-                    
                 });
             });
 

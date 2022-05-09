@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Hackathon.Abstraction.Audit;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
@@ -17,13 +18,14 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Refit;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Base
 {
-    public class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
+    public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
     {
         protected readonly IAuthApi AuthApi;
         protected readonly IUserApi UsersApi;
@@ -31,6 +33,7 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly ITeamApi TeamsApi;
         protected readonly IProjectApi ProjectsApi;
 
+        protected readonly IAuditRepository AuditRepository;
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
         protected readonly ITeamRepository TeamRepository;
@@ -41,6 +44,8 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly TestFaker TestFaker;
 
         protected readonly AppSettings AppSettings;
+
+        protected readonly ILoggerFactory LoggerFactory;
 
         private readonly HttpClient _httpClient;
         private readonly IUserService _userService;
@@ -53,10 +58,13 @@ namespace Hackathon.Tests.Integration.Base
 
             DbContext = factory.Services.GetRequiredService<ApplicationDbContext>();
 
+            AuditRepository = factory.Services.GetRequiredService<IAuditRepository>();
             UserRepository = factory.Services.GetRequiredService<IUserRepository>();
             EventRepository = factory.Services.GetRequiredService<IEventRepository>();
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
             ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
+            
+            LoggerFactory = factory.Services.GetRequiredService<ILoggerFactory>();
 
             _userService = factory.Services.GetRequiredService<IUserService>();
 
