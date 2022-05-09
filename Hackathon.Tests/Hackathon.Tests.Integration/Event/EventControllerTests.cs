@@ -18,7 +18,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task Get_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
@@ -38,7 +38,7 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task SetStatus_FromDraft_ToPublished_ShouldReturn_Success()
         {
-            var eventModel = TestFaker.GetEventModels(1, TestUserId).First();
+            var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
             var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
@@ -54,6 +54,47 @@ namespace Hackathon.Tests.Integration.Event
 
             eventModel = await EventsApi.Get(eventId);
             eventModel.Status.Should().Be(EventStatus.Published);
+        }
+
+        [Fact]
+        public async Task StartEvent_ShouldSuccess()
+        {
+            //Создаем событие
+            var createEventResponse = await EventsApi.Create(new CreateEventRequest
+            {
+                Name = Guid.NewGuid().ToString(),
+                Start = DateTime.UtcNow.AddDays(1),
+                DevelopmentMinutes = 10,
+                TeamPresentationMinutes = 10,
+                MemberRegistrationMinutes = 10,
+                IsCreateTeamsAutomatically = true,
+                MinTeamMembers = 1,
+                MaxEventMembers = 2
+            });
+
+            //Публикуем событие, чтобы можно было регистрироваться участникам
+            await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+            {
+                Id = createEventResponse.Id,
+                Status = EventStatus.Published
+            });
+
+            //Присоединяемся к событию в качестве участника
+            await EventsApi.Join(createEventResponse.Id);
+
+            //Регистрируем нового участника в событии
+            var user = await RegisterUser();
+            SetToken(user.Token);
+            await EventsApi.Join(createEventResponse.Id);
+
+            //Начинаем событие
+            SetToken(TestUser.Token);
+            
+            await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+            {
+                Id = createEventResponse.Id,
+                Status = EventStatus.Started
+            });
         }
     }
 }
