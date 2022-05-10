@@ -81,8 +81,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   public submit(): void {
     let request: Observable<any>;
 
-    console.log(this.form);
-
     if (!this.editMode) {
       let event: ICreateEvent = {
         name: this.form.get('name')?.value,
@@ -115,8 +113,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         award: this.form.get('award')?.value,
         description: this.form.get('description')?.value
       };
-
-      console.log(event);
 
       request = this.eventService.update(event);
     }
@@ -246,7 +242,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       maxEventMembers: [50],
       minTeamMembers: [2],
       isCreateTeamsAutomatically: [true],
-      award: [0]
+      award: ['0']
     });
   }
 
