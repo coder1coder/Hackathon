@@ -63,5 +63,19 @@ namespace Hackathon.Abstraction.Team
         /// <param name="expression">Выражение</param>
         /// <returns></returns>
         Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression);
+
+        /// <summary>
+        /// Изменить владельца команды
+        /// </summary>
+        /// <param name="changeOwnerModel"></param>
+        /// <returns></returns>
+        Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel);
+
+        /// <summary>
+        /// Удалить команду и исключить из событий
+        /// </summary>
+        /// <param name="deleteTeamModel"></param>
+        /// <returns></returns>
+        Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel);
     }
 }

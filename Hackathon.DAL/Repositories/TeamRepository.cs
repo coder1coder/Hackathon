@@ -158,7 +158,13 @@ namespace Hackathon.DAL.Repositories
             if (userEntity == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
 
-            teamEntity.Members.Add(userEntity);
+            var userTeamEntityForAdd = new MemberTeamEntity()
+            {
+                TeamId = teamMemberModel.TeamId,
+                MemberId = teamMemberModel.MemberId
+            };
+
+            teamEntity.Members.Add(userTeamEntityForAdd);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -179,8 +185,14 @@ namespace Hackathon.DAL.Repositories
 
             if (user == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
-            
-            team.Members.Remove(user);
+
+            var userTeamEntityForRemove = new MemberTeamEntity()
+            {
+                TeamId = teamMemberModel.TeamId,
+                MemberId = teamMemberModel.MemberId
+            };
+
+            team.Members.Remove(userTeamEntityForRemove);
             
             await _dbContext.SaveChangesAsync();
         }
@@ -193,5 +205,35 @@ namespace Hackathon.DAL.Repositories
                 .ProjectToType<TeamModel>(_mapper.Config)
                 .AsNoTracking()
                 .ToArrayAsync();
+
+        /// <inheritdoc cref="ITeamRepository.ChangeTeamOwnerAsync(ChangeOwnerModel)"/>
+        public async Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel)
+        {
+            var teamEntity = await _dbContext.Teams
+                .SingleOrDefaultAsync(
+                    x => (x.Id == changeOwnerModel.TeamId)
+                    && (x.OwnerId == changeOwnerModel.OwnerId));
+
+            if (teamEntity == null)
+                throw new EntityNotFoundException("Команда с указаным индентификатором и владельцем не найдена");
+
+            teamEntity.OwnerId = changeOwnerModel.NewOwnerId;
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <inheritdoc cref="ITeamRepository.DeleteTeamAsync(long)"/>
+        public async Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel)
+        {
+            var teamEntity = await _dbContext.Teams
+                .SingleOrDefaultAsync(x => (x.Id == deleteTeamModel.TeamId));
+
+            if (teamEntity == null)
+                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
+
+            _dbContext.Teams.Remove(teamEntity);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

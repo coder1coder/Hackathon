@@ -1,8 +1,8 @@
 <layout-default title="Команда">
 
   <div actions *ngIf="team">
-    <button mat-button color="primary" (click)="router.Teams.List()">Найти команду</button>
-    <button mat-button color="accent" (click)="router.Teams.List()">Покинуть команду</button>
+    <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
+    <button mat-button color="accent" (click)="LeaveTeam()">Покинуть команду</button>
   </div>
 
   <team [team]="team" *ngIf="team"></team>
@@ -10,11 +10,11 @@
   <div *ngIf="!team">
 
     <h4>Вы не состоите в команде</h4>
-    <button mat-button color="accent" (click)="router.Teams.New()">
+    <button mat-button color="accent" (click)="routerService.Teams.New()">
       <mat-icon>add</mat-icon>
       Создать команду
     </button>
-    <button mat-button color="primary" (click)="router.Teams.List()">Найти команду</button>
+    <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
 
   </div>
   
