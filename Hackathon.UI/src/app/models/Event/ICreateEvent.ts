@@ -3,6 +3,7 @@ import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
 export interface ICreateEvent
 {
   name: string;
+  description:string;
   developmentMinutes: number;
   isCreateTeamsAutomatically: boolean;
   maxEventMembers: number;

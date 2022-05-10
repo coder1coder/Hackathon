@@ -21,6 +21,20 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill">
+            <mat-label>Описание</mat-label>
+
+            <textarea matInput
+                      id="description"
+                      formControlName="description"
+                      autocomplete="off"
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="5"
+                      cdkAutosizeMaxRows="5"
+                      required></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
             <mat-label>Дата и время начала</mat-label>
             <input matInput
                    type="datetime-local"

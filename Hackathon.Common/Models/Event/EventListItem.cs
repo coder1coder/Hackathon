@@ -16,6 +16,11 @@ public class EventListItem
     /// Наименование события
     /// </summary>
     public string Name { get; set; }
+    
+    /// <summary>
+    /// Описание события
+    /// </summary>
+    public string Description { get; set; }
 
     /// <summary>
     /// Дата и время начала
