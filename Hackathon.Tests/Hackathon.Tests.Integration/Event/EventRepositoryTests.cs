@@ -41,10 +41,10 @@ namespace Hackathon.Tests.Integration.Event
         {
             var list = new List<EventEntity>
             {
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id},
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id },
-                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id }
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id, Description = "", Award = ""},
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id, Description = "", Award = ""},
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id, Description = "", Award = ""},
+                new() { Name = Guid.NewGuid().ToString(), Start = DateTime.UtcNow, Status = EventStatus.Draft, OwnerId = TestUser.Id, Description = "", Award = ""}
             };
 
             await DbContext.AddRangeAsync(list);
