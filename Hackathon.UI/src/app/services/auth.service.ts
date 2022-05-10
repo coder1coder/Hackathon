@@ -3,7 +3,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {Observable} from 'rxjs/internal/Observable';
 import {environment} from "../../environments/environment";
 import {map} from "rxjs/operators";
-import {ICreateUser} from '../models/CreateUser';
+import {ICreateUser} from '../models/User/CreateUser';
 import {IGetTokenResponse} from "../models/IGetTokenResponse";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {AuthConstants} from "./auth.constants";

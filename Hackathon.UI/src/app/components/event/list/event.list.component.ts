@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {EventService} from "../../../services/event.service";
 import {BaseCollection} from "../../../models/BaseCollection";
-import {EventStatus, EventStatusTranslator} from "../../../models/EventStatus";
+import {EventStatus, EventStatusTranslator} from "../../../models/Event/EventStatus";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {FormControl, FormGroup} from "@angular/forms";
 import {EventFilter} from "../../../models/Event/EventFilter";

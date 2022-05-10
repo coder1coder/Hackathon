@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {EventService} from "../../../services/event.service";
-import {EventStatusTranslator, EventStatus} from "../../../models/EventStatus";
+import {EventStatusTranslator, EventStatus} from "../../../models/Event/EventStatus";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {Team} from "../../../models/Team/Team";

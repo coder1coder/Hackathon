@@ -1,4 +1,4 @@
-import {EventStatus} from "../EventStatus";
+import {EventStatus} from "./EventStatus";
 
 export interface IEventStage
 {

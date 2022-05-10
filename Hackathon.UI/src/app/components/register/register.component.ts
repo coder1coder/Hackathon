@@ -1,7 +1,7 @@
 import '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ICreateUser } from 'src/app/models/CreateUser';
+import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from "../../services/auth.service";
 import { Location } from "@angular/common";
 import { IProblemDetails } from "../../models/IProblemDetails";

@@ -6,7 +6,7 @@ import {BaseCollection} from "../models/BaseCollection";
 import {ICreateEvent} from "../models/Event/ICreateEvent";
 import {IUpdateEvent} from "../models/Event/IUpdateEvent";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
-import {EventStatus} from "../models/EventStatus";
+import {EventStatus} from "../models/Event/EventStatus";
 import {AuthService} from "./auth.service";
 import {GetListParameters} from "../models/GetListParameters";
 import {EventFilter} from "../models/Event/EventFilter";
