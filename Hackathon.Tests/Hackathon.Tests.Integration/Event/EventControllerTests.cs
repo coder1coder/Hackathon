@@ -63,13 +63,15 @@ namespace Hackathon.Tests.Integration.Event
             var createEventResponse = await EventsApi.Create(new CreateEventRequest
             {
                 Name = Guid.NewGuid().ToString(),
+                Description = Guid.NewGuid().ToString(),
                 Start = DateTime.UtcNow.AddDays(1),
                 DevelopmentMinutes = 10,
                 TeamPresentationMinutes = 10,
                 MemberRegistrationMinutes = 10,
                 IsCreateTeamsAutomatically = true,
                 MinTeamMembers = 1,
-                MaxEventMembers = 2
+                MaxEventMembers = 2,
+                Award = "0"
             });
 
             //Публикуем событие, чтобы можно было регистрироваться участникам
