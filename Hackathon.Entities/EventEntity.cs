@@ -70,5 +70,10 @@ namespace Hackathon.Entities
         /// Команды связанные с событием
         /// </summary>
         public ICollection<TeamEntity> Teams { get; set; } = new List<TeamEntity>();
+        
+        /// <summary>
+        /// Награда, призовой фонд
+        /// </summary>
+        public string Award { get; set; }
     }
 }

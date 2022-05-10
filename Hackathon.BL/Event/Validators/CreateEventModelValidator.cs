@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using FluentValidation;
 using Hackathon.Common.Models.Event;
@@ -57,6 +58,9 @@ namespace Hackathon.BL.Event.Validators
                         .WithMessage("Нельзя указывать пустые сообщения для рассылки");
                 });
             });
+
+            RuleFor(x => x.Award).NotEmpty()
+                .WithMessage("Необходимо указать награду");
         }
     }
 }

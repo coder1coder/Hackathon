@@ -57,5 +57,10 @@ namespace Hackathon.Common.Models.Event
         /// Кто создал событие
         /// </summary>
         public long OwnerId { get; set; }
+        
+        /// <summary>
+        /// Награда, призовой фонд
+        /// </summary>
+        public string Award { get; set; }
     }
 }
