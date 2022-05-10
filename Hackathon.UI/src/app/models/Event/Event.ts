@@ -1,5 +1,5 @@
 import {ChangeEventStatusMessage} from "./ChangeEventStatusMessage";
-import {EventStatus} from "../EventStatus";
+import {EventStatus} from "./EventStatus";
 import {Team} from "../Team/Team";
 import {IUser} from "../User/IUser";
 

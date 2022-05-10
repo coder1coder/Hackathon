@@ -6,7 +6,7 @@ import { IProblemDetails } from "../../../models/IProblemDetails";
 import { ActivatedRoute } from "@angular/router";
 import { ICreateEvent } from "../../../models/Event/ICreateEvent";
 import { IUpdateEvent } from "../../../models/Event/IUpdateEvent";
-import { EventStatusTranslator, EventStatus } from "src/app/models/EventStatus";
+import { EventStatusTranslator, EventStatus } from "src/app/models/Event/EventStatus";
 import { ChangeEventStatusMessage } from "src/app/models/Event/ChangeEventStatusMessage";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
