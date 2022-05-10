@@ -93,7 +93,7 @@ namespace Hackathon.BL.Team
         public async Task<TeamGeneral> GetUserTeam(long userId)
         {
             var teams = await _teamRepository.GetByExpressionAsync(x =>
-                (x.Members.Any(u => u.Id == userId) && x.OwnerId != null)
+                (x.Members.Any(u => u.MemberId == userId) && x.OwnerId != null)
                 || x.OwnerId == userId);
 
             if (!teams.Any())
@@ -113,7 +113,51 @@ namespace Hackathon.BL.Team
 
         /// <inheritdoc cref="ITeamService.RemoveMemberAsync(TeamMemberModel)"/>
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
-            => await _teamRepository.RemoveMemberAsync(teamMemberModel);
+        {
+            // Определить роль участика. Владелец / участник
+            var team = await _teamRepository.GetAsync(teamMemberModel.TeamId);
+
+            var IsOwnerMember = team.OwnerId == teamMemberModel.MemberId;
+
+            // Если пользователь является создателем, то нужно передать права владения группой 
+            if (IsOwnerMember)
+            {
+                if (team.Members != null
+                    && team.Members.Count > 0)
+                {
+                    // кому теперь будет принадлежать команда
+                    // пользователь раньше остальных вступил в команду
+                    var newOwner = team.Members
+                        .OrderByDescending(u => u.DateTimeAdd)
+                        .First();
+
+                    ChangeOwnerModel changeOwnerModel = new ChangeOwnerModel()
+                    {
+                        TeamId = teamMemberModel.TeamId,
+                        OwnerId = teamMemberModel.MemberId,
+                        NewOwnerId = newOwner.Id
+                    };
+
+                    await _teamRepository.ChangeTeamOwnerAsync(changeOwnerModel);
+                }
+                else
+                {
+                    // TODO: События команды также удаляем?
+                    DeleteTeamModel deleteTeamModel = new DeleteTeamModel()
+                    {
+                        TeamId = teamMemberModel.TeamId,
+                        EventId = null
+                    };
+
+                    // TODO: SoftDelete
+                    await _teamRepository.DeleteTeamAsync(deleteTeamModel);
+                }
+            }
+
+            // Если пользователь не создатель, то исключим из команды
+            if (!IsOwnerMember)
+                await _teamRepository.RemoveMemberAsync(teamMemberModel);
+        }
 
         /// <inheritdoc cref="ITeamService.GetTeamEvents(long, PaginationSort)"/>
         public async Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort)

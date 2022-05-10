@@ -29,14 +29,6 @@ public class TeamEntityConfiguration: IEntityTypeConfiguration<TeamEntity>
                 x => x.ToTable("EventsTeams"));
 
         builder
-            .HasMany(x => x.Members)
-            .WithMany(x => x.Teams)
-            .UsingEntity<Dictionary<string, object>>("MembersTeams",
-                x => x.HasOne<UserEntity>().WithMany().HasForeignKey("MemberId"),
-                x => x.HasOne<TeamEntity>().WithMany().HasForeignKey("TeamId"),
-                x => x.ToTable("MembersTeams"));
-
-        builder
             .HasOne(x => x.Owner);
     }
 }

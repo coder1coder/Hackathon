@@ -94,5 +94,22 @@ namespace Hackathon.API.Controllers
                 TotalCount = collection.TotalCount
             };
         }
+
+        /// <summary>
+        /// Покинуть команду
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{teamId:long}/leave")]
+        public async Task<IActionResult> LeaveTeamAsync(long teamId)
+        {
+            var teamMember = new TeamMemberModel
+            {
+                TeamId = teamId,
+                MemberId = UserId
+            };
+
+            await _teamService.RemoveMemberAsync(teamMember);
+            return Ok();
+        }
     }
 }

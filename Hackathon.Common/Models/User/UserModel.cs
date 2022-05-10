@@ -15,6 +15,12 @@ namespace Hackathon.Common.Models.User
 
         public Guid? ProfileImageId { get; set; }
 
+
+        /// <summary>
+        /// Дата добавления пользователя в команду
+        /// </summary>
+        public DateTime DateTimeAdd { get; set; } = new();
+
         public override string ToString()
             => string.IsNullOrWhiteSpace(FullName)
                 ? UserName

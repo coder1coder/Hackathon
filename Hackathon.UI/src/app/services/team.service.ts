@@ -16,7 +16,6 @@ import {Endpoints} from "../common/Endpoints";
 })
 
 export class TeamService {
-
   api = environment.api;
   storage = sessionStorage;
 
@@ -50,5 +49,9 @@ export class TeamService {
   getByFilter(getFilterModel: GetListParameters<TeamFilter>):Observable<BaseCollection<Team>>
   {
     return this.http.post<BaseCollection<Team>>(this.endpoints.Team.GetTeams, getFilterModel);
+  }
+
+  leaveTeam(id: number):Observable<any> {
+    return this.http.get(`${this.api}/team/${id}/leave`);
   }
 }

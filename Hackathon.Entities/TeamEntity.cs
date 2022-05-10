@@ -18,7 +18,7 @@
         /// <summary>
         /// Участники
         /// </summary>
-        public ICollection<UserEntity> Members { get; set; } = new List<UserEntity>();
+        public ICollection<MemberTeamEntity> Members { get; set; } = new List<MemberTeamEntity>();
         
         /// <summary>
         /// Владелец команды
