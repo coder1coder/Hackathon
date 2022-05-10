@@ -74,5 +74,10 @@ namespace Hackathon.Common.Models.Event
         /// Список команд связанных с событием
         /// </summary>
         public List<TeamModel> Teams { get; set; } = new();
+        
+        /// <summary>
+        /// Награда, призовой фонд
+        /// </summary>
+        public string Award { get; set; }
     }
 }
