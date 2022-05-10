@@ -92,6 +92,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         start: this.form.get('start')?.value,
         teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
         changeEventStatusMessages: this.eventStatusDataSource.data,
+        award: this.form.get('award')?.value
       };
 
       request = this.eventService.create(event);
@@ -108,6 +109,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
         userId: Number(this.event?.ownerId),
         changeEventStatusMessages: this.eventStatusDataSource.data,
+        award: this.form.get('award')?.value,
       };
 
       request = this.eventService.update(event);
@@ -236,7 +238,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       teamPresentationMinutes: [10],
       maxEventMembers: [50],
       minTeamMembers: [2],
-      isCreateTeamsAutomatically: [true]
+      isCreateTeamsAutomatically: [true],
+      award: [0]
     });
   }
 

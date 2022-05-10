@@ -19,6 +19,7 @@ export class Event {
   owner!: IUser
   teams: Team[] = []
   stages: any[] = []
+  award!: string;
 
   public static getUsersCount(event:Event):number{
     let i = 0;

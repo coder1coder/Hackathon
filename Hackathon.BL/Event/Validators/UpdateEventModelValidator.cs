@@ -53,6 +53,9 @@ namespace Hackathon.BL.Event.Validators
                         .WithMessage("Нельзя указывать пустые сообщения для рассылки");
                 });
             });
+            
+            RuleFor(x => x.Award).NotEmpty()
+                .WithMessage("Необходимо указать награду");
         }
     }
 }

@@ -72,7 +72,9 @@ export class EventViewComponent implements AfterViewInit {
             { key: "", value: ""},
             { key: "Регистрация участников", value: this.event.memberRegistrationMinutes + ' мин'},
             { key: "Разработка", value: this.event.developmentMinutes + ' мин'},
-            { key: "Презентация", value: this.event.teamPresentationMinutes + ' мин'}
+            { key: "Презентация", value: this.event.teamPresentationMinutes + ' мин'},
+            { key: "", value: ""},
+            { key: "Награда / Призовой фонд", value: this.event.award},
           ]
 
           this.eventStatusesDataSource.data = this.event.changeEventStatusMessages;
