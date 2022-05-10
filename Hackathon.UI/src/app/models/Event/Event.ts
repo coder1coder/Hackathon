@@ -6,6 +6,7 @@ import {IUser} from "../User/IUser";
 export class Event {
   id!: number;
   name!: string;
+  description!: string;
   start!: Date;
   memberRegistrationMinutes!: number;
   developmentMinutes!: number;
