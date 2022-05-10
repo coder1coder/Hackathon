@@ -67,13 +67,18 @@ namespace Hackathon.API
                 });
             });
 
+            var databaseServiceLifetime = ServiceLifetime.Scoped;
+
+            if (_environment.EnvironmentName == "Tests")
+                databaseServiceLifetime = ServiceLifetime.Transient;
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
 
                 if (appConfig.EnableSensitiveDataLogging == true)
                     options.EnableSensitiveDataLogging();
-            });
+            }, databaseServiceLifetime);
             
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
 

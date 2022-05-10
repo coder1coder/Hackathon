@@ -95,7 +95,7 @@ namespace Hackathon.Tests.Integration.Event
             var createEventModel = TestFaker.GetCreateEventModels(1, TestUser.Id).FirstOrDefault();
             Assert.NotNull(createEventModel);
             var eventId = await EventRepository.CreateAsync(createEventModel);
-            DbContext.ChangeTracker.Clear();
+
             await EventRepository.DeleteAsync(eventId);
             var eventModel = await EventRepository.GetAsync(eventId);
             eventModel.Should().BeNull();
