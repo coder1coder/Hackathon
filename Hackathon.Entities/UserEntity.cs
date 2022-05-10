@@ -2,6 +2,9 @@
 
 namespace Hackathon.Entities
 {
+    /// <summary>
+    /// Пользователь
+    /// </summary>
     public class UserEntity: BaseEntity
     {
         public string? UserName { get; set; }
@@ -17,7 +20,10 @@ namespace Hackathon.Entities
 
         public UserRole Role { get; set; }
 
-        public List<TeamEntity> Teams { get; set; } = new ();
+        /// <summary>
+        /// Команды в которых участвует пользователь
+        /// </summary>
+        public List<MemberTeamEntity> Teams { get; set; } = new ();
         public Guid? ProfileImageId { get; set; }
     }
 }
