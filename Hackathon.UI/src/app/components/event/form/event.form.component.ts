@@ -81,6 +81,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   public submit(): void {
     let request: Observable<any>;
 
+    console.log(this.form);
+
     if (!this.editMode) {
       let event: ICreateEvent = {
         name: this.form.get('name')?.value,
@@ -92,7 +94,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         start: this.form.get('start')?.value,
         teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
         changeEventStatusMessages: this.eventStatusDataSource.data,
-        award: this.form.get('award')?.value
+        award: this.form.get('award')?.value,
+        description: this.form.get('description')?.value
       };
 
       request = this.eventService.create(event);
@@ -110,7 +113,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         userId: Number(this.event?.ownerId),
         changeEventStatusMessages: this.eventStatusDataSource.data,
         award: this.form.get('award')?.value,
+        description: this.form.get('description')?.value
       };
+
+      console.log(event);
 
       request = this.eventService.update(event);
     }
@@ -232,6 +238,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   private initForm(): void {
     this.form = this.fb.group({
       name: [null],
+      description: [null],
       start: [EventFormComponent.getEventStartDefault()],
       memberRegistrationMinutes: [10],
       developmentMinutes: [10],

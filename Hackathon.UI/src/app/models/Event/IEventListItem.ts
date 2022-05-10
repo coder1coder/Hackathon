@@ -3,6 +3,7 @@ import {EventStatus} from "../EventStatus";
 export interface IEventListItem {
   id: number;
   name: string;
+  description: string;
   start: Date;
   maxEventMembers: number;
   minTeamMembers: number;

@@ -45,7 +45,6 @@ export class TeamNewComponent
           this.goBack();
         },
         error=>{
-          console.log(error)
           let problemDetails: IProblemDetails = <IProblemDetails>error.error;
           this.snackBar.open(problemDetails.detail);
         });
