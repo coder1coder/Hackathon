@@ -44,7 +44,9 @@ export class TeamService {
       this.router.Profile.Login();
   }
 
-  getMyTeam = () => this.http.get<Team>(this.endpoints.Team.GetMy);
+  getMyTeam(): Observable<Team> {
+   return this.http.get<Team>(this.endpoints.Team.GetMy);
+  }
 
   getByFilter(getFilterModel: GetListParameters<TeamFilter>):Observable<BaseCollection<Team>>
   {

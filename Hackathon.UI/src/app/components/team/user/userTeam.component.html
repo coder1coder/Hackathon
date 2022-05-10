@@ -2,7 +2,7 @@
 
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
-    <button mat-button color="accent" (click)="LeaveTeam()">Покинуть команду</button>
+    <button mat-button color="accent" (click)="leaveTeam()">Покинуть команду</button>
   </div>
 
   <team [team]="team" *ngIf="team"></team>
@@ -17,5 +17,5 @@
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
 
   </div>
-  
+
 </layout-default>

@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
-import {RouterService} from "../../../services/router.service";
-import {TeamService} from "../../../services/team.service";
-import {Team} from "../../../models/Team/Team";
-import {AuthService} from "../../../services/auth.service";
-import { Router } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { RouterService } from "../../../services/router.service";
+import { TeamService } from "../../../services/team.service";
+import { Team } from "../../../models/Team/Team";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: 'userTeam',
@@ -13,39 +12,32 @@ import { Router } from "@angular/router";
 
 export class UserTeamComponent implements OnInit
 {
-  team?:Team
+  public team?:Team;
 
   constructor(
     public routerService: RouterService,
     private teamService: TeamService,
-    private authService: AuthService,
-    private router : Router
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
       if (!this.authService.isLoggedIn())
       return;
 
-    this.teamService.getMyTeam().subscribe(r => this.team = r);
+    this.teamService.getMyTeam()
+      .subscribe({
+        next: (res) => this.team = res,
+        error: (error) => {
+          this.team = undefined;
+        }
+      });
   }
-/*
-  ngAfterViewInit(): void {
-    if (!this.authService.isLoggedIn())
-      return;
 
-    this.teamService.getMyTeam().subscribe(r => this.team = r);
-  }
-*/
-  LeaveTeam()
-  {
+  public leaveTeam(): void  {
     if (this.team !== undefined) {
-      this.teamService.leaveTeam(this.team!.id)
-        .subscribe(r => {
-          // TODO: переделать на метод Angular
-          this.router.navigate([this.router.url])
-          //window.location.reload();
-          //this.ngAfterViewInit();
-          //this.ngOnInit(); 
+      this.teamService.leaveTeam(this.team?.id)
+        .subscribe(() => {
+          this.ngOnInit();
         });
     }
   }
