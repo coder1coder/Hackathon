@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
       <PackageReference Include="Mapster" Version="7.3.0" />
     </ItemGroup>
