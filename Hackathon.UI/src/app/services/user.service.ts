@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { BaseCollection } from "../models/BaseCollection";
 import { GetListParameters } from "../models/GetListParameters";
 import { UserFilter } from "../models/User/UserFilter";
-import {IUser} from "../models/User/IUser";
+import { IUser } from "../models/User/IUser";
 
 @Injectable({
   providedIn: 'root'
@@ -25,24 +25,11 @@ export class UserService {
     });
   }
 
-  getList(getFilterModel:GetListParameters<UserFilter>):Observable<BaseCollection<IUser>>{
+  public getList(getFilterModel:GetListParameters<UserFilter>):Observable<BaseCollection<IUser>>{
     return this.http.post<BaseCollection<IUser>>(this.api+'/User/list', getFilterModel);
   }
 
   public getById(userId:number): Observable<IUser> {
     return this.http.get<IUser>(this.api+'/User/'+ userId);
-  }
-
-  public getProfileImage(id: string): Observable<ArrayBuffer> {
-    return this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' });
-  }
-
-  public setProfileImage(file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
-      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
-    })
   }
 }

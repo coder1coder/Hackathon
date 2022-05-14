@@ -99,7 +99,7 @@ namespace Hackathon.API
             });
 
             services.AddSignalR(x=>x.EnableDetailedErrors = true);
-
+            services.AddMemoryCache();
             services.AddAuthentication(appConfig);
             services.AddAuthorization(x =>
             {
