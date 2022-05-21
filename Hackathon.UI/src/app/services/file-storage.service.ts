@@ -27,7 +27,7 @@ export class FileStorageService {
       const response = this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' })
       .pipe(
         share({
-          connector: () => new ReplaySubject(1),
+          connector: () => new ReplaySubject(3),
           resetOnError: false,
           resetOnComplete: false,
           resetOnRefCountZero: false,
@@ -36,14 +36,5 @@ export class FileStorageService {
       this.cache.set(key, response);
     }
     return this.cache.get(key) as Observable<ArrayBuffer>;
-  }
-
-  public setImage(file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
-      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
-    })
   }
 }

@@ -19,7 +19,7 @@ export class ProfileImageComponent implements AfterViewInit {
   public userNameSymbols: string = '';
 
   private maxFileSize: number = 2048;
-  private sizeInMB: number = 1024;
+  private divider: number = 1024;
 
   @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
   constructor(
@@ -57,12 +57,12 @@ export class ProfileImageComponent implements AfterViewInit {
       return;
     }
 
-    if (file.size / this.sizeInMB > this.maxFileSize) {
+    if (file.size / this.divider > this.maxFileSize) {
       this.snackService.open('Максимальный объем файла 2МБ');
       return;
     }
 
-    this.fileStorageService.setImage(file)
+    this.userService.setImage(file)
       .pipe(
         mergeMap((res: string) =>
           this.fileStorageService.getImage(res)

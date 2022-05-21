@@ -32,4 +32,13 @@ export class UserService {
   public getById(userId:number): Observable<IUser> {
     return this.http.get<IUser>(this.api+'/User/'+ userId);
   }
+
+  public setImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
+      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+    })
+  }
 }

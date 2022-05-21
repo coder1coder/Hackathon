@@ -170,10 +170,10 @@ namespace Hackathon.BL.User
         {
             var existedUser = await GetAsync(userId);
 
-            var uploadResult = await _fileStorageService.Upload(stream, Bucket.Avatars, filename, userId);
+            var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, filename, userId);
 
             if (existedUser.ProfileImageId is not null) { 
-                await _fileStorageService.Delete(existedUser.ProfileImageId.Value);
+                await _fileStorageService.DeleteAsync(existedUser.ProfileImageId.Value);
             }
 
             await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);

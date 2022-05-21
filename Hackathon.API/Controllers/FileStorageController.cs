@@ -23,12 +23,12 @@ public class FileStorageController: BaseController
             return BadRequest($"Файл не может быть пустым.");
 
         await using var stream = file.OpenReadStream();
-        return Ok(await _fileStorageService.Upload(stream, (Bucket)bucket, file.FileName, UserId));
+        return Ok(await _fileStorageService.UploadAsync(stream, (Bucket)bucket, file.FileName, UserId));
     }
 
     [HttpGet]
     [Route("get/{storageFileId:guid}")]
     public async Task<Stream> Get([FromRoute] Guid storageFileId)
-        => await _fileStorageService.Get(storageFileId);
+        => await _fileStorageService.GetAsync(storageFileId);
     
 }
