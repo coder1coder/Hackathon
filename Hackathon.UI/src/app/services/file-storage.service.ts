@@ -27,7 +27,7 @@ export class FileStorageService {
       const response = this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' })
       .pipe(
         share({
-          connector: () => new ReplaySubject(3),
+          connector: () => new ReplaySubject(0),
           resetOnError: false,
           resetOnComplete: false,
           resetOnRefCountZero: false,
