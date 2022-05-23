@@ -12,19 +12,19 @@ public interface IFileStorageService
     /// <param name="fileName">Имя файла</param>
     /// <param name="ownerId">Идентификатор владельца</param>
     /// <returns></returns>
-    Task<StorageFile> Upload(Stream stream, Bucket bucket, string fileName, long? ownerId = null);
+    Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null);
 
     /// <summary>
     /// Получить файл из хранилища
     /// </summary>
     /// <param name="storageFileId">Идентификатор файла</param>
     /// <returns></returns>
-    Task<Stream> Get(Guid storageFileId);
+    Task<Stream> GetAsync(Guid storageFileId);
 
     /// <summary>
     /// Удалить файл из хранилища
     /// </summary>
     /// <param name="storageFileId">Идентификатор файла</param>
     /// <returns></returns>
-    Task<bool> Delete(Guid storageFileId);
+    Task<bool> DeleteAsync(Guid storageFileId);
 }

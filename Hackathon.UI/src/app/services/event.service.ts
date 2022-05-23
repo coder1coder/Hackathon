@@ -33,7 +33,6 @@ export class EventService {
   }
 
   getList(params?:GetListParameters<EventFilter>):Observable<BaseCollection<IEventListItem>>{
-
     let endpoint = this.api+'/event/list';
     return this.http.post<BaseCollection<IEventListItem>>(endpoint, params);
   }
@@ -41,6 +40,7 @@ export class EventService {
   getById(eventId:number){
     return this.http.get<Event>(this.api+'/Event/'+eventId);
   }
+
 
   create(createEvent:ICreateEvent):Observable<IBaseCreateResponse>{
     return this.http.post<IBaseCreateResponse>(this.api + "/Event",createEvent);
