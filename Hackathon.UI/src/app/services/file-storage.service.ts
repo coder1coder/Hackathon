@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, share } from 'rxjs';
+import { Observable, of, ReplaySubject, share } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -24,17 +24,10 @@ export class FileStorageService {
   public getImage(id: string): Observable<ArrayBuffer> {
     const key = JSON.stringify(id);
     if (!this.cache.has(key)) {
-      const response = this.http.get(this.api + `/filestorage/get/${id}`, { responseType: 'arraybuffer' })
-      .pipe(
-        share({
-          connector: () => new ReplaySubject(0),
-          resetOnError: false,
-          resetOnComplete: false,
-          resetOnRefCountZero: false,
-        })
-      );
+      const response = this.http.get(`${this.api}/filestorage/get/${id}`, { responseType: 'arraybuffer' })
       this.cache.set(key, response);
     }
+
     return this.cache.get(key) as Observable<ArrayBuffer>;
   }
 }
