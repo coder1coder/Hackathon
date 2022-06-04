@@ -49,7 +49,7 @@ namespace Hackathon.BL.Team.Validators
                     var teamMemberCount = await teamRepository.GetMembersCount(model.TeamId);
 
                     if (teamMemberCount >= TeamService.MAX_TEAM_MEMBERS)
-                        context.AddFailure($"Достигнуто максимальное количество участников в команде {TeamService.MAX_TEAM_MEMBERS}");
+                        context.AddFailure(TeamService.MaximumNumberOfMembersReachedException);
                 });
         }
     }

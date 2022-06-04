@@ -5,7 +5,6 @@ using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
-using Hackathon.Abstraction.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -19,6 +18,7 @@ namespace Hackathon.BL.Team
     public class TeamService : ITeamService
     {
         public const int MAX_TEAM_MEMBERS = 30;
+        public static string MaximumNumberOfMembersReachedException = $"Достигнуто максимальное количество участников в команде {TeamService.MAX_TEAM_MEMBERS}";
 
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 

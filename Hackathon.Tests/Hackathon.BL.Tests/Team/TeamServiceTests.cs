@@ -155,6 +155,6 @@ public class TeamServiceTests: BaseUnitTest
 
         //assert
         result.ShouldHaveAnyValidationError()
-            .WithErrorMessage($"Достигнуто максимальное количество участников в команде {TeamService.MAX_TEAM_MEMBERS}");
+            .WithErrorMessage(TeamService.MaximumNumberOfMembersReachedException);
     }
 }
