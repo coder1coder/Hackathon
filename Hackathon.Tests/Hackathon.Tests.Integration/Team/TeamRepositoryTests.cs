@@ -50,13 +50,19 @@ namespace Hackathon.Tests.Integration.Team
             var (team, _) = await CreateTeamWithEvent(TestUser.Id);
 
             var signUpModel = TestFaker.GetSignUpModels(1).First();
-            var createdUser = await UserRepository.CreateAsync(signUpModel);
+
+            long userId = -1;
+            
+            UserRepository.CreateAsync(signUpModel)
+                .ContinueWith(x=>
+                    userId = x.Result)
+                .Wait();
 
             await FluentActions
                 .Invoking(async () => await TeamRepository.AddMemberAsync(new TeamMemberModel
                 {
                     TeamId = team.Id,
-                    MemberId = createdUser.Id
+                    MemberId = userId
                 }))
                 .Should()
                 .NotThrowAsync();

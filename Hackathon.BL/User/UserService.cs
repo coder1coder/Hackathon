@@ -56,8 +56,7 @@ namespace Hackathon.BL.User
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(signUpModel.Password);
             signUpModel.Password = passwordHash;
 
-            var userModel = await _userRepository.CreateAsync(signUpModel);
-            return userModel.Id;
+            return await _userRepository.CreateAsync(signUpModel);
         }
 
         /// <inheritdoc cref="IUserService.SignInAsync(SignInModel)"/>
@@ -99,7 +98,7 @@ namespace Hackathon.BL.User
             }
             else
             {
-                userModel = await _userRepository.CreateAsync(new SignUpModel
+                var userId = await _userRepository.CreateAsync(new SignUpModel
                 {
                     Email = signInByGoogleModel.Email,
                     UserName = signInByGoogleModel.Email,
@@ -107,6 +106,8 @@ namespace Hackathon.BL.User
                     Password = signInByGoogleModel.Id,
                     GoogleAccount = signInByGoogleModel
                 });
+
+                userModel = await _userRepository.GetAsync(userId);
             }
 
             return GenerateToken(userModel);

@@ -11,7 +11,7 @@ namespace Hackathon.Abstraction.User
         /// </summary>
         /// <param name="signUpModel"></param>
         /// <returns></returns>
-        Task<UserModel> CreateAsync(SignUpModel signUpModel);
+        Task<long> CreateAsync(SignUpModel signUpModel);
 
         /// <summary>
         /// Получить информацию о пользователе по идентификатору
