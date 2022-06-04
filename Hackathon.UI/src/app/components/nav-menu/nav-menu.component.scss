@@ -1,0 +1,17 @@
+:host{
+  display: block;
+  width: 100%;
+
+  header {
+    display: flex;
+    justify-items: flex-start;
+
+    button.mat-menu-item {
+      width: auto;
+
+      .mat-icon {
+        margin-right: 0;
+      }
+    }
+  }
+}

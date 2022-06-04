@@ -1,4 +1,27 @@
 <header>
-    <button mat-button routerLink="{{ item.routeLink }}" *ngFor="let item of items">{{ item.text }}</button>
+  <ng-template [ngIf]="true" *ngFor="let item of items">
+
+    <ng-template [ngIf]="item.children.length == 0" [ngIfElse]="dropdown">
+      <button mat-menu-item routerLink="{{ item.routeLink }}">
+        {{ item.text }}
+      </button>
+    </ng-template>
+
+    <ng-template #dropdown>
+
+      <button mat-menu-item [matMenuTriggerFor]="childrenMenu">
+        {{ item.text }}
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #childrenMenu="matMenu">
+        <button mat-menu-item routerLink="{{ child.routeLink }}" *ngFor="let child of item.children">
+          {{ child.text }}
+        </button>
+      </mat-menu>
+
+    </ng-template>
+
+  </ng-template>
+
 </header>
 
