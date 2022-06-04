@@ -8,10 +8,10 @@
 
   <mat-tab label="Общая информация">
 
-    <list-details [items]="[{ key: 'Наименование', value: team.name }]"></list-details>
-
-  </mat-tab>
-  <mat-tab label="Участники">
+    <list-details [items]="[
+    { key: 'Наименование', value: team.name },
+    { key: 'Владелец', value: team.owner?.fullName ?? team.owner?.userName },
+    ]"></list-details>
 
     <table mat-table [dataSource]="team.members" [class.empty]="team.members?.length == 0">
 
