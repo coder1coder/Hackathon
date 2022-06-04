@@ -238,6 +238,7 @@ namespace Hackathon.DAL.Repositories
         { 
             var teamEntity = await _dbContext.Teams
                 .Include(team => team.Members)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == teamId);
 
             if (teamEntity == null)
