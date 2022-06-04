@@ -27,14 +27,14 @@ namespace Hackathon.DAL.Repositories
         }
 
         /// <inheritdoc cref="IUserRepository.CreateAsync(SignUpModel)"/>
-        public async Task<UserModel> CreateAsync(SignUpModel signUpModel)
+        public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
 
             await _dbContext.Users.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map<UserModel>(entity);
+            return entity.Id;
         }
 
         /// <inheritdoc cref="IUserRepository.GetAsync(long)"/>
