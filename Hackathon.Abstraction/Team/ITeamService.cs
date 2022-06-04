@@ -56,5 +56,12 @@ namespace Hackathon.Abstraction.Team
         /// <param name="paginationSort">Пагинация и сортировка</param>
         /// <returns></returns>
         Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort);
+
+        /// <summary>
+        /// Добавить участника в команду
+        /// </summary>
+        /// <param name="teamMember">участник команды</param>
+        /// <returns></returns>
+        Task JoinTeam(TeamMemberModel teamMember);
     }
 }

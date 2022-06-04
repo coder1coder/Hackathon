@@ -7,6 +7,7 @@ using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.BL.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -24,6 +25,7 @@ public class TeamServiceTests: BaseUnitTest
     private Mock<IValidator<GetListParameters<TeamFilter>>> _getFilterModelValidatorMock;
     private Mock<IEventRepository> _eventRepositoryMock;
     private Mock<IProjectRepository> _projectRepositoryMock;
+    private Mock<IUserRepository> _userRepositoryMock;
 
     public TeamServiceTests()
     {
@@ -33,6 +35,7 @@ public class TeamServiceTests: BaseUnitTest
         _projectRepositoryMock = new Mock<IProjectRepository>();
         _teamAddMemberValidatorMock = new Mock<IValidator<TeamMemberModel>>();
         _getFilterModelValidatorMock = new Mock<IValidator<GetListParameters<TeamFilter>>>();
+        _userRepositoryMock = new Mock<IUserRepository>();
     }
     
     [Fact]
@@ -50,7 +53,8 @@ public class TeamServiceTests: BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object);
+            _projectRepositoryMock.Object,
+            _userRepositoryMock.Object);
 
         //act
         var result = await service.CreateAsync(new CreateTeamModel());
@@ -85,7 +89,8 @@ public class TeamServiceTests: BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object);
+            _projectRepositoryMock.Object,
+            _userRepositoryMock.Object);
         
         //act
         var result = await service.GetAsync(new GetListParameters<TeamFilter>()
@@ -103,5 +108,41 @@ public class TeamServiceTests: BaseUnitTest
 
         var first = result.Items.First();
         Assert.Equal(fakeTeams.First().Id, first.Id);
+    }
+
+    [Fact]
+    public async Task JoinTeam_ShouldThrowException()
+    {
+        //arrange
+        _teamRepositoryMock
+            .Setup(x => x.GetMembersCount(It.IsAny<long>()))
+            .ReturnsAsync(TeamService.MAX_TEAM_MEMBERS);
+
+        _teamRepositoryMock
+            .Setup(x => x.ExistAsync(It.IsAny<long>()))
+            .ReturnsAsync(true);
+
+        _userRepositoryMock
+            .Setup(x=>x.ExistAsync(It.IsAny<long>()))
+            .ReturnsAsync(true);
+
+        var service = new TeamService(
+            _createTeamModelValidatorMock.Object,
+            _teamAddMemberValidatorMock.Object,
+            _getFilterModelValidatorMock.Object,
+            _teamRepositoryMock.Object,
+            _eventRepositoryMock.Object,
+            _projectRepositoryMock.Object,
+            _userRepositoryMock.Object);
+
+        var teamMember = new Faker<TeamMemberModel>()
+            .RuleFor(o => o.MemberId, f=> f.Random.Long(1, long.MaxValue))
+            .RuleFor(o => o.TeamId, f => f.Random.Long(1, long.MaxValue));
+
+        //act
+        Task result() => service.JoinTeam(teamMember);
+
+        //assert
+        await Assert.ThrowsAsync<Exception>(result);
     }
 }

@@ -5,6 +5,7 @@ using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -17,11 +18,14 @@ namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
+        public const int MAX_TEAM_MEMBERS = 30;
+
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IProjectRepository _projectRepository;
+        private readonly IUserRepository _userRepository;
 
         private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
         private readonly IValidator<GetListParameters<TeamFilter>> _getFilterModelValidator;
@@ -32,7 +36,8 @@ namespace Hackathon.BL.Team
             IValidator<GetListParameters<TeamFilter>> getFilterModelValidator,
             ITeamRepository teamRepository, 
             IEventRepository eventRepository, 
-            IProjectRepository projectRepository)
+            IProjectRepository projectRepository,
+            IUserRepository userRepository)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
@@ -41,6 +46,7 @@ namespace Hackathon.BL.Team
             _teamRepository = teamRepository;
             _eventRepository = eventRepository;
             _projectRepository = projectRepository;
+            _userRepository = userRepository;
         }
 
         /// <inheritdoc cref="ITeamService.CreateAsync(CreateTeamModel)"/>
@@ -109,6 +115,27 @@ namespace Hackathon.BL.Team
                 Owner = userTeam.Owner,
                 Members = userTeam.Members.ToArray()
             };
+        }
+
+        /// <inheritdoc cref="ITeamService.JoinTeam(TeamMemberModel)"/>
+        public async Task JoinTeam(TeamMemberModel teamMember)
+        {
+            var isTeamExists = await _teamRepository.ExistAsync(teamMember.TeamId);
+
+            if (!isTeamExists)
+                throw new EntityNotFoundException("Команда не найдена");
+
+            var isMemberExists = await _userRepository.ExistAsync(teamMember.MemberId);
+
+            if (!isMemberExists)
+                throw new EntityNotFoundException("Участник не найден");
+
+            var teamMemberCount = await _teamRepository.GetMembersCount(teamMember.TeamId);
+
+            if (teamMemberCount >= MAX_TEAM_MEMBERS)
+                throw new Exception($"Достигнутое максимальное количество участников в команде {teamMemberCount} из {MAX_TEAM_MEMBERS}");
+
+            await _teamRepository.AddMemberAsync(teamMember);
         }
 
         /// <inheritdoc cref="ITeamService.RemoveMemberAsync(TeamMemberModel)"/>

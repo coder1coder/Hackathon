@@ -232,5 +232,14 @@ namespace Hackathon.DAL.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
+
+        /// <inheritdoc cref="ITeamRepository.GetMembersCount(long)"/>
+        public async Task<int> GetMembersCount(long TeamId)
+        {
+            var teamCount = await _dbContext.Teams
+                .CountAsync(x => x.Id == TeamId);
+
+            return teamCount;
+        }
     }
 }
