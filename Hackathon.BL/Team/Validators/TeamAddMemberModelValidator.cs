@@ -38,6 +38,9 @@ namespace Hackathon.BL.Team.Validators
 
                     if (teamModel.Members.Any(x => x.Id == model.MemberId))
                         context.AddFailure("Пользователь уже добавлен в эту команду");
+
+                    if (teamModel.OwnerId == model.MemberId)
+                        context.AddFailure("Нельзя добавить владельца команды в команду");
                 });
 
             RuleFor(x => x)
@@ -46,7 +49,7 @@ namespace Hackathon.BL.Team.Validators
                     var teamMemberCount = await teamRepository.GetMembersCount(model.TeamId);
 
                     if (teamMemberCount >= TeamService.MAX_TEAM_MEMBERS)
-                        context.AddFailure($"Достигнуто максимальное количество участников в команде {teamMemberCount} из {TeamService.MAX_TEAM_MEMBERS}");
+                        context.AddFailure($"Достигнуто максимальное количество участников в команде {TeamService.MAX_TEAM_MEMBERS}");
                 });
         }
     }

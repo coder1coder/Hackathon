@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
@@ -128,7 +128,7 @@ public class TeamServiceTests: BaseUnitTest
             .RuleFor(o => o.TeamId, f => f.Random.Long(1, long.MaxValue));
 
         var fakeTeam = new Faker<TeamModel>()
-            .RuleFor(x => x.Id, f => f.PickRandom(0, 1001))
+            .RuleFor(x => x.Id, f => f.Random.Long(1,long.MaxValue))
             .RuleFor(x => x.Members, f => fakeMembers);
 
         _teamRepositoryMock
@@ -155,6 +155,6 @@ public class TeamServiceTests: BaseUnitTest
 
         //assert
         result.ShouldHaveAnyValidationError()
-            .WithErrorMessage($"Достигнуто максимальное количество участников в команде {generatedMembersCount} из {TeamService.MAX_TEAM_MEMBERS}");
+            .WithErrorMessage($"Р”РѕСЃС‚РёРіРЅСѓС‚Рѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РІ РєРѕРјР°РЅРґРµ {TeamService.MAX_TEAM_MEMBERS}");
     }
 }

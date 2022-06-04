@@ -234,11 +234,11 @@ namespace Hackathon.DAL.Repositories
         }
 
         /// <inheritdoc cref="ITeamRepository.GetMembersCount(long)"/>
-        public async Task<int> GetMembersCount(long TeamId)
+        public async Task<int> GetMembersCount(long teamId)
         { 
             var teamEntity = await _dbContext.Teams
                 .Include(team => team.Members)
-                .FirstOrDefaultAsync(x => x.Id == TeamId);
+                .FirstOrDefaultAsync(x => x.Id == teamId);
 
             if (teamEntity == null)
                 throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
