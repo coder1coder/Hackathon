@@ -6,32 +6,38 @@ using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace Hackathon.API.Controllers
+namespace Hackathon.API.Controllers;
+
+[SwaggerTag("Проекты (результаты событий)")]
+public class ProjectController: BaseController, IProjectApi
 {
-    public class ProjectController: BaseController, IProjectApi
+    private readonly IProjectService _projectService;
+    private readonly IMapper _mapper;
+
+    public ProjectController(
+        IMapper mapper,
+        IProjectService projectService
+    )
     {
-        private readonly IProjectService _projectService;
-        private readonly IMapper _mapper;
+        _mapper = mapper;
+        _projectService = projectService;
+    }
 
-        public ProjectController(
-            IMapper mapper,
-            IProjectService projectService
-            )
+    /// <summary>
+    /// Создать новый проект
+    /// </summary>
+    /// <param name="projectCreateRequest">Параметры проекта</param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<BaseCreateResponse> Create(ProjectCreateRequest projectCreateRequest)
+    {
+        var projectCreateModel = _mapper.Map<ProjectCreateModel>(projectCreateRequest);
+        var projectId = await _projectService.CreateAsync(projectCreateModel);
+        return new BaseCreateResponse
         {
-            _mapper = mapper;
-            _projectService = projectService;
-        }
-
-        [HttpPost]
-        public async Task<BaseCreateResponse> Create(ProjectCreateRequest projectCreateRequest)
-        {
-            var projectCreateModel = _mapper.Map<ProjectCreateModel>(projectCreateRequest);
-            var projectId = await _projectService.CreateAsync(projectCreateModel);
-            return new BaseCreateResponse
-            {
-                Id = projectId
-            };
-        }
+            Id = projectId
+        };
     }
 }

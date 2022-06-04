@@ -7,12 +7,14 @@ using Hackathon.Contracts.Requests.User;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers
 {
     /// <summary>
     /// Авторизация и аутентификация
     /// </summary>
+    [SwaggerTag("Авторизация и аутентификация")]
     public class AuthController: BaseController, IAuthApi
     {
         private readonly IMapper _mapper;

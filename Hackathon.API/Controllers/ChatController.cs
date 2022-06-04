@@ -3,9 +3,11 @@ using Hackathon.Abstraction.Chat;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers;
 
+[SwaggerTag("Чат")]
 public class ChatController: BaseController
 {
     private readonly IChatService _chatService;

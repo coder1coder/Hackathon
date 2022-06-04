@@ -9,9 +9,11 @@ using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers;
 
+[SwaggerTag("Уведомления")]
 public class NotificationController: BaseController
 {
     private readonly INotificationService _notificationService;
@@ -31,7 +33,7 @@ public class NotificationController: BaseController
     [HttpPost("list")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(BaseCollectionResponse<NotificationModel>), StatusCodes.Status200OK)]
-    public async Task<BaseCollectionResponse<NotificationModel>> GetList(GetListRequest<NotificationFilterModel> request)
+    public async Task<BaseCollectionResponse<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
     {
         var filterModel = _mapper.Map<GetListParameters<NotificationFilterModel>>(request);
         var collectionModel = await _notificationService.GetList(filterModel, UserId);

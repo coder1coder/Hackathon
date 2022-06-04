@@ -45,6 +45,8 @@ namespace Hackathon.API.Extensions
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                
+                c.EnableAnnotations();
             });
 
             return services;
