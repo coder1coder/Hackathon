@@ -235,11 +235,20 @@ namespace Hackathon.DAL.Repositories
 
         /// <inheritdoc cref="ITeamRepository.GetMembersCount(long)"/>
         public async Task<int> GetMembersCount(long TeamId)
-        {
-            var teamCount = await _dbContext.Teams
-                .CountAsync(x => x.Id == TeamId);
+        { 
+            var teamEntity = await _dbContext.Teams
+                .Include(team => team.Members)
+                .FirstOrDefaultAsync(x => x.Id == TeamId);
 
-            return teamCount;
+            if (teamEntity == null)
+                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
+
+            var teamMembers = teamEntity.Members.Count();
+
+            if (teamEntity.Owner != null)
+                teamMembers += 1;
+
+            return teamMembers;
         }
     }
 }

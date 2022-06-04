@@ -4,14 +4,17 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
 using FluentValidation;
+using FluentValidation.TestHelper;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Team;
+using Hackathon.BL.Team.Validators;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
+using Hackathon.Common.Models.User;
 using Moq;
 using Xunit;
 
@@ -53,8 +56,7 @@ public class TeamServiceTests: BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object,
-            _userRepositoryMock.Object);
+            _projectRepositoryMock.Object);
 
         //act
         var result = await service.CreateAsync(new CreateTeamModel());
@@ -89,8 +91,7 @@ public class TeamServiceTests: BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object,
-            _userRepositoryMock.Object);
+            _projectRepositoryMock.Object);
         
         //act
         var result = await service.GetAsync(new GetListParameters<TeamFilter>()
@@ -111,9 +112,25 @@ public class TeamServiceTests: BaseUnitTest
     }
 
     [Fact]
-    public async Task JoinTeam_ShouldThrowException()
+    public async Task AddMember_ShouldHaveMaximumNumberOfMembersReachedValidateError()
     {
         //arrange
+        var memberId = 1;
+        var generatedMembersCount = TeamService.MAX_TEAM_MEMBERS;
+
+        var fakeMembers = new Faker<UserModel>()
+            .RuleFor(x => x.Id, memberId++)
+            .Generate(generatedMembersCount)
+            .ToList();
+
+        var fakeTeamMember = new Faker<TeamMemberModel>()
+            .RuleFor(o => o.MemberId, f => memberId++)
+            .RuleFor(o => o.TeamId, f => f.Random.Long(1, long.MaxValue));
+
+        var fakeTeam = new Faker<TeamModel>()
+            .RuleFor(x => x.Id, f => f.PickRandom(0, 1001))
+            .RuleFor(x => x.Members, f => fakeMembers);
+
         _teamRepositoryMock
             .Setup(x => x.GetMembersCount(It.IsAny<long>()))
             .ReturnsAsync(TeamService.MAX_TEAM_MEMBERS);
@@ -123,26 +140,21 @@ public class TeamServiceTests: BaseUnitTest
             .ReturnsAsync(true);
 
         _userRepositoryMock
-            .Setup(x=>x.ExistAsync(It.IsAny<long>()))
+            .Setup(x => x.ExistAsync(It.IsAny<long>()))
             .ReturnsAsync(true);
 
-        var service = new TeamService(
-            _createTeamModelValidatorMock.Object,
-            _teamAddMemberValidatorMock.Object,
-            _getFilterModelValidatorMock.Object,
-            _teamRepositoryMock.Object,
-            _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object,
-            _userRepositoryMock.Object);
-
-        var teamMember = new Faker<TeamMemberModel>()
-            .RuleFor(o => o.MemberId, f=> f.Random.Long(1, long.MaxValue))
-            .RuleFor(o => o.TeamId, f => f.Random.Long(1, long.MaxValue));
+        _teamRepositoryMock
+            .Setup(x => x.GetAsync(It.IsAny<long>()))
+            .ReturnsAsync(fakeTeam);
 
         //act
-        Task result() => service.JoinTeam(teamMember);
+        var result = await new TeamAddMemberModelValidator(
+            _teamRepositoryMock.Object,
+            _userRepositoryMock.Object)
+        .TestValidateAsync(fakeTeamMember);
 
         //assert
-        await Assert.ThrowsAsync<Exception>(result);
+        result.ShouldHaveAnyValidationError()
+            .WithErrorMessage($"Достигнуто максимальное количество участников в команде {generatedMembersCount} из {TeamService.MAX_TEAM_MEMBERS}");
     }
 }
