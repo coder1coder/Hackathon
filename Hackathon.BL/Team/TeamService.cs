@@ -17,6 +17,8 @@ namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
+        public const int MAX_TEAM_MEMBERS = 30;
+
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
