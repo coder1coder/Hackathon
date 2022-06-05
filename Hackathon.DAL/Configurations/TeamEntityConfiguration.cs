@@ -30,5 +30,10 @@ public class TeamEntityConfiguration: IEntityTypeConfiguration<TeamEntity>
 
         builder
             .HasOne(x => x.Owner);
+
+        builder
+            .Property(x => x.IsDeleted)
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

@@ -20,5 +20,10 @@ public class ProjectEntityConfiguration: IEntityTypeConfiguration<ProjectEntity>
 
         builder.HasOne(x => x.Event);
         builder.HasOne(x => x.Team);
+
+        builder
+            .Property(x => x.IsDeleted)
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

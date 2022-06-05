@@ -25,5 +25,10 @@ public class UserEntityConfiguration: IEntityTypeConfiguration<UserEntity>
         builder
             .Property(x => x.Role)
             .HasDefaultValue(UserRole.Default);
+
+        builder
+            .Property(x => x.IsDeleted)
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

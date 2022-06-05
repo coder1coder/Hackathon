@@ -1,17 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Hackathon.Common.Models.Event;
+using Hackathon.Entities.Interfaces;
 
 namespace Hackathon.Entities
 {
     /// <summary>
     /// Событие
     /// </summary>
-    public class EventEntity: BaseEntity
+    public class EventEntity: BaseEntity, ISoftDeletable
     {
         /// <summary>
         /// Кто создал событие
         /// </summary>
         public long OwnerId { get; set; }
+
         public UserEntity? Owner { get; set; }
 
         /// <summary>
@@ -80,5 +82,10 @@ namespace Hackathon.Entities
         /// Награда, призовой фонд
         /// </summary>
         public string Award { get; set; }
+
+        /// <summary>
+        /// Признак удаления
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
     }
 }
