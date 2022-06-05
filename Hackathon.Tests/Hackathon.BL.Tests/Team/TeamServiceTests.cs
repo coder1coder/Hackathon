@@ -11,6 +11,7 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Team;
 using Hackathon.BL.Team.Validators;
+using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -116,11 +117,10 @@ public class TeamServiceTests: BaseUnitTest
     {
         //arrange
         var memberId = 1;
-        var generatedMembersCount = TeamService.MAX_TEAM_MEMBERS;
 
         var fakeMembers = new Faker<UserModel>()
             .RuleFor(x => x.Id, memberId++)
-            .Generate(generatedMembersCount)
+            .Generate(TeamService.MAX_TEAM_MEMBERS)
             .ToList();
 
         var fakeTeamMember = new Faker<TeamMemberModel>()
@@ -132,7 +132,7 @@ public class TeamServiceTests: BaseUnitTest
             .RuleFor(x => x.Members, f => fakeMembers);
 
         _teamRepositoryMock
-            .Setup(x => x.GetMembersCount(It.IsAny<long>()))
+            .Setup(x => x.GetMembersCountAsync(It.IsAny<long>()))
             .ReturnsAsync(TeamService.MAX_TEAM_MEMBERS);
 
         _teamRepositoryMock
@@ -155,6 +155,6 @@ public class TeamServiceTests: BaseUnitTest
 
         //assert
         result.ShouldHaveAnyValidationError()
-            .WithErrorMessage(TeamService.MaximumNumberOfMembersReachedException);
+            .WithErrorMessage(ErrorMessages.MaximumNumberTeamMembersReached);
     }
 }

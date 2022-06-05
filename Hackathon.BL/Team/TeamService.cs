@@ -18,7 +18,6 @@ namespace Hackathon.BL.Team
     public class TeamService : ITeamService
     {
         public const int MAX_TEAM_MEMBERS = 30;
-        public static string MaximumNumberOfMembersReachedException = $"Достигнуто максимальное количество участников в команде {TeamService.MAX_TEAM_MEMBERS}";
 
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 

@@ -233,8 +233,8 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetMembersCount(long)"/>
-        public async Task<int> GetMembersCount(long teamId)
+        /// <inheritdoc cref="ITeamRepository.GetMembersCountAsync(long)"/>
+        public async Task<int> GetMembersCountAsync(long teamId)
         { 
             var teamEntity = await _dbContext.Teams
                 .Include(team => team.Members)

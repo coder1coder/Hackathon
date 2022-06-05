@@ -83,6 +83,6 @@ namespace Hackathon.Abstraction.Team
         /// </summary>
         /// <param name="teamId">Идентификатор команды</param>
         /// <returns></returns>
-        Task<int> GetMembersCount(long teamId);
+        Task<int> GetMembersCountAsync(long teamId);
     }
 }
