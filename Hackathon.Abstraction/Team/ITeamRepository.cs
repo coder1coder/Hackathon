@@ -77,5 +77,12 @@ namespace Hackathon.Abstraction.Team
         /// <param name="deleteTeamModel"></param>
         /// <returns></returns>
         Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel);
+
+        /// <summary>
+        /// Получить количество участников команды + владелец команды (если есть)
+        /// </summary>
+        /// <param name="teamId">Идентификатор команды</param>
+        /// <returns>Общее количество участников команды</returns>
+        Task<int> GetMembersCountAsync(long teamId);
     }
 }

@@ -232,5 +232,24 @@ namespace Hackathon.DAL.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
+
+        /// <inheritdoc cref="ITeamRepository.GetMembersCountAsync(long)"/>
+        public async Task<int> GetMembersCountAsync(long teamId)
+        { 
+            var teamEntity = await _dbContext.Teams
+                .Include(team => team.Members)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == teamId);
+
+            if (teamEntity == null)
+                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
+
+            var teamMembers = teamEntity.Members.Count();
+
+            if (teamEntity.Owner != null)
+                teamMembers += 1;
+
+            return teamMembers;
+        }
     }
 }
