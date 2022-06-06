@@ -23,7 +23,6 @@ public class ProjectEntityConfiguration: IEntityTypeConfiguration<ProjectEntity>
 
         builder
             .Property(x => x.IsDeleted)
-            .IsRequired()
             .HasDefaultValue(false);
     }
 }

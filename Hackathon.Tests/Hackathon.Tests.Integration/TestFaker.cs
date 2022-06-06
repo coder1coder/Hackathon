@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Bogus;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
@@ -45,13 +46,17 @@ namespace Hackathon.Tests.Integration
             return _mapper.Map<List<CreateEventModel>>(eventEntities);
         }
 
+        public IEnumerable<EventEntity> GetEventsEntities(int count, long userId, EventStatus? eventStatus = null)
+        {
+            return GetEventEntities(count, userId, eventStatus);
+        }
+
         public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
         {
             var faker = new Faker<CreateTeamModel>();
 
             faker
-                .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
-                ;
+                .RuleFor(x => x.Name, f => f.Random.String2(6, 20));
 
             return faker.Generate(count);
         }
@@ -62,8 +67,7 @@ namespace Hackathon.Tests.Integration
 
             faker
                 .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
-                .RuleFor(x=>x.Description, f=>f.Random.String2(6,20))
-                ;
+                .RuleFor(x=>x.Description, f=>f.Random.String2(6,20));
 
             return faker.Generate(count);
         }
@@ -79,16 +83,16 @@ namespace Hackathon.Tests.Integration
             faker
                 .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
                 .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
-                .RuleFor(x => x.MemberRegistrationMinutes, f=>f.Random.Int(1,30))
-                .RuleFor(x => x.DevelopmentMinutes, f=>f.Random.Int(1,30))
-                .RuleFor(x => x.TeamPresentationMinutes, f=>f.Random.Int(1,30))
-                .RuleFor(x => x.MaxEventMembers, _=>30)
+                .RuleFor(x => x.MemberRegistrationMinutes, f => f.Random.Int(1, 30))
+                .RuleFor(x => x.DevelopmentMinutes, f => f.Random.Int(1, 30))
+                .RuleFor(x => x.TeamPresentationMinutes, f => f.Random.Int(1, 30))
+                .RuleFor(x => x.MaxEventMembers, _ => 30)
                 .RuleFor(x => x.MinTeamMembers, _ => 3)
                 .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
                 .RuleFor(x => x.OwnerId, ownerId)
                 .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
-                .RuleFor(x => x.Award, f=>f.Random.Number(1, 1000).ToString())
-                .RuleFor(x => x.Description, f=>f.Random.String2(3,20));
+                .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
+                .RuleFor(x => x.Description, f => f.Random.String2(3, 20));
 
             return faker.Generate(count);
         }
@@ -102,6 +106,21 @@ namespace Hackathon.Tests.Integration
                 .RuleFor(x => x.PasswordHash, f => f.Random.String2(6, 20))
                 .RuleFor(x => x.FullName, f => f.Person.FullName)
                 .RuleFor(x => x.Email, f => f.Person.Email);
+
+            return faker.Generate(count);
+        }
+
+        public static IEnumerable<TeamEntity> GetTeamEntities(int count)
+        {
+            var owner = GetUserEntities(1).First();
+            var faker = new Faker<TeamEntity>();
+
+            faker
+                .RuleFor(x => x.Name, f => f.Company.CompanyName())
+                .RuleFor(x => x.Events, _ => new List<EventEntity>())
+                .RuleFor(x => x.Members, _ => new List<MemberTeamEntity>())
+                .RuleFor(x => x.Owner, _ => owner)
+                .RuleFor(x => x.OwnerId, _ => owner.Id);
 
             return faker.Generate(count);
         }

@@ -33,7 +33,6 @@ public class TeamEntityConfiguration: IEntityTypeConfiguration<TeamEntity>
 
         builder
             .Property(x => x.IsDeleted)
-            .IsRequired()
             .HasDefaultValue(false);
     }
 }

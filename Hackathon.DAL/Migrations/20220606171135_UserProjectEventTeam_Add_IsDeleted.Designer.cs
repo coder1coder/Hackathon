@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220605175952_UserProjectEventTeam_Add_IsDeleted")]
+    [Migration("20220606171135_UserProjectEventTeam_Add_IsDeleted")]
     partial class UserProjectEventTeam_Add_IsDeleted
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
