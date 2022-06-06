@@ -110,9 +110,8 @@ namespace Hackathon.Tests.Integration
             return faker.Generate(count);
         }
 
-        public static IEnumerable<TeamEntity> GetTeamEntities(int count)
+        public static IEnumerable<TeamEntity> GetTeamEntities(int count, UserEntity owner)
         {
-            var owner = GetUserEntities(1).First();
             var faker = new Faker<TeamEntity>();
 
             faker

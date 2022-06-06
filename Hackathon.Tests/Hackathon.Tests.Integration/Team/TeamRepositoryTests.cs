@@ -73,7 +73,8 @@ namespace Hackathon.Tests.Integration.Team
         public async Task GetAsync_WithGlobalFilter_ShouldReturn_Teams_Where_IsDeletedFalse()
         {
             const int validTeamsQuantity = 3;
-            var teamEntities = TestFaker.GetTeamEntities(10).ToList();
+            var owner = TestFaker.GetUserEntities(1).First();
+            var teamEntities = TestFaker.GetTeamEntities(10, owner).ToList();
 
             for (var i = 0; i < teamEntities.Count - validTeamsQuantity; i++)
             {
