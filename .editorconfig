@@ -162,3 +162,6 @@ dotnet_diagnostic.SA1600.severity = none
 
 # SA1518: Use line endings correctly at end of file
 dotnet_diagnostic.SA1518.severity = none
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
