@@ -11,6 +11,10 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.2" />
       <PackageReference Include="StackExchange.Redis" Version="2.5.43" />
+      <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -19,4 +23,7 @@
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<AdditionalFiles Include="..\stylecop.json"/>
+	</ItemGroup>
 </Project>
