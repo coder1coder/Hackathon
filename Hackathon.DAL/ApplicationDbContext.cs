@@ -1,4 +1,6 @@
-﻿using Hackathon.Entities;
+﻿using Hackathon.DAL.Extensions;
+using Hackathon.Entities;
+using Hackathon.Entities.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL
@@ -22,6 +24,7 @@ namespace Hackathon.DAL
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
         }
     }
 }

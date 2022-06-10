@@ -190,7 +190,6 @@ namespace Hackathon.DAL.Repositories
             };
 
             team.Members.Remove(userTeamEntityForRemove);
-            
             await _dbContext.SaveChangesAsync();
         }
 
@@ -215,7 +214,6 @@ namespace Hackathon.DAL.Repositories
                 throw new EntityNotFoundException("Команда с указаным индентификатором и владельцем не найдена");
 
             teamEntity.OwnerId = changeOwnerModel.NewOwnerId;
-
             await _dbContext.SaveChangesAsync();
         }
 
@@ -228,8 +226,7 @@ namespace Hackathon.DAL.Repositories
             if (teamEntity == null)
                 throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
 
-            _dbContext.Teams.Remove(teamEntity);
-
+            teamEntity.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
         }
 

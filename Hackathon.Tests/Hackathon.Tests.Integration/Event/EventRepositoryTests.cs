@@ -68,7 +68,8 @@ namespace Hackathon.Tests.Integration.Event
                         .WhenTypeIs<DateTime>()
                         .Excluding(x=>x.Teams)
                         .Excluding(x=>x.Owner)
-                    );
+                        .Excluding(x => x.IsDeleted)
+                );
         }
 
         [Fact(Skip = "TODO: fix")]
@@ -109,6 +110,46 @@ namespace Hackathon.Tests.Integration.Event
 
             var exist = await UserRepository.ExistAsync(userId);
             exist.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public async Task GetAsync_WithGlobalFilter_ShouldReturn_Events_Where_IsDeletedFalse()
+        {
+            var signUpModel = TestFaker.GetSignUpModels(1).First();
+            var userId = await UserRepository.CreateAsync(signUpModel);
+            const int validEventsQuantity = 3;
+            var eventEntities = TestFaker.GetEventsEntities(10, userId, EventStatus.Draft).ToList();
+
+            for (var i = 0; i < eventEntities.Count - validEventsQuantity; i++)
+            {
+                eventEntities[i].IsDeleted = true;
+            }
+
+            await DbContext.Events.AddRangeAsync(eventEntities);
+            await DbContext.SaveChangesAsync();
+
+            var response = await EventRepository.GetListAsync(userId, new GetListParameters<EventFilter>
+            {
+                Limit = int.MaxValue
+            });
+
+            var createdEventEntities = eventEntities.Where(x => response.Items.Any(f => f.Id == x.Id)).ToArray();
+
+            createdEventEntities.Should().NotBeEmpty();
+            createdEventEntities.Should().HaveCount(validEventsQuantity);
+            createdEventEntities.Any(x => x.IsDeleted).Should().BeFalse();
+            createdEventEntities.Any(x => x.OwnerId == userId).Should().BeTrue();
+            response.Items
+                .First(x => x.Id == createdEventEntities.First().Id)
+                .Should()
+                .BeEquivalentTo(createdEventEntities.First(), options =>
+                    options
+                        .Excluding(x => x.Teams)
+                        .Excluding(x => x.Owner)
+                        .Excluding(x => x.IsDeleted)
+                        .Excluding(x => x.Start)
+                );
         }
     }
 }

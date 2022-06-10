@@ -21,7 +21,7 @@ public class EventEntityConfiguration: IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.MaxEventMembers).IsRequired();
         builder.Property(x => x.IsCreateTeamsAutomatically).IsRequired();
         builder.Property(x => x.OwnerId).IsRequired();
-
         builder.Property(x => x.ChangeEventStatusMessages);
+        builder.Property(x => x.IsDeleted).HasDefaultValue(false);
     }
 }
