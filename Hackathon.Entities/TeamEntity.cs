@@ -1,9 +1,11 @@
-﻿namespace Hackathon.Entities
+﻿using Hackathon.Entities.Interfaces;
+
+namespace Hackathon.Entities
 {
     /// <summary>
     /// Команда
     /// </summary>
-    public class TeamEntity : BaseEntity
+    public class TeamEntity : BaseEntity, ISoftDeletable
     {
         /// <summary>
         /// Наименование
@@ -29,5 +31,10 @@
         /// Идентификатор владельца команды
         /// </summary>
         public long? OwnerId { get; set; }
+
+        /// <summary>
+        /// Признак удаления
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
     }
 }

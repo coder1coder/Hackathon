@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Team;
 using Hackathon.Tests.Integration.Base;
 using Xunit;
@@ -66,6 +67,43 @@ namespace Hackathon.Tests.Integration.Team
                 }))
                 .Should()
                 .NotThrowAsync();
+        }
+
+        [Fact]
+        public async Task GetAsync_WithGlobalFilter_ShouldReturn_Teams_Where_IsDeletedFalse()
+        {
+            const int validTeamsQuantity = 3;
+            var owner = TestFaker.GetUserEntities(1).First();
+            var teamEntities = TestFaker.GetTeamEntities(10, owner).ToList();
+
+            for (var i = 0; i < teamEntities.Count - validTeamsQuantity; i++)
+            {
+                teamEntities[i].IsDeleted = true;
+            }
+
+            await DbContext.Teams.AddRangeAsync(teamEntities);
+            await DbContext.SaveChangesAsync();
+
+            var response = await TeamRepository.GetAsync(new GetListParameters<TeamFilter>
+            {
+                Limit = int.MaxValue
+            });
+
+            var createdTeamEntities = teamEntities.Where(x => response.Items.Any(f => f.Id == x.Id)).ToArray();
+
+            createdTeamEntities.Should().NotBeEmpty();
+            createdTeamEntities.Should().HaveCount(validTeamsQuantity);
+            createdTeamEntities.Any(x => x.IsDeleted).Should().BeFalse();
+            response.Items
+                .First(x => x.Id == createdTeamEntities.First().Id)
+                .Should()
+                .BeEquivalentTo(createdTeamEntities.First(), options =>
+                    options
+                        .Excluding(x => x.Events)
+                        .Excluding(x => x.Members)
+                        .Excluding(x => x.IsDeleted)
+                        .Excluding(x => x.Owner)
+                );
         }
     }
 }

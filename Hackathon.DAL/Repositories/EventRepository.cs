@@ -171,15 +171,13 @@ namespace Hackathon.DAL.Repositories
         /// <inheritdoc cref="IEventRepository.DeleteAsync(long)"/>
         public async Task DeleteAsync(long eventId)
         {
-            var eventEntity = await _dbContext.Events
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == eventId);
+            var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
 
-            if (eventEntity != null)
-            {
-                _dbContext.Remove(eventEntity);
-                await _dbContext.SaveChangesAsync();    
-            }
+            if (eventEntity == null)
+                throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
+
+            eventEntity.IsDeleted = true;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -58,6 +58,7 @@ namespace Hackathon.Tests.Integration.User
                     options
                         .Excluding(x=>x.Teams)
                         .Excluding(x=>x.GoogleAccountId)
+                        .Excluding(x => x.IsDeleted)
                     );
         }
 
@@ -69,6 +70,41 @@ namespace Hackathon.Tests.Integration.User
 
             var exist = await UserRepository.ExistAsync(userId);
             exist.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetAsync_WithGlobalFilter_ShouldReturn_Users_Where_IsDeletedFalse()
+        {
+            const int validUsersQuantity = 3;
+            var userEntities = TestFaker.GetUserEntities(10).ToList();
+
+            for (var i = 0; i < userEntities.Count - validUsersQuantity; i++)
+            {
+                userEntities[i].IsDeleted = true;
+            }
+
+            await DbContext.Users.AddRangeAsync(userEntities);
+            await DbContext.SaveChangesAsync();
+
+            var response = await UserRepository.GetAsync(new GetListParameters<UserFilter>
+            {
+                Limit = int.MaxValue
+            });
+
+            var createdUserEntities = userEntities.Where(x => response.Items.Any(f => f.Id == x.Id)).ToArray();
+
+            createdUserEntities.Should().NotBeEmpty();
+            createdUserEntities.Should().HaveCount(validUsersQuantity);
+            createdUserEntities.Any(x => x.IsDeleted).Should().BeFalse();
+            response.Items
+                .First(x => x.Id == createdUserEntities.First().Id)
+                .Should()
+                .BeEquivalentTo(createdUserEntities.First(), options =>
+                    options
+                        .Excluding(x => x.Teams)
+                        .Excluding(x => x.GoogleAccountId)
+                        .Excluding(x => x.IsDeleted)
+                );
         }
     }
 }
