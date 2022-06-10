@@ -1,31 +1,39 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-#
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API", "Hackathon.API\Hackathon.API.csproj", "{118F4E10-EA48-4C40-A056-2D8FAA00A583}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.API", "Hackathon.API\Hackathon.API.csproj", "{118F4E10-EA48-4C40-A056-2D8FAA00A583}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL", "Hackathon.BL\Hackathon.BL.csproj", "{4AA75C3E-A4BD-4671-8AB7-C459141E8E67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.BL", "Hackathon.BL\Hackathon.BL.csproj", "{4AA75C3E-A4BD-4671-8AB7-C459141E8E67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.DAL", "Hackathon.DAL\Hackathon.DAL.csproj", "{6EDCE86D-3745-43CE-963A-C9A5035ED599}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.DAL", "Hackathon.DAL\Hackathon.DAL.csproj", "{6EDCE86D-3745-43CE-963A-C9A5035ED599}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Common", "Hackathon.Common\Hackathon.Common.csproj", "{CEA805B4-4D64-49B9-B514-CF2E667328D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Common", "Hackathon.Common\Hackathon.Common.csproj", "{CEA805B4-4D64-49B9-B514-CF2E667328D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API.Contracts", "Hackathon.API.Contracts\Hackathon.API.Contracts.csproj", "{D77A209E-78AB-47CB-9445-35873B59C50B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.API.Contracts", "Hackathon.API.Contracts\Hackathon.API.Contracts.csproj", "{D77A209E-78AB-47CB-9445-35873B59C50B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Tests", "Hackathon.Tests", "{BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.IntegrationEvents", "Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj", "{E0BC1D49-9625-4071-B95A-43A6F9B8D95C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.IntegrationEvents", "Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj", "{E0BC1D49-9625-4071-B95A-43A6F9B8D95C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Tests", "Hackathon.Tests\Hackathon.BL.Tests\Hackathon.BL.Tests.csproj", "{EC21951E-D09D-48FD-9736-B9D032335C92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.BL.Tests", "Hackathon.Tests\Hackathon.BL.Tests\Hackathon.BL.Tests.csproj", "{EC21951E-D09D-48FD-9736-B9D032335C92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Abstraction", "Hackathon.Abstraction\Hackathon.Abstraction.csproj", "{61AFCCAA-739D-4534-A8A4-3A9F577A1819}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Abstraction", "Hackathon.Abstraction\Hackathon.Abstraction.csproj", "{61AFCCAA-739D-4534-A8A4-3A9F577A1819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Jobs", "Hackathon.Jobs\Hackathon.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Jobs", "Hackathon.Jobs\Hackathon.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Entities", "Hackathon.Entities\Hackathon.Entities.csproj", "{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Entities", "Hackathon.Entities\Hackathon.Entities.csproj", "{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Tests.Benchmark", "Hackathon.Tests\Hackathon.Tests.Benchmark\Hackathon.Tests.Benchmark.csproj", "{8C51F712-35DA-42EC-BEE3-B22C05674E9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Tests.Benchmark", "Hackathon.Tests\Hackathon.Tests.Benchmark\Hackathon.Tests.Benchmark.csproj", "{8C51F712-35DA-42EC-BEE3-B22C05674E9E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68376261-8321-4CA1-AF47-289FC4215319}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,9 +90,15 @@ Global
 		{8C51F712-35DA-42EC-BEE3-B22C05674E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C51F712-35DA-42EC-BEE3-B22C05674E9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0EE92567-1C23-4660-89FC-8B4363B9CDB5} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{EC21951E-D09D-48FD-9736-B9D032335C92} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{8C51F712-35DA-42EC-BEE3-B22C05674E9E} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00FC3778-D6F7-4034-9697-FA3D761F5679}
 	EndGlobalSection
 EndGlobal

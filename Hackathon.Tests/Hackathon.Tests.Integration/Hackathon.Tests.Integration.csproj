@@ -12,6 +12,10 @@
         <PackageReference Include="FluentAssertions" Version="6.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-preview-20211130-02" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="xunit" Version="2.4.2-pre.12" />
         <PackageReference Include="Refit" Version="6.1.15" />
         <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />

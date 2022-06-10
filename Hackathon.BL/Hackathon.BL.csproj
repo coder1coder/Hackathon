@@ -18,7 +18,14 @@
       <PackageReference Include="Mapster" Version="7.2.0" />
       <PackageReference Include="MassTransit" Version="8.0.2" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     </ItemGroup>
 
+	<ItemGroup>
+		<AdditionalFiles Include="..\stylecop.json"/>
+	</ItemGroup>
 </Project>
