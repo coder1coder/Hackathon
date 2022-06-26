@@ -7,3 +7,18 @@ public class CreateNotificationModel<T> where T: class
     public long? OwnerId { get; set; }
     public T Data { get; set; }
 }
+
+public static class CreateNotificationModel
+{
+    public static CreateNotificationModel<InfoNotificationData> Information(long userId, string message, long? ownerId = null)
+        => new()
+        {
+            Type = NotificationType.Information,
+            OwnerId = ownerId,
+            UserId = userId,
+            Data = new InfoNotificationData
+            {
+                Message = message
+            }
+        };
+}
