@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Audit;
 using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.Friend;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
@@ -14,6 +15,7 @@ using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
+using Hackathon.DAL.Repositories;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -32,12 +34,14 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IEventApi EventsApi;
         protected readonly ITeamApi TeamsApi;
         protected readonly IProjectApi ProjectsApi;
+        protected readonly IFriendshipApi FriendshipApi;
 
         protected readonly IAuditRepository AuditRepository;
         protected readonly IUserRepository UserRepository;
         protected readonly IEventRepository EventRepository;
         protected readonly ITeamRepository TeamRepository;
         protected readonly IProjectRepository ProjectRepository;
+        protected readonly IFriendshipRepository FriendshipRepository;
         protected readonly IMapper Mapper;
 
         protected readonly ApplicationDbContext DbContext;
@@ -63,6 +67,7 @@ namespace Hackathon.Tests.Integration.Base
             EventRepository = factory.Services.GetRequiredService<IEventRepository>();
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
             ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
+            FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();
             
             LoggerFactory = factory.Services.GetRequiredService<ILoggerFactory>();
 
@@ -94,6 +99,13 @@ namespace Hackathon.Tests.Integration.Base
             EventsApi = RestService.For<IEventApi>(_httpClient);
             TeamsApi = RestService.For<ITeamApi>(_httpClient);
             ProjectsApi = RestService.For<IProjectApi>(_httpClient);
+            FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, new RefitSettings
+            {
+                UrlParameterFormatter = new DefaultUrlParameterFormatter
+                {
+                    
+                }
+            });
         }
 
         protected void SetToken(string token)

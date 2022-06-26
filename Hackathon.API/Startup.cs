@@ -1,5 +1,6 @@
 using System;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using Autofac;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
@@ -23,6 +24,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Hackathon.API
 {
@@ -96,6 +98,9 @@ namespace Hackathon.API
             {
                 options.Filters.Add(new MainActionFilter());
                 options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
+            }).AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services.AddSignalR(x=>x.EnableDetailedErrors = true);
@@ -151,6 +156,7 @@ namespace Hackathon.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint($"{appConfig.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
+                c.DocExpansion(DocExpansion.None);
             });
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions

@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Hackathon.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers;
 
+[SwaggerTag("Файловое хранилище")]
 public class FileStorageController: BaseController
 {
     private readonly IFileStorageService _fileStorageService;
