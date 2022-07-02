@@ -101,6 +101,10 @@ table {
   font-size: 14px;
 }
 
+.mat-tab-label-content mat-icon {
+  margin-right: .5em;
+}
+
 mat-tab-group.vertical-tabs {
 
   display: flex;

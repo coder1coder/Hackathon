@@ -41,11 +41,12 @@ public class EventListItem
     /// Статус события
     /// </summary>
     public EventStatus Status { get; set; }
-    
+
     /// <summary>
     /// Организатор
     /// </summary>
     public long OwnerId { get; set; }
+
     public string OwnerName { get; set; }
 
     /// <summary>
