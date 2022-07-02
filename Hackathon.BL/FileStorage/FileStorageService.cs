@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.FileStorage
 {
-    public class FileStorageService: IFileStorageService
+    public class FileStorageService : IFileStorageService
     {
         private readonly AmazonS3Client _s3Client;
         private readonly ILogger<FileStorageService> _logger;
@@ -35,7 +35,9 @@ namespace Hackathon.BL.FileStorage
                 var buckets = await _s3Client.ListBucketsAsync();
 
                 if (buckets.Buckets.All(x => x.BucketName != bucketName))
+                {
                     await _s3Client.PutBucketAsync(bucketName);
+                }
 
                 await _s3Client.PutObjectAsync(new PutObjectRequest()
                 {
@@ -54,9 +56,9 @@ namespace Hackathon.BL.FileStorage
                     FilePath = uniqueFileName.ToString(),
                     Length = stream.Length,
                     MimeType = mimeType,
-                    OwnerId = ownerId
+                    OwnerId = ownerId,
                 };
-                
+
                 await _fileStorageRepository.AddAsync(storageFile);
 
                 return storageFile;

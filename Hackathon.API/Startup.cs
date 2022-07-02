@@ -100,7 +100,7 @@ namespace Hackathon.API
                 options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             }).AddJsonOptions(opt =>
             {
-                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                // opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services.AddSignalR(x=>x.EnableDetailedErrors = true);
@@ -120,7 +120,7 @@ namespace Hackathon.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
-            
+
             builder.RegisterModule(new Module());
             builder.RegisterModule(new BL.Module(appConfig));
             builder.RegisterModule(new DAL.Module());
