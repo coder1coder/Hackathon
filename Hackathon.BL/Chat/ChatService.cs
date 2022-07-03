@@ -10,22 +10,22 @@ using Hackathon.IntegrationEvents.IntegrationEvent;
 
 namespace Hackathon.BL.Chat;
 
-public class ChatService: IChatService
+public class ChatService : IChatService
 {
     private readonly IChatRepository _chatRepository;
     private readonly IUserRepository _userRepository;
     private readonly IMessageHub<ChatMessageChangedIntegrationEvent> _chatMessageHub;
-    
+
     public ChatService(
-        IChatRepository chatRepository, 
-        IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub, 
+        IChatRepository chatRepository,
+        IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository)
     {
         _chatRepository = chatRepository;
         _chatMessageHub = chatMessageHub;
         _userRepository = userRepository;
     }
-    
+
     /// <inheritdoc cref="IChatService.SendMessage"/>
     public async Task SendMessage(ICreateChatMessage createChatMessage)
     {
@@ -36,29 +36,31 @@ public class ChatService: IChatService
             Timestamp = createChatMessage.Timestamp,
             Type = createChatMessage.Type,
             OwnerId = createChatMessage.OwnerId,
-            UserId = createChatMessage.UserId
+            UserId = createChatMessage.UserId,
         };
 
         if (createChatMessage is CreateTeamChatMessage createTeamChatMessage)
+        {
             entity.TeamId = createTeamChatMessage.TeamId;
-        
+        }
+
         var owner = await _userRepository.GetAsync(createChatMessage.OwnerId);
         entity.OwnerFullName = owner.FullName;
-        
-        //enrich message
+
+        // enrich message
         if (createChatMessage.UserId.HasValue)
         {
             var user = await _userRepository.GetAsync(createChatMessage.UserId.Value);
             entity.UserFullName = user.FullName;
         }
-        
+
         await _chatRepository.AddMessage(entity);
         await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, new ChatMessageChangedIntegrationEvent
         {
             Context = createChatMessage.Context,
             TeamId = createChatMessage is CreateTeamChatMessage teamChatMessage
                 ? teamChatMessage.TeamId
-                : null
+                : null,
         });
     }
 

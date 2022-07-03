@@ -32,16 +32,16 @@ namespace Hackathon.DAL.Repositories
             if (createTeamModel.EventId.HasValue)
             {
                 var eventEntity = await _dbContext.Events
-                    .FirstOrDefaultAsync(x => 
+                    .FirstOrDefaultAsync(x =>
                         x.Id == createTeamModel.EventId.Value);
-                
+
                 eventEntity?.Teams.Add(createTeamEntity);
             }
             else
             {
-                await _dbContext.AddAsync(createTeamEntity);    
+                await _dbContext.AddAsync(createTeamEntity);
             }
-            
+
             await _dbContext.SaveChangesAsync();
 
             return createTeamEntity.Id;
@@ -94,7 +94,7 @@ namespace Hackathon.DAL.Repositories
 
                 if (parameters.Filter.OwnerId.HasValue)
                     query = query.Where(x => x.OwnerId == parameters.Filter.OwnerId);
-                
+
                 if (parameters.Filter.HasOwner.HasValue)
                     query = query.Where(x => x.OwnerId != null);
             }
@@ -154,13 +154,13 @@ namespace Hackathon.DAL.Repositories
 
             if (user == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
-            
+
             team.Members.Add(new MemberTeamEntity
             {
                 TeamId = teamMemberModel.TeamId,
                 Team = team,
                 MemberId = teamMemberModel.MemberId,
-                Member = user
+                Member = user,
             });
 
             await _dbContext.SaveChangesAsync();
@@ -170,8 +170,8 @@ namespace Hackathon.DAL.Repositories
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams
-                .Include(x=>x.Members)
-                .FirstOrDefaultAsync(x=>
+                .Include(x => x.Members)
+                .FirstOrDefaultAsync(x =>
                     x.Id == teamMemberModel.TeamId);
 
             if (team == null)
@@ -232,7 +232,7 @@ namespace Hackathon.DAL.Repositories
 
         /// <inheritdoc cref="ITeamRepository.GetMembersCountAsync(long)"/>
         public async Task<int> GetMembersCountAsync(long teamId)
-        { 
+        {
             var teamEntity = await _dbContext.Teams
                 .Include(team => team.Members)
                 .AsNoTracking()

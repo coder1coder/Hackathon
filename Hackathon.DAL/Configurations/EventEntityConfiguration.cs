@@ -4,14 +4,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Hackathon.DAL.Configurations;
 
-public class EventEntityConfiguration: IEntityTypeConfiguration<EventEntity>
+public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
 {
     public void Configure(EntityTypeBuilder<EventEntity> builder)
     {
         builder.ToTable("Events");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(x => x.Description)
+            .IsRequired();
+
         builder.Property(x => x.Start).IsRequired();
         builder.Property(x => x.Status).IsRequired();
         builder.Property(x => x.MemberRegistrationMinutes).IsRequired();
@@ -21,7 +27,10 @@ public class EventEntityConfiguration: IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.MaxEventMembers).IsRequired();
         builder.Property(x => x.IsCreateTeamsAutomatically).IsRequired();
         builder.Property(x => x.OwnerId).IsRequired();
-        builder.Property(x => x.ChangeEventStatusMessages);
+
+        builder.Property(x => x.ChangeEventStatusMessages)
+            .HasColumnType("jsonb");
+
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);
     }
 }

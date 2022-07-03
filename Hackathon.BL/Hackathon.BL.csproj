@@ -6,12 +6,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.Abstraction\Hackathon.Abstraction.csproj" />
+      <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.3.0" />
+      <PackageReference Include="Autofac" Version="6.4.0" />
       <PackageReference Include="AWSSDK.S3" Version="3.7.7.25" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
       <PackageReference Include="FluentValidation" Version="10.3.6" />
@@ -26,6 +27,6 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="..\stylecop.json"/>
+		<AdditionalFiles Include="..\stylecop.json" />
 	</ItemGroup>
 </Project>

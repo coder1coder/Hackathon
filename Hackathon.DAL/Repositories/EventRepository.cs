@@ -29,10 +29,10 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IEventRepository.CreateAsync(CreateEventModel)"/>
-        public async Task<long> CreateAsync(CreateEventModel createUpdateEventModel)
+        /// <inheritdoc cref="IEventRepository.CreateAsync(EventCreateParameters)"/>
+        public async Task<long> CreateAsync(EventCreateParameters eventCreateUpdateParameters)
         {
-            var eventEntity = _mapper.Map<EventEntity>(createUpdateEventModel);
+            var eventEntity = _mapper.Map<EventEntity>(eventCreateUpdateParameters);
 
             await _dbContext.AddAsync(eventEntity);
             await _dbContext.SaveChangesAsync();
@@ -142,16 +142,16 @@ namespace Hackathon.DAL.Repositories
                 .ToArrayAsync();
         }
 
-        /// <inheritdoc cref="IEventRepository.UpdateAsync(UpdateEventModel)"/>
-        public async Task UpdateAsync(UpdateEventModel updateEventModel)
+        /// <inheritdoc cref="IEventRepository.UpdateAsync(EventUpdateParameters)"/>
+        public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
         {
             var entity = await _dbContext.Events
-                .SingleOrDefaultAsync(x => x.Id == updateEventModel.Id);
+                .SingleOrDefaultAsync(x => x.Id == eventUpdateParameters.Id);
             
             if (entity == null)
                 throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
 
-            _mapper.Map(updateEventModel, entity);
+            _mapper.Map(eventUpdateParameters, entity);
             _dbContext.Events.Update(entity);
             await _dbContext.SaveChangesAsync();
         }

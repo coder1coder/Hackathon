@@ -1,0 +1,21 @@
+<mat-toolbar class="layout-default__toolbar">
+
+  <div class="logo">Hackathon</div>
+  <app-nav-menu></app-nav-menu>
+  <span class="spacer"></span>
+  <notification-bell></notification-bell>
+  <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+    <profile-image [style.width]="'40px'" [style.height]="'40px'" [style.font-size]="'18px'"></profile-image>
+  </button>
+  <mat-menu #profileMenu="matMenu" yPosition="below">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>account_circle</mat-icon>
+      {{ UserName }}
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Выйти
+    </button>
+  </mat-menu>
+
+</mat-toolbar>

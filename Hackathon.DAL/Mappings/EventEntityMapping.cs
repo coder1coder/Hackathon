@@ -9,11 +9,11 @@ namespace Hackathon.DAL.Mappings
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.ForType<CreateEventModel, EventEntity>()
+            config.ForType<EventCreateParameters, EventEntity>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Start, s => s.Start.ToUniversalTime());
             
-            config.ForType<UpdateEventModel, EventEntity>()
+            config.ForType<EventUpdateParameters, EventEntity>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Start, s => s.Start.ToUniversalTime());
                 
@@ -41,7 +41,7 @@ namespace Hackathon.DAL.Mappings
 
             //for fake in tests
             config
-                .ForType<EventEntity, CreateEventModel>()
+                .ForType<EventEntity, EventCreateParameters>()
                 .IgnoreNullValues(true)
                 .MaxDepth(3);
 

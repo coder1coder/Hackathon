@@ -1,8 +1,4 @@
-import {AfterViewInit, Component, Input} from "@angular/core";
-import {AuthService} from "../../../services/auth.service";
-import {CustomDialog, ICustomDialogData} from "../../custom/custom-dialog/custom-dialog.component";
-import {RouterService} from "../../../services/router.service";
-import {MatDialog} from "@angular/material/dialog";
+import {Component, Input} from "@angular/core";
 
 @Component({
   selector: 'layout-default',
@@ -10,39 +6,13 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./default.layout.component.scss'],
 })
 
-export class DefaultLayoutComponent implements AfterViewInit {
+export class DefaultLayoutComponent {
 
   @Input() title!: string;
+  @Input() hideTitlebar: boolean = false;
   @Input() isLoading: boolean = false;
+  @Input() containerClasses: string = 'container container-full';
 
-  UserName:string | undefined;
-
-  constructor(
-    private authService:AuthService,
-    private routerService:RouterService,
-    private dialog: MatDialog
-    ) {}
-
-  ngAfterViewInit(): void {
-    this.authService.getCurrentUser()?.subscribe(x=>{
-      if (x != null)
-        this.UserName = x.fullName ?? x.userName
-    })
-  }
-
-  public logout(){
-    let data: ICustomDialogData = {
-      header: 'Выход',
-      content: `Вы уверены, что хотите выйти?`,
-      acceptButtonText: `Да`
-    };
-
-    this.dialog.open(CustomDialog, { data })
-      .afterClosed()
-      .subscribe(x =>
-      {
-        if (x) this.routerService.Profile.Logout();
-      });
-  }
+  constructor() {}
 }
 

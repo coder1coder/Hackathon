@@ -11,16 +11,16 @@ namespace Hackathon.Abstraction.Event
         /// <summary>
         /// Создание события
         /// </summary>
-        /// <param name="createEventModel">Модель создаваемого события</param>
+        /// <param name="eventCreateParameters">Модель создаваемого события</param>
         /// <returns></returns>
-        Task<long> CreateAsync(CreateEventModel createEventModel);
+        Task<long> CreateAsync(EventCreateParameters eventCreateParameters);
 
         /// <summary>
         /// Редактирование события
         /// </summary>
-        /// <param name="updateEventModel"></param>
+        /// <param name="eventUpdateParameters"></param>
         /// <returns></returns>
-        Task UpdateAsync(UpdateEventModel updateEventModel);
+        Task UpdateAsync(EventUpdateParameters eventUpdateParameters);
 
         /// <summary>
         /// Получение информации о событии по идентификатору

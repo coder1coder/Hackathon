@@ -6,13 +6,13 @@ namespace Hackathon.Common.Models.Event
     /// <summary>
     /// Модель события для создания
     /// </summary>
-    public class CreateEventModel
+    public class EventCreateParameters
     {
         /// <summary>
         /// Наименование события
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Описание события
         /// </summary>
@@ -62,7 +62,7 @@ namespace Hackathon.Common.Models.Event
         /// Кто создал событие
         /// </summary>
         public long OwnerId { get; set; }
-        
+
         /// <summary>
         /// Награда, призовой фонд
         /// </summary>

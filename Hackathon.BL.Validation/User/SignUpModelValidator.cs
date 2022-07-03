@@ -3,7 +3,7 @@ using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 
-namespace Hackathon.BL.User.Validators
+namespace Hackathon.BL.Validation.User
 {
     public class SignUpModelValidator: AbstractValidator<SignUpModel>
     {
