@@ -7,6 +7,16 @@ body {
   font-weight: 400;
 }
 
+@keyframes slide{
+  0% { background-position-y: 0; }
+  100% {  background-position-y: -1920px; }
+}
+
+.hackathon-background {
+  background: url('assets/img/back.png');
+  animation: slide 180s linear infinite;
+}
+
 b {
   font-weight: 500;
 }
@@ -24,10 +34,17 @@ table {
   margin: 0 auto;
   box-sizing: border-box;
   height: 100%;
+  max-width: 80%;
 
   &-full {
     max-width: 100%;
     padding: 0 1em 0 2em;
+  }
+
+  &-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 

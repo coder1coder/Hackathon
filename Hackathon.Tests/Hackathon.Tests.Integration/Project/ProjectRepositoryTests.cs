@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Project
 {
-    public class ProjectRepositoryTests: BaseIntegrationTest
+    public class ProjectRepositoryTests : BaseIntegrationTest
     {
         public ProjectRepositoryTests(TestWebApplicationFactory factory) : base(factory)
         {

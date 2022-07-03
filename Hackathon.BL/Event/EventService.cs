@@ -7,7 +7,7 @@ using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
-using Hackathon.BL.Event.Validators;
+using Hackathon.BL.Validation.Event;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
@@ -25,10 +25,10 @@ namespace Hackathon.BL.Event
     /// <summary>
     /// События
     /// </summary>
-    public class EventService: IEventService
+    public class EventService : IEventService
     {
-        private readonly IValidator<CreateEventModel> _createEventModelValidator;
-        private readonly IValidator<UpdateEventModel> _updateEventModelValidator;
+        private readonly IValidator<EventCreateParameters> _createEventModelValidator;
+        private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
         private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
         private readonly IValidator<GetListParameters<EventFilter>> _getFilterModelValidator;
@@ -37,12 +37,12 @@ namespace Hackathon.BL.Event
         private readonly IBus _messageBus;
 
         public EventService(
-            IValidator<CreateEventModel> createEventModelValidator,
-            IValidator<UpdateEventModel> updateEventModelValidator,
+            IValidator<EventCreateParameters> createEventModelValidator,
+            IValidator<EventUpdateParameters> updateEventModelValidator,
             IValidator<GetListParameters<EventFilter>> getFilterModelValidator,
             IEventRepository eventRepository,
-            ITeamService teamService, 
-            IUserRepository userRepository, 
+            ITeamService teamService,
+            IUserRepository userRepository,
             INotificationService notificationService,
             IBus messageBus)
         {
@@ -56,26 +56,26 @@ namespace Hackathon.BL.Event
             _messageBus = messageBus;
         }
 
-        /// <inheritdoc cref="IEventService.CreateAsync(CreateEventModel)"/>
-        public async Task<long> CreateAsync(CreateEventModel createEventModel)
+        /// <inheritdoc cref="IEventService.CreateAsync(EventCreateParameters)"/>
+        public async Task<long> CreateAsync(EventCreateParameters eventCreateParameters)
         {
-            await _createEventModelValidator.ValidateAndThrowAsync(createEventModel);
-            var eventId = await _eventRepository.CreateAsync(createEventModel);
-            
+            await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
+            var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
+
             await _messageBus.Publish(new AuditEventModel(
                 AuditEventType.Created,
                 $"Создано новое событие с идентификатором '{eventId}'",
-                createEventModel.OwnerId
+                eventCreateParameters.OwnerId
             ));
-            
+
             return eventId;
         }
 
-        /// <inheritdoc cref="IEventService.UpdateAsync(UpdateEventModel)"/>
-        public async Task UpdateAsync(UpdateEventModel updateEventModel)
+        /// <inheritdoc cref="IEventService.UpdateAsync(EventUpdateParameters)"/>
+        public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
         {
-            await _updateEventModelValidator.ValidateAndThrowAsync(updateEventModel);
-            await _eventRepository.UpdateAsync(updateEventModel);
+            await _updateEventModelValidator.ValidateAndThrowAsync(eventUpdateParameters);
+            await _eventRepository.UpdateAsync(eventUpdateParameters);
         }
 
         /// <inheritdoc cref="IEventService.GetAsync(long)"/>
@@ -109,7 +109,7 @@ namespace Hackathon.BL.Event
 
             if (!isValid)
                 throw new ValidationException(errorMessage);
-            
+
             await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
         }
 
@@ -120,7 +120,7 @@ namespace Hackathon.BL.Event
 
             if (eventModel.Status != EventStatus.Published)
                 throw new ValidationException("Нельзя присоединиться к событию");
-            
+
             var notFullTeams = eventModel
                 .Teams
                 .Where(x => x.Members?.Count < eventModel.MinTeamMembers)
@@ -215,7 +215,7 @@ namespace Hackathon.BL.Event
             {
                 var notificationModels = usersIds.Select(x =>
                     NotificationFactory.InfoNotification(changeEventStatusMessage, x));
-                
+
                 await _notificationService.PushMany(notificationModels);
             }
         }

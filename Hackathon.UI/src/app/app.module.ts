@@ -52,6 +52,8 @@ import { AlertComponent } from "./components/custom/alert/alert.component";
 import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
+import {EventCardComponent} from "./components/event/card/event.card.component";
+import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 
 @NgModule({
   declarations: [
@@ -68,6 +70,7 @@ import { ProfileImageComponent } from "./components/profile/image/profile-image.
     EventViewComponent,
     EventFormComponent,
     EventNewStatusDialogComponent,
+    EventCardComponent,
 
     TeamViewComponent,
     TeamComponent,
@@ -86,6 +89,7 @@ import { ProfileImageComponent } from "./components/profile/image/profile-image.
     NotificationListComponent,
     NotificationInfoViewComponent,
 
+    ToolbarComponent,
     DefaultLayoutComponent,
     ListDetailsComponent,
     AlertComponent,

@@ -53,9 +53,9 @@ namespace Hackathon.Tests.Integration.Team
             var signUpModel = TestFaker.GetSignUpModels(1).First();
 
             long userId = -1;
-            
+
             UserRepository.CreateAsync(signUpModel)
-                .ContinueWith(x=>
+                .ContinueWith(x =>
                     userId = x.Result)
                 .Wait();
 

@@ -17,7 +17,7 @@ namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
-        public const int MAX_TEAM_MEMBERS = 30;
+
 
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
@@ -32,14 +32,14 @@ namespace Hackathon.BL.Team
             IValidator<CreateTeamModel> createTeamModelValidator,
             IValidator<TeamMemberModel> teamAddMemberModelValidator,
             IValidator<GetListParameters<TeamFilter>> getFilterModelValidator,
-            ITeamRepository teamRepository, 
-            IEventRepository eventRepository, 
+            ITeamRepository teamRepository,
+            IEventRepository eventRepository,
             IProjectRepository projectRepository)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
             _getFilterModelValidator = getFilterModelValidator;
-            
+
             _teamRepository = teamRepository;
             _eventRepository = eventRepository;
             _projectRepository = projectRepository;
@@ -69,7 +69,7 @@ namespace Hackathon.BL.Team
                 if (teams.Items.Any())
                     throw new ValidationException("Пользователь уже является владельцем команды");
             }
-            
+
             return await _teamRepository.CreateAsync(createTeamModel);
         }
 
@@ -103,7 +103,7 @@ namespace Hackathon.BL.Team
 
             var userTeam = teams.First();
             userTeam.Members.Add(userTeam.Owner);
-            
+
             return new TeamGeneral
             {
                 Id = userTeam.Id,
@@ -121,7 +121,7 @@ namespace Hackathon.BL.Team
 
             var IsOwnerMember = team.OwnerId == teamMemberModel.MemberId;
 
-            // Если пользователь является создателем, то нужно передать права владения группой 
+            // Если пользователь является создателем, то нужно передать права владения группой
             if (IsOwnerMember)
             {
                 if (team.Members != null

@@ -1,14 +1,15 @@
-﻿using System.Linq;
-using FluentValidation;
+﻿using FluentValidation;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.BL.Team.Validators
+namespace Hackathon.BL.Validation.Team
 {
     public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
     {
+        public const int MaxTeamMembers = 30;
+
         public TeamAddMemberModelValidator(
             ITeamRepository teamRepository,
             IUserRepository userRepository
@@ -49,7 +50,7 @@ namespace Hackathon.BL.Team.Validators
                 {
                     var teamMemberCount = await teamRepository.GetMembersCountAsync(model.TeamId);
 
-                    if (teamMemberCount >= TeamService.MAX_TEAM_MEMBERS)
+                    if (teamMemberCount >= MaxTeamMembers)
                         context.AddFailure(ErrorMessages.MaximumNumberTeamMembersReached);
                 });
         }

@@ -2,7 +2,7 @@
 using Hackathon.Abstraction.Team;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.BL.Team.Validators
+namespace Hackathon.BL.Validation.Team
 {
     public class CreateTeamModelValidator : AbstractValidator<CreateTeamModel>
     {

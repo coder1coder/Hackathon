@@ -18,8 +18,8 @@ namespace Hackathon.BL.Tests.Event;
 
 public class EventServiceTests: BaseUnitTest
 {
-    private Mock<IValidator<CreateEventModel>> _createValidatorMock = new();
-    private Mock<IValidator<UpdateEventModel>> _updateValidatorMock = new();
+    private Mock<IValidator<EventCreateParameters>> _createValidatorMock = new();
+    private Mock<IValidator<EventUpdateParameters>> _updateValidatorMock = new();
     private Mock<IValidator<GetListParameters<EventFilter>>> _getListValidatorMock = new();
     
     private Mock<ITeamService> _teamServiceMock = new();
@@ -36,8 +36,8 @@ public class EventServiceTests: BaseUnitTest
         //arrange
         var createdId = new Random().Next(0, 11);
         
-        _createValidatorMock = new Mock<IValidator<CreateEventModel>>();
-        _updateValidatorMock = new Mock<IValidator<UpdateEventModel>>();
+        _createValidatorMock = new Mock<IValidator<EventCreateParameters>>();
+        _updateValidatorMock = new Mock<IValidator<EventUpdateParameters>>();
         _getListValidatorMock = new Mock<IValidator<GetListParameters<EventFilter>>>();
         
         _teamServiceMock = new Mock<ITeamService>();
@@ -48,7 +48,7 @@ public class EventServiceTests: BaseUnitTest
 
         _busMock = new Mock<IBus>();
 
-        _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<CreateEventModel>()))
+        _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<EventCreateParameters>()))
             .ReturnsAsync(createdId);
 
         _busMock.Setup(x => x.Publish(It.IsAny<AuditEventModel>(), default))
@@ -66,7 +66,7 @@ public class EventServiceTests: BaseUnitTest
         );
 
         //act
-        var result = await service.CreateAsync(new CreateEventModel());
+        var result = await service.CreateAsync(new EventCreateParameters());
 
         //assert
         result.Should().Be(createdId);

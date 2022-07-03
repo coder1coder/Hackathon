@@ -1,9 +1,7 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models.Event;
 
-namespace Hackathon.BL.Event.Validators;
+namespace Hackathon.BL.Validation.Event;
 
 public class ChangeEventStatusValidator
 {
@@ -11,7 +9,7 @@ public class ChangeEventStatusValidator
     {
         return await Task.FromResult(Validate(eventModel, newStatus));
     }
-    
+
     private (bool, string) Validate(EventModel eventModel, EventStatus newStatus)
     {
         var canChangeStatus = newStatus == EventStatus.Finished || (int)eventModel.Status == (int)newStatus - 1;
@@ -22,11 +20,11 @@ public class ChangeEventStatusValidator
         return newStatus switch
         {
             EventStatus.Started => IsEventStatusCanBeStarted(eventModel),
-            
+
             _ => (true, string.Empty)
         };
     }
-    
+
     private (bool, string) IsEventStatusCanBeStarted(EventModel eventModel)
     {
         var totalMembers = eventModel.Teams.Sum(x => x.Members?.Count);
@@ -37,5 +35,5 @@ public class ChangeEventStatusValidator
 
         return (true, string.Empty);
     }
-    
+
 }

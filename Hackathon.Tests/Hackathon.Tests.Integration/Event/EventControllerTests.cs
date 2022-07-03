@@ -19,7 +19,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task Get_ShouldReturn_Success()
         {
             var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-            var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
+            var createEventModel = Mapper.Map<EventCreateParameters>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
             eventModel = await EventsApi.Get(eventId);
@@ -39,7 +39,7 @@ namespace Hackathon.Tests.Integration.Event
         public async Task SetStatus_FromDraft_ToPublished_ShouldReturn_Success()
         {
             var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-            var createEventModel = Mapper.Map<CreateEventModel>(eventModel);
+            var createEventModel = Mapper.Map<EventCreateParameters>(eventModel);
 
             var eventId = await EventRepository.CreateAsync(createEventModel);
 

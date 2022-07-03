@@ -43,7 +43,8 @@
         <tr mat-row *matRowDef="let row; columns: getDisplayTeamsColumns();"></tr>
       </table>
     </mat-tab>
-    <mat-tab label="Уведомления" *ngIf="userId == event.ownerId">
+
+    <mat-tab label="Уведомления" *ngIf="userId == event.ownerId && false">
 
       <table mat-table [dataSource]="eventStatusesDataSource" [class.empty]="eventStatusesDataSource.data.length == 0">
         <ng-container matColumnDef="status">

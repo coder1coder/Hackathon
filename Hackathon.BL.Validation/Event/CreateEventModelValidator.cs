@@ -1,12 +1,9 @@
-﻿using System;
-using System.Data;
-using System.Linq;
-using FluentValidation;
+﻿using FluentValidation;
 using Hackathon.Common.Models.Event;
 
-namespace Hackathon.BL.Event.Validators
+namespace Hackathon.BL.Validation.Event
 {
-    public class CreateEventModelValidator: AbstractValidator<CreateEventModel>
+    public class CreateEventModelValidator : AbstractValidator<EventCreateParameters>
     {
         public CreateEventModelValidator()
         {
@@ -14,6 +11,11 @@ namespace Hackathon.BL.Event.Validators
                 .NotEmpty()
                 .MinimumLength(5)
                 .MaximumLength(100);
+
+            RuleFor(x => x.Description)
+                .NotEmpty()
+                .MinimumLength(400)
+                .WithMessage("Описание должно содержать минимум 400 символов");
 
             RuleFor(x => x.Start)
                .GreaterThan(DateTime.UtcNow)

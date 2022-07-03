@@ -37,7 +37,7 @@ public class EventController: BaseController
     [HttpPost]
     public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
     {
-        var createEventModel = _mapper.Map<CreateEventModel>(createEventRequest);
+        var createEventModel = _mapper.Map<EventCreateParameters>(createEventRequest);
         createEventModel.OwnerId = UserId;
 
         return new BaseCreateResponse
@@ -53,7 +53,7 @@ public class EventController: BaseController
     [HttpPut]
     public async Task Update(UpdateEventRequest request)
     {
-        var model = _mapper.Map<UpdateEventModel>(request);
+        var model = _mapper.Map<EventUpdateParameters>(request);
         await _eventService.UpdateAsync(model);
     }
 

@@ -40,10 +40,10 @@ namespace Hackathon.Tests.Integration
             return _mapper.Map<List<EventModel>>(eventEntities);
         }
 
-        public IEnumerable<CreateEventModel> GetCreateEventModels(int count, long userId)
+        public IEnumerable<EventCreateParameters> GetCreateEventModels(int count, long userId)
         {
             var eventEntities = GetEventEntities(count, userId);
-            return _mapper.Map<List<CreateEventModel>>(eventEntities);
+            return _mapper.Map<List<EventCreateParameters>>(eventEntities);
         }
 
         public IEnumerable<EventEntity> GetEventsEntities(int count, long userId, EventStatus? eventStatus = null)

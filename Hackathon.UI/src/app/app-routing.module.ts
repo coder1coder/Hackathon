@@ -16,6 +16,7 @@ import {RedirectService} from "./services/redirect.service";
 import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
+import {EventCardComponent} from "./components/event/card/event.card.component";
 
 
 const routes: Routes = [
@@ -27,7 +28,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileViewComponent, canActivate: [AuthGuard] },
   { path: 'events/new', component: EventFormComponent, canActivate: [AuthGuard] },
   { path: 'events/edit/:eventId', component: EventFormComponent, canActivate: [AuthGuard] },
-  { path: 'events/:eventId', component: EventViewComponent, canActivate: [AuthGuard] },
+  { path: 'events/:eventId', component: EventCardComponent, canActivate: [AuthGuard] },
   { path: 'events', component: EventListComponent, canActivate: [AuthGuard] },
 
   { path: 'teams/new', component: TeamNewComponent, canActivate: [AuthGuard] },

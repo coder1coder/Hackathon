@@ -7,7 +7,7 @@ namespace Hackathon.Entities
     /// <summary>
     /// Событие
     /// </summary>
-    public class EventEntity: BaseEntity, ISoftDeletable
+    public class EventEntity : BaseEntity, ISoftDeletable
     {
         /// <summary>
         /// Кто создал событие
@@ -20,7 +20,7 @@ namespace Hackathon.Entities
         /// Наименование события
         /// </summary>
         public string? Name { get; set; }
-        
+
         /// <summary>
         /// Описание события
         /// </summary>
@@ -70,14 +70,13 @@ namespace Hackathon.Entities
         /// <summary>
         /// Список сообщений высылаемых командам при смене статусов
         /// </summary>
-        [Column(TypeName = "jsonb")]
         public ICollection<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; } = new List<ChangeEventStatusMessage>();
 
         /// <summary>
         /// Команды связанные с событием
         /// </summary>
         public ICollection<TeamEntity> Teams { get; set; } = new List<TeamEntity>();
-        
+
         /// <summary>
         /// Награда, призовой фонд
         /// </summary>

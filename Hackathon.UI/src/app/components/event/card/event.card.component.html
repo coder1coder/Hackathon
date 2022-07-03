@@ -1,0 +1,45 @@
+<layout-default
+  [isLoading]="isLoading"
+  containerClasses="container"
+  [hideTitlebar]="true" class="hackathon-background">
+
+  <h1 style="margin-bottom: 10px;margin-top: 5em;">Событие: {{ event.name }}</h1>
+  <div style="margin-bottom: 20px;">
+    Организатор: {{ event.owner?.userName }}, Начало: {{ getStartDate() }}
+  </div>
+
+  <p style="max-width: 50%;margin-bottom: 2em;">{{ event.description }}</p>
+
+  <h3>Награда/Призовой фонд</h3>
+  <p>{{ event.award }}</p>
+
+  <div style="display: flex;column-gap: 2em;margin-bottom: 2em;">
+
+    <div>
+      <h4>Участники</h4>
+      <div>{{ getMembersCount() }}</div>
+    </div>
+
+    <div>
+      <h4>Команды</h4>
+      <div>0</div>
+    </div>
+
+  </div>
+
+  <button *ngIf="eventsService.isCanJoinToEvent(event)" mat-button mat-raised-button color="primary" (click)="enterToEvent()">Принять участие</button>
+
+  <button *ngIf="eventsService.isCanAddTeam(event)" mat-button color="primary" (click)="createNewTeam()">
+    <mat-icon>add</mat-icon>
+    Добавить команду</button>
+
+  <button *ngIf="eventsService.isCanLeave(event)" mat-button (click)="leaveFromEvent()">Покинуть событие</button>
+
+  <button *ngIf="eventsService.isCanStartEvent(event)" mat-button (click)="startEvent()">Начать событие</button>
+  <button *ngIf="eventsService.isCanFinishEvent(event)" mat-button (click)="finishEvent()">Завершить событие</button>
+
+</layout-default>
+
+
+
+
