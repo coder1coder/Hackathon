@@ -12,7 +12,7 @@ namespace Hackathon.Common.Models.Base
             get => _offset;
             set => _offset = value > 0 ? value : 0;
         }
-        
+
         /// <summary>
         /// Количество записей которые необходимо получить
         /// </summary>

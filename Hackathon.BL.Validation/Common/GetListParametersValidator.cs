@@ -3,9 +3,9 @@ using Hackathon.Common.Models;
 
 namespace Hackathon.BL.Validation.Common
 {
-    public class GetFilterModelValidator<T>: AbstractValidator<GetListParameters<T>> where T: class
+    public class GetListParametersValidator<T>: AbstractValidator<GetListParameters<T>> where T: class
     {
-        public GetFilterModelValidator()
+        public GetListParametersValidator()
         {
             RuleFor(x => x.Offset)
                 .GreaterThanOrEqualTo(0);
