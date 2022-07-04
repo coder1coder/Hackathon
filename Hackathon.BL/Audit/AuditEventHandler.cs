@@ -13,10 +13,10 @@ public class AuditEventHandler: IAuditEventHandler
     private readonly IUserRepository _userRepository;
 
     public AuditEventHandler(
-        IAuditRepository repository, 
+        IAuditRepository repository,
         IUserRepository userRepository)
     {
-        _repository = repository;
+        this._repository = repository;
         _userRepository = userRepository;
     }
 
@@ -36,7 +36,7 @@ public class AuditEventHandler: IAuditEventHandler
             var userEntity = await _userRepository.GetAsync(model.UserId.Value);
             entity.UserName = userEntity?.UserName;
         }
-        
+
         await _repository.AddAsync(entity);
     }
 }

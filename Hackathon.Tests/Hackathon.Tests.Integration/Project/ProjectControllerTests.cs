@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Project
 {
-    public class ProjectControllerTests: BaseIntegrationTest
+    public class ProjectControllerTests : BaseIntegrationTest
     {
         public ProjectControllerTests(TestWebApplicationFactory factory) : base(factory)
         {

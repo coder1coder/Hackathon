@@ -18,8 +18,8 @@ public class FriendshipService: IFriendshipService
     private readonly IUserService _userService;
 
     public FriendshipService(
-        IFriendshipRepository friendshipRepository, 
-        INotificationService notificationService, 
+        IFriendshipRepository friendshipRepository,
+        INotificationService notificationService,
         IUserService userService)
     {
         _friendshipRepository = friendshipRepository;
@@ -29,7 +29,7 @@ public class FriendshipService: IFriendshipService
 
     /// <inhertidoc cref="IFriendshipService.GetOffersAsync"/>
     public async Task<BaseCollection<Friendship>> GetOffersAsync(
-        long userId, 
+        long userId,
         GetListParameters<FriendshipGetOffersFilter> parameters)
         => await _friendshipRepository.GetOffersAsync(userId, parameters);
 
@@ -40,9 +40,9 @@ public class FriendshipService: IFriendshipService
 
         if (offer?.Status == FriendshipStatus.Confirmed)
             throw new ValidationException("Пользователи уже являются друзьями");
-        
+
         var proposer = await _userService.GetAsync(proposerId);
-        
+
         //Если предложение не существует
         if (offer == null)
         {
@@ -51,7 +51,7 @@ public class FriendshipService: IFriendshipService
                 .Information(userId, $"Запрос дружбы от {proposer}", proposerId));
             return;
         }
-        
+
         //Если предложение дружбы создано пользователем запроса
         if (offer.ProposerId == proposerId)
         {
@@ -59,7 +59,7 @@ public class FriendshipService: IFriendshipService
             {
                 case FriendshipStatus.Pending:
                     throw new ValidationException("Предложение дружбы было отправлено ранее");
-                    
+
                 //Предложение было отклонено ранее, обновим статус
                 case FriendshipStatus.Rejected:
                     await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Pending);
@@ -94,9 +94,9 @@ public class FriendshipService: IFriendshipService
 
         if (offer.Status != FriendshipStatus.Pending)
             throw new ValidationException("Не подходящий статус");
-        
+
         await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Rejected);
-        
+
         var user = await _userService.GetAsync(userId);
         await _notificationService.Push(CreateNotificationModel
             .Information(userId, $"{user} отклонил предложение дружбы"));

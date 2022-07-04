@@ -3,15 +3,4 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="..\stylecop.json" />
-	</ItemGroup>
 </Project>
