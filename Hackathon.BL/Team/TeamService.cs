@@ -119,10 +119,10 @@ namespace Hackathon.BL.Team
             // Определить роль участика. Владелец / участник
             var team = await _teamRepository.GetAsync(teamMemberModel.TeamId);
 
-            var IsOwnerMember = team.OwnerId == teamMemberModel.MemberId;
+            var isOwnerMember = team.OwnerId == teamMemberModel.MemberId;
 
             // Если пользователь является создателем, то нужно передать права владения группой
-            if (IsOwnerMember)
+            if (isOwnerMember)
             {
                 if (team.Members != null
                     && team.Members.Count > 0)
@@ -133,7 +133,7 @@ namespace Hackathon.BL.Team
                         .OrderByDescending(u => u.DateTimeAdd)
                         .First();
 
-                    ChangeOwnerModel changeOwnerModel = new ChangeOwnerModel()
+                    var changeOwnerModel = new ChangeOwnerModel
                     {
                         TeamId = teamMemberModel.TeamId,
                         OwnerId = teamMemberModel.MemberId,
@@ -145,7 +145,7 @@ namespace Hackathon.BL.Team
                 else
                 {
                     // TODO: События команды также удаляем?
-                    DeleteTeamModel deleteTeamModel = new DeleteTeamModel()
+                    var deleteTeamModel = new DeleteTeamModel
                     {
                         TeamId = teamMemberModel.TeamId,
                         EventId = null
@@ -157,7 +157,7 @@ namespace Hackathon.BL.Team
             }
 
             // Если пользователь не создатель, то исключим из команды
-            if (!IsOwnerMember)
+            if (!isOwnerMember)
                 await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
 

@@ -29,12 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Entities", "Hacka
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Tests.Benchmark", "Hackathon.Tests\Hackathon.Tests.Benchmark\Hackathon.Tests.Benchmark.csproj", "{8C51F712-35DA-42EC-BEE3-B22C05674E9E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68376261-8321-4CA1-AF47-289FC4215319}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		stylecop.json = stylecop.json
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation", "Hackathon.BL.Validation\Hackathon.BL.Validation.csproj", "{BC5596A8-41DD-4C25-BC00-93B23853CFAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation.Tests", "Hackathon.Tests\Hackathon.BL.Validation.Tests\Hackathon.BL.Validation.Tests.csproj", "{67AC0E13-295F-4ECD-A12D-4E5AC931E5A7}"

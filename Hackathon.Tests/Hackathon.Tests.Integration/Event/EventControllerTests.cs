@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
 using FluentAssertions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
@@ -9,9 +10,10 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Event
 {
-    public class EventControllerTests: BaseIntegrationTest
+    public class EventControllerTests : BaseIntegrationTest
     {
-        public EventControllerTests(TestWebApplicationFactory factory) : base(factory)
+        public EventControllerTests(TestWebApplicationFactory factory)
+            : base(factory)
         {
         }
 
@@ -30,9 +32,9 @@ namespace Hackathon.Tests.Integration.Event
 
             eventModel.Should().BeEquivalentTo(createEventModel, options =>
                 options
-                    .Using<DateTime>(x=>
-                        x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(1)
-                        )).WhenTypeIs<DateTime>());
+                    .Using<DateTime>(x =>
+                        x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(1)))
+                    .WhenTypeIs<DateTime>());
         }
 
         [Fact]
@@ -59,39 +61,41 @@ namespace Hackathon.Tests.Integration.Event
         [Fact]
         public async Task StartEvent_ShouldSuccess()
         {
-            //Создаем событие
-            var createEventResponse = await EventsApi.Create(new CreateEventRequest
-            {
-                Name = Guid.NewGuid().ToString(),
-                Description = Guid.NewGuid().ToString(),
-                Start = DateTime.UtcNow.AddDays(1),
-                DevelopmentMinutes = 10,
-                TeamPresentationMinutes = 10,
-                MemberRegistrationMinutes = 10,
-                IsCreateTeamsAutomatically = true,
-                MinTeamMembers = 1,
-                MaxEventMembers = 2,
-                Award = "0"
-            });
+            // Создаем событие
+            var request = new Faker<CreateEventRequest>()
+                .RuleFor(x => x.Description, f => f.Random.String2(400))
+                .RuleFor(x => x.Name, Guid.NewGuid().ToString())
+                .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
+                .RuleFor(x => x.DevelopmentMinutes, 10)
+                .RuleFor(x => x.TeamPresentationMinutes, 10)
+                .RuleFor(x => x.MemberRegistrationMinutes, 10)
+                .RuleFor(x => x.IsCreateTeamsAutomatically, true)
+                .RuleFor(x => x.MinTeamMembers, 1)
+                .RuleFor(x => x.MaxEventMembers, 2)
+                .RuleFor(x => x.Award, "0")
+                .Generate(1)
+                .First();
 
-            //Публикуем событие, чтобы можно было регистрироваться участникам
+            var createEventResponse = await EventsApi.Create(request);
+
+            // Публикуем событие, чтобы можно было регистрироваться участникам
             await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
 
-            //Присоединяемся к событию в качестве участника
+            // Присоединяемся к событию в качестве участника
             await EventsApi.Join(createEventResponse.Id);
 
-            //Регистрируем нового участника в событии
+            // Регистрируем нового участника в событии
             var user = await RegisterUser();
             SetToken(user.Token);
             await EventsApi.Join(createEventResponse.Id);
 
-            //Начинаем событие
+            // Начинаем событие
             SetToken(TestUser.Token);
-            
+
             await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,

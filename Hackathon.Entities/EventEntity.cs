@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Hackathon.Common.Models.Event;
+﻿using Hackathon.Common.Models.Event;
 using Hackathon.Entities.Interfaces;
 
 namespace Hackathon.Entities
@@ -85,6 +84,6 @@ namespace Hackathon.Entities
         /// <summary>
         /// Признак удаления
         /// </summary>
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }
