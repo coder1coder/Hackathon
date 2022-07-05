@@ -1,11 +1,13 @@
-<layout-default title="{{ team ? 'Моя команда: ' + team?.name : 'Вы не состоите в команде' }}">
+<layout-default
+  [isLoading]="isLoading"
+  [showLoadingIndicator]="false"
+  title="{{ team ? 'Моя команда: ' + team?.name : 'Вы не состоите в команде' }}">
 
+  <team [team]="team" *ngIf="team"></team>
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
     <button mat-button color="accent" (click)="leaveTeam()">Покинуть команду</button>
   </div>
-
-  <team [team]="team" *ngIf="team"></team>
 
   <div *ngIf="!team">
     <button mat-button color="accent" (click)="routerService.Teams.New()">
@@ -13,7 +15,6 @@
       Создать команду
     </button>
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
-
   </div>
 
 </layout-default>

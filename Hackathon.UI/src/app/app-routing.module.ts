@@ -18,7 +18,6 @@ import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
 import {EventCardComponent} from "./components/event/card/event.card.component";
 
-
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
   { path: 'login', component: LoginComponent, canActivate: [RedirectService] },

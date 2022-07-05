@@ -4,6 +4,7 @@ import { TeamService } from "../../../services/team.service";
 import { Team } from "../../../models/Team/Team";
 import { AuthService } from "../../../services/auth.service";
 import { Router } from "@angular/router";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'userTeam',
@@ -14,6 +15,7 @@ import { Router } from "@angular/router";
 export class UserTeamComponent implements OnInit
 {
   public team?:Team;
+  public isLoading = true;
 
   constructor(
     public routerService: RouterService,
@@ -27,9 +29,17 @@ export class UserTeamComponent implements OnInit
       return;
 
     this.teamService.getMyTeam()
+      .pipe(
+        finalize(() => this.isLoading = false),
+      )
       .subscribe({
-        next: (res) => this.team = res,
-        error: (error) => {}
+        next: (res) =>
+        {
+          this.team = res;
+        },
+        error: (_) => {
+          this.isLoading = false;
+        }
       });
   }
 
