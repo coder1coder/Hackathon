@@ -1,4 +1,4 @@
-<layout-default title="{{ 'Моя команда: ' + team?.name }}">
+<layout-default title="{{ team ? 'Моя команда: ' + team?.name : 'Вы не состоите в команде' }}">
 
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
@@ -8,8 +8,6 @@
   <team [team]="team" *ngIf="team"></team>
 
   <div *ngIf="!team">
-
-    <h4>Вы не состоите в команде</h4>
     <button mat-button color="accent" (click)="routerService.Teams.New()">
       <mat-icon>add</mat-icon>
       Создать команду

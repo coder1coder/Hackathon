@@ -54,7 +54,11 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   getMembersCount(){
-    return Event.getUsersCount(this.event) / this.event?.maxEventMembers
+    return Event.getUsersCount(this.event)
+  }
+
+  getMaxEventMembers(){
+    return this.event?.maxEventMembers
   }
 
   getStartDate(){

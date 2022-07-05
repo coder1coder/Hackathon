@@ -4,9 +4,9 @@
     <mat-tab label="Общая информация">
 
       <list-details [items]="[
-        { key: 'Имя пользователя', value: user.userName},
-        { key: 'Полное имя', value: user.fullName},
-        { key: 'Email', value: user.email},
+        { key: 'Имя пользователя', value: user?.userName},
+        { key: 'Полное имя', value: user?.fullName},
+        { key: 'Email', value: user?.email},
       ]"></list-details>
     </mat-tab>
   </mat-tab-group>
