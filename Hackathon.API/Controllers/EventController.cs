@@ -4,7 +4,6 @@ using Hackathon.Abstraction.Event;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
-using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
@@ -81,11 +80,11 @@ public class EventController: BaseController
 
     ///<inheritdoc cref="IEventApi.Join"/>
     [HttpPost("{eventId:long}/join")]
-    public async Task Join(long eventId) 
+    public async Task Join(long eventId)
         => await _eventService.JoinAsync(eventId, UserId);
-        
+
     [HttpPost("{eventId:long}/leave")]
-    public async Task Leave(long eventId) 
+    public async Task Leave(long eventId)
         => await _eventService.LeaveAsync(eventId, UserId);
 
     [HttpPost("{eventId:long}/join/team")]

@@ -1,15 +1,17 @@
 <toolbar></toolbar>
 
-<div class="layout-default__page-bar" *ngIf="!hideTitlebar">
+<div class="layout-default__page-bar" *ngIf="!hideTitlebar && !isLoading">
   <div class="layout-default__title">{{ title }}</div>
-  <div class="layout-default__actions"><ng-content select="[actions]"></ng-content></div>
+  <div class="layout-default__actions">
+    <ng-content select="[actions]"></ng-content>
+  </div>
 </div>
 
-<div class="{{ containerClasses }}">
+<div class="{{ containerClasses }}" *ngIf="!isLoading">
   <ng-content></ng-content>
 </div>
 
-<div class="layout-default__loader" *ngIf="isLoading">
+<div class="layout-default__loader" *ngIf="showLoadingIndicator && isLoading">
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
 </div>

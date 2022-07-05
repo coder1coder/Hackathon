@@ -11,6 +11,7 @@ export class DefaultLayoutComponent {
   @Input() title!: string;
   @Input() hideTitlebar: boolean = false;
   @Input() isLoading: boolean = false;
+  @Input() showLoadingIndicator: boolean = true;
   @Input() containerClasses: string = 'container container-full';
 
   constructor() {}
