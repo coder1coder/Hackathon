@@ -1,8 +1,9 @@
-import {Component, AfterViewInit} from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
-import {IUser} from "../../../models/User/IUser";
-import {AuthService} from "../../../services/auth.service";
-import {KeyValue} from "@angular/common";
+import { AuthService } from "../../../services/auth.service";
+import { KeyValue } from "@angular/common";
+import { TeamService } from "../../../services/team.service";
+import { catchError, of, switchMap } from "rxjs";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -15,20 +16,28 @@ export class ProfileViewComponent implements AfterViewInit {
   public userProfileDetails: KeyValue<string,any>[] = [];
 
   constructor(
-    private authService: AuthService) {
-  }
+    private authService: AuthService,
+    private teamService: TeamService
+  ) {}
 
   ngAfterViewInit(): void {
-
-    this.authService.getCurrentUser()?.subscribe((x: IUser) => {
-
-      this.userProfileDetails = [
-        { key: 'Имя пользователя', value: x.userName!},
-        { key: 'Полное имя', value: x.fullName!},
-        { key: 'E-mail', value: x.email!},
-        { key: 'Роль', value: x.role!.toString()}
-      ]
+    this.authService.getCurrentUser()
+    ?.pipe(
+      switchMap((res)=> {
+        this.userProfileDetails = [
+          { key: 'Имя пользователя', value: res.userName!},
+          { key: 'Полное имя', value: res.fullName!},
+          { key: 'E-mail', value: res.email!},
+          { key: 'Роль', value: res.role!.toString()},
+        ]
+        return this.teamService.getMyTeam()
+      }),
+      catchError(() => {
+        return of(null)
       })
+    ).subscribe((res) => {
+        this.userProfileDetails.push({ key: 'Команда', value: res?.name ?? "Не состоит в команде" })
+      }
+    )
   }
-
 }

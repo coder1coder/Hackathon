@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -88,7 +88,7 @@ namespace Hackathon.BL.Team
         public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> getListParameters)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
-            return await _teamRepository.GetAsync(getListParameters);
+            return await _teamRepository.GetAsync(getListParameters); 
         }
 
         /// <inheritdoc cref="ITeamService.GetUserTeam(long)"/>
