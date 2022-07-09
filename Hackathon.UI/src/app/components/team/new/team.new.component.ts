@@ -6,6 +6,7 @@ import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
 import {TeamService} from "../../../services/team.service";
 import {ActivatedRoute} from "@angular/router";
 import {SnackService} from "../../../services/snack.service";
+import { TeamType } from "src/app/models/Team/TeamType.";
 
 @Component({
   selector: 'team-new',
@@ -19,6 +20,13 @@ export class TeamNewComponent
   eventId!: number;
 
   isLoading: boolean = false;
+
+  selectedTeamType : number = 0;
+
+  teamTypes: TeamType[] = [
+    {id: 0, name: 'Закрытый'},
+    {id: 1, name: 'Открытый'},
+  ];
 
   form = new FormGroup({
     name: new FormControl(''),
@@ -35,10 +43,12 @@ export class TeamNewComponent
   submit() {
     let createTeamModel = new CreateTeamModel();
     createTeamModel.name =  this.form.get('name')?.value;
+    createTeamModel.type = this.selectedTeamType;
 
     if (this.eventId > 0)
       createTeamModel.eventId = this.eventId;
 
+    console.log(createTeamModel);
     this.teamService.create(createTeamModel)
       .subscribe(_=>{
           this.snackBar.open(`Новая команда добавлена`);
