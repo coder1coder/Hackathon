@@ -1,4 +1,5 @@
-﻿using Hackathon.Entities.Interfaces;
+using Hackathon.Common.Models.Team;
+using Hackathon.Entities.Interfaces;
 
 namespace Hackathon.Entities
 {
@@ -36,5 +37,10 @@ namespace Hackathon.Entities
         /// Признак удаления
         /// </summary>
         public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
+        /// Тип команды
+        /// </summary>
+        public TeamType Type { get; set; }
     }
 }
