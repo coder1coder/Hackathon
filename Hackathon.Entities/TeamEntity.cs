@@ -1,4 +1,5 @@
 ﻿using Hackathon.Entities.Interfaces;
+using Hackathon.Entities.User;
 
 namespace Hackathon.Entities
 {

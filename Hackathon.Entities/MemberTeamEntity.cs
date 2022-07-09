@@ -1,3 +1,5 @@
+using Hackathon.Entities.User;
+
 namespace Hackathon.Entities
 {
     /// <summary>

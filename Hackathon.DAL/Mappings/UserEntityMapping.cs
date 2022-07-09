@@ -1,5 +1,6 @@
 ﻿using Hackathon.Common.Models.User;
 using Hackathon.Entities;
+using Hackathon.Entities.User;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings
