@@ -18,6 +18,9 @@ public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.Description)
             .IsRequired();
 
+        builder.Property(x => x.Award)
+            .IsRequired();
+
         builder.Property(x => x.Start).IsRequired();
         builder.Property(x => x.Status).IsRequired();
         builder.Property(x => x.MemberRegistrationMinutes).IsRequired();
