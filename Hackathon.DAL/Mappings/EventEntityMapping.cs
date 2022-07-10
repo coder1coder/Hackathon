@@ -12,13 +12,12 @@ namespace Hackathon.DAL.Mappings
             config.ForType<EventCreateParameters, EventEntity>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Start, s => s.Start.ToUniversalTime());
-            
+
             config.ForType<EventUpdateParameters, EventEntity>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Start, s => s.Start.ToUniversalTime());
-                
+
             config.ForType<EventEntity, EventModel>()
-                .IgnoreNullValues(true)
                 .Map(x=>x.Stages, s=>new List<EventStage>
                 {
                     new()
@@ -37,6 +36,7 @@ namespace Hackathon.DAL.Mappings
                         Duration = s.TeamPresentationMinutes
                     }
                 })
+                .IgnoreNullValues(true)
                 .MaxDepth(5);
 
             //for fake in tests
