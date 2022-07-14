@@ -1,5 +1,6 @@
 ﻿using Hackathon.Common.Models.Event;
 using Hackathon.Entities.Interfaces;
+using Hackathon.Entities.User;
 
 namespace Hackathon.Entities
 {
@@ -23,7 +24,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Описание события
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Дата и время начала
@@ -79,7 +80,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Награда, призовой фонд
         /// </summary>
-        public string Award { get; set; }
+        public string? Award { get; set; }
 
         /// <summary>
         /// Признак удаления

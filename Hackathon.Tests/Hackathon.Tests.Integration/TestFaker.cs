@@ -6,6 +6,7 @@ using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.Entities;
+using Hackathon.Entities.User;
 using MapsterMapper;
 
 namespace Hackathon.Tests.Integration;

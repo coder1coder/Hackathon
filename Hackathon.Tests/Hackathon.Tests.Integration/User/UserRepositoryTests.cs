@@ -68,7 +68,7 @@ namespace Hackathon.Tests.Integration.User
             var signUpModel = TestFaker.GetSignUpModels(1).First();
             var userId = await UserRepository.CreateAsync(signUpModel);
 
-            var exist = await UserRepository.ExistAsync(userId);
+            var exist = await UserRepository.IsExistAsync(userId);
             exist.Should().BeTrue();
         }
 
