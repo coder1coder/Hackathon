@@ -29,7 +29,7 @@ namespace Hackathon.BL.Validation.Team
                 .WithMessage("Идентификатор пользователя должен быть больше 0")
                 .CustomAsync(async (userId, context, _) =>
                 {
-                    if (await userRepository.ExistAsync(userId) == false)
+                    if (await userRepository.IsExistAsync(userId) == false)
                         context.AddFailure("Пользователя с таким идентификатором не существует");
                 });
 

@@ -62,6 +62,33 @@ public class UserController: BaseController, IUserApi
         => _mapper.Map<UserResponse>(await _userService.GetAsync(userId));
 
     /// <summary>
+    /// Получить все реакции на профиль пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя получившего реакцию</param>
+    /// <returns></returns>
+    [HttpGet("{userId:long}/reactions")]
+    public async Task<UserProfileReaction[]> GetReactions(long userId)
+        => await _userService.GetReactionsAsync(UserId, userId);
+
+    /// <summary>
+    /// Добавить реакцию на профиль пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя получающего реакцию</param>
+    /// <param name="reaction">Реакция</param>
+    [HttpPost("{userId:long}/reactions/{reaction}")]
+    public async Task AddReaction(long userId, UserProfileReaction reaction)
+        => await _userService.AddReactionAsync(UserId, userId, reaction);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя получившего реакцию</param>
+    /// <param name="reaction">Реакция</param>
+    [HttpDelete("{userId:long}/reactions/{reaction}")]
+    public async Task RemoveReaction(long userId, UserProfileReaction reaction)
+        => await _userService.RemoveReactionAsync(UserId, userId, reaction);
+
+    /// <summary>
     /// Получить информацию о пользователях
     /// </summary>
     /// <returns></returns>
@@ -92,7 +119,7 @@ public class UserController: BaseController, IUserApi
         await using var stream = file.OpenReadStream();
 
         var newProfileImageId = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
-            
+
         return Ok(newProfileImageId);
     }
 }

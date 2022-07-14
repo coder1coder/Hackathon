@@ -5,7 +5,7 @@ using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
-using Hackathon.Entities;
+using Hackathon.Entities.User;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +54,7 @@ namespace Hackathon.DAL.Repositories
             var entity = await _dbContext.Users
                 .Include(x=>x.GoogleAccount)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => 
+                .SingleOrDefaultAsync(x =>
                     x.GoogleAccountId == googleId
                     || x.Email.ToLower() == email.ToLower());
 
@@ -85,13 +85,13 @@ namespace Hackathon.DAL.Repositories
             {
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Username))
                     query = query.Where(x => x.UserName.ToLower() == parameters.Filter.Username.ToLower());
-                
+
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Email))
                     query = query.Where(x => x.Email.ToLower() == parameters.Filter.Email.ToLower());
-                
+
                 if (parameters.Filter.Ids != null)
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
-                
+
                 if (parameters.Filter.ExcludeIds?.Length > 0)
                     query = query.Where(x => !parameters.Filter.ExcludeIds.Contains(x.Id));
             }
@@ -133,8 +133,8 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        /// <inheritdoc cref="IUserRepository.ExistAsync(long)"/>
-        public async Task<bool> ExistAsync(long userId)
+        /// <inheritdoc cref="IUserRepository.IsExistAsync"/>
+        public async Task<bool> IsExistAsync(long userId)
         {
             return await _dbContext.Users
                 .AsNoTracking()
@@ -149,7 +149,48 @@ namespace Hackathon.DAL.Repositories
 
             if (entity != null)
             {
-                entity.ProfileImageId = profileImageId; 
+                entity.ProfileImageId = profileImageId;
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        /// <inheritdoc cref="IUserRepository.GetReactionsAsync"/>
+        public async Task<UserProfileReaction[]> GetReactionsAsync(long userId, long targetUserId)
+        {
+            return await _dbContext.UserReactions
+                .AsNoTracking()
+                .Where(x =>
+                    x.UserId == userId
+                    && x.TargetUserId == targetUserId)
+                .Select(x=>x.Reaction)
+                .ToArrayAsync();
+        }
+
+        /// <inheritdoc cref="IUserRepository.AddReactionAsync"/>
+        public async Task AddReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
+        {
+            _dbContext.UserReactions.Add(new UserReactionEntity
+            {
+                UserId = userId,
+                TargetUserId = targetUserId,
+                Reaction = reaction
+            });
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        /// <inheritdoc cref="IUserRepository.RemoveReactionAsync"/>
+        public async Task RemoveReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
+        {
+            var reactionEntity = await _dbContext.UserReactions
+                .SingleOrDefaultAsync(x =>
+                    x.UserId == userId
+                    && x.TargetUserId == targetUserId
+                    && x.Reaction == reaction);
+
+            if (reactionEntity != null)
+            {
+                _dbContext.UserReactions.Remove(reactionEntity);
                 await _dbContext.SaveChangesAsync();
             }
         }

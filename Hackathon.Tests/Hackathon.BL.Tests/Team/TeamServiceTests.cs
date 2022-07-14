@@ -140,7 +140,7 @@ public class TeamServiceTests : BaseUnitTest
             .ReturnsAsync(true);
 
         _userRepositoryMock
-            .Setup(x => x.ExistAsync(It.IsAny<long>()))
+            .Setup(x => x.IsExistAsync(It.IsAny<long>()))
             .ReturnsAsync(true);
 
         _teamRepositoryMock

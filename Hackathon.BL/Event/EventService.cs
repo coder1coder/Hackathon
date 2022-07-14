@@ -159,7 +159,7 @@ namespace Hackathon.BL.Event
             if (eventModel.Status != EventStatus.Published)
                 throw new ValidationException("Нельзя покидать событие, когда оно уже начато");
 
-            var userExists = await _userRepository.ExistAsync(userId);
+            var userExists = await _userRepository.IsExistAsync(userId);
 
             if (!userExists)
                 throw new ValidationException("Пользователь не существует");
