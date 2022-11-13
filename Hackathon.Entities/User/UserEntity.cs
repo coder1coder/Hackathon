@@ -1,7 +1,7 @@
 ﻿using Hackathon.Common.Models.User;
 using Hackathon.Entities.Interfaces;
 
-namespace Hackathon.Entities
+namespace Hackathon.Entities.User
 {
     /// <summary>
     /// Пользователь
@@ -27,7 +27,7 @@ namespace Hackathon.Entities
         /// Полное наименование пользователя
         /// </summary>
         public string? FullName { get; set; }
-        
+
         /// <summary>
         /// Идентификатор пользователя социальной сети Google
         /// </summary>
@@ -53,6 +53,6 @@ namespace Hackathon.Entities
         /// <summary>
         /// Признак удаления
         /// </summary>
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.Entities;
+using Hackathon.Entities.User;
 using MapsterMapper;
 
 namespace Hackathon.Tests.Integration;
@@ -92,7 +93,7 @@ public class TestFaker
             .RuleFor(x => x.OwnerId, ownerId)
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
             .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
-            .RuleFor(x => x.Description, f => f.Random.String2(3, 20));
+            .RuleFor(x => x.Description, f => f.Random.String2(400));
 
         return faker.Generate(count);
     }

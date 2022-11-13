@@ -1,5 +1,6 @@
 using Hackathon.Common.Models.Team;
 using Hackathon.Entities.Interfaces;
+﻿using Hackathon.Entities.User;
 
 namespace Hackathon.Entities
 {

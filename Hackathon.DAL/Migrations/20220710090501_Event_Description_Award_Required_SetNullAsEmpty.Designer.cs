@@ -5,6 +5,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220710090501_Event_Description_Award_Required_SetNullAsEmpty")]
+    partial class Event_Description_Award_Required_SetNullAsEmpty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,9 +328,6 @@ namespace Hackathon.DAL.Migrations
                     b.Property<long?>("OwnerId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -339,7 +338,7 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("Teams", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.Entities.User.UserEntity", b =>
+            modelBuilder.Entity("Hackathon.Entities.UserEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -388,22 +387,6 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.Entities.User.UserReactionEntity", b =>
-                {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TargetUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Reaction")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "TargetUserId");
-
-                    b.ToTable("UserReactions", (string)null);
-                });
-
             modelBuilder.Entity("EventsTeams", b =>
                 {
                     b.HasOne("Hackathon.Entities.EventEntity", null)
@@ -421,7 +404,7 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.Entities.EventEntity", b =>
                 {
-                    b.HasOne("Hackathon.Entities.User.UserEntity", "Owner")
+                    b.HasOne("Hackathon.Entities.UserEntity", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -432,7 +415,7 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.Entities.MemberTeamEntity", b =>
                 {
-                    b.HasOne("Hackathon.Entities.User.UserEntity", "Member")
+                    b.HasOne("Hackathon.Entities.UserEntity", "Member")
                         .WithMany("Teams")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -470,18 +453,18 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.Entities.TeamEntity", b =>
                 {
-                    b.HasOne("Hackathon.Entities.User.UserEntity", "Owner")
+                    b.HasOne("Hackathon.Entities.UserEntity", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Hackathon.Entities.User.UserEntity", b =>
+            modelBuilder.Entity("Hackathon.Entities.UserEntity", b =>
                 {
                     b.HasOne("Hackathon.Entities.GoogleAccountEntity", "GoogleAccount")
                         .WithOne("User")
-                        .HasForeignKey("Hackathon.Entities.User.UserEntity", "GoogleAccountId");
+                        .HasForeignKey("Hackathon.Entities.UserEntity", "GoogleAccountId");
 
                     b.Navigation("GoogleAccount");
                 });
@@ -496,7 +479,7 @@ namespace Hackathon.DAL.Migrations
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("Hackathon.Entities.User.UserEntity", b =>
+            modelBuilder.Entity("Hackathon.Entities.UserEntity", b =>
                 {
                     b.Navigation("Teams");
                 });

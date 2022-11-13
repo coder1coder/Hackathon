@@ -61,7 +61,8 @@ namespace Hackathon.BL.Validation.Event
                 });
             });
 
-            RuleFor(x => x.Award).NotEmpty()
+            RuleFor(x => x.Award)
+                .NotEmpty()
                 .WithMessage("Необходимо указать награду");
         }
     }
