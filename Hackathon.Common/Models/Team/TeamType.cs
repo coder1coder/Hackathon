@@ -1,7 +1,7 @@
 namespace Hackathon.Common.Models.Team
 {
     //Тип команды
-    public enum TeamType
+    public enum TeamType : byte
     {
         /// <summary>
         /// Закрытый
