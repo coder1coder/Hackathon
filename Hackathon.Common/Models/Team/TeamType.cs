@@ -9,7 +9,7 @@ namespace Hackathon.Common.Models.Team
         /// <remarks> 
         /// В команду можно попасть только по приглашению
         /// </remarks>
-        Closed = 0,
+        Private = 0,
 
         /// <summary>
         /// Открытый
@@ -17,6 +17,6 @@ namespace Hackathon.Common.Models.Team
         /// <remarks>
         /// Вступить может любой желающий
         /// </remarks>
-        Open = 1,
+        Public = 1,
     }
 }
