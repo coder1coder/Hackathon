@@ -48,7 +48,6 @@ export class TeamNewComponent
     if (this.eventId > 0)
       createTeamModel.eventId = this.eventId;
 
-    console.log(createTeamModel);
     this.teamService.create(createTeamModel)
       .subscribe(_=>{
           this.snackBar.open(`Новая команда добавлена`);
