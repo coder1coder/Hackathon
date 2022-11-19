@@ -27,6 +27,7 @@ namespace Hackathon.BL.Validation
             builder.RegisterType<GetListParametersValidator<EventFilter>>().As<IValidator<GetListParameters<EventFilter>>>().InstancePerLifetimeScope();
             builder.RegisterType<CreateEventModelValidator>().As<IValidator<EventCreateParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateEventModelValidator>().As<IValidator<EventUpdateParameters>>().InstancePerLifetimeScope();
+            builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
         }
     }
 }

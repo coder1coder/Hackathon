@@ -56,7 +56,6 @@ namespace Hackathon.BL.Event
             _messageBus = messageBus;
         }
 
-        /// <inheritdoc cref="IEventService.CreateAsync(EventCreateParameters)"/>
         public async Task<long> CreateAsync(EventCreateParameters eventCreateParameters)
         {
             await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
@@ -71,18 +70,21 @@ namespace Hackathon.BL.Event
             return eventId;
         }
 
-        /// <inheritdoc cref="IEventService.UpdateAsync(EventUpdateParameters)"/>
         public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
         {
             await _updateEventModelValidator.ValidateAndThrowAsync(eventUpdateParameters);
+
+            var isEventExists = await _eventRepository.IsExists(eventUpdateParameters.Id);
+
+            if (!isEventExists)
+                throw new EntityNotFoundException($"Событие с идентификатором '{eventUpdateParameters.Id}' не найдено");
+
             await _eventRepository.UpdateAsync(eventUpdateParameters);
         }
 
-        /// <inheritdoc cref="IEventService.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
             => await _eventRepository.GetAsync(eventId);
 
-        /// <inheritdoc cref="IEventService.GetListAsync"/>
         public async Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> getListParameters)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
@@ -97,7 +99,6 @@ namespace Hackathon.BL.Event
             };
         }
 
-        /// <inheritdoc cref="IEventService.SetStatusAsync(long, EventStatus)"/>
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -113,7 +114,6 @@ namespace Hackathon.BL.Event
             await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
         }
 
-        /// <inheritdoc cref="IEventService.JoinAsync(long, long)"/>
         public async Task JoinAsync(long eventId, long userId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -178,7 +178,6 @@ namespace Hackathon.BL.Event
             });
         }
 
-        /// <inheritdoc cref="IEventService.DeleteAsync(long)"/>
         public async Task DeleteAsync(long eventId)
         {
             var eventModel = await _eventRepository.GetAsync(eventId);
@@ -189,7 +188,6 @@ namespace Hackathon.BL.Event
             await _eventRepository.DeleteAsync(eventId);
         }
 
-        /// <inheritdoc cref="IEventService.GetByExpression(Expression{Func{EventEntity, bool}})"/>
         public async Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
             => await _eventRepository.GetByExpression(expression);
 

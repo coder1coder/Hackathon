@@ -12,7 +12,7 @@ namespace Hackathon.Common
         private const string Dot = ".";
         private const string QuestionMark = "?";
         private const string DefaultMimeType = "application/octet-stream";
-        private static readonly Lazy<IDictionary<string, string>> Mappings = new(BuildMappings);
+        private static readonly Lazy<IDictionary<string, string>> _mappings = new(BuildMappings);
 
         private static IDictionary<string, string> BuildMappings()
         {
@@ -772,7 +772,7 @@ namespace Hackathon.Common
                 str = Dot + str;
             }
 
-            return Mappings.Value.TryGetValue(str, out mimeType);
+            return _mappings.Value.TryGetValue(str, out mimeType);
         }
 
         /// <summary>
@@ -806,7 +806,7 @@ namespace Hackathon.Common
                 throw new ArgumentException("Requested mime type is not valid: " + mimeType);
             }
 
-            if (Mappings.Value.TryGetValue(mimeType, out string extension))
+            if (_mappings.Value.TryGetValue(mimeType, out string extension))
             {
                 return extension;
             }

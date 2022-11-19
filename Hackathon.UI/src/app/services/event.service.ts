@@ -123,7 +123,7 @@ export class EventService {
   }
 
   isEventOwner(event:Event){
-    return event.ownerId == this.authService.getUserId();
+    return event.owner?.id == this.authService.getUserId();
   }
 
 }

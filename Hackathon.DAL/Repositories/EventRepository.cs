@@ -29,7 +29,6 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IEventRepository.CreateAsync(EventCreateParameters)"/>
         public async Task<long> CreateAsync(EventCreateParameters eventCreateUpdateParameters)
         {
             var eventEntity = _mapper.Map<EventEntity>(eventCreateUpdateParameters);
@@ -42,7 +41,6 @@ namespace Hackathon.DAL.Repositories
             return eventEntity.Id;
         }
 
-        /// <inheritdoc cref="IEventRepository.GetAsync(long)"/>
         public async Task<EventModel> GetAsync(long eventId)
         {
             var eventEntity = await _dbContext.Events
@@ -51,11 +49,10 @@ namespace Hackathon.DAL.Repositories
                     .ThenInclude(x => x.Members)
                 .Include(x => x.Owner)
                 .SingleOrDefaultAsync(x => x.Id == eventId);
-            
+
             return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
         }
 
-        /// <inheritdoc cref="IEventRepository.GetListAsync"/>
         public async Task<BaseCollection<EventModel>> GetListAsync(long userId, GetListParameters<EventFilter> parameters)
         {
             var query = _dbContext.Events
@@ -74,7 +71,7 @@ namespace Hackathon.DAL.Repositories
 
                 if (parameters.Filter.Statuses != null)
                     query = query.Where(x => parameters.Filter.Statuses.Contains(x.Status));
-                
+
                 if (parameters.Filter.ExcludeOtherUsersDraftedEvents)
                     query = query.Where(x =>
                         !(x.OwnerId != userId && x.Status == EventStatus.Draft));
@@ -93,7 +90,7 @@ namespace Hackathon.DAL.Repositories
 
                 if (parameters.Filter.TeamsIds != null)
                     query = query.Where(x =>
-                        x.Teams.Any(t => 
+                        x.Teams.Any(t =>
                             parameters.Filter.TeamsIds.Contains(t.Id)));
             }
 
@@ -142,21 +139,20 @@ namespace Hackathon.DAL.Repositories
                 .ToArrayAsync();
         }
 
-        /// <inheritdoc cref="IEventRepository.UpdateAsync(EventUpdateParameters)"/>
         public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
         {
             var entity = await _dbContext.Events
-                .SingleOrDefaultAsync(x => x.Id == eventUpdateParameters.Id);
-            
-            if (entity == null)
-                throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
+                .FirstOrDefaultAsync(x =>
+                    x.Id == eventUpdateParameters.Id);
+
+            if (entity is null)
+                return;
 
             _mapper.Map(eventUpdateParameters, entity);
             _dbContext.Events.Update(entity);
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="IEventRepository.SetStatusAsync(long, EventStatus)"/>
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
             var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
@@ -168,7 +164,6 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="IEventRepository.DeleteAsync(long)"/>
         public async Task DeleteAsync(long eventId)
         {
             var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
@@ -179,5 +174,10 @@ namespace Hackathon.DAL.Repositories
             eventEntity.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
         }
+
+        public Task<bool> IsExists(long eventId)
+            => _dbContext.Events.AnyAsync(x =>
+                x.Id == eventId
+                && !x.IsDeleted);
     }
 }
