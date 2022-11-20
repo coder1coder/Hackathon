@@ -8,4 +8,5 @@ export class EventFilter {
   statuses?: EventStatus[];
   excludeOtherUsersDraftedEvents?: boolean;
   teamsIds?: number[];
+  ownerIds?: number[];
 }
