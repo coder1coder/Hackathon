@@ -15,7 +15,7 @@ namespace Hackathon.API.Abstraction
         Task SetStatus([Body] SetStatusRequest<EventStatus> setStatusRequest);
 
         [Get("/api/Event/{id}")]
-        Task<EventModel> Get(long id);
+        Task<IApiResponse<EventModel>> Get(long id);
 
         [Post("/api/Event/{id}/join")]
         Task Join(long id);

@@ -28,7 +28,7 @@ namespace Hackathon.Tests.Integration.Team
                 Id = createEventResponse.Id,
                 Status = EventStatus.Published
             });
-            
+
             var user = await RegisterUser();
             SetToken(user.Token);
 

@@ -1,6 +1,6 @@
 using System;
 using System.Security.Claims;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using Autofac;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
@@ -81,7 +81,7 @@ namespace Hackathon.API
                 if (appConfig.EnableSensitiveDataLogging == true)
                     options.EnableSensitiveDataLogging();
             }, databaseServiceLifetime);
-            
+
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
 
             services.AddCors(options =>
@@ -100,7 +100,8 @@ namespace Hackathon.API
                 options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             }).AddJsonOptions(opt =>
             {
-                // opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
 
             services.AddSignalR(x=>x.EnableDetailedErrors = true);

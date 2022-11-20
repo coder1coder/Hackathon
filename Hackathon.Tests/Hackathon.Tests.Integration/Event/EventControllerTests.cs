@@ -21,14 +21,15 @@ namespace Hackathon.Tests.Integration.Event
         public async Task Get_ShouldReturn_Success()
         {
             var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-            var createEventModel = Mapper.Map<EventCreateParameters>(eventModel);
+            var createEventModel = Mapper.Map<CreateEventRequest>(eventModel);
 
-            var eventId = await EventRepository.CreateAsync(createEventModel);
-            eventModel = await EventsApi.Get(eventId);
+            var baseCreateResponse = await EventsApi.Create(createEventModel);
+            var getEventResponse = await EventsApi.Get(baseCreateResponse.Id);
+            eventModel = getEventResponse.Content;
 
             Assert.NotNull(eventModel);
 
-            eventModel.Id.Should().Be(eventId);
+            eventModel.Id.Should().Be(baseCreateResponse.Id);
 
             eventModel.Should().BeEquivalentTo(createEventModel, options =>
                 options
@@ -41,20 +42,24 @@ namespace Hackathon.Tests.Integration.Event
         public async Task SetStatus_FromDraft_ToPublished_ShouldReturn_Success()
         {
             var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-            var createEventModel = Mapper.Map<EventCreateParameters>(eventModel);
+            var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
 
-            var eventId = await EventRepository.CreateAsync(createEventModel);
+            var createEventResponse = await EventsApi.Create(createEventRequest);
 
             await FluentActions
                 .Invoking(async () => await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
                 {
-                    Id = eventId,
+                    Id = createEventResponse.Id,
                     Status = EventStatus.Published
                 }))
                 .Should()
                 .NotThrowAsync();
 
-            eventModel = await EventsApi.Get(eventId);
+            var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+            eventModel = getEventResponse.Content;
+
+            Assert.NotNull(eventModel);
+
             eventModel.Status.Should().Be(EventStatus.Published);
         }
 

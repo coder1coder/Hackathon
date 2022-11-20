@@ -1,11 +1,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Team;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
-using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
@@ -15,7 +13,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Hackathon.API.Controllers;
 
 [SwaggerTag("Команды")]
-public class TeamController : BaseController, ITeamApi
+public class TeamController : BaseController
 {
     private readonly IMapper _mapper;
     private readonly ITeamService _teamService;
@@ -41,7 +39,7 @@ public class TeamController : BaseController, ITeamApi
         var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
         createTeamModel.OwnerId = UserId;
-            
+
         var teamId = await _teamService.CreateAsync(createTeamModel);
         return new BaseCreateResponse
         {

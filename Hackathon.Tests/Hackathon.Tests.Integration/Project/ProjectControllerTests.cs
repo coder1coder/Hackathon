@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Requests.Team;
@@ -37,8 +38,11 @@ namespace Hackathon.Tests.Integration.Project
             var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
             {
                 Name = Guid.NewGuid().ToString()[..4],
-                EventId = createEventResponse.Id
+                EventId = createEventResponse.Id,
+                Type = (int)TeamType.Private
             });
+
+            Assert.NotNull(teamCreateResponse);
 
             var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
             {
