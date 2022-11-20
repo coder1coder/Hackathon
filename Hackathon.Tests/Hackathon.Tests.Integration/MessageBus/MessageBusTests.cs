@@ -8,6 +8,7 @@ using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.MessageBus;
@@ -23,7 +24,7 @@ public class MessageBusTests : BaseIntegrationTest
     {
         await using var provider = new ServiceCollection()
             .AddScoped<IAuditEventHandler>(_ => new AuditEventHandler(AuditRepository, UserRepository))
-            .AddScoped<ILogger<AuditEventConsumer>>(_ =>new Logger<AuditEventConsumer>(LoggerFactory))
+            .AddScoped<ILogger<AuditEventConsumer>>(_ => NullLogger<AuditEventConsumer>.Instance)
             .AddMassTransitTestHarness(cfg =>
             {
                 cfg.AddConsumer<AuditEventConsumer>();

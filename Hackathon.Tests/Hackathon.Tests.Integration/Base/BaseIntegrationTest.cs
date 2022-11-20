@@ -1,26 +1,21 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Audit;
-using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Friend;
-using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.API.Abstraction;
 using Hackathon.Common.Configuration;
-using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
-using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
-using Hackathon.DAL.Repositories;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Refit;
 using Xunit;
@@ -38,38 +33,27 @@ namespace Hackathon.Tests.Integration.Base
 
         protected readonly IAuditRepository AuditRepository;
         protected readonly IUserRepository UserRepository;
-        protected readonly IEventRepository EventRepository;
         protected readonly ITeamRepository TeamRepository;
-        protected readonly IProjectRepository ProjectRepository;
         protected readonly IFriendshipRepository FriendshipRepository;
         protected readonly IMapper Mapper;
 
-        protected readonly ApplicationDbContext DbContext;
         protected readonly TestFaker TestFaker;
 
         protected readonly AppSettings AppSettings;
 
-        protected readonly ILoggerFactory LoggerFactory;
-
         private readonly HttpClient _httpClient;
         private readonly IUserService _userService;
 
-        protected (long Id, string Token) TestUser { get; set; }
+        protected (long Id, string Token) TestUser { get; }
 
         protected BaseIntegrationTest(TestWebApplicationFactory factory)
         {
             AppSettings = factory.Services.GetRequiredService<IOptions<AppSettings>>().Value;
 
-            DbContext = factory.Services.GetRequiredService<ApplicationDbContext>();
-
             AuditRepository = factory.Services.GetRequiredService<IAuditRepository>();
             UserRepository = factory.Services.GetRequiredService<IUserRepository>();
-            EventRepository = factory.Services.GetRequiredService<IEventRepository>();
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
-            ProjectRepository = factory.Services.GetRequiredService<IProjectRepository>();
             FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();
-            
-            LoggerFactory = factory.Services.GetRequiredService<ILoggerFactory>();
 
             _userService = factory.Services.GetRequiredService<IUserService>();
 
@@ -83,7 +67,7 @@ namespace Hackathon.Tests.Integration.Base
                 AllowAutoRedirect = false,
                 HandleCookies = false
             });
-            
+
             var defaultToken = _userService.GenerateToken(new UserModel
             {
                 Id = 1,
@@ -91,21 +75,23 @@ namespace Hackathon.Tests.Integration.Base
             }).Token ?? "";
 
             TestUser = (1, defaultToken);
-            
+
             SetToken(defaultToken);
-            
-            AuthApi = RestService.For<IAuthApi>(_httpClient);
-            UsersApi = RestService.For<IUserApi>(_httpClient);
-            EventsApi = RestService.For<IEventApi>(_httpClient);
-            TeamsApi = RestService.For<ITeamApi>(_httpClient);
-            ProjectsApi = RestService.For<IProjectApi>(_httpClient);
-            FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, new RefitSettings
+
+            var jsonSerializerOptions = new JsonSerializerOptions
             {
-                UrlParameterFormatter = new DefaultUrlParameterFormatter
-                {
-                    
-                }
-            });
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true
+            };
+
+            var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer(jsonSerializerOptions));
+
+            AuthApi = RestService.For<IAuthApi>(_httpClient, refitSettings);
+            UsersApi = RestService.For<IUserApi>(_httpClient, refitSettings);
+            EventsApi = RestService.For<IEventApi>(_httpClient, refitSettings);
+            TeamsApi = RestService.For<ITeamApi>(_httpClient, refitSettings);
+            ProjectsApi = RestService.For<IProjectApi>(_httpClient, refitSettings);
+            FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, refitSettings);
         }
 
         protected void SetToken(string token)
@@ -126,19 +112,6 @@ namespace Hackathon.Tests.Integration.Base
             });
 
             return (response.Id, authTokenModel.Token);
-        }
-        protected async Task<(TeamModel Team, long EventId)> CreateTeamWithEvent(long userId)
-        {
-            var eventModel = TestFaker.GetCreateEventModels(1, userId).First();
-            var eventId = await EventRepository.CreateAsync(eventModel);
-
-            var createTeamModel = TestFaker.GetCreateTeamModels(1).First();
-            createTeamModel.EventId = eventId;
-
-            var teamId = await TeamRepository.CreateAsync(createTeamModel);
-
-            var team = await TeamRepository.GetAsync(teamId);
-            return (team, eventId);
         }
     }
 }

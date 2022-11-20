@@ -39,9 +39,11 @@ public class EventController: BaseController
         var createEventModel = _mapper.Map<EventCreateParameters>(createEventRequest);
         createEventModel.OwnerId = UserId;
 
+        var createdId = await _eventService.CreateAsync(createEventModel);
+
         return new BaseCreateResponse
         {
-            Id = await _eventService.CreateAsync(createEventModel),
+            Id = createdId
         };
     }
 

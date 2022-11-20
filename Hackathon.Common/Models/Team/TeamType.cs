@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace Hackathon.Common.Models.Team
 {
     //Тип команды
@@ -6,9 +8,10 @@ namespace Hackathon.Common.Models.Team
         /// <summary>
         /// Закрытый
         /// </summary>
-        /// <remarks> 
+        /// <remarks>
         /// В команду можно попасть только по приглашению
         /// </remarks>
+        [EnumMember(Value = "0")]
         Private = 0,
 
         /// <summary>
@@ -17,6 +20,7 @@ namespace Hackathon.Common.Models.Team
         /// <remarks>
         /// Вступить может любой желающий
         /// </remarks>
+        [EnumMember(Value = "1")]
         Public = 1,
     }
 }

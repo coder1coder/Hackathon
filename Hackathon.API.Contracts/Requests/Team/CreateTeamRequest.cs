@@ -13,7 +13,7 @@ namespace Hackathon.Contracts.Requests.Team
         /// </summary>
         [Required]
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Идентификатор события
         /// </summary>
@@ -22,6 +22,6 @@ namespace Hackathon.Contracts.Requests.Team
         /// <summary>
         /// Тип команды
         /// </summary>
-        public TeamType Type { get; set; }
+        public int Type { get; set; } = (int)TeamType.Private;
     }
 }
