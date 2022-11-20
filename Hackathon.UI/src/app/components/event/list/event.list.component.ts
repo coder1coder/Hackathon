@@ -11,6 +11,7 @@ import * as moment from "moment/moment";
 import {RouterService} from "../../../services/router.service";
 import {MatSelect} from "@angular/material/select";
 import {IEventListItem} from "../../../models/Event/IEventListItem";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'event-list',
@@ -29,6 +30,7 @@ export class EventListComponent extends BaseTableListComponent<IEventListItem>{
     startFrom: new FormControl(),
     startTo: new FormControl(),
     statuses: new FormControl(),
+    iAmOwner: new FormControl()
   })
 
   @ViewChild('statuses') statusesSelect!: MatSelect;
@@ -39,7 +41,8 @@ export class EventListComponent extends BaseTableListComponent<IEventListItem>{
 
   constructor(
     public eventsService: EventService,
-    public router: RouterService
+    public router: RouterService,
+    private authService: AuthService
   ) {
     super(EventListComponent.name);
   }
@@ -56,6 +59,14 @@ export class EventListComponent extends BaseTableListComponent<IEventListItem>{
 
     params.Filter = new EventFilter();
     params.Filter = this.filterForm.value;
+
+    if (this.filterForm.value.iAmOwner)
+    {
+      let userId = this.authService.getUserId();
+
+      if (userId)
+        params.Filter.ownerIds = [userId]
+    }
 
     params.Filter.excludeOtherUsersDraftedEvents = true;
 
