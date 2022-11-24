@@ -15,7 +15,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Hackathon.API.Controllers;
 
 [SwaggerTag("Пользователи системы")]
-public class UserController: BaseController, IUserApi
+public class UserController: BaseController
 {
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
@@ -60,33 +60,6 @@ public class UserController: BaseController, IUserApi
     [Route("{userId:long}")]
     public async Task<UserResponse> Get([FromRoute] long userId)
         => _mapper.Map<UserResponse>(await _userService.GetAsync(userId));
-
-    /// <summary>
-    /// Получить все реакции на профиль пользователя
-    /// </summary>
-    /// <param name="userId">Идентификатор пользователя получившего реакцию</param>
-    /// <returns></returns>
-    [HttpGet("{userId:long}/reactions")]
-    public async Task<UserProfileReaction[]> GetReactions(long userId)
-        => await _userService.GetReactionsAsync(UserId, userId);
-
-    /// <summary>
-    /// Добавить реакцию на профиль пользователя
-    /// </summary>
-    /// <param name="userId">Идентификатор пользователя получающего реакцию</param>
-    /// <param name="reaction">Реакция</param>
-    [HttpPost("{userId:long}/reactions/{reaction}")]
-    public async Task AddReaction(long userId, UserProfileReaction reaction)
-        => await _userService.AddReactionAsync(UserId, userId, reaction);
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="userId">Идентификатор пользователя получившего реакцию</param>
-    /// <param name="reaction">Реакция</param>
-    [HttpDelete("{userId:long}/reactions/{reaction}")]
-    public async Task RemoveReaction(long userId, UserProfileReaction reaction)
-        => await _userService.RemoveReactionAsync(UserId, userId, reaction);
 
     /// <summary>
     /// Получить информацию о пользователях

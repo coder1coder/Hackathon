@@ -23,9 +23,6 @@ namespace Hackathon.BL.User
 {
     public class UserService: IUserService
     {
-        public const string ReactionAlreadyExistMessage = "Реакции на профиль пользователя уже существует";
-        public const string ReactionNotExistMessage = "Реакции на профиль пользователя не существует";
-        
         private readonly IValidator<SignUpModel> _signUpModelValidator;
         private readonly IValidator<SignInModel> _signInModelValidator;
 
@@ -182,52 +179,6 @@ namespace Hackathon.BL.User
 
             await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);
             return uploadResult.Id;
-        }
-
-        /// <inhertidoc cref="IUserService.AddReactionAsync"/>
-        public async Task AddReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
-        {
-            if (! await _userRepository.IsExistAsync(userId))
-                throw new ValidationException($"Пользователь с идентификатором {userId} не найден");
-
-            if (! await _userRepository.IsExistAsync(targetUserId))
-                throw new ValidationException($"Пользователь с идентификатором {targetUserId} не найден");
-
-            var reactions = await _userRepository.GetReactionsAsync(userId, targetUserId);
-
-            if (reactions.Contains(reaction))
-                throw new ValidationException(ReactionAlreadyExistMessage);
-
-            await _userRepository.AddReactionAsync(userId, targetUserId, reaction);
-        }
-
-        /// <inhertidoc cref="IUserService.RemoveReactionAsync"/>
-        public async Task RemoveReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
-        {
-            if (! await _userRepository.IsExistAsync(userId))
-                throw new ValidationException($"Пользователь с идентификатором {userId} не найден");
-
-            if (! await _userRepository.IsExistAsync(targetUserId))
-                throw new ValidationException($"Пользователь с идентификатором {targetUserId} не найден");
-
-            var reactions = await _userRepository.GetReactionsAsync(userId, targetUserId);
-
-            if (!reactions.Contains(reaction))
-                throw new ValidationException(ReactionNotExistMessage);
-
-            await _userRepository.RemoveReactionAsync(userId, targetUserId, reaction);
-        }
-
-        /// <inhertidoc cref="IUserService.GetReactionsAsync"/>
-        public async Task<UserProfileReaction[]> GetReactionsAsync(long userId, long targetUserId)
-        {
-            if (! await _userRepository.IsExistAsync(userId))
-                throw new ValidationException($"Пользователь с идентификатором {userId} не найден");
-
-            if (! await _userRepository.IsExistAsync(targetUserId))
-                throw new ValidationException($"Пользователь с идентификатором {targetUserId} не найден");
-
-            return await _userRepository.GetReactionsAsync(userId, targetUserId);
         }
 
         private static class AppClaimTypes

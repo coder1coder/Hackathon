@@ -16,7 +16,7 @@ namespace Hackathon.API.Abstraction
         public Task<UserResponse> Get(long userId);
 
         [Get("/api/User/{userId}/reactions")]
-        public Task<UserProfileReaction[]> GetReactions(long userId);
+        public Task<UserProfileReaction> GetReactions(long userId);
 
         [Post("/api/User/{userId}/reactions/{reaction}")]
         public Task AddReaction(long userId, UserProfileReaction reaction);

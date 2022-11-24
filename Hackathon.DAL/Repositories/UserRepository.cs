@@ -153,46 +153,5 @@ namespace Hackathon.DAL.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
-
-        /// <inheritdoc cref="IUserRepository.GetReactionsAsync"/>
-        public async Task<UserProfileReaction[]> GetReactionsAsync(long userId, long targetUserId)
-        {
-            return await _dbContext.UserReactions
-                .AsNoTracking()
-                .Where(x =>
-                    x.UserId == userId
-                    && x.TargetUserId == targetUserId)
-                .Select(x=>x.Reaction)
-                .ToArrayAsync();
-        }
-
-        /// <inheritdoc cref="IUserRepository.AddReactionAsync"/>
-        public async Task AddReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
-        {
-            _dbContext.UserReactions.Add(new UserReactionEntity
-            {
-                UserId = userId,
-                TargetUserId = targetUserId,
-                Reaction = reaction
-            });
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        /// <inheritdoc cref="IUserRepository.RemoveReactionAsync"/>
-        public async Task RemoveReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
-        {
-            var reactionEntity = await _dbContext.UserReactions
-                .SingleOrDefaultAsync(x =>
-                    x.UserId == userId
-                    && x.TargetUserId == targetUserId
-                    && x.Reaction == reaction);
-
-            if (reactionEntity != null)
-            {
-                _dbContext.UserReactions.Remove(reactionEntity);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
     }
 }
