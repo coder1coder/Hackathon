@@ -5,9 +5,9 @@ namespace Hackathon.BL.Validation.Event
 {
     public class UpdateEventModelValidator: AbstractValidator<EventUpdateParameters>
     {
-        public UpdateEventModelValidator()
+        public UpdateEventModelValidator(IValidator<BaseEventParameters> baseEventParametersValidator)
         {
-            Include(new CreateEventModelValidator());
+            Include(baseEventParametersValidator);
 
             RuleFor(x => x.Id)
                 .GreaterThan(0)

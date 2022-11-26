@@ -19,7 +19,7 @@ namespace Hackathon.Jobs.Services
         private readonly INotificationService _notificationService;
 
         public EventStartNotifierJob(
-            IEventService eventService, 
+            IEventService eventService,
             INotificationService notificationService)
         {
             _eventService = eventService;
@@ -31,13 +31,13 @@ namespace Hackathon.Jobs.Services
             var now = DateTime.UtcNow.AddMinutes(5).ToUtcWithoutSeconds();
 
             var events = await _eventService.GetByExpression(x =>
-                DateTime.Compare(now, x.Start) == 0 
+                DateTime.Compare(now, x.Start) == 0
                 && x.Status == EventStatus.Published);
 
             if (events.Any())
                 await _notificationService.PushMany(
                     events.Select(x => NotificationFactory
-                    .InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
+                    .InfoNotification($"Событие '{x.Name}' скоро начнется", x.Owner.Id)));
         }
     }
 }

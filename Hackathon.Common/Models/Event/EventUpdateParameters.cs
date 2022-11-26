@@ -3,7 +3,7 @@
     /// <summary>
     /// Модель события для обновления
     /// </summary>
-    public class EventUpdateParameters : EventCreateParameters
+    public class EventUpdateParameters : BaseEventParameters
     {
         /// <summary>
         /// Идентификатор события
