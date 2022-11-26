@@ -2,6 +2,7 @@ namespace Hackathon.Common.Models.Base
 {
     public class Pagination
     {
+        public const int Default = 15;
         private int _offset;
 
         /// <summary>
@@ -16,6 +17,6 @@ namespace Hackathon.Common.Models.Base
         /// <summary>
         /// Количество записей которые необходимо получить
         /// </summary>
-        public int Limit { get; set; } = 15;
+        public int Limit { get; set; } = Default;
     }
 }

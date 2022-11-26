@@ -1,7 +1,7 @@
 using Amazon.S3;
 using Autofac;
-using Hackathon.Abstraction.Audit;
-using Hackathon.BL.Audit;
+using Hackathon.Abstraction.EventLog;
+using Hackathon.BL.EventLog;
 using Hackathon.Common.Configuration;
 
 namespace Hackathon.BL;
@@ -19,7 +19,7 @@ public class Module : Autofac.Module
     {
         builder.RegisterModule(new Validation.Module());
 
-        builder.RegisterType<AuditEventHandler>().As<IAuditEventHandler>().InstancePerLifetimeScope();
+        builder.RegisterType<EventLogHandler>().As<IEventLogHandler>().InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(typeof(Module).Assembly)
             .Where(x => !x.IsAbstract && x.Name.EndsWith("Service"))

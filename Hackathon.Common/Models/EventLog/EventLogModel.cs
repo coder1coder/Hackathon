@@ -1,47 +1,49 @@
 using System;
 
-namespace Hackathon.Common.Models.Audit;
+namespace Hackathon.Common.Models.EventLog;
 
-public class AuditEventModel
+public class EventLogModel
 {
     /// <summary>
     /// Идентификатор события аудита
     /// </summary>
-    public Guid Id { get; set; }
-    
+    public Guid Id { get; }
+
     /// <summary>
     /// Тип события
     /// </summary>
-    public AuditEventType Type { get; } 
-    
+    public EventLogType LogType { get; }
+
     /// <summary>
     /// Описание события
     /// </summary>
     public string Description { get; }
-    
+
     /// <summary>
     /// Идентификатор пользователя инициатора события
     /// null если система
     /// </summary>
     public long? UserId { get; }
-    
+
     /// <summary>
     /// Время события (UTC)
     /// </summary>
     public DateTime Timestamp { get; }
 
-    public AuditEventModel(AuditEventType type, string description = null, long? userId = null)
+    public EventLogModel(EventLogType logType, string description = null, long? userId = null)
     {
-        Type = type;
-        
-        Description = description ?? Type switch
+        Id = Guid.NewGuid();
+
+        LogType = logType;
+
+        Description = description ?? LogType switch
         {
-            AuditEventType.Created => "Создана запись",
-            AuditEventType.Updated => "Запись обновлена",
-            AuditEventType.Deleted => "Запись удалена",
+            EventLogType.Created => "Создана запись",
+            EventLogType.Updated => "Запись обновлена",
+            EventLogType.Deleted => "Запись удалена",
             _ => null
         };
-        
+
         Timestamp = DateTime.UtcNow;
         UserId = userId;
     }

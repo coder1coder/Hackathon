@@ -1,35 +1,35 @@
-using Hackathon.Common.Models.Audit;
+using System;
 
-namespace Hackathon.Entities;
+namespace Hackathon.Common.Models.EventLog;
 
 /// <summary>
-/// Событие аудита
+/// Модель списочного представления записи журнала событий
 /// </summary>
-public class AuditEventEntity
+public class EventLogListItem
 {
+    /// <summary>
+    /// Идентификатор события аудита
+    /// </summary>
     public Guid Id { get; set; }
-        
+
     /// <summary>
     /// Тип события
     /// </summary>
-    public AuditEventType Type { get; set; }
-    
+    public EventLogType LogType { get; set; }
+
+    /// <summary>
+    /// Описание события
+    /// </summary>
+    public string Description { get; set; }
+
     /// <summary>
     /// Идентификатор пользователя инициатора события
     /// null если система
     /// </summary>
     public long? UserId { get; set; }
-    
-    /// <summary>
-    /// Имя пользователя инициатора события
-    /// </summary>
+
     public string? UserName { get; set; }
-    
-    /// <summary>
-    /// Описание события
-    /// </summary>
-    public string? Description { get; set; }
-    
+
     /// <summary>
     /// Время события (UTC)
     /// </summary>

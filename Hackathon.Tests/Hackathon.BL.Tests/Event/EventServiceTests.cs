@@ -8,8 +8,8 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Event;
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.Audit;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.EventLog;
 using MassTransit;
 using Moq;
 using Xunit;
@@ -51,7 +51,7 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<EventCreateParameters>()))
             .ReturnsAsync(createdId);
 
-        _busMock.Setup(x => x.Publish(It.IsAny<AuditEventModel>(), default))
+        _busMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
             .Returns(Task.CompletedTask);
         
         var service = new EventService(

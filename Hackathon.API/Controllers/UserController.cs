@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
@@ -58,7 +57,7 @@ public class UserController: BaseController
     /// <returns></returns>
     [HttpGet]
     [Route("{userId:long}")]
-    public async Task<UserResponse> Get([FromRoute] long userId)
+    public async Task<UserResponse> GetAsync([FromRoute] long userId)
         => _mapper.Map<UserResponse>(await _userService.GetAsync(userId));
 
     /// <summary>
@@ -68,10 +67,9 @@ public class UserController: BaseController
     [HttpPost("list")]
     [Authorize(Policy = nameof(UserRole.Administrator))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserResponse>))]
-    public async Task<IActionResult> GetAsync([FromBody] GetListParameters<UserFilter> request)
+    public async Task<IActionResult> GetListAsync([FromBody] GetListParameters<UserFilter> request)
     {
-        var getFilterModel = _mapper.Map<GetListParameters<UserFilter>>(request);
-        var collectionModel = await _userService.GetAsync(getFilterModel);
+        var collectionModel = await _userService.GetAsync(request);
         return Ok(_mapper.Map<BaseCollectionResponse<UserResponse>>(collectionModel));
     }
 

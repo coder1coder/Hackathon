@@ -11,9 +11,9 @@ using Hackathon.BL.Validation.Event;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.Audit;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using Hackathon.Entities;
@@ -61,8 +61,8 @@ namespace Hackathon.BL.Event
             await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
             var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
 
-            await _messageBus.Publish(new AuditEventModel(
-                AuditEventType.Created,
+            await _messageBus.Publish(new EventLogModel(
+                EventLogType.Created,
                 $"Создано новое событие с идентификатором '{eventId}'",
                 eventCreateParameters.OwnerId
             ));
