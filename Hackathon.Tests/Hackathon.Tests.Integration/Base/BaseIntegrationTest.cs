@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Audit;
+using Hackathon.Abstraction.EventLog;
 using Hackathon.Abstraction.Friend;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
@@ -31,7 +31,7 @@ namespace Hackathon.Tests.Integration.Base
         protected readonly IProjectApi ProjectsApi;
         protected readonly IFriendshipApi FriendshipApi;
 
-        protected readonly IAuditRepository AuditRepository;
+        protected readonly IEventLogService EventLogService;
         protected readonly IUserRepository UserRepository;
         protected readonly ITeamRepository TeamRepository;
         protected readonly IFriendshipRepository FriendshipRepository;
@@ -50,7 +50,7 @@ namespace Hackathon.Tests.Integration.Base
         {
             AppSettings = factory.Services.GetRequiredService<IOptions<AppSettings>>().Value;
 
-            AuditRepository = factory.Services.GetRequiredService<IAuditRepository>();
+            EventLogService = factory.Services.GetRequiredService<IEventLogService>();
             UserRepository = factory.Services.GetRequiredService<IUserRepository>();
             TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
             FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();

@@ -5,7 +5,6 @@ using Hackathon.BL.User;
 using Hackathon.Common.Models.User;
 using Hackathon.Tests.Integration.Base;
 using Refit;
-using StackExchange.Redis;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.User;
@@ -46,7 +45,6 @@ public sealed class UserProfileReactionControllerTests: BaseIntegrationTest
         var response = await UsersApi.GetReactions(targetUserId);
 
         //assert
-        Assert.NotNull(response);
         response.Should().Be(reaction);
     }
 

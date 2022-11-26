@@ -16,7 +16,7 @@ public class ApplicationDbContext: DbContext
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<NotificationEntity> Notifications { get; set; }
     public DbSet<FileStorageEntity> StorageFiles { get; set; }
-    public DbSet<AuditEventEntity> Audit { get; set; }
+    public DbSet<EventLogEntity> EventLog { get; set; }
     public DbSet<FriendshipEntity> Friendships { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
