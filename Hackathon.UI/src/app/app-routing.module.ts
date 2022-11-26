@@ -17,6 +17,7 @@ import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
 import {EventCardComponent} from "./components/event/card/event.card.component";
+import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -38,6 +39,9 @@ const routes: Routes = [
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: 'users/:userId', component: UserViewComponent, canActivate: [AuthGuard] },
   { path: 'notifications', component: NotificationListComponent, canActivate: [AuthGuard]},
+
+  { path: 'eventLog', component: EventLogComponent, canActivate: [AuthGuard] },
+
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] }
 ];
 

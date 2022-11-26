@@ -19,6 +19,7 @@ export class NavMenuComponent {
         new MenuItem('/team','Моя команда'),
         new MenuItem('#', 'Администрирование', x.role == UserRole.Administrator,[
           new MenuItem('/users','Пользователи'),
+          new MenuItem('/eventLog','Журнал событий'),
         ]),
       ].filter(x=>x.access);
     })

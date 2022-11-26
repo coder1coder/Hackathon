@@ -54,6 +54,7 @@ import { ProfileViewComponent } from "./components/profile/view/profile.view.com
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
 import {EventCardComponent} from "./components/event/card/event.card.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
 
 @NgModule({
   declarations: [
@@ -84,6 +85,8 @@ import {ToolbarComponent} from "./components/toolbar/toolbar.component";
     NotFoundComponent,
 
     ChatTeamComponent,
+
+    EventLogComponent,
 
     NotificationBellComponent,
     NotificationListComponent,

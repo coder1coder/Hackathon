@@ -55,7 +55,7 @@ namespace Hackathon.API
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
-                x.AddConsumers(typeof(AuditEventConsumer).Assembly);
+                x.AddConsumers(typeof(EventLogConsumer).Assembly);
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
