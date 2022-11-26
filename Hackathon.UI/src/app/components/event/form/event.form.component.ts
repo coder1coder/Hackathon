@@ -120,15 +120,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     request.subscribe({
       next: r => {
         let eventId = (this.editMode) ? this.eventId : r.id;
+        let afterOperationMessage = (this.editMode) ? `Событие обновлено` : `Новое событие добавлено`;
 
-        if (this.editMode)
-          this.router.Events.Edit(eventId).then(_ =>
-            this.snackBar.open(`Событие обновлено`)
-          )
-        else
-          this.router.Events.List().then(_ =>
-            this.snackBar.open(`Новое событие добавлено`)
-          )
+        this.router.Events.Edit(eventId).then(_ =>
+          this.snackBar.open(afterOperationMessage)
+        )
       },
       error: err => {
         let problemDetails: IProblemDetails = <IProblemDetails>err.error;

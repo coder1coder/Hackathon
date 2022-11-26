@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 

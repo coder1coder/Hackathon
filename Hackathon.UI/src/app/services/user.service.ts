@@ -14,7 +14,6 @@ import { IUser } from "../models/User/IUser";
 export class UserService {
 
   private api: string = environment.api;
-  private storage: Storage = sessionStorage;
 
   constructor(private http: HttpClient) {
     const headers = new HttpHeaders()

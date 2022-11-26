@@ -8,7 +8,7 @@
     Организатор: {{ event.owner?.userName }}, Начало: {{ getStartDate() }}
   </div>
 
-  <p style="max-width: 50%;margin-bottom: 2em;">{{ event.description }}</p>
+  <div style="max-width: 50%;padding-bottom: 2em;overflow-wrap: break-word;">{{ event.description }}</div>
 
   <h3>Награда/Призовой фонд</h3>
   <p>{{ event.award }}</p>

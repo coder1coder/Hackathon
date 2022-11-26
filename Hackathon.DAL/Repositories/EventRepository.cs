@@ -61,15 +61,15 @@ namespace Hackathon.DAL.Repositories
                     .ThenInclude(x => x.Members)
                 .AsQueryable();
 
-            if (parameters.Filter != null)
+            if (parameters.Filter is not null)
             {
-                if (parameters.Filter.Ids != null)
+                if (parameters.Filter.Ids is not null)
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Name))
                     query = query.Where(x => x.Name.ToLower().Contains(parameters.Filter.Name));
 
-                if (parameters.Filter.Statuses != null)
+                if (parameters.Filter.Statuses is not null)
                     query = query.Where(x => parameters.Filter.Statuses.Contains(x.Status));
 
                 if (parameters.Filter.ExcludeOtherUsersDraftedEvents)
@@ -88,10 +88,14 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => x.Start <= startTo);
                 }
 
-                if (parameters.Filter.TeamsIds != null)
+                if (parameters.Filter.TeamsIds is not null)
                     query = query.Where(x =>
                         x.Teams.Any(t =>
                             parameters.Filter.TeamsIds.Contains(t.Id)));
+
+                if (parameters.Filter.OwnerIds is not null)
+                    query = query.Where(x =>
+                        parameters.Filter.OwnerIds.Contains(x.OwnerId));
             }
 
             var totalCount = await query.LongCountAsync();

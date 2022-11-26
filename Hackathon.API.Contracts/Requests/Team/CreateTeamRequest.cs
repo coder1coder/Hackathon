@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Hackathon.Common.Models.Team;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hackathon.Contracts.Requests.Team
 {
@@ -12,10 +13,15 @@ namespace Hackathon.Contracts.Requests.Team
         /// </summary>
         [Required]
         public string Name { get; set; }
-        
+
         /// <summary>
-        /// Идентификатор события.
+        /// Идентификатор события
         /// </summary>
         public long? EventId { get; set; }
+
+        /// <summary>
+        /// Тип команды
+        /// </summary>
+        public int Type { get; set; } = (int)TeamType.Private;
     }
 }
