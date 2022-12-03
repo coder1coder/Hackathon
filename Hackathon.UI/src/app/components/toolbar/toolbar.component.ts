@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {AuthService} from "../../services/auth.service";
 import {RouterService} from "../../services/router.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -10,9 +10,10 @@ import {CustomDialog, ICustomDialogData} from "../custom/custom-dialog/custom-di
   styleUrls: ['./toolbar.component.scss'],
 })
 
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
 
   UserName:string | undefined;
+  userId:number | undefined;
 
   constructor(
     private authService:AuthService,
@@ -20,11 +21,16 @@ export class ToolbarComponent {
     private dialog: MatDialog
   ) {}
 
-  ngAfterViewInit(): void {
+  ngOnInit() {
+
     this.authService.getCurrentUser()?.subscribe(x=>{
       if (x != null)
+      {
+        this.userId = x.id;
         this.UserName = x.fullName ?? x.userName
+      }
     })
+
   }
 
   public logout(){

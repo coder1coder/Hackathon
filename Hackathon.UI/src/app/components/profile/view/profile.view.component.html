@@ -1,13 +1,31 @@
-<layout-default title="Профиль" xmlns="http://www.w3.org/1999/html">
+<layout-default title="Профиль" [isLoading]="isLoading">
 
   <div class="profile">
 
     <div class="profile__left">
-      <profile-image canUpload></profile-image>
+      <profile-image [userId]="userId" [canUpload]="canUploadImage"></profile-image>
     </div>
 
     <div class="profile__right">
       <list-details [items]="userProfileDetails"></list-details>
+
+      <div class="reaction__list">
+
+        <div class="reaction reaction-{{ UserProfileReaction[reaction].toLowerCase() }}"
+             (click)="toggleReaction($event, reaction)"
+             [class.active]="isReactionActive(reaction)"
+             *ngFor="let reaction of getAvailableUserProfileReactions()">
+
+          <div [ngSwitch]="reaction">
+            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Like">thumb_up</mat-icon>
+            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Heart">favorite</mat-icon>
+            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Fire">local_fire_department</mat-icon>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
   </div>
