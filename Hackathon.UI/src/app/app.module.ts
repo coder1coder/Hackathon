@@ -31,7 +31,6 @@ import { EventFormComponent } from "./components/event/form/event.form.component
 import { EventViewComponent } from "./components/event/view/event.view.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { UserListComponent } from "./components/user/list/user.list.component";
-import { UserViewComponent } from "./components/user/view/user.view.component";
 import { MatSelectModule } from '@angular/material/select';
 import { TeamListComponent } from "./components/team/list/team.list.component";
 import { EventNewStatusDialogComponent } from './components/event/status/event-new-status-dialog.component';
@@ -80,7 +79,6 @@ import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
     UserTeamComponent,
 
     UserListComponent,
-    UserViewComponent,
 
     NotFoundComponent,
 
