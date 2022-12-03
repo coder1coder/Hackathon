@@ -1,12 +1,12 @@
-import { AfterViewInit, Attribute, Component, ViewChild } from "@angular/core";
-import { SnackService } from "../../../services/snack.service";
-import { UserService } from "../../../services/user.service";
-import { mergeMap } from "rxjs";
-import { DomSanitizer , SafeUrl } from "@angular/platform-browser";
-import { map } from "rxjs/operators";
-import { IUser } from "../../../models/User/IUser";
-import { AuthService } from "../../../services/auth.service";
-import { FileStorageService } from "src/app/services/file-storage.service";
+import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {SnackService} from "../../../services/snack.service";
+import {UserService} from "../../../services/user.service";
+import {BehaviorSubject, mergeMap} from "rxjs";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {map} from "rxjs/operators";
+import {IUser} from "../../../models/User/IUser";
+import {AuthService} from "../../../services/auth.service";
+import {FileStorageService} from "src/app/services/file-storage.service";
 
 @Component({
   selector: 'profile-image',
@@ -14,7 +14,16 @@ import { FileStorageService } from "src/app/services/file-storage.service";
   styleUrls:['./profile-image.component.scss']
 })
 
-export class ProfileImageComponent implements AfterViewInit {
+export class ProfileImageComponent implements OnInit {
+
+  @Input('canUpload') canUpload: boolean = false;
+
+  private _userId = new BehaviorSubject<number>(0);
+
+  @Input()
+  set userId(value) { this._userId.next(value); };
+  get userId() { return this._userId.getValue(); }
+
   public image: any;
   public userNameSymbols: string = '';
 
@@ -27,23 +36,8 @@ export class ProfileImageComponent implements AfterViewInit {
     private userService: UserService,
     private sanitizer: DomSanitizer,
     private authService: AuthService,
-    private fileStorageService: FileStorageService,
-    @Attribute('canUpload') public canUpload: boolean
+    private fileStorageService: FileStorageService
     ) {
-  }
-
-  ngAfterViewInit(): void {
-    this.authService.getCurrentUser()
-      ?.subscribe((x: IUser) => {
-        this.userNameSymbols = x.userName?.split(' ')
-            .reduce((x,y) => x.concat(y))
-            .substring(0,2)
-            .toUpperCase()
-          ?? '';
-
-        if (x?.profileImageId != undefined)
-          this.loadImage(x.profileImageId);
-      })
   }
 
   public selectFile(event: any): void {
@@ -89,5 +83,25 @@ export class ProfileImageComponent implements AfterViewInit {
     let base64String = btoa(STRING_CHAR);
 
     return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
+  }
+
+  ngOnInit(): void {
+
+    this._userId.subscribe(userId=>{
+
+      this.userService.getById(userId)
+        ?.subscribe((x: IUser) => {
+
+          this.userNameSymbols = x.userName?.split(' ')
+              .reduce((x,y) => x.concat(y))
+              .substring(0,2)
+              .toUpperCase()
+            ?? '';
+
+          if (x?.profileImageId != undefined)
+            this.loadImage(x.profileImageId);
+        })
+    })
+
   }
 }
