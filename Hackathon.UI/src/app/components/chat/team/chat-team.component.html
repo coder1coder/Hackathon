@@ -11,7 +11,7 @@
   </div>
   <div class="chat__footer">
     <form [formGroup]="form" class="chat__send-message-box">
-      <mat-checkbox formControlName="notifyTeam" color="primary">
+      <mat-checkbox formControlName="notifyTeam" color="primary" *ngIf="canSendMessageWithNotify">
         Уведомлять пользователей о сообщении
       </mat-checkbox>
 

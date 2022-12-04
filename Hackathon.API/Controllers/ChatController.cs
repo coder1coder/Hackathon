@@ -11,24 +11,21 @@ namespace Hackathon.API.Controllers;
 public class ChatController: BaseController
 {
     private readonly IChatService _chatService;
-    private readonly IChatNotifyService _chatNotifyService;
 
-    public ChatController(IChatService chatService,
-        IChatNotifyService chatNotifyService)
+    public ChatController(IChatService chatService)
     {
         _chatService = chatService;
-        _chatNotifyService = chatNotifyService;
     }
 
-    [HttpPost("team/{teamId:long}/send")]
-    public async Task SendTeamMessage(CreateTeamChatMessage createTeamChatMessage)
+    /// <summary>
+    /// Отправить сообщение в чат команды
+    /// </summary>
+    /// <param name="createTeamChatMessage"></param>
+    [HttpPost("team/send")]
+    public async Task SendTeamMessage([FromBody] CreateTeamChatMessage createTeamChatMessage)
     {
         createTeamChatMessage.OwnerId = UserId;
         await _chatService.SendMessage(createTeamChatMessage);
-
-        //TODO: добавить проверку что пользователь является овнером команды
-        if (createTeamChatMessage.Type == ChatMessageType.WithNotify)
-           await _chatNotifyService.SendMessage(createTeamChatMessage);
     }
 
     [HttpPost("team/{teamId:long}/list")]

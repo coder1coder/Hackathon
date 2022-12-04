@@ -33,7 +33,7 @@ export class ChatService
   }
 
   sendTeamMessage(message:ChatMessage){
-    return this.http.post(this.api + `/chat/team/${message.teamId}/send`, message);
+    return this.http.post(this.api + `/chat/team/send`, message);
   }
 
   public getTeamMessages(teamId:number, offset:number = 0, limit:number = 300): Observable<BaseCollection<ChatMessage>> {
