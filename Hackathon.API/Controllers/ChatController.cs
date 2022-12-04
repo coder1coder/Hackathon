@@ -11,10 +11,13 @@ namespace Hackathon.API.Controllers;
 public class ChatController: BaseController
 {
     private readonly IChatService _chatService;
-    
-    public ChatController(IChatService chatService)
+    private readonly IChatNotifyService _chatNotifyService;
+
+    public ChatController(IChatService chatService,
+        IChatNotifyService chatNotifyService)
     {
         _chatService = chatService;
+        _chatNotifyService = chatNotifyService;
     }
 
     [HttpPost("team/{teamId:long}/send")]
@@ -22,6 +25,10 @@ public class ChatController: BaseController
     {
         createTeamChatMessage.OwnerId = UserId;
         await _chatService.SendMessage(createTeamChatMessage);
+
+        //TODO: добавить проверку что пользователь является овнером команды
+        if (createTeamChatMessage.Type == ChatMessageType.WithNotify)
+           await _chatNotifyService.SendMessage(createTeamChatMessage);
     }
 
     [HttpPost("team/{teamId:long}/list")]
@@ -37,5 +44,4 @@ public class ChatController: BaseController
             TotalCount = collection.TotalCount
         };
     }
-        
 }

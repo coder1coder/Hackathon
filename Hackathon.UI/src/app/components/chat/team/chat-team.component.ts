@@ -29,8 +29,11 @@ export class ChatTeamComponent implements AfterViewInit {
 
   messages:ChatMessage[] = []
 
+  //TODO: переделать на инициализацию через html
   form:FormGroup = new FormGroup({
-    message: new FormControl('')
+    message: new FormControl(''),
+    //TODO: не отображать если текущий пользователь не овнер  
+    notifyTeam: new FormControl(false),
   })
 
   constructor(
@@ -39,6 +42,7 @@ export class ChatTeamComponent implements AfterViewInit {
 
     authService.authChange.subscribe(_ => this.updateChatView())
     chatService.onPublished = (_=> this.fetch());
+    let ownerId = this.authService.getUserId() ?? -1;
   }
 
   ngAfterViewInit(): void {
@@ -77,10 +81,14 @@ export class ChatTeamComponent implements AfterViewInit {
 
     let message = this.form.controls['message'].value;
     let ownerId = this.authService.getUserId() ?? -1;
+    let notifyTeam = this.form.controls['notifyTeam'].value;
+    
+    let chatMessageType = notifyTeam ? ChatMessageType.WithNotify : ChatMessageType.Default;
 
     let chatMessage = new ChatMessage(ChatMessageContext.TeamChat, ownerId, message);
     chatMessage.teamId = this.teamId;
     chatMessage.timestamp = moment.utc().toISOString();
+    chatMessage.Type = chatMessageType;
 
     this.chatService.sendTeamMessage(chatMessage)
       .subscribe(_ => {
@@ -105,6 +113,7 @@ export class ChatMessage{
   userFullName!:string;
   message!:string;
   context!:ChatMessageContext;
+  Type!:ChatMessageType;
   timestamp!:string;
 
   constructor(context:ChatMessageContext, ownerId:number, message:string) {
@@ -117,5 +126,11 @@ export class ChatMessage{
 export enum ChatMessageContext
 {
   TeamChat
+}
+
+export enum ChatMessageType
+{
+    Default = 0,
+    WithNotify = 1
 }
 

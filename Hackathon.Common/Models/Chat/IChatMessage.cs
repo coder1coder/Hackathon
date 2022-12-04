@@ -26,4 +26,5 @@ public enum ChatMessageContext
 public enum ChatMessageType
 {
     Default = 0,
+    WithNotify = 1,
 }

@@ -10,7 +10,11 @@
     </div>
   </div>
   <div class="chat__footer">
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="chat__send-message-box">
+      <mat-checkbox formControlName="notifyTeam" color="primary">
+        Уведомлять пользователей о сообщении
+      </mat-checkbox>
+
       <mat-form-field appearance="outline">
         <mat-label>Сообщение</mat-label>
         <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
