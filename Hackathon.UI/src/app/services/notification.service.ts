@@ -73,7 +73,7 @@ export class NotificationService
   startConnection() {
     try {
       this._signalR.start().then(_=>{
-        console.log("SignalR Connected.");
+        console.log("NotificationService SignalR Connected.");
       });
     } catch (err) {
       console.log(err);
