@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -47,6 +47,7 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .Include(x => x.Teams)
                     .ThenInclude(x => x.Members)
+                        .ThenInclude(x => x.Member)
                 .Include(x => x.Owner)
                 .SingleOrDefaultAsync(x => x.Id == eventId);
 

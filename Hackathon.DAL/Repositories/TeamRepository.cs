@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -183,13 +183,12 @@ namespace Hackathon.DAL.Repositories
             if (user == null)
                 throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
 
-            var userTeamEntityForRemove = new MemberTeamEntity()
-            {
-                TeamId = teamMemberModel.TeamId,
-                MemberId = teamMemberModel.MemberId
-            };
+            var teamMember = team.Members.FirstOrDefault(x => x.MemberId == user.Id);
 
-            team.Members.Remove(userTeamEntityForRemove);
+            if (teamMember == null)
+                throw new EntityNotFoundException("Пользователь не состоит в команде");
+
+            team.Members.Remove(teamMember);
             await _dbContext.SaveChangesAsync();
         }
 
