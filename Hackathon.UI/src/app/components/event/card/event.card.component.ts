@@ -8,11 +8,12 @@ import {Team} from "../../../models/Team/Team";
 import {MatTableDataSource} from "@angular/material/table";
 import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
 import {SnackService} from "../../../services/snack.service";
-import { Event } from 'src/app/models/Event/Event';
+import {Event} from 'src/app/models/Event/Event';
 import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
 import {IUser} from "../../../models/User/IUser";
 import {KeyValue} from "@angular/common";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'event-card',
@@ -21,72 +22,62 @@ import {KeyValue} from "@angular/common";
 })
 export class EventCardComponent implements AfterViewInit {
 
-  eventId: number;
-  event: Event = new Event();
-  EventModel = Event
-  isLoading: boolean = true;
-  EventStatusTranslator = EventStatusTranslator;
-  eventDataSource = new MatTableDataSource<Event>([]);
-  eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
-  eventTeamsDataSource = new MatTableDataSource<Team>([]);
-  eventDetails: KeyValue<string,any>[] = [];
+  public event: Event = new Event();
+  public isLoading: boolean = true;
+  public eventTeamsDataSource = new MatTableDataSource<Team>([]);
 
-  membersDataSource = new MatTableDataSource<IUser>([]);
+  private readonly eventId: number = this.activateRoute.snapshot.params['eventId'];
+  private membersDataSource: MatTableDataSource<IUser> = new MatTableDataSource<IUser>([]);
+  private userId: number = this.authService.getUserId() ?? 0;
+  private destroy$ = new Subject();
 
-  selectedTabIndex = 0;
-
-  public userId:number;
+  private EventStatusTranslator = EventStatusTranslator;
+  private eventDataSource = new MatTableDataSource<Event>([]);
+  private eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  private eventDetails: KeyValue<string,any>[] = [];
 
   constructor(
     private activateRoute: ActivatedRoute,
     public eventsService: EventService,
     private authService: AuthService,
     private snack: SnackService,
-    public router: RouterService) {
-    this.eventId = activateRoute.snapshot.params['eventId'];
-    this.eventsService = eventsService;
-    this.snack = snack;
-    this.userId = authService.getUserId() ?? 0;
+    public router: RouterService
+  ) {
   }
 
   ngAfterViewInit(): void {
     this.fetchEvent();
   }
 
-  getMembersCount(){
-    return Event.getUsersCount(this.event)
+  public get membersCount(): number {
+    return Event.getUsersCount(this.event);
   }
 
-  getMaxEventMembers(){
+  public get eventTeamsCount(): number {
+    return Event.getUsersCount(this.event);
+  }
+
+  public get maxEventMembers(): number {
     return this.event?.maxEventMembers
   }
 
-  getStartDate(){
+  public get startDate(): string {
     return this.event?.start?.toLocaleString('dd.MM.yyyy, hh:mm z');
   }
 
-  getEventStatus(){
+  public get eventStatus(): string {
     return EventStatusTranslator.Translate(this.event.status ?? -1);
   }
 
-  fetchEvent(){
-    this.isLoading = true;
-    this.eventsService.getById(this.eventId)
-      .pipe(finalize(()=>this.isLoading = false))
-      .subscribe({
-        next: (r: Event) =>  {
-          this.event = r;
-          this.eventTeamsDataSource.data = this.event.teams;
-          this.membersDataSource.data = this.event.teams
-            .map(x => x.members)
-            .reduce((x,y) =>
-              x?.concat(y));
-        },
-        error: () => {}
-      });
+  public get displayStatusesColumns(): string[] {
+    return ['status', 'message'];
   }
 
-  createNewTeam(){
+  public get displayTeamsColumns(): string[] {
+    return ['name', 'members'];
+  }
+
+  public createNewTeam(): void {
     if (this.event?.status !== EventStatus.Published)
     {
       this.snack.open('Событие должно быть опубликовано')
@@ -96,8 +87,9 @@ export class EventCardComponent implements AfterViewInit {
     this.router.Teams.New(this.eventId);
   }
 
-  enterToEvent(){
+  public enterToEvent(): void {
     this.eventsService.join(this.eventId)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) => {
           this.snack.open(`Вы зарегистрировались на мероприятие`);
@@ -110,8 +102,9 @@ export class EventCardComponent implements AfterViewInit {
       });
   }
 
-  leaveFromEvent(){
+  public leaveFromEvent(): void {
     this.eventsService.leave(this.eventId)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) => {
           this.snack.open(`Вы покинули мероприятие`);
@@ -124,8 +117,9 @@ export class EventCardComponent implements AfterViewInit {
       });
   }
 
-  startEvent(){
+  public startEvent(): void {
     this.eventsService.setStatus(this.eventId, EventStatus.Started)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) =>  {
           this.snack.open(`Событие начато`);
@@ -138,8 +132,9 @@ export class EventCardComponent implements AfterViewInit {
       });
   }
 
-  finishEvent(){
+  public finishEvent(): void {
     this.eventsService.setStatus(this.eventId, EventStatus.Finished)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) =>  {
           this.snack.open(`Событие завершено`);
@@ -152,11 +147,23 @@ export class EventCardComponent implements AfterViewInit {
       });
   }
 
-  getDisplayStatusesColumns(): string[] {
-    return ['status', 'message'];
-  }
-
-  getDisplayTeamsColumns(): string[] {
-    return ['name', 'members'];
+  private fetchEvent(): void {
+    this.isLoading = true;
+    this.eventsService.getById(this.eventId)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(()=>this.isLoading = false)
+      )
+      .subscribe({
+        next: (r: Event) =>  {
+          this.event = r;
+          this.eventTeamsDataSource.data = this.event.teams;
+          this.membersDataSource.data = this.event.teams
+            .map(x => x.members)
+            .reduce((x,y) =>
+              x?.concat(y));
+        },
+        error: () => {}
+      });
   }
 }
