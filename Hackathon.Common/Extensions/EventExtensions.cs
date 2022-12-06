@@ -9,7 +9,7 @@ public static class EventExtensions
     {
         Id = model.Id,
         Name = model.Name,
-        OwnerId = model.Owner.Id,
+        OwnerId = model.Owner?.Id ?? default,
         OwnerName = model.Owner?.ToString(),
         Start = model.Start,
         Status = model.Status,

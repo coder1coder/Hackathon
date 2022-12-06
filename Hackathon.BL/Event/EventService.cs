@@ -9,7 +9,6 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.Event;
 using Hackathon.Common.Exceptions;
-using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -94,7 +93,6 @@ namespace Hackathon.BL.Event
             {
                 TotalCount = events.TotalCount,
                 Items = events.Items?
-                    .Select(x => x.ToListItem())
                     .ToArray()
             };
         }

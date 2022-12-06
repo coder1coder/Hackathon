@@ -28,7 +28,7 @@ namespace Hackathon.Abstraction.Event
         /// <param name="userId">Идентификатор авторизованного пользователя</param>
         /// <param name="parameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollection<EventModel>> GetListAsync(long userId, GetListParameters<EventFilter> parameters);
+        Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> parameters);
 
         /// <summary>
         /// As queryable
