@@ -12,6 +12,7 @@ using Hackathon.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Hackathon.DAL.Repositories
 {
@@ -54,13 +55,10 @@ namespace Hackathon.DAL.Repositories
             return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
         }
 
-        public async Task<BaseCollection<EventModel>> GetListAsync(long userId, GetListParameters<EventFilter> parameters)
+        public async Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> parameters)
         {
             var query = _dbContext.Events
-                .AsNoTracking()
-                .Include(x => x.Teams)
-                    .ThenInclude(x => x.Members)
-                .AsQueryable();
+                .AsNoTracking();
 
             if (parameters.Filter is not null)
             {
@@ -123,15 +121,31 @@ namespace Hackathon.DAL.Repositories
                 };
             }
 
-            var eventModels = await query
-                .Skip(parameters.Offset)
-                .Take(parameters.Limit)
-                .ProjectToType<EventModel>(_mapper.Config)
-                .ToListAsync();
+            var items = await query
+                .Include(x=>x.Teams)
+                .ThenInclude(x=>x.Members)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.OwnerId,
+                    x.Owner,
+                    x.Start,
+                    x.Status,
+                    x.MaxEventMembers,
+                    x.MinTeamMembers,
+                    x.IsCreateTeamsAutomatically,
 
-            return new BaseCollection<EventModel>
+                    TeamsCount = x.Teams.Count,
+                    MembersCount = x.Teams.Sum(z => z.Members.Count)
+                }).Skip(parameters.Offset)
+                .Take(parameters.Limit)
+                .ProjectToType<EventListItem>()
+                .ToArrayAsync();
+
+            return new BaseCollection<EventListItem>
             {
-                Items = eventModels,
+                Items = items,
                 TotalCount = totalCount
             };
         }
