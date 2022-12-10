@@ -8,6 +8,7 @@ export const environment = {
   hubs:{
     notification: "http://localhost:5000/hubs/notifications",
     chat: "http://localhost:5000/hubs/chat",
+    friendship: "http://localhost:5000/hubs/friendship"
   },
   reCaptchaKey: "6Lew_2YeAAAAAFuRFhML7FxNeiD4wZnrX6x9GF_a",
   captchaEnabled: false,

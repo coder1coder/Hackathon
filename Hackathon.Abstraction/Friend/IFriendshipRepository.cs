@@ -8,11 +8,12 @@ namespace Hackathon.Abstraction.Friend;
 public interface IFriendshipRepository
 {
     /// <summary>
-    /// Получить список друзей
+    /// Получить список пользователей по статусу дружбы
     /// </summary>
     /// <param name="userId"></param>
+    /// <param name="status"></param>
     /// <returns></returns>
-    Task<BaseCollection<UserModel>> GetFriendsAsync(long userId);
+    Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status);
 
     /// <summary>
     /// Добавить или принять предложение дружбы
@@ -27,6 +28,8 @@ public interface IFriendshipRepository
     /// <param name="status">Статус</param>
     /// <returns></returns>
     Task UpdateStatusAsync(long proposerId, long userId, FriendshipStatus status);
+
+    Task UpdateFriendship(long proposerId, long userId, Friendship parameters);
 
     /// <summary>
     /// Получить предложение дружбы

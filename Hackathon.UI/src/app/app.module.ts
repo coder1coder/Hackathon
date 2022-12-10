@@ -54,6 +54,10 @@ import { ProfileImageComponent } from "./components/profile/image/profile-image.
 import {EventCardComponent} from "./components/event/card/event.card.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
+import {
+  FriendshipOfferButtonComponent
+} from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
+import {FriendsListComponent} from "./components/friendship/list/friends-list.component";
 
 @NgModule({
   declarations: [
@@ -89,6 +93,9 @@ import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
     NotificationBellComponent,
     NotificationListComponent,
     NotificationInfoViewComponent,
+
+    FriendshipOfferButtonComponent,
+    FriendsListComponent,
 
     ToolbarComponent,
     DefaultLayoutComponent,

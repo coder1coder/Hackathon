@@ -8,6 +8,9 @@ public class FriendOfferEntityConfiguration: IEntityTypeConfiguration<Friendship
 {
     public void Configure(EntityTypeBuilder<FriendshipEntity> builder)
     {
-        builder.HasKey(x => new {x.ProposerId, x.UserId});
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedNever();
+
+        builder.HasIndex(x => new {x.ProposerId, x.UserId}).IsUnique();
     }
 }

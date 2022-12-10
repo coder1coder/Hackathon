@@ -1,28 +1,33 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {AfterViewChecked, AfterViewInit, Component, ViewChild} from "@angular/core";
 import {UserRoleTranslator} from "src/app/models/User/UserRole";
 import {AuthService} from "../../../services/auth.service";
 import {KeyValue} from "@angular/common";
 import {TeamService} from "../../../services/team.service";
-import {catchError, Observable, of, switchMap} from "rxjs";
+import {catchError, of, switchMap} from "rxjs";
 import {IUser} from "../../../models/User/IUser";
 import {UserProfileReaction} from "src/app/models/User/UserProfileReaction";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {UserProfileReactionService} from "../../../services/user-profile-reaction.service";
 import {SnackService} from "../../../services/snack.service";
+import {FriendshipStatus} from "../../../models/Friendship/FriendshipStatus";
+import {MatTabGroup} from "@angular/material/tabs";
 
 @Component({
   templateUrl: './profile.view.component.html',
   styleUrls:['./profile.view.component.scss']
 })
-export class ProfileViewComponent implements AfterViewInit {
+export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
 
   UserRoleTranslator = UserRoleTranslator;
+  @ViewChild(MatTabGroup) public friendshipTabs!: MatTabGroup;
 
   public userProfileDetails: KeyValue<string,any>[] = [];
 
   userId: number;
   user?: IUser;
+
+  authUserId: number;
 
   canUploadImage: boolean = false;
 
@@ -30,6 +35,7 @@ export class ProfileViewComponent implements AfterViewInit {
 
   userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   UserProfileReaction = UserProfileReaction;
+  FriendshipStatus = FriendshipStatus;
   Object = Object;
 
   availableReactions: string[] = [];
@@ -46,10 +52,24 @@ export class ProfileViewComponent implements AfterViewInit {
     this.usersService = usersService;
     this.snackBar = snackBar;
 
-    this.userId = this.activateRoute.snapshot.params['userId'] ?? this.authService.getUserId();
+    this.authUserId = this.authService.getUserId() ?? 0;
+    this.userId = this.activateRoute.snapshot.params['userId'] ?? this.authUserId;
+  }
+
+  public ngAfterViewChecked(): void {
+
+    if (this.userId == this.authUserId)
+    {
+      setTimeout(() =>{
+        this.friendshipTabs?.realignInkBar()
+      }, 0);
+    }
+
   }
 
   ngAfterViewInit(): void {
+
+
 
     this.isLoading = true;
 
@@ -70,7 +90,10 @@ export class ProfileViewComponent implements AfterViewInit {
           { key: 'Роль', value: user?.role!.toString()},
         ]
 
-        this.fetchReactions();
+        if (this.userId != this.authUserId)
+        {
+          this.fetchReactions();
+        }
 
         return this.teamService.getMyTeam()
       }),
@@ -86,7 +109,7 @@ export class ProfileViewComponent implements AfterViewInit {
 
   public toggleReaction(event: Event, reaction: UserProfileReaction):void {
     this.userProfileReactionService.toggleReaction(this.userId, reaction)
-      .subscribe((r)=>{
+      .subscribe((_)=>{
         this.fetchReactions();
       });
   }
@@ -101,10 +124,6 @@ export class ProfileViewComponent implements AfterViewInit {
 
   public isReactionActive(reaction: UserProfileReaction):boolean {
     return (this.userProfileReactions & reaction) === reaction;
-  }
-
-  private fetchUser(): Observable<IUser> | null {
-    return this.usersService.getById(this.userId);
   }
 
   private fetchReactions() {

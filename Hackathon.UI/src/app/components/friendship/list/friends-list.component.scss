@@ -1,0 +1,29 @@
+:host {
+
+  .friends-list{
+    &__item {
+
+      &-actions {
+        padding-right: 1em;
+      }
+
+      &-user {
+        cursor: pointer;
+
+        &:hover {
+          color: #3f51b5;
+        }
+      }
+    }
+  }
+
+  .no-data-text {
+    color: #9FA2B4;
+    padding-top: 1em;
+    padding-left: 16px;
+  }
+
+}
+
+
+

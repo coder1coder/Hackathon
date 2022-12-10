@@ -9,10 +9,10 @@ namespace Hackathon.API.Abstraction;
 
 public interface IFriendshipApi
 {
-    private const string BaseRoute = "/api/friend";
+    private const string BaseRoute = "/api/friendship";
 
     [Post(BaseRoute + "/offers/list")]
-    Task<BaseCollectionResponse<Friendship>> GetOffers([Body] GetListParameters<FriendshipGetOffersFilter> request);
+    Task<BaseCollectionResponse<Friendship>> GetOffers([Body] GetListParameters<FriendshipGetOffersFilter> parameters);
 
     /// <summary>
     /// Создать или принять предложение дружбы
