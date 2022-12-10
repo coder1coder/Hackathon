@@ -21,26 +21,25 @@ public class FriendshipRepository: IFriendshipRepository
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
-    
+
     public FriendshipRepository(
-        ApplicationDbContext dbContext, 
+        ApplicationDbContext dbContext,
         IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.GetFriendsAsync"/>
-    public async Task<BaseCollection<UserModel>> GetFriendsAsync(long userId)
+    public async Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status)
     {
         var friendships = await _dbContext.Friendships
             .AsNoTracking()
             .Where(x =>
-                (x.ProposerId == userId 
+                (x.ProposerId == userId
                 || x.UserId == userId)
-            && x.Status == FriendshipStatus.Confirmed
+            && x.Status == status
             ).ToArrayAsync();
-            
+
         var friendsIds = friendships
             .SelectMany(x=> new []{ x.ProposerId, x.UserId })
             .Where(x=> x != userId)
@@ -59,7 +58,6 @@ public class FriendshipRepository: IFriendshipRepository
         };
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.CreateOfferAsync"/>
     public async Task CreateOfferAsync(long proposerId, long userId)
     {
         var hasOffer = await _dbContext.Friendships
@@ -71,6 +69,7 @@ public class FriendshipRepository: IFriendshipRepository
         {
             _dbContext.Friendships.Add(new FriendshipEntity
             {
+                Id = Guid.NewGuid(),
                 ProposerId = proposerId,
                 UserId = userId,
                 Status = FriendshipStatus.Pending
@@ -80,7 +79,6 @@ public class FriendshipRepository: IFriendshipRepository
         }
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.UpdateStatusAsync"/>
     public async Task UpdateStatusAsync(long proposerId, long userId, FriendshipStatus status)
     {
         var entity = await _dbContext
@@ -96,15 +94,32 @@ public class FriendshipRepository: IFriendshipRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.GetOfferAsync"/>
+    public async Task UpdateFriendship(long proposerId, long userId, Friendship parameters)
+    {
+        var entity = await _dbContext
+            .Friendships
+            .FirstOrDefaultAsync(x =>
+                x.ProposerId == proposerId
+                && x.UserId == userId);
+
+        if (entity is null)
+            return;
+
+        entity.ProposerId = parameters.ProposerId;
+        entity.UserId = parameters.UserId;
+        entity.Status = parameters.Status;
+
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task<Friendship?> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any)
     {
         Expression<Func<FriendshipEntity, bool>> expression = option switch
         {
             GetOfferOption.Incoming => x => x.UserId == proposerId && x.ProposerId == userId,
             GetOfferOption.Outgoing => x => x.ProposerId == proposerId && x.UserId == userId,
-            _ => x => 
-                (x.ProposerId == proposerId || x.ProposerId == userId) 
+            _ => x =>
+                (x.ProposerId == proposerId || x.ProposerId == userId)
                 && (x.UserId == proposerId || x.UserId == userId)
         };
 
@@ -115,7 +130,6 @@ public class FriendshipRepository: IFriendshipRepository
         return entity?.ToDto();
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.GetOffersAsync"/>
     public async Task<BaseCollection<Friendship>> GetOffersAsync(long userId, GetListParameters<FriendshipGetOffersFilter> parameters)
     {
         var query = _dbContext.Friendships.AsNoTracking();
@@ -128,7 +142,7 @@ public class FriendshipRepository: IFriendshipRepository
                 GetOfferOption.Outgoing => query.Where(x => x.ProposerId == userId),
                 _ => query.Where(x=>x.ProposerId == userId || x.UserId == userId)
             };
-        
+
             if (parameters.Filter.Status.HasValue)
                 query = query.Where(x => x.Status == parameters.Filter.Status);
         }
@@ -146,7 +160,6 @@ public class FriendshipRepository: IFriendshipRepository
         };
     }
 
-    /// <inhertidoc cref="IFriendshipRepository.RemoveOfferAsync"/>
     public async Task RemoveOfferAsync(long proposerId, long userId)
     {
         var offerEntity = await _dbContext.Friendships.FirstOrDefaultAsync(x =>
@@ -156,7 +169,7 @@ public class FriendshipRepository: IFriendshipRepository
 
         if (offerEntity == null)
             throw new EntityNotFoundException("Предложение дружбы не найдено");
-        
+
         _dbContext.Friendships.Remove(offerEntity);
         await _dbContext.SaveChangesAsync();
     }

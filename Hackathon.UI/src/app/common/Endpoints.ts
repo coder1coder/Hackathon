@@ -9,7 +9,6 @@ export class Endpoints {
   public Team: TeamEndpoints = new TeamEndpoints(this.api);
 }
 
-
 export class TeamEndpoints
 {
   constructor(private api: string){}
