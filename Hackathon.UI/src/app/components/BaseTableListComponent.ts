@@ -1,48 +1,53 @@
 import {PageEvent} from "@angular/material/paginator";
-import {AfterViewInit, Directive} from "@angular/core";
+import {AfterViewInit, Directive, OnDestroy} from "@angular/core";
 import {PageSettingsDefaults} from "../models/PageSettings";
 import {GetListParameters} from "../models/GetListParameters";
+import {Subject} from "rxjs";
 
 @Directive()
-export abstract class BaseTableListComponent<T> implements AfterViewInit {
+export abstract class BaseTableListComponent<T> implements AfterViewInit, OnDestroy {
 
   public items: T[] = [];
+  public pageSettings: PageEvent = new PageEvent();
+
   private readonly componentName: string | undefined;
+  protected destroy$ = new Subject();
 
-  pageSettings: PageEvent = new PageEvent();
-
-  protected constructor(private name:string) {
-
+  protected constructor(
+    private name:string
+  ) {
     this.componentName = name;
-
     let pageSettingsJson = sessionStorage.getItem(`${this.componentName}${PageEvent.name}`);
 
     if (pageSettingsJson != null)
       this.pageSettings = JSON.parse(pageSettingsJson)
-    else
-    {
+    else {
       this.pageSettings.pageSize = PageSettingsDefaults.Limit;
       this.pageSettings.pageIndex = 0;
     }
   }
 
-  abstract getDisplayColumns():string[];
-  abstract rowClick(item: T):any;
-  abstract fetch(getFilterModel?: GetListParameters<T>):any;
+  public abstract getDisplayColumns():string[];
+  public abstract rowClick(item: T):any;
+  public abstract fetch(getFilterModel?: GetListParameters<T>):any;
 
   ngAfterViewInit(): void {
     this.fetch();
   }
 
-  public paginatorChanges(event:PageEvent){
+  public paginatorChanges(event:PageEvent): void {
     this.setPageSettings(event);
     this.fetch();
   }
 
-  setPageSettings(event:PageEvent){
+  public setPageSettings(event:PageEvent): void {
     this.pageSettings = event;
     sessionStorage.setItem(`${this.componentName}${PageEvent.name}`, JSON.stringify(event));
     this.fetch();
   }
 
+  public ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
 }

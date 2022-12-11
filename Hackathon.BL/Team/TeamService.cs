@@ -94,14 +94,12 @@ namespace Hackathon.BL.Team
         public async Task<TeamGeneral> GetUserTeam(long userId)
         {
             var teams = await _teamRepository.GetByExpressionAsync(x =>
-                x.Members.Any(u =>
-                    u.MemberId == userId)
-                && x.OwnerId != null || x.OwnerId == userId);
+               x.OwnerId != null && (x.OwnerId == userId || x.Members.Any(s => s.MemberId == userId)));
 
             if (!teams.Any())
                 throw new EntityNotFoundException("Команда не найдена");
 
-            var userTeam = teams.First();
+            var userTeam = teams.FirstOrDefault(x => x.OwnerId == userId);
             userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
 
             return new TeamGeneral

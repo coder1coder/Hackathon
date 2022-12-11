@@ -6,7 +6,7 @@
   (selectedTabChange)="tabChanged($event)"
 >
 
-  <mat-tab class="mat-tab-body-position-absolute">
+  <mat-tab class="mat-tab-body-position-absolute" *ngIf="isTeamMember">
 
     <ng-template mat-tab-label>
       <mat-icon>chat</mat-icon>
