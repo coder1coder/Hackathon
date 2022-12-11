@@ -30,6 +30,7 @@ export class TeamsRouter
   New = (eventId?:number) => this.router.navigate(["/teams/new"], { queryParams: { eventId: eventId } })
   View = (teamId:number) => this.router.navigateByUrl(`team/${teamId}`)
   List = () => this.router.navigate([`teams`])
+  MyTeam = () => this.router.navigate(['team'])
 }
 
 @Injectable({ providedIn: 'root' })

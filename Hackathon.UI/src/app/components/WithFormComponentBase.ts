@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms'
 import { Subject } from 'rxjs';
 
 @Injectable()
-export abstract class ComponentBase implements OnDestroy {
+export abstract class WithFormComponentBase implements OnDestroy {
   public abstract form: FormGroup;
   public validators = Validators;
 

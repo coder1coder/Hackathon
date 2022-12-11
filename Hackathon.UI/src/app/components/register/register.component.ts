@@ -7,7 +7,7 @@ import { Location } from "@angular/common";
 import { IProblemDetails } from "../../models/IProblemDetails";
 import { SnackService } from "../../services/snack.service";
 import { takeUntil } from 'rxjs';
-import {ComponentBase} from "../ComponentBase";
+import {WithFormComponentBase} from "../WithFormComponentBase";
 import {RouterService} from "../../services/router.service";
 
 @Component({
@@ -16,7 +16,7 @@ import {RouterService} from "../../services/router.service";
   styleUrls: ['./register.component.scss'],
 })
 
-export class RegisterComponent extends ComponentBase implements OnInit {
+export class RegisterComponent extends WithFormComponentBase implements OnInit {
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';
   public isLoading: boolean = false;

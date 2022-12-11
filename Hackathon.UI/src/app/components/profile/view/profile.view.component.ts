@@ -68,9 +68,6 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
   }
 
   ngAfterViewInit(): void {
-
-
-
     this.isLoading = true;
 
     this.usersService.getById(this.userId)
@@ -87,7 +84,7 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
           { key: 'Имя пользователя', value: user?.userName},
           { key: 'Полное имя', value: user?.fullName},
           { key: 'E-mail', value: user?.email!},
-          { key: 'Роль', value: user?.role!.toString()},
+          { key: 'Роль', value: this.UserRoleTranslator.Translate(user?.role) },
         ]
 
         if (this.userId != this.authUserId)

@@ -14,8 +14,8 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
 
             RuleFor(x => x.Description)
                 .NotEmpty()
-                .MinimumLength(400)
-                .WithMessage("Описание должно содержать минимум 400 символов");
+                .MinimumLength(100)
+                .WithMessage("Описание должно содержать минимум 100 символов");
 
             RuleFor(x => x.Start)
                .GreaterThan(DateTime.UtcNow)

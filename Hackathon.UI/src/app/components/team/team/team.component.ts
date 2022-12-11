@@ -6,6 +6,7 @@ import {EventFilter} from "../../../models/Event/EventFilter";
 import {GetListParameters} from "../../../models/GetListParameters";
 import {MatTabChangeEvent} from "@angular/material/tabs";
 import {IEventListItem} from "../../../models/Event/IEventListItem";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'team',
@@ -14,19 +15,26 @@ import {IEventListItem} from "../../../models/Event/IEventListItem";
 })
 export class TeamComponent {
 
-  @Input() team?: Team
+  @Input() team: Team;
 
-  public teamEvents:IEventListItem[] = [];
+  public teamEvents: IEventListItem[] = [];
+  public userId = this.authService.getUserId();
 
   constructor(
     public router:RouterService,
-    private eventService:EventService) {
+    private eventService:EventService,
+    private authService: AuthService
+  ) {
   }
 
-  public tabChanged(event: MatTabChangeEvent){
+  public get isTeamMember(): boolean {
+    if (!Boolean(this.team)) return false;
+    if (this.team.owner?.id === this.userId) return true;
+    return this.team?.members.some(member => member.id === this.userId);
+  }
 
-    if (event.index == 2 && this.team != null)
-    {
+  public tabChanged(event: MatTabChangeEvent): void {
+    if (event.index == 2 && this.team != null) {
       let getList = new GetListParameters<EventFilter>();
       getList.Filter = new EventFilter();
       getList.Filter.teamsIds = [ this.team.id ];

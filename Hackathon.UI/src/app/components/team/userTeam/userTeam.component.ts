@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { RouterService } from "../../../services/router.service";
-import { TeamService } from "../../../services/team.service";
-import { Team } from "../../../models/Team/Team";
-import { AuthService } from "../../../services/auth.service";
-import { Router } from "@angular/router";
+import {Component, OnInit} from "@angular/core";
+import {RouterService} from "../../../services/router.service";
+import {TeamService} from "../../../services/team.service";
+import {Team} from "../../../models/Team/Team";
+import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
 import {finalize} from "rxjs/operators";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'userTeam',
@@ -12,11 +13,11 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['userTeam.component.scss']
 })
 
-export class UserTeamComponent implements OnInit
-{
-  public team?:Team;
-  public isLoading = true;
+export class UserTeamComponent implements OnInit {
+  public team: Team;
+  public isLoading: boolean = true;
 
+  private destroy$ = new Subject();
   constructor(
     public routerService: RouterService,
     private teamService: TeamService,
@@ -25,19 +26,18 @@ export class UserTeamComponent implements OnInit
   ) {}
 
   ngOnInit(): void {
-      if (!this.authService.isLoggedIn())
-      return;
+    if (!this.authService.isLoggedIn()) return;
 
     this.teamService.getMyTeam()
       .pipe(
+        takeUntil(this.destroy$),
         finalize(() => this.isLoading = false),
       )
       .subscribe({
-        next: (res) =>
-        {
+        next: (res) => {
           this.team = res;
         },
-        error: (_) => {
+        error: () => {
           this.isLoading = false;
         }
       });
@@ -46,6 +46,7 @@ export class UserTeamComponent implements OnInit
   public leaveTeam(): void  {
     if (this.team !== undefined) {
       this.teamService.leaveTeam(this.team?.id)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.navigate([this.router.url]);
