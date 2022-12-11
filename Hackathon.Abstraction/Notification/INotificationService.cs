@@ -14,10 +14,8 @@ public interface INotificationService
     /// <returns></returns>
     Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId);
 
-    /// <inheritdoc cref="INotificationRepository.MarkAsRead"/>
     Task MarkAsRead(long userId, Guid[] ids);
 
-    /// <inheritdoc cref="INotificationRepository.Delete(long, Guid[])"/>
     Task Delete(long userId, Guid[]? ids = null);
 
     /// <summary>
@@ -27,7 +25,7 @@ public interface INotificationService
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     Task Push<T>(CreateNotificationModel<T> model) where T : class;
-    
+
     /// <summary>
     /// Отправить несколько уведомлений
     /// </summary>

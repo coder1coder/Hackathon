@@ -16,15 +16,13 @@ public class ChatRepository: RedisRepository, IChatRepository
     public ChatRepository(IConnectionMultiplexer connectionMultiplexer):base(connectionMultiplexer)
     {
     }
-    
-    /// <inheritdoc cref="IChatRepository.AddMessage"/>
+
     public async Task AddMessage(ChatMessageEntity entity)
     {
         var value = JsonSerializer.Serialize(entity);
         await RedisDatabase.SetAddAsync(GetRedisKey(entity), new RedisValue(value));
     }
 
-    /// <inheritdoc cref="IChatRepository.GetTeamChatMessages"/>
     public async Task<BaseCollection<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300)
     {
         var items = RedisDatabase.SetScan(GetRedisKey(new ChatMessageEntity
@@ -32,7 +30,7 @@ public class ChatRepository: RedisRepository, IChatRepository
             TeamId = teamId,
             Context = ChatMessageContext.TeamChat
         }))
-        .Select(x => 
+        .Select(x =>
             JsonConvert.DeserializeObject<ChatMessageEntity>(x))
         .ToArray();
 
@@ -46,7 +44,7 @@ public class ChatRepository: RedisRepository, IChatRepository
                 .Select(x=>x.ToTeamChatMessage())
                 .OrderBy(x=>x.Timestamp)
                 .ToArray(),
-            
+
             TotalCount = totalCount
         });
     }
@@ -54,7 +52,7 @@ public class ChatRepository: RedisRepository, IChatRepository
     private static string GetRedisKey(ChatMessageEntity entity)
     {
         const string redisKeyPrefix = "chat:";
-        
+
         return entity.Context switch
         {
             ChatMessageContext.TeamChat => new RedisKey($"{redisKeyPrefix}team:{entity.TeamId}"),

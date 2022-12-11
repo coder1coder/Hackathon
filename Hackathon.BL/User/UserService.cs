@@ -48,7 +48,6 @@ namespace Hackathon.BL.User
             _mapper = mapper;
         }
 
-        /// <inheritdoc cref="IUserService.CreateAsync(SignUpModel)"/>
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             await _signUpModelValidator.ValidateAndThrowAsync(signUpModel);
@@ -59,7 +58,6 @@ namespace Hackathon.BL.User
             return await _userRepository.CreateAsync(signUpModel);
         }
 
-        /// <inheritdoc cref="IUserService.SignInAsync(SignInModel)"/>
         public async Task<AuthTokenModel> SignInAsync(SignInModel signInModel)
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
@@ -86,7 +84,6 @@ namespace Hackathon.BL.User
             return GenerateToken(user);
         }
 
-        /// <inheritdoc cref="IUserService.SignInByGoogle"/>
         public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
         {
             var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(signInByGoogleModel.Id, signInByGoogleModel.Email);
@@ -113,7 +110,6 @@ namespace Hackathon.BL.User
             return GenerateToken(userModel);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
             if (!await _userRepository.IsExistAsync(userId))
@@ -122,11 +118,9 @@ namespace Hackathon.BL.User
             return await _userRepository.GetAsync(userId);
         }
 
-        /// <inheritdoc cref="IUserService.GetAsync(GetListParameters{UserFilter})"/>
         public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters)
             => await _userRepository.GetAsync(getListParameters);
 
-        /// <inheritdoc cref="IUserService.GenerateToken(UserModel)"/>
         public AuthTokenModel GenerateToken(UserModel user)
         {
             var expires = DateTimeOffset.UtcNow.AddMinutes(_appSettings.AuthOptions.LifeTime);
@@ -166,7 +160,6 @@ namespace Hackathon.BL.User
             };
         }
 
-        /// <inheritdoc cref="IUserService.UploadProfileImageAsync(long, string, Stream)"/>
         public async Task<Guid> UploadProfileImageAsync(long userId, string filename, Stream stream)
         {
             var existedUser = await GetAsync(userId);

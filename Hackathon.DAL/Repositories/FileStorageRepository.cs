@@ -21,7 +21,6 @@ public class FileStorageRepository: IFileStorageRepository
         _memoryCache = memoryCache;
     }
 
-    /// <inheritdoc cref="IFileStorageRepository.Add"/>
     public async Task AddAsync(StorageFile storageFile)
     {
         var entity = _mapper.Map<FileStorageEntity>(storageFile);
@@ -29,7 +28,6 @@ public class FileStorageRepository: IFileStorageRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    /// <inheritdoc cref="IFileStorageRepository.Get"/>
     public async Task<StorageFile> GetAsync(Guid id)
     {
         if (!_memoryCache.TryGetValue(id, out FileStorageEntity entity))
@@ -52,7 +50,6 @@ public class FileStorageRepository: IFileStorageRepository
         return _mapper.Map<StorageFile>(entity);
     }
 
-    /// <inheritdoc cref="IFileStorageRepository.Remove"/>
     public async Task RemoveAsync(Guid id)
     {
         var entity =  await _dbContext.StorageFiles

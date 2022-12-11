@@ -26,7 +26,6 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IProjectRepository.CreateAsync(ProjectCreateModel)"/>
         public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
         {
             var projectEntity = _mapper.Map<ProjectEntity>(projectCreateModel);
@@ -35,7 +34,6 @@ namespace Hackathon.DAL.Repositories
             return projectEntity.Id;
         }
 
-        /// <inheritdoc cref="IProjectRepository.GetListAsync(GetListParameters{ProjectFilter})"/>
         public async Task<BaseCollection<ProjectListItem>> GetListAsync(GetListParameters<ProjectFilter> parameters)
         {
             var query = _dbContext.Projects
@@ -43,15 +41,15 @@ namespace Hackathon.DAL.Repositories
                 .Include(x => x.Team)
                 .AsNoTracking()
                 .AsQueryable();
-            
+
             if (parameters.Filter?.Ids != null)
                 query = query.Where(x=>
                     parameters.Filter.Ids.Contains(x.Id));
-            
+
             if (parameters.Filter?.EventsIds != null)
                 query = query.Where(x=>
                     parameters.Filter.EventsIds.Contains(x.EventId));
-                
+
             if (parameters.Filter?.TeamsIds != null)
                 query = query.Where(x=>
                         parameters.Filter.TeamsIds.Contains(x.TeamId));

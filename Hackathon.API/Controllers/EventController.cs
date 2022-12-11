@@ -80,7 +80,6 @@ public class EventController: BaseController
     public async Task<EventModel> Get([FromRoute] long id)
         => await _eventService.GetAsync(id);
 
-    ///<inheritdoc cref="IEventApi.Join"/>
     [HttpPost("{eventId:long}/join")]
     public async Task Join(long eventId)
         => await _eventService.JoinAsync(eventId, UserId);

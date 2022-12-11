@@ -45,7 +45,6 @@ namespace Hackathon.BL.Team
             _projectRepository = projectRepository;
         }
 
-        /// <inheritdoc cref="ITeamService.CreateAsync(CreateTeamModel)"/>
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
@@ -73,25 +72,21 @@ namespace Hackathon.BL.Team
             return await _teamRepository.CreateAsync(createTeamModel);
         }
 
-        /// <inheritdoc cref="ITeamService.AddMemberAsync(TeamMemberModel)"/>
         public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
         {
             await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamMemberModel);
             await _teamRepository.AddMemberAsync(teamMemberModel);
         }
 
-        /// <inheritdoc cref="ITeamService.GetAsync(long)"/>
         public async Task<TeamModel> GetAsync(long teamId)
             => await _teamRepository.GetAsync(teamId);
 
-        /// <inheritdoc cref="ITeamService.GetAsync(GetListParameters{TeamFilter})"/>
         public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> getListParameters)
         {
             await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
-            return await _teamRepository.GetAsync(getListParameters); 
+            return await _teamRepository.GetAsync(getListParameters);
         }
 
-        /// <inheritdoc cref="ITeamService.GetUserTeam(long)"/>
         public async Task<TeamGeneral> GetUserTeam(long userId)
         {
             var teams = await _teamRepository.GetByExpressionAsync(x =>
@@ -113,7 +108,6 @@ namespace Hackathon.BL.Team
             };
         }
 
-        /// <inheritdoc cref="ITeamService.RemoveMemberAsync(TeamMemberModel)"/>
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
         {
             // Определить роль участика. Владелец / участник
@@ -161,7 +155,6 @@ namespace Hackathon.BL.Team
                 await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
 
-        /// <inheritdoc cref="ITeamService.GetTeamEvents(long, PaginationSort)"/>
         public async Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort)
         {
             var isTeamExists = await _teamRepository.ExistAsync(teamId);

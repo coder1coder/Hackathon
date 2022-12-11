@@ -24,7 +24,6 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="ITeamRepository.CreateAsync(CreateTeamModel)"/>
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
         {
             var createTeamEntity = _mapper.Map<TeamEntity>(createTeamModel);
@@ -47,7 +46,6 @@ namespace Hackathon.DAL.Repositories
             return createTeamEntity.Id;
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetAsync(long)"/>
         public async Task<TeamModel> GetAsync(long teamId)
         {
             var teamEntity = await _dbContext.Teams
@@ -62,7 +60,6 @@ namespace Hackathon.DAL.Repositories
             return _mapper.Map<TeamModel>(teamEntity);
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetAsync(GetListParameters{TeamFilter})"/>
         public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters)
         {
             var query = _dbContext.Teams
@@ -128,19 +125,16 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        /// <inheritdoc cref="ITeamRepository.ExistAsync(string)"/>
         public async Task<bool> ExistAsync(string teamName)
             => await _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Name.ToLower() == teamName.ToLower());
 
-        /// <inheritdoc cref="ITeamRepository.ExistAsync(long)"/>
         public async Task<bool> ExistAsync(long teamId)
             => await _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == teamId);
 
-        /// <inheritdoc cref="ITeamRepository.AddMemberAsync(TeamMemberModel)"/>
         public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams
@@ -166,7 +160,6 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="ITeamRepository.RemoveMemberAsync(TeamMemberModel)"/>
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams
@@ -201,7 +194,6 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-        /// <inheritdoc cref="ITeamRepository.ChangeTeamOwnerAsync(ChangeOwnerModel)"/>
         public async Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel)
         {
             var teamEntity = await _dbContext.Teams
@@ -216,7 +208,6 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="ITeamRepository.DeleteTeamAsync(long)"/>
         public async Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel)
         {
             var teamEntity = await _dbContext.Teams
@@ -229,7 +220,6 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="ITeamRepository.GetMembersCountAsync(long)"/>
         public async Task<int> GetMembersCountAsync(long teamId)
         {
             var teamEntity = await _dbContext.Teams

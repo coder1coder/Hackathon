@@ -26,7 +26,6 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc cref="IUserRepository.CreateAsync(SignUpModel)"/>
         public async Task<long> CreateAsync(SignUpModel signUpModel)
         {
             var entity = _mapper.Map<UserEntity>(signUpModel);
@@ -37,7 +36,6 @@ namespace Hackathon.DAL.Repositories
             return entity.Id;
         }
 
-        /// <inheritdoc cref="IUserRepository.GetAsync(long)"/>
         public async Task<UserModel> GetAsync(long userId)
         {
             var entity = await _dbContext.Users
@@ -48,7 +46,6 @@ namespace Hackathon.DAL.Repositories
             return entity == null ? null : _mapper.Map<UserModel>(entity);
         }
 
-        /// <inheritdoc cref="IUserRepository.GetByGoogleIdOrEmailAsync"/>
         public async Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email)
         {
             var entity = await _dbContext.Users
@@ -61,7 +58,6 @@ namespace Hackathon.DAL.Repositories
             return entity != null ? _mapper.Map<UserModel>(entity) : null;
         }
 
-        /// <inheritdoc cref="IUserRepository.UpdateGoogleAccount"/>
         public async Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel)
         {
             var entity = await _dbContext.GoogleAccounts
@@ -74,7 +70,6 @@ namespace Hackathon.DAL.Repositories
             }
         }
 
-        /// <inheritdoc cref="IUserRepository.GetAsync(GetListParameters{UserFilter})"/>
         public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> parameters)
         {
             var query = _dbContext.Users
@@ -133,7 +128,6 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        /// <inheritdoc cref="IUserRepository.IsExistAsync"/>
         public async Task<bool> IsExistAsync(long userId)
         {
             return await _dbContext.Users
@@ -141,7 +135,6 @@ namespace Hackathon.DAL.Repositories
                 .AnyAsync(x => x.Id == userId);
         }
 
-        /// <inheritdoc cref="IUserRepository.UpdateProfileImageAsync(long, Guid)"/>
         public async Task UpdateProfileImageAsync(long userId, Guid profileImageId)
         {
             var entity = await _dbContext.Users
