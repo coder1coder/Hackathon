@@ -5,9 +5,10 @@ import {Team} from "../../../models/Team/Team";
 import {TeamService} from "../../../services/team.service";
 import {AuthService} from "../../../services/auth.service";
 import {GetListParameters} from 'src/app/models/GetListParameters';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {TeamFilter} from 'src/app/models/Team/TeamFilter';
 import {RouterService} from "../../../services/router.service";
+import {takeUntil} from "rxjs";
 
 @Component({
   selector: 'team-list',
@@ -18,34 +19,33 @@ import {RouterService} from "../../../services/router.service";
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {
 
-  userId!:number | undefined;
-
-  form = new FormGroup({
-    teamName: new FormControl(),
-    owner: new FormControl(),
-    QuantityUsersFrom: new FormControl(),
-    QuantityUsersTo: new FormControl()
-  })
+  public userId: number | undefined = this.authService.getUserId();
+  public form = this.fb.group({
+    teamName: [null],
+    owner: [null],
+    QuantityUsersFrom: [null],
+    QuantityUsersTo: [null]
+  });
 
   constructor(
     private teamService: TeamService,
     private authService: AuthService,
-    private router: RouterService) {
+    private router: RouterService,
+    private fb: FormBuilder
+  ) {
     super(TeamListComponent.name);
-    this.userId = authService.getUserId();
   }
 
-  createNewItem(){
-    this.router.Teams.New();
-  }
+  public createNewItem = () => this.router.Teams.New();
+  public getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'actions'];
 
-  override fetch(){
+  public override fetch(): void {
     let teamFilterModel = new TeamFilter();
     teamFilterModel.name =  this.form.get('teamName')?.value;
     teamFilterModel.owner =  this.form.get('owner')?.value;
     teamFilterModel.hasOwner = true;
-    teamFilterModel.quantityMembersFrom =  this.form.get('QuantityUsersFrom')?.value;
-    teamFilterModel.quantityMembersTo =  this.form.get('QuantityUsersTo')?.value;
+    teamFilterModel.quantityMembersFrom = this.form.get('QuantityUsersFrom')?.value;
+    teamFilterModel.quantityMembersTo = this.form.get('QuantityUsersTo')?.value;
 
     let getFilterModel = new GetListParameters<TeamFilter>();
     getFilterModel.Offset = this.pageSettings.pageIndex;
@@ -53,6 +53,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
     getFilterModel.Filter = teamFilterModel;
 
     this.teamService.getByFilter(getFilterModel)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (r: BaseCollection<Team>) =>  {
           this.items = r.items;
@@ -62,14 +63,16 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
       });
   }
 
-  clearFilter() {
-    this.form.reset('teamName');
-    this.form.reset('owner');
-    this.form.reset('QuantityFrom');
-    this.form.reset('QuantityTo');
+  public clearFilter(): void {
+    this.form.reset();
     this.fetch();
   }
 
-  rowClick = (item: Team) => this.router.Teams.View(item.id);
-  getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'actions'];
+  public rowClick = (item: Team) => {
+    if (item.owner?.id === this.userId) {
+      this.router.Teams.MyTeam();
+    } else {
+      this.router.Teams.View(item.id);
+    }
+  };
 }

@@ -52,6 +52,7 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .Include(x=>x.Owner)
                 .Include(x=>x.Members)
+                    .ThenInclude(x=>x.Member)
                 .SingleOrDefaultAsync(x=>x.Id == teamId);
 
             if (teamEntity == null)

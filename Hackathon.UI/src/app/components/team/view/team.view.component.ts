@@ -16,7 +16,7 @@ export class TeamViewComponent implements AfterViewInit {
 
   @Input() teamId?:number;
 
-  team?: Team;
+  public team: Team;
   teamDataSource = new MatTableDataSource<KeyValue<string, string>>([]);
 
   isLoading: boolean = true;
