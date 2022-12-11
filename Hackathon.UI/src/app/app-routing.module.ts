@@ -11,11 +11,11 @@ import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamNewComponent} from "./components/team/new/team.new.component";
 import {NotificationListComponent} from "./components/notification/list/notification.list.component";
 import {RedirectService} from "./services/redirect.service";
-import {UserTeamComponent} from "./components/team/user/userTeam.component";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
 import {EventCardComponent} from "./components/event/card/event.card.component";
 import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
+import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},

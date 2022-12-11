@@ -4,6 +4,7 @@
   title="{{ team ? 'Моя команда: ' + team?.name : 'Вы не состоите в команде' }}">
 
   <team [team]="team" *ngIf="team"></team>
+
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
     <button mat-button color="accent" (click)="leaveTeam()">Покинуть команду</button>

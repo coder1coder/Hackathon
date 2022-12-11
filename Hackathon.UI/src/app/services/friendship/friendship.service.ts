@@ -12,7 +12,6 @@ import {
   FriendshipChangedIntegrationEvent
 } from "../../models/IntegrationEvent/IFriendshipChangedIntegrationEvent";
 import {IUser} from "../../models/User/IUser";
-import {User} from "../../models/User/User";
 
 @Injectable({
   providedIn: 'root'
