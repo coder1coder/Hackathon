@@ -7,11 +7,15 @@ namespace Hackathon.Entities
     /// </summary>
     public class MemberTeamEntity
     {
-        /// Команды
+        /// <summary>
+        /// Идентификатор команды
+        /// </summary>
         public long TeamId { get; set; }
         public TeamEntity Team { get; set; } = new();
 
-        /// Участники
+        /// <summary>
+        /// Идентификатор участника команды
+        /// </summary>
         public long MemberId { get; set; }
         public UserEntity Member { get; set; } = new();
 

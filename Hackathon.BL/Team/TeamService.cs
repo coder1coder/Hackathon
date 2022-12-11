@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -11,14 +12,14 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
+using Hackathon.Common.Models.User;
+using MapsterMapper;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
-
-
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
@@ -28,13 +29,15 @@ namespace Hackathon.BL.Team
         private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
         private readonly IValidator<GetListParameters<TeamFilter>> _getFilterModelValidator;
 
+        private readonly IMapper _mapper;
+
         public TeamService(
             IValidator<CreateTeamModel> createTeamModelValidator,
             IValidator<TeamMemberModel> teamAddMemberModelValidator,
             IValidator<GetListParameters<TeamFilter>> getFilterModelValidator,
             ITeamRepository teamRepository,
             IEventRepository eventRepository,
-            IProjectRepository projectRepository)
+            IProjectRepository projectRepository, IMapper mapper)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
@@ -43,6 +46,7 @@ namespace Hackathon.BL.Team
             _teamRepository = teamRepository;
             _eventRepository = eventRepository;
             _projectRepository = projectRepository;
+            _mapper = mapper;
         }
 
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
@@ -90,21 +94,22 @@ namespace Hackathon.BL.Team
         public async Task<TeamGeneral> GetUserTeam(long userId)
         {
             var teams = await _teamRepository.GetByExpressionAsync(x =>
-                (x.Members.Any(u => u.MemberId == userId) && x.OwnerId != null)
-                || x.OwnerId == userId);
+                x.Members.Any(u =>
+                    u.MemberId == userId)
+                && x.OwnerId != null || x.OwnerId == userId);
 
             if (!teams.Any())
                 throw new EntityNotFoundException("Команда не найдена");
 
             var userTeam = teams.First();
-            userTeam.Members.Add(userTeam.Owner);
+            userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
 
             return new TeamGeneral
             {
                 Id = userTeam.Id,
                 Name = userTeam.Name,
-                Owner = userTeam.Owner,
-                Members = userTeam.Members.ToArray()
+                Owner = _mapper.Map<UserModel, UserShortModel>(userTeam.Owner),
+                Members = _mapper.Map<UserModel[], UserShortModel[]>(userTeam.Members)
             };
         }
 
@@ -119,7 +124,7 @@ namespace Hackathon.BL.Team
             if (isOwnerMember)
             {
                 if (team.Members != null
-                    && team.Members.Count > 0)
+                    && team.Members.Length > 0)
                 {
                     // кому теперь будет принадлежать команда
                     // пользователь раньше остальных вступил в команду

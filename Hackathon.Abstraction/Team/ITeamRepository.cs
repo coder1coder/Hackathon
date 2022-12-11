@@ -61,8 +61,9 @@ namespace Hackathon.Abstraction.Team
         /// Получить команды в соответствии с выборкой
         /// </summary>
         /// <param name="expression">Выражение</param>
+        /// <param name="includes">Навигационные свойства, которые необходимо включить в результаты</param>
         /// <returns></returns>
-        Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression);
+        Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression, string[] includes = null);
 
         /// <summary>
         /// Изменить владельца команды

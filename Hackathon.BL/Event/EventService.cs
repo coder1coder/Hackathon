@@ -121,7 +121,7 @@ namespace Hackathon.BL.Event
 
             var notFullTeams = eventModel
                 .Teams
-                .Where(x => x.Members?.Count < eventModel.MinTeamMembers)
+                .Where(x => x.Members?.Length < eventModel.MinTeamMembers)
                 .ToArray();
 
              var teamId = notFullTeams.Any()
