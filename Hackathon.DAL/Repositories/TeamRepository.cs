@@ -185,14 +185,23 @@ namespace Hackathon.DAL.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression)
-            => await _dbContext.Teams
+        public async Task<TeamModel[]> GetByExpressionAsync(
+            Expression<Func<TeamEntity, bool>> expression,
+            string[] includes = null)
+        {
+            var query = _dbContext.Teams
                 .Where(expression)
-                .Include(x=>x.Owner)
-                .Include(x => x.Members)
-                .ProjectToType<TeamModel>(_mapper.Config)
+                .IgnoreAutoIncludes();
+
+            if (includes is {Length: > 0})
+                foreach (var include in includes)
+                    query.Include(include);
+
+            return await query
                 .AsNoTracking()
+                .ProjectToType<TeamModel>(_mapper.Config)
                 .ToArrayAsync();
+        }
 
         public async Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel)
         {

@@ -1,4 +1,4 @@
-using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models.Team;
 using Hackathon.Entities;
 using Mapster;
 using System.Linq;
@@ -19,7 +19,6 @@ namespace Hackathon.DAL.Mappings
                 .ForType<TeamEntity, TeamModel>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Members, s => s.Members.Select(x => x.Member))
-                .Map(x => x.Events, s=> s.Events)
                 .Map(x => x.Owner, x => x.Owner)
                 .MaxDepth(3);
         }

@@ -18,6 +18,6 @@ public static class EventExtensions
         IsCreateTeamsAutomatically = model.IsCreateTeamsAutomatically,
 
         TeamsCount = model.Teams?.Count ?? 0,
-        MembersCount = model.Teams?.Sum(x => x.Members?.Count) ?? 0
+        MembersCount = model.Teams?.Sum(x => x.Members?.Length) ?? 0
     };
 }

@@ -23,13 +23,13 @@ namespace Hackathon.BL.Tests.Team;
 
 public class TeamServiceTests : BaseUnitTest
 {
-    private Mock<IValidator<CreateTeamModel>> _createTeamModelValidatorMock;
-    private Mock<ITeamRepository> _teamRepositoryMock;
-    private Mock<IValidator<TeamMemberModel>> _teamAddMemberValidatorMock;
-    private Mock<IValidator<GetListParameters<TeamFilter>>> _getFilterModelValidatorMock;
-    private Mock<IEventRepository> _eventRepositoryMock;
-    private Mock<IProjectRepository> _projectRepositoryMock;
-    private Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IValidator<CreateTeamModel>> _createTeamModelValidatorMock;
+    private readonly Mock<ITeamRepository> _teamRepositoryMock;
+    private readonly Mock<IValidator<TeamMemberModel>> _teamAddMemberValidatorMock;
+    private readonly Mock<IValidator<GetListParameters<TeamFilter>>> _getFilterModelValidatorMock;
+    private readonly Mock<IEventRepository> _eventRepositoryMock;
+    private readonly Mock<IProjectRepository> _projectRepositoryMock;
+    private readonly Mock<IUserRepository> _userRepositoryMock;
 
     public TeamServiceTests()
     {
@@ -57,7 +57,8 @@ public class TeamServiceTests : BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object);
+            _projectRepositoryMock.Object,
+            Mapper);
 
         //act
         var result = await service.CreateAsync(new CreateTeamModel());
@@ -92,7 +93,8 @@ public class TeamServiceTests : BaseUnitTest
             _getFilterModelValidatorMock.Object,
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
-            _projectRepositoryMock.Object);
+            _projectRepositoryMock.Object,
+            Mapper);
 
         //act
         var result = await service.GetAsync(new GetListParameters<TeamFilter>()
@@ -121,7 +123,7 @@ public class TeamServiceTests : BaseUnitTest
         var fakeMembers = new Faker<UserModel>()
             .RuleFor(x => x.Id, memberId++)
             .Generate(TeamAddMemberModelValidator.MaxTeamMembers)
-            .ToList();
+            .ToArray();
 
         var fakeTeamMember = new Faker<TeamMemberModel>()
             .RuleFor(o => o.MemberId, f => memberId++)

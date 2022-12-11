@@ -11,19 +11,19 @@ public class TeamGeneral
     /// Идентификатор
     /// </summary>
     public long Id { get; set; }
-    
+
     /// <summary>
     /// Наименование
     /// </summary>
     public string Name { get; set; }
-    
+
     /// <summary>
     /// Владелец
     /// </summary>
-    public UserModel Owner { get; set; }
-    
+    public UserShortModel Owner { get; set; }
+
     /// <summary>
     /// Участники команды
     /// </summary>
-    public UserModel[] Members { get; set; }
+    public UserShortModel[] Members { get; set; }
 }
