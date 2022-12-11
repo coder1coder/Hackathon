@@ -66,9 +66,14 @@ public class FriendshipControllerTests : BaseIntegrationTest
         offer.Status.Should().Be(FriendshipStatus.Rejected);
     }
 
+    /// <summary>
+    /// Если пользователь прекращает дружбу, то статус дружбы должен быть установлен в <see cref="FriendshipStatus.Pending"/>
+    /// Один пользователь остается в подписчиках у другого
+    /// </summary>
     [Fact]
-    public async Task EndFriendship_Should_Success()
+    public async Task EndFriendship_Should_SetFriendshipStatus_Pending()
     {
+        //arrange
         var (secondUserId, secondUserToken) = await RegisterUser();
 
         await FriendshipApi.CreateOrAcceptOffer(secondUserId);
@@ -77,10 +82,13 @@ public class FriendshipControllerTests : BaseIntegrationTest
 
         await FriendshipApi.CreateOrAcceptOffer(TestUser.Id);
 
+        //act
         await FriendshipApi.EndFriendship(TestUser.Id);
 
+        //assert
         var offer = await FriendshipRepository.GetOfferAsync(TestUser.Id, secondUserId);
 
-        Assert.Null(offer);
+        Assert.NotNull(offer);
+        offer.Status.Should().Be(FriendshipStatus.Pending);
     }
 }
