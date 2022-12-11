@@ -41,7 +41,6 @@ import { NotificationListComponent } from "./components/notification/list/notifi
 import { MatGridListModule } from "@angular/material/grid-list";
 import { NotificationInfoViewComponent } from "./components/notification/templates/info/notification.info.view.component";
 import { MatTabsModule } from "@angular/material/tabs";
-import { UserTeamComponent } from "./components/team/user/userTeam.component";
 import { TeamViewComponent } from "./components/team/view/team.view.component";
 import { TeamComponent } from "./components/team/team/team.component";
 import { MatCardModule } from "@angular/material/card";
@@ -58,6 +57,7 @@ import {
   FriendshipOfferButtonComponent
 } from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
 import {FriendsListComponent} from "./components/friendship/list/friends-list.component";
+import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
 
 @NgModule({
   declarations: [
