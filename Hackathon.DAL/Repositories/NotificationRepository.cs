@@ -26,7 +26,6 @@ public class NotificationRepository: INotificationRepository
         _dbContext = dbContext;
     }
 
-    /// <inheritdoc cref="INotificationRepository.Push{T}"/> 
     public async Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class
     {
         var notification = _mapper.Map<NotificationEntity>(model);
@@ -35,7 +34,6 @@ public class NotificationRepository: INotificationRepository
         return notification.Id;
     }
 
-    /// <inheritdoc cref="INotificationRepository.GetList"/> 
     public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> parameters, long userId)
     {
         var query = _dbContext.Notifications
@@ -68,26 +66,23 @@ public class NotificationRepository: INotificationRepository
         };
     }
 
-    /// <inheritdoc cref="INotificationRepository.GetUnreadNotificationsCount"/> 
     public async Task<long> GetUnreadNotificationsCount(long userId)
         => await _dbContext.Notifications
             .AsNoTracking()
             .CountAsync(x => x.UserId == userId && x.IsRead == false);
 
-    /// <inheritdoc cref="INotificationRepository.MarkAsRead"/>
     public async Task MarkAsRead(long userId, Guid[] ids)
     {
         var query = _dbContext.Notifications.Where(x => x.UserId == userId);
-            
+
         if (ids?.Length > 0)
             query = query.Where(x=>ids.Contains(x.Id));
-                
+
         await query.ForEachAsync(x => x.IsRead = true);
 
         await _dbContext.SaveChangesAsync();
     }
 
-    /// <inheritdoc cref="INotificationRepository.Delete"/>
     public async Task Delete(long userId, Guid[] ids = null)
     {
         var notifications = _dbContext

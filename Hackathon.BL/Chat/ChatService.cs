@@ -26,7 +26,6 @@ public class ChatService : IChatService
         _userRepository = userRepository;
     }
 
-    /// <inheritdoc cref="IChatService.SendMessage"/>
     public async Task SendMessage(ICreateChatMessage createChatMessage)
     {
         var entity = new ChatMessageEntity
@@ -64,7 +63,6 @@ public class ChatService : IChatService
         });
     }
 
-    /// <inheritdoc cref="IChatService.GetTeamMessages"/>
     public async Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
         => await _chatRepository.GetTeamChatMessages(teamId, offset, limit);
 }
