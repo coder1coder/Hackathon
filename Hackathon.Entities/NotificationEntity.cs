@@ -10,5 +10,5 @@ public class NotificationEntity
     public long OwnerId { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsRead { get; set; }
-    public string? Data { get; set; }
+    public string Data { get; set; }
 }

@@ -40,4 +40,12 @@ export class UserService {
       headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
     })
   }
+
+  public createEmailConfirmationRequest(): Observable<void>{
+    return this.http.post<void>(`${this.api}/User/profile/email/confirm/request`, null);
+  }
+
+  public confirmEmail(code: string): Observable<void>{
+    return this.http.post<void>(`${this.api}/User/profile/email/confirm?code=${code}`, null);
+  }
 }

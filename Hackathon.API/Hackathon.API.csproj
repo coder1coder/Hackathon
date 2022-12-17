@@ -37,6 +37,16 @@
       <ProjectReference Include="..\Hackathon.Jobs\Hackathon.Jobs.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Templates" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\EmailConfirmationRequestTemplate.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
     <PropertyGroup>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>

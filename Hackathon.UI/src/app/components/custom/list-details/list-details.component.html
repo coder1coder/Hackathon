@@ -1,6 +1,6 @@
 <table *ngIf="this.items.length > 0">
   <tr *ngFor="let item of this.items">
     <td [innerText]="item.key"></td>
-    <td [innerText]="item.value"></td>
+    <td [innerHTML]="item.value"></td>
   </tr>
 </table>

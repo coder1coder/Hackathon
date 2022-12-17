@@ -19,6 +19,11 @@ public class ApplicationDbContext: DbContext
     public DbSet<EventLogEntity> EventLog { get; set; }
     public DbSet<FriendshipEntity> Friendships { get; set; }
 
+    /// <summary>
+    ///
+    /// </summary>
+    public DbSet<EmailConfirmationRequestEntity> EmailConfirmations { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }

@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Common.Models.Friend;
-using Hackathon.Tests.Integration.Base;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Friendship;

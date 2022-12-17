@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Abstraction.User;
+using Hackathon.BL.Email;
+using Hackathon.BL.Validation.User;
+using Hackathon.Common;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
@@ -23,12 +26,15 @@ namespace Hackathon.BL.User
 {
     public class UserService: IUserService
     {
+        /// <see cref="SignUpModelValidator"/>
         private readonly IValidator<SignUpModel> _signUpModelValidator;
         private readonly IValidator<SignInModel> _signInModelValidator;
 
         private readonly IUserRepository _userRepository;
         private readonly AppSettings _appSettings;
         private readonly IFileStorageService _fileStorageService;
+
+        private readonly int _requestLifetimeMinutes;
 
         private readonly IMapper _mapper;
 
@@ -46,6 +52,7 @@ namespace Hackathon.BL.User
             _userRepository = userRepository;
             _fileStorageService = fileStorageService;
             _mapper = mapper;
+            _requestLifetimeMinutes = appSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
         }
 
         public async Task<long> CreateAsync(SignUpModel signUpModel)
@@ -115,11 +122,20 @@ namespace Hackathon.BL.User
             if (!await _userRepository.IsExistAsync(userId))
                 throw new EntityNotFoundException("Пользователя с указанным идентификатором не существует");
 
-            return await _userRepository.GetAsync(userId);
+            var model = await _userRepository.GetAsync(userId);
+
+            return EnrichModel(model);
         }
 
         public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters)
-            => await _userRepository.GetAsync(getListParameters);
+        {
+            var models = await _userRepository.GetAsync(getListParameters);
+
+            if (models.Items is {Count: > 0})
+                models.Items = models.Items.Select(EnrichModel).ToArray();
+
+            return models;
+        }
 
         public AuthTokenModel GenerateToken(UserModel user)
         {
@@ -174,9 +190,19 @@ namespace Hackathon.BL.User
             return uploadResult.Id;
         }
 
-        private static class AppClaimTypes
+        private UserModel EnrichModel(UserModel model)
         {
-            public const string GoogleId = nameof(GoogleId);
+            if (model.Email.ConfirmationRequest is not null)
+            {
+                if (model.Email.ConfirmationRequest.IsConfirmed)
+                    model.Email.Status = UserEmailStatus.Confirmed;
+                else if (DateTime.UtcNow < model.Email.ConfirmationRequest.CreatedAt.AddMinutes(_requestLifetimeMinutes))
+                    model.Email.Status = UserEmailStatus.Pending;
+                else
+                    model.Email.Status = UserEmailStatus.NotConfirmed;
+            }
+
+            return model;
         }
     }
 }

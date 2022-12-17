@@ -16,7 +16,7 @@ public interface INotificationService
 
     Task MarkAsRead(long userId, Guid[] ids);
 
-    Task Delete(long userId, Guid[]? ids = null);
+    Task Delete(long userId, Guid[] ids = null);
 
     /// <summary>
     /// Отправить уведомление

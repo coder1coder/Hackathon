@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.EventLog;
@@ -20,7 +21,7 @@ using Microsoft.Extensions.Options;
 using Refit;
 using Xunit;
 
-namespace Hackathon.Tests.Integration.Base
+namespace Hackathon.Tests.Integration
 {
     public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
     {

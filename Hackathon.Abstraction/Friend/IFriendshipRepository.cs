@@ -38,7 +38,7 @@ public interface IFriendshipRepository
     /// <param name="userId"></param>
     /// <param name="option"></param>
     /// <returns></returns>
-    Task<Friendship?> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any);
+    Task<Friendship> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any);
 
     /// <summary>
     /// Получить список предложений дружбы

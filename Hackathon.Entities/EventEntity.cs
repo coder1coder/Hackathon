@@ -14,17 +14,17 @@ namespace Hackathon.Entities
         /// </summary>
         public long OwnerId { get; set; }
 
-        public UserEntity? Owner { get; set; }
+        public UserEntity Owner { get; set; }
 
         /// <summary>
         /// Наименование события
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Описание события
         /// </summary>
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Дата и время начала
@@ -80,7 +80,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Награда, призовой фонд
         /// </summary>
-        public string? Award { get; set; }
+        public string Award { get; set; }
 
         /// <summary>
         /// Признак удаления

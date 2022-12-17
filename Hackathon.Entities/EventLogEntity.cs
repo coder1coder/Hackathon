@@ -23,12 +23,12 @@ public class EventLogEntity
     /// <summary>
     /// Имя пользователя
     /// </summary>
-    public string? UserName { get; set; }
+    public string UserName { get; set; }
 
     /// <summary>
     /// Описание события
     /// </summary>
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Время события (UTC)

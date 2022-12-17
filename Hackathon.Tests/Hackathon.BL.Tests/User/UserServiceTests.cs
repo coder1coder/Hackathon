@@ -38,7 +38,10 @@ public class UserServiceTests: BaseUnitTest
         //arrange
         var fakeUser = new Faker<UserModel>()
             .RuleFor(x => x.UserName, f => f.Name.FirstName())
-            .RuleFor(x => x.Email, f => f.Internet.Email())
+            .RuleFor(x => x.Email, f => new UserEmailModel
+            {
+                Address = f.Internet.Email()
+            })
             .Generate();
 
         _userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListParameters<UserFilter>>()))
@@ -63,7 +66,7 @@ public class UserServiceTests: BaseUnitTest
             Filter = new UserFilter
             {
                 Username = fakeUser.UserName,
-                Email = fakeUser.Email
+                Email = fakeUser.Email.Address
             }
         });
 

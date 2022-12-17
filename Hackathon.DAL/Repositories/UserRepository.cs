@@ -6,7 +6,6 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using Hackathon.Entities.User;
-using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,9 +38,10 @@ namespace Hackathon.DAL.Repositories
         public async Task<UserModel> GetAsync(long userId)
         {
             var entity = await _dbContext.Users
+                .Include(x=>x.EmailConfirmationRequest)
                 .Include(x=>x.GoogleAccount)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Id == userId);
+                .FirstOrDefaultAsync(x => x.Id == userId);
 
             return entity == null ? null : _mapper.Map<UserModel>(entity);
         }
@@ -49,13 +49,19 @@ namespace Hackathon.DAL.Repositories
         public async Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email)
         {
             var entity = await _dbContext.Users
+                .Include(x=>x.EmailConfirmationRequest)
                 .Include(x=>x.GoogleAccount)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x =>
+                .FirstOrDefaultAsync(x =>
                     x.GoogleAccountId == googleId
-                    || x.Email.ToLower() == email.ToLower());
+                    ||
+                    (
+                        x.EmailConfirmationRequest.IsConfirmed
+                        && x.EmailConfirmationRequest.Email.ToLower() == email.ToLower()
+                        && x.Email.ToLower() == email.ToLower()
+                    ));
 
-            return entity != null ? _mapper.Map<UserModel>(entity) : null;
+            return entity is not null ? _mapper.Map<UserModel>(entity) : null;
         }
 
         public async Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel)
@@ -63,7 +69,7 @@ namespace Hackathon.DAL.Repositories
             var entity = await _dbContext.GoogleAccounts
                 .FirstOrDefaultAsync(x => x.Id == googleAccountModel.Id);
 
-            if (entity != null)
+            if (entity is not null)
             {
                 _mapper.Map(googleAccountModel, entity);
                 await _dbContext.SaveChangesAsync();
@@ -73,6 +79,7 @@ namespace Hackathon.DAL.Repositories
         public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> parameters)
         {
             var query = _dbContext.Users
+                .Include(x=>x.EmailConfirmationRequest)
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -82,7 +89,10 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => x.UserName.ToLower() == parameters.Filter.Username.ToLower());
 
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Email))
-                    query = query.Where(x => x.Email.ToLower() == parameters.Filter.Email.ToLower());
+                    query = query.Where(x =>
+                        x.EmailConfirmationRequest.IsConfirmed
+                        && x.EmailConfirmationRequest.Email.ToLower() == parameters.Filter.Email.ToLower()
+                        && x.Email.ToLower() == parameters.Filter.Email.ToLower());
 
                 if (parameters.Filter.Ids != null)
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
@@ -115,15 +125,14 @@ namespace Hackathon.DAL.Repositories
                 };
             }
 
-            var userModels = await query
+            var entities = await query
                 .Skip(parameters.Offset)
                 .Take(parameters.Limit)
-                .ProjectToType<UserModel>()
-                .ToListAsync();
+                .ToArrayAsync();
 
             return new BaseCollection<UserModel>
             {
-                Items = userModels,
+                Items = _mapper.Map<UserEntity[], UserModel[]>(entities),
                 TotalCount = totalCount
             };
         }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
@@ -18,19 +19,22 @@ public class UserController: BaseController
 {
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
+    private readonly IEmailConfirmationService _emailConfirmationService;
 
     /// <summary>
     /// Пользователи
     /// </summary>
     /// <param name="mapper"></param>
     /// <param name="userService"></param>
+    /// <param name="emailConfirmationService"></param>
     public UserController(
         IMapper mapper,
-        IUserService userService
-    )
+        IUserService userService,
+        IEmailConfirmationService emailConfirmationService)
     {
         _mapper = mapper;
         _userService = userService;
+        _emailConfirmationService = emailConfirmationService;
     }
 
     /// <summary>
@@ -55,8 +59,7 @@ public class UserController: BaseController
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    [HttpGet]
-    [Route("{userId:long}")]
+    [HttpGet("{userId:long}")]
     public async Task<UserResponse> GetAsync([FromRoute] long userId)
         => _mapper.Map<UserResponse>(await _userService.GetAsync(userId));
 
@@ -78,14 +81,14 @@ public class UserController: BaseController
     /// </summary>
     /// <param name="file">Файл картинка.</param>
     /// <returns></returns>
-    [HttpPost]
-    [Route("profile/image/upload")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+    [HttpPost("profile/image/upload")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public async Task<IActionResult> UploadProfileImage(IFormFile file)
     {
+        //TODO: вынести в BL
         if (file is null)
-            return BadRequest($"Файл не может быть пустым.");
+            return BadRequest("Файл не может быть пустым.");
 
         await using var stream = file.OpenReadStream();
 
@@ -93,4 +96,20 @@ public class UserController: BaseController
 
         return Ok(newProfileImageId);
     }
+
+    /// <summary>
+    /// Подтвердить Email
+    /// </summary>
+    /// <param name="code">Код подтверждения</param>
+    [HttpPost("profile/email/confirm")]
+    public Task ConfirmEmail([FromQuery] string code)
+        => _emailConfirmationService.Confirm(UserId, code);
+
+    /// <summary>
+    /// Создать запрос на подтвреждение Email пользователя
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("profile/email/confirm/request")]
+    public Task<IActionResult> CreateEmailConfirmationRequest()
+        => GetResult(() => _emailConfirmationService.CreateRequest(UserId));
 }

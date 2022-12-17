@@ -19,4 +19,11 @@
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20221218113738_EmailConfirmation.cs" />
+      <Compile Remove="Migrations\20221218113738_EmailConfirmation.Designer.cs" />
+      <Compile Remove="Migrations\20221224154633_EmailConfirmation.cs" />
+      <Compile Remove="Migrations\20221224154633_EmailConfirmation.Designer.cs" />
+    </ItemGroup>
+
 </Project>

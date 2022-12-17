@@ -32,7 +32,8 @@ public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.OwnerId).IsRequired();
 
         builder.Property(x => x.ChangeEventStatusMessages)
-            .HasColumnType("jsonb");
+            .HasColumnType("jsonb")
+            .IsRequired();
 
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);
     }

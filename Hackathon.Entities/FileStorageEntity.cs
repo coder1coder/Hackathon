@@ -10,22 +10,22 @@ public class FileStorageEntity
     /// <summary>
     /// Имя бакета
     /// </summary>
-    public string? BucketName { get; set; }
+    public string BucketName { get; set; }
 
     /// <summary>
     /// Имя файла
     /// </summary>
-    public string? FileName { get; set; }
+    public string FileName { get; set; }
 
     /// <summary>
     /// Путь к файлу в файловом хранилище
     /// </summary>
-    public string? FilePath { get; set; }
+    public string FilePath { get; set; }
 
     /// <summary>
     /// MIME тип содержимого
     /// </summary>
-    public string? MimeType { get; set; }
+    public string MimeType { get; set; }
 
     /// <summary>
     /// Размер содержимого
@@ -37,5 +37,5 @@ public class FileStorageEntity
     /// </summary>
     public long? OwnerId { get; set; }
 
-    
+
 }
