@@ -50,14 +50,16 @@ import { AlertComponent } from "./components/custom/alert/alert.component";
 import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
-import {EventCardComponent} from "./components/event/card/event.card.component";
-import {ToolbarComponent} from "./components/toolbar/toolbar.component";
-import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
+import { EventCardComponent } from "./components/event/card/event.card.component";
+import { ToolbarComponent } from "./components/toolbar/toolbar.component";
+import { EventLogComponent } from "./components/eventlog/eventLog.list.component";
 import {
   FriendshipOfferButtonComponent
 } from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
-import {FriendsListComponent} from "./components/friendship/list/friends-list.component";
-import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
+import { FriendsListComponent } from "./components/friendship/list/friends-list.component";
+import { UserTeamComponent } from "./components/team/userTeam/userTeam.component";
+import { LineInfoComponent } from './components/line-info/line-info.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -101,7 +103,8 @@ import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
     DefaultLayoutComponent,
     ListDetailsComponent,
     AlertComponent,
-    CustomDialog
+    CustomDialog,
+    LineInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -129,7 +132,8 @@ import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
     MatBadgeModule,
     MatGridListModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    InfiniteScrollModule
   ],
   providers: [
     {

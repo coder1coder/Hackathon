@@ -1,4 +1,8 @@
-<layout-default title="События">
+<layout-default
+  title="События"
+  containerClasses="{{layoutCssClasses}}"
+  [isLoading]="isLoading"
+  [hideContentWhileLoading]="false">
 
   <div actions>
     <button mat-button color="primary" (click)="this.router.Events.New()">
@@ -7,115 +11,113 @@
     </button>
   </div>
 
-  <div class="mb-1-5em">
-    <form [formGroup]="filterForm" class="events__filter">
-      <mat-form-field appearance="outline">
-        <mat-label>Наименование события</mat-label>
-        <input matInput
-               autocomplete="off"
-               id="name"
-               formControlName="name">
-      </mat-form-field>
+  <div class="event-block">
+    <div class="mb-1-5em">
+      <form [formGroup]="filterForm" class="events__filter">
+        <mat-form-field appearance="outline">
+          <mat-label>Наименование события</mat-label>
+          <input matInput
+                 autocomplete="off"
+                 id="name"
+                 formControlName="name">
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Начало от</mat-label>
-        <input matInput
-               type="date"
-               autocomplete="off"
-               id="startFrom"
-               formControlName="startFrom">
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Начало от</mat-label>
+          <input matInput
+                 type="date"
+                 autocomplete="off"
+                 id="startFrom"
+                 formControlName="startFrom">
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Начало до</mat-label>
-        <input matInput
-               type="date"
-               autocomplete="off"
-               id="startTo"
-               formControlName="startTo">
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Начало до</mat-label>
+          <input matInput
+                 type="date"
+                 autocomplete="off"
+                 id="startTo"
+                 formControlName="startTo">
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Статус</mat-label>
-        <mat-select #statuses formControlName="statuses" multiple>
-          <button mat-button (click)="statusesToggleAll($event)" style="width: 100%;">Выбрать все</button>
-          <mat-divider></mat-divider>
-          <mat-option *ngFor="let status of getAllEventStatuses()" [value]="status"> {{ EventStatusTranslator.Translate(status) }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Статус</mat-label>
+          <mat-select #statuses formControlName="statuses" multiple>
+            <button mat-button (click)="statusesToggleAll($event)" style="width: 100%;">Выбрать все</button>
+            <mat-divider></mat-divider>
+            <mat-option *ngFor="let status of getAllEventStatuses()" [value]="status"> {{ eventStatusTranslator.Translate(status) }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <mat-checkbox id="iAmOwner" formControlName="iAmOwner">Отображать только созданные мной события</mat-checkbox>
+        <mat-checkbox id="iAmOwner" formControlName="iAmOwner">Отображать только созданные мной события</mat-checkbox>
+      </form>
 
-    </form>
-
-    <div style="display: flex; column-gap: 10px;">
-      <button mat-flat-button color="primary"
-              (click)="fetch()"
-              [disabled]="!this.filterForm.dirty">Применить</button>
-      <button mat-flat-button
-              (click)="clearFilter()"
-              [disabled]="!this.filterForm.dirty">Отменить</button>
+      <div style="display: flex; column-gap: 10px;">
+        <button mat-flat-button color="primary"
+                (click)="fetch(true)"
+                [disabled]="!this.filterForm.dirty">Применить</button>
+        <button mat-flat-button
+                (click)="clearFilter()"
+                [disabled]="!this.filterForm.dirty">Отменить</button>
+      </div>
     </div>
 
+    <div class="event-cards"
+         [class.empty]="eventList.totalCount === 0"
+         infinite-scroll
+         [infiniteScrollDistance]="2"
+         [infiniteScrollThrottle]="1000"
+         [infiniteScrollDisabled]="isFullListDisplayed"
+         (scrolled)="fetch()">
+      <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
+        <div class="card" (click)="rowClick(item)">
+
+          <div class="card-avatar">
+            <img class="card-image" (error)="catchLinkImageError(item)" src="{{item.photoLink}}" alt="event">
+          </div>
+
+          <div class="card-info">
+
+            <line-info
+              label="Название"
+              value="{{item.name}}">
+            </line-info>
+
+            <line-info
+              label="Команды"
+              value="{{item.teamsCount}}">
+            </line-info>
+
+            <line-info
+              label="Начало"
+              value="{{getDateTimeFormat(item.start)}}">
+            </line-info>
+
+            <line-info
+              label="Участники"
+              value="{{item.membersCount}} / {{item.maxEventMembers}}">
+            </line-info>
+
+            <line-info
+              label="Организатор"
+              value="{{item.ownerName}}">
+            </line-info>
+
+            <div class="grid">
+              <div class="grid-1-2">
+                <span>Статус: </span>
+              </div>
+              <div class="info-value grid-1-2">
+                <div class="status">
+                  <mat-icon class=" mat-icon-{{ eventStatusTranslator.GetName(item.status)}}">circle</mat-icon>
+                  {{eventStatusTranslator.Translate(item.status)}}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
-
-
-  <table mat-table [dataSource]="items" [class.empty] = "items.length == 0">
-
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.id}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Название</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.name}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="start">
-        <th mat-header-cell *matHeaderCellDef>Начало</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{ moment(element.start).local().format('DD.MM.yyyy, HH:MM') }} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Статус</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          <mat-icon class="mat-icon-{{ EventStatusTranslator.GetName(element.status) }}">circle</mat-icon>
-          {{ EventStatusTranslator.Translate(element.status) }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="teams">
-        <th mat-header-cell *matHeaderCellDef>Команды</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.teamsCount }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="members">
-        <th mat-header-cell *matHeaderCellDef>Участники</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.membersCount }} / {{element.maxEventMembers}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef>Организатор</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)" [innerText]="element.ownerName"></td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let event">
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
-    </table>
-  <div *ngIf="items.length > 0">
-    <mat-paginator [length]="pageSettings.length"
-                   [pageSize]="pageSettings.pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="paginatorChanges($event)"
-                   aria-label="Select page">
-    </mat-paginator>
-  </div>
-
 </layout-default>

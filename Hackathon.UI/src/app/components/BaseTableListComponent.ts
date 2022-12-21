@@ -11,6 +11,16 @@ export abstract class BaseTableListComponent<T> implements AfterViewInit, OnDest
   public pageSettings: PageEvent = new PageEvent();
 
   private readonly componentName: string | undefined;
+
+  /** Отказ от подписки вручную в связке с takeUntil
+   * takeUntil принимает на вход объект Observable как параметр notifier
+   * когда notifier выпускает значение, выполняет отписку от исходного Observable.
+   * оповещает Observable об уничтожении компонента.
+   * Для этого мы добавляем свойство класса с именем componentDestroyed$ (или любым другим именем)
+   * типа Subject<void> и используем его в качестве notifier.
+   * Нам нужно только добавить takeUntil(componentDestroyed$), а RxJS позаботится об остальном
+   * Отказ от ненужных подписок предотвращает утечку памяти. Кроме того, декларативная отписка не требует ссылки на подписки.
+   */
   protected destroy$ = new Subject();
 
   protected constructor(

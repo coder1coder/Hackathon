@@ -43,10 +43,13 @@ public class EventListItem
     public EventStatus Status { get; set; }
 
     /// <summary>
-    /// Организатор
+    /// Идентификатор организатора
     /// </summary>
     public long OwnerId { get; set; }
 
+    /// <summary>
+    /// Наименование организатора
+    /// </summary>
     public string OwnerName { get; set; }
 
     /// <summary>
