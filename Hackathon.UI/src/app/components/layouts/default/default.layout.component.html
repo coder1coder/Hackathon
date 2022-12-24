@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div class="{{ containerClasses }}" *ngIf="!isLoading">
+<div class="{{ containerClasses }}" *ngIf="!(isLoading && hideContentWhileLoading)">
   <ng-content></ng-content>
 </div>
 

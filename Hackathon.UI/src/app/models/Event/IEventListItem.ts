@@ -13,4 +13,6 @@ export interface IEventListItem {
   ownerName: string;
   teamsCount: number;
   membersCount: number;
+  eventImageId?: string;
+  photoLink?: string;
 }

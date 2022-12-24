@@ -90,30 +90,23 @@ table {
   opacity: .5;
 }
 
-.mat-table {
-  &.empty {
-    position: relative;
-    padding-bottom: 5em;
+.empty {
+  position: relative;
+  padding-bottom: 5em;
 
-    & .mat-header-row{
-      //display: none;
-    }
-
-    &::after {
-      color: dimgray;
-      padding: 2em 0;
-      content: 'Нет элементов для отображения';
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 1;
-    }
+  &::after {
+    color: dimgray;
+    padding: 2em 0;
+    content: 'Нет элементов для отображения';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
   }
 }
-
 .mat-list-base .mat-list-item{
   font-size: 14px;
 }
@@ -154,4 +147,43 @@ mat-tab-group.vertical-tabs {
     box-shadow: -20px 0px 20px 0px rgb(248 248 248);
     padding-left: 1em;
   }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.container-event {
+  padding: 0 1em 0 2em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+}
+
+.grid-1-2 {
+  grid-column: span 3;
+}
+
+.grid-1-4 {
+  grid-column: span 4;
+}
+
+.h-100 {
+  height: 100% !important;
 }
