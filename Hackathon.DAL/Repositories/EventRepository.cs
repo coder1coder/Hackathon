@@ -66,7 +66,7 @@ namespace Hackathon.DAL.Repositories
                     query = query.Where(x => parameters.Filter.Ids.Contains(x.Id));
 
                 if (!string.IsNullOrWhiteSpace(parameters.Filter.Name))
-                    query = query.Where(x => x.Name.ToLower().Contains(parameters.Filter.Name));
+                    query = query.Where(x => x.Name.ToLower().Contains(parameters.Filter.Name.ToLower()));
 
                 if (parameters.Filter.Statuses is not null)
                     query = query.Where(x => parameters.Filter.Statuses.Contains(x.Status));
@@ -129,13 +129,13 @@ namespace Hackathon.DAL.Repositories
                     x.Id,
                     x.Name,
                     x.OwnerId,
-                    x.Owner,
+                    x.Description,
                     x.Start,
                     x.Status,
                     x.MaxEventMembers,
                     x.MinTeamMembers,
                     x.IsCreateTeamsAutomatically,
-
+                    OwnerName = x.Owner.FullName,
                     TeamsCount = x.Teams.Count,
                     MembersCount = x.Teams.Sum(z => z.Members.Count)
                 }).Skip(parameters.Offset)
