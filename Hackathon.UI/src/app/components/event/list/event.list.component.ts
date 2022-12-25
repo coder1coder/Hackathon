@@ -149,6 +149,7 @@ export class EventListComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         map((r: BaseCollection<IEventListItem>) => {
+          console.log(r.items)
             r.items = EventListComponent.mapPhotoLink(r.items);
             return r;
         })

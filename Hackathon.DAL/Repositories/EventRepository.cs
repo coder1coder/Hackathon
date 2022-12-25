@@ -135,7 +135,7 @@ namespace Hackathon.DAL.Repositories
                     x.MaxEventMembers,
                     x.MinTeamMembers,
                     x.IsCreateTeamsAutomatically,
-                    OwnerName = x.Owner.FullName,
+                    OwnerName = x.Owner.FullName ?? x.Owner.UserName,
                     TeamsCount = x.Teams.Count,
                     MembersCount = x.Teams.Sum(z => z.Members.Count)
                 }).Skip(parameters.Offset)
