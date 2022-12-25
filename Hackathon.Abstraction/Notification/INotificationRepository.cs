@@ -35,7 +35,7 @@ public interface INotificationRepository
     /// <param name="userId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    Task Delete(long userId, Guid[]? ids = null);
+    Task Delete(long userId, Guid[] ids = null);
 
     Task<long> GetUnreadNotificationsCount(long userId);
 }

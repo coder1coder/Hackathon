@@ -3,7 +3,6 @@ using Hackathon.Abstraction.EventLog;
 using Hackathon.API.Consumers;
 using Hackathon.BL.EventLog;
 using Hackathon.Common.Models.EventLog;
-using Hackathon.Tests.Integration.Base;
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;

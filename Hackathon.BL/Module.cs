@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using Amazon.S3;
 using Autofac;
 using Hackathon.Abstraction.EventLog;
@@ -25,6 +27,17 @@ public class Module : Autofac.Module
             .Where(x => !x.IsAbstract && x.Name.EndsWith("Service"))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
+
+        builder.RegisterInstance(new SmtpClient
+            {
+                Host = _appSettings.EmailSender.Server,
+                Port = _appSettings.EmailSender.Port,
+                EnableSsl = _appSettings.EmailSender.EnableSsl,
+                UseDefaultCredentials = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential(_appSettings.EmailSender.Username, _appSettings.EmailSender.Password)
+            })
+            .AsSelf();
 
         builder.RegisterInstance(new AmazonS3Client(
             _appSettings.S3Options.AccessKey,

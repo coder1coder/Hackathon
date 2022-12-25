@@ -48,7 +48,7 @@ namespace Hackathon.BL.Validation.User
                     });
 
                     if (users.TotalCount > 0)
-                        context.AddFailure($"Пользователь с таким Email уже зарегистрирован");
+                        context.AddFailure("Пользователь с таким Email уже зарегистрирован");
                 });
 
             RuleFor(x => x.FullName)

@@ -7,7 +7,49 @@
     </div>
 
     <div class="profile__right">
-      <list-details [items]="userProfileDetails"></list-details>
+
+      <table *ngIf="user !== undefined">
+        <tr>
+          <td>Имя пользователя</td>
+          <td [innerText]="user?.userName"></td>
+        </tr>
+        <tr>
+          <td>Полное имя</td>
+          <td [innerText]="user?.fullName"></td>
+        </tr>
+        <tr>
+          <td class="email">E-mail</td>
+          <td>{{ user?.email?.address }}
+            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.NotConfirmed">
+              <alert warn>Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br> системы необходимо <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()">подтвердить</span> Email.</alert>
+            </div>
+
+            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.Pending">
+              <alert>
+                Код подтверждения отправлен на указанный Email. <br>
+                <input #confirmationCodeInput>
+                <br>
+                <span class="email-confirmation-link" (click)="confirmEmail()">Подтвердить</span>
+                <br><br>
+                Если код не приходит, повторите попытку  через 5 минут или обратитесь в службу поддержки.
+              </alert>
+            </div>
+
+            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.Confirmed">
+              <alert>Email подтвержден</alert>
+            </div>
+
+          </td>
+        </tr>
+        <tr>
+          <td>Роль</td>
+          <td>{{ UserRoleTranslator.Translate(user.role) }}</td>
+        </tr>
+        <tr>
+          <td>Команда</td>
+          <td>{{ userTeam?.name ?? "Не состоит в команде" }}</td>
+        </tr>
+      </table>
 
       <div class="reaction__list" *ngIf="this.userId != this.authUserId">
 

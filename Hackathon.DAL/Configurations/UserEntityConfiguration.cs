@@ -1,4 +1,5 @@
 using Hackathon.Common.Models.User;
+using Hackathon.Entities;
 using Hackathon.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -25,6 +26,11 @@ public class UserEntityConfiguration: IEntityTypeConfiguration<UserEntity>
         builder
             .Property(x => x.Role)
             .HasDefaultValue(UserRole.Default);
+
+        builder
+            .HasOne(x => x.EmailConfirmationRequest)
+            .WithOne(x => x.User)
+            .HasForeignKey<EmailConfirmationRequestEntity>(b => b.UserId);
 
         builder
             .Property(x => x.IsDeleted)

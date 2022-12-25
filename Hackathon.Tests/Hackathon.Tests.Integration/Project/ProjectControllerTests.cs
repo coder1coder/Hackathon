@@ -7,7 +7,6 @@ using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Requests.Team;
-using Hackathon.Tests.Integration.Base;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Project

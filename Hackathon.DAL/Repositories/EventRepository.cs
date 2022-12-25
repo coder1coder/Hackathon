@@ -152,10 +152,11 @@ namespace Hackathon.DAL.Repositories
 
         public async Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
         {
-            return await _dbContext.Events.Where(expression)
+            var entities = await _dbContext.Events.Where(expression)
                 .Where(expression)
-                .ProjectToType<EventModel>(_mapper.Config)
                 .ToArrayAsync();
+
+            return _mapper.Map<EventEntity[], EventModel[]>(entities);
         }
 
         public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)

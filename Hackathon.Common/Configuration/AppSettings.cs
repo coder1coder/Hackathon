@@ -10,6 +10,16 @@ public class AppSettings
     public string PathBase { get; set; }
     public HubsSettings Hubs { get; set; }
     public RabbitMqSettings RabbitMq { get; set; }
+
+    /// <summary>
+    /// Время жизни запроса на подтверждение Email в минутах
+    /// </summary>
+    public int EmailConfirmationRequestLifetime { get; set; } = 5;
+
+    /// <summary>
+    /// Настройки для отправки Email
+    /// </summary>
+    public EmailSenderSettings EmailSender { get; set; } = new();
 }
 
 public class HubsSettings
