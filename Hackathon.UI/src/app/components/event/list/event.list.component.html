@@ -78,41 +78,25 @@
 
           <div class="card-info">
 
-            <line-info
-              label="Название"
-              value="{{item.name}}">
-            </line-info>
+            <div class="title">{{item.name}}</div>
+            <div class="meta">
 
-            <line-info
-              label="Команды"
-              value="{{item.teamsCount}}">
-            </line-info>
-
-            <line-info
-              label="Начало"
-              value="{{getDateTimeFormat(item.start)}}">
-            </line-info>
-
-            <line-info
-              label="Участники"
-              value="{{item.membersCount}} / {{item.maxEventMembers}}">
-            </line-info>
-
-            <line-info
-              label="Организатор"
-              value="{{item.ownerName}}">
-            </line-info>
-
-            <div class="grid">
-              <div class="grid-1-2">
-                <span>Статус: </span>
+              <div class="start">
+                {{getDateTimeFormat(item.start)}}
               </div>
-              <div class="info-value grid-1-2">
-                <div class="status">
-                  <mat-icon class=" mat-icon-{{ eventStatusTranslator.GetName(item.status)}}">circle</mat-icon>
-                  {{eventStatusTranslator.Translate(item.status)}}
-                </div>
+
+              <div class="status">
+                <mat-icon class=" mat-icon-{{ eventStatusTranslator.GetName(item.status)}}">circle</mat-icon>
+                {{eventStatusTranslator.Translate(item.status)}}
               </div>
+
+              <div class="owner">/ Организатор: {{item?.ownerName }}</div>
+
+            </div>
+
+            <div class="details">
+              <div class="teams-count">Команды: {{item.teamsCount}}</div>
+              <div class="members-count">Участники: {{item.membersCount}} / {{item.maxEventMembers}}</div>
             </div>
 
           </div>
