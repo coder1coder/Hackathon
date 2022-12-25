@@ -165,14 +165,14 @@ public class FriendshipRepository: IFriendshipRepository
     public async Task RemoveOfferAsync(long proposerId, long userId)
     {
         var offerEntity = await _dbContext.Friendships.FirstOrDefaultAsync(x =>
-            (x.ProposerId == proposerId && x.UserId == userId)
+            x.ProposerId == proposerId && x.UserId == userId
             ||
-            (x.ProposerId == userId && x.UserId == proposerId));
+            x.ProposerId == userId && x.UserId == proposerId);
 
-        if (offerEntity == null)
-            throw new EntityNotFoundException("Предложение дружбы не найдено");
-
-        _dbContext.Friendships.Remove(offerEntity);
-        await _dbContext.SaveChangesAsync();
+        if (offerEntity is not null)
+        {
+            _dbContext.Friendships.Remove(offerEntity);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

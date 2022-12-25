@@ -240,7 +240,7 @@ namespace Hackathon.DAL.Repositories
             if (teamEntity == null)
                 throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
 
-            var teamMembers = teamEntity.Members.Count();
+            var teamMembers = teamEntity.Members.Count;
 
             if (teamEntity.Owner != null)
                 teamMembers += 1;
