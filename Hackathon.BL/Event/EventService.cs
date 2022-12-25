@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction.Event;
+using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
@@ -16,6 +17,8 @@ using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using Hackathon.Entities;
+using Hackathon.IntegrationEvents;
+using Hackathon.IntegrationEvents.IntegrationEvent;
 using MassTransit;
 using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
@@ -34,6 +37,7 @@ namespace Hackathon.BL.Event
         private readonly ITeamService _teamService;
         private readonly INotificationService _notificationService;
         private readonly IBus _messageBus;
+        private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
 
         public EventService(
             IValidator<EventCreateParameters> createEventModelValidator,
@@ -43,7 +47,8 @@ namespace Hackathon.BL.Event
             ITeamService teamService,
             IUserRepository userRepository,
             INotificationService notificationService,
-            IBus messageBus)
+            IBus messageBus,
+            IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub)
         {
             _createEventModelValidator = createEventModelValidator;
             _updateEventModelValidator = updateEventModelValidator;
@@ -53,6 +58,7 @@ namespace Hackathon.BL.Event
             _userRepository = userRepository;
             _notificationService = notificationService;
             _messageBus = messageBus;
+            _integrationEventHub = integrationEventHub;
         }
 
         public async Task<long> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -198,6 +204,12 @@ namespace Hackathon.BL.Event
         {
             await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
+            await _integrationEventHub.Publish(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
+            await NotifyEventMembers(eventModel, eventStatus);
+        }
+
+        private async Task NotifyEventMembers(EventModel eventModel, EventStatus eventStatus)
+        {
             var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
                                                .FirstOrDefault(x => x.Status == eventStatus)
                                                ?.Message
@@ -207,13 +219,13 @@ namespace Hackathon.BL.Event
                 .SelectMany(x => x.Members?.Select(z => z.Id))
                 .ToArray();
 
-            if (usersIds.Any())
-            {
-                var notificationModels = usersIds.Select(x =>
-                    NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+            if (!usersIds.Any())
+                return;
 
-                await _notificationService.PushMany(notificationModels);
-            }
+            var notificationModels = usersIds.Select(x =>
+                NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+
+            await _notificationService.PushMany(notificationModels);
         }
 
         private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
