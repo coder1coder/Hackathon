@@ -39,4 +39,45 @@
   }
 }
 
+table {
+  tr {
+    cursor: default;
+  }
+  tr > td {
+    padding-bottom: 10px;
+  }
 
+  tr > td:first-child{
+    color: #9FA2B4;
+    width: 1px;
+    white-space: nowrap;
+    padding-right: 2em;
+  }
+}
+
+td.email {
+  vertical-align: top;
+}
+
+.email-confirmation
+{
+  &-status {
+    color: rgb(210, 78, 78);
+  }
+
+  &-link{
+    font-weight: 500;
+    text-decoration: underline;
+
+    &:hover{
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+
+  &-description{
+    color: #9FA2B4;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+}

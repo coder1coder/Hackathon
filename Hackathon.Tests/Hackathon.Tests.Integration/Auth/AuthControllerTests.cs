@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.Contracts.Requests.User;
-using Hackathon.Tests.Integration.Base;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Auth

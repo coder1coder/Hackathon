@@ -12,7 +12,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Наименование
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// События
@@ -27,7 +27,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Владелец команды
         /// </summary>
-        public UserEntity? Owner { get; set; }
+        public UserEntity Owner { get; set; }
 
         /// <summary>
         /// Идентификатор владельца команды

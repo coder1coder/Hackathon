@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hackathon.BL.User;
 using Hackathon.Common.Models.User;
-using Hackathon.Tests.Integration.Base;
 using Refit;
 using Xunit;
 

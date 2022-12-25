@@ -7,26 +7,26 @@ namespace Hackathon.Entities
         /// <summary>
         /// Наименование
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Описание
         /// </summary>
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Идентификатор ивента
         /// </summary>
         public long EventId { get; set; }
 
-        public EventEntity? Event { get; set; }
+        public EventEntity Event { get; set; }
 
         /// <summary>
         /// Идентификатор команды
         /// </summary>
         public long TeamId { get; set; }
 
-        public TeamEntity? Team { get; set; }
+        public TeamEntity Team { get; set; }
 
         /// <summary>
         /// Признак удаления

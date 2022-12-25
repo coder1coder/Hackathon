@@ -1,7 +1,6 @@
-import {AfterViewChecked, AfterViewInit, Component, ViewChild} from "@angular/core";
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild} from "@angular/core";
 import {UserRoleTranslator} from "src/app/models/User/UserRole";
 import {AuthService} from "../../../services/auth.service";
-import {KeyValue} from "@angular/common";
 import {TeamService} from "../../../services/team.service";
 import {catchError, of, switchMap} from "rxjs";
 import {IUser} from "../../../models/User/IUser";
@@ -12,6 +11,8 @@ import {UserProfileReactionService} from "../../../services/user-profile-reactio
 import {SnackService} from "../../../services/snack.service";
 import {FriendshipStatus} from "../../../models/Friendship/FriendshipStatus";
 import {MatTabGroup} from "@angular/material/tabs";
+import {Team} from "../../../models/Team/Team";
+import { UserEmailStatus } from "src/app/models/User/UserEmailStatus";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -21,12 +22,11 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
 
   UserRoleTranslator = UserRoleTranslator;
   @ViewChild(MatTabGroup) public friendshipTabs!: MatTabGroup;
-
-  public userProfileDetails: KeyValue<string,any>[] = [];
+  @ViewChild('confirmationCodeInput') confirmationCodeInput: ElementRef;
 
   userId: number;
   user?: IUser;
-
+  userTeam?: Team | null;
   authUserId: number;
 
   canUploadImage: boolean = false;
@@ -36,6 +36,8 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
   userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   UserProfileReaction = UserProfileReaction;
   FriendshipStatus = FriendshipStatus;
+  UserEmailStatus = UserEmailStatus;
+
   Object = Object;
 
   availableReactions: string[] = [];
@@ -44,13 +46,13 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
     private authService: AuthService,
     private teamService: TeamService,
     private activateRoute: ActivatedRoute,
-    private usersService: UserService,
+    private userService: UserService,
     private userProfileReactionService: UserProfileReactionService,
-    private snackBar: SnackService,
+    private snackService: SnackService,
   ) {
 
-    this.usersService = usersService;
-    this.snackBar = snackBar;
+    this.userService = userService;
+    this.snackService = snackService;
 
     this.authUserId = this.authService.getUserId() ?? 0;
     this.userId = this.activateRoute.snapshot.params['userId'] ?? this.authUserId;
@@ -68,40 +70,38 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
   }
 
   ngAfterViewInit(): void {
+    this.fetchData();
+  }
+
+  private fetchData(): void{
+
     this.isLoading = true;
+    this.userService.getById(this.userId)
+      ?.pipe(
+        switchMap((user)=> {
 
-    this.usersService.getById(this.userId)
-    ?.pipe(
-      switchMap((user)=> {
+          let currentUserId = this.authService.getUserId();
 
-        let currentUserId = this.authService.getUserId();
+          this.canUploadImage = currentUserId == this.userId;
 
-        this.canUploadImage = currentUserId == this.userId;
+          this.user = user;
 
-        this.user = user;
+          if (this.userId != this.authUserId)
+          {
+            this.fetchReactions();
+          }
 
-        this.userProfileDetails = [
-          { key: 'Имя пользователя', value: user?.userName},
-          { key: 'Полное имя', value: user?.fullName},
-          { key: 'E-mail', value: user?.email!},
-          { key: 'Роль', value: this.UserRoleTranslator.Translate(user?.role) },
-        ]
-
-        if (this.userId != this.authUserId)
-        {
-          this.fetchReactions();
-        }
-
-        return this.teamService.getMyTeam()
-      }),
-      catchError(() => {
-        return of(null)
-      })
-    ).subscribe((res) => {
+          return this.teamService.getMyTeam()
+        }),
+        catchError(() => {
+          return of(null)
+        })
+      ).subscribe((res) => {
         this.isLoading = false;
-        this.userProfileDetails.push({ key: 'Команда', value: res?.name ?? "Не состоит в команде" })
+        this.userTeam = res
       }
     )
+
   }
 
   public toggleReaction(event: Event, reaction: UserProfileReaction):void {
@@ -129,9 +129,35 @@ export class ProfileViewComponent implements AfterViewInit, AfterViewChecked {
         next: (r: UserProfileReaction) => {
           this.userProfileReactions = r;
         },
-        error: () => {
-          console.log('not found reaction')
+        error: _ => {
         }
       });
   }
+
+  public confirmEmail():void{
+    let code = this.confirmationCodeInput?.nativeElement?.value ?? '';
+    this.userService.confirmEmail(code)
+      .subscribe({
+        next: () => {
+          this.fetchData();
+        },
+        error: _ => {
+          this.snackService.open("Ошибка подтверждения Email")
+        }
+      })
+  }
+
+  public createEmailConfirmationRequest()
+  {
+    this.userService.createEmailConfirmationRequest()
+      .subscribe({
+        next: () =>{
+          this.fetchData();
+        },
+        error: _ => {
+          this.snackService.open("Ошибка отправки запроса на подтверждение Email");
+        }
+      });
+  }
+
 }

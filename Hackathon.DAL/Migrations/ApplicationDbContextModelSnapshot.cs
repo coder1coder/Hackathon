@@ -39,6 +39,31 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("EventsTeams", (string)null);
                 });
 
+            modelBuilder.Entity("Hackathon.Entities.EmailConfirmationRequestEntity", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ConfirmationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("EmailConfirmations", (string)null);
+                });
+
             modelBuilder.Entity("Hackathon.Entities.EventEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -427,6 +452,17 @@ namespace Hackathon.DAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Hackathon.Entities.EmailConfirmationRequestEntity", b =>
+                {
+                    b.HasOne("Hackathon.Entities.User.UserEntity", "User")
+                        .WithOne("EmailConfirmationRequest")
+                        .HasForeignKey("Hackathon.Entities.EmailConfirmationRequestEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Hackathon.Entities.EventEntity", b =>
                 {
                     b.HasOne("Hackathon.Entities.User.UserEntity", "Owner")
@@ -506,6 +542,8 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.Entities.User.UserEntity", b =>
                 {
+                    b.Navigation("EmailConfirmationRequest");
+
                     b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618

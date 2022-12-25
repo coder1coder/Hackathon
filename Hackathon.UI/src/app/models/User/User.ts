@@ -1,3 +1,5 @@
+import {IUserEmail} from "./IUserEmail";
+
 export class User
 {
     id: number | undefined;
@@ -6,6 +8,8 @@ export class User
     fullname: string | undefined;
     token: any | undefined;
     image: any | undefined;
+
+    email: IUserEmail
 
     constructor(login?:string, token?:string) {
         this.id = 0;

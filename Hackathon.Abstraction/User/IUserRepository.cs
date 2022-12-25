@@ -40,7 +40,7 @@ namespace Hackathon.Abstraction.User
         /// <param name="googleId">GoogleId</param>
         /// <param name="email">Email</param>
         /// <returns></returns>
-        Task<UserModel?> GetByGoogleIdOrEmailAsync(string googleId, string email);
+        Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email);
 
         /// <summary>
         /// Обновить информацию о Google аккаунте

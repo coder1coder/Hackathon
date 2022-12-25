@@ -3,4 +3,10 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="Templates\EmailConfirmationRequestTemplate.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

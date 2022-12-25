@@ -28,7 +28,7 @@ public class EventLogListItem
     /// </summary>
     public long? UserId { get; set; }
 
-    public string? UserName { get; set; }
+    public string UserName { get; set; }
 
     /// <summary>
     /// Время события (UTC)

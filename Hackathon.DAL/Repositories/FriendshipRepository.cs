@@ -11,6 +11,7 @@ using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Extensions;
 using Hackathon.Entities;
+using Hackathon.Entities.User;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -45,11 +46,12 @@ public class FriendshipRepository: IFriendshipRepository
             .Where(x=> x != userId)
             .Distinct().ToArray();
 
-        var friends = await _dbContext.Users
+        var friendsEntities = await _dbContext.Users
             .AsNoTracking()
             .Where(x => friendsIds.Contains(x.Id))
-            .ProjectToType<UserModel>(_mapper.Config)
             .ToArrayAsync();
+
+        var friends = _mapper.Map<UserEntity[], UserModel[]>(friendsEntities);
 
         return new BaseCollection<UserModel>
         {
