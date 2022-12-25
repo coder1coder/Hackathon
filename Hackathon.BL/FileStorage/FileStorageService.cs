@@ -39,7 +39,7 @@ namespace Hackathon.BL.FileStorage
                     await _s3Client.PutBucketAsync(bucketName);
                 }
 
-                await _s3Client.PutObjectAsync(new PutObjectRequest()
+                await _s3Client.PutObjectAsync(new PutObjectRequest
                 {
                     Key = uniqueFileName.ToString(),
                     BucketName = bucketName,
@@ -48,7 +48,7 @@ namespace Hackathon.BL.FileStorage
                     AutoResetStreamPosition = true,
                 });
 
-                var storageFile = new StorageFile()
+                var storageFile = new StorageFile
                 {
                     Id = uniqueFileName,
                     BucketName = bucketName,
@@ -76,7 +76,10 @@ namespace Hackathon.BL.FileStorage
 
             if (fileInfo is null)
             {
-                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                _logger.LogError("{Actor}: Файл с индентификатором {storageFileId} не найден",
+                    nameof(FileStorageService),
+                    storageFileId);
+
                 throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
             }
 
@@ -97,7 +100,10 @@ namespace Hackathon.BL.FileStorage
 
             if (fileInfo is null)
             {
-                _logger.LogError($"Файл с индентификатором {storageFileId} не найден");
+                _logger.LogError("{Actor}: Файл с индентификатором {storageFileId} не найден",
+                    nameof(FileStorageService),
+                    storageFileId);
+
                 throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
             }
 
