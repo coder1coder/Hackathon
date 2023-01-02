@@ -13,4 +13,5 @@ export interface ICreateEvent
   teamPresentationMinutes: number;
   changeEventStatusMessages: ChangeEventStatusMessage[];
   award:string;
+  imageId:string;
 }

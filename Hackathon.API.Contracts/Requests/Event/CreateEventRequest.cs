@@ -13,7 +13,7 @@ namespace Hackathon.Contracts.Requests.Event
         /// Наименование события
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Описание события
         /// </summary>
@@ -58,10 +58,16 @@ namespace Hackathon.Contracts.Requests.Event
         /// Список сообщений высылаемых командам при смене статусов
         /// </summary>
         public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
-        
+
         /// <summary>
         /// Награда, призовой фонд
         /// </summary>
         public string Award { get; set; }
+
+        /// <summary>
+        /// Идентификатор изображения ивента
+        /// <remarks>Получается посредством загрузки файла в хранилище</remarks>
+        /// </summary>
+        public Guid? ImageId { get; set; }
     }
 }

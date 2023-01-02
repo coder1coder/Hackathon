@@ -1,3 +1,11 @@
+@mixin flex-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
 .eventsNewForm {
   display: flex;
   flex-direction: column;
@@ -5,10 +13,46 @@
   box-sizing: border-box;
 
   &__vertical-fields {
-    padding-top: 1em;
+
     display: flex;
     flex-direction: column;
     max-width: 600px;
     width: 100%;
   }
+}
+
+.event-form {
+  &__tab-common {
+    display: flex;
+    column-gap: 2em;
+    padding-top: 1em;
+  }
+}
+
+.event-image {
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+
+  &__image{
+    border: 1px solid #e8e8e8;
+    @include flex-center;
+    width: 200px;
+    height: 150px;
+
+    & img {
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__selector{
+    @include flex-center;
+  }
+}
+
+input[type="file"]{
+  display: none;
 }

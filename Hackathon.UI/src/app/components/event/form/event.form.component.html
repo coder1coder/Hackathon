@@ -11,85 +11,113 @@
     <mat-tab-group animationDuration="0" dynamicHeight>
 
       <mat-tab label="Общая информация">
-        <div class="eventsNewForm__vertical-fields">
-          <mat-form-field appearance="fill">
-            <mat-label>Наименование события</mat-label>
-            <input matInput autocomplete="off"
-                   id="name"
-                   formControlName="name"
-                   required>
-          </mat-form-field>
+        <div class="event-form__tab-common">
+          <div class="eventsNewForm__vertical-fields">
+            <mat-form-field appearance="fill">
+              <mat-label>Наименование события</mat-label>
+              <input matInput autocomplete="off"
+                     id="name"
+                     formControlName="name"
+                     required>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Описание</mat-label>
+            <mat-form-field appearance="fill">
+              <mat-label>Описание</mat-label>
 
-            <textarea matInput
-                      id="description"
-                      formControlName="description"
-                      autocomplete="off"
-                      cdkTextareaAutosize
-                      #autosize="cdkTextareaAutosize"
-                      cdkAutosizeMinRows="5"
-                      cdkAutosizeMaxRows="5"
-                      required></textarea>
-          </mat-form-field>
+              <textarea matInput
+                        id="description"
+                        formControlName="description"
+                        autocomplete="off"
+                        cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="5"
+                        cdkAutosizeMaxRows="5"
+                        required></textarea>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Дата и время начала</mat-label>
-            <input matInput
-                   type="datetime-local"
-                   autocomplete="off"
-                   id="start"
-                   formControlName="start"
-                   required
-                   min="{{minDate}}">
+            <mat-form-field appearance="fill">
+              <mat-label>Дата и время начала</mat-label>
+              <input matInput
+                     type="datetime-local"
+                     autocomplete="off"
+                     id="start"
+                     formControlName="start"
+                     required
+                     min="{{minDate}}">
 
-          </mat-form-field>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Продолжительность формированя команд</mat-label>
-            <input matInput
-                   type="number"
-                   min="1"
-                   id="memberRegistrationMinutes"
-                   formControlName="memberRegistrationMinutes"
-                   required>
-            <span matSuffix> мин</span>
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Продолжительность формированя команд</mat-label>
+              <input matInput
+                     type="number"
+                     min="1"
+                     id="memberRegistrationMinutes"
+                     formControlName="memberRegistrationMinutes"
+                     required>
+              <span matSuffix> мин</span>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Продолжительность этапа разработки</mat-label>
-            <input matInput
-                   min="1"
-                   type="number"
-                   id="developmentMinutes"
-                   formControlName="developmentMinutes"
-                   required>
-            <span matSuffix> мин</span>
+            <mat-form-field appearance="fill">
+              <mat-label>Продолжительность этапа разработки</mat-label>
+              <input matInput
+                     min="1"
+                     type="number"
+                     id="developmentMinutes"
+                     formControlName="developmentMinutes"
+                     required>
+              <span matSuffix> мин</span>
 
-          </mat-form-field>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Продолжительность выступления каждой команды</mat-label>
-            <input matInput
-                   type="number"
-                   min="1"
-                   id="teamPresentationMinutes"
-                   formControlName="teamPresentationMinutes"
-                   required>
-            <span matSuffix> мин</span>
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Продолжительность выступления каждой команды</mat-label>
+              <input matInput
+                     type="number"
+                     min="1"
+                     id="teamPresentationMinutes"
+                     formControlName="teamPresentationMinutes"
+                     required>
+              <span matSuffix> мин</span>
+            </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Награда / Призовой фонд</mat-label>
-            <input matInput autocomplete="off"
-                   id="award"
-                   formControlName="award"
-                   required>
-          </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Награда / Призовой фонд</mat-label>
+              <input matInput autocomplete="off"
+                     id="award"
+                     formControlName="award"
+                     required>
+            </mat-form-field>
 
+          </div>
+          <div class="image-upload">
+
+
+            <div class="event-image">
+
+              <div class="event-image__image">
+                <img *ngIf="eventImage; else noimage" [src]="eventImage" alt="event image">
+                <ng-template #noimage>
+                  <mat-icon style="color: #e5e5e5">image_outline</mat-icon>
+                </ng-template>
+              </div>
+
+              <div class="event-image__selector">
+                <input type="file" #selectedFile (change)="selectEventImage($event)">
+                <button mat-flat-button (click)="selectedFile.click()">
+                  <mat-icon color="primary">photo_camera</mat-icon>
+                  выбрать изображение
+                </button>
+                <button mat-flat-button (click)="clearEventImage()">
+                  <mat-icon color="accent">delete</mat-icon>
+                  удалить изображение
+                </button>
+              </div>
+
+            </div>
+
+          </div>
         </div>
-
       </mat-tab>
 
       <mat-tab label="Команды">

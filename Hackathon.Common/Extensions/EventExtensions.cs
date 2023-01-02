@@ -16,6 +16,7 @@ public static class EventExtensions
         MaxEventMembers = model.MaxEventMembers,
         MinTeamMembers = model.MinTeamMembers,
         IsCreateTeamsAutomatically = model.IsCreateTeamsAutomatically,
+        ImageId = model.ImageId,
 
         TeamsCount = model.Teams?.Count ?? 0,
         MembersCount = model.Teams?.Sum(x => x.Members?.Length) ?? 0

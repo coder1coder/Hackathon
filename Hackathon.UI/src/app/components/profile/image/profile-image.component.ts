@@ -2,11 +2,11 @@ import {Component, Input, OnInit, ViewChild} from "@angular/core";
 import {SnackService} from "../../../services/snack.service";
 import {UserService} from "../../../services/user.service";
 import {BehaviorSubject, mergeMap} from "rxjs";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {map} from "rxjs/operators";
+import {SafeUrl} from "@angular/platform-browser";
 import {IUser} from "../../../models/User/IUser";
 import {AuthService} from "../../../services/auth.service";
 import {FileStorageService} from "src/app/services/file-storage.service";
+import {FileUtils} from "../../../common/FileUtils";
 
 @Component({
   selector: 'profile-image',
@@ -27,14 +27,10 @@ export class ProfileImageComponent implements OnInit {
   public image: any;
   public userNameSymbols: string = '';
 
-  private maxFileSize: number = 2048;
-  private divider: number = 1024;
-
   @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
   constructor(
     private snackService: SnackService,
     private userService: UserService,
-    private sanitizer: DomSanitizer,
     private authService: AuthService,
     private fileStorageService: FileStorageService
     ) {
@@ -46,12 +42,12 @@ export class ProfileImageComponent implements OnInit {
 
     let file:File = event.target.files[0];
 
-    if (!ProfileImageComponent.isFileImage(file)) {
+    if (!FileUtils.IsImage(file)) {
       this.snackService.open('Файл не является картинкой');
       return;
     }
 
-    if (file.size / this.divider > this.maxFileSize) {
+    if (file.size / FileUtils.Divider > FileUtils.MaxFileSize) {
       this.snackService.open('Максимальный объем файла 2МБ');
       return;
     }
@@ -59,30 +55,14 @@ export class ProfileImageComponent implements OnInit {
     this.userService.setImage(file)
       .pipe(
         mergeMap((res: string) =>
-          this.fileStorageService.getImage(res)
-            .pipe(
-              map((res: ArrayBuffer) => this.getSafeUrlFromByteArray(res))
-            ))
+          this.fileStorageService.getById(res))
       )
       .subscribe((res : SafeUrl) => this.image = res)
   }
 
   public loadImage(imageId : string): void {
-    this.fileStorageService.getImage(imageId)
-        .pipe(map((x: ArrayBuffer) => this.getSafeUrlFromByteArray(x)))
+    this.fileStorageService.getById(imageId)
         .subscribe(x => this.image = x);
-  }
-
-  private static isFileImage(file: File): boolean {
-    return file && file['type'].split('/')[0] === 'image';
-  }
-
-  private getSafeUrlFromByteArray(buffer: ArrayBuffer): SafeUrl {
-    let TYPED_ARRAY = new Uint8Array(buffer);
-    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte)=> data + String.fromCharCode(byte), '');
-    let base64String = btoa(STRING_CHAR);
-
-    return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64,' + base64String);
   }
 
   ngOnInit(): void {

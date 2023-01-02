@@ -72,8 +72,12 @@
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
         <div class="card" (click)="rowClick(item)">
 
-          <div class="card-avatar">
-            <img class="card-image" (error)="catchLinkImageError(item)" src="{{item.photoLink}}" alt="event">
+          <div class="card-cover">
+            <img class="card-image" [src]="item.imageUrl" alt="event-image" *ngIf="item.imageId; else noImage"
+                 loading="lazy">
+            <ng-template #noImage>
+              <mat-icon class="no-image">image</mat-icon>
+            </ng-template>
           </div>
 
           <div class="card-info">

@@ -1,21 +1,27 @@
-import { Event } from "../../../models/Event/Event";
-import { AfterViewInit, Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { EventService } from "../../../services/event.service";
-import { IProblemDetails } from "../../../models/IProblemDetails";
-import { ActivatedRoute } from "@angular/router";
-import { ICreateEvent } from "../../../models/Event/ICreateEvent";
-import { IUpdateEvent } from "../../../models/Event/IUpdateEvent";
-import { EventStatusTranslator, EventStatus } from "src/app/models/Event/EventStatus";
-import { ChangeEventStatusMessage } from "src/app/models/Event/ChangeEventStatusMessage";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
-import { EventNewStatusDialogComponent } from "../status/event-new-status-dialog.component";
-import { SnackService } from "../../../services/snack.service";
-import { Observable } from "rxjs";
+import {Event} from "../../../models/Event/Event";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {EventService} from "../../../services/event.service";
+import {IProblemDetails} from "../../../models/IProblemDetails";
+import {ActivatedRoute} from "@angular/router";
+import {ICreateEvent} from "../../../models/Event/ICreateEvent";
+import {IUpdateEvent} from "../../../models/Event/IUpdateEvent";
+import {EventStatus, EventStatusTranslator} from "src/app/models/Event/EventStatus";
+import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {EventNewStatusDialogComponent} from "../status/event-new-status-dialog.component";
+import {SnackService} from "../../../services/snack.service";
+import {Observable} from "rxjs";
 import * as moment from "moment/moment";
-import { AuthService } from "../../../services/auth.service";
-import { RouterService } from "../../../services/router.service";
+import {AuthService} from "../../../services/auth.service";
+import {RouterService} from "../../../services/router.service";
+import {FileUtils} from "../../../common/FileUtils";
+import {FileStorageService} from "../../../services/file-storage.service";
+import {Bucket} from "../../../common/Bucket";
+import {IStorageFile} from "../../../models/FileStorage/IStorageFile";
+import {SafeUrl} from "@angular/platform-browser";
+import { EventErrorMessages } from "src/app/common/EventErrorMessages";
 
 @Component({
   selector: 'event-form',
@@ -24,24 +30,27 @@ import { RouterService } from "../../../services/router.service";
 })
 
 export class EventFormComponent implements OnInit, AfterViewInit {
+
+  private readonly eventId?: number;
+  private event?: Event;
+  private dateFormat: string = 'yyyy-MM-DDTHH:mm';
+  private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
+
   public editMode: boolean = false;
   public isLoading: boolean = false;
   public EventStatusTranslator = EventStatusTranslator;
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public form = new FormGroup({});
-
-  private readonly eventId?: number;
-  private event?: Event;
-  private dateFormat: string = 'yyyy-MM-DDTHH:mm';
-  private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
+  public eventImage: any;
   public minDate = moment(new Date()).format(this.dateFormat).toString();
 
   constructor(
     private activateRoute: ActivatedRoute,
     private eventService: EventService,
+    private fileStorageService: FileStorageService,
     private authService: AuthService,
-    private snackBar: SnackService,
+    private snackService: SnackService,
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder
@@ -70,11 +79,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (_) =>  {
           this.router.Events.View(this.eventId!).then(_=>
-            this.snackBar.open(`Событие опубликовано`))
+            this.snackService.open(EventErrorMessages.EventPublished))
         },
         error: (err) => {
           let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snackBar.open(problemDetails.detail)}
+          this.snackService.open(problemDetails.detail)}
       });
   }
 
@@ -93,7 +102,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
         changeEventStatusMessages: this.eventStatusDataSource.data,
         award: this.form.get('award')?.value,
-        description: this.form.get('description')?.value
+        description: this.form.get('description')?.value,
+        imageId: this.form.get('imageId')?.value
       };
 
       request = this.eventService.create(event);
@@ -111,7 +121,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         userId: Number(this.event?.ownerId),
         changeEventStatusMessages: this.eventStatusDataSource.data,
         award: this.form.get('award')?.value,
-        description: this.form.get('description')?.value
+        description: this.form.get('description')?.value,
+        imageId: this.form.get('imageId')?.value
       };
 
       request = this.eventService.update(event);
@@ -120,15 +131,15 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     request.subscribe({
       next: r => {
         let eventId = (this.editMode) ? this.eventId : r.id;
-        let afterOperationMessage = (this.editMode) ? `Событие обновлено` : `Новое событие добавлено`;
+        let afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
 
         this.router.Events.Edit(eventId).then(_ =>
-          this.snackBar.open(afterOperationMessage)
+          this.snackService.open(afterOperationMessage)
         )
       },
       error: err => {
         let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-        this.snackBar.open(problemDetails.detail);
+        this.snackService.open(problemDetails.detail);
       }
     });
   }
@@ -155,11 +166,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       .subscribe({
       next: (_) => {
         this.router.Events.List().then(_=>
-          this.snackBar.open(`Событие удалено`))
+          this.snackService.open(`Событие удалено`))
       },
       error: (err) => {
         let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-        this.snackBar.open(problemDetails.detail);
+        this.snackService.open(problemDetails.detail);
       }
     });
   }
@@ -207,12 +218,54 @@ export class EventFormComponent implements OnInit, AfterViewInit {
            this.eventStatusValues.every((val, index) => val === dataValues[index]);
   }
 
+  public clearEventImage(): void{
+    this.form.controls['imageId'].reset();
+    this.eventImage = undefined;
+  }
+
+  public selectEventImage(e: any): void{
+
+    if ( !(e?.target?.files?.length > 0) )
+      return;
+
+    let file:File = e.target.files[0];
+
+    if (!FileUtils.IsImage(file)) {
+      this.snackService.open(EventErrorMessages.FileIsNotImage);
+      return;
+    }
+
+    if (file.size / FileUtils.Divider > FileUtils.MaxFileSize) {
+      this.snackService.open(EventErrorMessages.FileSizeOutOfRange);
+      return;
+    }
+
+    this.fileStorageService
+      .upload(Bucket.Events, file)
+      .subscribe({
+        next: (r : IStorageFile) =>{
+          this.form.controls['imageId'].setValue(r.id);
+          this.loadImage(r.id);
+        },
+        error: (err: any) => {
+          console.log(err)
+          this.snackService.open(EventErrorMessages.FileUploadError)
+        }});
+  }
+
+  private loadImage(fileId:string){
+    this.fileStorageService.getById(fileId)
+      .subscribe({
+        next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
+        error: _ => this.snackService.open(EventErrorMessages.FileUploadError)});
+  }
+
   private fetch(): void {
     if (this.eventId == undefined)
       return;
 
     this.eventService.getById(this.eventId)
-      .subscribe((res: Event) => {
+      .subscribe({next: (res: Event) => {
         this.event = res;
         this.form.patchValue({
           ...res,
@@ -220,11 +273,12 @@ export class EventFormComponent implements OnInit, AfterViewInit {
          });
 
         this.eventStatusDataSource.data = res.changeEventStatusMessages;
+        this.loadImage(res.imageId);
       },
-      (error) => {
+      error: (error) => {
         let problemDetails: IProblemDetails = <IProblemDetails>error.error;
-        this.snackBar.open(problemDetails.detail);
-      });
+        this.snackService.open(problemDetails.detail);
+      }});
   }
 
   private initForm(): void {
@@ -238,7 +292,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       maxEventMembers: [50],
       minTeamMembers: [2],
       isCreateTeamsAutomatically: [true],
-      award: ['0']
+      award: ['0'],
+      imageId: [null],
     });
   }
 

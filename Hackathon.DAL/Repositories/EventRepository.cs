@@ -135,10 +135,12 @@ namespace Hackathon.DAL.Repositories
                     x.MaxEventMembers,
                     x.MinTeamMembers,
                     x.IsCreateTeamsAutomatically,
+                    x.ImageId,
                     OwnerName = x.Owner.FullName ?? x.Owner.UserName,
                     TeamsCount = x.Teams.Count,
                     MembersCount = x.Teams.Sum(z => z.Members.Count)
-                }).Skip(parameters.Offset)
+                })
+                .Skip(parameters.Offset)
                 .Take(parameters.Limit)
                 .ProjectToType<EventListItem>()
                 .ToArrayAsync();

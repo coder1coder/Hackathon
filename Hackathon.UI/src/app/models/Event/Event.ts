@@ -21,6 +21,7 @@ export class Event {
   teams: Team[] = []
   stages: any[] = []
   award!: string;
+  imageId: string;
 
   public static getUsersCount(event:Event):number{
     let i = 0;
