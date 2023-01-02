@@ -59,4 +59,10 @@ public abstract class BaseEventParameters
     /// Награда, призовой фонд
     /// </summary>
     public string Award { get; set; }
+
+    /// <summary>
+    /// Идентификатор изображения ивента
+    /// <remarks>Получается посредством загрузки файла в хранилище</remarks>
+    /// </summary>
+    public Guid? ImageId { get; set; }
 }

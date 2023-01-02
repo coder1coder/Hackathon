@@ -83,6 +83,11 @@ namespace Hackathon.Entities
         public string Award { get; set; }
 
         /// <summary>
+        /// Изображение события
+        /// </summary>
+        public Guid? ImageId { get; set; }
+
+        /// <summary>
         /// Признак удаления
         /// </summary>
         public bool IsDeleted { get; set; }

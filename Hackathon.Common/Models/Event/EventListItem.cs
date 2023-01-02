@@ -16,7 +16,7 @@ public class EventListItem
     /// Наименование события
     /// </summary>
     public string Name { get; set; }
-    
+
     /// <summary>
     /// Описание события
     /// </summary>
@@ -56,14 +56,19 @@ public class EventListItem
     /// Количество команд связанных с событием
     /// </summary>
     public long TeamsCount { get; set; }
-    
+
     /// <summary>
     /// Количество участников
     /// </summary>
     public long MembersCount { get; set; }
-    
+
     /// <summary>
     /// Создавать команды автоматически
     /// </summary>
     public bool IsCreateTeamsAutomatically { get; set; }
+
+    /// <summary>
+    /// Идентификатор изображения
+    /// </summary>
+    public Guid? ImageId { get; set; }
 }
