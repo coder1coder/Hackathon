@@ -10,10 +10,10 @@ import {RouterService} from "../../../services/router.service";
 import {MatSelect} from "@angular/material/select";
 import {IEventListItem} from "../../../models/Event/IEventListItem";
 import {AuthService} from "../../../services/auth.service";
-import {Subject, takeUntil} from "rxjs";
-import {map} from "rxjs/operators";
 import {PageSettingsDefaults} from "../../../models/PageSettings";
 import {DATE_FORMAT} from "../../../common/date-formats";
+import {SafeUrl} from "@angular/platform-browser";
+import {FileStorageService} from "../../../services/file-storage.service";
 
 @Component({
   selector: 'event-list',
@@ -33,15 +33,14 @@ export class EventListComponent implements OnInit {
   public isFullListDisplayed: boolean = false;
 
   private params = new GetListParameters<EventFilter>();
-  private static eventImgCount: number = 9;
-  private destroy$ = new Subject();
 
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
     private eventsService: EventService,
     public router: RouterService,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private fileStorageService: FileStorageService
   ) {
   }
 
@@ -57,10 +56,6 @@ export class EventListComponent implements OnInit {
 
   public getDateTimeFormat(date: Date): string {
     return moment(date).local().format(DATE_FORMAT)
-  }
-
-  public catchLinkImageError(item: IEventListItem): void {
-    item.photoLink = '/assets/img/event-img/event-default.svg';
   }
 
   public fetch(reloadLimit?: boolean): void {
@@ -146,16 +141,19 @@ export class EventListComponent implements OnInit {
   private loadData(params?: GetListParameters<EventFilter>): void {
     this.isLoading = true;
     this.eventsService.getList(params)
-      .pipe(
-        takeUntil(this.destroy$),
-        map((r: BaseCollection<IEventListItem>) => {
-          console.log(r.items)
-            r.items = EventListComponent.mapPhotoLink(r.items);
-            return r;
-        })
-      )
       .subscribe({
         next: (r: BaseCollection<IEventListItem>) =>  {
+
+          r.items.map(x=>{
+            if (x.imageId){
+              console.log(x.imageId)
+              this.fileStorageService.getById(x.imageId)
+                .subscribe({next: (url:SafeUrl) =>{
+                    x.imageUrl = url
+              }})
+            }
+          })
+
           this.eventList = r;
           if (this.eventList.items.length === r.totalCount) {
             this.isFullListDisplayed = true;
@@ -165,28 +163,10 @@ export class EventListComponent implements OnInit {
       });
   }
 
-  /** Установка дефолтного изображения для ивента */
-  private static mapPhotoLink(eventListItems: IEventListItem[]): IEventListItem[] {
-    return eventListItems.reduce((acc: IEventListItem[], eventItem: IEventListItem, currentIndex) => {
-      if (!Boolean(eventItem.eventImageId)) {
-        eventItem.photoLink = EventListComponent.getImageLink(eventListItems.length, currentIndex);
-      }
-      acc.push(eventItem);
-      return acc;
-    }, []);
+  public getSafeUrlByFileId(imageId:string): SafeUrl {
+    return this.fileStorageService
+      .getById(imageId)
+      .subscribe({ next: (safeUrl: SafeUrl) => safeUrl });
   }
 
-  /** Получить путь к изображению */
-  private static getImageLink(arrayLength: number, index: number): string {
-    if (index < 0 || arrayLength < 1) return '/assets/img/event-img/event-0.svg';
-    if (index <= this.eventImgCount - 1) return `/assets/img/event-img/event-${index}.svg`;
-    return `/assets/img/event-img/event-${EventListComponent.recursiveRemoveFraction(index, this.eventImgCount)}.svg`;
-  }
-
-  /** Получить валидный индекс изображения */
-  private static recursiveRemoveFraction(num: number, divider: number): number {
-    let res = num - divider;
-    if (res >= divider) return EventListComponent.recursiveRemoveFraction(res, divider);
-    return res;
-  }
 }

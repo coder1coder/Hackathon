@@ -13,7 +13,7 @@ import { IUser } from "../models/User/IUser";
 
 export class UserService {
 
-  private api: string = environment.api;
+  private api: string = `${environment.api}/user`;
 
   constructor(private http: HttpClient) {
     const headers = new HttpHeaders()
@@ -25,27 +25,27 @@ export class UserService {
   }
 
   public getList(getFilterModel:GetListParameters<UserFilter>):Observable<BaseCollection<IUser>>{
-    return this.http.post<BaseCollection<IUser>>(this.api+'/User/list', getFilterModel);
+    return this.http.post<BaseCollection<IUser>>(this.api+'/list', getFilterModel);
   }
 
   public getById(userId:number): Observable<IUser> {
-    return this.http.get<IUser>(this.api+'/User/'+ userId);
+    return this.http.get<IUser>(`${this.api}/${userId}`);
   }
 
   public setImage(file: File): Observable<string> {
     const formData = new FormData();
     formData.append("file", file);
 
-    return this.http.post<string>(this.api+'/User/profile/image/upload', formData, {
+    return this.http.post<string>(this.api+'/profile/image/upload', formData, {
       headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
     })
   }
 
   public createEmailConfirmationRequest(): Observable<void>{
-    return this.http.post<void>(`${this.api}/User/profile/email/confirm/request`, null);
+    return this.http.post<void>(`${this.api}/profile/email/confirm/request`, null);
   }
 
   public confirmEmail(code: string): Observable<void>{
-    return this.http.post<void>(`${this.api}/User/profile/email/confirm?code=${code}`, null);
+    return this.http.post<void>(`${this.api}/profile/email/confirm?code=${code}`, null);
   }
 }
