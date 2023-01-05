@@ -3,7 +3,7 @@ using Hackathon.Abstraction.IntegrationEvents;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvent;
 
-public class FriendshipChangedIntegrationEvent: IIntegrationEvent
+public sealed class FriendshipChangedIntegrationEvent: IIntegrationEvent
 {
     [JsonPropertyName("userIds")]
     public long[] UserIds { get; }

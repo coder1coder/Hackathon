@@ -122,7 +122,7 @@ namespace Hackathon.API
         {
             var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
-            builder.RegisterModule(new Module());
+            builder.RegisterModule(new IntegrationEvents.Module());
             builder.RegisterModule(new BL.Module(appConfig));
             builder.RegisterModule(new DAL.Module());
             builder.RegisterModule(new Jobs.Module());
