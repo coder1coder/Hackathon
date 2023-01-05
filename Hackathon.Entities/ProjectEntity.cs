@@ -29,6 +29,11 @@ namespace Hackathon.Entities
         public TeamEntity Team { get; set; }
 
         /// <summary>
+        /// Идентификаторы файлов проекта
+        /// </summary>
+        public Guid[] FileIds { get; set; } = Array.Empty<Guid>();
+
+        /// <summary>
         /// Признак удаления
         /// </summary>
         public bool IsDeleted { get; set; } = false;

@@ -1,9 +1,12 @@
-﻿namespace Hackathon.Common.Models.Project
+﻿using Hackathon.Common.Models.FileStorage;
+
+namespace Hackathon.Common.Models.Project
 {
-    public class ProjectModel
+    /// <summary>
+    /// Проект
+    /// </summary>
+    public class ProjectModel: ProjectUpdateParameters
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public long TeamId { get; set; }
+        public StorageFile[] Files { get; set; }
     }
 }

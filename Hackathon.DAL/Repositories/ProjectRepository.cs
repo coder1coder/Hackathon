@@ -26,12 +26,27 @@ namespace Hackathon.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<long> CreateAsync(ProjectCreateModel projectCreateModel)
+        public async Task<long> CreateAsync(ProjectCreateParameters projectCreateParameters)
         {
-            var projectEntity = _mapper.Map<ProjectEntity>(projectCreateModel);
+            var projectEntity = _mapper.Map<ProjectEntity>(projectCreateParameters);
             await _dbContext.Projects.AddAsync(projectEntity);
             await _dbContext.SaveChangesAsync();
             return projectEntity.Id;
+        }
+
+        public async Task UpdateAsync(ProjectUpdateParameters parameters)
+        {
+            var entity = await _dbContext.Projects.FirstOrDefaultAsync(x =>
+                x.Id == parameters.Id
+                && !x.IsDeleted);
+
+            if (entity is null)
+                return;
+
+            _mapper.Map(parameters, entity);
+
+            _dbContext.Projects.Update(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<BaseCollection<ProjectListItem>> GetListAsync(GetListParameters<ProjectFilter> parameters)
@@ -78,6 +93,20 @@ namespace Hackathon.DAL.Repositories
                 TotalCount = totalCount
             };
         }
+
+        public async Task<ProjectModel> GetAsync(long projectId)
+        {
+            var entity = await _dbContext.Projects.FirstOrDefaultAsync(x =>
+                x.Id == projectId
+                && !x.IsDeleted);
+
+            return _mapper.Map<ProjectEntity, ProjectModel>(entity);
+        }
+
+        public Task<bool> Exists(long projectId)
+            => _dbContext.Projects.AnyAsync(x =>
+                x.Id == projectId
+                && !x.IsDeleted);
 
         private static Expression<Func<ProjectEntity, object>> ResolveOrderExpression(GetListParameters<ProjectFilter> parameters)
             => parameters.SortBy.ToLowerInvariant() switch
