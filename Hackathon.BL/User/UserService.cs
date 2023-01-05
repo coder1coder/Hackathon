@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -105,7 +105,7 @@ namespace Hackathon.BL.User
                 var userId = await _userRepository.CreateAsync(new SignUpModel
                 {
                     Email = signInByGoogleModel.Email,
-                    UserName = signInByGoogleModel.Email,
+                    UserName = signInByGoogleModel.FullName,
                     FullName = signInByGoogleModel.FullName,
                     Password = signInByGoogleModel.Id,
                     GoogleAccount = signInByGoogleModel
