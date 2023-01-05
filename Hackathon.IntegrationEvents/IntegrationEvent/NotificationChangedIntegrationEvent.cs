@@ -3,7 +3,7 @@ using Hackathon.Abstraction.IntegrationEvents;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvent;
 
-public class NotificationChangedIntegrationEvent: IIntegrationEvent
+public sealed class NotificationChangedIntegrationEvent: IIntegrationEvent
 {
     public Guid[] NotificationIds { get; }
     public NotificationChangedOperation Operation { get; }

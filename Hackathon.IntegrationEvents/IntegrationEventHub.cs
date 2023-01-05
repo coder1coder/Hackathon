@@ -15,10 +15,10 @@ where TIntegrationEvent: IIntegrationEvent
     {
         _contextHub = contextHub;
     }
-    
+
     public async Task Publish(string topic, TIntegrationEvent message)
     {
         var serializedObject = JsonSerializer.Serialize(message);
-        await _contextHub.Clients.All.SendCoreAsync(topic, new object[]{serializedObject});
+        await _contextHub.Clients.All.SendCoreAsync(topic, new object[]{ serializedObject });
     }
 }

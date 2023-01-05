@@ -1,9 +1,8 @@
 using Autofac;
 using Hackathon.Abstraction.IntegrationEvents;
-using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 
-namespace Hackathon.API;
+namespace Hackathon.IntegrationEvents;
 
 public class Module: Autofac.Module
 {
@@ -19,6 +18,10 @@ public class Module: Autofac.Module
 
         builder.RegisterType<IntegrationEventHub<FriendshipChangedIntegrationEvent>>()
             .As<IMessageHub<FriendshipChangedIntegrationEvent>>()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterType<IntegrationEventHub<EventStatusChangedIntegrationEvent>>()
+            .As<IMessageHub<EventStatusChangedIntegrationEvent>>()
             .InstancePerLifetimeScope();
     }
 }

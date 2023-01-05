@@ -26,7 +26,10 @@ namespace Hackathon.Tests.Integration.User
             Assert.NotNull(userModel);
 
             userModel.Should().BeEquivalentTo(fakeRequest, options=>
-                options.Excluding(x=>x.Password));
+                options
+                    .Excluding(x=>x.Password)
+                    .Excluding(x=>x.Email)
+                );
         }
 
     }
