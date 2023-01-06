@@ -9,6 +9,7 @@ using Hackathon.Abstraction.Notification;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.Event;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -79,10 +80,10 @@ namespace Hackathon.BL.Event
         {
             await _updateEventModelValidator.ValidateAndThrowAsync(eventUpdateParameters);
 
-            var isEventExists = await _eventRepository.IsExists(eventUpdateParameters.Id);
+            var isEventExists = await _eventRepository.ExistsAsync(eventUpdateParameters.Id);
 
             if (!isEventExists)
-                throw new EntityNotFoundException($"Событие с идентификатором '{eventUpdateParameters.Id}' не найдено");
+                throw new EntityNotFoundException(EventErrorMessages.EventDoesNotExists);
 
             await _eventRepository.UpdateAsync(eventUpdateParameters);
         }
@@ -108,7 +109,7 @@ namespace Hackathon.BL.Event
             var eventModel = await _eventRepository.GetAsync(eventId);
 
             if (eventModel == null)
-                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
+                throw new EntityNotFoundException(EventErrorMessages.EventDoesNotExists);
 
             var (isValid, errorMessage) = await new ChangeEventStatusValidator().ValidateAsync(eventModel, eventStatus);
 
@@ -158,15 +159,15 @@ namespace Hackathon.BL.Event
             var eventModel = await _eventRepository.GetAsync(eventId);
 
             if (eventModel == null)
-                throw new ValidationException("События не существует");
+                throw new ValidationException(EventErrorMessages.EventDoesNotExists);
 
             if (eventModel.Status != EventStatus.Published)
                 throw new ValidationException("Нельзя покидать событие, когда оно уже начато");
 
-            var userExists = await _userRepository.IsExistAsync(userId);
+            var userExists = await _userRepository.ExistsAsync(userId);
 
             if (!userExists)
-                throw new ValidationException("Пользователь не существует");
+                throw new ValidationException(UserErrorMessages.UserDoesNotExists);
 
             var userTeam = GetTeamContainsMember(eventModel, userId);
             if (userTeam == null)
@@ -184,10 +185,10 @@ namespace Hackathon.BL.Event
 
         public async Task DeleteAsync(long eventId)
         {
-            var eventModel = await _eventRepository.GetAsync(eventId);
+            var eventExists = await _eventRepository.ExistsAsync(eventId);
 
-            if (eventModel == null)
-                throw new EntityNotFoundException($"События с идентификатором {eventId} не существует");
+            if (!eventExists)
+                throw new ValidationException(EventErrorMessages.EventDoesNotExists);
 
             await _eventRepository.DeleteAsync(eventId);
         }
@@ -202,6 +203,11 @@ namespace Hackathon.BL.Event
         /// <param name="eventStatus"></param>
         private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
         {
+            var eventExists = await _eventRepository.ExistsAsync(eventModel.Id);
+
+            if (!eventExists)
+                throw new ValidationException(EventErrorMessages.EventDoesNotExists);
+
             await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
             await _integrationEventHub.Publish(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));

@@ -32,7 +32,7 @@ namespace Hackathon.Abstraction.User
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns><c> true </c> если пользователь есть, иначе <c> false </c></returns>
-        Task<bool> IsExistAsync(long userId);
+        Task<bool> ExistsAsync(long userId);
 
         /// <summary>
         /// Получить информацию о пользователе по GoogleId или Email

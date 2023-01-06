@@ -113,7 +113,7 @@ namespace Hackathon.BL.FileStorage
 
             await _fileStorageRepository.RemoveAsync(fileInfo.Id);
 
-            var deleteObjectResponse = await _s3Client.DeleteObjectAsync(
+            var _ = await _s3Client.DeleteObjectAsync(
                 fileInfo.BucketName,
                 storageFileId.ToString());
 

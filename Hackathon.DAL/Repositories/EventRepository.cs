@@ -177,27 +177,27 @@ namespace Hackathon.DAL.Repositories
 
         public async Task SetStatusAsync(long eventId, EventStatus eventStatus)
         {
-            var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
+            var eventEntity = await _dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventId);
 
-            if (eventEntity == null)
-                throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
-
-            eventEntity.Status = eventStatus;
-            await _dbContext.SaveChangesAsync();
+            if (eventEntity is not null)
+            {
+                eventEntity.Status = eventStatus;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteAsync(long eventId)
         {
-            var eventEntity = await _dbContext.Events.SingleOrDefaultAsync(x => x.Id == eventId);
+            var eventEntity = await _dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventId);
 
-            if (eventEntity == null)
-                throw new EntityNotFoundException("Событие с указанным идентификатором не найдено");
-
-            eventEntity.IsDeleted = true;
-            await _dbContext.SaveChangesAsync();
+            if (eventEntity is not null)
+            {
+                eventEntity.IsDeleted = true;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        public Task<bool> IsExists(long eventId)
+        public Task<bool> ExistsAsync(long eventId)
             => _dbContext.Events.AnyAsync(x =>
                 x.Id == eventId
                 && !x.IsDeleted);

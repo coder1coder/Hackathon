@@ -64,6 +64,6 @@ namespace Hackathon.Abstraction.Event
         /// </summary>
         /// <param name="eventId">Идентификатор события</param>
         /// <returns></returns>
-        Task<bool> IsExists(long eventId);
+        Task<bool> ExistsAsync(long eventId);
     }
 }
