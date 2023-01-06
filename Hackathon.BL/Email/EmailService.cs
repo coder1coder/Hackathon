@@ -50,7 +50,7 @@ public class EmailService: IEmailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Ошибка во время отправки Email");
+            _logger.LogError(e, "{Inititator}. Ошибка во время отправки Email", nameof(EmailService));
             return Result.Internal("Ошибка во время отправки Email");
         }
     }

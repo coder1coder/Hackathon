@@ -69,7 +69,8 @@ namespace Hackathon.BL.FileStorage
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Ошибка во время записи файла в файловое хранилище");
+                _logger.LogError(e, "{Initiator}. Ошибка во время записи файла в файловое хранилище",
+                    nameof(FileStorageService));
                 throw;
             }
         }
@@ -80,7 +81,7 @@ namespace Hackathon.BL.FileStorage
 
             if (fileInfo is null)
             {
-                _logger.LogError("{Actor}: Файл с индентификатором {storageFileId} не найден",
+                _logger.LogError("{Initiator}: Файл с индентификатором {storageFileId} не найден",
                     nameof(FileStorageService),
                     storageFileId);
 
@@ -104,7 +105,7 @@ namespace Hackathon.BL.FileStorage
 
             if (fileInfo is null)
             {
-                _logger.LogError("{Actor}: Файл с индентификатором {storageFileId} не найден",
+                _logger.LogError("{Initiator}: Файл с индентификатором {storageFileId} не найден",
                     nameof(FileStorageService),
                     storageFileId);
 
