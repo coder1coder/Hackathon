@@ -9,6 +9,7 @@
       <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />
     </ItemGroup>
 
     <ItemGroup>

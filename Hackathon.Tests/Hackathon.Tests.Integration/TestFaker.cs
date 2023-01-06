@@ -62,9 +62,9 @@ public class TestFaker
         return faker.Generate(count);
     }
 
-    public static IEnumerable<ProjectCreateModel> GetProjectCreateModel(int count)
+    public static IEnumerable<ProjectCreateParameters> GetProjectCreateModel(int count)
     {
-        var faker = new Faker<ProjectCreateModel>();
+        var faker = new Faker<ProjectCreateParameters>();
 
         faker
             .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
