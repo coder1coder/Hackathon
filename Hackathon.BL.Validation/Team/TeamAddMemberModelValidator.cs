@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models.Team;
 
@@ -29,8 +30,8 @@ namespace Hackathon.BL.Validation.Team
                 .WithMessage("Идентификатор пользователя должен быть больше 0")
                 .CustomAsync(async (userId, context, _) =>
                 {
-                    if (await userRepository.IsExistAsync(userId) == false)
-                        context.AddFailure("Пользователя с таким идентификатором не существует");
+                    if (await userRepository.ExistsAsync(userId) == false)
+                        context.AddFailure(UserErrorMessages.UserDoesNotExists);
                 });
 
             RuleFor(x => x)
@@ -38,11 +39,17 @@ namespace Hackathon.BL.Validation.Team
                 {
                     var teamModel = await teamRepository.GetAsync(model.TeamId);
 
-                    if (teamModel.Members.Any(x => x.Id == model.MemberId))
-                        context.AddFailure("Пользователь уже добавлен в эту команду");
+                    if (teamModel is null)
+                        context.AddFailure(TeamErrorMessages.TeamDoesNotExists);
 
-                    if (teamModel.OwnerId == model.MemberId)
-                        context.AddFailure("Нельзя добавить владельца команды в команду");
+                    if (teamModel is not null)
+                    {
+                        if (teamModel.Members.Any(x => x.Id == model.MemberId))
+                            context.AddFailure("Пользователь уже добавлен в эту команду");
+
+                        if (teamModel.OwnerId == model.MemberId)
+                            context.AddFailure("Нельзя добавить владельца команды в команду");
+                    }
                 });
 
             RuleFor(x => x)

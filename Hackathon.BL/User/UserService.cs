@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -79,7 +79,7 @@ namespace Hackathon.BL.User
             });
 
             if (users.Items.Count == 0)
-                throw new EntityNotFoundException("Пользователь не найден");
+                throw new EntityNotFoundException(UserErrorMessages.UserDoesNotExists);
 
             var user = users.Items.First();
 
@@ -119,8 +119,8 @@ namespace Hackathon.BL.User
 
         public async Task<UserModel> GetAsync(long userId)
         {
-            if (!await _userRepository.IsExistAsync(userId))
-                throw new EntityNotFoundException("Пользователя с указанным идентификатором не существует");
+            if (!await _userRepository.ExistsAsync(userId))
+                throw new EntityNotFoundException(UserErrorMessages.UserDoesNotExists);
 
             var model = await _userRepository.GetAsync(userId);
 

@@ -58,7 +58,8 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            Mapper);
+            Mapper,
+            _userRepositoryMock.Object);
 
         //act
         var result = await service.CreateAsync(new CreateTeamModel());
@@ -79,8 +80,8 @@ public class TeamServiceTests : BaseUnitTest
 
         _teamRepositoryMock.Setup(x =>
                 x.GetAsync(It.Is<GetListParameters<TeamFilter>>(
-                    x=>x.Filter.Ids.Contains(fakeTeams.First().Id)
-                    && x.Filter.Ids.Length == 1 )))
+                    s=>s.Filter.Ids.Contains(fakeTeams.First().Id)
+                    && s.Filter.Ids.Length == 1 )))
             .ReturnsAsync(new BaseCollection<TeamModel>
             {
                 Items = new []{fakeTeams.First()},
@@ -94,7 +95,8 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            Mapper);
+            Mapper,
+            _userRepositoryMock.Object);
 
         //act
         var result = await service.GetAsync(new GetListParameters<TeamFilter>()
@@ -126,12 +128,12 @@ public class TeamServiceTests : BaseUnitTest
             .ToArray();
 
         var fakeTeamMember = new Faker<TeamMemberModel>()
-            .RuleFor(o => o.MemberId, f => memberId++)
-            .RuleFor(o => o.TeamId, f => f.Random.Long(1, long.MaxValue));
+            .RuleFor(o => o.MemberId, _ => memberId++)
+            .RuleFor(o => o.TeamId, f => f.Random.Long(1));
 
         var fakeTeam = new Faker<TeamModel>()
-            .RuleFor(x => x.Id, f => f.Random.Long(1,long.MaxValue))
-            .RuleFor(x => x.Members, f => fakeMembers);
+            .RuleFor(x => x.Id, f => f.Random.Long(1))
+            .RuleFor(x => x.Members, _ => fakeMembers);
 
         _teamRepositoryMock
             .Setup(x => x.GetMembersCountAsync(It.IsAny<long>()))
@@ -142,7 +144,7 @@ public class TeamServiceTests : BaseUnitTest
             .ReturnsAsync(true);
 
         _userRepositoryMock
-            .Setup(x => x.IsExistAsync(It.IsAny<long>()))
+            .Setup(x => x.ExistsAsync(It.IsAny<long>()))
             .ReturnsAsync(true);
 
         _teamRepositoryMock

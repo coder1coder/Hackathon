@@ -6,6 +6,9 @@ using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
+using Hackathon.Abstraction.User;
+using Hackathon.BL.Validation.Team;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -25,6 +28,7 @@ namespace Hackathon.BL.Team
         private readonly ITeamRepository _teamRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IProjectRepository _projectRepository;
+        private readonly IUserRepository _userRepository;
 
         private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
         private readonly IValidator<GetListParameters<TeamFilter>> _getFilterModelValidator;
@@ -37,7 +41,9 @@ namespace Hackathon.BL.Team
             IValidator<GetListParameters<TeamFilter>> getFilterModelValidator,
             ITeamRepository teamRepository,
             IEventRepository eventRepository,
-            IProjectRepository projectRepository, IMapper mapper)
+            IProjectRepository projectRepository,
+            IMapper mapper,
+            IUserRepository userRepository)
         {
             _createTeamModelValidator = createTeamModelValidator;
             _teamAddMemberModelValidator = teamAddMemberModelValidator;
@@ -47,6 +53,7 @@ namespace Hackathon.BL.Team
             _eventRepository = eventRepository;
             _projectRepository = projectRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
@@ -79,6 +86,17 @@ namespace Hackathon.BL.Team
         public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
         {
             await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamMemberModel);
+
+            var teamExists = await _teamRepository.ExistAsync(teamMemberModel.TeamId);
+
+            if (!teamExists)
+                throw new ValidationException(TeamErrorMessages.TeamDoesNotExists);
+
+            var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
+
+            if (!userExists)
+                throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+
             await _teamRepository.AddMemberAsync(teamMemberModel);
         }
 
@@ -97,7 +115,7 @@ namespace Hackathon.BL.Team
                x.OwnerId != null && (x.OwnerId == userId || x.Members.Any(s => s.MemberId == userId)));
 
             if (!teams.Any())
-                throw new EntityNotFoundException("Команда не найдена");
+                throw new EntityNotFoundException(TeamErrorMessages.TeamDoesNotExists);
 
             var userTeam = teams.First();
             userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
@@ -116,13 +134,25 @@ namespace Hackathon.BL.Team
             // Определить роль участика. Владелец / участник
             var team = await _teamRepository.GetAsync(teamMemberModel.TeamId);
 
+            if (team is null)
+                throw new ValidationException(TeamErrorMessages.TeamDoesNotExists);
+
+            var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
+
+            if (!userExists)
+                throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+
+            var teamMember = team.Members.FirstOrDefault(x => x.Id == teamMemberModel.MemberId);
+
+            if (teamMember is null && team.OwnerId != teamMemberModel.MemberId)
+                throw new ValidationException("Пользователь не состоит в команде");
+
             var isOwnerMember = team.OwnerId == teamMemberModel.MemberId;
 
             // Если пользователь является создателем, то нужно передать права владения группой
             if (isOwnerMember)
             {
-                if (team.Members != null
-                    && team.Members.Length > 0)
+                if (team.Members is {Length: > 0})
                 {
                     // кому теперь будет принадлежать команда
                     // пользователь раньше остальных вступил в команду
@@ -148,14 +178,13 @@ namespace Hackathon.BL.Team
                         EventId = null
                     };
 
-                    // TODO: SoftDelete
                     await _teamRepository.DeleteTeamAsync(deleteTeamModel);
                 }
             }
-
-            // Если пользователь не создатель, то исключим из команды
-            if (!isOwnerMember)
+            else // Если пользователь не создатель, то исключим из команды
+            {
                 await _teamRepository.RemoveMemberAsync(teamMemberModel);
+            }
         }
 
         public async Task<BaseCollection<TeamEventListItem>> GetTeamEvents(long teamId, PaginationSort paginationSort)
@@ -163,7 +192,7 @@ namespace Hackathon.BL.Team
             var isTeamExists = await _teamRepository.ExistAsync(teamId);
 
             if (!isTeamExists)
-                throw new EntityNotFoundException("Команда не найдена");
+                throw new EntityNotFoundException(TeamErrorMessages.TeamDoesNotExists);
 
             var events = await _eventRepository.GetListAsync(1, new GetListParameters<EventFilter>
             {
