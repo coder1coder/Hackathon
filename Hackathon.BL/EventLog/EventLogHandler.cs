@@ -27,7 +27,8 @@ public class EventLogHandler: IEventLogHandler
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while processing event log");
+            _logger.LogError(e, "{Initiator}. Ошибка во время обработки сообщения журнала событий",
+                nameof(EventLogHandler));
         }
     }
 }

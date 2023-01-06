@@ -23,7 +23,7 @@ namespace Hackathon.IntegrationServices.Services
 
         public override async Task<Stream> ReceiveFromRepository(GitParameters parameters)
         {
-            _logger.LogInformation("{Actor}. Начато получение содержимого из репозитория: {@parameters}",
+            _logger.LogInformation("{Initiator}. Начато получение содержимого из репозитория: {@parameters}",
                 nameof(GitHubIntegrationService),
                 parameters);
 
@@ -33,7 +33,7 @@ namespace Hackathon.IntegrationServices.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "{Actor}. Ошибка во время получения содержимого репозитория: {error}",
+                _logger.LogError(e, "{Initiator}. Ошибка во время получения содержимого репозитория: {error}",
                     nameof(GitHubIntegrationService),
                     e.Message);
 

@@ -26,7 +26,8 @@ public class EventLogConsumer: IConsumer<EventLogModel>
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Произошла ошибка при обработке события аудита");
+            _logger.LogError(e, "{Initiator}. Произошла ошибка при обработке события аудита",
+                nameof(EventLogConsumer));
         }
     }
 }
