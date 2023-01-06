@@ -26,6 +26,15 @@ public class ProjectController: BaseController, IProjectApi
     }
 
     /// <summary>
+    /// Получить проект по идентификатору
+    /// </summary>
+    /// <param name="id">Идентификатор проекта</param>
+    /// <returns></returns>
+    [HttpGet("{id:long}")]
+    public async Task<ProjectModel> Get(long id)
+        => await _projectService.GetAsync(id);
+
+    /// <summary>
     /// Создать новый проект
     /// </summary>
     /// <param name="projectCreateRequest">Параметры проекта</param>
@@ -33,11 +42,22 @@ public class ProjectController: BaseController, IProjectApi
     [HttpPost]
     public async Task<BaseCreateResponse> Create(ProjectCreateRequest projectCreateRequest)
     {
-        var projectCreateModel = _mapper.Map<ProjectCreateModel>(projectCreateRequest);
+        var projectCreateModel = _mapper.Map<ProjectCreateParameters>(projectCreateRequest);
         var projectId = await _projectService.CreateAsync(projectCreateModel);
         return new BaseCreateResponse
         {
             Id = projectId
         };
+    }
+
+    /// <summary>
+    /// Обновить проект из гит репозитория
+    /// </summary>
+    /// <param name="parameters">Параметры</param>
+    /// <returns></returns>
+    [HttpPut("git")]
+    public async Task UpdateFromGit(ProjectUpdateFromGitParameters parameters)
+    {
+        await _projectService.UpdateFromGitAsync(UserId, parameters);
     }
 }

@@ -10,17 +10,38 @@ namespace Hackathon.Abstraction.Project
     public interface IProjectRepository
     {
         /// <summary>
-        /// Создание проекта
+        /// Создать проект
         /// </summary>
-        /// <param name="projectCreateModel"></param>
+        /// <param name="projectCreateParameters">Параметры</param>
         /// <returns></returns>
-        Task<long> CreateAsync(ProjectCreateModel projectCreateModel);
+        Task<long> CreateAsync(ProjectCreateParameters projectCreateParameters);
+
+        /// <summary>
+        /// Обновить проект
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        Task UpdateAsync(ProjectUpdateParameters parameters);
 
         /// <summary>
         /// Получить список проектов
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">Параметры</param>
         /// <returns></returns>
         Task<BaseCollection<ProjectListItem>> GetListAsync(GetListParameters<ProjectFilter> parameters);
+
+        /// <summary>
+        /// Получить проект по идентификатору
+        /// </summary>
+        /// <param name="projectId">Идентификатор проекта</param>
+        /// <returns></returns>
+        Task<ProjectModel> GetAsync(long projectId);
+
+        /// <summary>
+        /// Проверяет существование проекта по идентификатору
+        /// </summary>
+        /// <param name="projectId">Идентификатор проекта</param>
+        /// <returns></returns>
+        Task<bool> Exists(long projectId);
     }
 }

@@ -39,6 +39,10 @@ namespace Hackathon.BL.FileStorage
                     await _s3Client.PutBucketAsync(bucketName);
                 }
 
+                //Размер необходимо зафиксировать до того, как будет вычитан поток
+                //который освободится после прочтения
+                var streamLength = stream.Length;
+
                 await _s3Client.PutObjectAsync(new PutObjectRequest
                 {
                     Key = uniqueFileName.ToString(),
@@ -54,7 +58,7 @@ namespace Hackathon.BL.FileStorage
                     BucketName = bucketName,
                     FileName = fileName,
                     FilePath = uniqueFileName.ToString(),
-                    Length = stream.Length,
+                    Length = streamLength,
                     MimeType = mimeType,
                     OwnerId = ownerId,
                 };
@@ -90,7 +94,7 @@ namespace Hackathon.BL.FileStorage
             await using var responseStream = storageFile.ResponseStream;
             var ms = new MemoryStream();
             await responseStream.CopyToAsync(ms);
-            ms.Position = 0;
+            if (ms.CanSeek) ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }
 

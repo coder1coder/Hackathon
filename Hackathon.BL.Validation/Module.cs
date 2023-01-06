@@ -17,7 +17,7 @@ namespace Hackathon.BL.Validation
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateModel>>().InstancePerLifetimeScope();
+            builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>().InstancePerLifetimeScope();
             builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamMemberModel>>().InstancePerLifetimeScope();
             builder.RegisterType<GetListParametersValidator<TeamFilter>>().As<IValidator<GetListParameters<TeamFilter>>>().InstancePerLifetimeScope();
@@ -28,6 +28,7 @@ namespace Hackathon.BL.Validation
             builder.RegisterType<CreateEventModelValidator>().As<IValidator<EventCreateParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateEventModelValidator>().As<IValidator<EventUpdateParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
+            builder.RegisterType<ProjectUpdateFromGitParametersValidator>().As<IValidator<ProjectUpdateFromGitParameters>>().InstancePerLifetimeScope();
         }
     }
 }
