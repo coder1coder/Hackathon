@@ -137,7 +137,7 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        public async Task<bool> IsExistAsync(long userId)
+        public async Task<bool> ExistsAsync(long userId)
         {
             return await _dbContext.Users
                 .AsNoTracking()

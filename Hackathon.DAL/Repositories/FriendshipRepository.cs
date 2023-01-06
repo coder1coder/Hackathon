@@ -89,11 +89,11 @@ public class FriendshipRepository: IFriendshipRepository
                 x.ProposerId == proposerId
                 && x.UserId == userId);
 
-        if (entity == null)
-            throw new EntityNotFoundException("Предложение дружбы не найдено");
-
-        entity.Status = status;
-        await _dbContext.SaveChangesAsync();
+        if (entity is not null)
+        {
+            entity.Status = status;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public async Task UpdateFriendship(long proposerId, long userId, Friendship parameters)

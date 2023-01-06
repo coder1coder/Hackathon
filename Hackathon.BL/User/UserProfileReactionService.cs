@@ -60,10 +60,10 @@ public class UserProfileReactionService: IUserProfileReactionService
         if (userId == targetUserId)
             throw new ValidationException("Реакции не доступны на собственном профиле");
 
-        if (! await _userRepository.IsExistAsync(userId))
+        if (! await _userRepository.ExistsAsync(userId))
             throw new ValidationException(string.Format(ValidationMessagePatterns.UserNotFound, userId));
 
-        if (! await _userRepository.IsExistAsync(targetUserId))
+        if (! await _userRepository.ExistsAsync(targetUserId))
             throw new ValidationException(string.Format(ValidationMessagePatterns.UserNotFound, targetUserId));
     }
 }

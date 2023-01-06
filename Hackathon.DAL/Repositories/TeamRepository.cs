@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Team;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -55,8 +54,8 @@ namespace Hackathon.DAL.Repositories
                     .ThenInclude(x=>x.Member)
                 .SingleOrDefaultAsync(x=>x.Id == teamId);
 
-            if (teamEntity == null)
-                throw new Exception("Команда с таким идентификатором не найдена");
+            if (teamEntity is null)
+                return null;
 
             return _mapper.Map<TeamModel>(teamEntity);
         }
@@ -139,26 +138,19 @@ namespace Hackathon.DAL.Repositories
         public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
         {
             var team = await _dbContext.Teams
-                .SingleOrDefaultAsync(x=>x.Id == teamMemberModel.TeamId);
+                .FirstOrDefaultAsync(x=>x.Id == teamMemberModel.TeamId);
 
-            if (team == null)
-                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
-
-            var user = await _dbContext.Users
-                .SingleOrDefaultAsync(x => x.Id == teamMemberModel.MemberId);
-
-            if (user == null)
-                throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
-
-            team.Members.Add(new MemberTeamEntity
+            if (team is not null)
             {
-                TeamId = teamMemberModel.TeamId,
-                Team = team,
-                MemberId = teamMemberModel.MemberId,
-                Member = user,
-            });
+                var memberTeamEntity = new MemberTeamEntity
+                {
+                    TeamId = teamMemberModel.TeamId,
+                    MemberId = teamMemberModel.MemberId,
+                };
 
-            await _dbContext.SaveChangesAsync();
+                _dbContext.Entry(memberTeamEntity).State = EntityState.Added;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
@@ -168,22 +160,13 @@ namespace Hackathon.DAL.Repositories
                 .FirstOrDefaultAsync(x =>
                     x.Id == teamMemberModel.TeamId);
 
-            if (team == null)
-                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
+            var teamMember = team?.Members?.FirstOrDefault(x => x.MemberId == teamMemberModel.MemberId);
 
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(x => x.Id == teamMemberModel.MemberId);
-
-            if (user == null)
-                throw new EntityNotFoundException("Пользователь с указаным индентификатором не найден");
-
-            var teamMember = team.Members.FirstOrDefault(x => x.MemberId == user.Id);
-
-            if (teamMember == null)
-                throw new EntityNotFoundException("Пользователь не состоит в команде");
-
-            team.Members.Remove(teamMember);
-            await _dbContext.SaveChangesAsync();
+            if (teamMember is not null)
+            {
+                team.Members.Remove(teamMember);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task<TeamModel[]> GetByExpressionAsync(
@@ -204,6 +187,7 @@ namespace Hackathon.DAL.Repositories
                 .ToArrayAsync();
         }
 
+        //TODO: вынести в BL
         public async Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel)
         {
             var teamEntity = await _dbContext.Teams
@@ -211,11 +195,11 @@ namespace Hackathon.DAL.Repositories
                     x => (x.Id == changeOwnerModel.TeamId)
                     && (x.OwnerId == changeOwnerModel.OwnerId));
 
-            if (teamEntity == null)
-                throw new EntityNotFoundException("Команда с указаным индентификатором и владельцем не найдена");
-
-            teamEntity.OwnerId = changeOwnerModel.NewOwnerId;
-            await _dbContext.SaveChangesAsync();
+            if (teamEntity is not null)
+            {
+                teamEntity.OwnerId = changeOwnerModel.NewOwnerId;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel)
@@ -223,11 +207,11 @@ namespace Hackathon.DAL.Repositories
             var teamEntity = await _dbContext.Teams
                 .SingleOrDefaultAsync(x => (x.Id == deleteTeamModel.TeamId));
 
-            if (teamEntity == null)
-                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
-
-            teamEntity.IsDeleted = true;
-            await _dbContext.SaveChangesAsync();
+            if (teamEntity is not null)
+            {
+                teamEntity.IsDeleted = true;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task<int> GetMembersCountAsync(long teamId)
@@ -237,8 +221,8 @@ namespace Hackathon.DAL.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == teamId);
 
-            if (teamEntity == null)
-                throw new EntityNotFoundException("Команда с указаным индентификатором не найдена");
+            if (teamEntity is null)
+                return default;
 
             var teamMembers = teamEntity.Members.Count;
 

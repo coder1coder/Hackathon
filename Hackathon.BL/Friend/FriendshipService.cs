@@ -52,7 +52,7 @@ public class FriendshipService: IFriendshipService
         var proposer = await _userService.GetAsync(proposerId);
 
         //Если предложение не существует
-        if (offer == null)
+        if (offer is null)
         {
             await _friendshipRepository.CreateOfferAsync(proposerId, userId);
             await _notificationService.Push(CreateNotificationModel
@@ -107,7 +107,7 @@ public class FriendshipService: IFriendshipService
     public async Task RejectOfferAsync(long userId, long proposerId)
     {
         var offer = await _friendshipRepository.GetOfferAsync(proposerId, userId, GetOfferOption.Outgoing);
-        if (offer == null)
+        if (offer is null)
             throw new ValidationException("Предложений дружбы не поступало");
 
         if (offer.Status != FriendshipStatus.Pending)
