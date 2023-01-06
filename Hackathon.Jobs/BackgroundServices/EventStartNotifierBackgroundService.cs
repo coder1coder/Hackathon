@@ -13,13 +13,13 @@ public class EventStartNotifierBackgroundService: BackgroundService
     private readonly IEventStartNotifierJob _job;
 
     public EventStartNotifierBackgroundService(
-        ILogger<EventStartNotifierBackgroundService> logger, 
+        ILogger<EventStartNotifierBackgroundService> logger,
         IEventStartNotifierJob job)
     {
         _logger = logger;
         _job = job;
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
@@ -32,8 +32,8 @@ public class EventStartNotifierBackgroundService: BackgroundService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Ошибка во время выполнения фоновой службы");
+            _logger.LogError(e, "{Initiator}. Ошибка во время выполнения фоновой службы", nameof(EventStartNotifierBackgroundService));
         }
-        
+
     }
 }
