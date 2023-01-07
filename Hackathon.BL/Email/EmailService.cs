@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.Tracing;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using BackendTools.Common.Models;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

@@ -15,5 +15,5 @@ export interface IEventListItem {
   teamsCount: number;
   membersCount: number;
   imageId?: string;
-  imageUrl?:any;//не возвращается с бэка, инициализируется после получения imageId
+  imageUrl?: SafeUrl; //не возвращается с бэка, инициализируется после получения imageId
 }

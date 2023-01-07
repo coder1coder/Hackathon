@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Event;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -12,7 +11,6 @@ using Hackathon.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Hackathon.DAL.Repositories
 {

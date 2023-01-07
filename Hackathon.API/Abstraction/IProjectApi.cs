@@ -8,13 +8,15 @@ namespace Hackathon.API.Abstraction
 {
     public interface IProjectApi
     {
-        [Post("/api/Project")]
+        private const string BaseRoute = "/api/Project";
+
+        [Post(BaseRoute)]
         Task<BaseCreateResponse> Create([Body] ProjectCreateRequest projectCreateRequest);
 
-        [Put("/api/Project/git")]
+        [Put(BaseRoute + "/git")]
         Task UpdateFromGit([Body] ProjectUpdateFromGitParameters parameters);
 
-        [Get("/api/Project/{id}")]
+        [Get(BaseRoute + "/{id}")]
         Task<ProjectModel> Get(long id);
     }
 }

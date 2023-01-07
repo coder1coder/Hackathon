@@ -1,18 +1,16 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {EventService} from "../../../services/event.service";
-import {EventStatusTranslator, EventStatus} from "../../../models/Event/EventStatus";
+import {EventStatus} from "../../../models/Event/EventStatus";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 import {Team} from "../../../models/Team/Team";
 import {MatTableDataSource} from "@angular/material/table";
-import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
 import {SnackService} from "../../../services/snack.service";
 import {Event} from 'src/app/models/Event/Event';
 import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
 import {IUser} from "../../../models/User/IUser";
-import {KeyValue} from "@angular/common";
 import {Subject, takeUntil} from "rxjs";
 
 @Component({
@@ -28,13 +26,7 @@ export class EventCardComponent implements AfterViewInit {
 
   private readonly eventId: number = this.activateRoute.snapshot.params['eventId'];
   private membersDataSource: MatTableDataSource<IUser> = new MatTableDataSource<IUser>([]);
-  private userId: number = this.authService.getUserId() ?? 0;
-  private destroy$ = new Subject();
-
-  private EventStatusTranslator = EventStatusTranslator;
-  private eventDataSource = new MatTableDataSource<Event>([]);
-  private eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
-  private eventDetails: KeyValue<string,any>[] = [];
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -63,18 +55,6 @@ export class EventCardComponent implements AfterViewInit {
 
   public get startDate(): string {
     return this.event?.start?.toLocaleString('dd.MM.yyyy, hh:mm z');
-  }
-
-  public get eventStatus(): string {
-    return EventStatusTranslator.Translate(this.event.status ?? -1);
-  }
-
-  public get displayStatusesColumns(): string[] {
-    return ['status', 'message'];
-  }
-
-  public get displayTeamsColumns(): string[] {
-    return ['name', 'members'];
   }
 
   public createNewTeam(): void {

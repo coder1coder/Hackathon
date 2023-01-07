@@ -61,10 +61,10 @@ namespace Hackathon.API
                 {
                     cfg.ConfigureEndpoints(context);
 
-                    cfg.Host(new Uri(appConfig.RabbitMq.Host), host =>
+                    cfg.Host(new Uri(appConfig.MessageBrokerSettings.Host), host =>
                     {
-                        host.Username(appConfig.RabbitMq.UserName);
-                        host.Password(appConfig.RabbitMq.Password);
+                        host.Username(appConfig.MessageBrokerSettings.UserName);
+                        host.Password(appConfig.MessageBrokerSettings.Password);
                     });
                 });
             });

@@ -37,7 +37,7 @@ namespace Hackathon.Entities
         /// <summary>
         /// Признак удаления
         /// </summary>
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
 
         /// <summary>
         /// Тип команды

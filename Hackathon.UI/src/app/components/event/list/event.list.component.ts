@@ -14,6 +14,7 @@ import {PageSettingsDefaults} from "../../../models/PageSettings";
 import {DATE_FORMAT} from "../../../common/date-formats";
 import {SafeUrl} from "@angular/platform-browser";
 import {FileStorageService} from "../../../services/file-storage.service";
+import {of, Subject, switchMap, takeUntil} from "rxjs";
 
 @Component({
   selector: 'event-list',
@@ -33,6 +34,7 @@ export class EventListComponent implements OnInit {
   public isFullListDisplayed: boolean = false;
 
   private params = new GetListParameters<EventFilter>();
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
@@ -47,7 +49,7 @@ export class EventListComponent implements OnInit {
   ngOnInit() {
     this.initDefaultSettings();
     this.initFormFilter();
-    this.loadData(this.params);
+    this.fetch(true);
   }
 
   public get layoutCssClasses(): string {
@@ -123,7 +125,7 @@ export class EventListComponent implements OnInit {
     } else {
       this.params.Limit += PageSettingsDefaults.Limit;
     }
-
+    this.params.SortBy = 'name';
     this.params.Filter = new EventFilter();
     this.params.Filter.name = this.filterForm.controls['name'].value ? this.filterForm.controls['name'].value : null;
     this.params.Filter.startFrom = this.filterForm.controls['startFrom'].value ? this.filterForm.controls['startFrom'].value : null;
@@ -141,19 +143,14 @@ export class EventListComponent implements OnInit {
   private loadData(params?: GetListParameters<EventFilter>): void {
     this.isLoading = true;
     this.eventsService.getList(params)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((r: BaseCollection<IEventListItem>) => {
+          this.setSafeUrl(r);
+          return of(r);
+        }))
       .subscribe({
         next: (r: BaseCollection<IEventListItem>) =>  {
-
-          r.items.map(x=>{
-            if (x.imageId){
-              console.log(x.imageId)
-              this.fileStorageService.getById(x.imageId)
-                .subscribe({next: (url:SafeUrl) =>{
-                    x.imageUrl = url
-              }})
-            }
-          })
-
           this.eventList = r;
           if (this.eventList.items.length === r.totalCount) {
             this.isFullListDisplayed = true;
@@ -163,10 +160,14 @@ export class EventListComponent implements OnInit {
       });
   }
 
-  public getSafeUrlByFileId(imageId:string): SafeUrl {
-    return this.fileStorageService
-      .getById(imageId)
-      .subscribe({ next: (safeUrl: SafeUrl) => safeUrl });
+  private setSafeUrl(eventList: BaseCollection<IEventListItem>): void {
+    eventList.items.map(x => {
+      if (x.imageId){
+        this.fileStorageService.getById(x.imageId)
+          .subscribe({next: (url:SafeUrl) =>{
+              x.imageUrl = url
+            }})
+      }
+    })
   }
-
 }

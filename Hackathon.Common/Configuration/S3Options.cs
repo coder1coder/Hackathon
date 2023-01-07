@@ -1,5 +1,8 @@
 namespace Hackathon.Common.Configuration;
 
+/// <summary>
+/// Настройки хранилища S3
+/// </summary>
 public class S3Options
 {
     public string ServiceUrl {get;set;}
