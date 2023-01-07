@@ -1,5 +1,8 @@
 ﻿namespace Hackathon.Common.Configuration
 {
+    /// <summary>
+    /// Настройки аутентификации и авторизации
+    /// </summary>
     public class AuthOptions
     {
         public string Issuer { get; set; }

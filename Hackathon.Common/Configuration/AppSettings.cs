@@ -9,7 +9,7 @@ public class AppSettings
     public bool? EnableSensitiveDataLogging { get; set; }
     public string PathBase { get; set; }
     public HubsSettings Hubs { get; set; }
-    public RabbitMqSettings RabbitMq { get; set; }
+    public MessageBrokerSettings MessageBrokerSettings { get; set; }
 
     /// <summary>
     /// Время жизни запроса на подтверждение Email в минутах
@@ -20,19 +20,4 @@ public class AppSettings
     /// Настройки для отправки Email
     /// </summary>
     public EmailSenderSettings EmailSender { get; set; } = new();
-}
-
-public class HubsSettings
-{
-    public string Notifications { get; set; }
-    public string Chat { get; set; }
-    public string Friendship { get; set; }
-    public string Events { get; set; }
-}
-
-public class RabbitMqSettings
-{
-    public string Host { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
 }

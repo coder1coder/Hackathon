@@ -8,6 +8,8 @@ namespace Hackathon.API.Abstraction;
 
 public interface IEventLogApi
 {
-    [Post("/api/EventLog/list")]
+    private const string BaseRoute = "/api/EventLog";
+
+    [Post(BaseRoute+"/list")]
     Task<BaseCollection<EventLogModel>> GetListAsync([Body] GetListParameters<EventLogModel> parameters);
 }

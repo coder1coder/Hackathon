@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Notification;
-using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;

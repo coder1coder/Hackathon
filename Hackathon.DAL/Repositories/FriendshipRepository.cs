@@ -1,10 +1,8 @@
-#nullable enable
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Friend;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
@@ -114,7 +112,7 @@ public class FriendshipRepository: IFriendshipRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Friendship?> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any)
+    public async Task<Friendship> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any)
     {
         Expression<Func<FriendshipEntity, bool>> expression = option switch
         {

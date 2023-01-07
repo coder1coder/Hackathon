@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction.User;
-using Hackathon.BL.Validation;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.User;
 
 public class UserProfileReactionService: IUserProfileReactionService
 {
-    public const string ReactionAlreadyExistMessage = "Реакции на профиль пользователя уже существует";
+    private const string ReactionAlreadyExistMessage = "Реакции на профиль пользователя уже существует";
     public const string ReactionNotExistMessage = "Реакции на профиль пользователя не существует";
 
     private readonly IUserProfileReactionRepository _userProfileReactionRepository;
@@ -61,9 +61,9 @@ public class UserProfileReactionService: IUserProfileReactionService
             throw new ValidationException("Реакции не доступны на собственном профиле");
 
         if (! await _userRepository.ExistsAsync(userId))
-            throw new ValidationException(string.Format(ValidationMessagePatterns.UserNotFound, userId));
+            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
 
         if (! await _userRepository.ExistsAsync(targetUserId))
-            throw new ValidationException(string.Format(ValidationMessagePatterns.UserNotFound, targetUserId));
+            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
     }
 }

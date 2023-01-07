@@ -41,7 +41,8 @@ public class EmailConfirmationRepository: IEmailConfirmationRepository
 
     public async Task UpdateAsync(EmailConfirmationRequestParameters parameters)
     {
-        var entity = await _dbContext.EmailConfirmations.FirstOrDefaultAsync(x =>
+        var entity = await _dbContext.EmailConfirmations
+            .FirstOrDefaultAsync(x =>
             x.UserId == parameters.UserId);
 
         if (entity is not null)

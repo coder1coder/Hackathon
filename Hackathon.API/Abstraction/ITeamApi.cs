@@ -8,10 +8,12 @@ namespace Hackathon.API.Abstraction
 {
     public interface ITeamApi
     {
-        [Post("/api/Team")]
+        private const string BaseRoute = "/api/Team";
+
+        [Post(BaseRoute)]
         Task<BaseCreateResponse> Create([Body] CreateTeamRequest createTeamRequest);
 
-        [Get("/api/Team/{id}")]
+        [Get(BaseRoute + "/{id}")]
         Task<TeamModel> Get(long id);
     }
 }

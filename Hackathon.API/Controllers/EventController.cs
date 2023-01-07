@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Event;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;

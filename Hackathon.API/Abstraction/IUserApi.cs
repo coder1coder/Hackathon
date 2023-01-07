@@ -9,19 +9,21 @@ namespace Hackathon.API.Abstraction
 {
     public interface IUserApi
     {
-        [Post("/api/User")]
+        private const string BaseRoute = "/api/User";
+
+        [Post(BaseRoute)]
         Task<BaseCreateResponse> SignUp([Body] SignUpRequest request);
 
-        [Get("/api/User/{userId})")]
+        [Get(BaseRoute + "/{userId})")]
         public Task<UserResponse> Get(long userId);
 
-        [Get("/api/User/{userId}/reactions")]
+        [Get(BaseRoute + "/{userId}/reactions")]
         public Task<UserProfileReaction> GetReactions(long userId);
 
-        [Post("/api/User/{userId}/reactions/{reaction}")]
+        [Post(BaseRoute + "/{userId}/reactions/{reaction}")]
         public Task AddReaction(long userId, UserProfileReaction reaction);
 
-        [Delete("/api/User/{userId}/reactions/{reaction}")]
+        [Delete(BaseRoute + "/{userId}/reactions/{reaction}")]
         public Task RemoveReaction(long userId, UserProfileReaction reaction);
     }
 }
