@@ -66,19 +66,15 @@
          [class.empty]="eventList.totalCount === 0"
          infinite-scroll
          [infiniteScrollDistance]="2"
-         [infiniteScrollThrottle]="1000"
+         [infiniteScrollThrottle]="700"
          [infiniteScrollDisabled]="isFullListDisplayed"
          (scrolled)="fetch()">
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
         <div class="card" (click)="rowClick(item)">
 
-          <div class="card-cover">
-            <img class="card-image" [src]="item.imageUrl" alt="event-image" *ngIf="item.imageId; else noImage"
-                 loading="lazy">
-            <ng-template #noImage>
-              <mat-icon class="no-image">image</mat-icon>
-            </ng-template>
-          </div>
+          <app-event-image
+            [event]="item">
+          </app-event-image>
 
           <div class="card-info">
 
@@ -89,10 +85,9 @@
                 {{getDateTimeFormat(item.start)}}
               </div>
 
-              <div class="status">
-                <mat-icon class=" mat-icon-{{ eventStatusTranslator.GetName(item.status)}}">circle</mat-icon>
-                {{eventStatusTranslator.Translate(item.status)}}
-              </div>
+              <app-event-status
+              [status]="item.status">
+              </app-event-status>
 
               <div class="owner">/ Организатор: {{item?.ownerName }}</div>
 

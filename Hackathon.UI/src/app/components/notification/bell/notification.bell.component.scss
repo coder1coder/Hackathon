@@ -1,12 +1,16 @@
 .notify {
-
   &__item {
     display: flex;
     column-gap: 1em;
 
-
     .mat-list-item-content {
       background: green;
+    }
+
+    &__block {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
   }
 
@@ -24,8 +28,11 @@
   &__check-icon{
     color: #bbb;
   }
+
+
 }
 
 ::ng-deep .mat-menu-panel.notify__menu {
   min-width: 400px;
+  max-width: 400px;
 }

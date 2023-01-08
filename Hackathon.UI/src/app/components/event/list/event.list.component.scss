@@ -1,5 +1,4 @@
 $cards-gap: .5em;
-$event-status-icon-size: 10px;
 $card-width: 30%;
 
 .mat-column-status {
@@ -58,39 +57,12 @@ $card-width: 30%;
     cursor: pointer;
     transition: all 0.2s ease-out;
 
-
     &:hover {
       box-shadow: 0 0 20px 0 rgb(195 195 195);
       transform: translateY(-2px);
     }
 
-    .card-cover {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-
-      height: 200px;
-
-      & .card-image {
-        object-fit: cover;
-        object-position: center;
-        width: 100%;
-        height: 100%;
-      }
-
-      & .no-image{
-        color: #f5f5f5;
-        font-size: 5em;
-        height: auto;
-        width: auto;
-      }
-    }
-
     .card-info {
-
       padding: 20px;
 
       & .title {
@@ -103,28 +75,6 @@ $card-width: 30%;
 
         display: flex;
         column-gap: 10px;
-      }
-
-      .status {
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
-
-        mat-icon {
-          font-size: $event-status-icon-size;
-          height: $event-status-icon-size;
-          width: $event-status-icon-size;
-          margin-right: 5px;
-          color: lightgray;
-        }
-        .mat-icon {
-          &-published {
-            color: #eb832b;
-          }
-          &-started {
-            color: seagreen;
-          }
-        }
       }
     }
   }

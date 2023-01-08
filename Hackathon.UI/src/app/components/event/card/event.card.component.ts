@@ -1,6 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {EventService} from "../../../services/event.service";
 import {EventStatus} from "../../../models/Event/EventStatus";
 import {finalize} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
@@ -12,6 +11,8 @@ import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
 import {IUser} from "../../../models/User/IUser";
 import {Subject, takeUntil} from "rxjs";
+import {EventHttpService} from "../../../services/event/event.http-service";
+import {EventService} from "../../../services/event/event.service";
 
 @Component({
   selector: 'event-card',
@@ -30,7 +31,8 @@ export class EventCardComponent implements AfterViewInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    public eventsService: EventService,
+    public eventHttpService: EventHttpService,
+    public eventService: EventService,
     private authService: AuthService,
     private snack: SnackService,
     public router: RouterService
@@ -58,8 +60,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public createNewTeam(): void {
-    if (this.event?.status !== EventStatus.Published)
-    {
+    if (this.event?.status !== EventStatus.Published) {
       this.snack.open('Событие должно быть опубликовано')
       return;
     }
@@ -68,7 +69,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public enterToEvent(): void {
-    this.eventsService.join(this.eventId)
+    this.eventHttpService.join(this.eventId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) => {
@@ -83,7 +84,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public leaveFromEvent(): void {
-    this.eventsService.leave(this.eventId)
+    this.eventHttpService.leave(this.eventId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) => {
@@ -98,7 +99,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public startEvent(): void {
-    this.eventsService.setStatus(this.eventId, EventStatus.Started)
+    this.eventHttpService.setStatus(this.eventId, EventStatus.Started)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) =>  {
@@ -113,7 +114,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public finishEvent(): void {
-    this.eventsService.setStatus(this.eventId, EventStatus.Finished)
+    this.eventHttpService.setStatus(this.eventId, EventStatus.Finished)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) =>  {
@@ -129,7 +130,7 @@ export class EventCardComponent implements AfterViewInit {
 
   private fetchEvent(): void {
     this.isLoading = true;
-    this.eventsService.getById(this.eventId)
+    this.eventHttpService.getById(this.eventId)
       .pipe(
         takeUntil(this.destroy$),
         finalize(()=>this.isLoading = false)

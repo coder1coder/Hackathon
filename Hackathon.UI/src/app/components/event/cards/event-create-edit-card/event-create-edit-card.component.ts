@@ -1,43 +1,42 @@
-import {Event} from "../../../models/Event/Event";
 import {AfterViewInit, Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {EventService} from "../../../services/event.service";
-import {IProblemDetails} from "../../../models/IProblemDetails";
+import {IProblemDetails} from "../../../../models/IProblemDetails";
 import {ActivatedRoute} from "@angular/router";
-import {ICreateEvent} from "../../../models/Event/ICreateEvent";
-import {IUpdateEvent} from "../../../models/Event/IUpdateEvent";
+import {ICreateEvent} from "../../../../models/Event/ICreateEvent";
+import {IUpdateEvent} from "../../../../models/Event/IUpdateEvent";
 import {EventStatus, EventStatusTranslator} from "src/app/models/Event/EventStatus";
 import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {EventNewStatusDialogComponent} from "../status/event-new-status-dialog.component";
-import {SnackService} from "../../../services/snack.service";
+import {EventNewStatusDialogComponent} from "../components/status/event-new-status-dialog.component";
+import {SnackService} from "../../../../services/snack.service";
 import {Observable} from "rxjs";
 import * as moment from "moment/moment";
-import {AuthService} from "../../../services/auth.service";
-import {RouterService} from "../../../services/router.service";
-import {FileUtils} from "../../../common/FileUtils";
-import {FileStorageService} from "../../../services/file-storage.service";
-import {Bucket} from "../../../common/Bucket";
-import {IStorageFile} from "../../../models/FileStorage/IStorageFile";
+import {AuthService} from "../../../../services/auth.service";
+import {RouterService} from "../../../../services/router.service";
+import {FileUtils} from "../../../../common/FileUtils";
+import {FileStorageService} from "../../../../services/file-storage.service";
+import {Bucket} from "../../../../common/Bucket";
+import {IStorageFile} from "../../../../models/FileStorage/IStorageFile";
 import {SafeUrl} from "@angular/platform-browser";
-import { EventErrorMessages } from "src/app/common/EventErrorMessages";
+import {EventErrorMessages} from "src/app/common/EventErrorMessages";
+import {EventCardBaseComponent} from "../components/event-card-base.component";
+import {EventHttpService} from "../../../../services/event/event.http-service";
+import {EventService} from "../../../../services/event/event.service";
 
 @Component({
-  selector: 'event-form',
-  templateUrl: './event.form.component.html',
-  styleUrls: ['./event.form.component.scss']
+  selector: 'event-create-edit-card',
+  templateUrl: './event-create-edit-card.component.html',
+  styleUrls: ['./event-create-edit-card.component.scss']
 })
 
-export class EventFormComponent implements OnInit, AfterViewInit {
+export class EventCreateEditCardComponent extends EventCardBaseComponent implements OnInit, AfterViewInit {
 
-  private readonly eventId?: number;
-  private event?: Event;
   private dateFormat: string = 'yyyy-MM-DDTHH:mm';
   private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
 
   public editMode: boolean = false;
-  public isLoading: boolean = false;
+  public submit: () => void = this.saveForm();
   public EventStatusTranslator = EventStatusTranslator;
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
@@ -47,14 +46,16 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private eventService: EventService,
     private fileStorageService: FileStorageService,
+    private eventHttpService: EventHttpService,
+    public eventService: EventService,
     private authService: AuthService,
     private snackService: SnackService,
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder
     ) {
+    super();
     this.eventId = activateRoute.snapshot.params['eventId'];
     this.editMode = this.eventId !== undefined && !isNaN(Number(this.eventId));
   }
@@ -68,80 +69,65 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.fetch();
   }
 
-  public isCanPublish(): boolean {
-    return this.editMode
-      && this.event !== undefined
-      && this.eventService.isCanPublishEvent(this.event);
-  }
+  public saveForm(): () => void {
+    return () => {
+      let request: Observable<any>;
 
-  public setPublish(): void {
-    this.eventService.setStatus(this.eventId!, EventStatus.Published)
-      .subscribe({
-        next: (_) =>  {
-          this.router.Events.View(this.eventId!).then(_=>
-            this.snackService.open(EventErrorMessages.EventPublished))
-        },
-        error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snackService.open(problemDetails.detail)}
-      });
-  }
+      if (!this.editMode) {
+        let event: ICreateEvent = {
+          name: this.form.get('name')?.value,
+          developmentMinutes: this.form.get('developmentMinutes')?.value,
+          isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
+          maxEventMembers: this.form.get('maxEventMembers')?.value,
+          memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
+          minTeamMembers: this.form.get('minTeamMembers')?.value,
+          start: this.form.get('start')?.value,
+          teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
+          changeEventStatusMessages: this.eventStatusDataSource.data,
+          award: this.form.get('award')?.value,
+          description: this.form.get('description')?.value,
+          imageId: this.form.get('imageId')?.value
+        };
 
-  public submit(): void {
-    let request: Observable<any>;
+        request = this.eventHttpService.create(event);
+      } else {
+        let event: IUpdateEvent = {
+          id: Number(this.event?.id),
+          name: this.form.get('name')?.value,
+          developmentMinutes: this.form.get('developmentMinutes')?.value,
+          isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
+          maxEventMembers: this.form.get('maxEventMembers')?.value,
+          memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
+          minTeamMembers: this.form.get('minTeamMembers')?.value,
+          start: this.form.get('start')?.value,
+          teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
+          userId: Number(this.event?.owner?.id),
+          changeEventStatusMessages: this.eventStatusDataSource.data,
+          award: this.form.get('award')?.value,
+          description: this.form.get('description')?.value,
+          imageId: this.form.get('imageId')?.value
+        };
 
-    if (!this.editMode) {
-      let event: ICreateEvent = {
-        name: this.form.get('name')?.value,
-        developmentMinutes: this.form.get('developmentMinutes')?.value,
-        isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
-        maxEventMembers: this.form.get('maxEventMembers')?.value,
-        memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
-        minTeamMembers: this.form.get('minTeamMembers')?.value,
-        start: this.form.get('start')?.value,
-        teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
-        changeEventStatusMessages: this.eventStatusDataSource.data,
-        award: this.form.get('award')?.value,
-        description: this.form.get('description')?.value,
-        imageId: this.form.get('imageId')?.value
-      };
-
-      request = this.eventService.create(event);
-    } else {
-      let event: IUpdateEvent = {
-        id: Number(this.event?.id),
-        name: this.form.get('name')?.value,
-        developmentMinutes: this.form.get('developmentMinutes')?.value,
-        isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
-        maxEventMembers: this.form.get('maxEventMembers')?.value,
-        memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
-        minTeamMembers: this.form.get('minTeamMembers')?.value,
-        start: this.form.get('start')?.value,
-        teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
-        userId: Number(this.event?.ownerId),
-        changeEventStatusMessages: this.eventStatusDataSource.data,
-        award: this.form.get('award')?.value,
-        description: this.form.get('description')?.value,
-        imageId: this.form.get('imageId')?.value
-      };
-
-      request = this.eventService.update(event);
-    }
-
-    request.subscribe({
-      next: r => {
-        let eventId = (this.editMode) ? this.eventId : r.id;
-        let afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
-
-        this.router.Events.Edit(eventId).then(_ =>
-          this.snackService.open(afterOperationMessage)
-        )
-      },
-      error: err => {
-        let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-        this.snackService.open(problemDetails.detail);
+        request = this.eventHttpService.update(event);
       }
-    });
+
+      request.subscribe({
+        next: r => {
+          const eventId = (this.editMode) ? this.eventId : r.id;
+          const afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
+          this.eventService.reloadEvent.emit(true);
+          this.snackService.open(afterOperationMessage);
+
+          if (eventId) {
+            this.router.Events.View(eventId);
+          }
+        },
+        error: err => {
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          this.snackService.open(problemDetails.detail);
+        }
+      });
+    }
   }
 
   public addStatus(): void {
@@ -157,20 +143,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       if(changeEventStatusMessage?.status !== undefined){
         this.eventStatusDataSource.data.push(changeEventStatusMessage);
         this.eventStatusDataSource.data = this.eventStatusDataSource.data;
-      }
-    });
-  }
-
-  public deleteEvent(): void {
-    this.eventService.remove(this.eventId!)
-      .subscribe({
-      next: (_) => {
-        this.router.Events.List().then(_=>
-          this.snackService.open(`Событие удалено`))
-      },
-      error: (err) => {
-        let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-        this.snackService.open(problemDetails.detail);
       }
     });
   }
@@ -201,12 +173,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public isCanDeleteEvent(): boolean {
-    let userId = this.authService.getUserId();
-    return this.eventId != null
-      && userId !== null
-      && this.event?.ownerId == userId
-  }
 
   public isCanAddStatus(): boolean {
     let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
@@ -247,8 +213,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           this.form.controls['imageId'].setValue(r.id);
           this.loadImage(r.id);
         },
-        error: (err: any) => {
-          console.log(err)
+        error: () => {
           this.snackService.open(EventErrorMessages.FileUploadError)
         }});
   }
@@ -264,28 +229,22 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     if (this.eventId == undefined)
       return;
 
-    this.eventService.getById(this.eventId)
-      .subscribe({next: (res: Event) => {
-        this.event = res;
-        this.form.patchValue({
-          ...res,
-          start: moment(res.start).local().format(this.dateFormat)
-         });
+    this.form.patchValue({
+      ...this.event,
+      start: moment(this.event.start).local().format(this.dateFormat)
+    });
 
-        this.eventStatusDataSource.data = res.changeEventStatusMessages;
-        this.loadImage(res.imageId);
-      },
-      error: (error) => {
-        let problemDetails: IProblemDetails = <IProblemDetails>error.error;
-        this.snackService.open(problemDetails.detail);
-      }});
+    this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
+    if (this.event.imageId)  {
+      this.loadImage(this.event.imageId);
+    }
   }
 
   private initForm(): void {
     this.form = this.fb.group({
       name: [null],
       description: [null],
-      start: [EventFormComponent.getEventStartDefault()],
+      start: [EventCreateEditCardComponent.getEventStartDefault()],
       memberRegistrationMinutes: [10],
       developmentMinutes: [10],
       teamPresentationMinutes: [10],
@@ -298,7 +257,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   }
 
   private static getEventStartDefault(): string {
-    let now = new Date();
+    const now = new Date();
     const offset = new Date().getTimezoneOffset() * 1000 * 60
     now.setHours( now.getHours() + 1 );
     now.setMilliseconds(now.getMilliseconds() - offset);

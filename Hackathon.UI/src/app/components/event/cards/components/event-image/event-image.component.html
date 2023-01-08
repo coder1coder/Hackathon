@@ -1,0 +1,7 @@
+<div class="card-cover">
+  <img class="card-image" [src]="event.imageUrl" alt="event-image" *ngIf="event.imageId; else noImage"
+       loading="lazy">
+  <ng-template #noImage>
+    <mat-icon class="no-image">image</mat-icon>
+  </ng-template>
+</div>

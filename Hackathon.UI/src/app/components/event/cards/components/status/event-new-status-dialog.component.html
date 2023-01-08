@@ -1,6 +1,5 @@
 <h1 mat-dialog-title>Новый статус</h1>
 <div mat-dialog-content>
-
   <form [formGroup]="form" class="form-vertical">
     <div class="form-vertical__fields">
 
@@ -27,8 +26,8 @@
 
     </div>
   </form>
-
 </div>
+
 <div mat-dialog-actions>
   <button mat-button color="primary" (click)="createStatus()" [disabled]="this.form.invalid">OK</button>
   <button mat-button mat-dialog-close="">Отмена</button>

@@ -5,7 +5,6 @@ import {RegisterComponent} from "./components/register/register.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {AuthGuard} from "./services/auth.guard";
 import {EventListComponent} from "./components/event/list/event.list.component";
-import {EventFormComponent} from "./components/event/form/event.form.component";
 import {UserListComponent} from "./components/user/list/user.list.component";
 import {TeamListComponent} from "./components/team/list/team.list.component";
 import {TeamNewComponent} from "./components/team/new/team.new.component";
@@ -13,9 +12,10 @@ import {NotificationListComponent} from "./components/notification/list/notifica
 import {RedirectService} from "./services/redirect.service";
 import {TeamViewComponent} from "./components/team/view/team.view.component";
 import {ProfileViewComponent} from "./components/profile/view/profile.view.component";
-import {EventCardComponent} from "./components/event/card/event.card.component";
 import {EventLogComponent} from "./components/eventlog/eventLog.list.component";
 import {UserTeamComponent} from "./components/team/userTeam/userTeam.component";
+import {EventCardFactoryComponent} from "./components/event/cards/event-card-factory/event-card-factory.component";
+import {EventCreateEditCardComponent} from "./components/event/cards/event-create-edit-card/event-create-edit-card.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -24,9 +24,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent , canActivate: [RedirectService]},
 
   { path: 'profile', component: ProfileViewComponent, canActivate: [AuthGuard] },
-  { path: 'events/new', component: EventFormComponent, canActivate: [AuthGuard] },
-  { path: 'events/edit/:eventId', component: EventFormComponent, canActivate: [AuthGuard] },
-  { path: 'events/:eventId', component: EventCardComponent, canActivate: [AuthGuard] },
+  { path: 'events/new', component: EventCreateEditCardComponent, canActivate: [AuthGuard] },
+  { path: 'events/edit/:eventId', component: EventCreateEditCardComponent, canActivate: [AuthGuard] },
+  { path: 'events/:eventId', component: EventCardFactoryComponent, canActivate: [AuthGuard] },
   { path: 'events', component: EventListComponent, canActivate: [AuthGuard] },
 
   { path: 'teams/new', component: TeamNewComponent, canActivate: [AuthGuard] },

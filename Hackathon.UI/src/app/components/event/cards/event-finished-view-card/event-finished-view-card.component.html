@@ -1,0 +1,91 @@
+<layout-default
+  [title]="'Событие: ' + event.name"
+  [isLoading]="isLoading"
+  [hideTitlebar]="true" class="event-finished hackathon-background">
+
+  <div class="event">
+    <div class="event-header">
+      <div class="event-header-left">
+        <div class="header-img">
+          <app-event-image
+            [event]="event">
+          </app-event-image>
+        </div>
+        <div class="event-header-info-block">
+          <div class="event-header-title">
+            <h1 class="event-line-info">{{ event.name }}</h1>
+          </div>
+          <div class="event-header-meta">
+            <div class="event-header-meta-info">
+              <div class="event-line-info">
+                Организатор: {{ event.owner?.userName }}
+              </div>
+              <div class="event-line-info">
+                Начало: {{ startDate }}
+              </div>
+              <div class="event-line-info">
+                Участники: {{ membersCount }} из {{ maxEventMembers }}
+              </div>
+              <div class="event-status">
+                <span>Статус: </span>
+                <app-event-status
+                  [status]="event.status">
+                </app-event-status>
+              </div>
+            </div>
+            <div class="event-header-meta-info">
+              <div class="event-line-info">
+                Место проведения: онлайн
+              </div>
+              <div class="event-line-info">
+                Команды: {{ eventTeamsCount }}
+              </div>
+            </div>
+            <div class="event-header-meta-award">
+              <img class="award-image" [src]="'assets/img/award.svg'" alt="event-image">
+              <div class="event-line-info">
+                Награда/Призовой фонд:
+              </div>
+              <div class="event-line-info">
+                {{ event.award }} ₽
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="event-description">
+      <h3>Описание</h3>
+      <div class="event-line-info">
+        {{ event.description }}
+      </div>
+
+      <h3>Команды</h3>
+      <div class="event-teams" *ngIf="event?.teams?.length; else teamEmpty">
+        <div *ngFor="let team of event.teams">
+          <div class="team-card" (click)="goToTeamCard(team)">
+          {{team.name}}
+          </div>
+        </div>
+      </div>
+
+      <h3>Проекты</h3>
+      <div class="event-projects">
+        Проекты не указаны
+      </div>
+
+      <h3>Результаты</h3>
+      <div class="event-result">
+        Скоро будут
+      </div>
+    </div>
+  </div>
+</layout-default>
+
+<ng-template #teamEmpty>
+  <div class="event-teams">
+    Команды не указаны
+  </div>
+</ng-template>

@@ -37,7 +37,7 @@ export class UserService {
     formData.append("file", file);
 
     return this.http.post<string>(this.api+'/profile/image/upload', formData, {
-      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+      headers: new HttpHeaders().set('Content-Disposition', 'multipart/event-create-edit-card-data')
     })
   }
 
