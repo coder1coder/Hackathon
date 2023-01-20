@@ -22,14 +22,9 @@ export class Event {
   stages: any[] = []
   award!: string;
   imageId: string;
+  imageUrl?: string;
 
-  public static getUsersCount(event:Event):number{
-    let i = 0;
-    Event.getEventTeams(event).forEach(x=> i += x.members?.length ?? 0);
-    return i;
-  }
-
-  public static getEventTeams(event:Event):Team[]{
-    return event.teams ?? [];
+  public static getUsersCount(event:Event): number {
+    return event.teams?.reduce((acc, team) => acc += team.members.length, 0);
   }
 }

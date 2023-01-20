@@ -1,0 +1,23 @@
+$event-status-icon-size: 10px;
+
+.status {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  mat-icon {
+    font-size: $event-status-icon-size;
+    height: $event-status-icon-size;
+    width: $event-status-icon-size;
+    margin-right: 5px;
+    color: lightgray;
+  }
+  .mat-icon {
+    &-published {
+      color: #eb832b;
+    }
+    &-started {
+      color: seagreen;
+    }
+  }
+}

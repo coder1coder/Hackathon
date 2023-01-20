@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import { EventStatusTranslator, EventStatus } from "../../../models/Event/EventStatus";
+import { EventStatusTranslator, EventStatus } from "../../../../../models/Event/EventStatus";
 
 @Component({
   selector: 'app-event-new-status-dialog',

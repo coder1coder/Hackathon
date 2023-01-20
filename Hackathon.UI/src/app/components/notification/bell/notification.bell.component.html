@@ -13,12 +13,14 @@
     <mat-list role="list">
       <div mat-subheader>Уведомления</div>
       <mat-list-item class="notify__item" role="listitem" *ngFor="let notify of notifications?.items">
-        <div [ngSwitch]="notify.type">
-          <notification-info-view *ngSwitchCase="0" [notify]="notify"></notification-info-view>
+        <div class="notify__item__block">
+          <div [ngSwitch]="notify.type">
+            <notification-info-view *ngSwitchCase="0" [notify]="notify"></notification-info-view>
+          </div>
+          <button mat-icon-button class="notify__item__remove" (click)="remove($event, [notify.id!])">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
         </div>
-        <button mat-icon-button class="notify__item__remove" (click)="remove($event, [notify.id!])">
-          <mat-icon>delete_outline</mat-icon>
-        </button>
       </mat-list-item>
     </mat-list>
   </ng-template>

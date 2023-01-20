@@ -1,0 +1,16 @@
+<div *ngIf="!eventService.isCreateEditEvent(event)">
+  <button *ngIf="eventService.isCanAddTeam(event)" mat-button color="primary" (click)="createNewTeam()">
+    <mat-icon>add</mat-icon>
+    Добавить команду
+  </button>
+  <button *ngIf="eventService.isCanStartEvent(event)" mat-button (click)="startEvent()">Начать событие</button>
+  <button *ngIf="eventService.isCanJoinToEvent(event)" mat-button (click)="enterToEvent()">Принять участие</button>
+  <button *ngIf="eventService.isCanLeave(event)" mat-button (click)="leaveFromEvent()">Покинуть событие</button>
+  <button *ngIf="eventService.isCanFinishEvent(event)" mat-button (click)="finishEvent()">Завершить событие</button>
+</div>
+
+<div *ngIf="eventService.isCreateEditEvent(event)">
+  <button mat-button color="primary" (click)="submit()">Сохранить</button>
+  <button *ngIf="eventService.isCanDeleteEvent(event)" mat-button (click)="deleteEvent()">Удалить</button>
+  <button *ngIf="eventService.isCanPublish(event)" mat-button (click)="setPublish()">Опубликовать</button>
+</div>

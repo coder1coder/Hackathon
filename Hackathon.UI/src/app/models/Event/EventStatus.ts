@@ -1,5 +1,4 @@
-export enum EventStatus
-{
+export enum EventStatus {
   Draft = 0,
   Published = 1,
   Started = 2,
@@ -11,12 +10,9 @@ export enum EventStatus
   Finished = 8,
 }
 
-export class EventStatusTranslator{
-
+export class EventStatusTranslator {
   public static GetName = (e:EventStatus) : string => EventStatus[e].toLowerCase();
-
   public static Translate = (e: EventStatus) : string => {
-
     switch (e) {
       case EventStatus.Draft: return 'Черновик'
       case EventStatus.Published: return 'Опубликовано'

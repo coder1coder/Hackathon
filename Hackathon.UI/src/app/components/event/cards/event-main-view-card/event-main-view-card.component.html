@@ -1,13 +1,9 @@
 <layout-default [title]="'Событие: ' + event.name" [isLoading]="isLoading">
 
   <div actions>
-    <button *ngIf="eventsService.isCanAddTeam(event)" mat-button color="primary" (click)="createNewTeam()">
-      <mat-icon>add</mat-icon>
-      Добавить команду</button>
-    <button *ngIf="eventsService.isCanStartEvent(event)" mat-button (click)="startEvent()">Начать событие</button>
-    <button *ngIf="eventsService.isCanJoinToEvent(event)" mat-button (click)="enterToEvent()">Принять участие</button>
-    <button *ngIf="eventsService.isCanLeave(event)" mat-button (click)="leaveFromEvent()">Покинуть событие</button>
-    <button *ngIf="eventsService.isCanFinishEvent(event)" mat-button (click)="finishEvent()">Завершить событие</button>
+    <app-actions
+      [event]="event">
+    </app-actions>
   </div>
 
   <mat-tab-group animationDuration="0ms"
@@ -16,10 +12,9 @@
 
     <mat-tab label="Общая информация">
       <list-details [items]="eventDetails"></list-details>
-
-      <alert *ngIf="eventsService.isEventOwner(event)">Вы являетесь организатором события</alert>
-
+      <alert *ngIf="eventService.isEventOwner(event)">Вы являетесь организатором события</alert>
     </mat-tab>
+
     <mat-tab label="Команды">
       <table mat-table [dataSource]="eventTeamsDataSource" [class.empty]="eventTeamsDataSource?.data?.length == 0">
 
@@ -44,12 +39,12 @@
       </table>
     </mat-tab>
 
-    <mat-tab label="Уведомления" *ngIf="userId == event.ownerId && false">
+    <mat-tab label="Уведомления" *ngIf="userId === event.owner.id">
 
       <table mat-table [dataSource]="eventStatusesDataSource" [class.empty]="eventStatusesDataSource.data.length == 0">
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Статус</th>
-          <td mat-cell *matCellDef="let element" [innerText]="EventStatusTranslator.Translate(element.status)"></td>
+          <td mat-cell *matCellDef="let element" [innerText]="eventStatusTranslator.Translate(element.status)"></td>
         </ng-container>
 
         <ng-container matColumnDef="message">

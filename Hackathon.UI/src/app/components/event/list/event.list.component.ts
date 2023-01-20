@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {EventService} from "../../../services/event.service";
 import {BaseCollection} from "../../../models/BaseCollection";
 import {EventStatus, EventStatusTranslator} from "../../../models/Event/EventStatus";
 import {FormBuilder} from "@angular/forms";
@@ -12,9 +11,8 @@ import {IEventListItem} from "../../../models/Event/IEventListItem";
 import {AuthService} from "../../../services/auth.service";
 import {PageSettingsDefaults} from "../../../models/PageSettings";
 import {DATE_FORMAT} from "../../../common/date-formats";
-import {SafeUrl} from "@angular/platform-browser";
-import {FileStorageService} from "../../../services/file-storage.service";
 import {of, Subject, switchMap, takeUntil} from "rxjs";
+import {EventHttpService} from "../../../services/event/event.http-service";
 
 @Component({
   selector: 'event-list',
@@ -38,11 +36,10 @@ export class EventListComponent implements OnInit {
 
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
-    private eventsService: EventService,
+    private eventHttpService: EventHttpService,
     public router: RouterService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private fileStorageService: FileStorageService
   ) {
   }
 
@@ -87,10 +84,7 @@ export class EventListComponent implements OnInit {
   }
 
   public rowClick(event: IEventListItem): void {
-    if (event.status == EventStatus.Draft)
-      this.router.Events.Edit(event.id);
-    else
-      this.router.Events.View(event.id);
+    this.router.Events.View(event.id);
   }
 
   public getAllEventStatuses(): number[] {
@@ -142,11 +136,10 @@ export class EventListComponent implements OnInit {
 
   private loadData(params?: GetListParameters<EventFilter>): void {
     this.isLoading = true;
-    this.eventsService.getList(params)
+    this.eventHttpService.getList(params)
       .pipe(
         takeUntil(this.destroy$),
         switchMap((r: BaseCollection<IEventListItem>) => {
-          this.setSafeUrl(r);
           return of(r);
         }))
       .subscribe({
@@ -158,16 +151,5 @@ export class EventListComponent implements OnInit {
         },
         complete: () => this.isLoading = false
       });
-  }
-
-  private setSafeUrl(eventList: BaseCollection<IEventListItem>): void {
-    eventList.items.map(x => {
-      if (x.imageId){
-        this.fileStorageService.getById(x.imageId)
-          .subscribe({next: (url:SafeUrl) =>{
-              x.imageUrl = url
-            }})
-      }
-    })
   }
 }
