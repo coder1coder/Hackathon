@@ -41,7 +41,7 @@ export class FileStorageService {
     formData.append("file", file);
 
     return this.http.post<IStorageFile>(`${this.api}/upload/${bucket}`, formData, {
-      headers: new HttpHeaders().set('Content-Disposition', 'multipart/form-data')
+      headers: new HttpHeaders().set('Content-Disposition', 'multipart/event-create-edit-card-data')
     })
   }
 

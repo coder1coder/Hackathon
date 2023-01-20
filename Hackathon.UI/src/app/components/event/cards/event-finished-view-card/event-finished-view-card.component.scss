@@ -1,0 +1,83 @@
+.event-finished {
+  .event {
+    margin: 32px 64px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px #e3e3e3;
+    &-header {
+      display: flex;
+      flex-direction: row;
+      &-left {
+        display: flex;
+        padding: 12px;
+        & .header-img {
+          width: 445px;
+          margin-right: 20px;
+        }
+        & .event-status {
+          display: flex;
+          span {
+            margin-right: 3px;
+          }
+        }
+        & .event-header-info-block {
+          padding: 0 12px;
+        }
+        & .event-header-meta-award {
+          text-align: center;
+          padding: 0 12px;
+          & .award-image {
+            width: 100px;
+            height: 75px;
+          }
+        }
+        & .event-header-title {
+          padding: 0 12px;
+        }
+        & .event-header-meta-info {
+          padding: 0 12px;
+        }
+        & .event-header-meta {
+          display: flex;
+        }
+      }
+    }
+    &-description {
+      padding: 12px;
+    }
+    &-teams {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      grid-gap: 0.5em;
+      gap: 0.5em;
+      padding-bottom: 2em;
+      & .team-card {
+        padding: 10px 16px;
+        background: #fff;
+        box-sizing: border-box;
+        box-shadow: 0 0 10px #e3e3e3;
+        cursor: pointer;
+        border-left: 2px solid #daa94a;
+      }
+    }
+    & .event-projects {
+      padding-bottom: 2em;
+    }
+    & .event-result {
+      padding-bottom: 2em;
+    }
+    ::ng-deep {
+      .card-cover {
+        height: 240px;
+      }
+    }
+  }
+}
+
+.event-line-info {
+  margin-bottom: 20px;
+}

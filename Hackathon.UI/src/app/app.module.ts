@@ -27,13 +27,11 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { TeamNewComponent } from "./components/team/new/team.new.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { EventListComponent } from "./components/event/list/event.list.component";
-import { EventFormComponent } from "./components/event/form/event.form.component";
-import { EventViewComponent } from "./components/event/view/event.view.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { UserListComponent } from "./components/user/list/user.list.component";
 import { MatSelectModule } from '@angular/material/select';
 import { TeamListComponent } from "./components/team/list/team.list.component";
-import { EventNewStatusDialogComponent } from './components/event/status/event-new-status-dialog.component';
+import { EventNewStatusDialogComponent } from './components/event/cards/components/status/event-new-status-dialog.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { NotificationBellComponent } from "./components/notification/bell/notification.bell.component";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -50,7 +48,6 @@ import { AlertComponent } from "./components/custom/alert/alert.component";
 import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
-import { EventCardComponent } from "./components/event/card/event.card.component";
 import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { EventLogComponent } from "./components/eventlog/eventLog.list.component";
 import {
@@ -60,6 +57,14 @@ import { FriendsListComponent } from "./components/friendship/list/friends-list.
 import { UserTeamComponent } from "./components/team/userTeam/userTeam.component";
 import { LineInfoComponent } from './components/line-info/line-info.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { EventCardFactoryComponent } from './components/event/cards/event-card-factory/event-card-factory.component';
+import { EventDirective } from "./components/event/event.directive";
+import { EventCreateEditCardComponent } from "./components/event/cards/event-create-edit-card/event-create-edit-card.component";
+import { EventButtonActionsComponent } from './components/event/cards/components/actions/event-button-actions.component';
+import { EventMainViewCardComponent } from "./components/event/cards/event-main-view-card/event-main-view-card.component";
+import { EventFinishedViewCardComponent } from './components/event/cards/event-finished-view-card/event-finished-view-card.component';
+import { EventImageComponent } from './components/event/cards/components/event-image/event-image.component';
+import { EventStatusComponent } from './components/event/cards/components/event-status/event-status.component';
 
 @NgModule({
   declarations: [
@@ -73,10 +78,15 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     ProfileImageComponent,
 
     EventListComponent,
-    EventViewComponent,
-    EventFormComponent,
     EventNewStatusDialogComponent,
-    EventCardComponent,
+    EventButtonActionsComponent,
+    EventStatusComponent,
+    EventImageComponent,
+    EventMainViewCardComponent,
+    EventCreateEditCardComponent,
+    EventFinishedViewCardComponent,
+    EventCardFactoryComponent,
+    EventDirective,
 
     TeamViewComponent,
     TeamComponent,
@@ -104,7 +114,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     ListDetailsComponent,
     AlertComponent,
     CustomDialog,
-    LineInfoComponent
+    LineInfoComponent,
   ],
   imports: [
     BrowserModule,

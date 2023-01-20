@@ -1,7 +1,7 @@
 import {Component, Input} from "@angular/core";
 import {Team} from "../../../models/Team/Team";
 import {RouterService} from "../../../services/router.service";
-import {EventService} from "../../../services/event.service";
+import {EventHttpService} from "../../../services/event/event.http-service";
 import {EventFilter} from "../../../models/Event/EventFilter";
 import {GetListParameters} from "../../../models/GetListParameters";
 import {MatTabChangeEvent} from "@angular/material/tabs";
@@ -21,8 +21,8 @@ export class TeamComponent {
   public userId = this.authService.getUserId();
 
   constructor(
-    public router:RouterService,
-    private eventService:EventService,
+    public router: RouterService,
+    private eventHttpService: EventHttpService,
     private authService: AuthService
   ) {
   }
@@ -39,7 +39,7 @@ export class TeamComponent {
       getList.Filter = new EventFilter();
       getList.Filter.teamsIds = [ this.team.id ];
 
-      this.eventService.getList(getList)
+      this.eventHttpService.getList(getList)
         .subscribe(x => this.teamEvents = x.items);
     }
   }

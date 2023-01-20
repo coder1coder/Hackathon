@@ -1,9 +1,10 @@
 <layout-default title="{{ editMode ? 'Событие' : 'Новое событие' }}">
 
   <div actions>
-    <button mat-button color="primary" (click)="submit()">Сохранить</button>
-    <button mat-button (click)="deleteEvent()" *ngIf="isCanDeleteEvent()">Удалить</button>
-    <button mat-button (click)="setPublish()" *ngIf="isCanPublish()">Опубликовать</button>
+    <app-actions
+    [event]="event"
+    [submit]="submit">
+    </app-actions>
   </div>
 
   <form [formGroup]="form" class="eventsNewForm">
