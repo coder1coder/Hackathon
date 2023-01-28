@@ -31,8 +31,8 @@ public class ProjectController: BaseController, IProjectApi
     /// <param name="id">Идентификатор проекта</param>
     /// <returns></returns>
     [HttpGet("{id:long}")]
-    public async Task<ProjectModel> Get(long id)
-        => await _projectService.GetAsync(id);
+    public Task<ProjectModel> Get(long id)
+        => _projectService.GetAsync(id);
 
     /// <summary>
     /// Создать новый проект

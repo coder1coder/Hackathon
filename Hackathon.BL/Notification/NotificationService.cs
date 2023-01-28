@@ -24,11 +24,11 @@ public class NotificationService: INotificationService
         _notificationsHub = notificationsHub;
     }
 
-    public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId)
-        => await _notificationRepository.GetList(listParameters, userId);
+    public Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId)
+        => _notificationRepository.GetList(listParameters, userId);
 
-    public async Task MarkAsRead(long userId, Guid[] ids)
-        => await _notificationRepository.MarkAsRead(userId, ids);
+    public Task MarkAsRead(long userId, Guid[] ids)
+        => _notificationRepository.MarkAsRead(userId, ids);
 
     public async Task Delete(long userId, Guid[] ids = null)
     {
@@ -54,6 +54,6 @@ public class NotificationService: INotificationService
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, ids.ToArray()));
     }
 
-    public async Task<long> GetUnreadNotificationsCount(long userId)
-        => await _notificationRepository.GetUnreadNotificationsCount(userId);
+    public Task<long> GetUnreadNotificationsCount(long userId)
+        => _notificationRepository.GetUnreadNotificationsCount(userId);
 }

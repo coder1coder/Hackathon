@@ -63,6 +63,6 @@ public class ChatService : IChatService
         });
     }
 
-    public async Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
-        => await _chatRepository.GetTeamChatMessages(teamId, offset, limit);
+    public Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
+        => _chatRepository.GetTeamChatMessages(teamId, offset, limit);
 }

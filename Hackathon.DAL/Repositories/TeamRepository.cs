@@ -125,13 +125,13 @@ namespace Hackathon.DAL.Repositories
             };
         }
 
-        public async Task<bool> ExistAsync(string teamName)
-            => await _dbContext.Teams
+        public Task<bool> ExistAsync(string teamName)
+            => _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Name.ToLower() == teamName.ToLower());
 
-        public async Task<bool> ExistAsync(long teamId)
-            => await _dbContext.Teams
+        public Task<bool> ExistAsync(long teamId)
+            => _dbContext.Teams
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == teamId);
 

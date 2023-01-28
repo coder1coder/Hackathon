@@ -1,8 +1,7 @@
 ﻿using System.Linq;
-using Hackathon.Common.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ValidationException = FluentValidation.ValidationException;
 
 namespace Hackathon.API
 {
@@ -27,7 +26,7 @@ namespace Hackathon.API
 
             switch (context.Exception)
             {
-                case ValidationException or Common.Exceptions.ValidationException:
+                case ValidationException:
 
                     problemDetails = new ProblemDetails
                     {
@@ -41,16 +40,6 @@ namespace Hackathon.API
                         && fluentValidationException.Errors.Any())
                         problemDetails.Detail = string.Join('\n', fluentValidationException.Errors);
 
-                    break;
-
-                case EntityNotFoundException:
-                    problemDetails = new ProblemDetails
-                    {
-                        Type = "https://example.com/entity-not-found",
-                        Detail = context.Exception.Message,
-                        Title = "Объект не найден",
-                        Status = 404
-                    };
                     break;
             }
 

@@ -52,8 +52,9 @@ public class TeamController : BaseController
     /// </summary>
     /// <param name="id"></param>
     [HttpGet("{id:long}")]
-    public async Task<TeamModel> Get([FromRoute] long id)
-        => await _teamService.GetAsync(id);
+    [ProducesResponseType(typeof(TeamModel), (int)HttpStatusCode.OK)]
+    public Task<IActionResult> Get([FromRoute] long id)
+        => GetResult(() => _teamService.GetAsync(id));
 
     /// <summary>
     /// Получить все команды
@@ -74,8 +75,8 @@ public class TeamController : BaseController
     [HttpGet("my")]
     [ProducesResponseType((int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
-    public async Task<TeamGeneral> GetUserTeam()
-        => await _teamService.GetUserTeam(UserId);
+    public Task<IActionResult> GetUserTeam()
+        => GetResult(() =>_teamService.GetUserTeam(UserId));
 
     /// <summary>
     /// Получить события в которых участвовала команда
@@ -83,16 +84,18 @@ public class TeamController : BaseController
     /// <returns></returns>
     [HttpPost("{teamId:long}/events")]
     [ProducesResponseType(typeof(BaseCollectionResponse<TeamEventListItem>), (int) HttpStatusCode.OK)]
-    public async Task<BaseCollectionResponse<TeamEventListItem>> GetTeamEvents([FromRoute] long teamId,
+    public async Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
         [FromBody] PaginationSort paginationSort)
     {
-        var collection = await _teamService.GetTeamEvents(teamId, paginationSort);
+        var result = await _teamService.GetTeamEvents(teamId, paginationSort);
+        if (!result.IsSuccess)
+            return await GetResult(() => Task.FromResult(result));
 
-        return new BaseCollectionResponse<TeamEventListItem>
+        return Ok(new BaseCollectionResponse<TeamEventListItem>
         {
-            Items = collection.Items,
-            TotalCount = collection.TotalCount
-        };
+            Items = result.Data.Items,
+            TotalCount = result.Data.TotalCount
+        });
     }
 
     /// <summary>
