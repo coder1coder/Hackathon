@@ -11,15 +11,12 @@ namespace Hackathon.DAL.Mappings
         {
             config
                 .ForType<CreateTeamModel, TeamEntity>()
-                .IgnoreNullValues(true)
-                .Map(x => x.Name, s => s.Name)
-                .Map(x => x.OwnerId, s => s.OwnerId);
+                .IgnoreNullValues(true);
 
             config
                 .ForType<TeamEntity, TeamModel>()
                 .IgnoreNullValues(true)
                 .Map(x => x.Members, s => s.Members.Select(x => x.Member))
-                .Map(x => x.Owner, x => x.Owner)
                 .MaxDepth(3);
         }
     }
