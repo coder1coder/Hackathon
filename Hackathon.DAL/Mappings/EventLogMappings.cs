@@ -10,19 +10,10 @@ public class EventLogMappings: IRegister
     {
         config.ForType<EventLogModel, EventLogEntity>()
             .IgnoreNullValues(true)
-            .Map(x=>x.Id, s=>s.Id)
-            .Map(x => x.Type, s => s.LogType)
-            .Map(x => x.UserId, s => s.UserId)
-            .Map(x => x.Description, s => s.Description)
-            .Map(x => x.Timestamp, s => s.Timestamp);
+            .Map(x => x.Type, s => s.LogType);
 
         config.ForType<EventLogEntity, EventLogListItem>()
             .IgnoreNullValues(true)
-            .Map(x=>x.Id, s=>s.Id)
-            .Map(x => x.LogType, s => s.Type)
-            .Map(x => x.UserId, s => s.UserId)
-            .Map(x => x.UserName, s => s.UserName)
-            .Map(x => x.Description, s => s.Description)
-            .Map(x => x.Timestamp, s => s.Timestamp);
+            .Map(x => x.LogType, s => s.Type);
     }
 }
