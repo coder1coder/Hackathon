@@ -47,8 +47,8 @@ public class NotificationController: BaseController
     [HttpPost("read")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    public async Task MarkAsRead([FromBody] Guid[] ids)
-        => await _notificationService.MarkAsRead(UserId, ids);
+    public Task MarkAsRead([FromBody] Guid[] ids)
+        => _notificationService.MarkAsRead(UserId, ids);
 
     /// <summary>
     /// Удалить уведомления пользователя
@@ -79,6 +79,6 @@ public class NotificationController: BaseController
     }
 
     [HttpGet("unread/count")]
-    public async Task<long> GetUnreadNotificationsCount()
-        => await _notificationService.GetUnreadNotificationsCount(UserId);
+    public Task<long> GetUnreadNotificationsCount()
+        => _notificationService.GetUnreadNotificationsCount(UserId);
 }

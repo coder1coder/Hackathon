@@ -50,21 +50,21 @@ public class EmailConfirmationService: IEmailConfirmationService
         var userModel = await _userRepository.GetAsync(userId);
 
         if (userModel is null)
-            throw new ValidationException(string.Format(EmailConfirmationErrorPatterns.UserWithIdNotFound, userId));
+            return Result.NotValid(string.Format(EmailConfirmationErrorPatterns.UserWithIdNotFound, userId));
 
         var request = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
         if (request is null)
-            throw new ValidationException("Запрос на подтверждение Email не найден");
+            return Result.NotValid("Запрос на подтверждение Email не найден");
 
         if (userModel.Email.Address != request.Email)
-            throw new ValidationException("Запрос на подтверждение Email пользователя не найден");
+            return Result.NotValid("Запрос на подтверждение Email пользователя не найден");
 
         if (request.IsConfirmed)
-            throw new ValidationException("Email пользователя уже подтвержден");
+            return Result.NotValid("Email пользователя уже подтвержден");
 
         if (request.Code != code)
-            throw new ValidationException("Код подтверждение указан неверно");
+            return Result.NotValid("Код подтверждение указан неверно");
 
         request.IsConfirmed = true;
 

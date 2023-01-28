@@ -55,24 +55,24 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// Создать или принять предложение дружбы
     /// </summary>
     [HttpPost("offer/{userId:long}")]
-    public async Task CreateOrAcceptOffer([FromRoute, Required] long userId)
-        => await _friendshipService.CreateOrAcceptOfferAsync(UserId, userId);
+    public Task CreateOrAcceptOffer([FromRoute, Required] long userId)
+        => GetResult(() => _friendshipService.CreateOrAcceptOfferAsync(UserId, userId));
 
     /// <summary>
     /// Отклонить предложение дружбы
     /// </summary>
     /// <param name="proposerId">Инициатор предложения</param>
     [HttpPost("offer/reject/{proposerId:long}")]
-    public async Task RejectOffer([FromRoute, Required] long proposerId)
-        => await _friendshipService.RejectOfferAsync(UserId, proposerId);
+    public Task RejectOffer([FromRoute, Required] long proposerId)
+        => _friendshipService.RejectOfferAsync(UserId, proposerId);
 
     /// <summary>
     /// Отписаться от профиля пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     [HttpPost("unsubscribe/{userId:long}")]
-    public async Task Unsubscribe([FromRoute] long userId)
-        => await _friendshipService.UnsubscribeAsync(UserId, userId);
+    public Task<IActionResult> Unsubscribe([FromRoute] long userId)
+        => GetResult(() => _friendshipService.UnsubscribeAsync(UserId, userId));
 
     /// <summary>
     /// Прекратить дружбу
@@ -80,6 +80,6 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// <param name="userId"></param>
     /// <returns></returns>
     [HttpDelete("{userId:long}")]
-    public async Task EndFriendship(long userId)
-        => await _friendshipService.EndFriendship(UserId, userId);
+    public Task EndFriendship(long userId)
+        => _friendshipService.EndFriendship(UserId, userId);
 }

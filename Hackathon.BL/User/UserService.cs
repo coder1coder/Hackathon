@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Abstraction.User;
@@ -13,14 +14,12 @@ using Hackathon.BL.Email;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common;
 using Hackathon.Common.Configuration;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using MapsterMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ValidationException = Hackathon.Common.Exceptions.ValidationException;
 
 namespace Hackathon.BL.User
 {
@@ -46,7 +45,7 @@ namespace Hackathon.BL.User
             IFileStorageService fileStorageService,
             IMapper mapper)
         {
-            _appSettings = appSettings.Value;
+            _appSettings = appSettings?.Value;
             _signUpModelValidator = signUpModelValidator;
             _signInModelValidator = signInModelValidator;
             _userRepository = userRepository;
@@ -65,11 +64,11 @@ namespace Hackathon.BL.User
             return await _userRepository.CreateAsync(signUpModel);
         }
 
-        public async Task<AuthTokenModel> SignInAsync(SignInModel signInModel)
+        public async Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel)
         {
             await _signInModelValidator.ValidateAndThrowAsync(signInModel);
 
-            var users = await _userRepository.GetAsync(new GetListParameters<UserFilter>
+            var users = await _userRepository.GetAsync(new Common.Models.GetListParameters<UserFilter>
             {
                 Filter = new UserFilter
                 {
@@ -79,16 +78,15 @@ namespace Hackathon.BL.User
             });
 
             if (users.Items.Count == 0)
-                throw new EntityNotFoundException(UserErrorMessages.UserDoesNotExists);
+                return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
 
             var user = users.Items.First();
 
             var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, user.PasswordHash);
 
-            if (!verified)
-                throw new ValidationException("Неправильное имя пользователя или пароль");
-
-            return GenerateToken(user);
+            return !verified
+                ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
+                : Result<AuthTokenModel>.FromValue(GenerateToken(user));
         }
 
         public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
@@ -117,17 +115,19 @@ namespace Hackathon.BL.User
             return GenerateToken(userModel);
         }
 
-        public async Task<UserModel> GetAsync(long userId)
+        public async Task<Result<UserModel>> GetAsync(long userId)
         {
             if (!await _userRepository.ExistsAsync(userId))
-                throw new EntityNotFoundException(UserErrorMessages.UserDoesNotExists);
+                Result.NotFound(UserErrorMessages.UserDoesNotExists);
 
             var model = await _userRepository.GetAsync(userId);
 
-            return EnrichModel(model);
+            EnrichModel(model);
+
+            return Result<UserModel>.FromValue(model);
         }
 
-        public async Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters)
+        public async Task<BaseCollection<UserModel>> GetAsync(Common.Models.GetListParameters<UserFilter> getListParameters)
         {
             var models = await _userRepository.GetAsync(getListParameters);
 
@@ -176,18 +176,21 @@ namespace Hackathon.BL.User
             };
         }
 
-        public async Task<Guid> UploadProfileImageAsync(long userId, string filename, Stream stream)
+        public async Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream)
         {
-            var existedUser = await GetAsync(userId);
+            var getUserResult = await GetAsync(userId);
+
+            if (!getUserResult.IsSuccess)
+                return Result<Guid>.FromErrors(getUserResult.Errors);
 
             var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, filename, userId);
 
-            if (existedUser.ProfileImageId is not null) {
-                await _fileStorageService.DeleteAsync(existedUser.ProfileImageId.Value);
+            if (getUserResult.Data.ProfileImageId is not null) {
+                await _fileStorageService.DeleteAsync(getUserResult.Data.ProfileImageId.Value);
             }
 
             await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);
-            return uploadResult.Id;
+            return Result<Guid>.FromValue(uploadResult.Id);
         }
 
         private UserModel EnrichModel(UserModel model)

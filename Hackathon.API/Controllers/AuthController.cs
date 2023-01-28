@@ -1,6 +1,6 @@
+using System.Net;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
@@ -15,7 +15,7 @@ namespace Hackathon.API.Controllers
     /// Авторизация и аутентификация
     /// </summary>
     [SwaggerTag("Авторизация и аутентификация")]
-    public class AuthController: BaseController, IAuthApi
+    public class AuthController: BaseController
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
@@ -33,10 +33,11 @@ namespace Hackathon.API.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost(nameof(SignIn))]
-        public async Task<AuthTokenModel> SignIn([FromBody] SignInRequest request)
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
+        public Task<IActionResult> SignIn([FromBody] SignInRequest request)
         {
             var signInModel = _mapper.Map<SignInModel>(request);
-            return await _userService.SignInAsync(signInModel);
+            return GetResult(() =>_userService.SignInAsync(signInModel));
         }
 
         /// <summary>

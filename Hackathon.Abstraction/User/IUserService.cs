@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Models;
+﻿using BackendTools.Common.Models;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 
@@ -18,7 +19,7 @@ namespace Hackathon.Abstraction.User
         /// </summary>
         /// <param name="signInModel"></param>
         /// <returns></returns>
-        Task<AuthTokenModel> SignInAsync(SignInModel signInModel);
+        Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel);
 
         /// <summary>
         /// Авторизация пользователя через Google
@@ -32,14 +33,14 @@ namespace Hackathon.Abstraction.User
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
-        Task<UserModel> GetAsync(long userId);
+        Task<Result<UserModel>> GetAsync(long userId);
 
         /// <summary>
         /// Получить информацию о пользователях
         /// </summary>
         /// <param name="getListParameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> getListParameters);
+        Task<BaseCollection<UserModel>> GetAsync(Common.Models.GetListParameters<UserFilter> getListParameters);
 
         /// <summary>
         /// Сгенерировать токен
@@ -55,6 +56,6 @@ namespace Hackathon.Abstraction.User
         /// <param name="filename">Имя файла картинки</param>
         /// <param name="stream">Новая картинка профиля</param>
         /// <returns></returns>
-        Task<Guid> UploadProfileImageAsync(long userId, string filename, Stream stream);
+        Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream);
     }
 }

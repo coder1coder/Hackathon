@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Hackathon.Common.Models;
+using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Entities;
@@ -20,7 +20,7 @@ namespace Hackathon.Abstraction.Event
         /// </summary>
         /// <param name="eventUpdateParameters"></param>
         /// <returns></returns>
-        Task UpdateAsync(EventUpdateParameters eventUpdateParameters);
+        Task<Result> UpdateAsync(EventUpdateParameters eventUpdateParameters);
 
         /// <summary>
         /// Получение информации о событии по идентификатору
@@ -35,7 +35,7 @@ namespace Hackathon.Abstraction.Event
         /// <param name="userId">Идентификатор авторизованного пользователя</param>
         /// <param name="getListParameters">Фильтр, пагинация</param>
         /// <returns></returns>
-        Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> getListParameters);
+        Task<BaseCollection<EventListItem>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters);
 
         /// <summary>
         /// Изменение статуса события
@@ -43,7 +43,7 @@ namespace Hackathon.Abstraction.Event
         /// <param name="eventId">Идентификатор обытия</param>
         /// <param name="eventStatus">Новый статус события</param>
         /// <returns></returns>
-        Task SetStatusAsync(long eventId, EventStatus eventStatus);
+        Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus);
 
         /// <summary>
         /// Добавление пользователя к событию
@@ -51,7 +51,7 @@ namespace Hackathon.Abstraction.Event
         /// <param name="eventId">Идентификатор события</param>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
-        Task JoinAsync(long eventId, long userId);
+        Task<Result> JoinAsync(long eventId, long userId);
 
         /// <summary>
         /// Покинуть событие
@@ -59,15 +59,15 @@ namespace Hackathon.Abstraction.Event
         /// <param name="eventId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task LeaveAsync(long eventId, long userId);
+        Task<Result> LeaveAsync(long eventId, long userId);
 
         /// <summary>
         /// Удаление события
         /// </summary>
         /// <param name="eventId">Идентификатор события</param>
         /// <returns></returns>
-        Task DeleteAsync(long eventId);
-        
+        Task<Result> DeleteAsync(long eventId);
+
         /// <summary>
         /// Получить события по выражению
         /// </summary>

@@ -66,10 +66,10 @@ public class NotificationRepository: INotificationRepository
         };
     }
 
-    public async Task<long> GetUnreadNotificationsCount(long userId)
-        => await _dbContext.Notifications
+    public Task<long> GetUnreadNotificationsCount(long userId)
+        => _dbContext.Notifications
             .AsNoTracking()
-            .CountAsync(x => x.UserId == userId && x.IsRead == false);
+            .LongCountAsync(x => x.UserId == userId && x.IsRead == false);
 
     public async Task MarkAsRead(long userId, Guid[] ids)
     {

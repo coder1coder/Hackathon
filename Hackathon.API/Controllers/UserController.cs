@@ -60,8 +60,16 @@ public class UserController: BaseController
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
     [HttpGet("{userId:long}")]
-    public async Task<UserResponse> GetAsync([FromRoute] long userId)
-        => _mapper.Map<UserResponse>(await _userService.GetAsync(userId));
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+    public async Task<IActionResult> GetAsync([FromRoute] long userId)
+    {
+        var userResult = await _userService.GetAsync(userId);
+
+        if (userResult.IsSuccess)
+            return Ok(_mapper.Map<UserResponse>(userResult.Data));
+
+        return await GetResult(() => Task.FromResult(userResult));
+    }
 
     /// <summary>
     /// Получить информацию о пользователях
@@ -103,7 +111,7 @@ public class UserController: BaseController
     /// <param name="code">Код подтверждения</param>
     [HttpPost("profile/email/confirm")]
     public Task ConfirmEmail([FromQuery] string code)
-        => _emailConfirmationService.Confirm(UserId, code);
+        => GetResult(() => _emailConfirmationService.Confirm(UserId, code));
 
     /// <summary>
     /// Создать запрос на подтвреждение Email пользователя

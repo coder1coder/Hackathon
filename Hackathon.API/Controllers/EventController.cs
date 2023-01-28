@@ -76,16 +76,16 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
-    public async Task<EventModel> Get([FromRoute] long id)
-        => await _eventService.GetAsync(id);
+    public Task<EventModel> Get([FromRoute] long id)
+        => _eventService.GetAsync(id);
 
     [HttpPost("{eventId:long}/join")]
-    public async Task Join(long eventId)
-        => await _eventService.JoinAsync(eventId, UserId);
+    public Task<IActionResult> Join(long eventId)
+        => GetResult(() => _eventService.JoinAsync(eventId, UserId));
 
     [HttpPost("{eventId:long}/leave")]
-    public async Task Leave(long eventId)
-        => await _eventService.LeaveAsync(eventId, UserId);
+    public Task<IActionResult> Leave(long eventId)
+        => GetResult(() => _eventService.LeaveAsync(eventId, UserId));
 
     [HttpPost("{eventId:long}/join/team")]
     public Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
@@ -96,14 +96,14 @@ public class EventController: BaseController
     /// </summary>
     /// <param name="setStatusRequest"></param>
     [HttpPut(nameof(SetStatus))]
-    public async Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
-        => await _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
+    public Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
+        => _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
 
     /// <summary>
     /// Полное удаление события
     /// </summary>
     /// <param name="id"></param>
     [HttpDelete("{id:long}")]
-    public async Task Delete([FromRoute] long id)
-        => await _eventService.DeleteAsync(id);
+    public Task<IActionResult> Delete([FromRoute] long id)
+        => GetResult(() => _eventService.DeleteAsync(id));
 }

@@ -30,7 +30,7 @@ public class FileStorageController: BaseController
 
     [HttpGet]
     [Route("get/{storageFileId:guid}")]
-    public async Task<Stream> Get([FromRoute] Guid storageFileId)
-        => await _fileStorageService.GetAsync(storageFileId);
+    public Task<Stream> Get([FromRoute] Guid storageFileId)
+        => _fileStorageService.GetAsync(storageFileId);
 
 }
