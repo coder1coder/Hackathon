@@ -1,91 +1,75 @@
 <layout-default
   [title]="'Событие: ' + event.name"
   [isLoading]="isLoading"
-  [hideTitlebar]="true" class="event-finished hackathon-background">
+  [hideTitlebar]="true" class="hackathon-background"
+  containerClasses="container container-full">
 
-  <div class="event">
+  <div class="event event-finished">
     <div class="event-header">
-      <div class="event-header-left">
-        <div class="header-img">
-          <app-event-image
-            [event]="event">
-          </app-event-image>
-        </div>
-        <div class="event-header-info-block">
-          <div class="event-header-title">
-            <h1 class="event-line-info">{{ event.name }}</h1>
-          </div>
-          <div class="event-header-meta">
-            <div class="event-header-meta-info">
-              <div class="event-line-info">
-                Организатор: {{ event.owner?.userName }}
-              </div>
-              <div class="event-line-info">
-                Начало: {{ startDate }}
-              </div>
-              <div class="event-line-info">
-                Участники: {{ membersCount }} из {{ maxEventMembers }}
-              </div>
-              <div class="event-status">
-                <span>Статус: </span>
-                <app-event-status
-                  [status]="event.status">
-                </app-event-status>
-              </div>
-            </div>
-            <div class="event-header-meta-info">
-              <div class="event-line-info">
-                Место проведения: онлайн
-              </div>
-              <div class="event-line-info">
-                Команды: {{ eventTeamsCount }}
-              </div>
-            </div>
-            <div class="event-header-meta-award">
-              <img class="award-image" [src]="'assets/img/award.svg'" alt="event-image">
-              <div class="event-line-info">
-                Награда/Призовой фонд:
-              </div>
-              <div class="event-line-info">
-                {{ event.award }} ₽
-              </div>
-            </div>
-          </div>
-        </div>
 
+      <div class="event-header__cover">
+        <image-from-storage [imageId]="event.imageId"></image-from-storage>
+        <div class="event-header__cover-shadow"></div>
+      </div>
+
+      <div class="event-header__content">
+
+        <div class="container">
+          <div class="event-header__title">{{ event.name }}</div>
+          <div class="event-header__description">{{ event.description }}</div>
+          <div class="event-header__meta">
+            событие от {{ startDate }} завершено
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <div class="event-description">
-      <h3>Описание</h3>
-      <div class="event-line-info">
-        {{ event.description }}
-      </div>
 
-      <h3>Команды</h3>
-      <div class="event-teams" *ngIf="event?.teams?.length; else teamEmpty">
-        <div *ngFor="let team of event.teams">
-          <div class="team-card" (click)="goToTeamCard(team)">
-          {{team.name}}
+    <div class="event-content">
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Участники и команды</div>
+        <div class="event-content__section-content">
+
+          <div class="event-content__members">
+            <div class="event-content__member" *ngFor="let member of getEventMembers()">
+              <div class="event-content__member-image">
+                <image-from-storage [imageId]="member.profileImageId"></image-from-storage>
+              </div>
+              <div class="event-content__member-content">
+                <div class="event-content__member-content-name">
+                  {{ member.fullName ?? member.userName }}
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
-      </div>
+      </section>
 
-      <h3>Проекты</h3>
-      <div class="event-projects">
-        Проекты не указаны
-      </div>
+      <section class="event-content__section">
+        <div class="event-content__section-title">Проекты и решения</div>
+        <div class="event-content__section-content">
 
-      <h3>Результаты</h3>
-      <div class="event-result">
-        Скоро будут
-      </div>
+          <div class="event-content__projects">
+            <div class="event-content__project" *ngFor="let project of getEventProjects()">
+              <div class="event-content__project-image">
+                <image-from-storage [imageId]="project.imageId"></image-from-storage>
+              </div>
+              <div class="event-content__project-content">
+                <div class="event-content__project-name">
+                  {{ project.name }}
+                </div>
+                <div class="event-content__project-description">
+                  {{ project.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
     </div>
   </div>
 </layout-default>
-
-<ng-template #teamEmpty>
-  <div class="event-teams">
-    Команды не указаны
-  </div>
-</ng-template>

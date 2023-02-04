@@ -25,6 +25,11 @@ export class Event {
   imageUrl?: string;
 
   public static getUsersCount(event:Event): number {
-    return event.teams?.reduce((acc, team) => acc += team.members.length, 0);
+    return event.teams?.reduce((acc, team) => acc + team.members.length, 0);
+  }
+
+  public static getMembers(event:Event): IUser[]{
+    console.log(event)
+    return  event.teams?.flatMap(x=>x.members);
   }
 }

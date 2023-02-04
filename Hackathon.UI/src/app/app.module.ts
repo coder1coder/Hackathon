@@ -63,8 +63,8 @@ import { EventCreateEditCardComponent } from "./components/event/cards/event-cre
 import { EventButtonActionsComponent } from './components/event/cards/components/actions/event-button-actions.component';
 import { EventMainViewCardComponent } from "./components/event/cards/event-main-view-card/event-main-view-card.component";
 import { EventFinishedViewCardComponent } from './components/event/cards/event-finished-view-card/event-finished-view-card.component';
-import { EventImageComponent } from './components/event/cards/components/event-image/event-image.component';
 import { EventStatusComponent } from './components/event/cards/components/event-status/event-status.component';
+import {ImageFromStorageComponent} from "./components/custom/image-from-storage/image-from-storage.component";
 
 @NgModule({
   declarations: [
@@ -81,7 +81,7 @@ import { EventStatusComponent } from './components/event/cards/components/event-
     EventNewStatusDialogComponent,
     EventButtonActionsComponent,
     EventStatusComponent,
-    EventImageComponent,
+    ImageFromStorageComponent,
     EventMainViewCardComponent,
     EventCreateEditCardComponent,
     EventFinishedViewCardComponent,

@@ -1,0 +1,7 @@
+<div class="image-from-storage">
+  <img class="image-from-storage__image" [src]="imageUrl" *ngIf="imageId; else noImage"
+       loading="lazy" alt="">
+  <ng-template #noImage>
+    <mat-icon class="no-image">image</mat-icon>
+  </ng-template>
+</div>

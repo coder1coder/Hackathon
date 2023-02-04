@@ -48,7 +48,7 @@ namespace Hackathon.DAL.Repositories
                     .ThenInclude(x => x.Members)
                         .ThenInclude(x => x.Member)
                 .Include(x => x.Owner)
-                .SingleOrDefaultAsync(x => x.Id == eventId);
+                .FirstOrDefaultAsync(x => x.Id == eventId);
 
             return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
         }

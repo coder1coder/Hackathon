@@ -1,5 +1,5 @@
 $cards-gap: .5em;
-$card-width: 30%;
+$card-width: 33%;
 
 .mat-column-status {
   mat-icon {
@@ -60,6 +60,10 @@ $card-width: 30%;
     &:hover {
       box-shadow: 0 0 20px 0 rgb(195 195 195);
       transform: translateY(-2px);
+    }
+
+    &__image {
+      height: 200px;
     }
 
     .card-info {
