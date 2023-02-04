@@ -6,6 +6,8 @@ import * as moment from "moment/moment";
 import {RouterService} from "../../../../services/router.service";
 import {Team} from "../../../../models/Team/Team";
 import {AuthService} from "../../../../services/auth.service";
+import {IUser} from "../../../../models/User/IUser";
+import {IProject} from "../../../../models/Project/IProject";
 
 @Component({
   selector: 'app-event-finished-view-card',
@@ -27,20 +29,25 @@ export class EventFinishedViewCardComponent extends EventCardBaseComponent imple
   ngOnInit(): void {
   }
 
-  public get membersCount(): number {
-    return Event.getUsersCount(this.event);
-  }
-
-  public get eventTeamsCount(): number {
-    return this.event?.teams?.length ?? 0;
-  }
-
-  public get maxEventMembers(): number {
-    return this.event?.maxEventMembers
-  }
-
   public get startDate(): string {
     return moment(this.event?.start).local().format(DATE_FORMAT)
+  }
+
+  public getEventMembers(): IUser[]{
+    return Event.getMembers(this.event);
+  }
+
+  public getEventProjects(): IProject[]{
+    return [{
+      imageId: undefined,
+      name: `Система безконтактного приема товара с использованием устройств МАЛИНА-0912`,
+      description: `Программное обеспечение для управления системой бесконтактного приема товара с использованием устройств МАЛИНА-0912 от российских производителей`
+    },
+      {
+        imageId: undefined,
+        name: `Мобильное приложения для контроля региональных поставок `,
+        description: `Мобильное приложение под ОС Android позволяет контролировать логистику товаров на региональном уровне`
+      }];
   }
 
   public goToTeamCard = (item: Team) => {

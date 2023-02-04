@@ -69,12 +69,13 @@
          [infiniteScrollThrottle]="700"
          [infiniteScrollDisabled]="isFullListDisplayed"
          (scrolled)="fetch()">
+
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
         <div class="card" (click)="rowClick(item)">
 
-          <app-event-image
-            [event]="item">
-          </app-event-image>
+          <div class="card__image">
+            <image-from-storage [imageId]="item.imageId"></image-from-storage>
+          </div>
 
           <div class="card-info">
 

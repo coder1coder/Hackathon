@@ -13,7 +13,7 @@ export class DefaultLayoutComponent {
   @Input() hideContentWhileLoading: boolean = true;
   @Input() isLoading: boolean = false;
   @Input() showLoadingIndicator: boolean = true;
-  @Input() containerClasses: string = 'container container-full';
+  @Input() containerClasses: string = 'container container-full container-padding';
 
   constructor() {}
 }
