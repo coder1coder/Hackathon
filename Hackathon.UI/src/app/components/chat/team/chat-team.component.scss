@@ -1,3 +1,5 @@
+@import "src/mixins";
+
 :host {
   display: block;
   max-height: 100%;
@@ -81,9 +83,5 @@
 
 .mat-tab-body.mat-tab-body-active :host {
   /* fix team chat screen */
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  @include absolute0;
 }
