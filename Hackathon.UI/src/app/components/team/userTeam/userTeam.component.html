@@ -3,7 +3,9 @@
   [showLoadingIndicator]="false"
   title="{{ team ? 'Моя команда: ' + team?.name : 'Вы не состоите в команде' }}">
 
-  <team [team]="team" *ngIf="team"></team>
+  <div class="user-team-wrapper">
+    <team [team]="team" *ngIf="team"></team>
+  </div>
 
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>

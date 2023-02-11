@@ -1,0 +1,5 @@
+@import '/src/mixins';
+
+.user-team-wrapper{
+  @include absolute0;
+}

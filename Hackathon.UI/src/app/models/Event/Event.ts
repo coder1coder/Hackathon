@@ -29,7 +29,6 @@ export class Event {
   }
 
   public static getMembers(event:Event): IUser[]{
-    console.log(event)
     return  event.teams?.flatMap(x=>x.members);
   }
 }
