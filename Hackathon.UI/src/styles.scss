@@ -49,7 +49,7 @@ table {
   }
 
   &-padding {
-    padding: 0 2em 0 2em;
+    padding: 2em;
   }
 
   &-center {
@@ -128,8 +128,7 @@ table {
 
 mat-tab-group.vertical-tabs {
 
-  display: flex;
-  flex-direction: row;
+  @include flex-row;
   column-gap: 2em;
   height: 100%;
 

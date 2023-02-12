@@ -2,16 +2,14 @@
 @import 'src/mixins';
 
 .event {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   overflow-x: hidden;
 
   font-size: 16px;
 
   &-header {
 
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
 
     position: relative;
     background-color: #e1e1e1;
@@ -100,8 +98,7 @@
     }
 
     &__projects {
-      display: flex;
-      flex-direction: column;
+      @include flex-column;
       row-gap: 1em;
     }
 
@@ -131,8 +128,7 @@
 
     &__section{
 
-      display: flex;
-      flex-direction: column;
+      @include flex-column;
       justify-content: center;
       padding-top: 1em;
       padding-bottom: 3em;

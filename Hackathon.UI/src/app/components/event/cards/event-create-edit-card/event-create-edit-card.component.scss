@@ -1,21 +1,13 @@
-@mixin flex-center{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
+@import "src/mixins";
 
 .eventsNewForm {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   height: 100%;
   box-sizing: border-box;
 
   &__vertical-fields {
 
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     max-width: 600px;
     width: 100%;
   }
@@ -31,13 +23,12 @@
 
 .event-image {
 
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   row-gap: 1em;
 
   &__image{
     border: 1px solid #e8e8e8;
-    @include flex-center;
+    @include flex-column-center;
     width: 200px;
     height: 150px;
 
@@ -49,7 +40,7 @@
   }
 
   &__selector{
-    @include flex-center;
+    @include flex-column-center;
   }
 }
 

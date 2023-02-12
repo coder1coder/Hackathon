@@ -1,3 +1,5 @@
+@import "src/mixins";
+
 .mat-column-status {
   mat-icon {
     font-size: 10px;
@@ -31,8 +33,7 @@
   column-gap: 10px;
 
   &__fields{
-    display: flex;
-    flex-direction: row;
+    @include flex-row;
     flex-wrap: wrap;
   }
 
