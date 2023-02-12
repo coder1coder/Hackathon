@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Configuration;
-using Hackathon.Common.Exceptions;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,6 +15,9 @@ public class EmailConfirmationService: IEmailConfirmationService
     public const int EmailConfirmationRequestLifetimeDefault = 5;
 
     private const string EmailConfirmationTitle = "Hackathon: подтвердите свой Email";
+    private const string EmailAlreadyConfirmed = "Email пользователя уже подтвержден";
+    private const string ConfirmationCodeIsWrong = "Код подтверждение указан неверно";
+    private const string EmailConfirmationRequestWasNotFound = "Запрос на подтверждение Email пользователя не найден";
 
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IUserRepository _userRepository;
@@ -54,17 +56,14 @@ public class EmailConfirmationService: IEmailConfirmationService
 
         var request = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
-        if (request is null)
-            return Result.NotValid("Запрос на подтверждение Email не найден");
-
-        if (userModel.Email.Address != request.Email)
-            return Result.NotValid("Запрос на подтверждение Email пользователя не найден");
+        if (request is null || userModel.Email.Address != request.Email)
+            return Result.NotValid(EmailConfirmationRequestWasNotFound);
 
         if (request.IsConfirmed)
-            return Result.NotValid("Email пользователя уже подтвержден");
+            return Result.NotValid(EmailAlreadyConfirmed);
 
         if (request.Code != code)
-            return Result.NotValid("Код подтверждение указан неверно");
+            return Result.NotValid(ConfirmationCodeIsWrong);
 
         request.IsConfirmed = true;
 

@@ -38,6 +38,11 @@ namespace Hackathon.BL.Event
         private readonly IBus _messageBus;
         private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
 
+        private const string CantAttachToEvent = "Нельзя присоединиться к событию";
+        private const string CantLeaveEventIfYouEnteredAsTeam = "Нельзя покинуть событие, если вступили командой";
+        private const string UserIsNotInEvent = "Пользователь не состоит в событии";
+        private const string CantLeaveEventWhenItsAlreadyStarted = "Нельзя покидать событие, когда оно уже начато";
+
         public EventService(
             IValidator<EventCreateParameters> createEventModelValidator,
             IValidator<EventUpdateParameters> updateEventModelValidator,
@@ -125,7 +130,7 @@ namespace Hackathon.BL.Event
             var eventModel = await _eventRepository.GetAsync(eventId);
 
             if (eventModel.Status != EventStatus.Published)
-                return Result.NotValid("Нельзя присоединиться к событию");
+                return Result.NotValid(CantAttachToEvent);
 
             var notFullTeams = eventModel
                 .Teams
@@ -141,7 +146,7 @@ namespace Hackathon.BL.Event
             else
             {
                 if (!eventModel.IsCreateTeamsAutomatically)
-                    return Result.NotValid("Невозможно присоединиться к событию");
+                    return Result.NotValid(CantAttachToEvent);
 
                 teamId = await _teamService.CreateAsync(new CreateTeamModel
                 {
@@ -172,7 +177,7 @@ namespace Hackathon.BL.Event
                 return Result.NotValid(EventErrorMessages.EventDoesNotExists);
 
             if (eventModel.Status != EventStatus.Published)
-                return Result.NotValid("Нельзя покидать событие, когда оно уже начато");
+                return Result.NotValid(CantLeaveEventWhenItsAlreadyStarted);
 
             var userExists = await _userRepository.ExistsAsync(userId);
 
@@ -181,10 +186,10 @@ namespace Hackathon.BL.Event
 
             var userTeam = GetTeamContainsMember(eventModel, userId);
             if (userTeam == null)
-                return Result.NotValid("Пользователь не состоит в событии");
+                return Result.NotValid(UserIsNotInEvent);
 
             if (userTeam.OwnerId.HasValue)
-                return Result.NotValid("Нельзя покинуть событие, если вступили командой");
+                return Result.NotValid(CantLeaveEventIfYouEnteredAsTeam);
 
             await _teamService.RemoveMemberAsync(new TeamMemberModel
             {
@@ -249,6 +254,7 @@ namespace Hackathon.BL.Event
 
         private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)
             => eventModel.Teams
-                .FirstOrDefault(x => x.Members.Any(s=>s.Id == userId));
+                .FirstOrDefault(x =>
+                    x.Members?.Any(s=>s.Id == userId) == true);
     }
 }
