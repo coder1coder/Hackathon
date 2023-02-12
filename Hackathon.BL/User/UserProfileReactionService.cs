@@ -10,6 +10,7 @@ public class UserProfileReactionService: IUserProfileReactionService
 {
     private const string ReactionAlreadyExistMessage = "Реакции на профиль пользователя уже существует";
     public const string ReactionNotExistMessage = "Реакции на профиль пользователя не существует";
+    private const string ReactionsAreNotAvailableOnYourOwnProfile = "Реакции не доступны на собственном профиле";
 
     private readonly IUserProfileReactionRepository _userProfileReactionRepository;
     private readonly IUserRepository _userRepository;
@@ -58,7 +59,7 @@ public class UserProfileReactionService: IUserProfileReactionService
     private async Task ValidateOrThrow(long userId, long targetUserId)
     {
         if (userId == targetUserId)
-            throw new ValidationException("Реакции не доступны на собственном профиле");
+            throw new ValidationException(ReactionsAreNotAvailableOnYourOwnProfile);
 
         if (! await _userRepository.ExistsAsync(userId))
             throw new ValidationException(UserErrorMessages.UserDoesNotExists);

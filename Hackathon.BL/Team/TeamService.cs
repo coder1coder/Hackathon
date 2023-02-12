@@ -21,6 +21,9 @@ namespace Hackathon.BL.Team
 {
     public class TeamService : ITeamService
     {
+        private const string UserAlreadyOwnerOfTeam = "Пользователь уже является владельцем команды";
+        private const string UserIsNotOnTeam = "Пользователь не состоит в команде";
+
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
         private readonly ITeamRepository _teamRepository;
@@ -75,7 +78,7 @@ namespace Hackathon.BL.Team
                 });
 
                 if (teams.Items.Any())
-                    throw new ValidationException("Пользователь уже является владельцем команды");
+                    throw new ValidationException(UserAlreadyOwnerOfTeam);
             }
 
             return await _teamRepository.CreateAsync(createTeamModel);
@@ -143,7 +146,7 @@ namespace Hackathon.BL.Team
             var teamMember = team.Members.FirstOrDefault(x => x.Id == teamMemberModel.MemberId);
 
             if (teamMember is null && team.OwnerId != teamMemberModel.MemberId)
-                throw new ValidationException("Пользователь не состоит в команде");
+                throw new ValidationException(UserIsNotOnTeam);
 
             var isOwnerMember = team.OwnerId == teamMemberModel.MemberId;
 

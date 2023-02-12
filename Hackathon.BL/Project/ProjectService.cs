@@ -10,6 +10,9 @@ namespace Hackathon.BL.Project
 {
     public class ProjectService: IProjectService
     {
+        private const string ProjectDoesNotExist = "Проект не существует";
+        private const string ReadFromRepositoryError = "Ошибка чтения из репозитория";
+
         private readonly IProjectRepository _projectRepository;
         private readonly IValidator<ProjectCreateParameters> _projectCreateModelValidator;
         private readonly IValidator<ProjectUpdateFromGitParameters> _projectUpdateFromGitValidator;
@@ -43,7 +46,7 @@ namespace Hackathon.BL.Project
             var project = await _projectRepository.GetAsync(parameters.ProjectId);
 
             if (project is null)
-                throw new ValidationException("Проект не существует");
+                throw new ValidationException(ProjectDoesNotExist);
 
             var gitParameters = _gitHubIntegrationService.ParseFromLink(parameters.LinkToGitBranch);
 
@@ -52,12 +55,12 @@ namespace Hackathon.BL.Project
             await stream.CopyToAsync(memoryStream);
 
             if (memoryStream is null || !memoryStream.CanRead)
-                throw new ValidationException("Ошибка чтения из репозитория");
+                throw new ValidationException(ReadFromRepositoryError);
 
             if (memoryStream.CanSeek) memoryStream.Seek(0, SeekOrigin.Begin);
 
             var storageFile = await _fileStorageService.UploadAsync(memoryStream, Bucket.Projects,
-                $"{gitParameters.UserName}_{gitParameters.Repository}_{gitParameters.Branch}.zip", userId);
+                ResolveProjectFileName(gitParameters), userId);
 
             project.FileIds.Add(storageFile.Id);
 
@@ -65,8 +68,9 @@ namespace Hackathon.BL.Project
         }
 
         public Task<ProjectModel> GetAsync(long projectId)
-        {
-            return _projectRepository.GetAsync(projectId);
-        }
+            => _projectRepository.GetAsync(projectId);
+
+        private static string ResolveProjectFileName(GitParameters gitParameters)
+            => $"{gitParameters.UserName}_{gitParameters.Repository}_{gitParameters.Branch}.zip";
     }
 }

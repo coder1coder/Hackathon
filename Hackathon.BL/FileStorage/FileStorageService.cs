@@ -13,6 +13,8 @@ namespace Hackathon.BL.FileStorage
 {
     public class FileStorageService : IFileStorageService
     {
+        private const string FileWithIdNotFoundPattern = "Файл с индентификатором {0} не найден";
+
         private readonly AmazonS3Client _s3Client;
         private readonly ILogger<FileStorageService> _logger;
         private readonly IFileStorageRepository _fileStorageRepository;
@@ -85,7 +87,7 @@ namespace Hackathon.BL.FileStorage
                     nameof(FileStorageService),
                     storageFileId);
 
-                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException(string.Format(FileWithIdNotFoundPattern, storageFileId));
             }
 
             using var storageFile = await _s3Client.GetObjectAsync(
@@ -109,7 +111,7 @@ namespace Hackathon.BL.FileStorage
                     nameof(FileStorageService),
                     storageFileId);
 
-                throw new FileNotFoundException($"Файл с индентификатором {storageFileId} не найден");
+                throw new FileNotFoundException(string.Format(FileWithIdNotFoundPattern, storageFileId));
             }
 
             await _fileStorageRepository.RemoveAsync(fileInfo.Id);
