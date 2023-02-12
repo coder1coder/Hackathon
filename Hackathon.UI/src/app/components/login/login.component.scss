@@ -72,8 +72,7 @@
     }
 
     &__block {
-      display: flex;
-      flex-direction: row;
+      @include flex-row;
       align-items: center;
       justify-content: space-around;
       width: 200px;
