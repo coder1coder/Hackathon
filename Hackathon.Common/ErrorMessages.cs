@@ -1,8 +1,7 @@
-﻿namespace Hackathon.Common.Exceptions
+﻿namespace Hackathon.Common;
+
+public static class ErrorMessages
 {
-    public static class ErrorMessages
-    {
-        public const string CantSetEventStatus =  "Невозможно сменить статус события";
-        public const string MaximumNumberTeamMembersReached = "Достигнуто максимальное количество участников в команде";
-    }
+    public const string CantSetEventStatus =  "Невозможно сменить статус события";
+    public const string MaximumNumberTeamMembersReached = "Достигнуто максимальное количество участников в команде";
 }

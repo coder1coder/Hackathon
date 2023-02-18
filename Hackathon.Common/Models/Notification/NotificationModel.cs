@@ -12,13 +12,3 @@ public class NotificationModel
     public long? OwnerId { get; set; }
     public string Data { get; set; }
 }
-
-/// <summary>
-/// Тип уведомления
-/// </summary>
-public enum NotificationType
-{
-    Information = 0,
-    TeamInvite = 1,
-    EventInvite = 2,
-}

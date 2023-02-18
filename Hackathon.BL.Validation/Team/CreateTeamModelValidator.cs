@@ -2,23 +2,22 @@
 using Hackathon.Abstraction.Team;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.BL.Validation.Team
-{
-    public class CreateTeamModelValidator : AbstractValidator<CreateTeamModel>
-    {
-        public CreateTeamModelValidator(ITeamRepository teamRepository)
-        {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MinimumLength(3)
-                .MaximumLength(30)
-                .CustomAsync(async (teamName, context, _) =>
-                {
-                    var isSameNameExist = await teamRepository.ExistAsync(teamName);
+namespace Hackathon.BL.Validation.Team;
 
-                    if (isSameNameExist)
-                        context.AddFailure("Команда с таким названием уже существует");
-                });
-        }
+public class CreateTeamModelValidator : AbstractValidator<CreateTeamModel>
+{
+    public CreateTeamModelValidator(ITeamRepository teamRepository)
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MinimumLength(3)
+            .MaximumLength(30)
+            .CustomAsync(async (teamName, context, _) =>
+            {
+                var isSameNameExist = await teamRepository.ExistAsync(teamName);
+
+                if (isSameNameExist)
+                    context.AddFailure("Команда с таким названием уже существует");
+            });
     }
 }

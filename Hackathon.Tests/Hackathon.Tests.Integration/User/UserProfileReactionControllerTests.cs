@@ -76,7 +76,7 @@ public sealed class UserProfileReactionControllerTests: BaseIntegrationTest
             .Where(x =>
                 x.Content != null
                 && x.Content.Status == (int)HttpStatusCode.BadRequest
-                && x.Content.Detail == UserProfileReactionService.ReactionNotExistMessage
+                && x.Content.Detail == UserMessages.ReactionNotExistMessage
                 );
     }
 

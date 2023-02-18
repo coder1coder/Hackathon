@@ -4,7 +4,7 @@ public enum Bucket
 {
     Avatars = 0,
     Events = 1,
-    Projects = 2,
+    Projects = 2
 }
 
 public static class BucketExtensions {

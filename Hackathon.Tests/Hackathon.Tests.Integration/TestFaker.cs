@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using Bogus;
 using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.Project;
-using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Hackathon.Entities;
-using Hackathon.Entities.User;
 using MapsterMapper;
 
 namespace Hackathon.Tests.Integration;
@@ -41,38 +38,6 @@ public class TestFaker
         return _mapper.Map<List<EventModel>>(eventEntities);
     }
 
-    public IEnumerable<EventCreateParameters> GetCreateEventModels(int count, long userId)
-    {
-        var eventEntities = GetEventEntities(count, userId);
-        return _mapper.Map<List<EventCreateParameters>>(eventEntities);
-    }
-
-    public IEnumerable<EventEntity> GetEventsEntities(int count, long userId, EventStatus? eventStatus = null)
-    {
-        return GetEventEntities(count, userId, eventStatus);
-    }
-
-    public static IEnumerable<CreateTeamModel> GetCreateTeamModels(int count)
-    {
-        var faker = new Faker<CreateTeamModel>();
-
-        faker
-            .RuleFor(x => x.Name, f => f.Random.String2(6, 20));
-
-        return faker.Generate(count);
-    }
-
-    public static IEnumerable<ProjectCreateParameters> GetProjectCreateModel(int count)
-    {
-        var faker = new Faker<ProjectCreateParameters>();
-
-        faker
-            .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
-            .RuleFor(x=>x.Description, f=>f.Random.String2(6,20));
-
-        return faker.Generate(count);
-    }
-
     #endregion
 
     #region Entities
@@ -94,33 +59,6 @@ public class TestFaker
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
             .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
             .RuleFor(x => x.Description, f => f.Random.String2(400));
-
-        return faker.Generate(count);
-    }
-
-    public static IEnumerable<UserEntity> GetUserEntities(int count)
-    {
-        var faker = new Faker<UserEntity>();
-
-        faker
-            .RuleFor(x => x.UserName, f => f.Person.UserName)
-            .RuleFor(x => x.PasswordHash, f => f.Random.String2(6, 20))
-            .RuleFor(x => x.FullName, f => f.Person.FullName)
-            .RuleFor(x => x.Email, f => f.Person.Email);
-
-        return faker.Generate(count);
-    }
-
-    public static IEnumerable<TeamEntity> GetTeamEntities(int count, UserEntity owner)
-    {
-        var faker = new Faker<TeamEntity>();
-
-        faker
-            .RuleFor(x => x.Name, f => f.Company.CompanyName())
-            .RuleFor(x => x.Events, _ => new List<EventEntity>())
-            .RuleFor(x => x.Members, _ => new List<MemberTeamEntity>())
-            .RuleFor(x => x.Owner, _ => owner)
-            .RuleFor(x => x.OwnerId, _ => owner.Id);
 
         return faker.Generate(count);
     }

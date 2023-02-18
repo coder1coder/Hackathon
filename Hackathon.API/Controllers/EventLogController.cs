@@ -3,9 +3,9 @@ using Hackathon.Abstraction.EventLog;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Hackathon.API.Controllers;
 

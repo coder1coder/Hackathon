@@ -2,64 +2,63 @@
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Exceptions;
+using Hackathon.Common;
 using Hackathon.Common.Models.Team;
 
-namespace Hackathon.BL.Validation.Team
+namespace Hackathon.BL.Validation.Team;
+
+public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
 {
-    public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
+    public const int MaxTeamMembers = 30;
+
+    public TeamAddMemberModelValidator(
+        ITeamRepository teamRepository,
+        IUserRepository userRepository
+    )
     {
-        public const int MaxTeamMembers = 30;
+        RuleFor(x => x.TeamId)
+            .GreaterThan(0)
+            .WithMessage("Идентификатор команды должен быть больше 0")
+            .CustomAsync(async (teamId, context, _) =>
+            {
+                if (await teamRepository.ExistAsync(teamId) == false)
+                    context.AddFailure("Команды с таким идентификатором не существует");
+            });
 
-        public TeamAddMemberModelValidator(
-            ITeamRepository teamRepository,
-            IUserRepository userRepository
-            )
-        {
-            RuleFor(x => x.TeamId)
-                .GreaterThan(0)
-                .WithMessage("Идентификатор команды должен быть больше 0")
-                .CustomAsync(async (teamId, context, _) =>
+        RuleFor(x => x.MemberId)
+            .GreaterThan(0)
+            .WithMessage("Идентификатор пользователя должен быть больше 0")
+            .CustomAsync(async (userId, context, _) =>
+            {
+                if (await userRepository.ExistsAsync(userId) == false)
+                    context.AddFailure(UserErrorMessages.UserDoesNotExists);
+            });
+
+        RuleFor(x => x)
+            .CustomAsync(async (model, context, _) =>
+            {
+                var teamModel = await teamRepository.GetAsync(model.TeamId);
+
+                if (teamModel is null)
+                    context.AddFailure(TeamErrorMessages.TeamDoesNotExists);
+
+                if (teamModel is not null)
                 {
-                    if (await teamRepository.ExistAsync(teamId) == false)
-                        context.AddFailure("Команды с таким идентификатором не существует");
-                });
+                    if (teamModel.Members.Any(x => x.Id == model.MemberId))
+                        context.AddFailure("Пользователь уже добавлен в эту команду");
 
-            RuleFor(x => x.MemberId)
-                .GreaterThan(0)
-                .WithMessage("Идентификатор пользователя должен быть больше 0")
-                .CustomAsync(async (userId, context, _) =>
-                {
-                    if (await userRepository.ExistsAsync(userId) == false)
-                        context.AddFailure(UserErrorMessages.UserDoesNotExists);
-                });
+                    if (teamModel.OwnerId == model.MemberId)
+                        context.AddFailure("Нельзя добавить владельца команды в команду");
+                }
+            });
 
-            RuleFor(x => x)
-                .CustomAsync(async (model, context, _) =>
-                {
-                    var teamModel = await teamRepository.GetAsync(model.TeamId);
+        RuleFor(x => x)
+            .CustomAsync(async (model, context, _) =>
+            {
+                var teamMemberCount = await teamRepository.GetMembersCountAsync(model.TeamId);
 
-                    if (teamModel is null)
-                        context.AddFailure(TeamErrorMessages.TeamDoesNotExists);
-
-                    if (teamModel is not null)
-                    {
-                        if (teamModel.Members.Any(x => x.Id == model.MemberId))
-                            context.AddFailure("Пользователь уже добавлен в эту команду");
-
-                        if (teamModel.OwnerId == model.MemberId)
-                            context.AddFailure("Нельзя добавить владельца команды в команду");
-                    }
-                });
-
-            RuleFor(x => x)
-                .CustomAsync(async (model, context, _) =>
-                {
-                    var teamMemberCount = await teamRepository.GetMembersCountAsync(model.TeamId);
-
-                    if (teamMemberCount >= MaxTeamMembers)
-                        context.AddFailure(ErrorMessages.MaximumNumberTeamMembersReached);
-                });
-        }
+                if (teamMemberCount >= MaxTeamMembers)
+                    context.AddFailure(ErrorMessages.MaximumNumberTeamMembersReached);
+            });
     }
 }

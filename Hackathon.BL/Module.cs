@@ -44,7 +44,7 @@ public class Module : Autofac.Module
             {
                 UseHttp = _appSettings.S3Options.UseHttp,
                 ServiceURL = _appSettings.S3Options.ServiceUrl,
-                ForcePathStyle = _appSettings.S3Options.ForcePathStyle,
+                ForcePathStyle = _appSettings.S3Options.ForcePathStyle
             })).AsSelf();
     }
 }

@@ -16,5 +16,5 @@ public enum ChatMessageOption: byte
     /// <summary>
     /// С уведомлением
     /// </summary>
-    WithNotify = 1,
+    WithNotify = 1
 }

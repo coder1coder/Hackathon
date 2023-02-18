@@ -1,12 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Hackathon.Common.Models
+namespace Hackathon.Common.Models;
+
+public enum SortOrder
 {
-    public enum SortOrder
-    {
-        [EnumMember(Value = "0")]
-        Asc = 0, 
-        [EnumMember(Value = "1")]
-        Desc = 1
-    }
+    [EnumMember(Value = "0")]
+    Asc = 0,
+    [EnumMember(Value = "1")]
+    Desc = 1
 }

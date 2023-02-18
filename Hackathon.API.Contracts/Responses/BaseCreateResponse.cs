@@ -1,7 +1,6 @@
-﻿namespace Hackathon.Contracts.Responses
+﻿namespace Hackathon.Contracts.Responses;
+
+public class BaseCreateResponse
 {
-    public class BaseCreateResponse
-    {
-        public long Id { get; set; }
-    }
+    public long Id { get; set; }
 }

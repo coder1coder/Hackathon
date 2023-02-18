@@ -1,8 +1,7 @@
-﻿namespace Hackathon.Contracts.Requests.Team
+﻿namespace Hackathon.Contracts.Requests.Team;
+
+public class TeamAddMemberRequest
 {
-    public class TeamAddMemberRequest
-    {
-        public long TeamId { get; set; }
-        public long UserId { get; set; }
-    }
+    public long TeamId { get; set; }
+    public long UserId { get; set; }
 }
