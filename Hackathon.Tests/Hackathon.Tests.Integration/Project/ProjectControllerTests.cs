@@ -42,11 +42,11 @@ namespace Hackathon.Tests.Integration.Project
                 Type = (int)TeamType.Private
             });
 
-            Assert.NotNull(teamCreateResponse);
+            Assert.NotNull(teamCreateResponse?.Content);
 
             var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
             {
-                TeamId = teamCreateResponse.Id,
+                TeamId = teamCreateResponse.Content.Id,
                 Name = Guid.NewGuid().ToString()[..8],
                 Description = Guid.NewGuid().ToString(),
                 EventId = createEventResponse.Id
@@ -81,9 +81,11 @@ namespace Hackathon.Tests.Integration.Project
                 Type = (int)TeamType.Private
             });
 
+            Assert.NotNull(teamCreateResponse?.Content);
+
             var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
             {
-                TeamId = teamCreateResponse.Id,
+                TeamId = teamCreateResponse.Content.Id,
                 Name = Guid.NewGuid().ToString()[..8],
                 Description = Guid.NewGuid().ToString(),
                 EventId = createEventResponse.Id

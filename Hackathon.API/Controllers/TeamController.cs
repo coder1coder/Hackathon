@@ -38,9 +38,7 @@ public class TeamController : BaseController
     {
         var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
-        createTeamModel.OwnerId = UserId;
-
-        var teamId = await _teamService.CreateAsync(createTeamModel);
+        var teamId = await _teamService.CreateAsync(createTeamModel, UserId);
         return new BaseCreateResponse
         {
             Id = teamId,

@@ -10,8 +10,9 @@ namespace Hackathon.Abstraction.Team
         /// Создание команды
         /// </summary>
         /// <param name="createTeamModel">Команда</param>
+        /// <param name="userId">Идентификатор авторизованного пользователя</param>
         /// <returns></returns>
-        Task<long> CreateAsync(CreateTeamModel createTeamModel);
+        Task<long> CreateAsync(CreateTeamModel createTeamModel, long? userId = null);
 
         /// <summary>
         /// Добавление пользователя в команду
