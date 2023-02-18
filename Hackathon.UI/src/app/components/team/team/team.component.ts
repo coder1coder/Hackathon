@@ -13,6 +13,7 @@ import {AuthService} from "../../../services/auth.service";
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss']
 })
+
 export class TeamComponent {
 
   @Input() team: Team;

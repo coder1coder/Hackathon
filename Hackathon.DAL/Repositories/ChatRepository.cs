@@ -28,7 +28,7 @@ public class ChatRepository: RedisRepository, IChatRepository
         var items = RedisDatabase.SetScan(GetRedisKey(new ChatMessageEntity
         {
             TeamId = teamId,
-            Context = ChatMessageContext.TeamChat
+            Type = ChatMessageType.TeamChat
         }))
         .Select(x =>
             JsonConvert.DeserializeObject<ChatMessageEntity>(x))
@@ -53,10 +53,10 @@ public class ChatRepository: RedisRepository, IChatRepository
     {
         const string redisKeyPrefix = "chat:";
 
-        return entity.Context switch
+        return entity.Type switch
         {
-            ChatMessageContext.TeamChat => new RedisKey($"{redisKeyPrefix}team:{entity.TeamId}"),
-            _ => throw new ArgumentOutOfRangeException(nameof(entity.Context), entity.Context, null)
+            ChatMessageType.TeamChat => new RedisKey($"{redisKeyPrefix}team:{entity.TeamId}"),
+            _ => throw new ArgumentOutOfRangeException(nameof(entity.Type), entity.Type, null)
         };
     }
 }

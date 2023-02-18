@@ -57,7 +57,7 @@ namespace Hackathon.DAL.Repositories
             if (teamEntity is null)
                 return null;
 
-            return _mapper.Map<TeamModel>(teamEntity);
+            return _mapper.Map<TeamEntity, TeamModel>(teamEntity);
         }
 
         public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters)

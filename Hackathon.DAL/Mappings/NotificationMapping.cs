@@ -13,6 +13,7 @@ public class NotificationMapping: IRegister
         config.ForType<CreateNotificationModel<InfoNotificationData>, NotificationEntity>()
             .Map(x => x.Id, _ => Guid.NewGuid())
             .Map(x => x.CreatedAt, _ => DateTime.UtcNow)
+            .Map(x=>x.Type, s=>s.Type)
             .AfterMapping((s, x) =>
             {
                 x.Data = JsonSerializer.Serialize(s.Data);
