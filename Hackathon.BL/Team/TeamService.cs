@@ -23,6 +23,7 @@ namespace Hackathon.BL.Team
     {
         private const string UserAlreadyOwnerOfTeam = "Пользователь уже является владельцем команды";
         private const string UserIsNotOnTeam = "Пользователь не состоит в команде";
+        public const string CreateTeamAccessDenied = "Создать команду для события может только владелец события";
 
         private readonly IValidator<CreateTeamModel> _createTeamModelValidator;
 
@@ -57,9 +58,25 @@ namespace Hackathon.BL.Team
             _userRepository = userRepository;
         }
 
-        public async Task<long> CreateAsync(CreateTeamModel createTeamModel)
+        public async Task<long> CreateAsync(CreateTeamModel createTeamModel, long? userId = null)
         {
+            createTeamModel.OwnerId = userId;
+
             await _createTeamModelValidator.ValidateAndThrowAsync(createTeamModel);
+
+            if (createTeamModel.EventId.HasValue && userId.HasValue)
+            {
+                var eventModel = await _eventRepository.GetAsync(createTeamModel.EventId.Value);
+                if (eventModel is null)
+                {
+                    throw new ValidationException("Событие не существует");
+                }
+
+                if (eventModel.Owner.Id != userId)
+                {
+                    throw new ValidationException(CreateTeamAccessDenied);
+                }
+            }
 
             // Проверяем, является ли пользователь, который создает команду,
             // владельцем команды которая уже существует
@@ -71,6 +88,7 @@ namespace Hackathon.BL.Team
                 {
                     Filter = new TeamFilter
                     {
+                        EventId = createTeamModel.EventId,
                         OwnerId = createTeamModel.OwnerId
                     },
                     Offset = 0,

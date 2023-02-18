@@ -11,7 +11,7 @@ namespace Hackathon.API.Abstraction
         private const string BaseRoute = "/api/Team";
 
         [Post(BaseRoute)]
-        Task<BaseCreateResponse> Create([Body] CreateTeamRequest createTeamRequest);
+        Task<IApiResponse<BaseCreateResponse>> Create([Body] CreateTeamRequest createTeamRequest);
 
         [Get(BaseRoute + "/{id}")]
         Task<TeamModel> Get(long id);
