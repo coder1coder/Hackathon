@@ -14,11 +14,6 @@ public class EmailConfirmationService: IEmailConfirmationService
 {
     public const int EmailConfirmationRequestLifetimeDefault = 5;
 
-    private const string EmailConfirmationTitle = "Hackathon: подтвердите свой Email";
-    private const string EmailAlreadyConfirmed = "Email пользователя уже подтвержден";
-    private const string ConfirmationCodeIsWrong = "Код подтверждение указан неверно";
-    private const string EmailConfirmationRequestWasNotFound = "Запрос на подтверждение Email пользователя не найден";
-
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IUserRepository _userRepository;
     private readonly IEmailService _emailService;
@@ -52,18 +47,18 @@ public class EmailConfirmationService: IEmailConfirmationService
         var userModel = await _userRepository.GetAsync(userId);
 
         if (userModel is null)
-            return Result.NotValid(string.Format(EmailConfirmationErrorPatterns.UserWithIdNotFound, userId));
+            return Result.NotValid(string.Format(EmailConfirmationMessages.UserWithIdNotFound, userId));
 
         var request = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
         if (request is null || userModel.Email.Address != request.Email)
-            return Result.NotValid(EmailConfirmationRequestWasNotFound);
+            return Result.NotValid(EmailConfirmationMessages.EmailConfirmationRequestWasNotFound);
 
         if (request.IsConfirmed)
-            return Result.NotValid(EmailAlreadyConfirmed);
+            return Result.NotValid(EmailConfirmationMessages.EmailAlreadyConfirmed);
 
         if (request.Code != code)
-            return Result.NotValid(ConfirmationCodeIsWrong);
+            return Result.NotValid(EmailConfirmationMessages.ConfirmationCodeIsWrong);
 
         request.IsConfirmed = true;
 
@@ -85,10 +80,10 @@ public class EmailConfirmationService: IEmailConfirmationService
         var userModel = await _userRepository.GetAsync(userId);
 
         if (userModel is null)
-            return Result.NotValid(string.Format(EmailConfirmationErrorPatterns.UserWithIdNotFound, userId));
+            return Result.NotValid(string.Format(EmailConfirmationMessages.UserWithIdNotFound, userId));
 
         if (userModel.Email is null)
-            return Result.NotValid(EmailConfirmationErrorPatterns.UsersEmailIsNotListed);
+            return Result.NotValid(EmailConfirmationMessages.UsersEmailIsNotListed);
 
         var requestModel = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
@@ -146,7 +141,7 @@ public class EmailConfirmationService: IEmailConfirmationService
         var emailParameters = new EmailParameters
         {
             Email = userModel.Email.Address,
-            Subject = EmailConfirmationTitle,
+            Subject = EmailConfirmationMessages.EmailConfirmationTitle,
             Body = generateTemplateResult.Data
         };
 

@@ -13,25 +13,24 @@ using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 
-namespace Hackathon.BL.Validation
+namespace Hackathon.BL.Validation;
+
+public class Module: Autofac.Module
 {
-    public class Module: Autofac.Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateParameters>>().InstancePerLifetimeScope();
-            builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>().InstancePerLifetimeScope();
-            builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamMemberModel>>().InstancePerLifetimeScope();
-            builder.RegisterType<GetListParametersValidator<TeamFilter>>().As<IValidator<GetListParameters<TeamFilter>>>().InstancePerLifetimeScope();
-            builder.RegisterType<SignUpModelValidator>().As<IValidator<SignUpModel>>().InstancePerLifetimeScope();
-            builder.RegisterType<SignInModelValidator>().As<IValidator<SignInModel>>().InstancePerLifetimeScope();
-            builder.RegisterType<GetListParametersValidator<UserFilter>>().As<IValidator<GetListParameters<UserFilter>>>().InstancePerLifetimeScope();
-            builder.RegisterType<GetListParametersValidator<EventFilter>>().As<IValidator<GetListParameters<EventFilter>>>().InstancePerLifetimeScope();
-            builder.RegisterType<CreateEventModelValidator>().As<IValidator<EventCreateParameters>>().InstancePerLifetimeScope();
-            builder.RegisterType<UpdateEventModelValidator>().As<IValidator<EventUpdateParameters>>().InstancePerLifetimeScope();
-            builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
-            builder.RegisterType<ProjectUpdateFromGitParametersValidator>().As<IValidator<ProjectUpdateFromGitParameters>>().InstancePerLifetimeScope();
-            builder.RegisterType<CreateChatMessageValidator>().As<IValidator<ICreateChatMessage>>().InstancePerLifetimeScope();
-        }
+        builder.RegisterType<ProjectCreateModelValidator>().As<IValidator<ProjectCreateParameters>>().InstancePerLifetimeScope();
+        builder.RegisterType<CreateTeamModelValidator>().As<IValidator<CreateTeamModel>>().InstancePerLifetimeScope();
+        builder.RegisterType<TeamAddMemberModelValidator>().As<IValidator<TeamMemberModel>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetListParametersValidator<TeamFilter>>().As<IValidator<GetListParameters<TeamFilter>>>().InstancePerLifetimeScope();
+        builder.RegisterType<SignUpModelValidator>().As<IValidator<SignUpModel>>().InstancePerLifetimeScope();
+        builder.RegisterType<SignInModelValidator>().As<IValidator<SignInModel>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetListParametersValidator<UserFilter>>().As<IValidator<GetListParameters<UserFilter>>>().InstancePerLifetimeScope();
+        builder.RegisterType<GetListParametersValidator<EventFilter>>().As<IValidator<GetListParameters<EventFilter>>>().InstancePerLifetimeScope();
+        builder.RegisterType<CreateEventModelValidator>().As<IValidator<EventCreateParameters>>().InstancePerLifetimeScope();
+        builder.RegisterType<UpdateEventModelValidator>().As<IValidator<EventUpdateParameters>>().InstancePerLifetimeScope();
+        builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
+        builder.RegisterType<ProjectUpdateFromGitParametersValidator>().As<IValidator<ProjectUpdateFromGitParameters>>().InstancePerLifetimeScope();
+        builder.RegisterType<CreateChatMessageValidator>().As<IValidator<ICreateChatMessage>>().InstancePerLifetimeScope();
     }
 }

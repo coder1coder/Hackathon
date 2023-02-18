@@ -16,14 +16,6 @@ namespace Hackathon.BL.Friend;
 
 public class FriendshipService: IFriendshipService
 {
-    private const string CantCreateAcceptFriendshipOffersForYourProfile = "Нельзя создать/принять предложение дружбы для своего профиля";
-    private const string UsersAreAlreadyFriends = "Пользователи уже являются друзьями";
-    private const string OfferOfFriendshipWasSentEarlier = "Предложение дружбы было отправлено ранее";
-    private const string NoOffersOfFriendshipHaveBeenMade = "Предложений дружбы не поступало";
-    private const string InappropriateStatus = "Не подходящий статус";
-    private const string YouAreNotSubscribedToUser = "Вы не подписаны на пользователя";
-    private const string UsersAreNotFriends = "Пользователи не являются друзьями";
-
     private readonly IFriendshipRepository _friendshipRepository;
     private readonly INotificationService _notificationService;
     private readonly IUserService _userService;
@@ -48,12 +40,12 @@ public class FriendshipService: IFriendshipService
     public async Task<Result> CreateOrAcceptOfferAsync(long proposerId, long userId)
     {
         if (proposerId == userId)
-            return Result.NotFound(CantCreateAcceptFriendshipOffersForYourProfile);
+            return Result.NotFound(FriendshipMessages.CantCreateAcceptFriendshipOffersForYourProfile);
 
         var offer = await _friendshipRepository.GetOfferAsync(proposerId, userId);
 
         if (offer?.Status == FriendshipStatus.Confirmed)
-            return Result.NotFound(UsersAreAlreadyFriends);
+            return Result.NotFound(FriendshipMessages.UsersAreAlreadyFriends);
 
         var proposer = await _userService.GetAsync(proposerId);
 
@@ -76,7 +68,7 @@ public class FriendshipService: IFriendshipService
             switch (offer.Status)
             {
                 case FriendshipStatus.Pending:
-                    return Result.NotValid(OfferOfFriendshipWasSentEarlier);
+                    return Result.NotValid(FriendshipMessages.OfferOfFriendshipWasSentEarlier);
 
                 //Предложение было отклонено ранее, обновим статус
                 case FriendshipStatus.Rejected:
@@ -116,10 +108,10 @@ public class FriendshipService: IFriendshipService
     {
         var offer = await _friendshipRepository.GetOfferAsync(proposerId, userId, GetOfferOption.Outgoing);
         if (offer is null)
-            return Result.NotValid(NoOffersOfFriendshipHaveBeenMade);
+            return Result.NotValid(FriendshipMessages.NoOffersOfFriendshipHaveBeenMade);
 
         if (offer.Status != FriendshipStatus.Pending)
-            return Result.NotValid(InappropriateStatus);
+            return Result.NotValid(FriendshipMessages.InappropriateStatus);
 
         await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Rejected);
 
@@ -138,7 +130,7 @@ public class FriendshipService: IFriendshipService
     {
         var offer = await _friendshipRepository.GetOfferAsync(proposerId, userId, GetOfferOption.Outgoing);
         if (offer is not { Status: FriendshipStatus.Pending })
-            return Result.NotValid(YouAreNotSubscribedToUser);
+            return Result.NotValid(FriendshipMessages.YouAreNotSubscribedToUser);
 
         await _friendshipRepository.RemoveOfferAsync(proposerId, userId);
 
@@ -153,7 +145,7 @@ public class FriendshipService: IFriendshipService
         var offer = await _friendshipRepository.GetOfferAsync(firstUserId, secondUserId);
 
         if (offer is not { Status: FriendshipStatus.Confirmed })
-            return Result.NotValid(UsersAreNotFriends);
+            return Result.NotValid(FriendshipMessages.UsersAreNotFriends);
 
         await _friendshipRepository.UpdateFriendship(offer.ProposerId, offer.UserId, new Friendship
         {

@@ -45,14 +45,12 @@ public class NotificationRepository: INotificationRepository
         if (parameters.Filter?.IsRead != null)
             query = query.Where(x => x.IsRead == parameters.Filter.IsRead.Value);
 
-        if (!string.IsNullOrWhiteSpace(parameters.SortBy))
+        if (!string.IsNullOrWhiteSpace(parameters.SortBy)
+            && string.Equals(parameters.SortBy, nameof(NotificationEntity.CreatedAt), StringComparison.CurrentCultureIgnoreCase))
         {
-            if (string.Equals(parameters.SortBy, nameof(NotificationEntity.CreatedAt), StringComparison.CurrentCultureIgnoreCase))
-            {
-                query = parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.CreatedAt)
-                    : query.OrderByDescending(x => x.CreatedAt);
-            }
+            query = parameters.SortOrder == SortOrder.Asc
+                ? query.OrderBy(x => x.CreatedAt)
+                : query.OrderByDescending(x => x.CreatedAt);
         }
 
         return new BaseCollection<NotificationModel>

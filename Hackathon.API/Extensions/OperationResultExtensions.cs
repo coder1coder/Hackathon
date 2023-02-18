@@ -13,7 +13,7 @@ public static class OperationResultExtensions
         if (result.IsSuccess)
             return new ProblemDetails
             {
-                Status = (int) HttpStatusCode.OK,
+                Status = (int) HttpStatusCode.OK
             };
 
         var status = result.Errors.Type switch
@@ -43,7 +43,7 @@ public static class OperationResultExtensions
         if (result.IsSuccess)
             return new ProblemDetails
             {
-                Status = (int) HttpStatusCode.OK,
+                Status = (int) HttpStatusCode.OK
             };
 
         var status = result.Errors.Type switch

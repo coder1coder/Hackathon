@@ -14,7 +14,7 @@ namespace Hackathon.Tests.Integration;
 
 public class EmailServiceTests: BaseIntegrationTest
 {
-    private IEmailService _service;
+    private readonly IEmailService _service;
 
     public EmailServiceTests(TestWebApplicationFactory factory) : base(factory)
     {
@@ -35,8 +35,6 @@ public class EmailServiceTests: BaseIntegrationTest
     [Fact]
     public async Task SendAsync_Test()
     {
-
-
         var result = await _service.SendAsync(new EmailParameters
         {
             Email = AppSettings.EmailSender.Sender,

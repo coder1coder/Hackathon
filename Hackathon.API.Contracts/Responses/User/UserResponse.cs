@@ -1,5 +1,5 @@
-using Hackathon.Common.Models.User;
 using System;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.Contracts.Responses.User;
 

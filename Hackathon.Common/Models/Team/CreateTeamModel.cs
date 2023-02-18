@@ -1,14 +1,13 @@
-namespace Hackathon.Common.Models.Team
-{
-    public class CreateTeamModel
-    {
-        public string Name { get; set; }
-        public long? EventId { get; set; }
-        public long? OwnerId { get; set; }
+namespace Hackathon.Common.Models.Team;
 
-        /// <summary>
-        /// Тип команды
-        /// </summary>
-        public TeamType Type { get; set; }
-    }
+public class CreateTeamModel
+{
+    public string Name { get; set; }
+    public long? EventId { get; set; }
+    public long? OwnerId { get; set; }
+
+    /// <summary>
+    /// Тип команды
+    /// </summary>
+    public TeamType Type { get; set; }
 }

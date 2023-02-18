@@ -1,17 +1,16 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Models.Event;
 
-namespace Hackathon.BL.Validation.Event
-{
-    public class CreateEventModelValidator : AbstractValidator<EventCreateParameters>
-    {
-        public CreateEventModelValidator(IValidator<BaseEventParameters> baseEventParametersValidator)
-        {
-            Include(baseEventParametersValidator);
+namespace Hackathon.BL.Validation.Event;
 
-            RuleFor(x => x.OwnerId)
-                .GreaterThan(0)
-                .WithMessage("Идентификатор пользователя должен быть больше 0");
-        }
+public class CreateEventModelValidator : AbstractValidator<EventCreateParameters>
+{
+    public CreateEventModelValidator(IValidator<BaseEventParameters> baseEventParametersValidator)
+    {
+        Include(baseEventParametersValidator);
+
+        RuleFor(x => x.OwnerId)
+            .GreaterThan(0)
+            .WithMessage("Идентификатор пользователя должен быть больше 0");
     }
 }

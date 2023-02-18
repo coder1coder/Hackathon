@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hackathon.Contracts.Requests.Event
-{
-    public class SetStatusRequest<T>
-    {
-        public long Id { get; set; }
+namespace Hackathon.Contracts.Requests.Event;
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public T Status { get; set; }
-    }
+public class SetStatusRequest<T>
+{
+    public long Id { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public T Status { get; set; }
 }

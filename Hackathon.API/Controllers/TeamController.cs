@@ -41,7 +41,7 @@ public class TeamController : BaseController
         var teamId = await _teamService.CreateAsync(createTeamModel, UserId);
         return new BaseCreateResponse
         {
-            Id = teamId,
+            Id = teamId
         };
     }
 

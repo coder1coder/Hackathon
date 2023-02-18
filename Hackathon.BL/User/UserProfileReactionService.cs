@@ -8,13 +8,8 @@ namespace Hackathon.BL.User;
 
 public class UserProfileReactionService: IUserProfileReactionService
 {
-    private const string ReactionAlreadyExistMessage = "Реакции на профиль пользователя уже существует";
-    public const string ReactionNotExistMessage = "Реакции на профиль пользователя не существует";
-    private const string ReactionsAreNotAvailableOnYourOwnProfile = "Реакции не доступны на собственном профиле";
-
     private readonly IUserProfileReactionRepository _userProfileReactionRepository;
     private readonly IUserRepository _userRepository;
-
 
     public UserProfileReactionService(IUserProfileReactionRepository userProfileReactionRepository, IUserRepository userRepository)
     {
@@ -29,7 +24,7 @@ public class UserProfileReactionService: IUserProfileReactionService
         var existsReactions = await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
 
         if ((existsReactions & reactions) == reactions)
-            throw new ValidationException(ReactionAlreadyExistMessage);
+            throw new ValidationException(UserMessages.ReactionAlreadyExistMessage);
 
         var newReactions = existsReactions | reactions;
 
@@ -43,7 +38,7 @@ public class UserProfileReactionService: IUserProfileReactionService
         var reactions = await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
 
         if ((reactions & reaction) != reaction)
-            throw new ValidationException(ReactionNotExistMessage);
+            throw new ValidationException(UserMessages.ReactionNotExistMessage);
 
         reactions &= ~reaction;
 
@@ -59,7 +54,7 @@ public class UserProfileReactionService: IUserProfileReactionService
     private async Task ValidateOrThrow(long userId, long targetUserId)
     {
         if (userId == targetUserId)
-            throw new ValidationException(ReactionsAreNotAvailableOnYourOwnProfile);
+            throw new ValidationException(UserMessages.ReactionsAreNotAvailableOnYourOwnProfile);
 
         if (! await _userRepository.ExistsAsync(userId))
             throw new ValidationException(UserErrorMessages.UserDoesNotExists);

@@ -11,7 +11,7 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Team;
 using Hackathon.BL.Validation.Team;
-using Hackathon.Common.Exceptions;
+using Hackathon.Common;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -99,7 +99,7 @@ public class TeamServiceTests : BaseUnitTest
             _userRepositoryMock.Object);
 
         //act
-        var result = await service.GetAsync(new GetListParameters<TeamFilter>()
+        var result = await service.GetAsync(new GetListParameters<TeamFilter>
         {
             Filter = new TeamFilter
             {

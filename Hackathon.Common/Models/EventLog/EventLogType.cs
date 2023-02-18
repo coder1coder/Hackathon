@@ -23,5 +23,5 @@ public enum EventLogType
     /// <summary>
     /// Запись удалена
     /// </summary>
-    Deleted = 3,
+    Deleted = 3
 }

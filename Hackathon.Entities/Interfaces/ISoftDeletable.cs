@@ -1,7 +1,6 @@
-﻿namespace Hackathon.Entities.Interfaces
+﻿namespace Hackathon.Entities.Interfaces;
+
+public interface ISoftDeletable
 {
-    public interface ISoftDeletable
-    {
-        public bool IsDeleted { get; set; }
-    }
+    public bool IsDeleted { get; set; }
 }

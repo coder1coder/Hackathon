@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Friend;
-using Hackathon.Contracts.Requests;
 using Hackathon.Contracts.Responses;
 using Refit;
 

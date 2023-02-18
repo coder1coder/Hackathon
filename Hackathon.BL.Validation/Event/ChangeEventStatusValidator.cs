@@ -1,16 +1,11 @@
-using Hackathon.Common.Exceptions;
+using Hackathon.Common;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Validation.Event;
 
 public class ChangeEventStatusValidator
 {
-    public async Task<(bool isValid, string errorMessage)> ValidateAsync(EventModel eventModel, EventStatus newStatus)
-    {
-        return await Task.FromResult(Validate(eventModel, newStatus));
-    }
-
-    private (bool, string) Validate(EventModel eventModel, EventStatus newStatus)
+    public static (bool, string) ValidateAsync(EventModel eventModel, EventStatus newStatus)
     {
         var canChangeStatus = newStatus == EventStatus.Finished || (int)eventModel.Status == (int)newStatus - 1;
 
@@ -25,15 +20,14 @@ public class ChangeEventStatusValidator
         };
     }
 
-    private (bool, string) IsEventStatusCanBeStarted(EventModel eventModel)
+    private static (bool, string) IsEventStatusCanBeStarted(EventModel eventModel)
     {
         var totalMembers = eventModel.Teams.Sum(x => x.Members?.Length);
         var minimalMembers = eventModel.MinTeamMembers * 2;
 
-        if (totalMembers < minimalMembers)
-            return (false, "Для того, чтобы начать событие необходимо набрать минимальное количество участников");
-
-        return (true, string.Empty);
+        return totalMembers < minimalMembers ?
+            (false, "Для того, чтобы начать событие необходимо набрать минимальное количество участников")
+            : (true, string.Empty);
     }
 
 }
