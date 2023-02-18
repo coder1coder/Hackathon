@@ -124,6 +124,7 @@ namespace Hackathon.API
 
             builder.RegisterModule(new IntegrationEvents.Module());
             builder.RegisterModule(new BL.Module(appConfig));
+            builder.RegisterModule(new BL.Validation.Module());
             builder.RegisterModule(new DAL.Module());
             builder.RegisterModule(new Jobs.Module());
             builder.RegisterModule(new IntegrationServices.Module());
