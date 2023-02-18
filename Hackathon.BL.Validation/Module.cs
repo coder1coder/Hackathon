@@ -1,11 +1,13 @@
 ﻿using Autofac;
 using FluentValidation;
+using Hackathon.BL.Validation.Chat;
 using Hackathon.BL.Validation.Common;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
@@ -29,6 +31,7 @@ namespace Hackathon.BL.Validation
             builder.RegisterType<UpdateEventModelValidator>().As<IValidator<EventUpdateParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
             builder.RegisterType<ProjectUpdateFromGitParametersValidator>().As<IValidator<ProjectUpdateFromGitParameters>>().InstancePerLifetimeScope();
+            builder.RegisterType<CreateChatMessageValidator>().As<IValidator<ICreateChatMessage>>().InstancePerLifetimeScope();
         }
     }
 }

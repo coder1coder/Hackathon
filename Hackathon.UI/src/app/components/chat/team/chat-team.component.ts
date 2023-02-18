@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {AuthService} from "../../../services/auth.service";
 import {ChatService} from "../../../services/chat/chat.service";
@@ -35,10 +35,15 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
 
   messages:ChatMessage[] = []
 
-  //TODO: переделать на инициализацию через html
   form:FormGroup = new FormGroup({
-    message: new FormControl(''),
-    notifyTeam: new FormControl(false),
+    message: new FormControl('',[
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(200)
+    ]),
+    notifyTeam: new FormControl(false, [
+      Validators.required
+    ]),
   })
 
   constructor(
@@ -53,7 +58,7 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this._teamId.subscribe(x=>{
+    this._teamId.subscribe(_=>{
       this.fetchTeam();
     })
   }
@@ -99,9 +104,12 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
   }
 
   sendMessage(){
-    //TODO: more validation
+
     if (this.teamId == null)
       return
+
+    if (!this.form.valid)
+      return;
 
     let message = this.form.controls['message'].value;
     let notifyTeam = this.canSendMessageWithNotify ? this.form.controls['notifyTeam'].value : false;

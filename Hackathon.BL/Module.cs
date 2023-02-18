@@ -19,8 +19,6 @@ public class Module : Autofac.Module
 
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterModule(new Validation.Module());
-
         builder.RegisterType<EventLogHandler>().As<IEventLogHandler>().InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(typeof(Module).Assembly)

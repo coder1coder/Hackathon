@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using Hackathon.Abstraction.Chat;
 using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Abstraction.Notification;
@@ -24,13 +25,16 @@ public class ChatService : IChatService
     private readonly INotificationService _notificationService;
     private readonly ILogger<ChatService> _logger;
 
+    private readonly IValidator<ICreateChatMessage> _chatMessageValidator;
+
     public ChatService(
         IChatRepository chatRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
         ITeamRepository teamRepository,
-        ILogger<ChatService> logger)
+        ILogger<ChatService> logger,
+        IValidator<ICreateChatMessage> chatMessageValidator)
     {
         _chatRepository = chatRepository;
         _chatMessageHub = chatMessageHub;
@@ -38,10 +42,13 @@ public class ChatService : IChatService
         _notificationService = notificationService;
         _teamRepository = teamRepository;
         _logger = logger;
+        _chatMessageValidator = chatMessageValidator;
     }
 
     public async Task SendMessage(ICreateChatMessage createChatMessage)
     {
+        await _chatMessageValidator.ValidateAndThrowAsync(createChatMessage);
+
         var entity = new ChatMessageEntity
         {
             Type = createChatMessage.Type,
