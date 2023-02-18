@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, ElementRef, Injectable, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment/moment";
 import {AuthService} from "../../../services/auth.service";
 import {ChatService} from "../../../services/chat/chat.service";
 import {BaseCollection} from "../../../models/BaseCollection";
+import {BehaviorSubject} from "rxjs";
+import {TeamService} from "../../../services/team.service";
 
 @Component({
   selector: 'chat-team',
@@ -12,7 +14,7 @@ import {BaseCollection} from "../../../models/BaseCollection";
 })
 
 @Injectable()
-export class ChatTeamComponent implements AfterViewInit {
+export class ChatTeamComponent implements OnInit, AfterViewInit {
 
   isCanView:boolean = false
   currentUserId:number = -1;
@@ -20,25 +22,47 @@ export class ChatTeamComponent implements AfterViewInit {
 
   isFloatMode = false;
 
+  teamOwnerId: number | undefined;
+
   public chatHeaderText = 'Чат команды';
 
   @Input()
-  public teamId?:number;
+  set teamId(value) { this._teamId.next(value); };
+  get teamId() { return this._teamId.getValue(); }
+  private _teamId = new BehaviorSubject<number>(0);
 
   @ViewChild('scrollMe') private chatBody: ElementRef | undefined;
 
   messages:ChatMessage[] = []
 
+  //TODO: переделать на инициализацию через html
   form:FormGroup = new FormGroup({
-    message: new FormControl('')
+    message: new FormControl(''),
+    notifyTeam: new FormControl(false),
   })
 
   constructor(
     private authService: AuthService,
-    private chatService:ChatService) {
+    private chatService: ChatService,
+    private teamService: TeamService) {
+
+    this.currentUserId = this.authService.getUserId() ?? -1;
 
     authService.authChange.subscribe(_ => this.updateChatView())
     chatService.onPublished = (_=> this.fetch());
+  }
+
+  ngOnInit(): void {
+    this._teamId.subscribe(x=>{
+      this.fetchTeam();
+    })
+  }
+
+  fetchTeam(){
+    this.teamService.getById(this.teamId)
+    .subscribe(x=>{
+      this.teamOwnerId = x.owner?.id;
+    })
   }
 
   ngAfterViewInit(): void {
@@ -70,17 +94,22 @@ export class ChatTeamComponent implements AfterViewInit {
     }
   }
 
+  get canSendMessageWithNotify(){
+    return this.teamOwnerId == this.currentUserId;
+  }
+
   sendMessage(){
     //TODO: more validation
     if (this.teamId == null)
       return
 
     let message = this.form.controls['message'].value;
-    let ownerId = this.authService.getUserId() ?? -1;
+    let notifyTeam = this.canSendMessageWithNotify ? this.form.controls['notifyTeam'].value : false;
 
-    let chatMessage = new ChatMessage(ChatMessageContext.TeamChat, ownerId, message);
+    let chatMessage = new ChatMessage(ChatMessageContext.TeamChat, this.currentUserId, message);
     chatMessage.teamId = this.teamId;
     chatMessage.timestamp = moment.utc().toISOString();
+    chatMessage.options = notifyTeam ? ChatMessageOption.WithNotify : ChatMessageOption.Default;
 
     this.chatService.sendTeamMessage(chatMessage)
       .subscribe(_ => {
@@ -95,16 +124,18 @@ export class ChatTeamComponent implements AfterViewInit {
         }
       },100)
   }
+
 }
 
 export class ChatMessage{
   ownerId!:number;
   ownerFullName!:string;
-  teamId!:number
+  teamId?:number
   userId?:number;
   userFullName!:string;
   message!:string;
   context!:ChatMessageContext;
+  options!:ChatMessageOption;
   timestamp!:string;
 
   constructor(context:ChatMessageContext, ownerId:number, message:string) {
@@ -119,3 +150,7 @@ export enum ChatMessageContext
   TeamChat
 }
 
+export enum ChatMessageOption {
+  Default = 0,
+  WithNotify = 1
+}

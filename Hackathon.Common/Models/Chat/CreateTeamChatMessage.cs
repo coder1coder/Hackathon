@@ -9,6 +9,6 @@ public class CreateTeamChatMessage: ICreateChatMessage
     public long? UserId { get; set; }
     public string Message { get; set; }
     public DateTime Timestamp { get; set; }
-    public ChatMessageContext Context { get; set; }
     public ChatMessageType Type { get; set; }
+    public ChatMessageOption Options { get; set; }
 }

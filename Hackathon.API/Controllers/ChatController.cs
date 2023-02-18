@@ -11,14 +11,18 @@ namespace Hackathon.API.Controllers;
 public class ChatController: BaseController
 {
     private readonly IChatService _chatService;
-    
+
     public ChatController(IChatService chatService)
     {
         _chatService = chatService;
     }
 
-    [HttpPost("team/{teamId:long}/send")]
-    public async Task SendTeamMessage(CreateTeamChatMessage createTeamChatMessage)
+    /// <summary>
+    /// Отправить сообщение в чат команды
+    /// </summary>
+    /// <param name="createTeamChatMessage"></param>
+    [HttpPost("team/send")]
+    public async Task SendTeamMessage([FromBody] CreateTeamChatMessage createTeamChatMessage)
     {
         createTeamChatMessage.OwnerId = UserId;
         await _chatService.SendMessage(createTeamChatMessage);
@@ -37,5 +41,4 @@ public class ChatController: BaseController
             TotalCount = collection.TotalCount
         };
     }
-        
 }

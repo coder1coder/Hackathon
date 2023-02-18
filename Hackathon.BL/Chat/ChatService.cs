@@ -1,12 +1,17 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Chat;
 using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.Abstraction.Notification;
+using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Common.Models.Notification;
 using Hackathon.Entities;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
+using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Chat;
 
@@ -14,55 +19,107 @@ public class ChatService : IChatService
 {
     private readonly IChatRepository _chatRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ITeamRepository _teamRepository;
     private readonly IMessageHub<ChatMessageChangedIntegrationEvent> _chatMessageHub;
+    private readonly INotificationService _notificationService;
+    private readonly ILogger<ChatService> _logger;
 
     public ChatService(
         IChatRepository chatRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        INotificationService notificationService,
+        ITeamRepository teamRepository,
+        ILogger<ChatService> logger)
     {
         _chatRepository = chatRepository;
         _chatMessageHub = chatMessageHub;
         _userRepository = userRepository;
+        _notificationService = notificationService;
+        _teamRepository = teamRepository;
+        _logger = logger;
     }
 
     public async Task SendMessage(ICreateChatMessage createChatMessage)
     {
         var entity = new ChatMessageEntity
         {
-            Context = createChatMessage.Context,
+            Type = createChatMessage.Type,
             Message = createChatMessage.Message,
             Timestamp = createChatMessage.Timestamp,
-            Type = createChatMessage.Type,
+            Options = createChatMessage.Options,
             OwnerId = createChatMessage.OwnerId,
             UserId = createChatMessage.UserId,
+            TeamId = createChatMessage is CreateTeamChatMessage createTeamChatMessage ? createTeamChatMessage.TeamId : null
         };
 
-        if (createChatMessage is CreateTeamChatMessage createTeamChatMessage)
-        {
-            entity.TeamId = createTeamChatMessage.TeamId;
-        }
-
-        var owner = await _userRepository.GetAsync(createChatMessage.OwnerId);
-        entity.OwnerFullName = owner.FullName;
-
-        // enrich message
-        if (createChatMessage.UserId.HasValue)
-        {
-            var user = await _userRepository.GetAsync(createChatMessage.UserId.Value);
-            entity.UserFullName = user.FullName;
-        }
+        await EnrichChatMessage(entity);
 
         await _chatRepository.AddMessage(entity);
         await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, new ChatMessageChangedIntegrationEvent
         {
-            Context = createChatMessage.Context,
-            TeamId = createChatMessage is CreateTeamChatMessage teamChatMessage
-                ? teamChatMessage.TeamId
-                : null,
+            Type = createChatMessage.Type,
+            TeamId = entity.TeamId
         });
+
+        await NotifyUsersAboutNewMessageIfNeed(createChatMessage);
     }
 
     public Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
         => _chatRepository.GetTeamChatMessages(teamId, offset, limit);
+
+    /// <summary>
+    /// Отправить уведомления пользователям, если это требуется
+    /// </summary>
+    /// <param name="createChatMessage">Сообщение</param>
+    private async Task NotifyUsersAboutNewMessageIfNeed(ICreateChatMessage createChatMessage)
+    {
+        if (!createChatMessage.Options.HasFlag(ChatMessageOption.WithNotify))
+            return;
+
+        switch (createChatMessage.Type)
+        {
+            case ChatMessageType.TeamChat when createChatMessage is CreateTeamChatMessage teamChatMessage:
+                await NotifyTeamAboutNewMessage(teamChatMessage);
+                break;
+
+            default:
+                _logger.LogWarning("{Service}.{Action} doesn't have any handler message for type {messageType}",
+                    nameof(ChatService),
+                    nameof(NotifyUsersAboutNewMessageIfNeed),
+                    createChatMessage.Type);
+                break;
+        }
+    }
+
+    private async Task NotifyTeamAboutNewMessage(CreateTeamChatMessage chatMessage)
+    {
+        var team = await _teamRepository.GetAsync(chatMessage.TeamId);
+
+        var usersIds = team.Members
+            .Where(x=> x.Id != chatMessage.OwnerId)
+            .Select(x => x.Id)
+            .ToArray();
+
+        if (usersIds.Length > 0)
+        {
+            var notificationModels = usersIds
+                .Select(x =>
+                    NotificationFactory.InfoNotification(chatMessage.Message, x, chatMessage.OwnerId));
+
+            await _notificationService.PushMany(notificationModels);
+        }
+    }
+
+    private async Task EnrichChatMessage(ChatMessageEntity chatMessageEntity)
+    {
+        var owner = await _userRepository.GetAsync(chatMessageEntity.OwnerId);
+        chatMessageEntity.OwnerFullName = owner.FullName;
+
+        if (chatMessageEntity.UserId.HasValue)
+        {
+            var user = await _userRepository.GetAsync(chatMessageEntity.UserId.Value);
+            chatMessageEntity.UserFullName = user.FullName;
+        }
+    }
 }

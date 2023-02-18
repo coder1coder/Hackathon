@@ -1,4 +1,4 @@
-using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models.Team;
 using Hackathon.Entities;
 using Mapster;
 using System.Linq;
@@ -21,3 +21,4 @@ namespace Hackathon.DAL.Mappings
         }
     }
 }
+

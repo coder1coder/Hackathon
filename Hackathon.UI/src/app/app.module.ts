@@ -40,12 +40,10 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { NotificationInfoViewComponent } from "./components/notification/templates/info/notification.info.view.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TeamViewComponent } from "./components/team/view/team.view.component";
-import { TeamComponent } from "./components/team/team/team.component";
 import { MatCardModule } from "@angular/material/card";
 import { CustomDialog } from "./components/custom/custom-dialog/custom-dialog.component";
 import { ListDetailsComponent } from "./components/custom/list-details/list-details.component";
 import { AlertComponent } from "./components/custom/alert/alert.component";
-import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
 import { ToolbarComponent } from "./components/toolbar/toolbar.component";
@@ -65,6 +63,8 @@ import { EventMainViewCardComponent } from "./components/event/cards/event-main-
 import { EventFinishedViewCardComponent } from './components/event/cards/event-finished-view-card/event-finished-view-card.component';
 import { EventStatusComponent } from './components/event/cards/components/event-status/event-status.component';
 import {ImageFromStorageComponent} from "./components/custom/image-from-storage/image-from-storage.component";
+import {TeamComponent} from "./components/team/team/team.component";
+import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
 
 @NgModule({
   declarations: [
@@ -89,16 +89,15 @@ import {ImageFromStorageComponent} from "./components/custom/image-from-storage/
     EventDirective,
 
     TeamViewComponent,
-    TeamComponent,
     TeamNewComponent,
     TeamListComponent,
+    TeamComponent,
+    ChatTeamComponent,
     UserTeamComponent,
 
     UserListComponent,
 
     NotFoundComponent,
-
-    ChatTeamComponent,
 
     EventLogComponent,
 

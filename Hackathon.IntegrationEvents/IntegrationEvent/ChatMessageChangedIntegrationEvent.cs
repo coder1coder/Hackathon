@@ -5,6 +5,6 @@ namespace Hackathon.IntegrationEvents.IntegrationEvent;
 
 public sealed class ChatMessageChangedIntegrationEvent: IIntegrationEvent
 {
-    public ChatMessageContext Context { get; set; }
+    public ChatMessageType Type { get; set; }
     public long? TeamId { get; set; }
 }
