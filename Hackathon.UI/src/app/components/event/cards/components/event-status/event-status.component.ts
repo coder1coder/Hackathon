@@ -16,4 +16,8 @@ export class EventStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  confirm():void{
+
+  }
+
 }

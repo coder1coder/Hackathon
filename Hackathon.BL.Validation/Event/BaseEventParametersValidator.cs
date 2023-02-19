@@ -41,7 +41,7 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 .GreaterThan(0)
                 .WithMessage("Продолжительность этапа презентации должна быть больше 0 минут");
 
-            When(x => x.ChangeEventStatusMessages != null && x.ChangeEventStatusMessages.Any(), () =>
+            When(x => x.ChangeEventStatusMessages is {Count: > 0}, () =>
             {
                 RuleForEach(x => x.ChangeEventStatusMessages).ChildRules(statusMessages =>
                 {
@@ -54,6 +54,33 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                         .RuleFor(x => x.Status)
                         .IsInEnum()
                         .WithMessage("Нельзя указывать пустые сообщения для рассылки");
+                });
+            });
+
+            RuleFor(x => x.Stages)
+                .NotEmpty()
+                .WithMessage("Необходимо указать хотя бы один этап события")
+                .Must(x => x.GroupBy(e => e.Name)
+                    .Select(g => new
+                    {
+                        g.Key,
+                        Count = g.Count()
+                    })
+                    .Any(z => z.Count > 1) == false)
+                .WithMessage("Нельзя указать несколько этапов с одинаковым наименованием");
+
+            When(x => x.Stages is {Count: > 0}, () =>
+            {
+                RuleForEach(x => x.Stages).ChildRules(stage =>
+                {
+                    stage
+                        .RuleFor(x => x.Duration)
+                        .GreaterThan(0);
+
+                    stage
+                        .RuleFor(x => x.Name)
+                        .NotEmpty()
+                        .WithMessage("Необходимо указать наименование для этапа события");
                 });
             });
 

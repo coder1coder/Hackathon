@@ -7,7 +7,7 @@ using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.Entities;
+using Hackathon.Entities.Event;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -45,9 +45,10 @@ public class EventRepository : IEventRepository
         var eventEntity = await _dbContext.Events
             .AsNoTracking()
             .Include(x => x.Teams)
-            .ThenInclude(x => x.Members)
-            .ThenInclude(x => x.Member)
+                .ThenInclude(x => x.Members)
+                    .ThenInclude(x => x.Member)
             .Include(x => x.Owner)
+            .Include(x=>x.Stages)
             .FirstOrDefaultAsync(x => x.Id == eventId);
 
         return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
@@ -162,6 +163,7 @@ public class EventRepository : IEventRepository
     public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
     {
         var entity = await _dbContext.Events
+            .Include(x=>x.Stages)
             .FirstOrDefaultAsync(x =>
                 x.Id == eventUpdateParameters.Id);
 

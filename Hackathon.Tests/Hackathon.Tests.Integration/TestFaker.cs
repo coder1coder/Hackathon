@@ -4,6 +4,7 @@ using Bogus;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 using Hackathon.Entities;
+using Hackathon.Entities.Event;
 using MapsterMapper;
 
 namespace Hackathon.Tests.Integration;

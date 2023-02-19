@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>Этап события</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form" class="form-vertical">
+    <div class="form-vertical__fields">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Наименование</mat-label>
+        <input matInput
+               autocomplete="off"
+               id="name"
+               formControlName="name"
+               [errorStateMatcher]="matcher"
+               required>
+
+        <mat-error *ngIf="form.get('name')?.errors && form.get('name')?.hasError('required')">
+          Поле обязательно для заполнения
+        </mat-error>
+
+        <mat-error *ngIf="form.get('name')?.errors && form.get('name')?.hasError('nameShouldBeUnique')">
+          {{ form.get('name')?.errors!['nameShouldBeUnique'][0] }}
+        </mat-error>
+
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Продолжительность (мин)</mat-label>
+        <input matInput
+               type="number"
+               min="1"
+               id="duration"
+               formControlName="duration"
+               required>
+
+        <mat-error *ngIf="form.get('duration')?.errors && form.get('duration')?.hasError('required')">
+          Поле обязательно для заполнения
+        </mat-error>
+
+      </mat-form-field>
+
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">OK</button>
+  <button mat-button mat-dialog-close="">Отмена</button>
+</div>
