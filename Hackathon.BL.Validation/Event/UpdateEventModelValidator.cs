@@ -11,6 +11,13 @@ public class UpdateEventModelValidator: AbstractValidator<EventUpdateParameters>
 
         RuleFor(x => x.Id)
             .GreaterThan(0)
-            .WithMessage("необходимо указать корректный модификатор");
+            .WithMessage("необходимо указать корректный идентификатор");
+
+        When(x => x.Stages is {Count: > 0}, () =>
+        {
+            RuleForEach(x => x.Stages).ChildRules(v =>
+                v.RuleFor(x => x.EventId)
+                    .GreaterThan(0));
+        });
     }
 }

@@ -1,4 +1,5 @@
 using Hackathon.Common.Models.Team;
+using Hackathon.Entities.Event;
 using Hackathon.Entities.Interfaces;
 using Hackathon.Entities.User;
 

@@ -1,4 +1,5 @@
-﻿using Hackathon.Entities.Interfaces;
+﻿using Hackathon.Entities.Event;
+using Hackathon.Entities.Interfaces;
 
 namespace Hackathon.Entities;
 

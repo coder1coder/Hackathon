@@ -74,7 +74,7 @@ public class TeamController : BaseController
     [ProducesResponseType((int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetUserTeam()
-        => GetResult(() =>_teamService.GetUserTeam(UserId));
+        => GetResult(() => _teamService.GetUserTeam(UserId));
 
     /// <summary>
     /// Получить события в которых участвовала команда

@@ -2,7 +2,7 @@
 using Hackathon.Entities.Interfaces;
 using Hackathon.Entities.User;
 
-namespace Hackathon.Entities;
+namespace Hackathon.Entities.Event;
 
 /// <summary>
 /// Событие
@@ -76,6 +76,11 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// Команды связанные с событием
     /// </summary>
     public ICollection<TeamEntity> Teams { get; set; } = new List<TeamEntity>();
+
+    /// <summary>
+    /// Этапы событи
+    /// </summary>
+    public ICollection<EventStageEntity> Stages { get; set; } = new List<EventStageEntity>();
 
     /// <summary>
     /// Награда, призовой фонд

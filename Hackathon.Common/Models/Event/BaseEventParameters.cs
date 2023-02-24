@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hackathon.Common.Models.EventStage;
 
 namespace Hackathon.Common.Models.Event;
 
@@ -54,6 +55,11 @@ public abstract class BaseEventParameters
     /// Список сообщений высылаемых командам при смене статусов
     /// </summary>
     public IList<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
+
+    /// <summary>
+    /// Этапы события
+    /// </summary>
+    public List<EventStageModel> Stages { get; set; } = new();
 
     /// <summary>
     /// Награда, призовой фонд

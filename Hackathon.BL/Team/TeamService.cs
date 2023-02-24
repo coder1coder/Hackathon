@@ -129,8 +129,10 @@ public class TeamService : ITeamService
         var teams = await _teamRepository.GetByExpressionAsync(x =>
             x.OwnerId != null && (x.OwnerId == userId || x.Members.Any(s => s.MemberId == userId)));
 
-        if (!teams.Any())
+        if (teams.Length == 0)
+        {
             return Result<TeamGeneral>.NotFound(TeamErrorMessages.TeamDoesNotExists);
+        }
 
         var userTeam = teams.First();
         userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
