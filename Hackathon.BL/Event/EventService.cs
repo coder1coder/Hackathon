@@ -16,7 +16,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities;
+using Hackathon.Entities.Event;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 using MassTransit;

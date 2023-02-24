@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hackathon.Common.Models.EventStage;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 
@@ -6,11 +7,6 @@ namespace Hackathon.Common.Models.Event;
 
 public class EventModel : EventUpdateParameters
 {
-    /// <summary>
-    /// Этапы
-    /// </summary>
-    public List<EventStage> Stages { get; set; } = new();
-
     /// <summary>
     /// Статус события
     /// </summary>

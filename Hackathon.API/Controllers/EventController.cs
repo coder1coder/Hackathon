@@ -35,7 +35,7 @@ public class EventController: BaseController
     [HttpPost]
     public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
     {
-        var createEventModel = _mapper.Map<EventCreateParameters>(createEventRequest);
+        var createEventModel = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
         createEventModel.OwnerId = UserId;
 
         var createdId = await _eventService.CreateAsync(createEventModel);

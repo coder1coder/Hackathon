@@ -3,6 +3,7 @@ using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Entities;
+using Hackathon.Entities.Event;
 
 namespace Hackathon.Abstraction.Event;
 

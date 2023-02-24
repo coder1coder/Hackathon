@@ -1,5 +1,6 @@
 ﻿using Hackathon.DAL.Extensions;
 using Hackathon.Entities;
+using Hackathon.Entities.Event;
 using Hackathon.Entities.Interfaces;
 using Hackathon.Entities.User;
 using Microsoft.EntityFrameworkCore;

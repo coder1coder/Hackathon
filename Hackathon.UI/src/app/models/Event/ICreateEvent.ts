@@ -1,4 +1,5 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
+import {EventStage} from "./EventStage";
 
 export interface ICreateEvent
 {
@@ -12,6 +13,7 @@ export interface ICreateEvent
   start: Date;
   teamPresentationMinutes: number;
   changeEventStatusMessages: ChangeEventStatusMessage[];
+  stages: EventStage[];
   award:string;
   imageId:string;
 }

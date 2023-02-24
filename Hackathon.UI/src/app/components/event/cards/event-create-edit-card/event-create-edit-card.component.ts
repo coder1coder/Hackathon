@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {IProblemDetails} from "../../../../models/IProblemDetails";
 import {ActivatedRoute} from "@angular/router";
@@ -6,7 +6,7 @@ import {ICreateEvent} from "../../../../models/Event/ICreateEvent";
 import {IUpdateEvent} from "../../../../models/Event/IUpdateEvent";
 import {EventStatus, EventStatusTranslator} from "src/app/models/Event/EventStatus";
 import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {EventNewStatusDialogComponent} from "../components/status/event-new-status-dialog.component";
 import {SnackService} from "../../../../services/snack.service";
@@ -23,6 +23,12 @@ import {EventErrorMessages} from "src/app/common/EventErrorMessages";
 import {EventCardBaseComponent} from "../components/event-card-base.component";
 import {EventHttpService} from "../../../../services/event/event.http-service";
 import {EventService} from "../../../../services/event/event.service";
+import { EventStage } from "src/app/models/Event/EventStage";
+import {
+  EventStageDialogComponent,
+  EventStageDialogData
+} from "../components/event-stage-dialog/event-stage-dialog.component";
+import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -40,6 +46,10 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   public EventStatusTranslator = EventStatusTranslator;
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+
+  @ViewChild('eventStagesTable') eventStagesTable: MatTable<any>;
+  public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
+
   public form = new FormGroup({});
   public eventImage: any;
   public minDate = moment(new Date()).format(this.dateFormat).toString();
@@ -73,6 +83,12 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     return () => {
       let request: Observable<any>;
 
+      let eventStages = this.eventStagesDataSource.data;
+      eventStages.forEach((value, index) => {
+        value.eventId = this.event?.id;
+        value.order = index * 10;
+      });
+
       if (!this.editMode) {
         let event: ICreateEvent = {
           name: this.form.get('name')?.value,
@@ -86,7 +102,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           changeEventStatusMessages: this.eventStatusDataSource.data,
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
-          imageId: this.form.get('imageId')?.value
+          imageId: this.form.get('imageId')?.value,
+          stages: eventStages
         };
 
         request = this.eventHttpService.create(event);
@@ -103,6 +120,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
           userId: Number(this.event?.owner?.id),
           changeEventStatusMessages: this.eventStatusDataSource.data,
+          stages: eventStages,
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value
@@ -173,7 +191,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     });
   }
 
-
   public isCanAddStatus(): boolean {
     let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
                             .map(x => x.status).sort(function(a, b) { return a - b; });
@@ -182,6 +199,57 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
            Array.isArray(dataValues) &&
            this.eventStatusValues.length === dataValues.length &&
            this.eventStatusValues.every((val, index) => val === dataValues[index]);
+  }
+
+  public isCanAddEventStage():boolean {
+    return true;
+  }
+
+  public showEventStageCreateView():void{
+
+    let data = new EventStageDialogData();
+    data.eventStages = this.eventStagesDataSource.data;
+    data.eventStage = undefined;
+
+    this.dialog.open(EventStageDialogComponent, {
+      data: data
+    })
+      .afterClosed()
+      .subscribe(data => {
+        let model = <EventStage> data;
+        if(model?.name !== undefined){
+          this.eventStagesDataSource.data.push(data);
+          this.eventStagesDataSource.data = this.eventStagesDataSource.data;
+        }
+      });
+  }
+
+  public updateEventStage(eventStage: EventStage):void {
+
+    let data = new EventStageDialogData();
+    data.eventStages = this.eventStagesDataSource.data;
+    data.eventStage = eventStage;
+
+    this.dialog.open(EventStageDialogComponent, {
+      data: data
+    })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          let idx = this.eventStagesDataSource.data.indexOf(eventStage);
+
+          this.eventStagesDataSource.data[idx].name = result.name;
+          this.eventStagesDataSource.data[idx].duration = result.duration;
+
+          this.eventStagesDataSource.data = this.eventStagesDataSource.data;
+        }
+      });
+  }
+
+  public removeEventStage(eventStage: EventStage):void {
+    const index = this.eventStagesDataSource.data.indexOf(eventStage);
+    if (index > -1) this.eventStagesDataSource.data.splice(index, 1);
+    this.eventStagesDataSource.data = this.eventStagesDataSource.data;
   }
 
   public clearEventImage(): void{
@@ -235,6 +303,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
+    this.eventStagesDataSource.data = this.event.stages;
+
     if (this.event.imageId)  {
       this.loadImage(this.event.imageId);
     }
@@ -271,5 +341,11 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     }
 
     return avlStatutes;
+  }
+
+  public dropEventStageRow(event: CdkDragDrop<MatTableDataSource<EventStage>, EventStage>) {
+    const previousIndex = this.eventStagesDataSource.data.findIndex(row => row === event.item.data);
+    moveItemInArray(this.eventStagesDataSource.data, previousIndex, event.currentIndex);
+    this.eventStagesTable.renderRows();
   }
 }

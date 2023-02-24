@@ -2,6 +2,7 @@ import {ChangeEventStatusMessage} from "./ChangeEventStatusMessage";
 import {EventStatus} from "./EventStatus";
 import {Team} from "../Team/Team";
 import {IUser} from "../User/IUser";
+import {EventStage} from "./EventStage";
 
 export class Event {
   id!: number;
@@ -19,7 +20,7 @@ export class Event {
   ownerId?: number;
   owner!: IUser
   teams: Team[] = []
-  stages: any[] = []
+  stages: EventStage[] = []
   award!: string;
   imageId: string;
   imageUrl?: string;

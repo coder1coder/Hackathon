@@ -15,10 +15,10 @@
     <ItemGroup>
       <PackageReference Include="Autofac" Version="6.4.0" />
       <PackageReference Include="AWSSDK.S3" Version="3.7.7.25" />
-      <PackageReference Include="BackendTools.Common" Version="1.0.11" />
+      <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
       <PackageReference Include="FluentValidation" Version="10.3.6" />
-      <PackageReference Include="Mapster" Version="7.2.0" />
+      <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="MassTransit" Version="8.0.2" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />

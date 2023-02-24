@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.EventStage;
 
 namespace Hackathon.Contracts.Requests.Event;
 
@@ -58,6 +59,11 @@ public class CreateEventRequest
     /// Список сообщений высылаемых командам при смене статусов
     /// </summary>
     public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
+
+    /// <summary>
+    /// Этапы события
+    /// </summary>
+    public ICollection<EventStageModel> Stages { get; set; }
 
     /// <summary>
     /// Награда, призовой фонд

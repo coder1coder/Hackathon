@@ -65,6 +65,10 @@ import { EventStatusComponent } from './components/event/cards/components/event-
 import {ImageFromStorageComponent} from "./components/custom/image-from-storage/image-from-storage.component";
 import {TeamComponent} from "./components/team/team/team.component";
 import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
+import {
+  EventStageDialogComponent
+} from "./components/event/cards/components/event-stage-dialog/event-stage-dialog.component";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 @NgModule({
   declarations: [
@@ -87,6 +91,7 @@ import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
     EventFinishedViewCardComponent,
     EventCardFactoryComponent,
     EventDirective,
+    EventStageDialogComponent,
 
     TeamViewComponent,
     TeamNewComponent,
@@ -122,6 +127,7 @@ import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
     AppRoutingModule,
     BrowserAnimationsModule,
 
+    DragDropModule,
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,

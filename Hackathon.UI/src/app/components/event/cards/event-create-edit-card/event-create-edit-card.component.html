@@ -121,6 +121,66 @@
         </div>
       </mat-tab>
 
+      <mat-tab label="Этапы">
+
+        <div style="padding: 1em">
+          <button mat-button
+                  (click)="showEventStageCreateView()"
+                  [disabled]="!isCanAddEventStage()">Добавить новый этап</button>
+        </div>
+
+        <table #eventStagesTable
+               mat-table [dataSource]="eventStagesDataSource" [class.empty]="eventStagesDataSource.data.length == 0"
+               cdkDropList
+               [cdkDropListData]="eventStagesDataSource"
+               (cdkDropListDropped)="dropEventStageRow($event)">
+
+          <ng-container matColumnDef="preRow">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let eventStage">
+              <mat-icon>drag_handle</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Наименование</th>
+            <td mat-cell *matCellDef="let eventStage">{{eventStage.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef>Продолжительность (мин)</th>
+            <td mat-cell *matCellDef="let eventStage">{{eventStage.duration}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let eventStage" class="table-list-actions-column">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="updateEventStage(eventStage)">
+                  <mat-icon color="primary">edit</mat-icon>
+                  <span>Редактировать</span>
+                </button>
+                <button mat-menu-item (click)="removeEventStage(eventStage)">
+                  <mat-icon color="accent">delete_outline</mat-icon>
+                  <span>Удалить</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['preRow', 'name', 'duration', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['preRow', 'name', 'duration', 'actions'];"
+              cdkDrag
+              cdkDragLockAxis="y"
+              [cdkDragData]="row"
+          ></tr>
+        </table>
+
+      </mat-tab>
+
       <mat-tab label="Команды">
         <div class="eventsNewForm__vertical-fields">
         <mat-form-field appearance="fill">
@@ -157,7 +217,9 @@
 
         <div class="eventsNewForm__vertical-fields">
 
-          <table mat-table [dataSource]="eventStatusDataSource" [class.empty]="eventStatusDataSource.data.length == 0">
+          <table mat-table [dataSource]="eventStatusDataSource"
+                 [class.empty]="eventStatusDataSource.data.length == 0">
+
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Статус</th>
               <td mat-cell *matCellDef="let element">{{EventStatusTranslator.Translate(element.status)}}</td>
@@ -189,6 +251,7 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
           </table>
 
           <button [disabled]="isCanAddStatus()"
