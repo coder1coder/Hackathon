@@ -1,4 +1,4 @@
-<div class="noselect" *ngIf="!image" [innerText]="userNameSymbols"></div>
+<div class="noSelect" *ngIf="!image" [innerText]="userNameSymbols"></div>
 <img *ngIf="image" [src]="image" alt="">
 
 <input type="file" #selectedFile (change)="selectFile($event)">

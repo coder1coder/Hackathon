@@ -1,9 +1,7 @@
 <div class="chat" *ngIf="!isFloatMode else floatModeTemplate">
   <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
     <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
-      <div class="chat__message-image" *ngIf="message.ownerId !== currentUserId">
-
-      </div>
+      <profile-image [userId]="message.ownerId" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
       <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
         <div class="chat__message-owner">{{ message.ownerFullName }}</div>
         <div class="chat__message-text">{{ message.message }} </div>

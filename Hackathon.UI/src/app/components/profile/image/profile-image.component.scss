@@ -16,8 +16,13 @@
 
   width: 150px;
   height: 150px;
-
   font-size: 62px;
+
+  &.size35 {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
 
   & input[type=file] {
     display: none;
@@ -55,7 +60,7 @@
   }
 }
 
-.noselect {
+.noSelect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
