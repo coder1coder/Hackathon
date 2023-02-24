@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Team} from "../../../models/Team/Team";
+import {Team, TeamType} from "../../../models/Team/Team";
 import {TeamService} from "../../../services/team.service";
 import {finalize} from "rxjs/operators";
-import {MatTableDataSource} from "@angular/material/table";
 import {RouterService} from "../../../services/router.service";
-import {KeyValue} from "@angular/common";
+import {AuthService} from "../../../services/auth.service";
+import {SnackService} from "../../../services/snack.service";
+import {IProblemDetails} from "../../../models/IProblemDetails";
 
 @Component({
   selector: 'team-view',
@@ -17,14 +18,18 @@ export class TeamViewComponent implements AfterViewInit {
   @Input() teamId?:number;
 
   public team: Team;
-  teamDataSource = new MatTableDataSource<KeyValue<string, string>>([]);
+  public userId: number;
 
   isLoading: boolean = true;
 
   constructor(
     private activateRoute: ActivatedRoute,
     public router: RouterService,
-    private teamsService: TeamService) {
+    private teamsService: TeamService,
+    private authService: AuthService,
+    private snackService: SnackService) {
+
+    this.userId = authService.getUserId() ?? 0;
 
     if (this.teamId == null)
       this.teamId = activateRoute.snapshot.params['teamId'];
@@ -41,11 +46,50 @@ export class TeamViewComponent implements AfterViewInit {
       .subscribe({
         next: (r: Team) =>  {
           this.team = r;
-          this.teamDataSource.data = [
-            { key: 'Наименование',  value: this.team.name ?? '' }
-          ];
         },
         error: () => {}
       });
+  }
+
+  get canJoinToTeam() {
+    return this.team
+      && this.team.type == TeamType.Public
+      && !this.teamContainsMember(this.team, this.userId);
+  }
+
+  get canLeaveTeam(){
+    return this.team && this.teamContainsMember(this.team, this.userId);
+  }
+
+  public joinToTeam(): void {
+    this.teamsService.joinToTeam(this.teamId ?? 0)
+      .subscribe({
+        next:() => {
+          this.router.Teams.MyTeam();
+        },
+        error: err => {
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          this.snackService.open(problemDetails.detail);
+        }
+      });
+  }
+
+  public leaveTeam(): void
+  {
+    this.teamsService.leaveTeam(this.teamId ?? 0)
+      .subscribe({
+        next: () => {
+          this.router.Teams.MyTeam();
+        },
+        error: err => {
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          this.snackService.open(problemDetails.detail);
+        }
+      });
+  }
+
+  private teamContainsMember(team: Team, memberId: number):boolean
+  {
+    return (team.owner && team.owner.id == memberId) || (team.members && team.members.length > 0 && team.members.filter(x=>x.id == memberId).length > 0);
   }
 }

@@ -51,7 +51,7 @@ public class TeamRepository : ITeamRepository
             .AsNoTracking()
             .Include(x=>x.Owner)
             .Include(x=>x.Members)
-            .ThenInclude(x=>x.Member)
+                .ThenInclude(x=>x.Member)
             .SingleOrDefaultAsync(x=>x.Id == teamId);
 
         return teamEntity is null

@@ -204,6 +204,33 @@ public class TeamService : ITeamService
         }
     }
 
+    public async Task<Result> JoinToTeamAsync(long teamId, long userId)
+    {
+        var team = await _teamRepository.GetAsync(teamId);
+
+        if (team is null)
+            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
+
+        if (team.Type != TeamType.Public)
+            return Result.NotValid("The selected team isn't a public team");
+
+        var user = await _userRepository.GetAsync(userId);
+
+        if (user is null)
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
+
+        if (team.Owner.Id == userId || team.Members.Any(x=>x.Id == userId))
+            return Result.NotValid("User already is the team member");
+
+        await _teamRepository.AddMemberAsync(new TeamMemberModel
+        {
+            TeamId = teamId,
+            MemberId = userId
+        });
+
+        return Result.Success;
+    }
+
     public async Task<Result<BaseCollection<TeamEventListItem>>> GetTeamEvents(long teamId, PaginationSort paginationSort)
     {
         var isTeamExists = await _teamRepository.ExistAsync(teamId);

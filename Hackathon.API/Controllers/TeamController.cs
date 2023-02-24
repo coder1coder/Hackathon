@@ -97,11 +97,19 @@ public class TeamController : BaseController
     }
 
     /// <summary>
+    /// Вступить в команду
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("{teamId:long}/join")]
+    public Task<IActionResult> JoinToTeam([FromRoute]long teamId)
+        => GetResult(() => _teamService.JoinToTeamAsync(teamId, UserId));
+
+    /// <summary>
     /// Покинуть команду
     /// </summary>
     /// <returns></returns>
     [HttpGet("{teamId:long}/leave")]
-    public async Task<IActionResult> LeaveTeamAsync(long teamId)
+    public async Task<IActionResult> LeaveTeamAsync([FromRoute] long teamId)
     {
         var teamMember = new TeamMemberModel
         {

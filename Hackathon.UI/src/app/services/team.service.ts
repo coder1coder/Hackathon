@@ -13,7 +13,7 @@ import { GetListParameters } from '../models/GetListParameters';
   providedIn: 'root'
 })
 export class TeamService {
-  api = environment.api;
+  api = `${environment.api}/team`;
   storage = sessionStorage;
   constructor(private http: HttpClient) {
 
@@ -26,23 +26,27 @@ export class TeamService {
   }
 
   create(createTeamModel:CreateTeamModel): Observable<IBaseCreateResponse>{
-    return this.http.post<IBaseCreateResponse>(`${this.api}/Team`, createTeamModel);
+    return this.http.post<IBaseCreateResponse>(this.api, createTeamModel);
   }
 
   getById(id:number){
-    return this.http.get<Team>(`${this.api}/Team/${id}`);
+    return this.http.get<Team>(`${this.api}/${id}`);
   }
 
   getMyTeam(): Observable<Team> {
-   return this.http.get<Team>(`${this.api}/Team/My`);
+   return this.http.get<Team>(`${this.api}/My`);
   }
 
   getByFilter(getFilterModel: GetListParameters<TeamFilter>):Observable<BaseCollection<Team>>
   {
-    return this.http.post<BaseCollection<Team>>(`${this.api}/Team/getTeams`, getFilterModel);
+    return this.http.post<BaseCollection<Team>>(`${this.api}/getTeams`, getFilterModel);
   }
 
-  leaveTeam(id: number):Observable<any> {
-    return this.http.get(`${this.api}/team/${id}/leave`);
+  joinToTeam(teamId: number){
+    return this.http.post(`${this.api}/${teamId}/join`, null);
+  }
+
+  leaveTeam(teamId: number):Observable<any> {
+    return this.http.get(`${this.api}/${teamId}/leave`);
   }
 }

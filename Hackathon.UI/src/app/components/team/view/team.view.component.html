@@ -1,6 +1,11 @@
 <layout-default title="Команда">
 
-  <div actions></div>
+  <div actions>
+
+    <button mat-button color="primary" *ngIf="canJoinToTeam" (click)="joinToTeam()">Вступить в команду</button>
+    <button mat-button color="primary" *ngIf="canLeaveTeam" (click)="leaveTeam()">Покинуть команду</button>
+
+  </div>
   <team [team]="team"></team>
 
 </layout-default>
