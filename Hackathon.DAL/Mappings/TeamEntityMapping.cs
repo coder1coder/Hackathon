@@ -16,7 +16,8 @@ public class TeamEntityMapping: IRegister
         config
             .ForType<TeamEntity, TeamModel>()
             .IgnoreNullValues(true)
-            .Map(x => x.Members, s => s.Members.Select(x => x.Member))
+            .Map(x => x.Members, s =>
+                s.Members.Select(x => x.Member))
             .MaxDepth(3);
     }
 }

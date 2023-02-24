@@ -1,4 +1,8 @@
+@import "src/mixins";
+
 :host {
   display: block;
   height: 100%;
+
+  @include absolute0;
 }

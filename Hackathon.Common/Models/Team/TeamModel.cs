@@ -10,4 +10,6 @@ public class TeamModel
     public UserModel[] Members { get; set; } = Array.Empty<UserModel>();
     public UserModel Owner { get; set; }
     public long? OwnerId { get; set; }
+
+    public TeamType Type { get; set; }
 }

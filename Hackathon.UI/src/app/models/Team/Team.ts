@@ -6,6 +6,7 @@ export class Team implements ITeam {
   members: IUser[] = [];
   owner?: IUser;
   project: any //TODO: add typed
+  type: TeamType
 }
 
 export interface ITeam {
@@ -14,4 +15,11 @@ export interface ITeam {
   members: IUser[];
   owner?: IUser;
   project: any //TODO: add typed
+  type: TeamType;
+}
+
+export enum TeamType
+{
+  Private = 0,
+  Public = 1
 }
