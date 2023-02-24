@@ -12,7 +12,7 @@ import {map} from "rxjs/operators";
 })
 
 export class FileStorageService {
-  private api: string = `${environment.api}/filestorage`;
+  private api: string = `${environment.api}/fileStorage`;
   private cache = new Map<string, Observable<ArrayBuffer>>();
 
   constructor(private sanitizer: DomSanitizer, private http: HttpClient) {
@@ -25,13 +25,14 @@ export class FileStorageService {
   }
 
   public getById(id: string): Observable<SafeUrl> {
+
     const key = JSON.stringify(id);
     if (!this.cache.has(key)) {
       const response = this.http.get(`${this.api}/get/${id}`, { responseType: 'arraybuffer' })
       this.cache.set(key, response);
     }
 
-    return (this.cache.get(key)  as Observable<ArrayBuffer>)
+    return (this.cache.get(key) as Observable<ArrayBuffer>)
       .pipe(map((x: ArrayBuffer) => this.getSafeUrlFromByteArray(x)));
   }
 

@@ -26,8 +26,14 @@
     <table mat-table [dataSource]="team.members" [class.empty]="team.members?.length == 0">
 
       <ng-container matColumnDef="fullName">
-        <th mat-header-cell *matHeaderCellDef> Полное имя </th>
-        <td mat-cell *matCellDef="let element"> {{element.fullName}}</td>
+        <th mat-header-cell *matHeaderCellDef>Участник</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="member">
+            <profile-image [canUpload]="false" [userId]="element.id" class="size35"></profile-image>
+            <div>{{element.fullName}}</div>
+          </div>
+
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="status">

@@ -5,4 +5,12 @@
   height: 100%;
 
   @include absolute0;
+
+  & .member {
+    @include flex-row;
+    column-gap: 1em;
+    align-items: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
 }

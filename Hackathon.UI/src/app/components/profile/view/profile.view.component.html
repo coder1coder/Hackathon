@@ -19,7 +19,8 @@
         </tr>
         <tr>
           <td class="email">E-mail</td>
-          <td>{{ user?.email?.address }}
+          <td>
+            <div>{{ user?.email?.address }}</div>
             <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.NotConfirmed">
               <alert warn>Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br> системы необходимо <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()">подтвердить</span> Email.</alert>
             </div>

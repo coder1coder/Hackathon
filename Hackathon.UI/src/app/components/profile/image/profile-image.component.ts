@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 import {SnackService} from "../../../services/snack.service";
 import {UserService} from "../../../services/user.service";
 import {BehaviorSubject, filter, mergeMap, of, Subject, switchMap, takeUntil} from "rxjs";
@@ -59,8 +59,9 @@ export class ProfileImageComponent implements OnInit {
     this.userService.setImage(file)
       .pipe(
         takeUntil(this.destroy$),
-        mergeMap((res: string) =>
-          this.fileStorageService.getById(res))
+        mergeMap((res: any) =>{
+          return this.fileStorageService.getById(res.data);
+        })
       )
       .subscribe((res : SafeUrl) => this.image = res)
   }
