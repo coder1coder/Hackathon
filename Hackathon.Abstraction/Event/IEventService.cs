@@ -14,7 +14,7 @@ public interface IEventService
     /// </summary>
     /// <param name="eventCreateParameters">Модель создаваемого события</param>
     /// <returns></returns>
-    Task<long> CreateAsync(EventCreateParameters eventCreateParameters);
+    Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters);
 
     /// <summary>
     /// Редактирование события
@@ -28,7 +28,7 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
     /// <returns></returns>
-    Task<EventModel> GetAsync(long eventId);
+    Task<Result<EventModel>> GetAsync(long eventId);
 
     /// <summary>
     /// Получение информации о событиях
@@ -36,7 +36,7 @@ public interface IEventService
     /// <param name="userId">Идентификатор авторизованного пользователя</param>
     /// <param name="getListParameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<BaseCollection<EventListItem>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters);
+    Task<Result<BaseCollection<EventListItem>>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters);
 
     /// <summary>
     /// Изменение статуса события
@@ -74,5 +74,5 @@ public interface IEventService
     /// </summary>
     /// <param name="expression"></param>
     /// <returns></returns>
-    Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression);
+    Task<Result<EventModel[]>> GetByExpression(Expression<Func<EventEntity, bool>> expression);
 }

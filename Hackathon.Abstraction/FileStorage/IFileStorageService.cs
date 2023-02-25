@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Models.FileStorage;
+﻿using BackendTools.Common.Models;
+using Hackathon.Common.Models.FileStorage;
 
 namespace Hackathon.Abstraction.FileStorage;
 
@@ -26,5 +27,5 @@ public interface IFileStorageService
     /// </summary>
     /// <param name="storageFileId">Идентификатор файла</param>
     /// <returns></returns>
-    Task<bool> DeleteAsync(Guid storageFileId);
+    Task<Result> DeleteAsync(Guid storageFileId);
 }

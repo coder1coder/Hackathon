@@ -4,6 +4,7 @@ using Hackathon.Common.Models.Chat;
 using Hackathon.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace Hackathon.API.Controllers;
 
@@ -29,16 +30,22 @@ public class ChatController: BaseController
     }
 
     [HttpPost("team/{teamId:long}/list")]
-    public async Task<BaseCollectionResponse<TeamChatMessage>> GetTeamMessages(
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BaseCollectionResponse<TeamChatMessage>))]
+
+    public async Task<IActionResult> GetTeamMessages(
         [FromRoute] long teamId,
         [FromQuery] int offset = 0,
         [FromQuery] int limit = 300)
     {
-        var collection = await _chatService.GetTeamMessages(teamId, offset, limit);
-        return new BaseCollectionResponse<TeamChatMessage>
+        var result = await _chatService.GetTeamMessages(teamId, offset, limit);
+
+        if (!result.IsSuccess)
+            return await GetResult(() => Task.FromResult(result));
+
+        return Ok(new BaseCollectionResponse<TeamChatMessage>
         {
-            Items = collection.Items,
-            TotalCount = collection.TotalCount
-        };
+            Items = result.Data.Items,
+            TotalCount = result.Data.TotalCount
+        });
     }
 }

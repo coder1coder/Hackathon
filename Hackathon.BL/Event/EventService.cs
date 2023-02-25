@@ -60,7 +60,7 @@ public class EventService : IEventService
         _integrationEventHub = integrationEventHub;
     }
 
-    public async Task<long> CreateAsync(EventCreateParameters eventCreateParameters)
+    public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
     {
         await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
         var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
@@ -71,7 +71,7 @@ public class EventService : IEventService
             eventCreateParameters.OwnerId
         ));
 
-        return eventId;
+        return Result<long>.FromValue(eventId);
     }
 
     public async Task<Result> UpdateAsync(EventUpdateParameters eventUpdateParameters)
@@ -87,20 +87,23 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public Task<EventModel> GetAsync(long eventId)
-        => _eventRepository.GetAsync(eventId);
+    public async Task<Result<EventModel>> GetAsync(long eventId)
+    {
+        var @event = await _eventRepository.GetAsync(eventId);
+        return Result<EventModel>.FromValue(@event);
+    }
 
-    public async Task<BaseCollection<EventListItem>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters)
+    public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters)
     {
         await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
         var events = await _eventRepository.GetListAsync(userId, getListParameters);
 
-        return new BaseCollection<EventListItem>
+        return Result<BaseCollection<EventListItem>>.FromValue(new BaseCollection<EventListItem>
         {
             TotalCount = events.TotalCount,
             Items = events.Items?
                 .ToArray()
-        };
+        });
     }
 
     public async Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus)
@@ -206,8 +209,11 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
-        => _eventRepository.GetByExpression(expression);
+    public async Task<Result<EventModel[]>> GetByExpression(Expression<Func<EventEntity, bool>> expression)
+    {
+        var result = await _eventRepository.GetByExpression(expression);
+        return Result<EventModel[]>.FromValue(result);
+    }
 
     /// <summary>
     /// Меняет статус события и отправляет сообщение в шину с уведомлением участников события

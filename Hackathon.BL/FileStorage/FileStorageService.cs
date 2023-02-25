@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using BackendTools.Common.Models;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common;
 using Hackathon.Common.Models.FileStorage;
@@ -101,7 +102,7 @@ public class FileStorageService : IFileStorageService
         return ms;
     }
 
-    public async Task<bool> DeleteAsync(Guid storageFileId)
+    public async Task<Result> DeleteAsync(Guid storageFileId)
     {
         var fileInfo = await _fileStorageRepository.GetAsync(storageFileId);
 
@@ -111,7 +112,7 @@ public class FileStorageService : IFileStorageService
                 nameof(FileStorageService),
                 storageFileId);
 
-            throw new FileNotFoundException(string.Format(FileWithIdNotFoundPattern, storageFileId));
+            return Result.NotFound(string.Format(FileWithIdNotFoundPattern, storageFileId));
         }
 
         await _fileStorageRepository.RemoveAsync(fileInfo.Id);
@@ -120,6 +121,6 @@ public class FileStorageService : IFileStorageService
             fileInfo.BucketName,
             storageFileId.ToString());
 
-        return true;
+        return Result.Success;
     }
 }

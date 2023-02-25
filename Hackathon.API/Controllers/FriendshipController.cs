@@ -9,6 +9,7 @@ using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace Hackathon.API.Controllers;
 
@@ -29,10 +30,11 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// <param name="status"></param>
     /// <returns></returns>
     [HttpGet("users")]
-    public Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(
+    [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCollection<UserModel>))]
+    public Task<IActionResult> GetUsersByFriendshipStatus(
         [FromQuery, Required] long userId,
         [FromQuery, Required] FriendshipStatus status)
-        => _friendshipService.GetUsersByFriendshipStatus(userId, status);
+        => GetResult(() => _friendshipService.GetUsersByFriendshipStatus(userId, status));
 
     /// <summary>
     /// Получить список предложений дружбы
@@ -55,7 +57,7 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// Создать или принять предложение дружбы
     /// </summary>
     [HttpPost("offer/{userId:long}")]
-    public Task CreateOrAcceptOffer([FromRoute, Required] long userId)
+    public Task<IActionResult> CreateOrAcceptOffer([FromRoute, Required] long userId)
         => GetResult(() => _friendshipService.CreateOrAcceptOfferAsync(UserId, userId));
 
     /// <summary>
@@ -63,8 +65,8 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// </summary>
     /// <param name="proposerId">Инициатор предложения</param>
     [HttpPost("offer/reject/{proposerId:long}")]
-    public Task RejectOffer([FromRoute, Required] long proposerId)
-        => _friendshipService.RejectOfferAsync(UserId, proposerId);
+    public Task<IActionResult> RejectOffer([FromRoute, Required] long proposerId)
+        => GetResult(() => _friendshipService.RejectOfferAsync(UserId, proposerId));
 
     /// <summary>
     /// Отписаться от профиля пользователя
@@ -80,6 +82,6 @@ public class FriendshipController: BaseController, IFriendshipApi
     /// <param name="userId"></param>
     /// <returns></returns>
     [HttpDelete("{userId:long}")]
-    public Task EndFriendship(long userId)
-        => _friendshipService.EndFriendship(UserId, userId);
+    public Task<IActionResult> EndFriendship(long userId)
+        => GetResult(() => _friendshipService.EndFriendship(UserId, userId));
 }

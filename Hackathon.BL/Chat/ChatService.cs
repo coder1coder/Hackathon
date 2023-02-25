@@ -1,3 +1,4 @@
+using BackendTools.Common.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -45,7 +46,7 @@ public class ChatService : IChatService
         _chatMessageValidator = chatMessageValidator;
     }
 
-    public async Task SendMessage(ICreateChatMessage createChatMessage)
+    public async Task<Result> SendMessage(ICreateChatMessage createChatMessage)
     {
         await _chatMessageValidator.ValidateAndThrowAsync(createChatMessage);
 
@@ -70,10 +71,15 @@ public class ChatService : IChatService
         });
 
         await NotifyUsersAboutNewMessageIfNeed(createChatMessage);
+
+        return Result.Success;
     }
 
-    public Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
-        => _chatRepository.GetTeamChatMessages(teamId, offset, limit);
+    public async Task<Result<BaseCollection<TeamChatMessage>>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
+    {
+        var messages = await _chatRepository.GetTeamChatMessages(teamId, offset, limit);
+        return Result<BaseCollection<TeamChatMessage>>.FromValue(messages);
+    }
 
     /// <summary>
     /// Отправить уведомления пользователям, если это требуется

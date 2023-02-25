@@ -47,5 +47,5 @@ public interface IFriendshipService
     /// <param name="userId"></param>
     /// <param name="status"></param>
     /// <returns></returns>
-    Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status);
+    Task<Result<BaseCollection<UserModel>>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status);
 }

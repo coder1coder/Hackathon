@@ -186,7 +186,10 @@ public class UserService: IUserService
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, filename, userId);
 
         if (getUserResult.Data.ProfileImageId is not null) {
-            await _fileStorageService.DeleteAsync(getUserResult.Data.ProfileImageId.Value);
+
+            var deletionResult = await _fileStorageService.DeleteAsync(getUserResult.Data.ProfileImageId.Value);
+            if (!deletionResult.IsSuccess)
+                return Result<Guid>.FromErrors(deletionResult.Errors);
         }
 
         await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);

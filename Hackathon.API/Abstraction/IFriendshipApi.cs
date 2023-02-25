@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Friend;
 using Hackathon.Contracts.Responses;
+using Microsoft.AspNetCore.Mvc;
 using Refit;
 
 namespace Hackathon.API.Abstraction;
@@ -17,14 +18,14 @@ public interface IFriendshipApi
     /// Создать или принять предложение дружбы
     /// </summary>
     [Post(BaseRoute + "/offer/{userId}")]
-    Task CreateOrAcceptOffer(long userId);
+    Task<IActionResult> CreateOrAcceptOffer(long userId);
 
     /// <summary>
     /// Отклонить предложение дружбы
     /// </summary>
     /// <param name="proposerId">Инициатор предложения</param>
     [Post(BaseRoute + "/offer/reject/{proposerId}")]
-    Task RejectOffer(long proposerId);
+    Task<IActionResult> RejectOffer(long proposerId);
 
     /// <summary>
     /// Прекратить дружбу
@@ -32,5 +33,5 @@ public interface IFriendshipApi
     /// <param name="userId"></param>
     /// <returns></returns>
     [Delete(BaseRoute + "/{userId}")]
-    Task EndFriendship(long userId);
+    Task<IActionResult> EndFriendship(long userId);
 }
