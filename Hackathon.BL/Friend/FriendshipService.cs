@@ -160,6 +160,6 @@ public class FriendshipService: IFriendshipService
         return Result.Success;
     }
 
-    public Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status)
-        => _friendshipRepository.GetUsersByFriendshipStatus(userId, status);
+    public async Task<Result<BaseCollection<UserModel>>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status)
+        => Result<BaseCollection<UserModel>>.FromValue(await _friendshipRepository.GetUsersByFriendshipStatus(userId, status));
 }

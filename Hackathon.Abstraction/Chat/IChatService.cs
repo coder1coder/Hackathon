@@ -1,3 +1,4 @@
+using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
 
@@ -10,8 +11,8 @@ public interface IChatService
     /// </summary>
     /// <param name="createChatMessage">Сообщение</param>
     /// <returns></returns>
-    Task SendMessage(ICreateChatMessage createChatMessage);
-    
+    Task<Result> SendMessage(ICreateChatMessage createChatMessage);
+
     /// <summary>
     /// Получить сообщения команды
     /// </summary>
@@ -19,5 +20,5 @@ public interface IChatService
     /// <param name="offset">Смещение</param>
     /// <param name="limit">Лимит</param>
     /// <returns></returns>
-    Task<BaseCollection<TeamChatMessage>> GetTeamMessages(long teamId, int offset = 0, int limit = 300);
+    Task<Result<BaseCollection<TeamChatMessage>>> GetTeamMessages(long teamId, int offset = 0, int limit = 300);
 }

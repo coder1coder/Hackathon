@@ -9,6 +9,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace Hackathon.API.Controllers;
 
@@ -33,17 +34,20 @@ public class EventController: BaseController
     /// <param name="createEventRequest"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<BaseCreateResponse> Create(CreateEventRequest createEventRequest)
+    [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCreateResponse))]
+    public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
         var createEventModel = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
         createEventModel.OwnerId = UserId;
 
-        var createdId = await _eventService.CreateAsync(createEventModel);
+        var createResult = await _eventService.CreateAsync(createEventModel);
+        if (!createResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(createResult));
 
-        return new BaseCreateResponse
+        return Ok(new BaseCreateResponse
         {
-            Id = createdId
-        };
+            Id = createResult.Data
+        });
     }
 
     /// <summary>
@@ -51,11 +55,8 @@ public class EventController: BaseController
     /// </summary>
     /// <param name="request"></param>
     [HttpPut]
-    public async Task Update(UpdateEventRequest request)
-    {
-        var model = _mapper.Map<EventUpdateParameters>(request);
-        await _eventService.UpdateAsync(model);
-    }
+    public Task<IActionResult> Update(UpdateEventRequest request)
+        => GetResult(() => _eventService.UpdateAsync(_mapper.Map<EventUpdateParameters>(request)));
 
     /// <summary>
     /// Получить все события
@@ -76,8 +77,8 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpGet("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
-    public Task<EventModel> Get([FromRoute] long id)
-        => _eventService.GetAsync(id);
+    public Task<IActionResult> Get([FromRoute] long id)
+        => GetResult(() => _eventService.GetAsync(id));
 
     [HttpPost("{eventId:long}/join")]
     public Task<IActionResult> Join(long eventId)
@@ -88,7 +89,7 @@ public class EventController: BaseController
         => GetResult(() => _eventService.LeaveAsync(eventId, UserId));
 
     [HttpPost("{eventId:long}/join/team")]
-    public Task JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
+    public Task<IActionResult> JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
         => throw new NotImplementedException();
 
     /// <summary>
@@ -96,8 +97,8 @@ public class EventController: BaseController
     /// </summary>
     /// <param name="setStatusRequest"></param>
     [HttpPut(nameof(SetStatus))]
-    public Task SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
-        => _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status);
+    public Task<IActionResult> SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
+        => GetResult(() => _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status));
 
     /// <summary>
     /// Полное удаление события

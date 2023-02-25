@@ -35,10 +35,7 @@ public class AuthController: BaseController
     [HttpPost(nameof(SignIn))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
     public Task<IActionResult> SignIn([FromBody] SignInRequest request)
-    {
-        var signInModel = _mapper.Map<SignInModel>(request);
-        return GetResult(() =>_userService.SignInAsync(signInModel));
-    }
+        => GetResult(() =>_userService.SignInAsync(_mapper.Map<SignInModel>(request)));
 
     /// <summary>
     /// Авторизация пользователя через Google

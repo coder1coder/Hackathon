@@ -63,12 +63,12 @@ public class UserController: BaseController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
     public async Task<IActionResult> GetAsync([FromRoute] long userId)
     {
-        var userResult = await _userService.GetAsync(userId);
+        var getUserResult = await _userService.GetAsync(userId);
 
-        if (userResult.IsSuccess)
-            return Ok(_mapper.Map<UserResponse>(userResult.Data));
+        if (!getUserResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(getUserResult));
 
-        return await GetResult(() => Task.FromResult(userResult));
+        return Ok(_mapper.Map<UserResponse>(getUserResult.Data));
     }
 
     /// <summary>
@@ -100,9 +100,11 @@ public class UserController: BaseController
 
         await using var stream = file.OpenReadStream();
 
-        var newProfileImageId = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
+        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
+        if (!uploadProfileImageResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(uploadProfileImageResult));
 
-        return Ok(newProfileImageId);
+        return Ok(uploadProfileImageResult.Data);
     }
 
     /// <summary>
