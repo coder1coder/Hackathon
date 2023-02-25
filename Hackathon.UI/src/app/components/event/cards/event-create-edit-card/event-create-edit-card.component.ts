@@ -103,7 +103,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value,
-          stages: eventStages
+          stages: eventStages,
+          rules: this.form.get('rules')?.value
         };
 
         request = this.eventHttpService.create(event);
@@ -123,7 +124,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           stages: eventStages,
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
-          imageId: this.form.get('imageId')?.value
+          imageId: this.form.get('imageId')?.value,
+          rules: this.form.get('rules')?.value
         };
 
         request = this.eventHttpService.update(event);
@@ -323,6 +325,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       isCreateTeamsAutomatically: [true],
       award: ['0'],
       imageId: [null],
+      rules: [null]
     });
   }
 

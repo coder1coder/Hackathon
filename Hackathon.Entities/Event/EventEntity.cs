@@ -93,6 +93,11 @@ public class EventEntity : BaseEntity, ISoftDeletable
     public Guid? ImageId { get; set; }
 
     /// <summary>
+    /// Правила участия в событии
+    /// </summary>
+    public string Rules { get; set; }
+
+    /// <summary>
     /// Признак удаления
     /// </summary>
     public bool IsDeleted { get; set; }

@@ -71,4 +71,9 @@ public abstract class BaseEventParameters
     /// <remarks>Получается посредством загрузки файла в хранилище</remarks>
     /// </summary>
     public Guid? ImageId { get; set; }
+
+    /// <summary>
+    /// Правила участия
+    /// </summary>
+    public string Rules { get; set; }
 }

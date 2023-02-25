@@ -75,4 +75,9 @@ public class CreateEventRequest
     /// <remarks>Получается посредством загрузки файла в хранилище</remarks>
     /// </summary>
     public Guid? ImageId { get; set; }
+
+    /// <summary>
+    /// Правила проведения мероприятия
+    /// </summary>
+    public string Rules { get; set; }
 }
