@@ -64,11 +64,8 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("list")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventListItem>))]
-    public async Task<IActionResult> GetList([FromBody] GetListParameters<EventFilter> listRequest)
-    {
-        var getFilterModel = _mapper.Map<GetListParameters<EventFilter>>(listRequest);
-        return Ok(await _eventService.GetListAsync(UserId, getFilterModel));
-    }
+    public Task<IActionResult> GetList([FromBody] GetListParameters<EventFilter> listRequest)
+        => GetResult(() => _eventService.GetListAsync(UserId, _mapper.Map<GetListParameters<EventFilter>>(listRequest)));
 
     /// <summary>
     /// Получить событие по идентификатору
