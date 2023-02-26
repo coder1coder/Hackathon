@@ -1,11 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from "../../environments/environment";
-import { Observable } from "rxjs";
-import { BaseCollection } from "../models/BaseCollection";
-import { GetListParameters } from "../models/GetListParameters";
-import { UserFilter } from "../models/User/UserFilter";
-import { IUser } from "../models/User/IUser";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {environment} from "../../environments/environment";
+import {Observable} from "rxjs";
+import {BaseCollection} from "../models/BaseCollection";
+import {GetListParameters} from "../models/GetListParameters";
+import {UserFilter} from "../models/User/UserFilter";
+import {IUpdateUser, IUser} from "../models/User/IUser";
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +47,9 @@ export class UserService {
 
   public confirmEmail(code: string): Observable<void>{
     return this.http.post<void>(`${this.api}/profile/email/confirm?code=${code}`, null);
+  }
+
+  public updateUser(request: IUpdateUser): Observable<void> {
+    return this.http.put<void>(`${this.api}/profile/update`, request);
   }
 }

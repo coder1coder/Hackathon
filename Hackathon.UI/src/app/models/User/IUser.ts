@@ -9,3 +9,9 @@ export interface IUser {
   role: UserRole
   profileImageId?: string
 }
+
+export interface IUpdateUser {
+  id: number;
+  email: string;
+  fullName: string;
+}

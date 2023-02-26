@@ -1,5 +1,11 @@
 <layout-default title="Профиль" [isLoading]="isLoading">
 
+  <div actions *ngIf="user">
+    <button *ngIf="!isEditMode" mat-button color="primary" (click)="userEdit()">Редактировать</button>
+    <button *ngIf="isEditMode" mat-button (click)="userEditCancel()">Отменить</button>
+    <button *ngIf="isEditMode" mat-button color="primary" (click)="saveUserEdit()" [disabled]="!form.valid">Сохранить</button>
+  </div>
+
   <div class="profile">
 
     <div class="profile__left">
@@ -7,41 +13,69 @@
     </div>
 
     <div class="profile__right">
+      <form [formGroup]="form" class="profile__edit-form">
+       <table *ngIf="user !== undefined">
+         <tr>
+           <td>Имя пользователя</td>
+           <td [innerText]="user?.userName"></td>
+         </tr>
+         <ng-container *ngIf="!isEditMode">
+          <tr>
+            <td>Полное имя</td>
+            <td [innerText]="user?.fullName"></td>
+          </tr>
+          <tr>
+            <td class="email">E-mail</td>
+            <td>
+              <div>{{ user?.email?.address }}</div>
+              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.NotConfirmed">
+                <alert warn>Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br> системы необходимо <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()">подтвердить</span> Email.</alert>
+              </div>
 
-      <table *ngIf="user !== undefined">
-        <tr>
-          <td>Имя пользователя</td>
-          <td [innerText]="user?.userName"></td>
-        </tr>
-        <tr>
-          <td>Полное имя</td>
-          <td [innerText]="user?.fullName"></td>
-        </tr>
-        <tr>
-          <td class="email">E-mail</td>
-          <td>
-            <div>{{ user?.email?.address }}</div>
-            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.NotConfirmed">
-              <alert warn>Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br> системы необходимо <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()">подтвердить</span> Email.</alert>
-            </div>
+              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.Pending">
+                <alert>
+                  Код подтверждения отправлен на указанный Email. <br>
+                  <input #confirmationCodeInput>
+                  <br>
+                  <span class="email-confirmation-link" (click)="confirmEmail()">Подтвердить</span>
+                  <br><br>
+                  Если код не приходит, повторите попытку  через 5 минут или обратитесь в службу поддержки.
+                </alert>
+              </div>
 
-            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.Pending">
-              <alert>
-                Код подтверждения отправлен на указанный Email. <br>
-                <input #confirmationCodeInput>
-                <br>
-                <span class="email-confirmation-link" (click)="confirmEmail()">Подтвердить</span>
-                <br><br>
-                Если код не приходит, повторите попытку  через 5 минут или обратитесь в службу поддержки.
-              </alert>
-            </div>
+              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.Confirmed">
+                <alert>Email подтвержден</alert>
+              </div>
 
-            <div *ngIf="(user?.email?.status ?? UserEmailStatus.NotConfirmed) == UserEmailStatus.Confirmed">
-              <alert>Email подтвержден</alert>
-            </div>
-
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="isEditMode">
+          <tr>
+            <td>Полное имя</td>
+            <td>
+              <mat-form-field floatLabel='never' appearance="fill">
+                <input matInput autocomplete="off"
+                       id="fullName"
+                       #fullName
+                       formControlName="fullName"
+                       required>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>E-mail</td>
+            <td>
+              <mat-form-field floatLabel='never' appearance="fill">
+                <input matInput autocomplete="off"
+                       id="email"
+                       #email
+                       formControlName="email"
+                       required>
+              </mat-form-field>
+            </td>
+          </tr>
+        </ng-container>
         <tr>
           <td>Роль</td>
           <td>{{ UserRoleTranslator.Translate(user.role) }}</td>
@@ -51,18 +85,19 @@
           <td>{{ userTeam?.name ?? "Не состоит в команде" }}</td>
         </tr>
       </table>
+      </form>
 
-      <div class="reaction__list" *ngIf="this.userId != this.authUserId">
+      <div class="reaction__list" *ngIf="userId != authUserId">
 
-        <div class="reaction reaction-{{ UserProfileReaction[reaction].toLowerCase() }}"
+        <div class="reaction reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
              (click)="toggleReaction($event, reaction)"
              [class.active]="isReactionActive(reaction)"
              *ngFor="let reaction of getAvailableUserProfileReactions()">
 
           <div [ngSwitch]="reaction">
-            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Like">thumb_up</mat-icon>
-            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Heart">favorite</mat-icon>
-            <mat-icon class="reaction-icon" *ngSwitchCase="UserProfileReaction.Fire">local_fire_department</mat-icon>
+            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Like">thumb_up</mat-icon>
+            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Heart">favorite</mat-icon>
+            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Fire">local_fire_department</mat-icon>
           </div>
 
         </div>
@@ -70,15 +105,15 @@
 
       <friendship-offer-button *ngIf="userId != authUserId" [friendId]="userId"></friendship-offer-button>
 
-      <mat-tab-group *ngIf="this.userId == this.authUserId" [selectedIndex]="0" animationDuration="0">
+      <mat-tab-group *ngIf="userId == authUserId" [selectedIndex]="0" animationDuration="0">
         <mat-tab label="Друзья">
           <ng-template matTabContent>
-            <friends-list [userId]="authUserId" [status]="FriendshipStatus.Confirmed"></friends-list>
+            <friends-list [userId]="authUserId" [status]="friendshipStatus.Confirmed"></friends-list>
           </ng-template>
         </mat-tab>
         <mat-tab label="Заявки в друзья">
           <ng-template matTabContent>
-            <friends-list [userId]="authUserId" [status]="FriendshipStatus.Pending"></friends-list>
+            <friends-list [userId]="authUserId" [status]="friendshipStatus.Pending"></friends-list>
           </ng-template>
         </mat-tab>
       </mat-tab-group>

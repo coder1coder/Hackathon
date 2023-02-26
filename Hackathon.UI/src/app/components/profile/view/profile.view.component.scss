@@ -5,6 +5,22 @@
   &__right {
     flex: 1;
   }
+
+  &__edit-form {
+    tr {
+      cursor: default;
+    }
+    tr > td {
+      padding-bottom: 10px;
+    }
+
+    tr > td:first-child{
+      color: #9FA2B4;
+      width: 1px;
+      white-space: nowrap;
+      padding-right: 2em;
+    }
+  }
 }
 
 .reaction__list
@@ -39,22 +55,6 @@
   }
 }
 
-table {
-  tr {
-    cursor: default;
-  }
-  tr > td {
-    padding-bottom: 10px;
-  }
-
-  tr > td:first-child{
-    color: #9FA2B4;
-    width: 1px;
-    white-space: nowrap;
-    padding-right: 2em;
-  }
-}
-
 td.email {
   vertical-align: top;
 }
@@ -79,5 +79,19 @@ td.email {
     color: #9FA2B4;
     padding-top: 3px;
     padding-bottom: 3px;
+  }
+}
+
+::ng-deep {
+  .profile__edit-form {
+    .mat-form-field-appearance-fill .mat-form-field-flex {
+      padding: 0 0.75em 0 0.75em;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+    .mat-form-field-underline {
+      bottom: 0.05em;
+    }
   }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
@@ -152,5 +152,18 @@ public class UserRepository: IUserRepository
             entity.ProfileImageId = profileImageId;
             await _dbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task UpdateAsync(UpdateUserParameters updateUserParameters)
+    {
+        var entity = await _dbContext.Users
+           .FirstOrDefaultAsync(x => x.Id == updateUserParameters.Id);
+
+        if (entity is null)
+            return;
+
+        _mapper.Map(updateUserParameters, entity);
+        _dbContext.Users.Update(entity);
+        await _dbContext.SaveChangesAsync();
     }
 }

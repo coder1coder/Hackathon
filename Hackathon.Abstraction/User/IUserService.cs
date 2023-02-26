@@ -1,4 +1,4 @@
-﻿using BackendTools.Common.Models;
+using BackendTools.Common.Models;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
@@ -57,4 +57,11 @@ public interface IUserService
     /// <param name="stream">Новая картинка профиля</param>
     /// <returns></returns>
     Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream);
+
+    /// <summary>
+    /// Редактирование профиля пользователя
+    /// </summary>
+    /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
+    /// <returns></returns>
+    Task<Result> UpdateUserAsync(UpdateUserParameters updateUserParameters);
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -28,8 +28,10 @@ public class UserService: IUserService
     /// <see cref="SignUpModelValidator"/>
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
+    private readonly IValidator<UpdateUserParameters> _updateUserParameters;
 
     private readonly IUserRepository _userRepository;
+    private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly AppSettings _appSettings;
     private readonly IFileStorageService _fileStorageService;
 
@@ -41,14 +43,18 @@ public class UserService: IUserService
         IOptions<AppSettings> appSettings,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
+        IValidator<UpdateUserParameters> updateUserParameters,
         IUserRepository userRepository,
+        IEmailConfirmationRepository emailConfirmationRepository,
         IFileStorageService fileStorageService,
         IMapper mapper)
     {
         _appSettings = appSettings?.Value;
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
+        _updateUserParameters = updateUserParameters;
         _userRepository = userRepository;
+        _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
         _mapper = mapper;
         _requestLifetimeMinutes = appSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
@@ -194,6 +200,26 @@ public class UserService: IUserService
 
         await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);
         return Result<Guid>.FromValue(uploadResult.Id);
+    }
+
+    public async Task<Result> UpdateUserAsync(UpdateUserParameters updateUserParameters)
+    {
+        await _updateUserParameters.ValidateAndThrowAsync(updateUserParameters);
+
+        var isUserExists = await _userRepository.ExistsAsync(updateUserParameters.Id);
+
+        if (!isUserExists)
+            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+
+        var model = await _userRepository.GetAsync(updateUserParameters.Id);
+
+        if (model.Email.Address is not null && !model.Email.Address.Equals(updateUserParameters.Email))
+        {
+            await _emailConfirmationRepository.DeleteAsync(model.Id);
+        }
+
+        await _userRepository.UpdateAsync(updateUserParameters);
+        return Result.Success;
     }
 
     private UserModel EnrichModel(UserModel model)

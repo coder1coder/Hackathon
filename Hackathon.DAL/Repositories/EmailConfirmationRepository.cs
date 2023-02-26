@@ -52,4 +52,16 @@ public class EmailConfirmationRepository: IEmailConfirmationRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public async Task DeleteAsync(long userId)
+    {
+        var entity = await _dbContext.EmailConfirmations
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (entity is not null)
+        {
+            _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

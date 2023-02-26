@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
@@ -122,4 +122,12 @@ public class UserController: BaseController
     [HttpPost("profile/email/confirm/request")]
     public Task<IActionResult> CreateEmailConfirmationRequest()
         => GetResult(() => _emailConfirmationService.CreateRequest(UserId));
+
+    /// <summary>
+    /// Обновить профиль пользователя
+    /// </summary>
+    /// <param name="request"></param>
+    [HttpPut("profile/update")]
+    public Task<IActionResult> UpdateUserProfile(UpdateUserRequest request)
+        => GetResult(() => _userService.UpdateUserAsync(_mapper.Map<UpdateUserParameters>(request)));
 }
