@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using FluentValidation;
 using Hackathon.BL.Validation.Chat;
 using Hackathon.BL.Validation.Common;
@@ -32,5 +32,6 @@ public class Module: Autofac.Module
         builder.RegisterType<BaseEventParametersValidator>().As<IValidator<BaseEventParameters>>().InstancePerLifetimeScope();
         builder.RegisterType<ProjectUpdateFromGitParametersValidator>().As<IValidator<ProjectUpdateFromGitParameters>>().InstancePerLifetimeScope();
         builder.RegisterType<CreateChatMessageValidator>().As<IValidator<ICreateChatMessage>>().InstancePerLifetimeScope();
+        builder.RegisterType<UpdateUserModelValidator>().As<IValidator<UpdateUserParameters>>().InstancePerLifetimeScope();
     }
 }

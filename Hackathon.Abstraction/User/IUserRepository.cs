@@ -1,4 +1,4 @@
-﻿using Hackathon.Common.Models;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 
@@ -56,4 +56,11 @@ public interface IUserRepository
     /// <param name="profileImageId">Идентификатор картинки в хранилище</param>
     /// <returns></returns>
     Task UpdateProfileImageAsync(long userId, Guid profileImageId);
+
+    /// <summary>
+    /// Обновление профиля пользователя
+    /// </summary>
+    /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
+    /// <returns></returns>
+    Task UpdateAsync(UpdateUserParameters updateUserParameters);
 }

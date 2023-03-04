@@ -24,4 +24,11 @@ public interface IEmailConfirmationRepository
     /// <param name="parameters">Параметры запроса</param>
     /// <returns></returns>
     Task UpdateAsync(EmailConfirmationRequestParameters parameters);
+
+    /// <summary>
+    /// Удалить запись запроса на подтверждение Email
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <returns></returns>
+    Task DeleteAsync(long userId);
 }

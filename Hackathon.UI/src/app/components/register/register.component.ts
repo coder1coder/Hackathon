@@ -1,14 +1,15 @@
 import '@angular/compiler';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ICreateUser } from 'src/app/models/User/CreateUser';
-import { AuthService } from "../../services/auth.service";
-import { Location } from "@angular/common";
-import { IProblemDetails } from "../../models/IProblemDetails";
-import { SnackService } from "../../services/snack.service";
-import { takeUntil } from 'rxjs';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {ICreateUser} from 'src/app/models/User/CreateUser';
+import {AuthService} from "../../services/auth.service";
+import {Location} from "@angular/common";
+import {IProblemDetails} from "../../models/IProblemDetails";
+import {SnackService} from "../../services/snack.service";
+import {takeUntil} from 'rxjs';
 import {WithFormComponentBase} from "../WithFormComponentBase";
 import {RouterService} from "../../services/router.service";
+import {emailRegex} from "../../common/patterns/email-regex";
 
 @Component({
   selector: 'app-register',
@@ -17,12 +18,15 @@ import {RouterService} from "../../services/router.service";
 })
 
 export class RegisterComponent extends WithFormComponentBase implements OnInit {
+
+  @ViewChild('login', {static: true}) inputLogin: ElementRef | undefined;
+
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';
   public isLoading: boolean = false;
   public isPassFieldHide: boolean = true;
 
-  @ViewChild('login', {static: true}) inputLogin: ElementRef | undefined;
+  private emailRegexp: RegExp = emailRegex;
 
   constructor(
     private routerService: RouterService,
@@ -75,7 +79,7 @@ export class RegisterComponent extends WithFormComponentBase implements OnInit {
     this.form = this.fb.group({
       login: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      email: [null, [Validators.required, Validators.email]],
+      email: [null, [Validators.required, Validators.pattern(this.emailRegexp)]],
       fullname: [null, [Validators.required]],
     });
 
