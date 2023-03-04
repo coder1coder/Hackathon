@@ -18,14 +18,14 @@ public interface IFriendshipApi
     /// Создать или принять предложение дружбы
     /// </summary>
     [Post(BaseRoute + "/offer/{userId}")]
-    Task<IActionResult> CreateOrAcceptOffer(long userId);
+    Task CreateOrAcceptOffer(long userId);
 
     /// <summary>
     /// Отклонить предложение дружбы
     /// </summary>
     /// <param name="proposerId">Инициатор предложения</param>
     [Post(BaseRoute + "/offer/reject/{proposerId}")]
-    Task<IActionResult> RejectOffer(long proposerId);
+    Task RejectOffer(long proposerId);
 
     /// <summary>
     /// Прекратить дружбу
@@ -33,5 +33,5 @@ public interface IFriendshipApi
     /// <param name="userId"></param>
     /// <returns></returns>
     [Delete(BaseRoute + "/{userId}")]
-    Task<IActionResult> EndFriendship(long userId);
+    Task EndFriendship(long userId);
 }

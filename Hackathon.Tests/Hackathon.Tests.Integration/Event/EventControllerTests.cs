@@ -1,10 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Bogus;
+﻿using Bogus;
 using FluentAssertions;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.EventStage;
 using Hackathon.Contracts.Requests.Event;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Event;
@@ -20,9 +22,9 @@ public class EventControllerTests : BaseIntegrationTest
     public async Task Get_ShouldReturn_Success()
     {
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-        var createEventModel = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
 
-        var baseCreateResponse = await EventsApi.Create(createEventModel);
+        var baseCreateResponse = await EventsApi.Create(createEventRequest);
         var getEventResponse = await EventsApi.Get(baseCreateResponse.Id);
         eventModel = getEventResponse.Content;
 
@@ -30,11 +32,15 @@ public class EventControllerTests : BaseIntegrationTest
 
         eventModel.Id.Should().Be(baseCreateResponse.Id);
 
-        eventModel.Should().BeEquivalentTo(createEventModel, options =>
+        eventModel.Should().BeEquivalentTo(createEventRequest, options =>
             options
+                .Excluding(x=>x.Stages)
                 .Using<DateTime>(x =>
                     x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(1)))
                 .WhenTypeIs<DateTime>());
+
+        eventModel.Stages.Should().BeEquivalentTo(createEventRequest.Stages, options =>
+            options.Excluding(x=>x.EventId));
     }
 
     [Fact]
@@ -77,6 +83,16 @@ public class EventControllerTests : BaseIntegrationTest
             .RuleFor(x => x.MinTeamMembers, 1)
             .RuleFor(x => x.MaxEventMembers, 2)
             .RuleFor(x => x.Award, "0")
+            .RuleFor(x=>x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
+            .RuleFor(x=>x.Stages, (f)=>
+                new List<EventStageModel>
+                {
+                    new()
+                    {
+                        Name = Guid.NewGuid().ToString(),
+                        Duration = 5
+                    }
+                })
             .Generate(1)
             .First();
 

@@ -57,9 +57,8 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 });
             });
 
+            RuleFor(x => x.Stages).NotEmpty().WithMessage("Необходимо указать хотя бы один этап события");
             RuleFor(x => x.Stages)
-                .NotEmpty()
-                .WithMessage("Необходимо указать хотя бы один этап события")
                 .Must(x => x.GroupBy(e => e.Name)
                     .Select(g => new
                     {
@@ -67,7 +66,8 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                         Count = g.Count()
                     })
                     .Any(z => z.Count > 1) == false)
-                .WithMessage("Нельзя указать несколько этапов с одинаковым наименованием");
+                .WithMessage("Нельзя указать несколько этапов с одинаковым наименованием")
+                .When(x => x.Stages is {Count: > 0});
 
             When(x => x.Stages is {Count: > 0}, () =>
             {

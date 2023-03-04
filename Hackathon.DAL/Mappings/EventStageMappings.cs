@@ -10,5 +10,9 @@ public class EventStageMappings: IRegister
     {
         config.ForType<EventStageModel, EventStageEntity>()
             .IgnoreNullValues(true);
+
+        config.ForType<EventStageEntity, EventStageModel>()
+            .Map(x=>x.Id, s=>s.Id)
+            .IgnoreNullValues(true);
     }
 }

@@ -10,11 +10,13 @@ namespace Hackathon.BL;
 
 public class Module : Autofac.Module
 {
-    private readonly AppSettings _appSettings;
+    private readonly EmailSettings _emailSettings;
+    private readonly S3Options _s3Options;
 
-    public Module(AppSettings appSettings)
+    public Module(EmailSettings emailSettings, S3Options s3Options)
     {
-        _appSettings = appSettings;
+        _emailSettings = emailSettings;
+        _s3Options = s3Options;
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -28,23 +30,23 @@ public class Module : Autofac.Module
 
         builder.RegisterInstance(new SmtpClient
             {
-                Host = _appSettings.EmailSender.Server,
-                Port = _appSettings.EmailSender.Port,
-                EnableSsl = _appSettings.EmailSender.EnableSsl,
+                Host = _emailSettings.EmailSender.Server,
+                Port = _emailSettings.EmailSender.Port,
+                EnableSsl = _emailSettings.EmailSender.EnableSsl,
                 UseDefaultCredentials = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(_appSettings.EmailSender.Username, _appSettings.EmailSender.Password)
+                Credentials = new NetworkCredential(_emailSettings.EmailSender.Username, _emailSettings.EmailSender.Password)
             })
             .AsSelf();
 
         builder.RegisterInstance(new AmazonS3Client(
-            _appSettings.S3Options.AccessKey,
-            _appSettings.S3Options.SecretKey,
+            _s3Options.AccessKey,
+            _s3Options.SecretKey,
             new AmazonS3Config
             {
-                UseHttp = _appSettings.S3Options.UseHttp,
-                ServiceURL = _appSettings.S3Options.ServiceUrl,
-                ForcePathStyle = _appSettings.S3Options.ForcePathStyle
+                UseHttp = _s3Options.UseHttp,
+                ServiceURL = _s3Options.ServiceUrl,
+                ForcePathStyle = _s3Options.ForcePathStyle
             })).AsSelf();
     }
 }

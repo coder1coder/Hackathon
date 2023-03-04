@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using BackendTools.Common.Models;
+﻿using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.Abstraction.FileStorage;
 using Hackathon.Abstraction.User;
@@ -19,7 +11,10 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using MapsterMapper;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hackathon.BL.User;
 
@@ -30,28 +25,30 @@ public class UserService: IUserService
     private readonly IValidator<SignInModel> _signInModelValidator;
 
     private readonly IUserRepository _userRepository;
-    private readonly AppSettings _appSettings;
     private readonly IFileStorageService _fileStorageService;
 
     private readonly int _requestLifetimeMinutes;
 
     private readonly IMapper _mapper;
 
+    private readonly AuthOptions _authOptions;
+
     public UserService(
-        IOptions<AppSettings> appSettings,
+        IOptions<EmailSettings> emailSettings,
+        IOptions<AuthOptions> authOptions,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
         IUserRepository userRepository,
         IFileStorageService fileStorageService,
         IMapper mapper)
     {
-        _appSettings = appSettings?.Value;
+        _authOptions = authOptions?.Value ?? new AuthOptions();
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
         _userRepository = userRepository;
         _fileStorageService = fileStorageService;
         _mapper = mapper;
-        _requestLifetimeMinutes = appSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
+        _requestLifetimeMinutes = emailSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
     }
 
     public async Task<long> CreateAsync(SignUpModel signUpModel)
@@ -86,7 +83,7 @@ public class UserService: IUserService
 
         return !verified
             ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
-            : Result<AuthTokenModel>.FromValue(GenerateToken(user));
+            : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(user, _authOptions));
     }
 
     public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
@@ -112,7 +109,7 @@ public class UserService: IUserService
             userModel = await _userRepository.GetAsync(userId);
         }
 
-        return GenerateToken(userModel);
+        return AuthTokenGenerator.GenerateToken(userModel, _authOptions);
     }
 
     public async Task<Result<UserModel>> GetAsync(long userId)
@@ -137,44 +134,7 @@ public class UserService: IUserService
         return models;
     }
 
-    public AuthTokenModel GenerateToken(UserModel user)
-    {
-        var expires = DateTimeOffset.UtcNow.AddMinutes(_appSettings.AuthOptions.LifeTime);
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Role, ((int) user.Role).ToString())
-        };
-
-        if (user.GoogleAccount != null)
-            claims.Add(new Claim(AppClaimTypes.GoogleId, user.GoogleAccount.Id));
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = expires.UtcDateTime,
-            Issuer = _appSettings.AuthOptions.Issuer,
-            Audience = _appSettings.AuthOptions.Audience,
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.AuthOptions.Secret)),
-                SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var tokenString = tokenHandler.WriteToken(token);
-
-        return new AuthTokenModel
-        {
-            UserId = user.Id,
-            Expires = expires.ToUnixTimeMilliseconds(),
-            Token = tokenString,
-            Role = user.Role,
-            GoogleId = user.GoogleAccount?.Id
-        };
-    }
 
     public async Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream)
     {

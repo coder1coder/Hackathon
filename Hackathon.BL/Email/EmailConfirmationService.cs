@@ -25,7 +25,7 @@ public class EmailConfirmationService: IEmailConfirmationService
     public EmailConfirmationService(
         IEmailConfirmationRepository emailConfirmationRepository,
         IUserRepository userRepository,
-        IOptions<AppSettings> appSettings,
+        IOptions<EmailSettings> emailSettings,
         ILogger<EmailConfirmationService> logger,
         IEmailService emailService,
         ITemplateService templateService)
@@ -35,7 +35,7 @@ public class EmailConfirmationService: IEmailConfirmationService
         _logger = logger;
         _emailService = emailService;
         _templateService = templateService;
-        _requestLifetimeMinutes = appSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationRequestLifetimeDefault;
+        _requestLifetimeMinutes = emailSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationRequestLifetimeDefault;
     }
 
     public async Task<Result> Confirm(long userId, string code)

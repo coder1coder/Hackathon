@@ -18,18 +18,18 @@ public class EmailServiceTests: BaseIntegrationTest
 
     public EmailServiceTests(TestWebApplicationFactory factory) : base(factory)
     {
-        var appSettingsMock = new Mock<IOptions<AppSettings>>();
-        appSettingsMock.Setup(x => x.Value)
-            .Returns(new AppSettings
+        var emailSettingsMock = new Mock<IOptions<EmailSettings>>();
+        emailSettingsMock.Setup(x => x.Value)
+            .Returns(new EmailSettings
             {
                 EmailSender = new EmailSenderSettings
                 {
-                    Sender = AppSettings.EmailSender.Sender
+                    Sender = EmailSettings.EmailSender.Sender
                 }
             });
 
         var smtpClient = factory.Services.GetRequiredService<SmtpClient>();
-        _service = new EmailService(appSettingsMock.Object, NullLogger<EmailService>.Instance, smtpClient);
+        _service = new EmailService(emailSettingsMock.Object, NullLogger<EmailService>.Instance, smtpClient);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class EmailServiceTests: BaseIntegrationTest
     {
         var result = await _service.SendAsync(new EmailParameters
         {
-            Email = AppSettings.EmailSender.Sender,
+            Email = EmailSettings.EmailSender.Sender,
             Subject = "subject",
             Body = "<b>OK</b>"
         });
