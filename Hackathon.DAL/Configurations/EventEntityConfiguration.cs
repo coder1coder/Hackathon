@@ -1,5 +1,4 @@
-using Hackathon.Entities;
-using Hackathon.Entities.Event;
+using Hackathon.DAL.Entities.Event;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -15,8 +15,8 @@ public class Module : Autofac.Module
 
     public Module(EmailSettings emailSettings, S3Options s3Options)
     {
-        _emailSettings = emailSettings;
-        _s3Options = s3Options;
+        _emailSettings = emailSettings ?? new EmailSettings();
+        _s3Options = s3Options ?? new S3Options();
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -30,12 +30,12 @@ public class Module : Autofac.Module
 
         builder.RegisterInstance(new SmtpClient
             {
-                Host = _emailSettings.EmailSender.Server,
-                Port = _emailSettings.EmailSender.Port,
-                EnableSsl = _emailSettings.EmailSender.EnableSsl,
+                Host = _emailSettings.EmailSender?.Server,
+                Port = _emailSettings.EmailSender?.Port ?? default,
+                EnableSsl = _emailSettings.EmailSender?.EnableSsl ?? default,
                 UseDefaultCredentials = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(_emailSettings.EmailSender.Username, _emailSettings.EmailSender.Password)
+                Credentials = new NetworkCredential(_emailSettings.EmailSender?.Username, _emailSettings.EmailSender?.Password)
             })
             .AsSelf();
 

@@ -1,8 +1,6 @@
-﻿using System.Linq.Expressions;
-using Hackathon.Common.Models;
+﻿using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.Entities.Event;
 
 namespace Hackathon.Abstraction.Event;
 
@@ -29,13 +27,6 @@ public interface IEventRepository
     /// <param name="parameters">Фильтр, пагинация</param>
     /// <returns></returns>
     Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> parameters);
-
-    /// <summary>
-    /// As queryable
-    /// </summary>
-    /// <param name="expression"></param>
-    /// <returns></returns>
-    Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression);
 
     /// <summary>
     /// Обновление события

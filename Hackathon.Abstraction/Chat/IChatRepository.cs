@@ -1,6 +1,6 @@
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
-using Hackathon.Entities;
+using Hackathon.Common.Models.Chat.Team;
 
 namespace Hackathon.Abstraction.Chat;
 
@@ -9,9 +9,9 @@ public interface IChatRepository
     /// <summary>
     /// Добавить сообщение
     /// </summary>
-    /// <param name="entity"></param>
+    /// <param name="chatMessage"></param>
     /// <returns></returns>
-    Task AddMessage(ChatMessageEntity entity);
+    Task AddMessage<TChatMessage>(TChatMessage chatMessage) where TChatMessage : IChatMessage;
 
     /// <summary>
     /// Получить сообщения команды

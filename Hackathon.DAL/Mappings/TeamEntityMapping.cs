@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings;

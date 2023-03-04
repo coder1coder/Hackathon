@@ -1,4 +1,6 @@
-namespace Hackathon.Entities;
+using System;
+
+namespace Hackathon.DAL.Entities;
 
 public class FileStorageEntity
 {

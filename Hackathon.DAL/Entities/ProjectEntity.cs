@@ -1,7 +1,8 @@
-﻿using Hackathon.Entities.Event;
-using Hackathon.Entities.Interfaces;
+﻿using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Entities.Interfaces;
+using System;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 public class ProjectEntity: BaseEntity, ISoftDeletable
 {

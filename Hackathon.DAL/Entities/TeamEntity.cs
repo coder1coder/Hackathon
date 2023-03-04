@@ -1,9 +1,10 @@
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities.Event;
-using Hackathon.Entities.Interfaces;
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Entities.Interfaces;
+using Hackathon.DAL.Entities.User;
+using System.Collections.Generic;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 /// <summary>
 /// Команда

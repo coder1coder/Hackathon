@@ -6,7 +6,7 @@ using Hackathon.Abstraction.Project;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Project;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,8 +70,8 @@ public class ProjectRepository: IProjectRepository
                 parameters.Filter.TeamsIds.Contains(x.TeamId));
 
         query = parameters.SortOrder == SortOrder.Asc
-            ? query.OrderBy(ResolveOrderExpression(parameters))
-            : query.OrderByDescending(ResolveOrderExpression(parameters));
+            ? query.OrderBy(ResolveOrderFieldExpression(parameters))
+            : query.OrderByDescending(ResolveOrderFieldExpression(parameters));
 
         var totalCount = await query.LongCountAsync();
 
@@ -108,7 +108,7 @@ public class ProjectRepository: IProjectRepository
             x.Id == projectId
             && !x.IsDeleted);
 
-    private static Expression<Func<ProjectEntity, object>> ResolveOrderExpression(PaginationSort parameters)
+    private static Expression<Func<ProjectEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy.ToLowerInvariant() switch
         {
             "eventId" => x => x.EventId,

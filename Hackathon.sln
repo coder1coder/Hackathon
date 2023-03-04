@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Abstraction", "Ha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Jobs", "Hackathon.Jobs\Hackathon.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Entities", "Hackathon.Entities\Hackathon.Entities.csproj", "{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation", "Hackathon.BL.Validation\Hackathon.BL.Validation.csproj", "{BC5596A8-41DD-4C25-BC00-93B23853CFAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation.Tests", "Hackathon.Tests\Hackathon.BL.Validation.Tests\Hackathon.BL.Validation.Tests.csproj", "{67AC0E13-295F-4ECD-A12D-4E5AC931E5A7}"
@@ -79,10 +77,6 @@ Global
 		{D4A8BE0A-2F85-4525-A157-911F27003BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A8BE0A-2F85-4525-A157-911F27003BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4A8BE0A-2F85-4525-A157-911F27003BC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBC09C5C-14FC-44C3-A33C-2F971FD957C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC5596A8-41DD-4C25-BC00-93B23853CFAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC5596A8-41DD-4C25-BC00-93B23853CFAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC5596A8-41DD-4C25-BC00-93B23853CFAE}.Release|Any CPU.ActiveCfg = Release|Any CPU

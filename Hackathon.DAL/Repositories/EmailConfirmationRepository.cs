@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.User;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 

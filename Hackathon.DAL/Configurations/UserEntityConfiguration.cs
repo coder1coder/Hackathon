@@ -1,6 +1,6 @@
 using Hackathon.Common.Models.User;
-using Hackathon.Entities;
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

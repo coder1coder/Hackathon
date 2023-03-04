@@ -1,15 +1,15 @@
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hackathon.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
 
 namespace Hackathon.DAL.Repositories;
 
@@ -93,23 +93,17 @@ public class TeamRepository : ITeamRepository
 
             if (parameters.Filter.HasOwner.HasValue)
                 query = query.Where(x => x.OwnerId != null);
+
+            if (parameters.Filter.MemberId.HasValue)
+                query = query.Where(x=>
+                    x.OwnerId != null && (x.OwnerId == parameters.Filter.MemberId || x.Members.Any(s => s.MemberId == parameters.Filter.MemberId)));
         }
 
         var totalCount = await query.LongCountAsync();
 
-        if (!string.IsNullOrWhiteSpace(parameters.SortBy))
-        {
-            query = parameters.SortBy switch
-            {
-                nameof(TeamEntity.Name) => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Name)
-                    : query.OrderByDescending(x => x.Name),
-
-                _ => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Id)
-                    : query.OrderByDescending(x => x.Id)
-            };
-        }
+        query = parameters.SortOrder == SortOrder.Asc
+            ? query.OrderBy(ResolveOrderFieldExpression(parameters))
+            : query.OrderByDescending(ResolveOrderFieldExpression(parameters));
 
         var teamModels = await query
             .Skip(parameters.Offset)
@@ -168,39 +162,15 @@ public class TeamRepository : ITeamRepository
         }
     }
 
-    public async Task<TeamModel[]> GetByExpressionAsync(
-        Expression<Func<TeamEntity, bool>> expression,
-        string[] includes = null)
+    public async Task SetOwnerAsync(long teamId, long ownerId)
     {
-        var query = _dbContext.Teams
-            .Where(expression)
-            .IgnoreAutoIncludes();
-
-        if (includes is {Length: > 0})
-        {
-            foreach (var include in includes)
-            {
-                query.Include(include);
-            }
-        }
-
-        return await query
-            .AsNoTracking()
-            .ProjectToType<TeamModel>(_mapper.Config)
-            .ToArrayAsync();
-    }
-
-    //TODO: вынести в BL
-    public async Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel)
-    {
-        var teamEntity = await _dbContext.Teams
-            .SingleOrDefaultAsync(
-                x => x.Id == changeOwnerModel.TeamId
-                     && x.OwnerId == changeOwnerModel.OwnerId);
+        var teamEntity = await _dbContext.Teams.FirstOrDefaultAsync(x => x.Id == teamId);
 
         if (teamEntity is not null)
         {
-            teamEntity.OwnerId = changeOwnerModel.NewOwnerId;
+            teamEntity.OwnerId = ownerId;
+
+            _dbContext.Teams.Update(teamEntity);
             await _dbContext.SaveChangesAsync();
         }
     }
@@ -234,4 +204,11 @@ public class TeamRepository : ITeamRepository
 
         return teamMembers;
     }
+
+    private static Expression<Func<TeamEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
+        => parameters.SortBy switch
+        {
+            nameof(TeamEntity.Name) => x => x.Name,
+            _ => x => x.Id
+        };
 }

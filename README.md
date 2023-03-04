@@ -3,7 +3,7 @@
 
 Сервис позволяет организовать хакатон, все самые полезные функции в одном инструменте.
 
-[Описание общих терминов](https://github.com/coder1coder/Hackathon/discussions/categories/general)
+[Описание общих терминов](https://github.com/coder1coder/Hackathon/wiki)
 
 [Фичи в планах](https://github.com/coder1coder/Hackathon/discussions/categories/ideas)
 
@@ -13,6 +13,21 @@
 ```
 docker-compose up -d
 ```
+
+Настроить секреты
+```
+"EmailSettings": {
+    "EmailSender": {
+        "Server": "smtp.host.ru",
+        "Port": 587,
+        "Username": "username@host.ru",
+        "Password": "password",
+        "EnableSsl": true,
+        "Sender": "username@host.ru"
+    }
+}
+```
+[Как настроить секреты?](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
 Запустить веб-апи
 ```

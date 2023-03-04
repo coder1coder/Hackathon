@@ -1,8 +1,6 @@
-﻿using System.Linq.Expressions;
-using Hackathon.Common.Models;
+﻿using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities;
 
 namespace Hackathon.Abstraction.Team;
 
@@ -58,19 +56,12 @@ public interface ITeamRepository
     Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
 
     /// <summary>
-    /// Получить команды в соответствии с выборкой
-    /// </summary>
-    /// <param name="expression">Выражение</param>
-    /// <param name="includes">Навигационные свойства, которые необходимо включить в результаты</param>
-    /// <returns></returns>
-    Task<TeamModel[]> GetByExpressionAsync(Expression<Func<TeamEntity, bool>> expression, string[] includes = null);
-
-    /// <summary>
     /// Изменить владельца команды
     /// </summary>
-    /// <param name="changeOwnerModel"></param>
+    /// <param name="teamId">Идентификатор команды</param>
+    /// <param name="ownerId">Идентификатор нового владельца</param>
     /// <returns></returns>
-    Task ChangeTeamOwnerAsync(ChangeOwnerModel changeOwnerModel);
+    Task SetOwnerAsync(long teamId, long ownerId);
 
     /// <summary>
     /// Удалить команду и исключить из событий

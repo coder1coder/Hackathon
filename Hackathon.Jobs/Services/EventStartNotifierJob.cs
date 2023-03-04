@@ -1,8 +1,6 @@
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Jobs;
 using Hackathon.Abstraction.Notification;
-using Hackathon.Common.Extensions;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Notification;
 using System;
 using System.Linq;
@@ -28,18 +26,14 @@ public class EventStartNotifierJob: IEventStartNotifierJob
 
     public async Task Execute()
     {
-        var now = DateTime.UtcNow.AddMinutes(5).ToUtcWithoutSeconds();
-
-        var eventsResult = await _eventService.GetByExpression(x =>
-            DateTime.Compare(now, x.Start) == 0
-            && x.Status == EventStatus.Published);
+        var eventsResult = await _eventService.GetUpcomingEventsAsync(TimeSpan.FromMinutes(5));
 
         if (eventsResult.IsSuccess)
         {
-            if (eventsResult.Data.Length > 0)
+            if (eventsResult.Data.Items is {Count: > 0})
                 await _notificationService.PushMany(
-                    eventsResult.Data.Select(x => NotificationFactory
-                        .InfoNotification($"Событие '{x.Name}' скоро начнется", x.Owner.Id)));
+                    eventsResult.Data.Items.Select(x => NotificationFactory
+                        .InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
         }
     }
 }

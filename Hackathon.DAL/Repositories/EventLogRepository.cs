@@ -4,7 +4,7 @@ using Hackathon.Abstraction.EventLog;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.EventLog;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

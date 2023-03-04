@@ -1,7 +1,9 @@
 ﻿using Hackathon.Common.Models.User;
-using Hackathon.Entities.Interfaces;
+using Hackathon.DAL.Entities.Interfaces;
+using System;
+using System.Collections.Generic;
 
-namespace Hackathon.Entities.User;
+namespace Hackathon.DAL.Entities.User;
 
 /// <summary>
 /// Пользователь

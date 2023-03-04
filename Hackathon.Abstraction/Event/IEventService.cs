@@ -1,9 +1,6 @@
-﻿using System.Linq.Expressions;
-using BackendTools.Common.Models;
+﻿using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.Entities;
-using Hackathon.Entities.Event;
 
 namespace Hackathon.Abstraction.Event;
 
@@ -70,9 +67,8 @@ public interface IEventService
     Task<Result> DeleteAsync(long eventId);
 
     /// <summary>
-    /// Получить события по выражению
+    /// Получить предстоящие события
     /// </summary>
-    /// <param name="expression"></param>
     /// <returns></returns>
-    Task<Result<EventModel[]>> GetByExpression(Expression<Func<EventEntity, bool>> expression);
+    Task<Result<BaseCollection<EventListItem>>> GetUpcomingEventsAsync(TimeSpan timeBeforeStart);
 }

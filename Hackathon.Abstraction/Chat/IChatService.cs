@@ -1,6 +1,7 @@
 using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Common.Models.Chat.Team;
 
 namespace Hackathon.Abstraction.Chat;
 
@@ -9,9 +10,11 @@ public interface IChatService
     /// <summary>
     /// Отправить сообщение в чат
     /// </summary>
+    /// <param name="ownerId">Идентификатор автора сообщения</param>
     /// <param name="createChatMessage">Сообщение</param>
     /// <returns></returns>
-    Task<Result> SendMessage(ICreateChatMessage createChatMessage);
+    Task<Result> SendMessage<TChatMessageModel>(long ownerId, ICreateChatMessage createChatMessage)
+        where TChatMessageModel : IChatMessage;
 
     /// <summary>
     /// Получить сообщения команды

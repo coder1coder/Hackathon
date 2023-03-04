@@ -1,6 +1,6 @@
 using Hackathon.Common.Models.User;
 
-namespace Hackathon.Entities.User;
+namespace Hackathon.DAL.Entities.User;
 
 public class UserReactionEntity
 {
