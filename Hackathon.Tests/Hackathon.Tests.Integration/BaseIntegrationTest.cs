@@ -38,6 +38,7 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
     protected readonly TestFaker TestFaker;
 
     protected readonly AppSettings AppSettings;
+    protected readonly DataSettings DataSettings;
 
     private readonly HttpClient _httpClient;
     private readonly IUserService _userService;
@@ -47,6 +48,7 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
     protected BaseIntegrationTest(TestWebApplicationFactory factory)
     {
         AppSettings = factory.Services.GetRequiredService<IOptions<AppSettings>>().Value;
+        DataSettings = factory.Services.GetRequiredService<IOptions<DataSettings>>().Value;
 
         EventLogService = factory.Services.GetRequiredService<IEventLogService>();
         UserRepository = factory.Services.GetRequiredService<IUserRepository>();
