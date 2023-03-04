@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Entities;
+﻿namespace Hackathon.DAL.Entities;
 
 public abstract class BaseEntity
 {

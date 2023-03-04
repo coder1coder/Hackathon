@@ -1,6 +1,7 @@
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.User;
+using System;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 /// <summary>
 /// Таблица для связи участников и команд (отношение многие ко многим)

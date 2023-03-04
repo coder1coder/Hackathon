@@ -1,6 +1,7 @@
 using Hackathon.Common.Models.Notification;
+using System;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 public class NotificationEntity
 {

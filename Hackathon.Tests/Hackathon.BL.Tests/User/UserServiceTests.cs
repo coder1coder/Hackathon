@@ -20,18 +20,22 @@ public class UserServiceTests: BaseUnitTest
     private readonly Mock<IFileStorageService> _fileStorageMock;
     private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock;
     private readonly Mock<IValidator<SignInModel>> _signInValidatorMock;
+    private readonly Mock<IValidator<UpdateUserParameters>> _updateUserParametersValidator;
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock;
     private readonly Mock<IOptions<AuthOptions>> _authOptionsMock;
+    private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock;
 
     public UserServiceTests()
     {
+        _updateUserParametersValidator = new Mock<IValidator<UpdateUserParameters>>();
         _fileStorageMock = new Mock<IFileStorageService>();
         _emailSettingsMock = new Mock<IOptions<EmailSettings>>();
         _authOptionsMock = new Mock<IOptions<AuthOptions>>();
         _signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
         _signInValidatorMock = new Mock<IValidator<SignInModel>>();
         _userRepositoryMock = new Mock<IUserRepository>();
+        _emailConfirmationRepositoryMock = new Mock<IEmailConfirmationRepository>();
     }
 
     [Fact]
@@ -58,7 +62,9 @@ public class UserServiceTests: BaseUnitTest
             _authOptionsMock.Object,
             _signUpValidatorMock.Object,
             _signInValidatorMock.Object,
+            _updateUserParametersValidator.Object,
             _userRepositoryMock.Object,
+            _emailConfirmationRepositoryMock.Object,
             _fileStorageMock.Object,
             Mapper
             );

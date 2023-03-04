@@ -5,7 +5,7 @@ using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.User;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -78,8 +78,7 @@ public class UserRepository: IUserRepository
     {
         var query = _dbContext.Users
             .Include(x=>x.EmailConfirmationRequest)
-            .AsNoTracking()
-            .AsQueryable();
+            .AsNoTracking();
 
         if (parameters.Filter != null)
         {
@@ -135,12 +134,9 @@ public class UserRepository: IUserRepository
         };
     }
 
-    public async Task<bool> ExistsAsync(long userId)
-    {
-        return await _dbContext.Users
-            .AsNoTracking()
+    public Task<bool> ExistsAsync(long userId)
+        => _dbContext.Users
             .AnyAsync(x => x.Id == userId);
-    }
 
     public async Task UpdateProfileImageAsync(long userId, Guid profileImageId)
     {

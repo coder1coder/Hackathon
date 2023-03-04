@@ -1,6 +1,6 @@
-using Hackathon.Entities.Interfaces;
+using Hackathon.DAL.Entities.Interfaces;
 
-namespace Hackathon.Entities.Event;
+namespace Hackathon.DAL.Entities.Event;
 
 /// <summary>
 /// Этап события

@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Entities.Interfaces;
+﻿namespace Hackathon.DAL.Entities.Interfaces;
 
 public interface ISoftDeletable
 {

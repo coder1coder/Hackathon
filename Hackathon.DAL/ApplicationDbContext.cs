@@ -1,8 +1,8 @@
-﻿using Hackathon.DAL.Extensions;
-using Hackathon.Entities;
-using Hackathon.Entities.Event;
-using Hackathon.Entities.Interfaces;
-using Hackathon.Entities.User;
+﻿using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Entities.Interfaces;
+using Hackathon.DAL.Entities.User;
+using Hackathon.DAL.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL;

@@ -1,8 +1,10 @@
 ﻿using Hackathon.Common.Models.Event;
-using Hackathon.Entities.Interfaces;
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.Interfaces;
+using Hackathon.DAL.Entities.User;
+using System;
+using System.Collections.Generic;
 
-namespace Hackathon.Entities.Event;
+namespace Hackathon.DAL.Entities.Event;
 
 /// <summary>
 /// Событие

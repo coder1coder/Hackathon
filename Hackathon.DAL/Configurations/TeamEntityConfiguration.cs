@@ -1,6 +1,6 @@
+using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities.Event;
 using System.Collections.Generic;
-using Hackathon.Entities;
-using Hackathon.Entities.Event;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

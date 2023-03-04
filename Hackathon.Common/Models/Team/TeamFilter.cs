@@ -51,4 +51,8 @@ public class TeamFilter
     /// </summary>
     public bool? HasOwner { get; set; }
 
+    /// <summary>
+    /// Идентификатор участника
+    /// </summary>
+    public long? MemberId { get; set; }
 }

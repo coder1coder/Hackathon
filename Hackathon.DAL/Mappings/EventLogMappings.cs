@@ -1,5 +1,5 @@
 using Hackathon.Common.Models.EventLog;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings;

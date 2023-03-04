@@ -1,16 +1,16 @@
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Hackathon.Abstraction.Event;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.Entities.Event;
+using Hackathon.DAL.Entities.Event;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Hackathon.DAL.Repositories;
 
@@ -98,27 +98,9 @@ public class EventRepository : IEventRepository
 
         var totalCount = await query.LongCountAsync();
 
-        if (!string.IsNullOrWhiteSpace(parameters.SortBy))
-        {
-            query = parameters.SortBy switch
-            {
-                nameof(EventEntity.Name) => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Name)
-                    : query.OrderByDescending(x => x.Name),
-
-                nameof(EventEntity.Start) => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Start)
-                    : query.OrderByDescending(x => x.Start),
-
-                nameof(EventEntity.Status) => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Status)
-                    : query.OrderByDescending(x => x.Status),
-
-                _ => parameters.SortOrder == SortOrder.Asc
-                    ? query.OrderBy(x => x.Id)
-                    : query.OrderByDescending(x => x.Id)
-            };
-        }
+        query = parameters.SortOrder == SortOrder.Asc
+            ? query.OrderBy(ResolveOrderFieldExpression(parameters))
+            : query.OrderByDescending(ResolveOrderFieldExpression(parameters));
 
         var items = await query
             .Include(x=>x.Teams)
@@ -149,15 +131,6 @@ public class EventRepository : IEventRepository
             Items = items,
             TotalCount = totalCount
         };
-    }
-
-    public async Task<EventModel[]> GetByExpression(Expression<Func<EventEntity, bool>> expression)
-    {
-        var entities = await _dbContext.Events.Where(expression)
-            .Where(expression)
-            .ToArrayAsync();
-
-        return _mapper.Map<EventEntity[], EventModel[]>(entities);
     }
 
     public async Task UpdateAsync(EventUpdateParameters eventUpdateParameters)
@@ -201,4 +174,13 @@ public class EventRepository : IEventRepository
         => _dbContext.Events.AnyAsync(x =>
             x.Id == eventId
             && !x.IsDeleted);
+
+    private static Expression<Func<EventEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
+        => parameters.SortBy switch
+        {
+            nameof(EventEntity.Name) => x => x.Name,
+            nameof(EventEntity.Start) => x => x.Start,
+            nameof(EventEntity.Status) => x => x.Status,
+            _ => x => x.Id
+        };
 }

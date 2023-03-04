@@ -9,10 +9,11 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Common.Models.Chat.Team;
 using Hackathon.Common.Models.Notification;
-using Hackathon.Entities;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
+using MapsterMapper;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Chat;
@@ -25,6 +26,7 @@ public class ChatService : IChatService
     private readonly IMessageHub<ChatMessageChangedIntegrationEvent> _chatMessageHub;
     private readonly INotificationService _notificationService;
     private readonly ILogger<ChatService> _logger;
+    private readonly IMapper _mapper;
 
     private readonly IValidator<ICreateChatMessage> _chatMessageValidator;
 
@@ -35,7 +37,8 @@ public class ChatService : IChatService
         INotificationService notificationService,
         ITeamRepository teamRepository,
         ILogger<ChatService> logger,
-        IValidator<ICreateChatMessage> chatMessageValidator)
+        IValidator<ICreateChatMessage> chatMessageValidator,
+        IMapper mapper)
     {
         _chatRepository = chatRepository;
         _chatMessageHub = chatMessageHub;
@@ -44,30 +47,24 @@ public class ChatService : IChatService
         _teamRepository = teamRepository;
         _logger = logger;
         _chatMessageValidator = chatMessageValidator;
+        _mapper = mapper;
     }
 
-    public async Task<Result> SendMessage(ICreateChatMessage createChatMessage)
+    public async Task<Result> SendMessage<TChatMessageModel>(long ownerId, ICreateChatMessage createChatMessage)
+        where TChatMessageModel: IChatMessage
     {
+        createChatMessage.OwnerId = ownerId;
+
         await _chatMessageValidator.ValidateAndThrowAsync(createChatMessage);
 
-        var entity = new ChatMessageEntity
-        {
-            Type = createChatMessage.Type,
-            Message = createChatMessage.Message,
-            Timestamp = createChatMessage.Timestamp,
-            Options = createChatMessage.Options,
-            OwnerId = createChatMessage.OwnerId,
-            UserId = createChatMessage.UserId,
-            TeamId = createChatMessage is CreateTeamChatMessage createTeamChatMessage ? createTeamChatMessage.TeamId : null
-        };
+        var typedChatMessage = await GetTypedChatMessage<TChatMessageModel>(createChatMessage);
 
-        await EnrichChatMessage(entity);
+        await _chatRepository.AddMessage(typedChatMessage);
 
-        await _chatRepository.AddMessage(entity);
         await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, new ChatMessageChangedIntegrationEvent
         {
             Type = createChatMessage.Type,
-            TeamId = entity.TeamId
+            TeamId = typedChatMessage is TeamChatMessage teamChatMessage ? teamChatMessage.TeamId : null
         });
 
         await NotifyUsersAboutNewMessageIfNeed(createChatMessage);
@@ -124,15 +121,30 @@ public class ChatService : IChatService
         }
     }
 
-    private async Task EnrichChatMessage(ChatMessageEntity chatMessageEntity)
+    private async Task<TChatMessageModel> GetTypedChatMessage<TChatMessageModel>(ICreateChatMessage createChatMessage)
+    where TChatMessageModel: IChatMessage
     {
-        var owner = await _userRepository.GetAsync(chatMessageEntity.OwnerId);
-        chatMessageEntity.OwnerFullName = owner.FullName;
+        var chatMessage = _mapper.Map<ICreateChatMessage, TChatMessageModel>(createChatMessage);
 
-        if (chatMessageEntity.UserId.HasValue)
+        if (chatMessage is null)
         {
-            var user = await _userRepository.GetAsync(chatMessageEntity.UserId.Value);
-            chatMessageEntity.UserFullName = user.FullName;
+            return default;
         }
+
+        var owner = await _userRepository.GetAsync(createChatMessage.OwnerId);
+        chatMessage.OwnerFullName = owner.FullName;
+
+        if (createChatMessage.UserId.HasValue)
+        {
+            var user = await _userRepository.GetAsync(createChatMessage.UserId.Value);
+            chatMessage.UserFullName = user.FullName;
+        }
+
+        if (createChatMessage is CreateTeamChatMessage createTeamChatMessage && chatMessage is TeamChatMessage teamChatMessage)
+        {
+            teamChatMessage.TeamId = createTeamChatMessage.TeamId;
+        }
+
+        return chatMessage;
     }
 }

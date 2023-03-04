@@ -1,5 +1,5 @@
 using Hackathon.Common.Models.Friend;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 
 namespace Hackathon.DAL.Extensions;
 

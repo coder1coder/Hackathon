@@ -5,7 +5,7 @@ using Hackathon.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using Hackathon.Entities;
+using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

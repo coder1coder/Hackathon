@@ -5,7 +5,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <LangVersion>latest</LangVersion>
-    </PropertyGroup>
+      <UserSecretsId>f69ee8e7-ca10-46c2-911a-667fb2db1f20</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />

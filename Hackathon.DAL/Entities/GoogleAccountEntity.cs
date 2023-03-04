@@ -1,6 +1,6 @@
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.User;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 public class GoogleAccountEntity
 {

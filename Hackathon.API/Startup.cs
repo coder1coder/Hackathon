@@ -76,7 +76,9 @@ public class Startup
         var databaseServiceLifetime = ServiceLifetime.Scoped;
 
         if (_environment.EnvironmentName == "Tests")
+        {
             databaseServiceLifetime = ServiceLifetime.Transient;
+        }
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {

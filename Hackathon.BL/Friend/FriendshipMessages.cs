@@ -1,6 +1,6 @@
 namespace Hackathon.BL.Friend;
 
-public class FriendshipMessages
+public static class FriendshipMessages
 {
     public const string CantCreateAcceptFriendshipOffersForYourProfile = "Нельзя создать/принять предложение дружбы для своего профиля";
     public const string UsersAreAlreadyFriends = "Пользователи уже являются друзьями";

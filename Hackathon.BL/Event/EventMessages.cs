@@ -1,6 +1,6 @@
 namespace Hackathon.BL.Event;
 
-public class EventMessages
+public static class EventMessages
 {
     public const string CantAttachToEvent = "Нельзя присоединиться к событию";
     public const string CantLeaveEventIfYouEnteredAsTeam = "Нельзя покинуть событие, если вступили командой";

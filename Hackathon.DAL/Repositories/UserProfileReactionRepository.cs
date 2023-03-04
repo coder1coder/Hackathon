@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Models.User;
-using Hackathon.Entities.User;
+using Hackathon.DAL.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL.Repositories;

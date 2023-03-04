@@ -2,7 +2,7 @@
 using Hackathon.Common;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
-using Hackathon.Entities.Event;
+using Hackathon.DAL.Entities.Event;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings;

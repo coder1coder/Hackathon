@@ -1,7 +1,3 @@
-
-
-using System.Collections.Generic;
-using System.Text;
 using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.Abstraction.FileStorage;
@@ -27,12 +23,11 @@ public class UserService: IUserService
     /// <see cref="SignUpModelValidator"/>
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
-    private readonly IValidator<UpdateUserParameters> _updateUserParameters;
+    private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
 
     private readonly IUserRepository _userRepository;
 
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
-    private readonly AppSettings _appSettings;
 
     private readonly IFileStorageService _fileStorageService;
 
@@ -47,7 +42,7 @@ public class UserService: IUserService
         IOptions<AuthOptions> authOptions,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
-        IValidator<UpdateUserParameters> updateUserParameters,
+        IValidator<UpdateUserParameters> updateUserParametersValidator,
         IUserRepository userRepository,
         IEmailConfirmationRepository emailConfirmationRepository,
         IFileStorageService fileStorageService,
@@ -56,7 +51,7 @@ public class UserService: IUserService
         _authOptions = authOptions?.Value ?? new AuthOptions();
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
-        _updateUserParameters = updateUserParameters;
+        _updateUserParametersValidator = updateUserParametersValidator;
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
@@ -171,7 +166,7 @@ public class UserService: IUserService
 
     public async Task<Result> UpdateUserAsync(UpdateUserParameters updateUserParameters)
     {
-        await _updateUserParameters.ValidateAndThrowAsync(updateUserParameters);
+        await _updateUserParametersValidator.ValidateAndThrowAsync(updateUserParameters);
 
         var isUserExists = await _userRepository.ExistsAsync(updateUserParameters.Id);
 

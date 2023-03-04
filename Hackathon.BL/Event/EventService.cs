@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using BackendTools.Common.Models;
+﻿using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.IntegrationEvents;
@@ -11,15 +7,18 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
-using Hackathon.Entities.Event;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 using MassTransit;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hackathon.BL.Event;
 
@@ -209,10 +208,21 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public async Task<Result<EventModel[]>> GetByExpression(Expression<Func<EventEntity, bool>> expression)
+    public async Task<Result<BaseCollection<EventListItem>>> GetUpcomingEventsAsync(TimeSpan timeBeforeStart)
     {
-        var result = await _eventRepository.GetByExpression(expression);
-        return Result<EventModel[]>.FromValue(result);
+        var now = DateTime.UtcNow.AddMinutes(5).ToUtcWithoutSeconds();
+
+        var result = await _eventRepository.GetListAsync(1, new Common.Models.GetListParameters<EventFilter>
+        {
+            Filter = new EventFilter
+            {
+                StartFrom = now,
+                StartTo = now.AddMinutes(1),
+                Statuses = new [] {EventStatus.Published }
+            }
+        });
+
+        return Result<BaseCollection<EventListItem>>.FromValue(result);
     }
 
     /// <summary>

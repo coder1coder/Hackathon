@@ -1,6 +1,7 @@
 using Hackathon.Common.Models.Friend;
+using System;
 
-namespace Hackathon.Entities;
+namespace Hackathon.DAL.Entities;
 
 public class FriendshipEntity
 {

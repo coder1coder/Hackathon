@@ -126,15 +126,21 @@ public class TeamService : ITeamService
 
     public async Task<Result<TeamGeneral>> GetUserTeam(long userId)
     {
-        var teams = await _teamRepository.GetByExpressionAsync(x =>
-            x.OwnerId != null && (x.OwnerId == userId || x.Members.Any(s => s.MemberId == userId)));
+        var teams = await _teamRepository.GetAsync(new Common.Models.GetListParameters<TeamFilter>
+        {
+            Filter = new TeamFilter
+            {
+                MemberId = userId
+            },
+            Limit = 1
+        });
 
-        if (teams.Length == 0)
+        if (teams?.Items is not {Count: > 0})
         {
             return Result<TeamGeneral>.NotFound(TeamErrorMessages.TeamDoesNotExists);
         }
 
-        var userTeam = teams.First();
+        var userTeam = teams.Items.First();
         userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
 
         return Result<TeamGeneral>.FromValue(new TeamGeneral
@@ -177,14 +183,8 @@ public class TeamService : ITeamService
                     .OrderByDescending(u => u.DateTimeAdd)
                     .First();
 
-                var changeOwnerModel = new ChangeOwnerModel
-                {
-                    TeamId = teamMemberModel.TeamId,
-                    OwnerId = teamMemberModel.MemberId,
-                    NewOwnerId = newOwner.Id
-                };
-
-                await _teamRepository.ChangeTeamOwnerAsync(changeOwnerModel);
+                team.OwnerId = newOwner.Id;
+                await _teamRepository.SetOwnerAsync(team.Id, newOwner.Id);
             }
             else
             {
@@ -212,7 +212,7 @@ public class TeamService : ITeamService
             return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
 
         if (team.Type != TeamType.Public)
-            return Result.NotValid("The selected team isn't a public team");
+            return Result.NotValid(TeamMessages.SelectedTeamIsNotPublic);
 
         var user = await _userRepository.GetAsync(userId);
 
@@ -220,7 +220,7 @@ public class TeamService : ITeamService
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
         if (team.Owner.Id == userId || team.Members.Any(x=>x.Id == userId))
-            return Result.NotValid("User already is the team member");
+            return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         await _teamRepository.AddMemberAsync(new TeamMemberModel
         {
