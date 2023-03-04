@@ -8,6 +8,7 @@ using Hackathon.Abstraction.Friend;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.API.Abstraction;
+using Hackathon.Common;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
@@ -37,23 +38,24 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
 
     protected readonly TestFaker TestFaker;
 
-    protected readonly AppSettings AppSettings;
+    protected readonly DataSettings DataSettings;
+    protected readonly EmailSettings EmailSettings;
+    private readonly AuthOptions _authOptions;
 
     private readonly HttpClient _httpClient;
-    private readonly IUserService _userService;
 
     protected (long Id, string Token) TestUser { get; }
 
     protected BaseIntegrationTest(TestWebApplicationFactory factory)
     {
-        AppSettings = factory.Services.GetRequiredService<IOptions<AppSettings>>().Value;
+        DataSettings = factory.Services.GetRequiredService<IOptions<DataSettings>>().Value;
+        EmailSettings = factory.Services.GetRequiredService<IOptions<EmailSettings>>().Value;
+        _authOptions = factory.Services.GetRequiredService<IOptions<AuthOptions>>().Value;
 
         EventLogService = factory.Services.GetRequiredService<IEventLogService>();
         UserRepository = factory.Services.GetRequiredService<IUserRepository>();
         TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
         FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();
-
-        _userService = factory.Services.GetRequiredService<IUserService>();
 
         Mapper = factory.Services.GetRequiredService<IMapper>();
         TestFaker = new TestFaker(Mapper);
@@ -64,11 +66,11 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
             HandleCookies = false
         });
 
-        var defaultToken = _userService.GenerateToken(new UserModel
+        var defaultToken = AuthTokenGenerator.GenerateToken(new UserModel
         {
             Id = 1,
             Role = UserRole.Administrator
-        }).Token ?? "";
+        }, _authOptions).Token ?? "";
 
         TestUser = (1, defaultToken);
 
@@ -101,11 +103,11 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
         var fakeRequest = Mapper.Map<SignUpRequest>(fakeUser);
         var response = await UsersApi.SignUp(fakeRequest);
 
-        var authTokenModel = _userService.GenerateToken(new UserModel
+        var authTokenModel = AuthTokenGenerator.GenerateToken(new UserModel
         {
             Id = response.Id,
             Role = UserRole.Default
-        });
+        }, _authOptions);
 
         return (response.Id, authTokenModel.Token);
     }

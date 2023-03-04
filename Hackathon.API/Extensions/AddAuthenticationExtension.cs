@@ -9,7 +9,7 @@ namespace Hackathon.API.Extensions;
 
 public static class AddAuthenticationExtension
 {
-    public static IServiceCollection AddAuthentication(this IServiceCollection services, AppSettings appSettings)
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, AuthOptions authOptions)
     {
         services
             .AddAuthentication(x =>
@@ -23,12 +23,12 @@ public static class AddAuthenticationExtension
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.AuthOptions.Secret)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.Secret)),
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer = appSettings.AuthOptions.Issuer,
-                    ValidAudience = appSettings.AuthOptions.Audience,
+                    ValidIssuer = authOptions.Issuer,
+                    ValidAudience = authOptions.Audience,
                     ClockSkew = TimeSpan.Zero
                 };
             });
