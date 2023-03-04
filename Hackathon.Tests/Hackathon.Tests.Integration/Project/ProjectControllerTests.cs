@@ -32,9 +32,6 @@ public class ProjectControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var user = await RegisterUser();
-        SetToken(user.Token);
-
         var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
@@ -43,6 +40,9 @@ public class ProjectControllerTests : BaseIntegrationTest
         });
 
         Assert.NotNull(teamCreateResponse?.Content);
+
+        var user = await RegisterUser();
+        SetToken(user.Token);
 
         var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
         {
@@ -71,9 +71,6 @@ public class ProjectControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var user = await RegisterUser();
-        SetToken(user.Token);
-
         var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
@@ -82,6 +79,9 @@ public class ProjectControllerTests : BaseIntegrationTest
         });
 
         Assert.NotNull(teamCreateResponse?.Content);
+
+        var user = await RegisterUser();
+        SetToken(user.Token);
 
         var createProjectResponse = await ProjectsApi.Create(new ProjectCreateRequest
         {

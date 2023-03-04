@@ -43,13 +43,6 @@ public interface IUserService
     Task<BaseCollection<UserModel>> GetAsync(Common.Models.GetListParameters<UserFilter> getListParameters);
 
     /// <summary>
-    /// Сгенерировать токен
-    /// </summary>
-    /// <param name="user">Пользователь</param>
-    /// <returns></returns>
-    AuthTokenModel GenerateToken(UserModel user);
-
-    /// <summary>
     /// Загрузить картинку профиля пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>

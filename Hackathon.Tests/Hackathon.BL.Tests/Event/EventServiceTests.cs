@@ -11,9 +11,11 @@ using Hackathon.BL.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
+using Hackathon.Common.Models.EventStage;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 using MassTransit;
 using Moq;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Hackathon.BL.Tests.Event;
@@ -71,9 +73,13 @@ public class EventServiceTests: BaseUnitTest
         );
 
         //act
-        var result = await service.CreateAsync(new EventCreateParameters());
+        var result = await service.CreateAsync(new EventCreateParameters
+        {
+            Stages = new List<EventStageModel>()
+        });
 
         //assert
-        result.Should().Be(createdId);
+        Assert.NotNull(result);
+        result.Data.Should().Be(createdId);
     }
 }

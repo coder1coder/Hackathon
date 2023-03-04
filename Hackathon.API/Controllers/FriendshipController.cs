@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Hackathon.Abstraction.Friend;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
@@ -9,12 +6,14 @@ using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Hackathon.API.Controllers;
 
 [SwaggerTag("Друзья")]
-public class FriendshipController: BaseController, IFriendshipApi
+public class FriendshipController: BaseController
 {
     private readonly IFriendshipService _friendshipService;
 

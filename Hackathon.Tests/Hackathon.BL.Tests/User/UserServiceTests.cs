@@ -18,15 +18,17 @@ namespace Hackathon.BL.Tests.User;
 public class UserServiceTests: BaseUnitTest
 {
     private readonly Mock<IFileStorageService> _fileStorageMock;
-    private readonly Mock<IOptions<AppSettings>> _appSettingsMock;
     private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock;
     private readonly Mock<IValidator<SignInModel>> _signInValidatorMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock;
+    private readonly Mock<IOptions<AuthOptions>> _authOptionsMock;
 
     public UserServiceTests()
     {
         _fileStorageMock = new Mock<IFileStorageService>();
-        _appSettingsMock = new Mock<IOptions<AppSettings>>();
+        _emailSettingsMock = new Mock<IOptions<EmailSettings>>();
+        _authOptionsMock = new Mock<IOptions<AuthOptions>>();
         _signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
         _signInValidatorMock = new Mock<IValidator<SignInModel>>();
         _userRepositoryMock = new Mock<IUserRepository>();
@@ -52,7 +54,8 @@ public class UserServiceTests: BaseUnitTest
             });
 
         var sut = new UserService(
-            _appSettingsMock.Object,
+            _emailSettingsMock.Object,
+            _authOptionsMock.Object,
             _signUpValidatorMock.Object,
             _signInValidatorMock.Object,
             _userRepositoryMock.Object,

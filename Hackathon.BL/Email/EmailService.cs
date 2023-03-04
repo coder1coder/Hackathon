@@ -18,14 +18,14 @@ public class EmailService: IEmailService
     private readonly SmtpClient _smtpClient;
 
     public EmailService(
-        IOptions<AppSettings> appSettings,
+        IOptions<EmailSettings> emailSettings,
         ILogger<EmailService> logger,
         SmtpClient smtpClient)
     {
         _logger = logger;
         _smtpClient = smtpClient;
 
-        _emailSenderSettings = appSettings?.Value?.EmailSender ?? new EmailSenderSettings();
+        _emailSenderSettings = emailSettings?.Value?.EmailSender ?? new EmailSenderSettings();
     }
 
     public async Task<Result> SendAsync(EmailParameters parameters)

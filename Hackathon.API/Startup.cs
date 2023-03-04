@@ -44,9 +44,12 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+        var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
 
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
+        services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
+        services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
 
         var config = new TypeAdapterConfig();
         config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
@@ -107,7 +110,7 @@ public class Startup
 
         services.AddSignalR(x=>x.EnableDetailedErrors = true);
         services.AddMemoryCache();
-        services.AddAuthentication(appConfig);
+        services.AddAuthentication(authOptions);
         services.AddAuthorization(x =>
         {
             x.AddPolicy(nameof(UserRole.Administrator), p =>
@@ -121,10 +124,11 @@ public class Startup
 
     public void ConfigureContainer(ContainerBuilder builder)
     {
-        var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+        var emailSettings = Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
+        var s3Options = Configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
 
         builder.RegisterModule(new Module());
-        builder.RegisterModule(new BL.Module(appConfig));
+        builder.RegisterModule(new BL.Module(emailSettings, s3Options));
         builder.RegisterModule(new BL.Validation.Module());
         builder.RegisterModule(new DAL.Module());
         builder.RegisterModule(new Jobs.Module());
