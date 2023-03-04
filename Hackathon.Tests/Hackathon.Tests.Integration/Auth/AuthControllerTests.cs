@@ -38,8 +38,8 @@ public class AuthControllerTests: BaseIntegrationTest
     {
         var adminSignInResponse =  await AuthApi.SignIn(new SignInRequest
         {
-            UserName = AppSettings.AdministratorDefaults.Login,
-            Password = AppSettings.AdministratorDefaults.Password
+            UserName = DataSettings.AdministratorDefaults.Login,
+            Password = DataSettings.AdministratorDefaults.Password
         });
 
         Assert.NotNull(adminSignInResponse);

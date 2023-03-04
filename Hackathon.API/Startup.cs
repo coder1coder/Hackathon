@@ -46,6 +46,7 @@ public class Startup
         var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
+        services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
 
         var config = new TypeAdapterConfig();
         config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
@@ -135,18 +136,22 @@ public class Startup
         IServiceProvider serviceProvider,
         ApplicationDbContext dbContext,
         ILogger<Startup> logger,
-        IOptions<AppSettings> appSettings)
+        IOptions<AppSettings> appSettings,
+        IOptions<DataSettings> dataSettings)
     {
         var appConfig = appSettings.Value;
 
-        try
+        if (dataSettings?.Value?.ApplyMigrationsAtStart == true)
         {
-            dbContext.Database.Migrate();
-            DbInitializer.Seed(dbContext, logger, appConfig.AdministratorDefaults);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+            try
+            {
+                dbContext.Database.Migrate();
+                DbInitializer.Seed(dbContext, logger, dataSettings.Value.AdministratorDefaults);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Error while applying migrations");
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
