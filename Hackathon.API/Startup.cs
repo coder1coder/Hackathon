@@ -26,7 +26,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using Module = Hackathon.IntegrationEvents.Module;
 
 namespace Hackathon.API;
 
@@ -43,8 +42,6 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
-
         var authOptionsSection = Configuration.GetSection(nameof(AuthOptions));
         var authOptions = authOptionsSection?.Get<AuthOptions>();
 
@@ -57,6 +54,8 @@ public class Startup
         config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
+
+        var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
         services.AddMassTransit(x =>
         {
@@ -112,7 +111,9 @@ public class Startup
             opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         });
 
-        services.AddSignalR(x=>x.EnableDetailedErrors = true);
+        services.AddSignalR(x=>
+            x.EnableDetailedErrors = _environment.IsDevelopment());
+
         services.AddMemoryCache();
         services.AddAuthentication(authOptions);
         services.AddAuthorization(x =>
@@ -123,6 +124,7 @@ public class Startup
                     .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
             );
         });
+
         services.AddSwagger();
     }
 
@@ -131,7 +133,7 @@ public class Startup
         var emailSettings = Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
         var s3Options = Configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
 
-        builder.RegisterModule(new Module());
+        builder.RegisterModule(new IntegrationEvents.Module());
         builder.RegisterModule(new BL.Module(emailSettings, s3Options));
         builder.RegisterModule(new BL.Validation.Module());
         builder.RegisterModule(new DAL.Module());

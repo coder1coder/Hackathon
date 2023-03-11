@@ -84,7 +84,7 @@ public class EventControllerTests : BaseIntegrationTest
             .RuleFor(x => x.MaxEventMembers, 2)
             .RuleFor(x => x.Award, "0")
             .RuleFor(x=>x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
-            .RuleFor(x=>x.Stages, (f)=>
+            .RuleFor(x=>x.Stages, _=>
                 new List<EventStageModel>
                 {
                     new()
