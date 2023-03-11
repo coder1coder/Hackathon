@@ -11,6 +11,9 @@ public static class AddAuthenticationExtension
 {
     public static IServiceCollection AddAuthentication(this IServiceCollection services, AuthOptions authOptions)
     {
+        if (authOptions is null)
+            throw new ArgumentNullException(nameof(authOptions), "Необходимо указать параметры аутентификации/авторизации");
+
         services
             .AddAuthentication(x =>
             {
