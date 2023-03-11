@@ -35,8 +35,6 @@ public class EventRepository : IEventRepository
         await _dbContext.AddAsync(eventEntity);
         await _dbContext.SaveChangesAsync();
 
-        //TODO: разобраться (падают тесты)
-        _dbContext.ChangeTracker.Clear();
         return eventEntity.Id;
     }
 
