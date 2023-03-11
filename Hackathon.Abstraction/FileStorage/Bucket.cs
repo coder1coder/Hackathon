@@ -1,21 +1,22 @@
 namespace Hackathon.Abstraction.FileStorage;
 
+/// <summary>
+/// Идентификатор бакета
+/// </summary>
 public enum Bucket
 {
+    /// <summary>
+    /// Аватары пользователей
+    /// </summary>
     Avatars = 0,
-    Events = 1,
-    Projects = 2
-}
 
-public static class BucketExtensions {
-    public static string ToBucketName(this Bucket bucket)
-    {
-        return bucket switch
-        {
-            Bucket.Avatars => nameof(Bucket.Avatars).ToLower(),
-            Bucket.Events => nameof(Bucket.Events).ToLower(),
-            Bucket.Projects => nameof(Bucket.Projects).ToLower(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
+    /// <summary>
+    /// Изображения событий
+    /// </summary>
+    Events = 1,
+
+    /// <summary>
+    /// Проекты пользователей
+    /// </summary>
+    Projects = 2
 }
