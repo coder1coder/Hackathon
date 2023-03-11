@@ -1,4 +1,4 @@
-namespace Hackathon.Abstraction.IntegrationServices;
+namespace Hackathon.IntegrationServices.Github.Abstraction;
 
 public interface IGitIntegrationService
 {

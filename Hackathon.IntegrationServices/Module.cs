@@ -1,6 +1,6 @@
 using System.Net.Http;
 using Autofac;
-using Hackathon.IntegrationServices.Services;
+using Hackathon.IntegrationServices.Github.Services;
 
 namespace Hackathon.IntegrationServices;
 
