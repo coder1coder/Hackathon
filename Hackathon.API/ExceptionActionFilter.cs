@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Hackathon.API;
 
-public class MainActionFilter: IActionFilter
+public class ExceptionActionFilter: IActionFilter
 {
-
     public void OnActionExecuting(ActionExecutingContext context)
     {
     }
