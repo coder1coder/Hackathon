@@ -44,12 +44,14 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
-        var authOptions = Configuration.GetSection(nameof(AuthOptions)).Get<AuthOptions>();
+
+        var authOptionsSection = Configuration.GetSection(nameof(AuthOptions));
+        var authOptions = authOptionsSection?.Get<AuthOptions>();
 
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
-        services.Configure<AuthOptions>(Configuration.GetSection(nameof(AuthOptions)));
+        services.Configure<AuthOptions>(authOptionsSection);
 
         var config = new TypeAdapterConfig();
         config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
