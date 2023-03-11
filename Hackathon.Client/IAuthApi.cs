@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Contracts.Requests.User;
 using Refit;
 
-namespace Hackathon.API.Abstraction;
+namespace Hackathon.Client;
 
 public interface IAuthApi
 {

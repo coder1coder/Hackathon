@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Hackathon.Common.Models.User;
+﻿using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
 using Hackathon.Contracts.Responses.User;
 using Refit;
 
-namespace Hackathon.API.Abstraction;
+namespace Hackathon.Client;
 
 public interface IUserApi
 {

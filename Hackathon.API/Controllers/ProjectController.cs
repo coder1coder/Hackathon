@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Abstraction.Project;
-using Hackathon.API.Abstraction;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
 using Hackathon.Contracts.Responses;
@@ -11,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Hackathon.API.Controllers;
 
 [SwaggerTag("Проекты (результаты событий)")]
-public class ProjectController: BaseController, IProjectApi
+public class ProjectController: BaseController
 {
     private readonly IProjectService _projectService;
     private readonly IMapper _mapper;
