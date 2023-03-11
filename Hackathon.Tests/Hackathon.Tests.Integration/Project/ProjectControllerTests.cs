@@ -39,7 +39,7 @@ public class ProjectControllerTests : BaseIntegrationTest
             Type = (int)TeamType.Private
         });
 
-        Assert.NotNull(teamCreateResponse?.Content);
+        Assert.NotNull(teamCreateResponse.Content);
 
         var user = await RegisterUser();
         SetToken(user.Token);
@@ -78,7 +78,7 @@ public class ProjectControllerTests : BaseIntegrationTest
             Type = (int)TeamType.Private
         });
 
-        Assert.NotNull(teamCreateResponse?.Content);
+        Assert.NotNull(teamCreateResponse.Content);
 
         var user = await RegisterUser();
         SetToken(user.Token);
