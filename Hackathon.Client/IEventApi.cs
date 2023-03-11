@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using Hackathon.Common.Models.Event;
+﻿using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
 using Refit;
 
-namespace Hackathon.API.Abstraction;
+namespace Hackathon.Client;
 
 public interface IEventApi
 {

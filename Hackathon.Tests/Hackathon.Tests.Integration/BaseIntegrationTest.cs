@@ -7,7 +7,7 @@ using Hackathon.Abstraction.EventLog;
 using Hackathon.Abstraction.Friend;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
-using Hackathon.API.Abstraction;
+using Hackathon.Client;
 using Hackathon.Common;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;

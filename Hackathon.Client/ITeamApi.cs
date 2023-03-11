@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using Refit;
 
-namespace Hackathon.API.Abstraction;
+namespace Hackathon.Client;
 
 public interface ITeamApi
 {

@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Friend;
 using Hackathon.Contracts.Responses;
-using Microsoft.AspNetCore.Mvc;
 using Refit;
 
-namespace Hackathon.API.Abstraction;
+namespace Hackathon.Client;
 
 public interface IFriendshipApi
 {
