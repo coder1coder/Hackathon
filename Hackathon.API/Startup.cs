@@ -104,7 +104,7 @@ public class Startup
 
         services.AddControllers(options =>
         {
-            options.Filters.Add(new MainActionFilter());
+            options.Filters.Add(new ExceptionActionFilter());
             options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
         }).AddJsonOptions(opt =>
         {
