@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Hackathon.Tests.Integration;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class TestWebApplicationFactory : WebApplicationFactory<Startup>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -15,6 +16,5 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>
         builder.UseEnvironment("Tests");
 
         base.ConfigureWebHost(builder);
-        // builder.ConfigureKestrel(x => x.ListenLocalhost(7100));
     }
 }
