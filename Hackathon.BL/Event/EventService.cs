@@ -210,7 +210,7 @@ public class EventService : IEventService
 
     public async Task<Result<BaseCollection<EventListItem>>> GetUpcomingEventsAsync(TimeSpan timeBeforeStart)
     {
-        var now = DateTime.UtcNow.AddMinutes(5).ToUtcWithoutSeconds();
+        var now = DateTime.UtcNow.AddTicks(-timeBeforeStart.Ticks).ToUtcWithoutSeconds();
 
         var result = await _eventRepository.GetListAsync(1, new Common.Models.GetListParameters<EventFilter>
         {
