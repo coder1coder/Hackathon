@@ -1,10 +1,10 @@
 using System.IO;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System.Reflection;
+using System;
 
 namespace Hackathon.API;
 
@@ -12,10 +12,21 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
+        var appHost = CreateHostBuilder(args).Build();
+        var logger = appHost.Services.GetRequiredService<ILogger>();
+
+        try
+        {
+            appHost.Run();
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "Возникла ошибка во время запуска приложения: {Message}", e.Message);
+            throw;
+        }
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host
             .CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
