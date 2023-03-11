@@ -1,9 +1,6 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Hackathon.Abstraction.IntegrationServices;
+using Hackathon.IntegrationServices.Github.Abstraction;
 
-namespace Hackathon.IntegrationServices.Services;
+namespace Hackathon.IntegrationServices.Github.Services;
 
 public abstract class GitIntegrationService: IGitIntegrationService
 {

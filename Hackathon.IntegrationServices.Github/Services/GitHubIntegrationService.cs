@@ -1,14 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Hackathon.Abstraction.IntegrationServices;
-using Hackathon.Common;
+﻿using Hackathon.Common;
+using Hackathon.IntegrationServices.Github.Abstraction;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
-namespace Hackathon.IntegrationServices.Services;
+namespace Hackathon.IntegrationServices.Github.Services;
 
 public class GitHubIntegrationService: GitIntegrationService, IGitHubIntegrationService
 {

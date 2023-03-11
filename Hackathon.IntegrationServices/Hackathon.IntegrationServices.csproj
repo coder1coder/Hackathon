@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hackathon.Abstraction\Hackathon.Abstraction.csproj" />
+    <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
   </ItemGroup>
 
 </Project>

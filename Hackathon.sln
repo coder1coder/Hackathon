@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Common", "Hackath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.API.Contracts", "Hackathon.API.Contracts\Hackathon.API.Contracts.csproj", "{D77A209E-78AB-47CB-9445-35873B59C50B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hackathon.Tests", "Hackathon.Tests", "{BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Tests.Integration", "Hackathon.Tests\Hackathon.Tests.Integration\Hackathon.Tests.Integration.csproj", "{0EE92567-1C23-4660-89FC-8B4363B9CDB5}"
 EndProject
@@ -32,6 +32,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.IntegrationServices", "Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj", "{FDF34FDF-6570-47EB-AF46-90990B8FF7B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Client", "Hackathon.Client\Hackathon.Client.csproj", "{B60AE77A-DF32-4C0D-BDF4-328B439270C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationServices", "IntegrationServices", "{F52D02FF-B2A0-4095-8979-427E991FB852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.IntegrationServices.Github", "Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj", "{4DD72D6B-908F-4E71-8351-FC03CFE91A0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +99,10 @@ Global
 		{B60AE77A-DF32-4C0D-BDF4-328B439270C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60AE77A-DF32-4C0D-BDF4-328B439270C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60AE77A-DF32-4C0D-BDF4-328B439270C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD72D6B-908F-4E71-8351-FC03CFE91A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD72D6B-908F-4E71-8351-FC03CFE91A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD72D6B-908F-4E71-8351-FC03CFE91A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD72D6B-908F-4E71-8351-FC03CFE91A0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +111,8 @@ Global
 		{0EE92567-1C23-4660-89FC-8B4363B9CDB5} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{EC21951E-D09D-48FD-9736-B9D032335C92} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
 		{67AC0E13-295F-4ECD-A12D-4E5AC931E5A7} = {BB1FF3AB-8210-41DB-91F9-CFE209C2CA58}
+		{FDF34FDF-6570-47EB-AF46-90990B8FF7B0} = {F52D02FF-B2A0-4095-8979-427E991FB852}
+		{4DD72D6B-908F-4E71-8351-FC03CFE91A0E} = {F52D02FF-B2A0-4095-8979-427E991FB852}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00FC3778-D6F7-4034-9697-FA3D761F5679}
