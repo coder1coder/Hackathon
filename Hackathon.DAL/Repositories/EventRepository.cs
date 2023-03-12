@@ -173,6 +173,16 @@ public class EventRepository : IEventRepository
             x.Id == eventId
             && !x.IsDeleted);
 
+    public async Task SetCurrentStageId(long eventId, long stageId)
+    {
+        var eventEntity = await _dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventId);
+        if (eventEntity is not null)
+        {
+            eventEntity.CurrentStageId = stageId;
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
     private static Expression<Func<EventEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy switch
         {

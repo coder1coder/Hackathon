@@ -80,6 +80,11 @@ public class EventEntity : BaseEntity, ISoftDeletable
     public ICollection<TeamEntity> Teams { get; set; } = new List<TeamEntity>();
 
     /// <summary>
+    /// Идентификатор текущего этапа события
+    /// </summary>
+    public long CurrentStageId { get; set; }
+    
+    /// <summary>
     /// Этапы событи
     /// </summary>
     public ICollection<EventStageEntity> Stages { get; set; } = new List<EventStageEntity>();
