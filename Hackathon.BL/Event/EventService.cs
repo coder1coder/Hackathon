@@ -117,6 +117,12 @@ public class EventService : IEventService
         if (!isValid)
             return Result.NotValid(errorMessage);
 
+        if (eventStatus == EventStatus.Started)
+        {
+            var initialStageId = eventModel.Stages.OrderBy(x => x.Order).FirstOrDefault()?.Id ?? default;
+            await _eventRepository.SetCurrentStageId(eventId, initialStageId);
+        }
+
         await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
 
         return Result.Success;
@@ -225,6 +231,39 @@ public class EventService : IEventService
         return Result<BaseCollection<EventListItem>>.FromValue(result);
     }
 
+    public async Task<Result> GoNextStage(long userId, long eventId)
+    {
+        var userExists = await _userRepository.ExistsAsync(userId);
+        if (!userExists)
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
+
+        var eventModel = await _eventRepository.GetAsync(eventId);
+        if (eventModel is null)
+            return Result.NotValid(EventErrorMessages.EventDoesNotExists);
+
+        if (eventModel.Owner?.Id != userId)
+            return Result.Forbidden("Только владелец события может переключить этап");
+
+        var notAvailableStatusesForGoingNextStage = new[] {EventStatus.Draft, EventStatus.Published, EventStatus.Finished};
+
+        if (notAvailableStatusesForGoingNextStage.Contains(eventModel.Status))
+            return Result.NotValid("Текущий статус события не позволяет перейти к следующему этапу");
+
+        var orderedStages = eventModel.Stages.OrderBy(x => x.Order).ToList();
+        var currentStageIndex = orderedStages.FindIndex(x => x.Id == eventModel.CurrentStageId);
+
+        if (currentStageIndex < 0)
+            return Result.Internal("Невозможно определить текущее событие");
+
+        if (orderedStages.Count - 1 == currentStageIndex)
+            return Result.NotValid("Текущий этап события является последним");
+
+        var nextStageId = orderedStages[++currentStageIndex].Id;
+        await _eventRepository.SetCurrentStageId(eventId, nextStageId);
+
+        return Result.Success;
+    }
+
     /// <summary>
     /// Меняет статус события и отправляет сообщение в шину с уведомлением участников события
     /// </summary>
@@ -232,11 +271,6 @@ public class EventService : IEventService
     /// <param name="eventStatus"></param>
     private async Task ChangeEventStatusAndPublishMessage(EventModel eventModel, EventStatus eventStatus)
     {
-        var eventExists = await _eventRepository.ExistsAsync(eventModel.Id);
-
-        if (!eventExists)
-            throw new ValidationException(EventErrorMessages.EventDoesNotExists);
-
         await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
         await _integrationEventHub.Publish(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));

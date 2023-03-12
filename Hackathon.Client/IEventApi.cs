@@ -20,4 +20,12 @@ public interface IEventApi
 
     [Post(BaseRoute + "/{id}/join")]
     Task Join(long id);
+
+    /// <summary>
+    /// Переключить событие на следующий этап
+    /// </summary>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <returns></returns>
+    [Post(BaseRoute + "/{eventId}/stages/next")]
+    Task GoNextStage(long eventId);
 }

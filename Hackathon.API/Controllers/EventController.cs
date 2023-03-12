@@ -98,7 +98,16 @@ public class EventController: BaseController
         => GetResult(() => _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status));
 
     /// <summary>
-    /// Полное удаление события
+    /// Переключить событие на следующий этап
+    /// </summary>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <returns></returns>
+    [HttpPost("{eventId:long}/stages/next")]
+    public Task<IActionResult> GoNextStage([FromRoute] long eventId)
+        => GetResult(() => _eventService.GoNextStage(UserId, eventId));
+
+    /// <summary>
+    /// Удалить событие
     /// </summary>
     /// <param name="id"></param>
     [HttpDelete("{id:long}")]
