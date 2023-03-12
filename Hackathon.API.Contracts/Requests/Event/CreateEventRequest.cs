@@ -51,7 +51,7 @@ public class CreateEventRequest
     public int MinTeamMembers { get; set; }
 
     /// <summary>
-    /// создавать команды автоматически
+    /// Создавать команды автоматически
     /// </summary>
     public bool IsCreateTeamsAutomatically { get; set; }
 

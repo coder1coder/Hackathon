@@ -71,4 +71,12 @@ public interface IEventService
     /// </summary>
     /// <returns></returns>
     Task<Result<BaseCollection<EventListItem>>> GetUpcomingEventsAsync(TimeSpan timeBeforeStart);
+
+    /// <summary>
+    /// Переключить событие на следующий этап
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <returns></returns>
+    Task<Result> GoNextStage(long userId, long eventId);
 }

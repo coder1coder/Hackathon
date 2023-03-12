@@ -766,7 +766,7 @@ public static class MimeTypeMap
             var index = str.LastIndexOf(Dot, StringComparison.Ordinal);
             if (index != -1 && str.Length > index + 1)
             {
-                str = str.Substring(index + 1);
+                str = str[(index + 1)..];
             }
 
             str = Dot + str;

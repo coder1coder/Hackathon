@@ -122,4 +122,64 @@ public class EventControllerTests : BaseIntegrationTest
             Status = EventStatus.Started
         });
     }
+
+    [Fact]
+    public async Task GoNextStage_ShouldSuccess()
+    {
+        //arrange
+        var stages = new Faker<EventStageModel>()
+            .RuleFor(x => x.Name, f => f.Random.String2(10))
+            .RuleFor(x => x.Duration, f => f.Random.Int(1, 10))
+            .Generate(3)
+            .ToArray();
+
+        var createEventRequest = new Faker<CreateEventRequest>()
+            .RuleFor(x => x.Description, f => f.Random.String2(400))
+            .RuleFor(x => x.Name, Guid.NewGuid().ToString())
+            .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
+            .RuleFor(x => x.DevelopmentMinutes, 10)
+            .RuleFor(x => x.TeamPresentationMinutes, 10)
+            .RuleFor(x => x.MemberRegistrationMinutes, 10)
+            .RuleFor(x => x.IsCreateTeamsAutomatically, true)
+            .RuleFor(x => x.MinTeamMembers, 1)
+            .RuleFor(x => x.MaxEventMembers, 2)
+            .RuleFor(x => x.Award, "0")
+            .RuleFor(x=>x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
+            .RuleFor(x=>x.Stages, _=> stages)
+            .Generate(1)
+            .First();
+
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Published
+        });
+
+        await EventsApi.Join(createEventResponse.Id);
+
+        var user = await RegisterUser();
+        SetToken(user.Token);
+        await EventsApi.Join(createEventResponse.Id);
+
+        SetToken(TestUser.Token);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Started
+        });
+
+        //act
+        await EventsApi.GoNextStage(createEventResponse.Id);
+
+        //assert
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+
+        Assert.NotNull(getEventResponse.Content);
+        getEventResponse.Content.CurrentStageId.Should()
+            .Be(getEventResponse.Content.Stages.OrderBy(x => x.Order).ElementAt(1).Id);
+
+    }
 }

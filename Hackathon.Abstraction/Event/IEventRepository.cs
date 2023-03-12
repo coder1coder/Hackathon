@@ -56,4 +56,12 @@ public interface IEventRepository
     /// <param name="eventId">Идентификатор события</param>
     /// <returns></returns>
     Task<bool> ExistsAsync(long eventId);
+
+    /// <summary>
+    /// Установить идентификатор текущего этапа события
+    /// </summary>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <param name="stageId">Идентификатор этапа события</param>
+    /// <returns></returns>
+    Task SetCurrentStageId(long eventId, long stageId);
 }
