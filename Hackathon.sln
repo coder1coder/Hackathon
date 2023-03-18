@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.BL.Tests", "Hacka
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Abstraction", "Hackathon.Abstraction\Hackathon.Abstraction.csproj", "{61AFCCAA-739D-4534-A8A4-3A9F577A1819}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Jobs", "Hackathon.Jobs\Hackathon.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.API.Jobs", "Hackathon.API.Jobs\Hackathon.API.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation", "Hackathon.BL.Validation\Hackathon.BL.Validation.csproj", "{BC5596A8-41DD-4C25-BC00-93B23853CFAE}"
 EndProject

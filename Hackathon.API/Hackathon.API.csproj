@@ -33,7 +33,7 @@
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
       <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />
-      <ProjectReference Include="..\Hackathon.Jobs\Hackathon.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.API.Jobs\Hackathon.API.Jobs.csproj" />
     </ItemGroup>
 
     <ItemGroup>
