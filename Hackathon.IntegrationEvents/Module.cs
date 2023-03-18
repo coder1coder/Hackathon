@@ -1,5 +1,5 @@
 using Autofac;
-using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 
 namespace Hackathon.IntegrationEvents;

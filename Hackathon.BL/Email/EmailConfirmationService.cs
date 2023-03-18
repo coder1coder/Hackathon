@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.Abstraction.User;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.User;

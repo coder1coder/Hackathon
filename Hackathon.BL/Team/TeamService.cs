@@ -1,10 +1,10 @@
 using BackendTools.Common.Models;
 using FluentValidation;
-using Hackathon.Abstraction.Event;
-using Hackathon.Abstraction.Project;
-using Hackathon.Abstraction.Team;
-using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.Abstraction.Event;
+using Hackathon.Common.Abstraction.Project;
+using Hackathon.Common.Abstraction.Team;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;

@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.FileStorage;
+using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.DAL.Entities;
 using MapsterMapper;

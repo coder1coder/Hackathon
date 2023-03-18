@@ -3,7 +3,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.Abstraction.User;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;

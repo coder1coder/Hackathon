@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Hackathon.Abstraction.EventLog;
 using Hackathon.API.Consumers;
 using Hackathon.BL.EventLog;
+using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Models.EventLog;
 using MassTransit;
 using MassTransit.Testing;

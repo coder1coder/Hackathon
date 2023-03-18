@@ -1,5 +1,3 @@
-using Hackathon.Common.Models.Event;
-
 namespace Hackathon.Common.Models.EventStage;
 
 /// <summary>

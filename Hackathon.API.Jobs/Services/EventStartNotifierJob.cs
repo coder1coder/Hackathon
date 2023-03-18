@@ -1,6 +1,6 @@
-using Hackathon.Abstraction.Event;
-using Hackathon.Abstraction.Jobs;
-using Hackathon.Abstraction.Notification;
+using Hackathon.Common.Abstraction.Event;
+using Hackathon.Common.Abstraction.Jobs;
+using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models.Notification;
 using System;
 using System.Linq;

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.Abstraction.FileStorage;
-using Hackathon.Abstraction.Project;
+using Hackathon.Common.Abstraction.FileStorage;
+using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Project;
 using Hackathon.IntegrationServices.Github.Abstraction;

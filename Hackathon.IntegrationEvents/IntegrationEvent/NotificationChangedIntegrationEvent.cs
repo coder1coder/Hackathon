@@ -1,5 +1,5 @@
 using System;
-using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.IntegrationEvents;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvent;
 

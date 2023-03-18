@@ -1,5 +1,5 @@
+using Hackathon.Common.Abstraction.EventLog;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.EventLog;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.User;

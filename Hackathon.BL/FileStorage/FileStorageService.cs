@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using BackendTools.Common.Models;
-using Hackathon.Abstraction.FileStorage;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
 

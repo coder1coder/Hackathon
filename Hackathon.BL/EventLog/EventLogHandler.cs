@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.EventLog;
+using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Models.EventLog;
 using Microsoft.Extensions.Logging;
 

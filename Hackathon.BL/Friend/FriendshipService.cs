@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.Abstraction.Friend;
-using Hackathon.Abstraction.IntegrationEvents;
-using Hackathon.Abstraction.Notification;
-using Hackathon.Abstraction.User;
+using Hackathon.Common.Abstraction.Friend;
+using Hackathon.Common.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.Notification;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;

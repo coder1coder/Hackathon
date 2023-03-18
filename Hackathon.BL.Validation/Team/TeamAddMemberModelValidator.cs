@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Hackathon.Abstraction.Team;
-using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common;
+using Hackathon.Common.Abstraction.Team;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Team;
 

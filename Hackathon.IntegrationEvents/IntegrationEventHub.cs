@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Hackathon.IntegrationEvents;

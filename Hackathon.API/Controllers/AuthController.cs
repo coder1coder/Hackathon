@@ -1,6 +1,6 @@
+using Hackathon.Common.Abstraction.User;
 using System.Net;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
