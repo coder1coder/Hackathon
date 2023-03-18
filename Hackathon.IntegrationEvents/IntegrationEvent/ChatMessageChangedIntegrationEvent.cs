@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Models.Chat;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvent;

@@ -5,11 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.Abstraction\Hackathon.Abstraction.csproj" />
       <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
-      <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
     </ItemGroup>
 
     <ItemGroup>

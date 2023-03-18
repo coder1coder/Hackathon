@@ -1,5 +1,5 @@
 using Autofac;
-using Hackathon.Abstraction.Jobs;
+using Hackathon.Common.Abstraction.Jobs;
 using Hackathon.Jobs.BackgroundServices;
 using Hackathon.Jobs.Services;
 using Microsoft.Extensions.Hosting;

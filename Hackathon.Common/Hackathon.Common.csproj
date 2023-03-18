@@ -11,7 +11,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
       <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstraction" />
     </ItemGroup>
 </Project>

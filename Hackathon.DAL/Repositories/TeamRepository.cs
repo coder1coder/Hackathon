@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Team;
+using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;

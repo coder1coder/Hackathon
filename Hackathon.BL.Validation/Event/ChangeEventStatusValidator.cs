@@ -1,4 +1,3 @@
-using Hackathon.Common;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Event;
 

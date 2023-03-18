@@ -2,8 +2,8 @@ using System.Net;
 using System.Net.Mail;
 using Amazon.S3;
 using Autofac;
-using Hackathon.Abstraction.EventLog;
 using Hackathon.BL.EventLog;
+using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Configuration;
 
 namespace Hackathon.BL;

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.IntegrationEvents;
-using Hackathon.Abstraction.Notification;
+using Hackathon.Common.Abstraction.IntegrationEvents;
+using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;

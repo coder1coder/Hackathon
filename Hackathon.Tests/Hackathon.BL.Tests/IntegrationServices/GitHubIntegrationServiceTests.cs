@@ -1,7 +1,7 @@
-using System.Net.Http;
 using FluentAssertions;
 using Hackathon.IntegrationServices.Github.Abstraction;
 using Hackathon.IntegrationServices.Github.Services;
+using System.Net.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;

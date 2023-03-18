@@ -1,7 +1,7 @@
+using Hackathon.Common.Abstraction.Chat;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.Chat;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Chat.Team;

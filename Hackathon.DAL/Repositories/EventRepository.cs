@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.Event;
+using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;

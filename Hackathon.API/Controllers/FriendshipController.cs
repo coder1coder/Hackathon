@@ -1,4 +1,4 @@
-using Hackathon.Abstraction.Friend;
+using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;

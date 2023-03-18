@@ -1,6 +1,6 @@
+using Hackathon.Common.Abstraction.EventLog;
 using System;
 using System.Threading.Tasks;
-using Hackathon.Abstraction.EventLog;
 using Hackathon.Common.Models.EventLog;
 using MassTransit;
 using Microsoft.Extensions.Logging;

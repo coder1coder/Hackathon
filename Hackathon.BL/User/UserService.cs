@@ -1,10 +1,10 @@
 using BackendTools.Common.Models;
 using FluentValidation;
-using Hackathon.Abstraction.FileStorage;
-using Hackathon.Abstraction.User;
 using Hackathon.BL.Email;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction.FileStorage;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
