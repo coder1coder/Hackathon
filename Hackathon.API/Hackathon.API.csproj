@@ -37,10 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Templates" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="Templates\EmailConfirmationRequestTemplate.html">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
