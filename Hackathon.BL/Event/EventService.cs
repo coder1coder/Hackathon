@@ -135,26 +135,23 @@ public class EventService : IEventService
         if (eventModel.Status != EventStatus.Published)
             return Result.NotValid(EventMessages.CantAttachToEvent);
 
-        var notFullTeams = eventModel
-            .Teams
-            .Where(x => x.Members?.Length < eventModel.MinTeamMembers)
-            .ToArray();
+        var notFullTeams = eventModel.GetNotFullTeams();
+
+        if (notFullTeams.Count == 0 && !eventModel.IsCreateTeamsAutomatically)
+            return Result.NotValid(EventMessages.CantAttachToEvent);
 
         long teamId;
 
-        if (notFullTeams.Any())
+        if (notFullTeams.Count > 0)
         {
             teamId = notFullTeams.First().Id;
         }
         else
         {
-            if (!eventModel.IsCreateTeamsAutomatically)
-                return Result.NotValid(EventMessages.CantAttachToEvent);
-
             var createTeamResult = await _teamService.CreateAsync(new CreateTeamModel
             {
                 EventId = eventId,
-                Name = $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}"
+                Name = GenerateAutoCreatedTeamName(eventId),
             });
 
             if (!createTeamResult.IsSuccess)
@@ -308,4 +305,12 @@ public class EventService : IEventService
         => eventModel.Teams
             .FirstOrDefault(x =>
                 x.Members?.Any(s=>s.Id == userId) == true);
+
+    /// <summary>
+    /// Сформировать наименование для команды создаваемой автоматически
+    /// </summary>
+    /// <param name="eventId">Идентификатор события</param>
+    /// <returns></returns>
+    private static string GenerateAutoCreatedTeamName(long eventId)
+        => $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}";
 }
