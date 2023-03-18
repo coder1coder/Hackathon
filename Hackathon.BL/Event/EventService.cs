@@ -151,20 +151,27 @@ public class EventService : IEventService
             if (!eventModel.IsCreateTeamsAutomatically)
                 return Result.NotValid(EventMessages.CantAttachToEvent);
 
-            teamId = await _teamService.CreateAsync(new CreateTeamModel
+            var createTeamResult = await _teamService.CreateAsync(new CreateTeamModel
             {
                 EventId = eventId,
                 Name = $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}"
             });
+
+            if (!createTeamResult.IsSuccess)
+                return Result.FromErrors(createTeamResult.Errors);
+
+            teamId = createTeamResult.Data;
         }
 
-        await _teamService.AddMemberAsync(new TeamMemberModel
+        var addMemberResult = await _teamService.AddMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
             MemberId = userId
         });
 
-        return Result.Success;
+        return !addMemberResult.IsSuccess
+            ? addMemberResult
+            : Result.Success;
     }
 
     /// <summary>

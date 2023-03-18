@@ -34,15 +34,20 @@ public class TeamController : BaseController
     /// <param name="createTeamRequest"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<BaseCreateResponse> Create(CreateTeamRequest createTeamRequest)
+    [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
+    public async Task<IActionResult> Create(CreateTeamRequest createTeamRequest)
     {
         var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
-        var teamId = await _teamService.CreateAsync(createTeamModel, UserId);
-        return new BaseCreateResponse
+        var createTeamResult = await _teamService.CreateAsync(createTeamModel, UserId);
+
+        if (!createTeamResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(createTeamResult));
+
+        return Ok(new BaseCreateResponse
         {
-            Id = teamId
-        };
+            Id = createTeamResult.Data
+        });
     }
 
     /// <summary>
@@ -109,15 +114,10 @@ public class TeamController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("{teamId:long}/leave")]
-    public async Task<IActionResult> LeaveTeamAsync([FromRoute] long teamId)
-    {
-        var teamMember = new TeamMemberModel
+    public Task<IActionResult> LeaveTeamAsync([FromRoute] long teamId)
+        => GetResult(() => _teamService.RemoveMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
             MemberId = UserId
-        };
-
-        await _teamService.RemoveMemberAsync(teamMember);
-        return Ok();
-    }
+        }));
 }

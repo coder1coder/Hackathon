@@ -8,6 +8,7 @@ using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
+using Hackathon.BL.Event;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Models.Base;
@@ -54,7 +55,7 @@ public class TeamService : ITeamService
         _userRepository = userRepository;
     }
 
-    public async Task<long> CreateAsync(CreateTeamModel createTeamModel, long? userId = null)
+    public async Task<Result<long>> CreateAsync(CreateTeamModel createTeamModel, long? userId = null)
     {
         createTeamModel.OwnerId = userId;
 
@@ -64,14 +65,10 @@ public class TeamService : ITeamService
         {
             var eventModel = await _eventRepository.GetAsync(createTeamModel.EventId.Value);
             if (eventModel is null)
-            {
-                throw new ValidationException("Событие не существует");
-            }
+                return Result<long>.NotValid(EventMessages.EventNotFound);
 
             if (eventModel.Owner.Id != userId)
-            {
-                throw new ValidationException(TeamMessages.CreateTeamAccessDenied);
-            }
+                return Result<long>.Forbidden(TeamMessages.CreateTeamAccessDenied);
         }
 
         // Проверяем, является ли пользователь, который создает команду,
@@ -92,27 +89,31 @@ public class TeamService : ITeamService
             });
 
             if (teams.Items.Any())
-                throw new ValidationException(TeamMessages.UserAlreadyOwnerOfTeam);
+                return Result<long>.NotValid(TeamMessages.UserAlreadyOwnerOfTeam);
         }
 
-        return await _teamRepository.CreateAsync(createTeamModel);
+        var newTeamId = await _teamRepository.CreateAsync(createTeamModel);
+
+        return Result<long>.FromValue(newTeamId);
     }
 
-    public async Task AddMemberAsync(TeamMemberModel teamMemberModel)
+    public async Task<Result> AddMemberAsync(TeamMemberModel teamMemberModel)
     {
         await _teamAddMemberModelValidator.ValidateAndThrowAsync(teamMemberModel);
 
         var teamExists = await _teamRepository.ExistAsync(teamMemberModel.TeamId);
 
         if (!teamExists)
-            throw new ValidationException(TeamErrorMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
 
         var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
 
         if (!userExists)
-            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
         await _teamRepository.AddMemberAsync(teamMemberModel);
+
+        return Result.Success;
     }
 
     public async Task<Result<TeamModel>> GetAsync(long teamId)
@@ -152,23 +153,24 @@ public class TeamService : ITeamService
         });
     }
 
-    public async Task RemoveMemberAsync(TeamMemberModel teamMemberModel)
+    //TODO: написать тесты
+    public async Task<Result> RemoveMemberAsync(TeamMemberModel teamMemberModel)
     {
         // Определить роль участика. Владелец / участник
         var team = await _teamRepository.GetAsync(teamMemberModel.TeamId);
 
         if (team is null)
-            throw new ValidationException(TeamErrorMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
 
         var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
 
         if (!userExists)
-            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
         var teamMember = team.Members.FirstOrDefault(x => x.Id == teamMemberModel.MemberId);
 
         if (teamMember is null && team.OwnerId != teamMemberModel.MemberId)
-            throw new ValidationException(TeamMessages.UserIsNotOnTeam);
+            return Result.NotValid(TeamMessages.UserIsNotOnTeam);
 
         var isOwnerMember = team.OwnerId == teamMemberModel.MemberId;
 
@@ -202,6 +204,8 @@ public class TeamService : ITeamService
         {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
+
+        return Result.Success;
     }
 
     public async Task<Result> JoinToTeamAsync(long teamId, long userId)

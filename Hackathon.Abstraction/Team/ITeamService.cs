@@ -12,14 +12,14 @@ public interface ITeamService
     /// <param name="createTeamModel">Команда</param>
     /// <param name="userId">Идентификатор авторизованного пользователя</param>
     /// <returns></returns>
-    Task<long> CreateAsync(CreateTeamModel createTeamModel, long? userId = null);
+    Task<Result<long>> CreateAsync(CreateTeamModel createTeamModel, long? userId = null);
 
     /// <summary>
     /// Добавление пользователя в команду
     /// </summary>
     /// <param name="teamMemberModel">Команда, пользователь</param>
     /// <returns></returns>
-    Task AddMemberAsync(TeamMemberModel teamMemberModel);
+    Task<Result> AddMemberAsync(TeamMemberModel teamMemberModel);
 
     /// <summary>
     /// Получение информации о команде по идентификатору
@@ -47,7 +47,7 @@ public interface ITeamService
     /// </summary>
     /// <param name="teamMemberModel"></param>
     /// <returns></returns>
-    Task RemoveMemberAsync(TeamMemberModel teamMemberModel);
+    Task<Result> RemoveMemberAsync(TeamMemberModel teamMemberModel);
 
     /// <summary>
     /// Вступить в команду
