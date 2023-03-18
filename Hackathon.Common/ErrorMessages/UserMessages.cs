@@ -1,4 +1,4 @@
-namespace Hackathon.BL.User;
+namespace Hackathon.Common.ErrorMessages;
 
 public static class UserMessages
 {

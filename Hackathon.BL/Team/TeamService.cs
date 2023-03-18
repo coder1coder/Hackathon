@@ -1,22 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.Abstraction.Event;
 using Hackathon.Abstraction.Project;
 using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
-using Hackathon.BL.Event;
-using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using MapsterMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hackathon.BL.Team;
 
@@ -104,7 +103,7 @@ public class TeamService : ITeamService
         var teamExists = await _teamRepository.ExistAsync(teamMemberModel.TeamId);
 
         if (!teamExists)
-            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamMessages.TeamDoesNotExists);
 
         var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
 
@@ -138,7 +137,7 @@ public class TeamService : ITeamService
 
         if (teams?.Items is not {Count: > 0})
         {
-            return Result<TeamGeneral>.NotFound(TeamErrorMessages.TeamDoesNotExists);
+            return Result<TeamGeneral>.NotFound(TeamMessages.TeamDoesNotExists);
         }
 
         var userTeam = teams.Items.First();
@@ -160,7 +159,7 @@ public class TeamService : ITeamService
         var team = await _teamRepository.GetAsync(teamMemberModel.TeamId);
 
         if (team is null)
-            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamMessages.TeamDoesNotExists);
 
         var userExists = await _userRepository.ExistsAsync(teamMemberModel.MemberId);
 
@@ -187,7 +186,7 @@ public class TeamService : ITeamService
         var team = await _teamRepository.GetAsync(teamId);
 
         if (team is null)
-            return Result.NotValid(TeamErrorMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamMessages.TeamDoesNotExists);
 
         if (team.Type != TeamType.Public)
             return Result.NotValid(TeamMessages.SelectedTeamIsNotPublic);
@@ -214,7 +213,7 @@ public class TeamService : ITeamService
         var isTeamExists = await _teamRepository.ExistAsync(teamId);
 
         if (!isTeamExists)
-            Result<BaseCollection<TeamEventListItem>>.NotFound(TeamErrorMessages.TeamDoesNotExists);
+            Result<BaseCollection<TeamEventListItem>>.NotFound(TeamMessages.TeamDoesNotExists);
 
         var events = await _eventRepository.GetListAsync(1, new Common.Models.GetListParameters<EventFilter>
         {

@@ -1,4 +1,4 @@
-namespace Hackathon.BL.Friend;
+namespace Hackathon.Common.ErrorMessages;
 
 public static class FriendshipMessages
 {

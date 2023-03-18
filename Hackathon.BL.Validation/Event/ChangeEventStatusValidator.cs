@@ -1,4 +1,5 @@
 using Hackathon.Common;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Validation.Event;
@@ -10,7 +11,7 @@ public class ChangeEventStatusValidator
         var canChangeStatus = newStatus == EventStatus.Finished || (int)eventModel.Status == (int)newStatus - 1;
 
         if (!canChangeStatus)
-            return (false, ErrorMessages.CantSetEventStatus);
+            return (false, EventMessages.CantSetEventStatus);
 
         return newStatus switch
         {

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.User;

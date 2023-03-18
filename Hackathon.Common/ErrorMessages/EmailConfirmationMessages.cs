@@ -1,4 +1,4 @@
-namespace Hackathon.BL.Email;
+namespace Hackathon.Common.ErrorMessages;
 
 public static class EmailConfirmationMessages
 {

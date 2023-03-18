@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Bogus;
-using FluentAssertions;
+﻿using Bogus;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Hackathon.Abstraction.Event;
@@ -11,12 +7,15 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Team;
 using Hackathon.BL.Validation.Team;
-using Hackathon.Common;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using Moq;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Hackathon.BL.Tests.Team;
@@ -163,6 +162,6 @@ public class TeamServiceTests : BaseUnitTest
 
         //assert
         result.ShouldHaveAnyValidationError()
-            .WithErrorMessage(ErrorMessages.MaximumNumberTeamMembersReached);
+            .WithErrorMessage(TeamMessages.MaximumNumberTeamMembersReached);
     }
 }

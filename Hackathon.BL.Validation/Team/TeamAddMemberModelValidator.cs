@@ -3,6 +3,7 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Team;
 
 namespace Hackathon.BL.Validation.Team;
@@ -40,7 +41,7 @@ public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
                 var teamModel = await teamRepository.GetAsync(model.TeamId);
 
                 if (teamModel is null)
-                    context.AddFailure(TeamErrorMessages.TeamDoesNotExists);
+                    context.AddFailure(TeamMessages.TeamDoesNotExists);
 
                 if (teamModel is not null)
                 {
@@ -58,7 +59,7 @@ public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
                 var teamMemberCount = await teamRepository.GetMembersCountAsync(model.TeamId);
 
                 if (teamMemberCount >= MaxTeamMembers)
-                    context.AddFailure(ErrorMessages.MaximumNumberTeamMembersReached);
+                    context.AddFailure(TeamMessages.MaximumNumberTeamMembersReached);
             });
     }
 }

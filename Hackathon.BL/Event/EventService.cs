@@ -7,6 +7,7 @@ using Hackathon.Abstraction.Team;
 using Hackathon.Abstraction.User;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
