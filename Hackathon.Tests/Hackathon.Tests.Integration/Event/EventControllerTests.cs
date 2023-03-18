@@ -83,8 +83,8 @@ public class EventControllerTests : BaseIntegrationTest
             .RuleFor(x => x.MinTeamMembers, 1)
             .RuleFor(x => x.MaxEventMembers, 2)
             .RuleFor(x => x.Award, "0")
-            .RuleFor(x=>x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
-            .RuleFor(x=>x.Stages, _=>
+            .RuleFor(x => x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
+            .RuleFor(x => x.Stages, _=>
                 new List<EventStageModel>
                 {
                     new()
@@ -144,8 +144,8 @@ public class EventControllerTests : BaseIntegrationTest
             .RuleFor(x => x.MinTeamMembers, 1)
             .RuleFor(x => x.MaxEventMembers, 2)
             .RuleFor(x => x.Award, "0")
-            .RuleFor(x=>x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
-            .RuleFor(x=>x.Stages, _=> stages)
+            .RuleFor(x => x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
+            .RuleFor(x => x.Stages, _=> stages)
             .Generate(1)
             .First();
 

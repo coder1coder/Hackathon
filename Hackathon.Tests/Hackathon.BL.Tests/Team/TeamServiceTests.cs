@@ -62,9 +62,13 @@ public class TeamServiceTests : BaseUnitTest
             _userRepositoryMock.Object);
 
         //act
-        var result = await service.CreateAsync(new CreateTeamModel());
+        var teamCreateResult = await service.CreateAsync(new CreateTeamModel());
+
         //assert
-        result.Should().Be(createdId);
+
+        Assert.NotNull(teamCreateResult);
+        Assert.True(teamCreateResult.IsSuccess);
+        Assert.Equal(createdId, teamCreateResult.Data);
     }
 
     [Theory]
