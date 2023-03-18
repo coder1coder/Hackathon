@@ -167,40 +167,14 @@ public class TeamService : ITeamService
         if (!userExists)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        var teamMember = team.Members.FirstOrDefault(x => x.Id == teamMemberModel.MemberId);
-
-        if (teamMember is null && team.OwnerId != teamMemberModel.MemberId)
+        if (!team.HasMember(teamMemberModel.MemberId))
             return Result.NotValid(TeamMessages.UserIsNotOnTeam);
 
-        var isOwnerMember = team.OwnerId == teamMemberModel.MemberId;
-
-        // Если пользователь является создателем, то нужно передать права владения группой
-        if (isOwnerMember)
+        if (team.HasOwner(teamMemberModel.MemberId))
         {
-            if (team.Members is {Length: > 0})
-            {
-                // кому теперь будет принадлежать команда
-                // пользователь раньше остальных вступил в команду
-                var newOwner = team.Members
-                    .OrderByDescending(u => u.DateTimeAdd)
-                    .First();
-
-                team.OwnerId = newOwner.Id;
-                await _teamRepository.SetOwnerAsync(team.Id, newOwner.Id);
-            }
-            else
-            {
-                // TODO: События команды также удаляем?
-                var deleteTeamModel = new DeleteTeamModel
-                {
-                    TeamId = teamMemberModel.TeamId,
-                    EventId = null
-                };
-
-                await _teamRepository.DeleteTeamAsync(deleteTeamModel);
-            }
+            await RemoveOwnerAsync(team);
         }
-        else // Если пользователь не создатель, то исключим из команды
+        else
         {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
@@ -286,5 +260,32 @@ public class TeamService : ITeamService
             }).ToArray(),
             TotalCount = events.TotalCount
         });
+    }
+
+    /// <summary>
+    /// Исключить владельца команды из неё
+    /// </summary>
+    /// <param name="team">Модель команды</param>
+    private async Task RemoveOwnerAsync(TeamModel team)
+    {
+        // Если пользователь является создателем, то нужно передать права владения группой
+        if (team.Members is not {Length: > 0})
+        {
+            await _teamRepository.DeleteTeamAsync(new DeleteTeamModel
+            {
+                TeamId = team.Id,
+                EventId = null
+            });
+            return;
+        }
+
+        // кому теперь будет принадлежать команда
+        // пользователь раньше остальных вступил в команду
+        var newOwner = team.Members
+            .OrderByDescending(u => u.DateTimeAdd)
+            .First();
+
+        team.OwnerId = newOwner.Id;
+        await _teamRepository.SetOwnerAsync(team.Id, newOwner.Id);
     }
 }
