@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hackathon.Common;
+using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.DAL.Entities.Event;

@@ -1,9 +1,9 @@
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mapster;
 
-namespace Hackathon.Common;
+namespace Hackathon.Common.Extensions;
 
 public static class MapsterCollections
 {
