@@ -5,6 +5,7 @@ using Hackathon.Abstraction.Friend;
 using Hackathon.Abstraction.IntegrationEvents;
 using Hackathon.Abstraction.Notification;
 using Hackathon.Abstraction.User;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.Notification;

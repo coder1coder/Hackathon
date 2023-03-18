@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Abstraction.User;
 using Hackathon.Common.Configuration;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

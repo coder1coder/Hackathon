@@ -1,4 +1,4 @@
-namespace Hackathon.BL.Project;
+namespace Hackathon.Common.ErrorMessages;
 
 public static class ProjectMessages
 {
