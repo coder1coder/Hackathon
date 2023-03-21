@@ -55,4 +55,9 @@ public class TeamFilter
     /// Идентификатор участника
     /// </summary>
     public long? MemberId { get; set; }
+
+    /// <summary>
+    /// Тип команды
+    /// </summary>
+    public TeamType? TeamType { get; set; }
 }

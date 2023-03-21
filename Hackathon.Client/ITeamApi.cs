@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models;
+using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
 using Refit;
@@ -14,4 +15,7 @@ public interface ITeamApi
 
     [Get(BaseRoute + "/{id}")]
     Task<TeamModel> Get(long id);
+
+    [Post(BaseRoute + "/getTeams")]
+    Task<IApiResponse<BaseCollectionResponse<TeamModel>>> GetListAsync([Body] GetListParameters<TeamFilter> parameters);
 }

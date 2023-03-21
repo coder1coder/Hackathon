@@ -97,6 +97,9 @@ public class TeamRepository : ITeamRepository
             if (parameters.Filter.MemberId.HasValue)
                 query = query.Where(x=>
                     x.OwnerId != null && (x.OwnerId == parameters.Filter.MemberId || x.Members.Any(s => s.MemberId == parameters.Filter.MemberId)));
+
+            if (parameters.Filter.TeamType.HasValue)
+                query = query.Where(x => x.Type == parameters.Filter.TeamType);
         }
 
         var totalCount = await query.LongCountAsync();
