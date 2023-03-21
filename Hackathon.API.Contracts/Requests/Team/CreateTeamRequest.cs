@@ -22,5 +22,5 @@ public class CreateTeamRequest
     /// <summary>
     /// Тип команды
     /// </summary>
-    public int Type { get; set; } = (int)TeamType.Private;
+    public TeamType Type { get; set; } = TeamType.Private;
 }
