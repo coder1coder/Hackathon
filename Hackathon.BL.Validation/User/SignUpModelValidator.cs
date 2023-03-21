@@ -1,20 +1,32 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
+using Microsoft.Extensions.Options;
 
 namespace Hackathon.BL.Validation.User;
 
 public class SignUpModelValidator: AbstractValidator<SignUpModel>
 {
-    public SignUpModelValidator(IUserRepository userRepository)
+    public const string SpecifyUserNameIsRestricted = "Указанное имя пользователя не допустимо";
+
+    public SignUpModelValidator(IUserRepository userRepository, IOptions<RestrictedNames> restrictedNamesOptions)
     {
+        var restrictedNames = restrictedNamesOptions?.Value?.Users ?? Array.Empty<string>();
+
         RuleFor(x => x.UserName)
             .NotEmpty()
             .MinimumLength(3)
             .MaximumLength(100)
             .CustomAsync(async (userName, context, _) =>
             {
+                if (restrictedNames.Contains(userName.Trim().ToLower()))
+                {
+                    context.AddFailure(SpecifyUserNameIsRestricted);
+                    return;
+                }
+
                 var users = await userRepository.GetAsync(new GetListParameters<UserFilter>
                 {
                     Filter = new UserFilter
