@@ -48,6 +48,7 @@ public class Startup
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
+        services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
         services.Configure<AuthOptions>(authOptionsSection);
 
         var config = new TypeAdapterConfig();
