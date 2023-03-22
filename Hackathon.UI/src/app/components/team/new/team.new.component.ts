@@ -3,7 +3,7 @@ import {Team} from "../../../models/Team/Team";
 import {FormControl, FormGroup} from "@angular/forms";
 import {IProblemDetails} from "../../../models/IProblemDetails";
 import {CreateTeamModel} from "../../../models/Team/CreateTeamModel";
-import {TeamService} from "../../../services/team.service";
+import {TeamClient} from "../../../services/team-client.service";
 import {ActivatedRoute} from "@angular/router";
 import {SnackService} from "../../../services/snack.service";
 import { TeamType } from "src/app/models/Team/TeamType.";
@@ -33,7 +33,7 @@ export class TeamNewComponent
   })
 
   constructor(
-    private teamService:TeamService,
+    private teamService:TeamClient,
     private snackBar:SnackService,
     private route: ActivatedRoute
   ) {

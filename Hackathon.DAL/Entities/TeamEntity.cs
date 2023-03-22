@@ -27,6 +27,11 @@ public class TeamEntity : BaseEntity, ISoftDeletable
     public ICollection<MemberTeamEntity> Members { get; set; } = new List<MemberTeamEntity>();
 
     /// <summary>
+    /// Запросы на вступление в команду
+    /// </summary>
+    public ICollection<TeamJoinRequestEntity> JoinRequests { get; set; } = new List<TeamJoinRequestEntity>();
+
+    /// <summary>
     /// Владелец команды
     /// </summary>
     public UserEntity Owner { get; set; }

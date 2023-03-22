@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {UserRoleTranslator} from "src/app/models/User/UserRole";
 import {AuthService} from "../../../services/auth.service";
-import {TeamService} from "../../../services/team.service";
+import {TeamClient} from "../../../services/team-client.service";
 import {catchError, of, switchMap, takeUntil} from "rxjs";
 import {IUpdateUser, IUser} from "../../../models/User/IUser";
 import {UserProfileReaction} from "src/app/models/User/UserProfileReaction";
@@ -45,7 +45,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
 
   constructor(
     private authService: AuthService,
-    private teamService: TeamService,
+    private teamService: TeamClient,
     private activateRoute: ActivatedRoute,
     private userService: UserService,
     private userProfileReactionService: UserProfileReactionService,

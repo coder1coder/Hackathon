@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -9,9 +7,11 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
-namespace Hackathon.DAL.Repositories;
+namespace Hackathon.DAL.Repositories.Team;
 
 public class TeamRepository : ITeamRepository
 {
@@ -59,7 +59,7 @@ public class TeamRepository : ITeamRepository
             : _mapper.Map<TeamEntity, TeamModel>(teamEntity);
     }
 
-    public async Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters)
+    public async Task<BaseCollection<TeamModel>> GetListAsync(GetListParameters<TeamFilter> parameters)
     {
         var query = _dbContext.Teams
             .Include(x => x.Members)

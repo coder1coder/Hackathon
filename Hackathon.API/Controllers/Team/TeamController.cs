@@ -1,6 +1,4 @@
 using Hackathon.Common.Abstraction.Team;
-using System.Net;
-using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
@@ -9,8 +7,10 @@ using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using System.Threading.Tasks;
 
-namespace Hackathon.API.Controllers;
+namespace Hackathon.API.Controllers.Team;
 
 [SwaggerTag("Команды")]
 public class TeamController : BaseController
@@ -39,7 +39,7 @@ public class TeamController : BaseController
     {
         var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
 
-        var createTeamResult = await _teamService.CreateAsync(createTeamModel, UserId);
+        var createTeamResult = await _teamService.CreateAsync(createTeamModel, AuthorizedUserId);
 
         if (!createTeamResult.IsSuccess)
             return await GetResult(() => Task.FromResult(createTeamResult));
@@ -63,12 +63,11 @@ public class TeamController : BaseController
     /// Получить все команды
     /// </summary>
     [HttpPost("getTeams")]
-    [ProducesResponseType(typeof(BaseCollectionResponse<TeamModel>), (int)HttpStatusCode.OK)]
-    public async Task<BaseCollectionResponse<TeamModel>> GetList([FromBody] GetListParameters<TeamFilter> listRequest)
+    [ProducesResponseType(typeof(BaseCollection<TeamModel>), (int)HttpStatusCode.OK)]
+    public async Task<BaseCollection<TeamModel>> GetList([FromBody] GetListParameters<TeamFilter> listRequest)
     {
         var getFilterModel = _mapper.Map<GetListParameters<TeamFilter>>(listRequest);
-        var collectionModel = await _teamService.GetAsync(getFilterModel);
-        return _mapper.Map<BaseCollectionResponse<TeamModel>>(collectionModel);
+        return await _teamService.GetListAsync(getFilterModel);
     }
 
     /// <summary>
@@ -79,14 +78,14 @@ public class TeamController : BaseController
     [ProducesResponseType((int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetUserTeam()
-        => GetResult(() => _teamService.GetUserTeam(UserId));
+        => GetResult(() => _teamService.GetUserTeam(AuthorizedUserId));
 
     /// <summary>
     /// Получить события в которых участвовала команда
     /// </summary>
     /// <returns></returns>
     [HttpPost("{teamId:long}/events")]
-    [ProducesResponseType(typeof(BaseCollectionResponse<TeamEventListItem>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(BaseCollection<TeamEventListItem>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
         [FromBody] PaginationSort paginationSort)
     {
@@ -94,20 +93,12 @@ public class TeamController : BaseController
         if (!result.IsSuccess)
             return await GetResult(() => Task.FromResult(result));
 
-        return Ok(new BaseCollectionResponse<TeamEventListItem>
+        return Ok(new BaseCollection<TeamEventListItem>
         {
             Items = result.Data.Items,
             TotalCount = result.Data.TotalCount
         });
     }
-
-    /// <summary>
-    /// Вступить в команду
-    /// </summary>
-    /// <returns></returns>
-    [HttpPost("{teamId:long}/join")]
-    public Task<IActionResult> JoinToTeam([FromRoute]long teamId)
-        => GetResult(() => _teamService.JoinToTeamAsync(teamId, UserId));
 
     /// <summary>
     /// Покинуть команду
@@ -118,6 +109,6 @@ public class TeamController : BaseController
         => GetResult(() => _teamService.RemoveMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
-            MemberId = UserId
+            MemberId = AuthorizedUserId
         }));
 }

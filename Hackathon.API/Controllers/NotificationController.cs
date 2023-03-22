@@ -1,14 +1,14 @@
 using Hackathon.Common.Abstraction.Notification;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Hackathon.API.Controllers;
 
@@ -31,12 +31,11 @@ public class NotificationController: BaseController
     /// <returns></returns>
     [HttpPost("list")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(BaseCollectionResponse<NotificationModel>), StatusCodes.Status200OK)]
-    public async Task<BaseCollectionResponse<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
+    [ProducesResponseType(typeof(BaseCollection<NotificationModel>), StatusCodes.Status200OK)]
+    public async Task<BaseCollection<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
     {
         var filterModel = _mapper.Map<GetListParameters<NotificationFilterModel>>(request);
-        var collectionModel = await _notificationService.GetList(filterModel, UserId);
-        return _mapper.Map<BaseCollectionResponse<NotificationModel>>(collectionModel);
+        return await _notificationService.GetList(filterModel, AuthorizedUserId);
     }
 
     /// <summary>
@@ -48,7 +47,7 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public Task MarkAsRead([FromBody] Guid[] ids)
-        => _notificationService.MarkAsRead(UserId, ids);
+        => _notificationService.MarkAsRead(AuthorizedUserId, ids);
 
     /// <summary>
     /// Удалить уведомления пользователя
@@ -60,7 +59,7 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public async Task Delete([FromBody] Guid[] ids)
     {
-        await _notificationService.Delete(UserId, ids);
+        await _notificationService.Delete(AuthorizedUserId, ids);
     }
 
     [HttpPost("push/info")]
@@ -69,7 +68,7 @@ public class NotificationController: BaseController
         await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
         {
             UserId = to,
-            OwnerId = UserId,
+            OwnerId = AuthorizedUserId,
             Type = NotificationType.Information,
             Data = new InfoNotificationData
             {
@@ -80,5 +79,5 @@ public class NotificationController: BaseController
 
     [HttpGet("unread/count")]
     public Task<long> GetUnreadNotificationsCount()
-        => _notificationService.GetUnreadNotificationsCount(UserId);
+        => _notificationService.GetUnreadNotificationsCount(AuthorizedUserId);
 }

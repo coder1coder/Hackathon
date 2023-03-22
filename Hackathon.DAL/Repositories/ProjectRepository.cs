@@ -109,7 +109,7 @@ public class ProjectRepository: IProjectRepository
             && !x.IsDeleted);
 
     private static Expression<Func<ProjectEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
-        => parameters.SortBy.ToLowerInvariant() switch
+        => parameters.SortBy?.ToLowerInvariant() switch
         {
             "eventId" => x => x.EventId,
             "teamId" => x =>x.TeamId,

@@ -6,6 +6,11 @@ namespace Hackathon.Common.Models.Team;
 
 public class TeamModel
 {
+    /// <summary>
+    /// Максимальное количество участников в команде
+    /// </summary>
+    public const int MembersLimit = 30;
+
     public long Id { get; set; }
     public string Name { get; set; }
     public UserModel[] Members { get; set; } = Array.Empty<UserModel>();
@@ -29,4 +34,11 @@ public class TeamModel
     /// <returns></returns>
     public bool HasOwner(long userId)
         => OwnerId == userId;
+
+    /// <summary>
+    /// Проверить, является ли команда заполненной
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFull()
+        => Members.Length + 1 >= MembersLimit;
 }

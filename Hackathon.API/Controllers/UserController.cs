@@ -2,6 +2,7 @@ using Hackathon.Common.Abstraction.User;
 using System;
 using System.Threading.Tasks;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.Contracts.Responses;
@@ -77,11 +78,10 @@ public class UserController: BaseController
     /// <returns></returns>
     [HttpPost("list")]
     [Authorize(Policy = nameof(UserRole.Administrator))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<UserResponse>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<UserResponse>))]
     public async Task<IActionResult> GetListAsync([FromBody] GetListParameters<UserFilter> request)
     {
-        var collectionModel = await _userService.GetAsync(request);
-        return Ok(_mapper.Map<BaseCollectionResponse<UserResponse>>(collectionModel));
+        return Ok(await _userService.GetAsync(request));
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class UserController: BaseController
 
         await using var stream = file.OpenReadStream();
 
-        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(UserId, file.FileName, stream);
+        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(AuthorizedUserId, file.FileName, stream);
         if (!uploadProfileImageResult.IsSuccess)
             return await GetResult(() => Task.FromResult(uploadProfileImageResult));
 
@@ -113,7 +113,7 @@ public class UserController: BaseController
     /// <param name="code">Код подтверждения</param>
     [HttpPost("profile/email/confirm")]
     public Task ConfirmEmail([FromQuery] string code)
-        => GetResult(() => _emailConfirmationService.Confirm(UserId, code));
+        => GetResult(() => _emailConfirmationService.Confirm(AuthorizedUserId, code));
 
     /// <summary>
     /// Создать запрос на подтвреждение Email пользователя
@@ -121,7 +121,7 @@ public class UserController: BaseController
     /// <returns></returns>
     [HttpPost("profile/email/confirm/request")]
     public Task<IActionResult> CreateEmailConfirmationRequest()
-        => GetResult(() => _emailConfirmationService.CreateRequest(UserId));
+        => GetResult(() => _emailConfirmationService.CreateRequest(AuthorizedUserId));
 
     /// <summary>
     /// Обновить профиль пользователя

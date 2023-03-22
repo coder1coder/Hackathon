@@ -12,9 +12,9 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration.Team;
 
-public class TeamControllerTests: BaseIntegrationTest
+public class TeamApiTests: BaseIntegrationTest
 {
-    public TeamControllerTests(TestWebApplicationFactory factory) : base(factory)
+    public TeamApiTests(TestWebApplicationFactory factory) : base(factory)
     {
     }
 
@@ -97,10 +97,10 @@ public class TeamControllerTests: BaseIntegrationTest
         SetToken(secondUserToken);
 
        await TeamsApi.Create(new CreateTeamRequest
-        {
-            Name = Guid.NewGuid().ToString()[..4],
-            Type = TeamType.Public
-        });
+       {
+           Name = Guid.NewGuid().ToString()[..4],
+           Type = TeamType.Public
+       });
 
         //act
         var getTeamListResponse = await TeamsApi.GetListAsync(new GetListParameters<TeamFilter>
@@ -114,5 +114,63 @@ public class TeamControllerTests: BaseIntegrationTest
         //assert
         Assert.True(getTeamListResponse.Content?.Items is {Count: > 0});
         Assert.True(getTeamListResponse.Content.Items.All(x => x.Type == TeamType.Public));
+    }
+
+    [Fact]
+    public async Task GetSentJoinRequest_Should_Success()
+    {
+        //arrange
+        var teamOwner = await RegisterUser();
+        SetToken(teamOwner.Token);
+
+        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var user = await RegisterUser();
+        SetToken(user.Token);
+
+        await TeamsApi.CreateJoinRequestAsync(teamId);
+
+        //act
+        var response = await TeamsApi.GetSentJoinRequestAsync(teamId);
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content);
+        response.Content.Status.Should().Be(TeamJoinRequestStatus.Sent);
+    }
+
+    [Fact]
+    public async Task CancelJoinRequest_Should_Success()
+    {
+        //arrange
+        var teamOwner = await RegisterUser();
+        SetToken(teamOwner.Token);
+
+        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var user = await RegisterUser();
+        SetToken(user.Token);
+
+        await TeamsApi.CreateJoinRequestAsync(teamId);
+
+        //act
+        await TeamsApi.CancelJoinRequestAsync(teamId);
+        var response = await TeamsApi.GetSentJoinRequestAsync(teamId);
+
+        //assert
+        Assert.False(response.IsSuccessStatusCode);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

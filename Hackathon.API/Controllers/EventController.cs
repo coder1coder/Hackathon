@@ -1,7 +1,6 @@
 ﻿using Hackathon.Common.Abstraction.Event;
-using System;
-using System.Threading.Tasks;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Responses;
@@ -9,7 +8,9 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Hackathon.API.Controllers;
 
@@ -38,7 +39,7 @@ public class EventController: BaseController
     public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
         var createEventModel = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
-        createEventModel.OwnerId = UserId;
+        createEventModel.OwnerId = AuthorizedUserId;
 
         var createResult = await _eventService.CreateAsync(createEventModel);
         if (!createResult.IsSuccess)
@@ -63,9 +64,9 @@ public class EventController: BaseController
     /// </summary>
     /// <returns></returns>
     [HttpPost("list")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollectionResponse<EventListItem>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<EventListItem>))]
     public Task<IActionResult> GetList([FromBody] GetListParameters<EventFilter> listRequest)
-        => GetResult(() => _eventService.GetListAsync(UserId, _mapper.Map<GetListParameters<EventFilter>>(listRequest)));
+        => GetResult(() => _eventService.GetListAsync(AuthorizedUserId, _mapper.Map<GetListParameters<EventFilter>>(listRequest)));
 
     /// <summary>
     /// Получить событие по идентификатору
@@ -79,11 +80,11 @@ public class EventController: BaseController
 
     [HttpPost("{eventId:long}/join")]
     public Task<IActionResult> Join(long eventId)
-        => GetResult(() => _eventService.JoinAsync(eventId, UserId));
+        => GetResult(() => _eventService.JoinAsync(eventId, AuthorizedUserId));
 
     [HttpPost("{eventId:long}/leave")]
     public Task<IActionResult> Leave(long eventId)
-        => GetResult(() => _eventService.LeaveAsync(eventId, UserId));
+        => GetResult(() => _eventService.LeaveAsync(eventId, AuthorizedUserId));
 
     [HttpPost("{eventId:long}/join/team")]
     public Task<IActionResult> JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
@@ -104,7 +105,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("{eventId:long}/stages/next")]
     public Task<IActionResult> GoNextStage([FromRoute] long eventId)
-        => GetResult(() => _eventService.GoNextStage(UserId, eventId));
+        => GetResult(() => _eventService.GoNextStage(AuthorizedUserId, eventId));
 
     /// <summary>
     /// Удалить событие

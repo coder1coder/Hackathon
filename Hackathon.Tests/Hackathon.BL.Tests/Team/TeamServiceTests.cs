@@ -74,7 +74,7 @@ public class TeamServiceTests : BaseUnitTest
     [InlineData(1)]
     [InlineData(5)]
     [InlineData(9)]
-    public async Task GetAsync_ShouldReturn_Success(int teamCount)
+    public async Task GetListAsync_ShouldReturn_Success(int teamCount)
     {
         //arrange
         var fakeTeams = new Faker<TeamModel>()
@@ -82,7 +82,7 @@ public class TeamServiceTests : BaseUnitTest
             .Generate(teamCount).ToArray();
 
         _teamRepositoryMock.Setup(x =>
-                x.GetAsync(It.Is<GetListParameters<TeamFilter>>(
+                x.GetListAsync(It.Is<GetListParameters<TeamFilter>>(
                     s=>s.Filter.Ids.Contains(fakeTeams.First().Id)
                     && s.Filter.Ids.Length == 1 )))
             .ReturnsAsync(new BaseCollection<TeamModel>
@@ -102,7 +102,7 @@ public class TeamServiceTests : BaseUnitTest
             _userRepositoryMock.Object);
 
         //act
-        var result = await service.GetAsync(new GetListParameters<TeamFilter>
+        var result = await service.GetListAsync(new GetListParameters<TeamFilter>
         {
             Filter = new TeamFilter
             {
@@ -127,7 +127,7 @@ public class TeamServiceTests : BaseUnitTest
 
         var fakeMembers = new Faker<UserModel>()
             .RuleFor(x => x.Id, memberId++)
-            .Generate(TeamAddMemberModelValidator.MaxTeamMembers)
+            .Generate(TeamModel.MembersLimit)
             .ToArray();
 
         var fakeTeamMember = new Faker<TeamMemberModel>()
@@ -140,7 +140,7 @@ public class TeamServiceTests : BaseUnitTest
 
         _teamRepositoryMock
             .Setup(x => x.GetMembersCountAsync(It.IsAny<long>()))
-            .ReturnsAsync(TeamAddMemberModelValidator.MaxTeamMembers);
+            .ReturnsAsync(TeamModel.MembersLimit);
 
         _teamRepositoryMock
             .Setup(x => x.ExistAsync(It.IsAny<long>()))

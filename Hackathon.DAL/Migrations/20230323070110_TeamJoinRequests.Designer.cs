@@ -5,6 +5,7 @@ using Hackathon.Common.Models.Event;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hackathon.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230323070110_TeamJoinRequests")]
+    partial class TeamJoinRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -604,17 +606,6 @@ namespace Hackathon.DAL.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.TeamJoinRequestEntity", b =>
-                {
-                    b.HasOne("Hackathon.DAL.Entities.TeamEntity", "Team")
-                        .WithMany("JoinRequests")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Team");
-                });
-
             modelBuilder.Entity("Hackathon.DAL.Entities.User.UserEntity", b =>
                 {
                     b.HasOne("Hackathon.DAL.Entities.GoogleAccountEntity", "GoogleAccount")
@@ -636,8 +627,6 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.DAL.Entities.TeamEntity", b =>
                 {
-                    b.Navigation("JoinRequests");
-
                     b.Navigation("Members");
                 });
 

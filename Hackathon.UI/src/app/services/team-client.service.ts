@@ -8,11 +8,13 @@ import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {TeamFilter} from '../models/Team/TeamFilter';
 import { GetListParameters } from '../models/GetListParameters';
+import {ITeamJoinRequest} from "../models/Team/ITeamJoinRequest";
+import {ITeamJoinRequestFilter} from "../models/Team/ITeamJoinRequestFilter";
 
 @Injectable({
   providedIn: 'root'
 })
-export class TeamService {
+export class TeamClient {
   api = `${environment.api}/team`;
   storage = sessionStorage;
   constructor(private http: HttpClient) {
@@ -48,5 +50,21 @@ export class TeamService {
 
   leaveTeam(teamId: number):Observable<any> {
     return this.http.get(`${this.api}/${teamId}/leave`);
+  }
+
+  sendJoinRequest(teamId: number) {
+    return this.http.post(`${this.api}/${teamId}/join/request`, null);
+  }
+
+  cancelJoinRequest(teamId: number) {
+    return this.http.delete(`${this.api}/${teamId}/join/request`);
+  }
+
+  getSentJoinRequest(teamId: number):Observable<ITeamJoinRequest> {
+    return this.http.get<ITeamJoinRequest>(`${this.api}/${teamId}/join/request/sent`);
+  }
+
+  getJoinRequests(filter: GetListParameters<ITeamJoinRequestFilter>):Observable<BaseCollection<ITeamJoinRequest>>{
+    return this.http.post<BaseCollection<ITeamJoinRequest>>(`${this.api}/join/request/list`, filter);
   }
 }

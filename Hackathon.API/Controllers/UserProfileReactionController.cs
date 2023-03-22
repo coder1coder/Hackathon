@@ -22,7 +22,7 @@ public class UserProfileReactionController: BaseController
     /// <returns></returns>
     [HttpGet("{userId:long}/reactions")]
     public Task<UserProfileReaction?> GetReactions(long userId)
-        => _userProfileReactionService.GetReactionsAsync(UserId, userId);
+        => _userProfileReactionService.GetReactionsAsync(AuthorizedUserId, userId);
 
     /// <summary>
     /// Добавить реакцию на профиль пользователя
@@ -31,7 +31,7 @@ public class UserProfileReactionController: BaseController
     /// <param name="reaction">Реакция</param>
     [HttpPost("{userId:long}/reactions/{reaction}")]
     public Task AddReaction(long userId, UserProfileReaction reaction)
-        => _userProfileReactionService.UpsertReactionAsync(UserId, userId, reaction);
+        => _userProfileReactionService.UpsertReactionAsync(AuthorizedUserId, userId, reaction);
 
     /// <summary>
     ///
@@ -40,5 +40,5 @@ public class UserProfileReactionController: BaseController
     /// <param name="reaction">Реакция</param>
     [HttpDelete("{userId:long}/reactions/{reaction}")]
     public Task RemoveReaction(long userId, UserProfileReaction reaction)
-        => _userProfileReactionService.RemoveReactionAsync(UserId, userId, reaction);
+        => _userProfileReactionService.RemoveReactionAsync(AuthorizedUserId, userId, reaction);
 }

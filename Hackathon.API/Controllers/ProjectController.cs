@@ -57,6 +57,6 @@ public class ProjectController: BaseController
     [HttpPut("git")]
     public async Task UpdateFromGit(ProjectUpdateFromGitParameters parameters)
     {
-        await _projectService.UpdateFromGitAsync(UserId, parameters);
+        await _projectService.UpdateFromGitAsync(AuthorizedUserId, parameters);
     }
 }
