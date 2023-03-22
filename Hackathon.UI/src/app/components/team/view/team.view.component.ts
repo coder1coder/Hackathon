@@ -61,6 +61,12 @@ export class TeamViewComponent implements AfterViewInit {
     return this.team && this.teamContainsMember(this.team, this.userId);
   }
 
+  get canSendRequestJoinToTeam(){
+    return this.team
+      && this.team.type == TeamType.Private
+      && !this.teamContainsMember(this.team, this.userId);
+  }
+
   public joinToTeam(): void {
     this.teamsService.joinToTeam(this.teamId ?? 0)
       .subscribe({
@@ -72,6 +78,10 @@ export class TeamViewComponent implements AfterViewInit {
           this.snackService.open(problemDetails.detail);
         }
       });
+  }
+
+  public sendRequestJoinToTeam():void{
+
   }
 
   public leaveTeam(): void
