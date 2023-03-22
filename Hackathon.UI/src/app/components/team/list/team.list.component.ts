@@ -2,7 +2,7 @@ import {Component, Injectable} from '@angular/core';
 import {BaseCollection} from "../../../models/BaseCollection";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
 import {Team, TeamType} from "../../../models/Team/Team";
-import {TeamService} from "../../../services/team.service";
+import {TeamClient} from "../../../services/team-client.service";
 import {AuthService} from "../../../services/auth.service";
 import {GetListParameters} from 'src/app/models/GetListParameters';
 import {FormBuilder} from '@angular/forms';
@@ -28,7 +28,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
   });
 
   constructor(
-    private teamService: TeamService,
+    private teamService: TeamClient,
     private authService: AuthService,
     private router: RouterService,
     private fb: FormBuilder

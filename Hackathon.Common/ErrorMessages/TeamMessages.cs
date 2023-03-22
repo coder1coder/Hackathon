@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Hackathon.Common.ErrorMessages;
 
 public static class TeamMessages
@@ -9,4 +11,5 @@ public static class TeamMessages
     public const string SelectedTeamIsNotPublic = "Команда не является публичной";
     public const string MaximumNumberTeamMembersReached = "Достигнуто максимальное количество участников в команде";
     public const string TeamDoesNotExists = "Команда не существует";
+    public const string TeamIsFull = "Команда содержит максимально количество участников";
 }

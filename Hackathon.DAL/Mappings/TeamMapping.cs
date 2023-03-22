@@ -5,7 +5,7 @@ using Mapster;
 
 namespace Hackathon.DAL.Mappings;
 
-public class TeamEntityMapping: IRegister
+public class TeamMapping: IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
@@ -19,5 +19,8 @@ public class TeamEntityMapping: IRegister
             .Map(x => x.Members, s =>
                 s.Members.Select(x => x.Member))
             .MaxDepth(3);
+
+        config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
+            .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null);
     }
 }

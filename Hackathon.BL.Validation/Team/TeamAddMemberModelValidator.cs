@@ -9,8 +9,6 @@ namespace Hackathon.BL.Validation.Team;
 
 public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
 {
-    public const int MaxTeamMembers = 30;
-
     public TeamAddMemberModelValidator(
         ITeamRepository teamRepository,
         IUserRepository userRepository
@@ -57,7 +55,7 @@ public class TeamAddMemberModelValidator: AbstractValidator<TeamMemberModel>
             {
                 var teamMemberCount = await teamRepository.GetMembersCountAsync(model.TeamId);
 
-                if (teamMemberCount >= MaxTeamMembers)
+                if (teamMemberCount >= TeamModel.MembersLimit)
                     context.AddFailure(TeamMessages.MaximumNumberTeamMembersReached);
             });
     }

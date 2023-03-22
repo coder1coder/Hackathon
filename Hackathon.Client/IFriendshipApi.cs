@@ -1,6 +1,6 @@
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
-using Hackathon.Contracts.Responses;
 using Refit;
 
 namespace Hackathon.Client;
@@ -10,7 +10,7 @@ public interface IFriendshipApi
     private const string BaseRoute = "/api/friendship";
 
     [Post(BaseRoute + "/offers/list")]
-    Task<BaseCollectionResponse<Friendship>> GetOffers([Body] GetListParameters<FriendshipGetOffersFilter> parameters);
+    Task<BaseCollection<Friendship>> GetOffers([Body] GetListParameters<FriendshipGetOffersFilter> parameters);
 
     /// <summary>
     /// Создать или принять предложение дружбы

@@ -34,7 +34,7 @@ public interface ITeamService
     /// </summary>
     /// <param name="getListParameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<BaseCollection<TeamModel>> GetAsync(Common.Models.GetListParameters<TeamFilter> getListParameters);
+    Task<BaseCollection<TeamModel>> GetListAsync(Common.Models.GetListParameters<TeamFilter> getListParameters);
 
     /// <summary>
     /// Получить команду пользователя
@@ -49,14 +49,6 @@ public interface ITeamService
     /// <param name="teamMemberModel"></param>
     /// <returns></returns>
     Task<Result> RemoveMemberAsync(TeamMemberModel teamMemberModel);
-
-    /// <summary>
-    /// Вступить в команду
-    /// </summary>
-    /// <param name="teamId">Идентификатор команды</param>
-    /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
-    Task<Result> JoinToTeamAsync(long teamId, long userId);
 
     /// <summary>
     /// Получить список событий в которых принимала участие команда

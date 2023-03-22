@@ -3,7 +3,6 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.User;
-using Hackathon.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -41,11 +40,11 @@ public class FriendshipController: BaseController
     /// <param name="parameters"></param>
     /// <returns></returns>
     [HttpPost("offers/list")]
-    public async Task<BaseCollectionResponse<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
+    public async Task<BaseCollection<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
     {
-        var offers = await _friendshipService.GetOffersAsync(UserId, parameters);
+        var offers = await _friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
 
-        return new BaseCollectionResponse<Friendship>
+        return new BaseCollection<Friendship>
         {
             Items = offers.Items,
             TotalCount = offers.TotalCount
@@ -57,7 +56,7 @@ public class FriendshipController: BaseController
     /// </summary>
     [HttpPost("offer/{userId:long}")]
     public Task<IActionResult> CreateOrAcceptOffer([FromRoute, Required] long userId)
-        => GetResult(() => _friendshipService.CreateOrAcceptOfferAsync(UserId, userId));
+        => GetResult(() => _friendshipService.CreateOrAcceptOfferAsync(AuthorizedUserId, userId));
 
     /// <summary>
     /// Отклонить предложение дружбы
@@ -65,7 +64,7 @@ public class FriendshipController: BaseController
     /// <param name="proposerId">Инициатор предложения</param>
     [HttpPost("offer/reject/{proposerId:long}")]
     public Task<IActionResult> RejectOffer([FromRoute, Required] long proposerId)
-        => GetResult(() => _friendshipService.RejectOfferAsync(UserId, proposerId));
+        => GetResult(() => _friendshipService.RejectOfferAsync(AuthorizedUserId, proposerId));
 
     /// <summary>
     /// Отписаться от профиля пользователя
@@ -73,7 +72,7 @@ public class FriendshipController: BaseController
     /// <param name="userId">Идентификатор пользователя</param>
     [HttpPost("unsubscribe/{userId:long}")]
     public Task<IActionResult> Unsubscribe([FromRoute] long userId)
-        => GetResult(() => _friendshipService.UnsubscribeAsync(UserId, userId));
+        => GetResult(() => _friendshipService.UnsubscribeAsync(AuthorizedUserId, userId));
 
     /// <summary>
     /// Прекратить дружбу
@@ -82,5 +81,5 @@ public class FriendshipController: BaseController
     /// <returns></returns>
     [HttpDelete("{userId:long}")]
     public Task<IActionResult> EndFriendship(long userId)
-        => GetResult(() => _friendshipService.EndFriendship(UserId, userId));
+        => GetResult(() => _friendshipService.EndFriendship(AuthorizedUserId, userId));
 }

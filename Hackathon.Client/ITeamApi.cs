@@ -1,4 +1,5 @@
 ﻿using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Team;
 using Hackathon.Contracts.Responses;
@@ -17,5 +18,17 @@ public interface ITeamApi
     Task<TeamModel> Get(long id);
 
     [Post(BaseRoute + "/getTeams")]
-    Task<IApiResponse<BaseCollectionResponse<TeamModel>>> GetListAsync([Body] GetListParameters<TeamFilter> parameters);
+    Task<IApiResponse<BaseCollection<TeamModel>>> GetListAsync([Body] GetListParameters<TeamFilter> parameters);
+
+    [Post(BaseRoute + "/{teamId}/join/request")]
+    Task CreateJoinRequestAsync(long teamId);
+
+    [Delete(BaseRoute + "/{teamId}/join/request")]
+    Task CancelJoinRequestAsync(long teamId);
+
+    [Get(BaseRoute + "/{teamId}/join/request/sent")]
+    Task<IApiResponse<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId);
+
+    [Post(BaseRoute + "/join/request/list")]
+    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetJoinRequestsAsync([Body] GetListParameters<TeamJoinRequestFilter> parameters);
 }

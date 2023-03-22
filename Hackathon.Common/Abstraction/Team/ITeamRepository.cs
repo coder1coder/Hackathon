@@ -26,7 +26,7 @@ public interface ITeamRepository
     /// </summary>
     /// <param name="parameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<BaseCollection<TeamModel>> GetAsync(GetListParameters<TeamFilter> parameters);
+    Task<BaseCollection<TeamModel>> GetListAsync(GetListParameters<TeamFilter> parameters);
 
     /// <summary>
     /// Проверка наличия команды по имени

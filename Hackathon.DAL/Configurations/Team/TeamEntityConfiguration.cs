@@ -1,10 +1,10 @@
 using Hackathon.DAL.Entities;
 using Hackathon.DAL.Entities.Event;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
 
-namespace Hackathon.DAL.Configurations;
+namespace Hackathon.DAL.Configurations.Team;
 
 public class TeamEntityConfiguration: IEntityTypeConfiguration<TeamEntity>
 {
@@ -20,7 +20,7 @@ public class TeamEntityConfiguration: IEntityTypeConfiguration<TeamEntity>
         builder
             .Property(x => x.Name)
             .IsRequired();
-        
+
         builder
             .HasMany(x => x.Events)
             .WithMany(x => x.Teams)

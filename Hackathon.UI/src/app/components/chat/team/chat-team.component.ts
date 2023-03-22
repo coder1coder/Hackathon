@@ -5,7 +5,7 @@ import {AuthService} from "../../../services/auth.service";
 import {ChatService} from "../../../services/chat/chat.service";
 import {BaseCollection} from "../../../models/BaseCollection";
 import {BehaviorSubject} from "rxjs";
-import {TeamService} from "../../../services/team.service";
+import {TeamClient} from "../../../services/team-client.service";
 
 @Component({
   selector: 'chat-team',
@@ -49,7 +49,7 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private chatService: ChatService,
-    private teamService: TeamService) {
+    private teamService: TeamClient) {
 
     this.currentUserId = this.authService.getUserId() ?? -1;
 

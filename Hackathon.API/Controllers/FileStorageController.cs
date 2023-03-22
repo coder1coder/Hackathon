@@ -25,7 +25,7 @@ public class FileStorageController: BaseController
             return BadRequest("Файл не может быть пустым.");
 
         await using var stream = file.OpenReadStream();
-        return Ok(await _fileStorageService.UploadAsync(stream, (Bucket)bucket, file.FileName, UserId));
+        return Ok(await _fileStorageService.UploadAsync(stream, (Bucket)bucket, file.FileName, AuthorizedUserId));
     }
 
     [HttpGet]

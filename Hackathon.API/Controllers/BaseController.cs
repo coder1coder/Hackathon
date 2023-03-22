@@ -14,7 +14,7 @@ namespace Hackathon.API.Controllers;
 [Authorize]
 public abstract class BaseController: ControllerBase
 {
-    protected long UserId
+    protected long AuthorizedUserId
     {
         get {
             var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);

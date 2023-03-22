@@ -76,7 +76,7 @@ public class TeamService : ITeamService
         // OwnerId = null
         if (createTeamModel.OwnerId.HasValue)
         {
-            var teams = await _teamRepository.GetAsync(new Common.Models.GetListParameters<TeamFilter>
+            var teams = await _teamRepository.GetListAsync(new Common.Models.GetListParameters<TeamFilter>
             {
                 Filter = new TeamFilter
                 {
@@ -118,15 +118,15 @@ public class TeamService : ITeamService
     public async Task<Result<TeamModel>> GetAsync(long teamId)
         => Result<TeamModel>.FromValue(await _teamRepository.GetAsync(teamId));
 
-    public async Task<BaseCollection<TeamModel>> GetAsync(Common.Models.GetListParameters<TeamFilter> getListParameters)
+    public async Task<BaseCollection<TeamModel>> GetListAsync(Common.Models.GetListParameters<TeamFilter> getListParameters)
     {
         await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
-        return await _teamRepository.GetAsync(getListParameters);
+        return await _teamRepository.GetListAsync(getListParameters);
     }
 
     public async Task<Result<TeamGeneral>> GetUserTeam(long userId)
     {
-        var teams = await _teamRepository.GetAsync(new Common.Models.GetListParameters<TeamFilter>
+        var teams = await _teamRepository.GetListAsync(new Common.Models.GetListParameters<TeamFilter>
         {
             Filter = new TeamFilter
             {
@@ -177,33 +177,6 @@ public class TeamService : ITeamService
         {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
-
-        return Result.Success;
-    }
-
-    public async Task<Result> JoinToTeamAsync(long teamId, long userId)
-    {
-        var team = await _teamRepository.GetAsync(teamId);
-
-        if (team is null)
-            return Result.NotValid(TeamMessages.TeamDoesNotExists);
-
-        if (team.Type != TeamType.Public)
-            return Result.NotValid(TeamMessages.SelectedTeamIsNotPublic);
-
-        var user = await _userRepository.GetAsync(userId);
-
-        if (user is null)
-            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
-
-        if (team.Owner.Id == userId || team.Members.Any(x=>x.Id == userId))
-            return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
-
-        await _teamRepository.AddMemberAsync(new TeamMemberModel
-        {
-            TeamId = teamId,
-            MemberId = userId
-        });
 
         return Result.Success;
     }
