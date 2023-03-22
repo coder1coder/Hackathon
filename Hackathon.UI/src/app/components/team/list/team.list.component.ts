@@ -1,7 +1,7 @@
 import {Component, Injectable} from '@angular/core';
 import {BaseCollection} from "../../../models/BaseCollection";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {Team} from "../../../models/Team/Team";
+import {Team, TeamType} from "../../../models/Team/Team";
 import {TeamService} from "../../../services/team.service";
 import {AuthService} from "../../../services/auth.service";
 import {GetListParameters} from 'src/app/models/GetListParameters';
@@ -37,7 +37,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
   }
 
   public createNewItem = () => this.router.Teams.New();
-  public getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'actions'];
+  public getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'type', 'actions'];
 
   public override fetch(): void {
     let teamFilterModel = new TeamFilter();
@@ -75,4 +75,15 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
       this.router.Teams.View(item.id);
     }
   };
+
+  public getTeamTypeName(type: TeamType){
+    switch (type) {
+      case TeamType.Private:
+        return 'Закрытый';
+      case TeamType.Public:
+        return 'Открытый';
+      default:
+        return '';
+    }
+  }
 }
