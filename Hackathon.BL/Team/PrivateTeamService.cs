@@ -52,10 +52,11 @@ public class PrivateTeamService: IPrivateTeamService
             return Result.NotValid(TeamMessages.TeamIsFull);
 
         var sentJoinRequests = await _teamJoinRequestsRepository
-            .GetListAsync(parameters.UserId, new Common.Models.GetListParameters<TeamJoinRequestFilter>
+            .GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
             {
-                Filter = new TeamJoinRequestFilter
+                Filter = new TeamJoinRequestExtendedFilter
                 {
+                    UserId = parameters.UserId,
                     Status = TeamJoinRequestStatus.Sent
                 },
                 Offset = 0,
@@ -77,12 +78,13 @@ public class PrivateTeamService: IPrivateTeamService
         return Result.Success;
     }
 
-    public async Task<Result<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId, long userId)
+    public async Task<Result<TeamJoinRequestModel>> GetSingleSentJoinRequestAsync(long teamId, long userId)
     {
-        var sentRequests = await _teamJoinRequestsRepository.GetListAsync(userId, new Common.Models.GetListParameters<TeamJoinRequestFilter>
+        var sentRequests = await _teamJoinRequestsRepository.GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
         {
-            Filter = new TeamJoinRequestFilter
+            Filter = new TeamJoinRequestExtendedFilter
             {
+                UserId = userId,
                 TeamId = teamId,
                 Status = TeamJoinRequestStatus.Sent
             },
@@ -96,16 +98,43 @@ public class PrivateTeamService: IPrivateTeamService
             : Result<TeamJoinRequestModel>.FromValue(firstSentRequest);
     }
 
-    public Task<BaseCollection<TeamJoinRequestModel>> GetJoinRequestsAsync(long userId, Common.Models.GetListParameters<TeamJoinRequestFilter> parameters)
-        => _teamJoinRequestsRepository.GetListAsync(userId, parameters);
+    public Task<BaseCollection<TeamJoinRequestModel>> GetJoinRequestsAsync(Common.Models.GetListParameters<TeamJoinRequestExtendedFilter> parameters)
+        => _teamJoinRequestsRepository.GetListAsync(parameters);
+
+    public async Task<Result<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequests(long teamId, long authorizedUserId, PaginationSort paginationSort)
+    {
+        var team = await _teamRepository.GetAsync(teamId);
+        if (team is null)
+            return Result<BaseCollection<TeamJoinRequestModel>>.NotFound(TeamMessages.TeamDoesNotExists);
+
+        if (team.OwnerId != authorizedUserId)
+            return Result<BaseCollection<TeamJoinRequestModel>>.Forbidden(
+                "Получение списка запросов на вступление в команду доступно только уполномоченным лицам");
+
+        var result = await _teamJoinRequestsRepository.GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
+        {
+            Filter = new TeamJoinRequestExtendedFilter
+            {
+                TeamId = teamId,
+                Status = TeamJoinRequestStatus.Sent
+            },
+            Limit = paginationSort.Limit,
+            Offset = paginationSort.Offset,
+            SortBy = paginationSort.SortBy,
+            SortOrder = paginationSort.SortOrder
+        });
+
+        return Result<BaseCollection<TeamJoinRequestModel>>.FromValue(result);
+    }
 
     public async Task<Result> CancelJoinRequestAsync(long teamId, long userId)
     {
         var joinRequests = await _teamJoinRequestsRepository
-            .GetListAsync(userId, new Common.Models.GetListParameters<TeamJoinRequestFilter>
+            .GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
             {
-                Filter = new TeamJoinRequestFilter
+                Filter = new TeamJoinRequestExtendedFilter
                 {
+                    UserId = userId,
                     TeamId = teamId,
                     Status = TeamJoinRequestStatus.Sent
                 },

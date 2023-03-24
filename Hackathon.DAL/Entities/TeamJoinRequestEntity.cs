@@ -1,5 +1,6 @@
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models.Team;
+using Hackathon.DAL.Entities.User;
 using System;
 
 namespace Hackathon.DAL.Entities;
@@ -23,6 +24,11 @@ public class TeamJoinRequestEntity: BaseEntity, IHasCreatedAt, IHasModifyAt
     /// Идентификатор пользователя
     /// </summary>
     public long UserId { get; set; }
+
+    /// <summary>
+    /// Пользователь, автор заявки
+    /// </summary>
+    public UserEntity User { get; set; }
 
     /// <summary>
     /// Статус запроса

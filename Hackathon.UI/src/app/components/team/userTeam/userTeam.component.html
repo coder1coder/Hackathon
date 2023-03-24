@@ -3,10 +3,6 @@
   [showLoadingIndicator]="false"
   title="{{ team ? 'Моя команда: ' + team?.name : 'Моя команда' }}">
 
-  <div class="user-team-wrapper">
-    <team [team]="team" *ngIf="team"></team>
-  </div>
-
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
     <button mat-button color="accent" (click)="leaveTeam()">Покинуть команду</button>
@@ -20,11 +16,15 @@
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
   </div>
 
-  <alert *ngIf="!team">На текущий момент вы не состоите в команде. Для того, чтобы присоединиться к команде, вы можете воспользоваться поиском команд, либо создать свою</alert>
+  <div class="user-team-wrapper">
+    <team [team]="team" *ngIf="team"></team>
+  </div>
 
+  <alert *ngIf="!team">На текущий момент вы не состоите в команде. Для того, чтобы присоединиться к команде, вы можете воспользоваться поиском команд, либо создать свою</alert>
   <section style="padding-top: 1.5em"  *ngIf="!team">
 
     <div style="font-size: 16px; padding-left: 22px;">Отправленные заявки на вступление в команды:</div>
+
     <table mat-table [dataSource]="sentTeamJoinRequestsDataSource" [class.empty]="sentTeamJoinRequestsDataSource?.data?.length == 0">
       <ng-container matColumnDef="teamName">
         <th mat-header-cell *matHeaderCellDef>Команда</th>

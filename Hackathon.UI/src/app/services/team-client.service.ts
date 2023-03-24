@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 import {CreateTeamModel} from "../models/Team/CreateTeamModel";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {TeamFilter} from '../models/Team/TeamFilter';
-import { GetListParameters } from '../models/GetListParameters';
+import {GetListParameters, PaginationSorting} from '../models/GetListParameters';
 import {ITeamJoinRequest} from "../models/Team/ITeamJoinRequest";
 import {ITeamJoinRequestFilter} from "../models/Team/ITeamJoinRequestFilter";
 
@@ -66,5 +66,9 @@ export class TeamClient {
 
   getJoinRequests(filter: GetListParameters<ITeamJoinRequestFilter>):Observable<BaseCollection<ITeamJoinRequest>>{
     return this.http.post<BaseCollection<ITeamJoinRequest>>(`${this.api}/join/request/list`, filter);
+  }
+
+  getTeamSentJoinRequests(teamId: number, paginationSorting: PaginationSorting):Observable<BaseCollection<ITeamJoinRequest>>{
+    return this.http.post<BaseCollection<ITeamJoinRequest>>(`${this.api}/${teamId}/join/request/list`, paginationSorting);
   }
 }

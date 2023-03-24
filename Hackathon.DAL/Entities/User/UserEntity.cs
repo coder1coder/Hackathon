@@ -53,6 +53,11 @@ public class UserEntity: BaseEntity, ISoftDeletable
     public List<MemberTeamEntity> Teams { get; set; } = new ();
 
     /// <summary>
+    /// Запросы на вступление в команду
+    /// </summary>
+    public ICollection<TeamJoinRequestEntity> JoinRequests { get; set; } = new List<TeamJoinRequestEntity>();
+
+    /// <summary>
     /// Идентификатор аватара профиля в файловом хранилище
     /// </summary>
     public Guid? ProfileImageId { get; set; }
@@ -61,4 +66,11 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// Признак удаления
     /// </summary>
     public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// Получить одно из имеющихся имен
+    /// </summary>
+    /// <returns></returns>
+    public string GetAnyName()
+        => FullName ?? UserName;
 }

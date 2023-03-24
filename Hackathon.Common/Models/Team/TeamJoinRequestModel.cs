@@ -19,6 +19,11 @@ public class TeamJoinRequestModel: TeamJoinRequestParameters, IHasCreatedAt, IHa
     public string TeamName { get; set; }
 
     /// <summary>
+    /// Наименование пользователя, автора заявки
+    /// </summary>
+    public string UserName { get; set; }
+
+    /// <summary>
     /// Дата и время создания запроса
     /// </summary>
     public DateTime CreatedAt { get; set; }

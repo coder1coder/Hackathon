@@ -89,8 +89,6 @@ export class UserTeamComponent implements OnInit {
       )
       .subscribe({
         next: (res) => {
-
-          console.log(res.items)
           this.sentTeamJoinRequestsDataSource.data = res?.items;
         },
         error: () => {
