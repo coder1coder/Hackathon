@@ -17,4 +17,7 @@ public class UserModel: UserShortModel
     /// Дата добавления пользователя в команду
     /// </summary>
     public DateTime DateTimeAdd { get; set; } = new();
+
+    public string GetAnyName()
+        => FullName ?? UserName;
 }

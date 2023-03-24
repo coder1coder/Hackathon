@@ -30,15 +30,18 @@ public class TeamJoinRequestRepository: ITeamJoinRequestsRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(long userId, GetListParameters<TeamJoinRequestFilter> parameters)
+    public async Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(GetListParameters<TeamJoinRequestExtendedFilter> parameters)
     {
         var query = _dbContext.TeamJoinRequests
-            .Include(x=>x.Team)
-            .AsNoTracking()
-            .Where(x=>x.UserId == userId);
+            .Include(x => x.Team)
+            .Include(x=>x.User)
+            .AsNoTracking();
 
         if (parameters.Filter is not null)
         {
+            if (parameters.Filter.UserId.HasValue)
+                query = query.Where(x => x.UserId == parameters.Filter.UserId.Value);
+
             if (parameters.Filter.TeamId.HasValue)
                 query = query.Where(x => x.TeamId == parameters.Filter.TeamId.Value);
 

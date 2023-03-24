@@ -16,10 +16,9 @@ public interface ITeamJoinRequestsRepository
     /// <summary>
     /// Получить список запросов на вступление в команду
     /// </summary>
-    /// <param name="userId"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(long userId, GetListParameters<TeamJoinRequestFilter> parameters);
+    Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(GetListParameters<TeamJoinRequestExtendedFilter> parameters);
 
     /// <summary>
     /// Установить статус запроса

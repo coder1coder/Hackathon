@@ -28,13 +28,21 @@ public interface IPrivateTeamService
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<Result<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId, long userId);
+    Task<Result<TeamJoinRequestModel>> GetSingleSentJoinRequestAsync(long teamId, long userId);
 
     /// <summary>
     /// Получить список запросов на вступление в команду
     /// </summary>
-    /// <param name="userId"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    Task<BaseCollection<TeamJoinRequestModel>> GetJoinRequestsAsync(long userId, Models.GetListParameters<TeamJoinRequestFilter> parameters);
+    Task<BaseCollection<TeamJoinRequestModel>> GetJoinRequestsAsync(Models.GetListParameters<TeamJoinRequestExtendedFilter> parameters);
+
+    /// <summary>
+    /// Получить список отправленных запросов на вступление в команду
+    /// </summary>
+    /// <param name="teamId">Идентификатор команды</param>
+    /// <param name="authorizedUserId">Идентификатор пользователя осуществляющего запрос</param>
+    /// <param name="paginationSort">Параметры пагинации и сортировки</param>
+    /// <returns></returns>
+    Task<Result<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequests(long teamId, long authorizedUserId, PaginationSort paginationSort);
 }

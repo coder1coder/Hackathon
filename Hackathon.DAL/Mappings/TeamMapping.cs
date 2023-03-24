@@ -21,6 +21,7 @@ public class TeamMapping: IRegister
             .MaxDepth(3);
 
         config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
-            .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null);
+            .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null)
+            .Map(x=>x.UserName, s=>s.User.GetAnyName(), z=>z.User != null);
     }
 }

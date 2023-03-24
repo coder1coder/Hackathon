@@ -2,6 +2,7 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -14,10 +15,12 @@ namespace Hackathon.API.Controllers.Team;
 public class PrivateTeamController: BaseController
 {
     private readonly IPrivateTeamService _privateTeamService;
+    private IMapper _mapper;
 
-    public PrivateTeamController(IPrivateTeamService privateTeamService)
+    public PrivateTeamController(IPrivateTeamService privateTeamService, IMapper mapper)
     {
         _privateTeamService = privateTeamService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -49,16 +52,31 @@ public class PrivateTeamController: BaseController
     /// <returns></returns>
     [HttpGet("{teamId:long}/join/request/sent")]
     [ProducesResponseType(typeof(TeamJoinRequestModel), (int)HttpStatusCode.OK)]
-    public Task<IActionResult> GetSentJoinRequest([FromRoute] long teamId)
-        => GetResult(() => _privateTeamService.GetSentJoinRequestAsync(teamId, AuthorizedUserId));
+    public Task<IActionResult> GetSingleSentJoinRequest([FromRoute] long teamId)
+        => GetResult(() => _privateTeamService.GetSingleSentJoinRequestAsync(teamId, AuthorizedUserId));
 
     /// <summary>
-    /// Получить список запросов на вступление в команду
+    /// Получить список запросов пользователя на вступление в команду
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
     [HttpPost("join/request/list")]
     [ProducesResponseType(typeof(BaseCollection<TeamJoinRequestFilter>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetJoinRequests([FromBody] GetListParameters<TeamJoinRequestFilter> parameters)
-        => Ok(await _privateTeamService.GetJoinRequestsAsync(AuthorizedUserId, parameters));
+    {
+        var extendedFilter = _mapper.Map<GetListParameters<TeamJoinRequestFilter>, GetListParameters<TeamJoinRequestExtendedFilter>>(parameters);
+        extendedFilter.Filter.UserId = AuthorizedUserId;
+
+        var result = await _privateTeamService.GetJoinRequestsAsync(extendedFilter);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Получить список отправленных запросов на вступление в команду
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("{teamId:long}/join/request/list")]
+    [ProducesResponseType(typeof(BaseCollection<TeamJoinRequestFilter>), (int) HttpStatusCode.OK)]
+    public Task<IActionResult> GetTeamSentJoinRequests(long teamId, [FromBody] PaginationSort paginationSort)
+        => GetResult(() => _privateTeamService.GetTeamSentJoinRequests(teamId, AuthorizedUserId, paginationSort));
 }

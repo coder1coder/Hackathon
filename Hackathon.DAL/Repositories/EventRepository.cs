@@ -115,7 +115,7 @@ public class EventRepository : IEventRepository
                 x.MinTeamMembers,
                 x.IsCreateTeamsAutomatically,
                 x.ImageId,
-                OwnerName = x.Owner.FullName ?? x.Owner.UserName,
+                OwnerName = x.Owner.GetAnyName(),
                 TeamsCount = x.Teams.Count,
                 MembersCount = x.Teams.Sum(z => z.Members.Count)
             })
