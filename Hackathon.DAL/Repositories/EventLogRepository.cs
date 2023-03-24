@@ -34,7 +34,7 @@ public class EventLogRepository: IEventLogRepository
                     x.Id == entity.UserId);
 
             if (userEntity is not null)
-                entity.UserName = userEntity.FullName ?? userEntity.UserName;
+                entity.UserName = userEntity.GetAnyName();
         }
 
         _dbContext.EventLog.Add(entity);

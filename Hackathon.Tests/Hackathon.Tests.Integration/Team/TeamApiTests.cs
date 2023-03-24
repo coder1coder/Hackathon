@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Event;
@@ -31,7 +32,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -63,7 +64,7 @@ public class TeamApiTests: BaseIntegrationTest
         SetToken(user.Token);
 
         //act
-        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -87,7 +88,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        await TeamsApi.Create(new CreateTeamRequest
+        await TeamsClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -96,14 +97,14 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, secondUserToken) = await RegisterUser();
         SetToken(secondUserToken);
 
-       await TeamsApi.Create(new CreateTeamRequest
+       await TeamsClient.Create(new CreateTeamRequest
        {
            Name = Guid.NewGuid().ToString()[..4],
            Type = TeamType.Public
        });
 
         //act
-        var getTeamListResponse = await TeamsApi.GetListAsync(new GetListParameters<TeamFilter>
+        var getTeamListResponse = await TeamsClient.GetListAsync(new GetListParameters<TeamFilter>
         {
             Filter = new TeamFilter
             {
@@ -123,7 +124,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -134,10 +135,10 @@ public class TeamApiTests: BaseIntegrationTest
         var user = await RegisterUser();
         SetToken(user.Token);
 
-        await TeamsApi.CreateJoinRequestAsync(teamId);
+        await TeamsClient.CreateJoinRequestAsync(teamId);
 
         //act
-        var response = await TeamsApi.GetSentJoinRequestAsync(teamId);
+        var response = await TeamsClient.GetSentJoinRequestAsync(teamId);
 
         //assert
         Assert.True(response.IsSuccessStatusCode);
@@ -152,7 +153,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamsApi.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -163,14 +164,86 @@ public class TeamApiTests: BaseIntegrationTest
         var user = await RegisterUser();
         SetToken(user.Token);
 
-        await TeamsApi.CreateJoinRequestAsync(teamId);
+        await TeamsClient.CreateJoinRequestAsync(teamId);
 
         //act
-        await TeamsApi.CancelJoinRequestAsync(teamId);
-        var response = await TeamsApi.GetSentJoinRequestAsync(teamId);
+        await TeamsClient.CancelJoinRequestAsync(teamId);
+        var response = await TeamsClient.GetSentJoinRequestAsync(teamId);
 
         //assert
         Assert.False(response.IsSuccessStatusCode);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetTeamSentJoinRequestsAsync_Should_Success()
+    {
+        //arrange
+        var (_, teamOwnerToken) = await RegisterUser();
+        SetToken(teamOwnerToken);
+
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        const int joinRequestCount = 5;
+
+        for (var i = 0; i < joinRequestCount; i++)
+        {
+            var createdUser = await RegisterUser();
+            SetToken(createdUser.Token);
+            await TeamsClient.CreateJoinRequestAsync(teamId);
+        }
+
+        //act
+        SetToken(teamOwnerToken);
+
+        var response = await TeamsClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
+        {
+            Offset = 0,
+            Limit = joinRequestCount
+        });
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content);
+
+        response.Content.TotalCount.Should().Be(joinRequestCount);
+        response.Content.Items.Count.Should().Be(joinRequestCount);
+    }
+
+    [Fact]
+    public async Task GetTeamSentJoinRequestsAsync_Should_Forbidden_When_User_IsNot_Owner()
+    {
+        //arrange
+        var (_, teamOwnerToken) = await RegisterUser();
+        SetToken(teamOwnerToken);
+
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var createdUser = await RegisterUser();
+        SetToken(createdUser.Token);
+
+        await TeamsClient.CreateJoinRequestAsync(teamId);
+
+        //act
+        var response = await TeamsClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
+        {
+            Offset = 0,
+            Limit = 1
+        });
+
+        //assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

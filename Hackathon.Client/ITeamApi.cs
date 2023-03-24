@@ -30,5 +30,8 @@ public interface ITeamApi
     Task<IApiResponse<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId);
 
     [Post(BaseRoute + "/join/request/list")]
-    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetJoinRequestsAsync([Body] GetListParameters<TeamJoinRequestFilter> parameters);
+    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetSingleJoinRequestsAsync([Body] GetListParameters<TeamJoinRequestFilter> parameters);
+
+    [Post(BaseRoute + "/{teamId}/join/request/list")]
+    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequestsAsync(long teamId, [Body] PaginationSort parameters);
 }
