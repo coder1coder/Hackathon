@@ -101,7 +101,7 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <button color="primary" mat-button>Принять</button>
-          <button color="accent" mat-button>Отклонить</button>
+          <button color="accent" mat-button (click)="cancelJoinRequestByOwner(element.id)">Отклонить</button>
         </td>
       </ng-container>
 

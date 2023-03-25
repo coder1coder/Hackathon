@@ -69,6 +69,9 @@ import {
   EventStageDialogComponent
 } from "./components/event/cards/components/event-stage-dialog/event-stage-dialog.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {
+  CancelJoinRequestCommentDialog
+} from "./components/team/cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component";
 
 @NgModule({
   declarations: [
@@ -99,6 +102,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     TeamComponent,
     ChatTeamComponent,
     UserTeamComponent,
+    CancelJoinRequestCommentDialog,
 
     UserListComponent,
 

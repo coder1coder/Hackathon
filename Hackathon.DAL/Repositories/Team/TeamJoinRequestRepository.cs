@@ -3,6 +3,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities;
+using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,11 +24,12 @@ public class TeamJoinRequestRepository: ITeamJoinRequestsRepository
         _mapper = mapper;
     }
 
-    public async Task CreateAsync(TeamJoinRequestCreateParameters createParameters)
+    public async Task<long> CreateAsync(TeamJoinRequestCreateParameters createParameters)
     {
         var entity = _mapper.Map<TeamJoinRequestCreateParameters, TeamJoinRequestEntity>(createParameters);
         _dbContext.TeamJoinRequests.Add(entity);
         await _dbContext.SaveChangesAsync();
+        return entity.Id;
     }
 
     public async Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(GetListParameters<TeamJoinRequestExtendedFilter> parameters)
@@ -67,7 +69,7 @@ public class TeamJoinRequestRepository: ITeamJoinRequestsRepository
         };
     }
 
-    public async Task SetStatusAsync(long joinRequestId, TeamJoinRequestStatus status)
+    public async Task SetStatusWithCommentAsync(long joinRequestId, TeamJoinRequestStatus status, string comment = null)
     {
         var request = await _dbContext.TeamJoinRequests.FirstOrDefaultAsync(x => x.Id == joinRequestId);
 
@@ -75,10 +77,18 @@ public class TeamJoinRequestRepository: ITeamJoinRequestsRepository
             return;
 
         request.Status = status;
+        request.Comment = comment;
 
         _dbContext.Update(request);
         await _dbContext.SaveChangesAsync();
     }
+
+    public Task<TeamJoinRequestModel> GetAsync(long requestId)
+        => _dbContext.TeamJoinRequests.AsNoTracking()
+            .Include(x => x.Team)
+            .Include(x => x.User)
+            .ProjectToType<TeamJoinRequestModel>()
+            .FirstOrDefaultAsync(x => x.Id == requestId);
 
     private static Expression<Func<TeamJoinRequestEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy?.ToLowerInvariant() switch

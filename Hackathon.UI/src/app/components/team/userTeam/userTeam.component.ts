@@ -97,8 +97,11 @@ export class UserTeamComponent implements OnInit {
       });
   }
 
-  cancelJoinRequest(teamId: number) {
-    this.teamClient.cancelJoinRequest(teamId)
+  cancelJoinRequest(requestId: number) {
+    this.teamClient.cancelJoinRequest({
+      requestId: requestId,
+      comment: null
+    })
       .subscribe({
         next: (res) => {
           this.fetchSentJoinRequests();

@@ -19,9 +19,19 @@ public class TeamJoinRequestModel: TeamJoinRequestParameters, IHasCreatedAt, IHa
     public string TeamName { get; set; }
 
     /// <summary>
+    /// Идентификатор владельца команды
+    /// </summary>
+    public long? TeamOwnerId { get; set; }
+
+    /// <summary>
     /// Наименование пользователя, автора заявки
     /// </summary>
     public string UserName { get; set; }
+
+    /// <summary>
+    /// Комментарий
+    /// </summary>
+    public string Comment { get; set; }
 
     /// <summary>
     /// Дата и время создания запроса

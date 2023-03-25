@@ -1,0 +1,19 @@
+<div mat-dialog-title>Отклонить запрос</div>
+<div mat-dialog-content style="display: flex; flex-direction: column">
+
+    <mat-form-field appearance="outline">
+      <textarea matInput
+                [(ngModel)]="data"
+                placeholder="Комментарий (необязательно)"
+                autocomplete="off"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="3"
+                maxlength="200"
+                required></textarea>
+    </mat-form-field>
+
+  <button color="accent" mat-button [mat-dialog-close]="data" cdkFocusInitial>Отклонить</button>
+  <button color="primary" mat-button (click)="onNoClick()">Отмена</button>
+
+</div>

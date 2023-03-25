@@ -44,4 +44,9 @@ public class TeamJoinRequestEntity: BaseEntity, IHasCreatedAt, IHasModifyAt
     /// Дата и время изменения запроса
     /// </summary>
     public DateTime? ModifyAt { get; set; }
+
+    /// <summary>
+    /// Комментарий
+    /// </summary>
+    public string Comment { get; set; }
 }
