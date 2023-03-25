@@ -157,6 +157,11 @@ mat-tab-group.vertical-tabs {
     box-shadow: -20px 0px 20px 0px rgb(248 248 248);
     padding-left: 1em;
   }
+
+  .mat-tab-body {
+    position: absolute;
+  }
+
 }
 
 .d-flex {
