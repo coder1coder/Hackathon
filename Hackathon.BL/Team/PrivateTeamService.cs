@@ -1,8 +1,10 @@
 using BackendTools.Common.Models;
+using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
+using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,39 +19,43 @@ public class PrivateTeamService: IPrivateTeamService
     private readonly ITeamRepository _teamRepository;
     private readonly IUserRepository _userRepository;
     private readonly ITeamJoinRequestsRepository _teamJoinRequestsRepository;
+    private readonly INotificationService _notificationService;
 
     private const int SentJoinRequestsLimit = 5;
 
-    public PrivateTeamService(ITeamRepository teamRepository,
+    public PrivateTeamService(
+        ITeamRepository teamRepository,
         IUserRepository userRepository,
-        ITeamJoinRequestsRepository teamJoinRequestsRepository)
+        ITeamJoinRequestsRepository teamJoinRequestsRepository,
+        INotificationService notificationService)
     {
         _teamRepository = teamRepository;
         _userRepository = userRepository;
         _teamJoinRequestsRepository = teamJoinRequestsRepository;
+        _notificationService = notificationService;
     }
 
-    public async Task<Result> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters)
+    public async Task<Result<long>> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters)
     {
         var user = await _userRepository.GetAsync(parameters.UserId);
         if (user is null)
-            return Result.NotFound(UserMessages.UserDoesNotExists);
+            return Result<long>.NotFound(UserMessages.UserDoesNotExists);
 
         var team = await _teamRepository.GetAsync(parameters.TeamId);
         if (team is null)
-            return Result.NotFound(TeamMessages.TeamDoesNotExists);
+            return Result<long>.NotFound(TeamMessages.TeamDoesNotExists);
 
         if (team.Type is not TeamType.Private)
-            return Result.NotValid("Запрос на вступление в команду можно отправить только для команды закрытого типа");
+            return Result<long>.NotValid("Запрос на вступление в команду можно отправить только для команды закрытого типа");
 
         if (!team.OwnerId.HasValue)
-            return Result.NotValid("Запрос на вступление в команду можно отправить только для пользовательских команд");
+            return Result<long>.NotValid("Запрос на вступление в команду можно отправить только для пользовательских команд");
 
         if (team.HasMember(parameters.UserId))
-            return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
+            return Result<long>.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         if (team.IsFull())
-            return Result.NotValid(TeamMessages.TeamIsFull);
+            return Result<long>.NotValid(TeamMessages.TeamIsFull);
 
         var sentJoinRequests = await _teamJoinRequestsRepository
             .GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
@@ -64,18 +70,18 @@ public class PrivateTeamService: IPrivateTeamService
             });
 
         if (sentJoinRequests?.Items?.Any(x=>x.TeamId == parameters.TeamId) == true)
-            return Result.NotValid("Запрос на вступление в команду уже отправлен");
+            return Result<long>.NotValid("Запрос на вступление в команду уже отправлен");
 
         if (sentJoinRequests?.Items is {Count: >= SentJoinRequestsLimit})
-            return Result.NotValid("Превышено ограничение на количество запросов на вступление в команду");
+            return Result<long>.NotValid("Превышено ограничение на количество запросов на вступление в команду");
 
-        await _teamJoinRequestsRepository.CreateAsync(new TeamJoinRequestCreateParameters
+        var requestId = await _teamJoinRequestsRepository.CreateAsync(new TeamJoinRequestCreateParameters
         {
             TeamId = parameters.TeamId,
             UserId = parameters.UserId
         });
 
-        return Result.Success;
+        return Result<long>.FromValue(requestId);
     }
 
     public async Task<Result<TeamJoinRequestModel>> GetSingleSentJoinRequestAsync(long teamId, long userId)
@@ -127,26 +133,30 @@ public class PrivateTeamService: IPrivateTeamService
         return Result<BaseCollection<TeamJoinRequestModel>>.FromValue(result);
     }
 
-    public async Task<Result> CancelJoinRequestAsync(long teamId, long userId)
+    public async Task<Result> CancelJoinRequestAsync(long authorizedUserId, CancelRequestParameters parameters)
     {
-        var joinRequests = await _teamJoinRequestsRepository
-            .GetListAsync(new Common.Models.GetListParameters<TeamJoinRequestExtendedFilter>
-            {
-                Filter = new TeamJoinRequestExtendedFilter
-                {
-                    UserId = userId,
-                    TeamId = teamId,
-                    Status = TeamJoinRequestStatus.Sent
-                },
-                Limit = 1
-            });
+        var request = await _teamJoinRequestsRepository.GetAsync(parameters.RequestId);
 
-        var joinRequest = joinRequests?.Items?.FirstOrDefault();
-
-        if (joinRequest is null)
+        if (request is null)
             return Result.NotFound("Запрос на вступление в команду не найден");
 
-        await _teamJoinRequestsRepository.SetStatusAsync(joinRequest.Id, TeamJoinRequestStatus.Cancelled);
+        var isRequestAuthor = authorizedUserId == request.UserId;
+        var isTeamOwner = authorizedUserId == request.TeamOwnerId;
+
+        if (!isRequestAuthor && !isTeamOwner)
+            return Result.Forbidden("Отменить запрос на вступление в команду может только автор запроса или уполномоченный участник команды");
+
+        if (request.Status != TeamJoinRequestStatus.Sent)
+            return Result.NotValid("Запрос уже принят или отклонен");
+
+        var newStatus = isTeamOwner ? TeamJoinRequestStatus.Refused : TeamJoinRequestStatus.Cancelled;
+
+        await _teamJoinRequestsRepository.SetStatusWithCommentAsync(parameters.RequestId, newStatus, parameters.Comment);
+
+        if (isTeamOwner)
+            await _notificationService.Push(CreateNotificationModel
+                .Information(request.UserId, $"Запрос на вступление в команду '{request.TeamName}' отклонен"));
+
         return Result.Success;
     }
 }

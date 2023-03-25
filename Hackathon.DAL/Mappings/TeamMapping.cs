@@ -22,6 +22,7 @@ public class TeamMapping: IRegister
 
         config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
             .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null)
+            .Map(x=>x.TeamOwnerId, s=>s.Team.OwnerId, z=>z.Team != null)
             .Map(x=>x.UserName, s=>s.User.GetAnyName(), z=>z.User != null);
     }
 }

@@ -12,15 +12,15 @@ public interface IPrivateTeamService
     /// </summary>
     /// <param name="parameters">Параметры запроса</param>
     /// <returns></returns>
-    Task<Result> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters);
+    Task<Result<long>> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters);
 
     /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
-    /// <param name="teamId">Идентификатор команды</param>
-    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="parameters">Параметры отмены</param>
     /// <returns></returns>
-    Task<Result> CancelJoinRequestAsync(long teamId, long userId);
+    Task<Result> CancelJoinRequestAsync(long authorizedUserId, CancelRequestParameters parameters);
 
     /// <summary>
     /// Получить отправленный запрос на вступление в команду

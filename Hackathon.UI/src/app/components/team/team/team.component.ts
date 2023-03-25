@@ -3,17 +3,20 @@ import {Team} from "../../../models/Team/Team";
 import {RouterService} from "../../../services/router.service";
 import {EventHttpService} from "../../../services/event/event.http-service";
 import {EventFilter} from "../../../models/Event/EventFilter";
-import {GetListParameters, PaginationSorting, SortOrder} from "../../../models/GetListParameters";
+import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {MatTabChangeEvent} from "@angular/material/tabs";
 import {IEventListItem} from "../../../models/Event/IEventListItem";
 import {AuthService} from "../../../services/auth.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {
   ITeamJoinRequest,
-  TeamJoinRequestStatus
 } from "../../../models/Team/ITeamJoinRequest";
-import {ITeamJoinRequestFilter} from "../../../models/Team/ITeamJoinRequestFilter";
 import {TeamClient} from "../../../services/team-client.service";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  CancelJoinRequestCommentDialog
+} from "../cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component";
+import {ICancelRequestParameters} from "../../../models/Team/CancelRequestParameters";
 
 @Component({
   selector: 'team',
@@ -30,6 +33,7 @@ export class TeamComponent {
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> = new MatTableDataSource<ITeamJoinRequest>([]);
 
   constructor(
+    public dialog: MatDialog,
     public router: RouterService,
     private eventHttpService: EventHttpService,
     private authService: AuthService,
@@ -78,5 +82,26 @@ export class TeamComponent {
         error: () => {
         }
       });
+  }
+
+  cancelJoinRequestByOwner(requestId:number) {
+
+    const dialogRef = this.dialog.open(CancelJoinRequestCommentDialog, {
+      data: null,
+      minWidth: 320
+    });
+
+    let parameters: ICancelRequestParameters = {
+      requestId: requestId,
+      comment: null
+    };
+
+    dialogRef.afterClosed().subscribe(result => {
+      parameters.comment = result;
+      this.teamClient.cancelJoinRequest(parameters).subscribe(_=>{
+        this.fetchTeamSentJoinRequests()
+      })
+    });
+
   }
 }

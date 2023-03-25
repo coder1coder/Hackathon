@@ -164,10 +164,14 @@ public class TeamApiTests: BaseIntegrationTest
         var user = await RegisterUser();
         SetToken(user.Token);
 
-        await TeamsClient.CreateJoinRequestAsync(teamId);
+        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+
 
         //act
-        await TeamsClient.CancelJoinRequestAsync(teamId);
+        await TeamsClient.CancelJoinRequestAsync(new CancelRequestParameters
+        {
+            RequestId = createResponse.Id
+        });
         var response = await TeamsClient.GetSentJoinRequestAsync(teamId);
 
         //assert
