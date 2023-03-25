@@ -11,7 +11,7 @@ public interface ITeamJoinRequestsRepository
     /// Создать запрос на вступление в команду
     /// </summary>
     /// <returns></returns>
-    Task CreateAsync(TeamJoinRequestCreateParameters createParameters);
+    Task<long> CreateAsync(TeamJoinRequestCreateParameters createParameters);
 
     /// <summary>
     /// Получить список запросов на вступление в команду
@@ -21,10 +21,18 @@ public interface ITeamJoinRequestsRepository
     Task<BaseCollection<TeamJoinRequestModel>> GetListAsync(GetListParameters<TeamJoinRequestExtendedFilter> parameters);
 
     /// <summary>
-    /// Установить статус запроса
+    /// Установить статус запроса с комментарием
     /// </summary>
     /// <param name="joinRequestId">Идентификатор запроса</param>
     /// <param name="status">Статус</param>
+    /// <param name="comment">Комментарий</param>
     /// <returns></returns>
-    Task SetStatusAsync(long joinRequestId, TeamJoinRequestStatus status);
+    Task SetStatusWithCommentAsync(long joinRequestId, TeamJoinRequestStatus status, string comment = null);
+
+    /// <summary>
+    /// Получить запрос по идентификатору
+    /// </summary>
+    /// <param name="requestId">Идентификатор запроса</param>
+    /// <returns></returns>
+    Task<TeamJoinRequestModel> GetAsync(long requestId);
 }

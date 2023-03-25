@@ -2,6 +2,7 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
+using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -15,7 +16,7 @@ namespace Hackathon.API.Controllers.Team;
 public class PrivateTeamController: BaseController
 {
     private readonly IPrivateTeamService _privateTeamService;
-    private IMapper _mapper;
+    private readonly IMapper _mapper;
 
     public PrivateTeamController(IPrivateTeamService privateTeamService, IMapper mapper)
     {
@@ -29,21 +30,31 @@ public class PrivateTeamController: BaseController
     /// <param name="teamId"></param>
     /// <returns></returns>
     [HttpPost("{teamId:long}/join/request")]
-    public Task<IActionResult> CreateJoinRequest([FromRoute] long teamId)
-        => GetResult(() => _privateTeamService.CreateJoinRequestAsync(new TeamJoinRequestCreateParameters
+    [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
+    public async Task<IActionResult> CreateJoinRequest([FromRoute] long teamId)
+    {
+        var createResult = await _privateTeamService.CreateJoinRequestAsync(new TeamJoinRequestCreateParameters
         {
             TeamId = teamId,
             UserId = AuthorizedUserId,
-        }));
+        });
+
+        if (!createResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(createResult));
+
+        return Ok(new BaseCreateResponse
+        {
+            Id = createResult.Data
+        });
+    }
 
     /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
-    /// <param name="teamId"></param>
     /// <returns></returns>
-    [HttpDelete("{teamId:long}/join/request")]
-    public Task<IActionResult> CancelJoinRequest([FromRoute] long teamId)
-        => GetResult(() => _privateTeamService.CancelJoinRequestAsync(teamId, AuthorizedUserId));
+    [HttpPost("join/request/cancel")]
+    public Task<IActionResult> CancelJoinRequest([FromBody] CancelRequestParameters parameters)
+        => GetResult(() => _privateTeamService.CancelJoinRequestAsync(AuthorizedUserId, parameters));
 
     /// <summary>
     /// Получить отправленный запрос на вступление в команду
@@ -77,6 +88,7 @@ public class PrivateTeamController: BaseController
     /// <returns></returns>
     [HttpPost("{teamId:long}/join/request/list")]
     [ProducesResponseType(typeof(BaseCollection<TeamJoinRequestFilter>), (int) HttpStatusCode.OK)]
-    public Task<IActionResult> GetTeamSentJoinRequests(long teamId, [FromBody] PaginationSort paginationSort)
+    public Task<IActionResult> GetTeamSentJoinRequests([FromRoute] long teamId, [FromBody] PaginationSort paginationSort)
         => GetResult(() => _privateTeamService.GetTeamSentJoinRequests(teamId, AuthorizedUserId, paginationSort));
+
 }

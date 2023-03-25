@@ -21,10 +21,14 @@ public interface ITeamApi
     Task<IApiResponse<BaseCollection<TeamModel>>> GetListAsync([Body] GetListParameters<TeamFilter> parameters);
 
     [Post(BaseRoute + "/{teamId}/join/request")]
-    Task CreateJoinRequestAsync(long teamId);
+    Task<BaseCreateResponse> CreateJoinRequestAsync(long teamId);
 
-    [Delete(BaseRoute + "/{teamId}/join/request")]
-    Task CancelJoinRequestAsync(long teamId);
+    /// <summary>
+    /// Отменить запрос на вступление в команду
+    /// </summary>
+    /// <returns></returns>
+    [Post(BaseRoute + "/join/request/cancel")]
+    Task CancelJoinRequestAsync([Body] CancelRequestParameters parameters);
 
     [Get(BaseRoute + "/{teamId}/join/request/sent")]
     Task<IApiResponse<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId);

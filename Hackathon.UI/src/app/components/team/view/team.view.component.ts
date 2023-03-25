@@ -109,7 +109,7 @@ export class TeamViewComponent implements AfterViewInit {
       return;
     }
 
-    this.teamClient.sendJoinRequest(this.teamId)
+    this.teamClient.createJoinRequest(this.teamId)
       .subscribe({
         next: () => {
           this.snackService.open("Запрос на вступление в команду отправлен")
@@ -123,13 +123,16 @@ export class TeamViewComponent implements AfterViewInit {
   }
 
   public cancelSentJoinRequest():void{
-    if (this.teamId === undefined)
+    if (this.existsSentJoinRequest === undefined)
     {
-      this.snackService.open("Не удалось определить идентификатор команды");
+      this.snackService.open("Запрос на вступление в команду не найден");
       return;
     }
 
-    this.teamClient.cancelJoinRequest(this.teamId)
+    this.teamClient.cancelJoinRequest({
+      requestId: this.existsSentJoinRequest.id,
+      comment: null
+    })
       .subscribe({
         next: () => {
           this.snackService.open("Запрос на вступление в команду отменен")

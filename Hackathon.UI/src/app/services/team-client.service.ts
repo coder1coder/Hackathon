@@ -10,6 +10,7 @@ import {TeamFilter} from '../models/Team/TeamFilter';
 import {GetListParameters, PaginationSorting} from '../models/GetListParameters';
 import {ITeamJoinRequest} from "../models/Team/ITeamJoinRequest";
 import {ITeamJoinRequestFilter} from "../models/Team/ITeamJoinRequestFilter";
+import {ICancelRequestParameters} from "../models/Team/CancelRequestParameters";
 
 @Injectable({
   providedIn: 'root'
@@ -52,12 +53,12 @@ export class TeamClient {
     return this.http.get(`${this.api}/${teamId}/leave`);
   }
 
-  sendJoinRequest(teamId: number) {
+  createJoinRequest(teamId: number) {
     return this.http.post(`${this.api}/${teamId}/join/request`, null);
   }
 
-  cancelJoinRequest(teamId: number) {
-    return this.http.delete(`${this.api}/${teamId}/join/request`);
+  cancelJoinRequest(parameters: ICancelRequestParameters) {
+    return this.http.post(`${this.api}/join/request/cancel`, parameters);
   }
 
   getSentJoinRequest(teamId: number):Observable<ITeamJoinRequest> {

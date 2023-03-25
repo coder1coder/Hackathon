@@ -1,5 +1,3 @@
-import {EventStatus} from "../Event/EventStatus";
-
 export interface ITeamJoinRequest
 {
   id:number;
@@ -9,6 +7,7 @@ export interface ITeamJoinRequest
   createdAt:Date;
   modifyAt?:Date;
   status: TeamJoinRequestStatus;
+  comment:string;
 }
 
 export enum TeamJoinRequestStatus
