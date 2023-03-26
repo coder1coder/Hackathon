@@ -50,4 +50,11 @@ public interface ITeamApi
 
     [Post(BaseRoute + "/{teamId}/join/request/list")]
     Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequestsAsync(long teamId, [Body] PaginationSort parameters);
+
+    /// <summary>
+    /// Вступить в открытую команду
+    /// </summary>
+    /// <returns></returns>
+    [Post(BaseRoute + "/{teamId}/join")]
+    Task JoinToTeam(long teamId);
 }

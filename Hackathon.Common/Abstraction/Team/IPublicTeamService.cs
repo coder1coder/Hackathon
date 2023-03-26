@@ -12,7 +12,7 @@ public interface IPublicTeamService
     /// Вступить в команду открытого типа
     /// </summary>
     /// <param name="teamId">Идентификатор команды</param>
-    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <returns></returns>
-    Task<Result> JoinToTeamAsync(long teamId, long userId);
+    Task<Result> JoinToTeamAsync(long teamId, long authorizedUserId);
 }

@@ -324,4 +324,30 @@ public class TeamApiTests: BaseIntegrationTest
             && x.UserId == userId
             && x.Status == TeamJoinRequestStatus.Accepted);
     }
+
+    [Fact]
+    public async Task JoinToTeam_Should_Success()
+    {
+        //arrange
+        var teamOwner = await RegisterUser();
+        SetToken(teamOwner.Token);
+
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Public
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var (userId, userToken) = await RegisterUser();
+        SetToken(userToken);
+
+        //act
+        await TeamsClient.JoinToTeam(teamId);
+
+        //assert
+        var teamWithNewMember = await TeamsClient.Get(teamId);
+        teamWithNewMember.HasMember(userId);
+    }
 }

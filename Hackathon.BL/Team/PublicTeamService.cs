@@ -19,7 +19,7 @@ public class PublicTeamService: IPublicTeamService
         _userRepository = userRepository;
     }
 
-    public async Task<Result> JoinToTeamAsync(long teamId, long userId)
+    public async Task<Result> JoinToTeamAsync(long teamId, long authorizedUserId)
     {
         var team = await _teamRepository.GetAsync(teamId);
 
@@ -29,18 +29,18 @@ public class PublicTeamService: IPublicTeamService
         if (team.Type != TeamType.Public)
             return Result.NotValid(TeamMessages.SelectedTeamIsNotPublic);
 
-        var user = await _userRepository.GetAsync(userId);
+        var user = await _userRepository.GetAsync(authorizedUserId);
 
         if (user is null)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        if (team.HasMember(userId))
+        if (team.HasMember(authorizedUserId))
             return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         await _teamRepository.AddMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
-            MemberId = userId
+            MemberId = authorizedUserId
         });
 
         return Result.Success;
