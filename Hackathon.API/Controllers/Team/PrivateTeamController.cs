@@ -49,6 +49,14 @@ public class PrivateTeamController: BaseController
     }
 
     /// <summary>
+    /// Принять пользователя в закрытую команду
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("join/request/{requestId:long}/approve")]
+    public Task<IActionResult> ApproveJoinRequest([FromRoute] long requestId)
+        => GetResult(() => _privateTeamService.ApproveJoinRequest(AuthorizedUserId, requestId));
+
+    /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
     /// <returns></returns>

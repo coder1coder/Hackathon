@@ -4,7 +4,6 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Team;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hackathon.BL.Team;
@@ -35,7 +34,7 @@ public class PublicTeamService: IPublicTeamService
         if (user is null)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        if (team.Owner.Id == userId || team.Members.Any(x=>x.Id == userId))
+        if (team.HasMember(userId))
             return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         await _teamRepository.AddMemberAsync(new TeamMemberModel
