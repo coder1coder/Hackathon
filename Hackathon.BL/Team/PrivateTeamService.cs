@@ -1,4 +1,5 @@
 using BackendTools.Common.Models;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
@@ -21,6 +22,7 @@ public class PrivateTeamService: IPrivateTeamService
     private readonly ITeamJoinRequestsRepository _teamJoinRequestsRepository;
     private readonly INotificationService _notificationService;
 
+    private const string TeamJoinRequestNotFound = "Запрос на вступление в команду не найден";
     private const int SentJoinRequestsLimit = 5;
 
     public PrivateTeamService(
@@ -100,7 +102,7 @@ public class PrivateTeamService: IPrivateTeamService
         var firstSentRequest = sentRequests?.Items.FirstOrDefault();
 
         return firstSentRequest is null
-            ? Result<TeamJoinRequestModel>.NotFound("Запрос на вступление в команду не найден")
+            ? Result<TeamJoinRequestModel>.NotFound(TeamJoinRequestNotFound)
             : Result<TeamJoinRequestModel>.FromValue(firstSentRequest);
     }
 
@@ -133,12 +135,50 @@ public class PrivateTeamService: IPrivateTeamService
         return Result<BaseCollection<TeamJoinRequestModel>>.FromValue(result);
     }
 
+    public async Task<Result> ApproveJoinRequest(long authorizedUserId, long requestId)
+    {
+        var request = await _teamJoinRequestsRepository.GetAsync(requestId);
+
+        if (request is null)
+            return Result.NotFound(TeamJoinRequestNotFound);
+
+        var isTeamOwner = request.TeamOwnerId == authorizedUserId;
+
+        if (!isTeamOwner)
+            return Result.Forbidden("Принять запрос на вступление в команду может только владелец команды или уполномоченное лицо");
+
+        var user = await _userRepository.GetAsync(request.UserId);
+
+        if (user is null)
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
+
+        var team = await _teamRepository.GetAsync(request.TeamId);
+        if (team is null)
+            return Result.NotFound(TeamMessages.TeamDoesNotExists);
+
+        if (team.HasMember(request.UserId))
+            return Result<long>.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
+
+        await _teamJoinRequestsRepository.SetStatusWithCommentAsync(requestId, TeamJoinRequestStatus.Accepted);
+
+        await _teamRepository.AddMemberAsync(new TeamMemberModel
+        {
+            TeamId = request.TeamId,
+            MemberId = request.UserId
+        });
+
+        await _notificationService.Push(CreateNotificationModel
+                .Information(request.UserId, $"Вы были приняты в команду '{request.TeamName}'"));
+
+        return Result.Success;
+    }
+
     public async Task<Result> CancelJoinRequestAsync(long authorizedUserId, CancelRequestParameters parameters)
     {
         var request = await _teamJoinRequestsRepository.GetAsync(parameters.RequestId);
 
         if (request is null)
-            return Result.NotFound("Запрос на вступление в команду не найден");
+            return Result.NotFound(TeamJoinRequestNotFound);
 
         var isRequestAuthor = authorizedUserId == request.UserId;
         var isTeamOwner = authorizedUserId == request.TeamOwnerId;

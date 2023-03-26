@@ -41,6 +41,13 @@ export class TeamComponent {
   ) {
   }
 
+  private fetchTeam(){
+    this.teamClient.getById(this.team.id)
+      .subscribe(r=>{
+        this.team = r
+      });
+  }
+
   public get isTeamMember(): boolean {
     if (!Boolean(this.team)) return false;
     if (this.team.owner?.id === this.authorizedUserId) return true;
@@ -82,6 +89,13 @@ export class TeamComponent {
         error: () => {
         }
       });
+  }
+
+  approveJoinRequestByOwner(requestId:number){
+    this.teamClient.approveJoinRequest(requestId).subscribe(_=>{
+      this.fetchTeam();
+      this.fetchTeamSentJoinRequests();
+    })
   }
 
   cancelJoinRequestByOwner(requestId:number) {

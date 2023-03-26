@@ -250,4 +250,78 @@ public class TeamApiTests: BaseIntegrationTest
         //assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
+
+    [Fact]
+    public async Task ApproveJoinRequest_Should_AddMemberToTeam()
+    {
+        //arrange
+        var (_, teamOwnerToken) = await RegisterUser();
+        SetToken(teamOwnerToken);
+
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var (userId, userToken) = await RegisterUser();
+        SetToken(userToken);
+
+        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+
+        //act
+        SetToken(teamOwnerToken);
+        await TeamsClient.ApproveJoinRequest(createResponse.Id);
+
+        var response = await TeamsClient.Get(teamId);
+
+        //assert
+        response.HasMember(userId).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ApproveJoinRequest_Should_UpdateRequestStatus()
+    {
+        //arrange
+        var (_, teamOwnerToken) = await RegisterUser();
+        SetToken(teamOwnerToken);
+
+        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        {
+            Name = Guid.NewGuid().ToString()[..4],
+            Type = TeamType.Private
+        });
+
+        var teamId = teamCreateResponse.Content?.Id ?? default;
+
+        var (userId, userToken) = await RegisterUser();
+        SetToken(userToken);
+
+        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+
+        //act
+        SetToken(teamOwnerToken);
+        await TeamsClient.ApproveJoinRequest(createResponse.Id);
+
+        SetToken(userToken);
+        var response = await TeamsClient.GetJoinRequests(new GetListParameters<TeamJoinRequestFilter>
+        {
+            Filter = new TeamJoinRequestFilter
+            {
+                TeamId = teamId
+            }
+        });
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content?.Items);
+
+        Assert.Contains(response.Content.Items, x =>
+            x.Id == createResponse.Id
+            && x.TeamId == teamId
+            && x.UserId == userId
+            && x.Status == TeamJoinRequestStatus.Accepted);
+    }
 }

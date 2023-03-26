@@ -45,4 +45,12 @@ public interface IPrivateTeamService
     /// <param name="paginationSort">Параметры пагинации и сортировки</param>
     /// <returns></returns>
     Task<Result<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequests(long teamId, long authorizedUserId, PaginationSort paginationSort);
+
+    /// <summary>
+    /// Принять пользователя в закрытую команду
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="requestId">Идентификатор запроса на вступление</param>
+    /// <returns></returns>
+    Task<Result> ApproveJoinRequest(long authorizedUserId, long requestId);
 }

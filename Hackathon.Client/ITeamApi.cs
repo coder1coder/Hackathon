@@ -24,6 +24,13 @@ public interface ITeamApi
     Task<BaseCreateResponse> CreateJoinRequestAsync(long teamId);
 
     /// <summary>
+    /// Принять пользователя в закрытую команду
+    /// </summary>
+    /// <returns></returns>
+    [Post(BaseRoute + "/join/request/{requestId}/approve")]
+    public Task ApproveJoinRequest(long requestId);
+
+    /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
     /// <returns></returns>
@@ -33,8 +40,13 @@ public interface ITeamApi
     [Get(BaseRoute + "/{teamId}/join/request/sent")]
     Task<IApiResponse<TeamJoinRequestModel>> GetSentJoinRequestAsync(long teamId);
 
+    /// <summary>
+    /// Получить список запросов пользователя на вступление в команду
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Post(BaseRoute + "/join/request/list")]
-    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetSingleJoinRequestsAsync([Body] GetListParameters<TeamJoinRequestFilter> parameters);
+    Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetJoinRequests([Body] GetListParameters<TeamJoinRequestFilter> parameters);
 
     [Post(BaseRoute + "/{teamId}/join/request/list")]
     Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequestsAsync(long teamId, [Body] PaginationSort parameters);
