@@ -21,10 +21,10 @@ public class TeamMapping: IRegister
             .Map(x => x.Members, s =>
                 s.Members.Select(x => x.Member))
             .MaxDepth(3)
-            .AfterMapping((s, d) =>
+            .AfterMapping((_, d) =>
             {
                 var members = new List<UserModel>(d.Members);
-                if (d.Owner is not null)
+                if (d.Owner is not null && members.All(x => x.Id != d.OwnerId))
                     members.Add(d.Owner);
 
                 d.Members = members.ToArray();

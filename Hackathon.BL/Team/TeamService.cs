@@ -13,7 +13,6 @@ using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
 using MapsterMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -130,7 +129,8 @@ public class TeamService : ITeamService
         {
             Filter = new TeamFilter
             {
-                MemberId = userId
+                MemberId = userId,
+                HasOwner = true
             },
             Limit = 1
         });
@@ -239,8 +239,9 @@ public class TeamService : ITeamService
     /// <param name="team">Модель команды</param>
     private async Task RemoveOwnerAsync(TeamModel team)
     {
-        // Если пользователь является создателем, то нужно передать права владения группой
-        if (team.Members is not {Length: > 0})
+        var membersWhoNotOwner = team.Members?.Where(x => x.Id != team.OwnerId).ToArray();
+
+        if (membersWhoNotOwner is not {Length: > 0})
         {
             await _teamRepository.DeleteTeamAsync(new DeleteTeamModel
             {
@@ -252,7 +253,7 @@ public class TeamService : ITeamService
 
         // кому теперь будет принадлежать команда
         // пользователь раньше остальных вступил в команду
-        var newOwner = team.Members
+        var newOwner = membersWhoNotOwner
             .OrderByDescending(u => u.DateTimeAdd)
             .First();
 
