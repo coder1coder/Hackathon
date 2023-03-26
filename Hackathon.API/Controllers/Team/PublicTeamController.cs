@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Hackathon.API.Controllers.Team;
 
 [SwaggerTag("Команды открытого типа")]
-[Microsoft.AspNetCore.Components.Route("api/team")]
+[Route("api/team")]
 public class PublicTeamController: BaseController
 {
     private readonly IPublicTeamService _publicTeamService;
@@ -17,10 +17,10 @@ public class PublicTeamController: BaseController
     }
 
     /// <summary>
-    /// Вступить в команду
+    /// Вступить в открытую команду
     /// </summary>
     /// <returns></returns>
     [HttpPost("{teamId:long}/join")]
-    public Task<IActionResult> JoinToTeam([FromRoute]long teamId)
+    public Task<IActionResult> JoinToTeam([FromRoute] long teamId)
         => GetResult(() => _publicTeamService.JoinToTeamAsync(teamId, AuthorizedUserId));
 }

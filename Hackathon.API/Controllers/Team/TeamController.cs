@@ -86,19 +86,9 @@ public class TeamController : BaseController
     /// <returns></returns>
     [HttpPost("{teamId:long}/events")]
     [ProducesResponseType(typeof(BaseCollection<TeamEventListItem>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
+    public Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
         [FromBody] PaginationSort paginationSort)
-    {
-        var result = await _teamService.GetTeamEvents(teamId, paginationSort);
-        if (!result.IsSuccess)
-            return await GetResult(() => Task.FromResult(result));
-
-        return Ok(new BaseCollection<TeamEventListItem>
-        {
-            Items = result.Data.Items,
-            TotalCount = result.Data.TotalCount
-        });
-    }
+        => GetResult(() => _teamService.GetTeamEvents(teamId, paginationSort));
 
     /// <summary>
     /// Покинуть команду
