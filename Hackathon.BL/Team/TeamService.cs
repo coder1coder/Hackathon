@@ -141,7 +141,6 @@ public class TeamService : ITeamService
         }
 
         var userTeam = teams.Items.First();
-        userTeam.Members = new List<UserModel>(userTeam.Members) {userTeam.Owner}.ToArray();
 
         return Result<TeamGeneral>.FromValue(new TeamGeneral
         {

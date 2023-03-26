@@ -57,6 +57,10 @@ export class TeamClient {
     return this.http.post(`${this.api}/${teamId}/join/request`, null);
   }
 
+  approveJoinRequest(requestId:number) {
+    return this.http.post(`${this.api}/join/request/${requestId}/approve`, null);
+  }
+
   cancelJoinRequest(parameters: ICancelRequestParameters) {
     return this.http.post(`${this.api}/join/request/cancel`, parameters);
   }
