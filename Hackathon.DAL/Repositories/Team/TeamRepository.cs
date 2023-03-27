@@ -3,7 +3,6 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities;
-using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -63,6 +62,8 @@ public class TeamRepository : ITeamRepository
     {
         var query = _dbContext.Teams
             .Include(x => x.Members)
+                .ThenInclude(x=>x.Member)
+            .Include(x=>x.Owner)
             .Include(x => x.Events)
             .AsNoTracking();
 
@@ -108,15 +109,14 @@ public class TeamRepository : ITeamRepository
             ? query.OrderBy(ResolveOrderFieldExpression(parameters))
             : query.OrderByDescending(ResolveOrderFieldExpression(parameters));
 
-        var teamModels = await query
+        var entities = await query
             .Skip(parameters.Offset)
             .Take(parameters.Limit)
-            .ProjectToType<TeamModel>(_mapper.Config)
-            .ToListAsync();
+            .ToArrayAsync();
 
         return new BaseCollection<TeamModel>
         {
-            Items = teamModels,
+            Items = _mapper.Map<TeamEntity[], TeamModel[]>(entities),
             TotalCount = totalCount
         };
     }
