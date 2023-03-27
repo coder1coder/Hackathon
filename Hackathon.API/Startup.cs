@@ -1,16 +1,19 @@
 using System;
 using System.Security.Claims;
 using System.Text.Json;
-using Autofac;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
 using Hackathon.API.Mapping;
+using Hackathon.BL;
+using Hackathon.BL.Validation;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
+using Hackathon.IntegrationServices;
+using Hackathon.Jobs;
 using Mapster;
 using MapsterMapper;
 using MassTransit;
@@ -55,6 +58,17 @@ public class Startup
         config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
+
+        var emailSettings = Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
+        var s3Options = Configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
+
+        services
+            .RegisterServices(emailSettings, s3Options)
+            .RegisterValidators()
+            .RegisterIntegrationEvents()
+            .RegisterApiJobs()
+            .RegisterIntegrationServices()
+            .RegisterRepositories();
 
         var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
@@ -127,19 +141,6 @@ public class Startup
         });
 
         services.AddSwagger();
-    }
-
-    public void ConfigureContainer(ContainerBuilder builder)
-    {
-        var emailSettings = Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
-        var s3Options = Configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
-
-        builder.RegisterModule(new IntegrationEvents.Module());
-        builder.RegisterModule(new BL.Module(emailSettings, s3Options));
-        builder.RegisterModule(new BL.Validation.Module());
-        builder.RegisterModule(new DAL.Module());
-        builder.RegisterModule(new Jobs.Module());
-        builder.RegisterModule(new IntegrationServices.Module());
     }
 
     public void Configure(

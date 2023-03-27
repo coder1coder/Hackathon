@@ -35,7 +35,7 @@ public class NotificationController: BaseController
     public async Task<BaseCollection<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
     {
         var filterModel = _mapper.Map<GetListParameters<NotificationFilterModel>>(request);
-        return await _notificationService.GetList(filterModel, AuthorizedUserId);
+        return await _notificationService.GetListAsync(filterModel, AuthorizedUserId);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public Task MarkAsRead([FromBody] Guid[] ids)
-        => _notificationService.MarkAsRead(AuthorizedUserId, ids);
+        => _notificationService.MarkAsReadAsync(AuthorizedUserId, ids);
 
     /// <summary>
     /// Удалить уведомления пользователя
@@ -59,13 +59,13 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public async Task Delete([FromBody] Guid[] ids)
     {
-        await _notificationService.Delete(AuthorizedUserId, ids);
+        await _notificationService.DeleteAsync(AuthorizedUserId, ids);
     }
 
     [HttpPost("push/info")]
     public async Task PushInformationNotification([FromBody] string message, [Required] long to)
     {
-        await _notificationService.Push(new CreateNotificationModel<InfoNotificationData>
+        await _notificationService.PushAsync(new CreateNotificationModel<InfoNotificationData>
         {
             UserId = to,
             OwnerId = AuthorizedUserId,
@@ -79,5 +79,5 @@ public class NotificationController: BaseController
 
     [HttpGet("unread/count")]
     public Task<long> GetUnreadNotificationsCount()
-        => _notificationService.GetUnreadNotificationsCount(AuthorizedUserId);
+        => _notificationService.GetUnreadNotificationsCountAsync(AuthorizedUserId);
 }

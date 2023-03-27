@@ -24,14 +24,14 @@ public class EventStartNotifierJob: IEventStartNotifierJob
         _notificationService = notificationService;
     }
 
-    public async Task Execute()
+    public async Task ExecuteAsync()
     {
         var eventsResult = await _eventService.GetUpcomingEventsAsync(TimeSpan.FromMinutes(5));
 
         if (eventsResult.IsSuccess)
         {
             if (eventsResult.Data.Items is {Count: > 0})
-                await _notificationService.PushMany(
+                await _notificationService.PushManyAsync(
                     eventsResult.Data.Items.Select(x => NotificationFactory
                         .InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
         }

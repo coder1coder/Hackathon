@@ -1,5 +1,4 @@
 using System.IO;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +28,6 @@ public class Program
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host
             .CreateDefaultBuilder(args)
-            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .UseSerilog((context, _, configuration) => configuration
                 .ReadFrom.Configuration(context.Configuration)
                 .WriteTo.Console())

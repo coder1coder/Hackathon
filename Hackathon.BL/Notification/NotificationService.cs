@@ -24,27 +24,27 @@ public class NotificationService: INotificationService
         _notificationsHub = notificationsHub;
     }
 
-    public Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId)
+    public Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> listParameters, long userId)
         => _notificationRepository.GetList(listParameters, userId);
 
-    public Task MarkAsRead(long userId, Guid[] ids)
+    public Task MarkAsReadAsync(long userId, Guid[] ids)
         => _notificationRepository.MarkAsRead(userId, ids);
 
-    public async Task Delete(long userId, Guid[] ids = null)
+    public async Task DeleteAsync(long userId, Guid[] ids = null)
     {
         await _notificationRepository.Delete(userId, ids);
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Deleted, ids));
     }
 
-    public async Task Push<T>(CreateNotificationModel<T> model) where T: class
+    public async Task PushAsync<T>(CreateNotificationModel<T> model) where T: class
     {
         var notificationId = await _notificationRepository.Push(model);
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, new []{ notificationId }));
     }
 
-    public async Task PushMany<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
+    public async Task PushManyAsync<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
     {
         var ids = new List<Guid>();
         foreach (var model in models)
@@ -54,6 +54,6 @@ public class NotificationService: INotificationService
             new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, ids.ToArray()));
     }
 
-    public Task<long> GetUnreadNotificationsCount(long userId)
+    public Task<long> GetUnreadNotificationsCountAsync(long userId)
         => _notificationRepository.GetUnreadNotificationsCount(userId);
 }

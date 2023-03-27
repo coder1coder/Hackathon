@@ -117,7 +117,7 @@ public class ChatService : IChatService
                 .Select(x =>
                     NotificationFactory.InfoNotification(chatMessage.Message, x, chatMessage.OwnerId));
 
-            await _notificationService.PushMany(notificationModels);
+            await _notificationService.PushManyAsync(notificationModels);
         }
     }
 

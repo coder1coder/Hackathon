@@ -167,7 +167,7 @@ public class PrivateTeamService: IPrivateTeamService
             MemberId = request.UserId
         });
 
-        await _notificationService.Push(CreateNotificationModel
+        await _notificationService.PushAsync(CreateNotificationModel
                 .Information(request.UserId, $"Вы были приняты в команду '{request.TeamName}'"));
 
         return Result.Success;
@@ -194,7 +194,7 @@ public class PrivateTeamService: IPrivateTeamService
         await _teamJoinRequestsRepository.SetStatusWithCommentAsync(parameters.RequestId, newStatus, parameters.Comment);
 
         if (isTeamOwner)
-            await _notificationService.Push(CreateNotificationModel
+            await _notificationService.PushAsync(CreateNotificationModel
                 .Information(request.UserId, $"Запрос на вступление в команду '{request.TeamName}' отклонен"));
 
         return Result.Success;

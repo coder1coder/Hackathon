@@ -8,7 +8,6 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -85,10 +84,6 @@ public class EventController: BaseController
     [HttpPost("{eventId:long}/leave")]
     public Task<IActionResult> Leave(long eventId)
         => GetResult(() => _eventService.LeaveAsync(eventId, AuthorizedUserId));
-
-    [HttpPost("{eventId:long}/join/team")]
-    public Task<IActionResult> JoinTeam([FromRoute] long eventId, [FromQuery] long teamId)
-        => throw new NotImplementedException();
 
     /// <summary>
     /// Задать статус события
