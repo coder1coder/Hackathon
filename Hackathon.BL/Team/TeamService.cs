@@ -129,7 +129,8 @@ public class TeamService : ITeamService
         {
             Filter = new TeamFilter
             {
-                MemberId = userId
+                MemberId = userId,
+                HasOwner = true
             },
             Limit = 1
         });
