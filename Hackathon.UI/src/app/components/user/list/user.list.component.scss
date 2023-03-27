@@ -1,5 +1,17 @@
+@import "src/mixins";
+
 .mat-cell {
   &.mat-column-actions {
     width: 40px;
+  }
+}
+
+:host {
+  & .member {
+    @include flex-row;
+    column-gap: 1em;
+    align-items: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 }
