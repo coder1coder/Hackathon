@@ -40,16 +40,8 @@ public class FriendshipController: BaseController
     /// <param name="parameters"></param>
     /// <returns></returns>
     [HttpPost("offers/list")]
-    public async Task<BaseCollection<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
-    {
-        var offers = await _friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
-
-        return new BaseCollection<Friendship>
-        {
-            Items = offers.Items,
-            TotalCount = offers.TotalCount
-        };
-    }
+    public Task<BaseCollection<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
+        => _friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
 
     /// <summary>
     /// Создать или принять предложение дружбы

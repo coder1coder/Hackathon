@@ -4,5 +4,5 @@ namespace Hackathon.Common.Abstraction.Jobs;
 
 public interface IJob
 {
-    Task Execute();
+    Task ExecuteAsync();
 }

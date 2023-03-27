@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.Jobs;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -10,23 +11,26 @@ namespace Hackathon.Jobs.BackgroundServices;
 public class EventStartNotifierBackgroundService: BackgroundService
 {
     private readonly ILogger<EventStartNotifierBackgroundService> _logger;
-    private readonly IEventStartNotifierJob _job;
+    private readonly IServiceProvider _serviceProvider;
 
     public EventStartNotifierBackgroundService(
         ILogger<EventStartNotifierBackgroundService> logger,
-        IEventStartNotifierJob job)
+        IServiceProvider serviceProvider)
     {
         _logger = logger;
-        _job = job;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {
+            using var scope = _serviceProvider.CreateScope();
+            var job = scope.ServiceProvider.GetRequiredService<IEventStartNotifierJob>();
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _job.Execute();
+                await job.ExecuteAsync();
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }

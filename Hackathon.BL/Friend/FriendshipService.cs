@@ -54,7 +54,7 @@ public class FriendshipService: IFriendshipService
         if (offer is null)
         {
             await _friendshipRepository.CreateOfferAsync(proposerId, userId);
-            await _notificationService.Push(CreateNotificationModel
+            await _notificationService.PushAsync(CreateNotificationModel
                 .Information(userId, $"Запрос дружбы от {proposer}", proposerId));
 
             await _messageHub.Publish(TopicNames.FriendshipChanged,
@@ -74,7 +74,7 @@ public class FriendshipService: IFriendshipService
                 //Предложение было отклонено ранее, обновим статус
                 case FriendshipStatus.Rejected:
                     await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Pending);
-                    await _notificationService.Push(CreateNotificationModel
+                    await _notificationService.PushAsync(CreateNotificationModel
                         .Information(userId, $"Запрос дружбы от {proposer}", proposerId));
 
                     await _messageHub.Publish(TopicNames.FriendshipChanged,
@@ -94,7 +94,7 @@ public class FriendshipService: IFriendshipService
             if (offer.Status == FriendshipStatus.Pending)
             {
                 await _friendshipRepository.UpdateStatusAsync(userId, proposerId, FriendshipStatus.Confirmed);
-                await _notificationService.Push(CreateNotificationModel
+                await _notificationService.PushAsync(CreateNotificationModel
                     .Information(userId, $"{proposer} принял предложение дружбы", proposerId));
 
                 await _messageHub.Publish(TopicNames.FriendshipChanged,
@@ -118,7 +118,7 @@ public class FriendshipService: IFriendshipService
 
         //TODO: отправлять событие в шину, и вынести логику уведомления в хендлер
         var user = await _userService.GetAsync(userId);
-        await _notificationService.Push(CreateNotificationModel
+        await _notificationService.PushAsync(CreateNotificationModel
             .Information(userId, $"{user} отклонил предложение дружбы"));
 
         await _messageHub.Publish(TopicNames.FriendshipChanged,

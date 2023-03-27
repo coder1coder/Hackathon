@@ -299,7 +299,7 @@ public class EventService : IEventService
         var notificationModels = usersIds.Select(x =>
             NotificationFactory.InfoNotification(changeEventStatusMessage, x));
 
-        await _notificationService.PushMany(notificationModels);
+        await _notificationService.PushManyAsync(notificationModels);
     }
 
     private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)

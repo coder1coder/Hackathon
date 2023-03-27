@@ -28,20 +28,9 @@ public class ChatController: BaseController
 
     [HttpPost("team/{teamId:long}/list")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BaseCollection<TeamChatMessage>))]
-    public async Task<IActionResult> GetTeamMessages(
+    public Task<IActionResult> GetTeamMessages(
         [FromRoute] long teamId,
         [FromQuery] int offset = 0,
         [FromQuery] int limit = 300)
-    {
-        var result = await _chatService.GetTeamMessages(teamId, offset, limit);
-
-        if (!result.IsSuccess)
-            return await GetResult(() => Task.FromResult(result));
-
-        return Ok(new BaseCollection<TeamChatMessage>
-        {
-            Items = result.Data.Items,
-            TotalCount = result.Data.TotalCount
-        });
-    }
+        => GetResult(() => _chatService.GetTeamMessages(teamId, offset, limit));
 }

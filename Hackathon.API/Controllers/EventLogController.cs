@@ -27,8 +27,5 @@ public sealed class EventLogController: BaseController
     [HttpPost("list")]
     [Authorize(Policy = nameof(UserRole.Administrator))]
     public async Task<IActionResult> GetListAsync(GetListParameters<EventLogModel> parameters)
-    {
-        var collectionModel = await _service.GetListAsync(parameters);
-        return Ok(collectionModel);
-    }
+        => Ok(await _service.GetListAsync(parameters));
 }

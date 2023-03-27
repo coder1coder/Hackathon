@@ -15,11 +15,11 @@ public interface INotificationService
     /// <param name="listParameters">Модель фильтра и пагинации</param>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> listParameters, long userId);
+    Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> listParameters, long userId);
 
-    Task MarkAsRead(long userId, Guid[] ids);
+    Task MarkAsReadAsync(long userId, Guid[] ids);
 
-    Task Delete(long userId, Guid[] ids = null);
+    Task DeleteAsync(long userId, Guid[] ids = null);
 
     /// <summary>
     /// Отправить уведомление
@@ -27,7 +27,7 @@ public interface INotificationService
     /// <param name="model"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task Push<T>(CreateNotificationModel<T> model) where T : class;
+    Task PushAsync<T>(CreateNotificationModel<T> model) where T : class;
 
     /// <summary>
     /// Отправить несколько уведомлений
@@ -35,12 +35,12 @@ public interface INotificationService
     /// <param name="models"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task PushMany<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class;
+    Task PushManyAsync<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class;
 
     /// <summary>
     /// Получить количество непрочитанных уведомлений
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<long> GetUnreadNotificationsCount(long userId);
+    Task<long> GetUnreadNotificationsCountAsync(long userId);
 }

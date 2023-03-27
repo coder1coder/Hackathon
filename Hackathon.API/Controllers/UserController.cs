@@ -80,9 +80,7 @@ public class UserController: BaseController
     [Authorize(Policy = nameof(UserRole.Administrator))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<UserResponse>))]
     public async Task<IActionResult> GetListAsync([FromBody] GetListParameters<UserFilter> request)
-    {
-        return Ok(await _userService.GetAsync(request));
-    }
+        => Ok(await _userService.GetAsync(request));
 
     /// <summary>
     /// Загрузить картинку профиля пользователя.

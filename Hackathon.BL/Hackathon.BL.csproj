@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
       <PackageReference Include="AWSSDK.S3" Version="3.7.7.25" />
       <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
