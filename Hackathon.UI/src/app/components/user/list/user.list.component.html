@@ -10,7 +10,14 @@
 
       <ng-container matColumnDef="userName">
         <th mat-header-cell *matHeaderCellDef>Имя пользователя</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.userName}} </td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+
+          <div class="member">
+            <profile-image [canUpload]="false" [userId]="element.id" class="size35"></profile-image>
+            <div>{{element.userName}}</div>
+          </div>
+
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="email">
@@ -26,7 +33,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button [matMenuTriggerFor]="menu">
+          <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
