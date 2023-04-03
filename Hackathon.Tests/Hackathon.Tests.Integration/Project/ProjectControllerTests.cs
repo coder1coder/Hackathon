@@ -32,7 +32,7 @@ public class ProjectControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id,
@@ -71,7 +71,7 @@ public class ProjectControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id,

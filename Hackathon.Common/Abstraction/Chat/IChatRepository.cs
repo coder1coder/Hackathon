@@ -1,25 +1,24 @@
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
-using Hackathon.Common.Models.Chat.Team;
 using System.Threading.Tasks;
 
 namespace Hackathon.Common.Abstraction.Chat;
 
-public interface IChatRepository
+public interface IChatRepository<TChatMessage> where TChatMessage : class, IChatMessage
 {
     /// <summary>
     /// Добавить сообщение
     /// </summary>
     /// <param name="chatMessage"></param>
     /// <returns></returns>
-    Task AddMessage<TChatMessage>(TChatMessage chatMessage) where TChatMessage : IChatMessage;
+    Task AddMessageAsync(TChatMessage chatMessage);
 
     /// <summary>
-    /// Получить сообщения команды
+    /// Получить список сообщений
     /// </summary>
-    /// <param name="teamId">Идентификатор команды</param>
+    /// <param name="key">Уникальный ключ</param>
     /// <param name="offset">Смещение</param>
     /// <param name="limit">Лимит</param>
     /// <returns></returns>
-    Task<BaseCollection<TeamChatMessage>> GetTeamChatMessages(long teamId, int offset = 0, int limit = 300);
+    Task<BaseCollection<TChatMessage>> GetMessagesByKeyAsync(string key, int offset = 0, int limit = 300);
 }

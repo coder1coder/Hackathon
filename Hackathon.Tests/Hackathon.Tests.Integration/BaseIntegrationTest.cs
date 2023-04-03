@@ -4,7 +4,9 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Hackathon.Client;
+using Hackathon.Client.Chat;
 using Hackathon.Common;
+using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Team;
@@ -26,15 +28,19 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
     protected readonly IAuthApi AuthApi;
     protected readonly IUserApi UsersApi;
     protected readonly IEventApi EventsApi;
-    protected readonly ITeamApi TeamsClient;
+    protected readonly ITeamApi TeamApiClient;
     protected readonly IProjectApi ProjectsApi;
     protected readonly IFriendshipApi FriendshipApi;
+    protected readonly ITeamChatApiClient TeamChatApiClient;
+    protected readonly IEventChatApiClient EventChatApiClient;
 
     protected readonly IEventLogService EventLogService;
     protected readonly IUserRepository UserRepository;
     protected readonly ITeamRepository TeamRepository;
     protected readonly IFriendshipRepository FriendshipRepository;
     protected readonly IMapper Mapper;
+    protected readonly ITeamChatRepository TeamChatRepository;
+    protected readonly IEventChatRepository EventChatRepository;
 
     protected readonly TestFaker TestFaker;
 
@@ -56,6 +62,8 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
         UserRepository = factory.Services.GetRequiredService<IUserRepository>();
         TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
         FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();
+        TeamChatRepository = factory.Services.GetRequiredService<ITeamChatRepository>();
+        EventChatRepository = factory.Services.GetRequiredService<IEventChatRepository>();
 
         Mapper = factory.Services.GetRequiredService<IMapper>();
         TestFaker = new TestFaker(Mapper);
@@ -87,9 +95,11 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
         AuthApi = RestService.For<IAuthApi>(_httpClient, refitSettings);
         UsersApi = RestService.For<IUserApi>(_httpClient, refitSettings);
         EventsApi = RestService.For<IEventApi>(_httpClient, refitSettings);
-        TeamsClient = RestService.For<ITeamApi>(_httpClient, refitSettings);
+        TeamApiClient = RestService.For<ITeamApi>(_httpClient, refitSettings);
         ProjectsApi = RestService.For<IProjectApi>(_httpClient, refitSettings);
         FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, refitSettings);
+        TeamChatApiClient = RestService.For<ITeamChatApiClient>(_httpClient, refitSettings);
+        EventChatApiClient = RestService.For<IEventChatApiClient>(_httpClient, refitSettings);
     }
 
     protected void SetToken(string token)
