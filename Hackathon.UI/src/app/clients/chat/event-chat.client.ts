@@ -1,0 +1,28 @@
+import {HttpClient} from "@angular/common/http";
+import {BaseApiClient} from "../base.client";
+import {TeamChatMessage} from "../../models/chat/TeamChatMessage";
+import {Observable} from "rxjs";
+import {BaseCollection} from "../../models/BaseCollection";
+import {Injectable} from "@angular/core";
+import {EventChatMessage} from "../../models/chat/EventChatMessage";
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class EventChatClient extends BaseApiClient
+{
+  baseRoute = `${this.api}/chat/event`;
+
+  protected constructor(http:HttpClient) {
+    super(http)
+  }
+
+  public sendAsync(message:EventChatMessage){
+    return this.http.post(this.baseRoute + `/send`, message);
+  }
+
+  public getListAsync(eventId:number, offset:number = 0, limit:number = 300): Observable<BaseCollection<EventChatMessage>> {
+    return this.http.post<BaseCollection<EventChatMessage>>(this.baseRoute + `/${eventId}/list?offset=${offset}&limit=${limit}`, null);
+  }
+}
