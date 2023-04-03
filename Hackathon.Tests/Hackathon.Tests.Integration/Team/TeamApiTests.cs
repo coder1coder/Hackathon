@@ -32,7 +32,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -64,7 +64,7 @@ public class TeamApiTests: BaseIntegrationTest
         SetToken(user.Token);
 
         //act
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -88,7 +88,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        await TeamsClient.Create(new CreateTeamRequest
+        await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -97,14 +97,14 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, secondUserToken) = await RegisterUser();
         SetToken(secondUserToken);
 
-       await TeamsClient.Create(new CreateTeamRequest
+       await TeamApiClient.Create(new CreateTeamRequest
        {
            Name = Guid.NewGuid().ToString()[..4],
            Type = TeamType.Public
        });
 
         //act
-        var getTeamListResponse = await TeamsClient.GetListAsync(new GetListParameters<TeamFilter>
+        var getTeamListResponse = await TeamApiClient.GetListAsync(new GetListParameters<TeamFilter>
         {
             Filter = new TeamFilter
             {
@@ -124,7 +124,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -135,10 +135,10 @@ public class TeamApiTests: BaseIntegrationTest
         var user = await RegisterUser();
         SetToken(user.Token);
 
-        await TeamsClient.CreateJoinRequestAsync(teamId);
+        await TeamApiClient.CreateJoinRequestAsync(teamId);
 
         //act
-        var response = await TeamsClient.GetSentJoinRequestAsync(teamId);
+        var response = await TeamApiClient.GetSentJoinRequestAsync(teamId);
 
         //assert
         Assert.True(response.IsSuccessStatusCode);
@@ -153,7 +153,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -164,15 +164,15 @@ public class TeamApiTests: BaseIntegrationTest
         var user = await RegisterUser();
         SetToken(user.Token);
 
-        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+        var createResponse = await TeamApiClient.CreateJoinRequestAsync(teamId);
 
 
         //act
-        await TeamsClient.CancelJoinRequestAsync(new CancelRequestParameters
+        await TeamApiClient.CancelJoinRequestAsync(new CancelRequestParameters
         {
             RequestId = createResponse.Id
         });
-        var response = await TeamsClient.GetSentJoinRequestAsync(teamId);
+        var response = await TeamApiClient.GetSentJoinRequestAsync(teamId);
 
         //assert
         Assert.False(response.IsSuccessStatusCode);
@@ -186,7 +186,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -200,13 +200,13 @@ public class TeamApiTests: BaseIntegrationTest
         {
             var createdUser = await RegisterUser();
             SetToken(createdUser.Token);
-            await TeamsClient.CreateJoinRequestAsync(teamId);
+            await TeamApiClient.CreateJoinRequestAsync(teamId);
         }
 
         //act
         SetToken(teamOwnerToken);
 
-        var response = await TeamsClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
+        var response = await TeamApiClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
         {
             Offset = 0,
             Limit = joinRequestCount
@@ -227,7 +227,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -238,10 +238,10 @@ public class TeamApiTests: BaseIntegrationTest
         var createdUser = await RegisterUser();
         SetToken(createdUser.Token);
 
-        await TeamsClient.CreateJoinRequestAsync(teamId);
+        await TeamApiClient.CreateJoinRequestAsync(teamId);
 
         //act
-        var response = await TeamsClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
+        var response = await TeamApiClient.GetTeamSentJoinRequestsAsync(teamId, new PaginationSort
         {
             Offset = 0,
             Limit = 1
@@ -258,7 +258,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -269,13 +269,13 @@ public class TeamApiTests: BaseIntegrationTest
         var (userId, userToken) = await RegisterUser();
         SetToken(userToken);
 
-        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+        var createResponse = await TeamApiClient.CreateJoinRequestAsync(teamId);
 
         //act
         SetToken(teamOwnerToken);
-        await TeamsClient.ApproveJoinRequest(createResponse.Id);
+        await TeamApiClient.ApproveJoinRequest(createResponse.Id);
 
-        var response = await TeamsClient.Get(teamId);
+        var response = await TeamApiClient.Get(teamId);
 
         //assert
         response.HasMember(userId).Should().BeTrue();
@@ -288,7 +288,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -299,14 +299,14 @@ public class TeamApiTests: BaseIntegrationTest
         var (userId, userToken) = await RegisterUser();
         SetToken(userToken);
 
-        var createResponse = await TeamsClient.CreateJoinRequestAsync(teamId);
+        var createResponse = await TeamApiClient.CreateJoinRequestAsync(teamId);
 
         //act
         SetToken(teamOwnerToken);
-        await TeamsClient.ApproveJoinRequest(createResponse.Id);
+        await TeamApiClient.ApproveJoinRequest(createResponse.Id);
 
         SetToken(userToken);
-        var response = await TeamsClient.GetJoinRequests(new GetListParameters<TeamJoinRequestFilter>
+        var response = await TeamApiClient.GetJoinRequests(new GetListParameters<TeamJoinRequestFilter>
         {
             Filter = new TeamJoinRequestFilter
             {
@@ -332,7 +332,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamsClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Public
@@ -344,10 +344,10 @@ public class TeamApiTests: BaseIntegrationTest
         SetToken(userToken);
 
         //act
-        await TeamsClient.JoinToTeam(teamId);
+        await TeamApiClient.JoinToTeam(teamId);
 
         //assert
-        var teamWithNewMember = await TeamsClient.Get(teamId);
+        var teamWithNewMember = await TeamApiClient.Get(teamId);
         teamWithNewMember.HasMember(userId);
     }
 }

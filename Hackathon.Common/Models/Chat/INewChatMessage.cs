@@ -1,14 +1,7 @@
-using System;
-
 namespace Hackathon.Common.Models.Chat;
 
-public interface ICreateChatMessage
+public interface INewChatMessage
 {
-    /// <summary>
-    /// Идентификатор автора сообщения
-    /// </summary>
-    long OwnerId { get; set; }
-
     /// <summary>
     /// Идентификатор пользователя кому адресовано сообщение
     /// </summary>
@@ -20,14 +13,9 @@ public interface ICreateChatMessage
     string Message { get; set; }
 
     /// <summary>
-    /// Дата и время создания сообщения
-    /// </summary>
-    DateTime Timestamp { get; set; }
-
-    /// <summary>
     /// Контекст сообщения
     /// </summary>
-    ChatMessageType Type { get; set; }
+    ChatMessageType Type { get; }
 
     /// <summary>
     /// Опции сообщения (возможно несколько значений)
