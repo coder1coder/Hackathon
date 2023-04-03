@@ -1,11 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Injectable, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {AuthService} from "../../../services/auth.service";
-import {ChatService} from "../../../services/chat/chat.service";
 import {BaseCollection} from "../../../models/BaseCollection";
-import {BehaviorSubject} from "rxjs";
 import {TeamClient} from "../../../services/team-client.service";
+import {ChatMessageOption, TeamChatMessage} from "../../../models/chat/TeamChatMessage";
+import {BaseChatComponent} from "../base.chat.component";
+import {SignalRService} from "../../../services/signalr.service";
+import {TeamChatClient} from "../../../clients/chat/team-chat.client";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'chat-team',
@@ -14,83 +17,56 @@ import {TeamClient} from "../../../services/team-client.service";
 })
 
 @Injectable()
-export class ChatTeamComponent implements OnInit, AfterViewInit {
+export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit, AfterViewInit {
 
-  isCanView:boolean = false
-  currentUserId:number = -1;
-  isOpened = false
-
-  isFloatMode = false;
-
-  teamOwnerId: number | undefined;
+  private _canView: boolean;
+  private teamOwnerId: number | undefined;
 
   public chatHeaderText = 'Чат команды';
 
-  @Input()
-  set teamId(value) { this._teamId.next(value); };
-  get teamId() { return this._teamId.getValue(); }
-  private _teamId = new BehaviorSubject<number>(0);
+  @Input("chatId")
+  set chatId(value) { this._chatId.next(value); };
+  get chatId() { return this._chatId.getValue(); }
+  private _chatId = new BehaviorSubject<number>(0);
 
-  @ViewChild('scrollMe') private chatBody: ElementRef | undefined;
-
-  messages:ChatMessage[] = []
-
-  form:FormGroup = new FormGroup({
-    message: new FormControl('',[
-      Validators.required,
-      Validators.minLength(1),
-      Validators.maxLength(200)
-    ]),
-    notifyTeam: new FormControl(false, [
-      Validators.required
-    ]),
-  })
+  form:FormGroup;
 
   constructor(
-    private authService: AuthService,
-    private chatService: ChatService,
-    private teamService: TeamClient) {
-
-    this.currentUserId = this.authService.getUserId() ?? -1;
-
-    authService.authChange.subscribe(_ => this.updateChatView())
-    chatService.onPublished = (_=> this.fetch());
+    authService: AuthService,
+    private signalRService: SignalRService,
+    private teamService: TeamClient,
+    private teamChatClient: TeamChatClient
+    ) {
+    super(authService)
+    signalRService.onChatMessageChanged = (_=> this.fetchMessages());
   }
 
   ngOnInit(): void {
-    this._teamId.subscribe(_=>{
+
+    this.initForm();
+
+    this._chatId.subscribe(_=>{
       this.fetchTeam();
     })
   }
 
   fetchTeam(){
-    this.teamService.getById(this.teamId)
+    this.teamService.getById(this.chatId)
     .subscribe(x=>{
       this.teamOwnerId = x.owner?.id;
     })
   }
 
-  ngAfterViewInit(): void {
-    this.updateChatView()
+  get canView(): boolean {
+    return this._canView;
   }
 
-  updateChatView(){
-    this.isCanView = false;
-    if (this.authService.isLoggedIn())
+  fetchMessages(): void {
+    if (this._canView)
     {
-      this.currentUserId = this.authService.getUserId() ?? 0;
-      this.isCanView = this.teamId != null;
-
-      this.fetch();
-    }
-  }
-
-  fetch(){
-    if (this.isCanView)
-    {
-      this.chatService.getTeamMessages(this.teamId!)
+      this.teamChatClient.getListAsync(this.chatId!)
         .subscribe({
-          next: (r: BaseCollection<ChatMessage>) =>  {
+          next: (r: BaseCollection<TeamChatMessage>) =>  {
             this.messages = r.items
             this.scrollChatToLastMessage();
           },
@@ -99,13 +75,24 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
     }
   }
 
-  get canSendMessageWithNotify(){
+  updateChatView(){
+    this._canView = false;
+    if (this.authService.isLoggedIn())
+    {
+      this.currentUserId = this.authService.getUserId() ?? 0;
+      this._canView = this.chatId != null;
+
+      this.fetchMessages();
+    }
+  }
+
+  get canSendMessageWithNotify():boolean{
     return this.teamOwnerId == this.currentUserId;
   }
 
-  sendMessage(){
+  sendMessage():void{
 
-    if (this.teamId == null)
+    if (this._chatId == null)
       return
 
     if (!this.form.valid)
@@ -114,51 +101,27 @@ export class ChatTeamComponent implements OnInit, AfterViewInit {
     let message = this.form.controls['message'].value;
     let notifyTeam = this.canSendMessageWithNotify ? this.form.controls['notifyTeam'].value : false;
 
-    let chatMessage = new ChatMessage(ChatMessageContext.TeamChat, this.currentUserId, message);
-    chatMessage.teamId = this.teamId;
+    let chatMessage = new TeamChatMessage(this.currentUserId, message);
+    chatMessage.teamId = this.chatId;
     chatMessage.timestamp = moment.utc().toISOString();
     chatMessage.options = notifyTeam ? ChatMessageOption.WithNotify : ChatMessageOption.Default;
 
-    this.chatService.sendTeamMessage(chatMessage)
+    this.teamChatClient.sendAsync(chatMessage)
       .subscribe(_ => {
-        this.form.reset()
+        this.initForm();
       })
   }
 
-  scrollChatToLastMessage(){
-      setTimeout(()=>{
-        if (this.chatBody !== undefined) {
-          this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
-        }
-      },100)
+  private initForm():void{
+    this.form = new FormGroup({
+      message: new FormControl('',[
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(200)
+      ]),
+      notifyTeam: new FormControl(false, [
+        Validators.required
+      ]),
+    })
   }
-
-}
-
-export class ChatMessage{
-  ownerId!:number;
-  ownerFullName!:string;
-  teamId?:number
-  userId?:number;
-  userFullName!:string;
-  message!:string;
-  context!:ChatMessageContext;
-  options!:ChatMessageOption;
-  timestamp!:string;
-
-  constructor(context:ChatMessageContext, ownerId:number, message:string) {
-    this.context = context;
-    this.ownerId = ownerId;
-    this.message = message;
-  }
-}
-
-export enum ChatMessageContext
-{
-  TeamChat
-}
-
-export enum ChatMessageOption {
-  Default = 0,
-  WithNotify = 1
 }
