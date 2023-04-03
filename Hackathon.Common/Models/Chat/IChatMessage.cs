@@ -1,7 +1,19 @@
+using System;
+
 namespace Hackathon.Common.Models.Chat;
 
-public interface IChatMessage: ICreateChatMessage
+public interface IChatMessage: INewChatMessage
 {
+    /// <summary>
+    /// Идентификатор автора сообщения
+    /// </summary>
+    long OwnerId { get; set; }
+
+    /// <summary>
+    /// Дата и время создания сообщения
+    /// </summary>
+    DateTime Timestamp { get; set; }
+
     /// <summary>
     /// Полное имя автора сообщения
     /// </summary>

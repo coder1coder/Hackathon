@@ -1,149 +1,148 @@
 using BackendTools.Common.Models;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Notification;
-using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
-using Hackathon.Common.Models.Chat.Team;
 using Hackathon.Common.Models.Notification;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 using MapsterMapper;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public class ChatService : IChatService
+public abstract class ChatService<TNewChatMessage, TChatMessage>
+    where TNewChatMessage: class, INewChatMessage
+    where TChatMessage: class, IChatMessage
 {
-    private readonly IChatRepository _chatRepository;
+    private readonly IChatRepository<TChatMessage> _repository;
+
     private readonly IUserRepository _userRepository;
-    private readonly ITeamRepository _teamRepository;
     private readonly IMessageHub<ChatMessageChangedIntegrationEvent> _chatMessageHub;
     private readonly INotificationService _notificationService;
-    private readonly ILogger<ChatService> _logger;
     private readonly IMapper _mapper;
 
-    private readonly IValidator<ICreateChatMessage> _chatMessageValidator;
+    private readonly IValidator<INewChatMessage> _newMessageValidator;
 
-    public ChatService(
-        IChatRepository chatRepository,
+    protected ChatService(
+        IChatRepository<TChatMessage> repository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        ITeamRepository teamRepository,
-        ILogger<ChatService> logger,
-        IValidator<ICreateChatMessage> chatMessageValidator,
+        IValidator<INewChatMessage> newMessageValidator,
         IMapper mapper)
     {
-        _chatRepository = chatRepository;
+        _repository = repository;
         _chatMessageHub = chatMessageHub;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _teamRepository = teamRepository;
-        _logger = logger;
-        _chatMessageValidator = chatMessageValidator;
+        _newMessageValidator = newMessageValidator;
         _mapper = mapper;
     }
 
-    public async Task<Result> SendMessage<TChatMessageModel>(long ownerId, ICreateChatMessage createChatMessage)
-        where TChatMessageModel: IChatMessage
+    protected async Task<Result<BaseCollection<TChatMessage>>> GetListAsync(string key, int offset = 0, int limit = 300)
     {
-        createChatMessage.OwnerId = ownerId;
+        var messages = await _repository.GetMessagesByKeyAsync(key, offset, limit);
+        return Result<BaseCollection<TChatMessage>>.FromValue(messages);
+    }
 
-        await _chatMessageValidator.ValidateAndThrowAsync(createChatMessage);
+    protected async Task<Result> SendAsync(long ownerId, TNewChatMessage newChatMessage)
+    {
+        await _newMessageValidator.ValidateAndThrowAsync(newChatMessage);
 
-        var typedChatMessage = await GetTypedChatMessage<TChatMessageModel>(createChatMessage);
+        var typedChatMessage = await GetTypedChatMessage<TChatMessage>(ownerId, newChatMessage);
 
-        await _chatRepository.AddMessage(typedChatMessage);
+        typedChatMessage.Timestamp = DateTime.UtcNow;
 
-        await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, new ChatMessageChangedIntegrationEvent
-        {
-            Type = createChatMessage.Type,
-            TeamId = typedChatMessage is TeamChatMessage teamChatMessage ? teamChatMessage.TeamId : null
-        });
+        await _repository.AddMessageAsync(typedChatMessage);
 
-        await NotifyUsersAboutNewMessageIfNeed(createChatMessage);
+        await PublicIntegrationEvent(newChatMessage);
+
+        await NotifyUsersIfNeed(ownerId, newChatMessage);
 
         return Result.Success;
     }
 
-    public async Task<Result<BaseCollection<TeamChatMessage>>> GetTeamMessages(long teamId, int offset = 0, int limit = 300)
+    private async Task PublicIntegrationEvent(TNewChatMessage newChatMessage)
     {
-        var messages = await _chatRepository.GetTeamChatMessages(teamId, offset, limit);
-        return Result<BaseCollection<TeamChatMessage>>.FromValue(messages);
+        var integrationEvent = new ChatMessageChangedIntegrationEvent
+        {
+            Type = newChatMessage.Type
+        };
+
+        SetIntegrationEventUniqueParameter(integrationEvent, newChatMessage);
+
+        await _chatMessageHub.Publish(TopicNames.ChatMessageChanged, integrationEvent);
     }
+
+    /// <summary>
+    /// Задать уникальный параметр сообщения интеграционного события
+    /// </summary>
+    /// <param name="integrationEvent">Сообщение интеграционного события</param>
+    /// <param name="newChatMessage"></param>
+    protected abstract void SetIntegrationEventUniqueParameter(ChatMessageChangedIntegrationEvent integrationEvent, TNewChatMessage newChatMessage);
+
+    /// <summary>
+    /// Получить список пользователей для которых необходимо отправить уведомление о новом сообщении
+    /// </summary>
+    /// <returns></returns>
+    protected virtual Task<long[]> GetUserIdsToNotify(long ownerId, TNewChatMessage newChatMessage) => null;
+
+    /// <summary>
+    /// Обогатить сообщение дополнительными данными перед сохранением
+    /// </summary>
+    protected virtual Task EnrichMessageBeforeSaving<TChatMessageModel>(INewChatMessage newChatMessage, TChatMessageModel chatMessage)
+    where TChatMessageModel: IChatMessage => Task.CompletedTask;
 
     /// <summary>
     /// Отправить уведомления пользователям, если это требуется
     /// </summary>
-    /// <param name="createChatMessage">Сообщение</param>
-    private async Task NotifyUsersAboutNewMessageIfNeed(ICreateChatMessage createChatMessage)
+    /// <param name="ownerId"></param>
+    /// <param name="newChatMessage">Сообщение</param>
+    private async Task NotifyUsersIfNeed(long ownerId, TNewChatMessage newChatMessage)
     {
-        if (!createChatMessage.Options.HasFlag(ChatMessageOption.WithNotify))
+        if (!newChatMessage.Options.HasFlag(ChatMessageOption.WithNotify))
             return;
 
-        switch (createChatMessage.Type)
+        var userIdsToNotify = await GetUserIdsToNotify(ownerId, newChatMessage);
+
+        if (userIdsToNotify is {Length: > 0})
         {
-            case ChatMessageType.TeamChat when createChatMessage is CreateTeamChatMessage teamChatMessage:
-                await NotifyTeamAboutNewMessage(teamChatMessage);
-                break;
-
-            default:
-                _logger.LogWarning("{Service}.{Action} doesn't have any handler message for type {messageType}",
-                    nameof(ChatService),
-                    nameof(NotifyUsersAboutNewMessageIfNeed),
-                    createChatMessage.Type);
-                break;
-        }
-    }
-
-    private async Task NotifyTeamAboutNewMessage(CreateTeamChatMessage chatMessage)
-    {
-        var team = await _teamRepository.GetAsync(chatMessage.TeamId);
-
-        var usersIds = team.Members
-            .Where(x=> x.Id != chatMessage.OwnerId)
-            .Select(x => x.Id)
-            .ToArray();
-
-        if (usersIds.Length > 0)
-        {
-            var notificationModels = usersIds
+            var notificationModels = userIdsToNotify
                 .Select(x =>
-                    NotificationFactory.InfoNotification(chatMessage.Message, x, chatMessage.OwnerId));
+                    NotificationFactory.InfoNotification(newChatMessage.Message, x, ownerId));
 
             await _notificationService.PushManyAsync(notificationModels);
         }
     }
 
-    private async Task<TChatMessageModel> GetTypedChatMessage<TChatMessageModel>(ICreateChatMessage createChatMessage)
+    private async Task<TChatMessageModel> GetTypedChatMessage<TChatMessageModel>(long ownerId, INewChatMessage newChatMessage)
     where TChatMessageModel: IChatMessage
     {
-        var chatMessage = _mapper.Map<ICreateChatMessage, TChatMessageModel>(createChatMessage);
+        var chatMessage = _mapper.Map<INewChatMessage, TChatMessageModel>(newChatMessage);
 
         if (chatMessage is null)
         {
             return default;
         }
 
-        var owner = await _userRepository.GetAsync(createChatMessage.OwnerId);
+        chatMessage.OwnerId = ownerId;
+
+        var owner = await _userRepository.GetAsync(ownerId);
         chatMessage.OwnerFullName = owner.FullName;
 
-        if (createChatMessage.UserId.HasValue)
+        if (newChatMessage.UserId.HasValue)
         {
-            var user = await _userRepository.GetAsync(createChatMessage.UserId.Value);
+            var user = await _userRepository.GetAsync(newChatMessage.UserId.Value);
             chatMessage.UserFullName = user.FullName;
         }
 
-        if (createChatMessage is CreateTeamChatMessage createTeamChatMessage && chatMessage is TeamChatMessage teamChatMessage)
-        {
-            teamChatMessage.TeamId = createTeamChatMessage.TeamId;
-        }
+        await EnrichMessageBeforeSaving(newChatMessage, chatMessage);
 
         return chatMessage;
     }
