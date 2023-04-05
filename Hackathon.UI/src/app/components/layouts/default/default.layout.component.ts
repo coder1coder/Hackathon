@@ -1,4 +1,6 @@
 import {Component, Input} from "@angular/core";
+import {MenuItem} from "../../../common/MenuItem";
+import {UserRole} from "../../../models/User/UserRole";
 
 @Component({
   selector: 'layout-default',
@@ -14,7 +16,18 @@ export class DefaultLayoutComponent {
   @Input() isLoading: boolean = false;
   @Input() showLoadingIndicator: boolean = true;
   @Input() containerClasses: string = 'container container-full container-padding';
+  @Input() logoMinWidth: string = `initial`;
 
-  constructor() {}
+  toolbarMenuItems = [
+    new MenuItem('/events','События'),
+    new MenuItem('/team','Моя команда'),
+    new MenuItem('#', 'Администрирование', [UserRole.Administrator],[
+      new MenuItem('/users','Пользователи'),
+      new MenuItem('/eventLog','Журнал событий'),
+    ]),
+  ]
+
+  constructor() {
+  }
 }
 

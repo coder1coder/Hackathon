@@ -17,11 +17,11 @@ import {finalize} from "rxjs/operators";
 import {EventService} from "../../../../services/event/event.service";
 import {EventMainViewCardComponent} from "../event-main-view-card/event-main-view-card.component";
 import {EventFinishedViewCardComponent} from "../event-finished-view-card/event-finished-view-card.component";
+import {EventCardStartedComponent} from "../event-card-started/event-card-started.component";
 
 @Component({
   selector: 'app-event-card-factory',
-  templateUrl: './event-card-factory.component.html',
-  styleUrls: ['./event-card-factory.component.scss'],
+  template: `<ng-template event-item></ng-template>`
 })
 export class EventCardFactoryComponent implements OnInit {
 
@@ -89,7 +89,7 @@ export class EventCardFactoryComponent implements OnInit {
     switch (this.event?.status) {
       case EventStatus.Draft: return EventCreateEditCardComponent;
       case EventStatus.Published: return EventMainViewCardComponent;
-      case EventStatus.Started: return EventMainViewCardComponent;
+      case EventStatus.Started: return EventCardStartedComponent;
       case EventStatus.Development: return EventMainViewCardComponent;
       case EventStatus.Prepare: return EventMainViewCardComponent;
       case EventStatus.Presentation: return EventMainViewCardComponent;

@@ -1,8 +1,9 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {AuthService} from "../../services/auth.service";
 import {RouterService} from "../../services/router.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CustomDialog, ICustomDialogData} from "../custom/custom-dialog/custom-dialog.component";
+import {MenuItem} from "../../common/MenuItem";
 
 @Component({
   selector: 'toolbar',
@@ -15,6 +16,12 @@ export class ToolbarComponent implements OnInit {
   UserName:string | undefined;
   userId:number | undefined;
 
+  @Input()
+  logoMinWidth: string = "initial";
+
+  @Input()
+  toolbarMenuItems: MenuItem[] = []
+
   constructor(
     private authService:AuthService,
     private routerService:RouterService,
@@ -22,7 +29,6 @@ export class ToolbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.authService.getCurrentUser()?.subscribe(x=>{
       if (x != null)
       {

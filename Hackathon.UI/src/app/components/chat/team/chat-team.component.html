@@ -1,27 +1,39 @@
 <div class="chat" *ngIf="!isFloatMode else floatModeTemplate">
-  <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
-    <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
-      <profile-image [userId]="message.ownerId" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
-      <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
-        <div class="chat__message-owner">{{ message.ownerFullName }}</div>
-        <div class="chat__message-text">{{ message.message }} </div>
-        <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
+
+  <main>
+
+    <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
+      <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
+        <profile-image [userId]="message.ownerId" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
+        <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
+          <div class="chat__message-owner">{{ message.ownerFullName }}</div>
+          <div class="chat__message-text">{{ message.message }} </div>
+          <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="chat__footer">
-    <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
-      <mat-checkbox formControlName="notifyTeam" color="primary" *ngIf="canSendMessageWithNotify">
-        Уведомлять пользователей о сообщении
-      </mat-checkbox>
+    <div class="chat__footer">
+      <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
+        <mat-checkbox formControlName="notifyTeam" color="primary" *ngIf="canSendMessageWithNotify">
+          Уведомлять пользователей о сообщении
+        </mat-checkbox>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Сообщение</mat-label>
-        <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
-        <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
-      </mat-form-field>
-    </form>
-  </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Сообщение</mat-label>
+          <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
+          <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
+        </mat-form-field>
+      </form>
+    </div>
+
+  </main>
+
+  <aside class="chat__members" *ngIf="showMembers">
+    <mat-list>
+      <mat-list-item *ngFor="let member of this.members">{{ member.fullName ?? member.userName }}</mat-list-item>
+    </mat-list>
+  </aside>
+
 </div>
 
 <ng-template #floatModeTemplate>

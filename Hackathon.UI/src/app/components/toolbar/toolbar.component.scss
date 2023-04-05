@@ -1,3 +1,9 @@
+@import "src/variables";
+
 .bell {
   margin-right: 8px;
+}
+
+mat-toolbar {
+  background-color: $additional-color;
 }

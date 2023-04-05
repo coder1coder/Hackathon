@@ -9,6 +9,8 @@ import {BaseChatComponent} from "../base.chat.component";
 import {SignalRService} from "../../../services/signalr.service";
 import {TeamChatClient} from "../../../clients/chat/team-chat.client";
 import {BehaviorSubject} from "rxjs";
+import {Team} from "../../../models/Team/Team";
+import {IUser} from "../../../models/User/IUser";
 
 @Component({
   selector: 'chat-team',
@@ -20,7 +22,9 @@ import {BehaviorSubject} from "rxjs";
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit, AfterViewInit {
 
   private _canView: boolean;
-  private teamOwnerId: number | undefined;
+
+
+  public team: Team | undefined;
 
   public chatHeaderText = 'Чат команды';
 
@@ -28,6 +32,9 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   set chatId(value) { this._chatId.next(value); };
   get chatId() { return this._chatId.getValue(); }
   private _chatId = new BehaviorSubject<number>(0);
+
+  @Input()
+  showMembers: boolean = false;
 
   form:FormGroup;
 
@@ -47,13 +54,14 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
     this._chatId.subscribe(_=>{
       this.fetchTeam();
+      this.fetchMessages();
     })
   }
 
   fetchTeam(){
     this.teamService.getById(this.chatId)
     .subscribe(x=>{
-      this.teamOwnerId = x.owner?.id;
+      this.team = x;
     })
   }
 
@@ -87,16 +95,21 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   }
 
   get canSendMessageWithNotify():boolean{
-    return this.teamOwnerId == this.currentUserId;
+    return this.team?.owner?.id == this.currentUserId;
+  }
+
+  get members():IUser[]{
+    return (this.team) ? this.team.members : [];
+  }
+
+  get canSendMessage():boolean{
+    return this.chatId !== undefined && this.chatId > 0 && this.form.valid;
   }
 
   sendMessage():void{
 
-    if (this._chatId == null)
+    if (!this.canSendMessage)
       return
-
-    if (!this.form.valid)
-      return;
 
     let message = this.form.controls['message'].value;
     let notifyTeam = this.canSendMessageWithNotify ? this.form.controls['notifyTeam'].value : false;

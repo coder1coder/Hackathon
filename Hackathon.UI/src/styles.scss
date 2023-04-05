@@ -199,3 +199,19 @@ mat-tab-group.vertical-tabs {
 .h-100 {
   height: 100% !important;
 }
+
+.relative {
+  position: relative;
+}
+
+mat-tab-group.without-header .mat-tab-header {
+  display: none;
+}
+
+.padding-1em {
+  padding: 1em;
+}
+
+.mat-tab-group, .mat-tab-body-wrapper {
+  height: 100%;
+}
