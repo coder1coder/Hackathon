@@ -1,0 +1,68 @@
+@import "src/mixins";
+
+:host{
+  background-color: #fff;
+
+  & .mat-tab-header {
+    background-color: red;
+  }
+}
+
+.event-started
+{
+  &-wrapper {
+    @include absolute0;
+    @include flex-row;
+  }
+
+  &-sidebar{
+    @include flex-column;
+
+    background-color: #FBFBFB;
+    padding: 1em;
+    box-sizing: border-box;
+
+    mat-icon {
+      color: #2A6BCB;
+      font-size: 1.2em;
+      line-height: 1.2em;
+    }
+
+    button {
+      text-align: left;
+    }
+  }
+  &__content {
+
+    flex-grow: 1;
+
+    &-top{
+      padding: 1em;
+      border-bottom: 1px solid #ededed;
+    }
+  }
+
+  &__chat {
+
+    @include flex-column;
+    height: 100%;
+
+    &-wrapper {
+      position: relative;
+      height: 100%;
+    }
+
+    &-selector {
+      width: 120px;
+    }
+  }
+}
+
+.newProjectButton {
+  width: 200px;
+  height: 150px;
+  border: 1px dashed #ddd;
+  font-weight: 300;
+}
+
+

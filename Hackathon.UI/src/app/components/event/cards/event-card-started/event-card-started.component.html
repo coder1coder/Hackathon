@@ -1,0 +1,79 @@
+<layout-default [hideTitlebar]="true" [logoMinWidth]="(sideBarWidthPx - 16).toString()" containerClasses="relative">
+
+  <div class="event-started-wrapper">
+    <aside class="event-started-sidebar" [style.width.px]="sideBarWidthPx">
+
+      <button mat-button (click)="selectedPageIndex = Pages.EventTasks">
+        <mat-icon>task</mat-icon>
+        Задачи
+      </button>
+      <button mat-button (click)="selectedPageIndex = Pages.Communication">
+        <mat-icon>group</mat-icon>
+        Общение
+      </button>
+      <button mat-button (click)="selectedPageIndex = Pages.Project">
+        <mat-icon>inventory_2</mat-icon>
+        Проект
+      </button>
+
+    </aside>
+
+    <main class="event-started__content">
+
+      <mat-tab-group [selectedIndex]="selectedPageIndex"
+                     class="without-header"
+                     animationDuration="0ms"
+                     >
+
+        <mat-tab>
+          <div class="padding-1em">
+            <h2>Задачи мероприятия</h2>
+            <ol>
+              <li *ngFor="let eventTask of eventTasks">
+                {{ eventTask }}
+              </li>
+            </ol>
+          </div>
+
+        </mat-tab>
+
+        <mat-tab>
+          <div class="event-started__chat">
+            <div class="event-started__content-top">
+              <div class="event-started__chat-selector">
+                <mat-select [(value)]="selectedChatIndex">
+                  <mat-option [value]="0">Общий чат</mat-option>
+                  <mat-option [value]="1">Чат команды</mat-option>
+                </mat-select>
+              </div>
+            </div>
+            <div class="event-started__chat-wrapper">
+              <chat-team [chatId]="currentChatId" [showMembers]="true"></chat-team>
+            </div>
+          </div>
+
+        </mat-tab>
+
+        <mat-tab>
+
+          <div class="padding-1em">
+            <div *ngIf="project; else hasNoProject">
+              some project info
+            </div>
+
+            <ng-template #hasNoProject>
+              <button mat-button class="newProjectButton">
+                <mat-icon color="primary">add</mat-icon>
+                Добавить проект
+              </button>
+            </ng-template>
+          </div>
+
+        </mat-tab>
+
+      </mat-tab-group>
+
+    </main>
+  </div>
+
+</layout-default>

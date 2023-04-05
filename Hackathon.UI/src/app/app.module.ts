@@ -72,6 +72,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {
   CancelJoinRequestCommentDialog
 } from "./components/team/cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component";
+import {EventCardStartedComponent} from "./components/event/cards/event-card-started/event-card-started.component";
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import {
     EventCardFactoryComponent,
     EventDirective,
     EventStageDialogComponent,
+    EventCardStartedComponent,
 
     TeamViewComponent,
     TeamNewComponent,

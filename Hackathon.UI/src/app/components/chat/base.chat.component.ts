@@ -16,7 +16,6 @@ export abstract class BaseChatComponent<TChatMessage> implements AfterViewInit {
 
   protected constructor(
     protected authService: AuthService) {
-
     this.currentUserId = this.authService.getUserId() ?? -1;
     authService.authChange.subscribe(_ => this.updateChatView())
   }

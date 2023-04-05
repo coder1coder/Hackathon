@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-import {UserRole} from "../../models/User/UserRole";
+import {MenuItem} from "../../common/MenuItem";
 
 @Component({
   selector: 'app-nav-menu',
@@ -9,36 +9,12 @@ import {UserRole} from "../../models/User/UserRole";
 })
 export class NavMenuComponent {
 
+  @Input()
   items:MenuItem[] = []
 
   constructor(authService:AuthService) {
-
     authService.getCurrentUser()?.subscribe(x=>{
-      this.items = [
-        new MenuItem('/events','События'),
-        new MenuItem('/team','Моя команда'),
-        new MenuItem('#', 'Администрирование', x.role == UserRole.Administrator,[
-          new MenuItem('/users','Пользователи'),
-          new MenuItem('/eventLog','Журнал событий'),
-        ]),
-      ].filter(x=>x.access);
+      this.items = this.items.filter(item=> !item.onlyForRoles || item.onlyForRoles.includes(x.role));
     })
-  }
-}
-
-class MenuItem {
-  unique: number
-  routeLink:string
-  text:string
-  access:boolean
-  children: MenuItem[]
-
-  constructor(routeLink:string, text:string, access:boolean = true, children: MenuItem[] = []) {
-    this.unique = new Date().getTime();
-
-    this.routeLink = routeLink;
-    this.text = text;
-    this.access = access;
-    this.children = children;
   }
 }
