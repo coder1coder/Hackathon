@@ -182,4 +182,21 @@ public class EventControllerTests : BaseIntegrationTest
             .Be(getEventResponse.Content.Stages.OrderBy(x => x.Order).ElementAt(1).Id);
 
     }
+
+    [Fact]
+    public async Task Create_Should_Store_Tasks()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        var eventCreationResponse = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.NotNull(eventCreationResponse.Content?.Tasks);
+        eventCreationResponse.Content.Tasks.Should().HaveCount(TestFaker.EventTasksAmount);
+        eventCreationResponse.Content.Tasks.Should().NotContainNulls();
+    }
 }

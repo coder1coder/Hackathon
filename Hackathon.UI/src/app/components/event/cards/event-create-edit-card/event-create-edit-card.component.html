@@ -157,8 +157,6 @@
           ></tr>
         </table>
 
-
-
       </mat-tab>
 
       <mat-tab label="Команды">
@@ -191,6 +189,70 @@
           Создавать команды автоматически
         </mat-checkbox>
         </div>
+      </mat-tab>
+
+      <mat-tab label="Задачи">
+
+        <div class="padding-top-1em">
+          <alert>Список задач будет отображен участникам сразу после начала мероприятия</alert>
+        </div>
+        <div class="flex-row flex-align-items-center">
+          <div style="width: 100%;">
+            <mat-form-field appearance="outline" class="padding-bottom-0" style="width: 100%;">
+              <mat-label>Новая задача</mat-label>
+              <input matInput
+                     autocomplete="off"
+                     #newTaskInput
+                     (keydown.control.enter)="addEventTaskFromInput()"
+              >
+              <mat-hint>Для добавления нажмите Ctrl + Enter</mat-hint>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+        <table #eventTasksTable
+               mat-table [dataSource]="eventTasksDataSource"
+               [class.empty]="eventTasksDataSource.data.length == 0"
+               cdkDropList
+               [cdkDropListData]="eventTasksDataSource"
+               (cdkDropListDropped)="dropEventTaskRow($event)">
+
+          <ng-container matColumnDef="preRow">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let eventTask">
+              <mat-icon>drag_handle</mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Задача</th>
+            <td mat-cell *matCellDef="let eventTask">{{ eventTask.title }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let eventTask" class="table-list-actions-column">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="removeEventTask(eventTask)">
+                  <mat-icon color="accent">delete_outline</mat-icon>
+                  <span>Удалить</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['preRow', 'title', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['preRow', 'title', 'actions'];"
+              cdkDrag
+              cdkDragLockAxis="y"
+              [cdkDragData]="row"
+          ></tr>
+        </table>
+
       </mat-tab>
 
       <mat-tab label="Уведомления">

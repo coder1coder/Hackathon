@@ -3,7 +3,7 @@
   <div class="event-started-wrapper">
     <aside class="event-started-sidebar" [style.width.px]="sideBarWidthPx">
 
-      <button mat-button (click)="selectedPageIndex = Pages.EventTasks">
+      <button mat-button (click)="selectedPageIndex = Pages.EventTasks" *ngIf="Event.hasTasks(event)">
         <mat-icon>task</mat-icon>
         Задачи
       </button>
@@ -25,12 +25,12 @@
                      animationDuration="0ms"
                      >
 
-        <mat-tab>
+        <mat-tab [hidden]="!Event.hasTasks(event)">
           <div class="padding-1em">
             <h2>Задачи мероприятия</h2>
             <ol>
-              <li *ngFor="let eventTask of eventTasks">
-                {{ eventTask }}
+              <li *ngFor="let eventTask of event.tasks">
+                {{ eventTask.title }}
               </li>
             </ol>
           </div>

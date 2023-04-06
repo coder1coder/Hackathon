@@ -85,4 +85,9 @@ public class UpdateEventRequest
     /// Правила проведения мероприятия
     /// </summary>
     public string Rules { get; set; }
+
+    /// <summary>
+    /// Задачи, которые ставятся перед участниками мероприятия
+    /// </summary>
+    public EventTaskItem[] Tasks { get; set; }
 }

@@ -5,11 +5,14 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities.Event;
 using MapsterMapper;
+using System.Linq;
 
 namespace Hackathon.Tests.Integration;
 
 public class TestFaker
 {
+    public const int EventTasksAmount = 5;
+
     private readonly IMapper _mapper;
 
     public TestFaker(IMapper mapper)
@@ -69,7 +72,11 @@ public class TestFaker
                     Duration = 5,
                     EventId = e.Id
                 }
-            });
+            })
+            .RuleFor(x=>x.Tasks, f=> f.Random.WordsArray(EventTasksAmount).Select(x=>new EventTaskItem
+            {
+                Title = x
+            }));
 
         return faker.Generate(count);
     }
