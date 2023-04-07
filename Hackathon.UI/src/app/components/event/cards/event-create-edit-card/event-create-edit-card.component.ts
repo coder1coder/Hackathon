@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {IProblemDetails} from "../../../../models/IProblemDetails";
 import {ActivatedRoute} from "@angular/router";
@@ -29,6 +29,7 @@ import {
   EventStageDialogData
 } from "../components/event-stage-dialog/event-stage-dialog.component";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {IEventTaskItem} from "../../../../models/Event/IEventTaskItem";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -47,8 +48,13 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
 
+  @ViewChild('eventTasksTable') eventTasksTable: MatTable<any>;
+  public eventTasksDataSource = new MatTableDataSource<IEventTaskItem>([]);
+
   @ViewChild('eventStagesTable') eventStagesTable: MatTable<any>;
   public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
+
+  @ViewChild('newTaskInput') newTaskInput: ElementRef;
 
   public form = new FormGroup({});
   public eventImage: any;
@@ -89,6 +95,11 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
         value.order = index * 10;
       });
 
+      let eventTasks = this.eventTasksDataSource.data;
+      eventTasks.forEach((value, index) => {
+        value.order = index * 10;
+      });
+
       if (!this.editMode) {
         let event: ICreateEvent = {
           name: this.form.get('name')?.value,
@@ -104,6 +115,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value,
           stages: eventStages,
+          tasks: eventTasks,
           rules: this.form.get('rules')?.value
         };
 
@@ -122,6 +134,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           userId: Number(this.event?.owner?.id),
           changeEventStatusMessages: this.eventStatusDataSource.data,
           stages: eventStages,
+          tasks: eventTasks,
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value,
@@ -254,6 +267,12 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     this.eventStagesDataSource.data = this.eventStagesDataSource.data;
   }
 
+  public removeEventTask(eventTask: IEventTaskItem):void{
+    const index = this.eventTasksDataSource.data.indexOf(eventTask);
+    if (index > -1) this.eventTasksDataSource.data.splice(index, 1);
+    this.eventTasksDataSource.data = this.eventTasksDataSource.data;
+  }
+
   public clearEventImage(): void{
     this.form.controls['imageId'].reset();
     this.eventImage = undefined;
@@ -307,6 +326,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
     this.eventStagesDataSource.data = this.event.stages;
 
+    if (this.event.tasks)
+      this.eventTasksDataSource.data = this.event.tasks;
+
     if (this.event.imageId)  {
       this.loadImage(this.event.imageId);
     }
@@ -350,5 +372,26 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     const previousIndex = this.eventStagesDataSource.data.findIndex(row => row === event.item.data);
     moveItemInArray(this.eventStagesDataSource.data, previousIndex, event.currentIndex);
     this.eventStagesTable.renderRows();
+  }
+
+  public dropEventTaskRow(event: CdkDragDrop<MatTableDataSource<IEventTaskItem>, IEventTaskItem>){
+    const previousIndex = this.eventTasksDataSource.data.findIndex(row => row === event.item.data);
+    moveItemInArray(this.eventTasksDataSource.data, previousIndex, event.currentIndex);
+    this.eventTasksTable.renderRows();
+  }
+
+  public addEventTaskFromInput(){
+    let value = this.newTaskInput.nativeElement.value;
+
+    if (!value)
+      return;
+
+    if (this.eventTasksDataSource.data.find(x=> x.title == value))
+      return;
+
+    this.eventTasksDataSource.data.push({title: value, order: 0});
+    this.eventTasksTable.renderRows();
+    this.newTaskInput.nativeElement.value = null;
+    this.newTaskInput.nativeElement.focus();
   }
 }

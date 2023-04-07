@@ -1,8 +1,9 @@
-import {Component, Injectable, OnInit} from "@angular/core";
+import {Component, Injectable} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
 import {IProject} from "../../../../models/Project/IProject";
 import {EventCardBaseComponent} from "../components/event-card-base.component";
 import {AuthService} from "../../../../services/auth.service";
+import {Event} from "../../../../models/Event/Event";
 
 @Component({
   selector: `event-card-started`,
@@ -11,9 +12,10 @@ import {AuthService} from "../../../../services/auth.service";
 })
 
 @Injectable()
-export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit
+export class EventCardStartedComponent extends EventCardBaseComponent
 {
   Pages = Pages;
+  Event = Event;
 
   set selectedChatIndex(value) { this._selectedChatIndex.next(value); };
   get selectedChatIndex() { return this._selectedChatIndex.getValue(); }
@@ -24,16 +26,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   project: IProject | undefined;
   sideBarWidthPx: number = 200;
   currentChatId: number = -1;
-  eventTasks: string[] = [
-    'Развернуть на этапы процесс реализации фичи смены тем приложения (темная/светлая)',
-    'Сделать обязательным изображение события при создании/редактировании карточки события',
-    'Добавить возможность изменить тип команды Открытый/Закрытый'
-  ];
 
   constructor(private authService:AuthService) {
-
     super();
-
 
     this.currentUserId = this.authService.getUserId();
 
@@ -55,10 +50,6 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
           break;
       }
     })
-
-  }
-
-  ngOnInit(): void {
   }
 }
 

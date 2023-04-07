@@ -177,6 +177,14 @@ mat-tab-group.vertical-tabs {
   flex-direction: column;
 }
 
+.flex-align-items-center {
+  align-items: center;
+}
+
+.flex-justify-content-center {
+  justify-content: center;
+}
+
 .container-event {
   padding: 0 1em 0 1em;
 }
