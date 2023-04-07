@@ -83,7 +83,7 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// Идентификатор текущего этапа события
     /// </summary>
     public long CurrentStageId { get; set; }
-    
+
     /// <summary>
     /// Этапы событи
     /// </summary>
@@ -108,4 +108,9 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// Признак удаления
     /// </summary>
     public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// Задачи, которые ставятся перед участниками мероприятия
+    /// </summary>
+    public EventTaskItem[]? Tasks { get; set; }
 }

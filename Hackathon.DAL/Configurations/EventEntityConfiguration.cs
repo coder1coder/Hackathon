@@ -6,6 +6,8 @@ namespace Hackathon.DAL.Configurations;
 
 public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
 {
+    private const string JsonBColumnType = "jsonb";
+
     public void Configure(EntityTypeBuilder<EventEntity> builder)
     {
         builder.ToTable("Events");
@@ -32,7 +34,11 @@ public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
         builder.Property(x => x.OwnerId).IsRequired();
 
         builder.Property(x => x.ChangeEventStatusMessages)
-            .HasColumnType("jsonb")
+            .HasColumnType(JsonBColumnType)
+            .IsRequired();
+
+        builder.Property(x => x.Tasks)
+            .HasColumnType(JsonBColumnType)
             .IsRequired();
 
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);

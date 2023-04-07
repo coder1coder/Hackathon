@@ -1,5 +1,6 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
 import {EventStage} from "./EventStage";
+import {IEventTaskItem} from "./IEventTaskItem";
 
 export interface ICreateEvent
 {
@@ -30,4 +31,7 @@ export interface ICreateEvent
 
   //Правила участия
   rules: string;
+
+  //Задачи, которые ставятся перед участниками мероприятия
+  tasks: IEventTaskItem[]
 }

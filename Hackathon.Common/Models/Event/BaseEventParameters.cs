@@ -76,4 +76,9 @@ public abstract class BaseEventParameters
     /// Правила участия
     /// </summary>
     public string Rules { get; set; }
+
+    /// <summary>
+    /// Задачи, которые ставятся перед участниками мероприятия
+    /// </summary>
+    public EventTaskItem[] Tasks { get; set; }
 }

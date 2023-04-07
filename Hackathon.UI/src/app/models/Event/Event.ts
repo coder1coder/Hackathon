@@ -3,6 +3,7 @@ import {EventStatus} from "./EventStatus";
 import {Team} from "../Team/Team";
 import {IUser} from "../User/IUser";
 import {EventStage} from "./EventStage";
+import {IEventTaskItem} from "./IEventTaskItem";
 
 export class Event {
   id!: number;
@@ -24,6 +25,13 @@ export class Event {
   award!: string;
   imageId: string;
   imageUrl?: string;
+
+  //Задачи, которые ставятся перед участниками мероприятия
+  tasks: IEventTaskItem[];
+
+  public static hasTasks(event: Event):boolean{
+    return event?.tasks?.length > 0
+  }
 
   public static getUsersCount(event:Event): number {
     return event.teams?.reduce((acc, team) => acc + team.members.length, 0);
