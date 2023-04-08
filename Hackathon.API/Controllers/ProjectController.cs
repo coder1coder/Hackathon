@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
-using Hackathon.Contracts.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -25,13 +24,12 @@ public class ProjectController: BaseController
     }
 
     /// <summary>
-    /// Получить проект по идентификатору
+    /// Получить проект
     /// </summary>
-    /// <param name="id">Идентификатор проекта</param>
     /// <returns></returns>
-    [HttpGet("{id:long}")]
-    public Task<ProjectModel> Get(long id)
-        => _projectService.GetAsync(id);
+    [HttpGet("{eventId:long}/{teamId:long}")]
+    public Task<ProjectModel> Get([FromRoute] long eventId, [FromRoute] long teamId)
+        => _projectService.GetAsync(eventId, teamId);
 
     /// <summary>
     /// Создать новый проект
@@ -39,22 +37,40 @@ public class ProjectController: BaseController
     /// <param name="projectCreateRequest">Параметры проекта</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<BaseCreateResponse> Create(ProjectCreateRequest projectCreateRequest)
+    public Task<IActionResult> Create([FromBody] ProjectCreateRequest projectCreateRequest)
     {
         var projectCreateModel = _mapper.Map<ProjectCreateParameters>(projectCreateRequest);
-        var projectId = await _projectService.CreateAsync(projectCreateModel);
-        return new BaseCreateResponse
-        {
-            Id = projectId
-        };
+        return GetResult(() => _projectService.CreateAsync(projectCreateModel));
     }
 
     /// <summary>
-    /// Обновить проект из гит репозитория
+    /// Обновить проект
     /// </summary>
     /// <param name="parameters">Параметры</param>
     /// <returns></returns>
-    [HttpPut("git")]
-    public Task UpdateFromGit(ProjectUpdateFromGitParameters parameters)
-        => _projectService.UpdateFromGitAsync(AuthorizedUserId, parameters);
+    [HttpPut]
+    public Task<IActionResult> Update([FromBody] ProjectUpdateParameters parameters)
+        => GetResult(() => _projectService.UpdateAsync(parameters, AuthorizedUserId));
+
+    /// <summary>
+    /// Обновить проект из ветки Git-репозитория
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPut("branch")]
+    public Task<IActionResult> UpdateProjectFromGitBranch([FromBody] UpdateProjectFromGitBranchRequest request)
+    {
+        var parameters = _mapper.Map<UpdateProjectFromGitBranchRequest, UpdateProjectFromGitBranchParameters>(request);
+        return GetResult(() => _projectService.UpdateProjectFromGitBranchAsync(parameters, AuthorizedUserId));
+    }
+
+    /// <summary>
+    /// Удалить проект
+    /// </summary>
+    /// <param name="eventId"></param>
+    /// <param name="teamId"></param>
+    /// <returns></returns>
+    [HttpDelete("{eventId:long}/{teamId:long}")]
+    public Task<IActionResult> Delete(long eventId, long teamId)
+        => GetResult(() => _projectService.DeleteAsync(eventId, teamId, AuthorizedUserId));
 }

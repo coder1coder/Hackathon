@@ -52,7 +52,11 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
     this.initForm();
 
-    this._chatId.subscribe(_=>{
+    this._chatId.subscribe(value=>{
+
+      if (value < 1)
+        return;
+
       this.fetchTeam();
       this.fetchMessages();
     })
@@ -70,9 +74,9 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   }
 
   fetchMessages(): void {
-    if (this._canView)
+    if (this._canView && this.chatId > 0)
     {
-      this.teamChatClient.getListAsync(this.chatId!)
+      this.teamChatClient.getListAsync(this.chatId)
         .subscribe({
           next: (r: BaseCollection<TeamChatMessage>) =>  {
             this.messages = r.items

@@ -4,5 +4,6 @@ export interface IProblemDetails
   status: number | undefined;
   title: string | undefined;
   type: string | undefined;
-  'validation-error': string | undefined
+  'validation-error': string | undefined;
+  errors: object;
 }

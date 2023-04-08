@@ -6,15 +6,10 @@ namespace Hackathon.Common.Models.Project;
 public class ProjectFilter
 {
     /// <summary>
-    /// Идентификаторы проектов
-    /// </summary>
-    public long[] Ids { get; set; }
-    
-    /// <summary>
     /// Идентификаторы событий
     /// </summary>
     public long[] EventsIds { get; set; }
-    
+
     /// <summary>
     /// Идентификаторы команд
     /// </summary>

@@ -80,5 +80,5 @@ public abstract class BaseEventParameters
     /// <summary>
     /// Задачи, которые ставятся перед участниками мероприятия
     /// </summary>
-    public EventTaskItem[] Tasks { get; set; }
+    public EventTaskItem[] Tasks { get; set; } = Array.Empty<EventTaskItem>();
 }

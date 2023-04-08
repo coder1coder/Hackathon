@@ -1,10 +1,9 @@
 ﻿using Hackathon.DAL.Entities.Event;
-using Hackathon.DAL.Entities.Interfaces;
 using System;
 
 namespace Hackathon.DAL.Entities;
 
-public class ProjectEntity: BaseEntity, ISoftDeletable
+public class ProjectEntity
 {
     /// <summary>
     /// Наименование
@@ -36,7 +35,7 @@ public class ProjectEntity: BaseEntity, ISoftDeletable
     public Guid[] FileIds { get; set; } = Array.Empty<Guid>();
 
     /// <summary>
-    /// Признак удаления
+    /// Ссылка на ветку Git-репозитория
     /// </summary>
-    public bool IsDeleted { get; set; } = false;
+    public string LinkToGitBranch { get; set; }
 }

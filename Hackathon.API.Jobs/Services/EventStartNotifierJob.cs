@@ -32,8 +32,8 @@ public class EventStartNotifierJob: IEventStartNotifierJob
         {
             if (eventsResult.Data.Items is {Count: > 0})
                 await _notificationService.PushManyAsync(
-                    eventsResult.Data.Items.Select(x => NotificationFactory
-                        .InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
+                    eventsResult.Data.Items.Select(x =>
+                        NotificationFactory.InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
         }
     }
 }

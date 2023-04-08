@@ -43,7 +43,7 @@ public class EmailConfirmationRepository: IEmailConfirmationRepository
     {
         var entity = await _dbContext.EmailConfirmations
             .FirstOrDefaultAsync(x =>
-            x.UserId == parameters.UserId);
+                x.UserId == parameters.UserId);
 
         if (entity is not null)
         {

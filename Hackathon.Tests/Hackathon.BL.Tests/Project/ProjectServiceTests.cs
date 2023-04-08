@@ -1,6 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using FluentAssertions;
 using FluentValidation;
 using Hackathon.BL.Project;
 using Hackathon.Common.Abstraction.Project;
@@ -13,11 +11,15 @@ namespace Hackathon.BL.Tests.Project;
 public class ProjectServiceTests: BaseUnitTest
 {
     private readonly Mock<IValidator<ProjectCreateParameters>> _createValidatorMock;
-    private readonly  Mock<IProjectRepository> _projectRepositoryMock;
+    private readonly Mock<IValidator<ProjectUpdateParameters>> _updateValidatorMock;
+    private readonly Mock<IValidator<UpdateProjectFromGitBranchParameters>> _updateFromGitBranchValidator;
+    private readonly Mock<IProjectRepository> _projectRepositoryMock;
 
     public ProjectServiceTests()
     {
+        _updateFromGitBranchValidator = new Mock<IValidator<UpdateProjectFromGitBranchParameters>>();
         _createValidatorMock = new Mock<IValidator<ProjectCreateParameters>>();
+        _updateValidatorMock = new Mock<IValidator<ProjectUpdateParameters>>();
         _projectRepositoryMock = new Mock<IProjectRepository>();
     }
 
@@ -25,15 +27,14 @@ public class ProjectServiceTests: BaseUnitTest
     public async Task Create_Should_Return_Positive_Id()
     {
         //arrange
-        var createdId = new Random().Next(0, 11);
-
         _projectRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<ProjectCreateParameters>()))
-            .ReturnsAsync(createdId);
+            .Returns(Task.CompletedTask);
 
         var service = new ProjectService(
             _projectRepositoryMock.Object,
             _createValidatorMock.Object,
-            null,
+            _updateValidatorMock.Object,
+            _updateFromGitBranchValidator.Object,
             null,
             null
         );
@@ -42,6 +43,7 @@ public class ProjectServiceTests: BaseUnitTest
         var result = await service.CreateAsync(new ProjectCreateParameters());
 
         //assert
-        result.Should().Be(createdId);
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
     }
 }

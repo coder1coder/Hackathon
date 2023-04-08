@@ -30,6 +30,10 @@ export class Event {
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];
 
+  public static getMemberTeam(event:Event, memberId: number): Team | undefined{
+    return event?.teams.find(x=>x.members.findIndex(s=>s.id == memberId) >=0);
+  }
+
   public static hasTasks(event: Event):boolean{
     return event?.tasks?.length > 0
   }

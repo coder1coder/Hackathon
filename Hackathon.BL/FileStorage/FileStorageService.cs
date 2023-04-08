@@ -115,11 +115,13 @@ public class FileStorageService : IFileStorageService
             return Result.NotFound(string.Format(FileWithIdNotFoundPattern, storageFileId));
         }
 
-        await _fileStorageRepository.RemoveAsync(fileInfo.Id);
-
+        //Сначала удаляем из хранилища
         var _ = await _s3Client.DeleteObjectAsync(
             fileInfo.BucketName,
             storageFileId.ToString());
+
+        //потом запись из БД
+        await _fileStorageRepository.RemoveAsync(fileInfo.Id);
 
         return Result.Success;
     }

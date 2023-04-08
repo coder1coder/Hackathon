@@ -12,7 +12,7 @@ public interface ITeamApi
     private const string BaseRoute = "/api/Team";
 
     [Post(BaseRoute)]
-    Task<IApiResponse<BaseCreateResponse>> Create([Body] CreateTeamRequest createTeamRequest);
+    Task<IApiResponse<BaseCreateResponse>> CreateAsync([Body] CreateTeamRequest createTeamRequest);
 
     [Get(BaseRoute + "/{id}")]
     Task<TeamModel> Get(long id);

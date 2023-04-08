@@ -71,31 +71,8 @@ public class EventControllerTests : BaseIntegrationTest
     [Fact]
     public async Task StartEvent_ShouldSuccess()
     {
-        // Создаем событие
-        var request = new Faker<CreateEventRequest>()
-            .RuleFor(x => x.Description, f => f.Random.String2(400))
-            .RuleFor(x => x.Name, Guid.NewGuid().ToString())
-            .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
-            .RuleFor(x => x.DevelopmentMinutes, 10)
-            .RuleFor(x => x.TeamPresentationMinutes, 10)
-            .RuleFor(x => x.MemberRegistrationMinutes, 10)
-            .RuleFor(x => x.IsCreateTeamsAutomatically, true)
-            .RuleFor(x => x.MinTeamMembers, 1)
-            .RuleFor(x => x.MaxEventMembers, 2)
-            .RuleFor(x => x.Award, "0")
-            .RuleFor(x => x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
-            .RuleFor(x => x.Stages, _=>
-                new List<EventStageModel>
-                {
-                    new()
-                    {
-                        Name = Guid.NewGuid().ToString(),
-                        Duration = 5
-                    }
-                })
-            .Generate(1)
-            .First();
-
+        var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
+        var request = Mapper.Map<CreateEventRequest>(@event);
         var createEventResponse = await EventsApi.Create(request);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам
@@ -106,12 +83,12 @@ public class EventControllerTests : BaseIntegrationTest
         });
 
         // Присоединяемся к событию в качестве участника
-        await EventsApi.Join(createEventResponse.Id);
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
         // Регистрируем нового участника в событии
         var user = await RegisterUser();
         SetToken(user.Token);
-        await EventsApi.Join(createEventResponse.Id);
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
         // Начинаем событие
         SetToken(TestUser.Token);
@@ -127,29 +104,16 @@ public class EventControllerTests : BaseIntegrationTest
     public async Task GoNextStage_ShouldSuccess()
     {
         //arrange
-        var stages = new Faker<EventStageModel>()
+        var @event = TestFaker.GetEventModels(1, TestUser.Id).First();
+
+        @event.Stages = new Faker<EventStageModel>()
             .RuleFor(x => x.Name, f => f.Random.String2(10))
             .RuleFor(x => x.Duration, f => f.Random.Int(1, 10))
             .Generate(3)
-            .ToArray();
+            .ToList();
 
-        var createEventRequest = new Faker<CreateEventRequest>()
-            .RuleFor(x => x.Description, f => f.Random.String2(400))
-            .RuleFor(x => x.Name, Guid.NewGuid().ToString())
-            .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
-            .RuleFor(x => x.DevelopmentMinutes, 10)
-            .RuleFor(x => x.TeamPresentationMinutes, 10)
-            .RuleFor(x => x.MemberRegistrationMinutes, 10)
-            .RuleFor(x => x.IsCreateTeamsAutomatically, true)
-            .RuleFor(x => x.MinTeamMembers, 1)
-            .RuleFor(x => x.MaxEventMembers, 2)
-            .RuleFor(x => x.Award, "0")
-            .RuleFor(x => x.ChangeEventStatusMessages, new List<ChangeEventStatusMessage>())
-            .RuleFor(x => x.Stages, _=> stages)
-            .Generate(1)
-            .First();
-
-        var createEventResponse = await EventsApi.Create(createEventRequest);
+        var request = Mapper.Map<CreateEventRequest>(@event);
+        var createEventResponse = await EventsApi.Create(request);
 
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
@@ -157,11 +121,11 @@ public class EventControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        await EventsApi.Join(createEventResponse.Id);
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
         var user = await RegisterUser();
         SetToken(user.Token);
-        await EventsApi.Join(createEventResponse.Id);
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
         SetToken(TestUser.Token);
 

@@ -26,6 +26,7 @@
                      >
 
         <mat-tab [hidden]="!Event.hasTasks(event)">
+
           <div class="padding-1em">
             <h2>Задачи мероприятия</h2>
             <ol>
@@ -57,12 +58,44 @@
         <mat-tab>
 
           <div class="padding-1em">
+
+            <h2>Проект</h2>
+
             <div *ngIf="project; else hasNoProject">
-              some project info
+
+              <div *ngIf="project.name">
+                Наименование: {{ project.name }}
+              </div>
+
+              <div *ngIf="project.description">
+                Описание: {{ project.description }}
+              </div>
+
+              <div *ngIf="project.linkToGitBranch">
+                Git-репозиторий: {{ project.linkToGitBranch }}
+              </div>
+
+              <div *ngIf="project.files != null && project.files.length > 0; else noFiles;">
+                <ul>
+                  <li *ngFor="let file of project.files">
+                    {{ file.fileName }}
+                  </li>
+                </ul>
+              </div>
+
+              <ng-template #noFiles>
+                <br/>
+                <button mat-button color="primary" (click)="showProjectDialog()">Обновить информацию о проекте</button>
+                <br/>
+                <button mat-button color="primary" (click)="showUpdateProjectFromBitBranchDialog()">Обновить файлы проекта из Git-репозитория</button>
+                <br/>
+                <button mat-button color="primary" (click)="removeProject()">Удалить проект</button>
+              </ng-template>
+
             </div>
 
             <ng-template #hasNoProject>
-              <button mat-button class="newProjectButton">
+              <button mat-button class="newProjectButton" (click)="showProjectDialog()">
                 <mat-icon color="primary">add</mat-icon>
                 Добавить проект
               </button>

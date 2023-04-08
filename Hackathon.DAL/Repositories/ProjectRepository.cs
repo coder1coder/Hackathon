@@ -26,27 +26,41 @@ public class ProjectRepository: IProjectRepository
         _dbContext = dbContext;
     }
 
-    public async Task<long> CreateAsync(ProjectCreateParameters projectCreateParameters)
+    public async Task CreateAsync(ProjectCreateParameters projectCreateParameters)
     {
         var projectEntity = _mapper.Map<ProjectEntity>(projectCreateParameters);
         await _dbContext.Projects.AddAsync(projectEntity);
         await _dbContext.SaveChangesAsync();
-        return projectEntity.Id;
     }
 
     public async Task UpdateAsync(ProjectUpdateParameters parameters)
     {
         var entity = await _dbContext.Projects.FirstOrDefaultAsync(x =>
-            x.Id == parameters.Id
-            && !x.IsDeleted);
+            x.EventId == parameters.EventId
+            && x.TeamId == parameters.TeamId);
 
-        if (entity is null)
-            return;
+        if (entity is not null)
+        {
+            _mapper.Map(parameters, entity);
+            _dbContext.Projects.Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 
-        _mapper.Map(parameters, entity);
+    public async Task UpdateUploadingFromGitInfo(ProjectUploadingFromGitInfoDto uploadingFromGitInfo)
+    {
+        var entity = await _dbContext.Projects.FirstOrDefaultAsync(x =>
+            x.EventId == uploadingFromGitInfo.EventId
+            && x.TeamId == uploadingFromGitInfo.TeamId);
 
-        _dbContext.Projects.Update(entity);
-        await _dbContext.SaveChangesAsync();
+        if (entity is not null)
+        {
+            entity.LinkToGitBranch = uploadingFromGitInfo.LinkToGitBranch;
+            entity.FileIds = uploadingFromGitInfo.FileIds;
+
+            _dbContext.Projects.Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public async Task<BaseCollection<ProjectListItem>> GetListAsync(GetListParameters<ProjectFilter> parameters)
@@ -56,10 +70,6 @@ public class ProjectRepository: IProjectRepository
             .Include(x => x.Team)
             .AsNoTracking()
             .AsQueryable();
-
-        if (parameters.Filter?.Ids != null)
-            query = query.Where(x=>
-                parameters.Filter.Ids.Contains(x.Id));
 
         if (parameters.Filter?.EventsIds != null)
             query = query.Where(x=>
@@ -82,7 +92,6 @@ public class ProjectRepository: IProjectRepository
                 .Take(parameters.Limit)
                 .Select(x=> new ProjectListItem
                 {
-                    Id = x.Id,
                     Name = x.Name,
                     EventId = x.EventId,
                     TeamId = x.TeamId,
@@ -94,25 +103,37 @@ public class ProjectRepository: IProjectRepository
         };
     }
 
-    public async Task<ProjectModel> GetAsync(long projectId)
+    public async Task<ProjectModel> GetAsync(long eventId, long teamId)
     {
-        var entity = await _dbContext.Projects.FirstOrDefaultAsync(x =>
-            x.Id == projectId
-            && !x.IsDeleted);
+        var entity = await _dbContext.Projects
+            .Include(x=>x.Team)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+                x.EventId == eventId
+                && x.TeamId == teamId);
 
         return _mapper.Map<ProjectEntity, ProjectModel>(entity);
     }
 
-    public Task<bool> Exists(long projectId)
-        => _dbContext.Projects.AnyAsync(x =>
-            x.Id == projectId
-            && !x.IsDeleted);
+    public async Task DeleteAsync(long eventId, long teamId)
+    {
+        var entity = await _dbContext.Projects
+            .FirstOrDefaultAsync(x =>
+                x.EventId == eventId
+                && x.TeamId == teamId);
+
+        if (entity is not null)
+        {
+            _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 
     private static Expression<Func<ProjectEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy?.ToLowerInvariant() switch
         {
             "eventId" => x => x.EventId,
             "teamId" => x =>x.TeamId,
-            _ => x => x.Id
+            _ => x => x.Name
         };
 }

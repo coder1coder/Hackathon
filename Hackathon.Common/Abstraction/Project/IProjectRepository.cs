@@ -15,7 +15,7 @@ public interface IProjectRepository
     /// </summary>
     /// <param name="projectCreateParameters">Параметры</param>
     /// <returns></returns>
-    Task<long> CreateAsync(ProjectCreateParameters projectCreateParameters);
+    Task CreateAsync(ProjectCreateParameters projectCreateParameters);
 
     /// <summary>
     /// Обновить проект
@@ -25,6 +25,13 @@ public interface IProjectRepository
     Task UpdateAsync(ProjectUpdateParameters parameters);
 
     /// <summary>
+    /// Обновить информацию обновления проекта из Git-репозитория
+    /// </summary>
+    /// <param name="uploadingFromGitInfo"></param>
+    /// <returns></returns>
+    Task UpdateUploadingFromGitInfo(ProjectUploadingFromGitInfoDto uploadingFromGitInfo);
+
+    /// <summary>
     /// Получить список проектов
     /// </summary>
     /// <param name="parameters">Параметры</param>
@@ -32,16 +39,18 @@ public interface IProjectRepository
     Task<BaseCollection<ProjectListItem>> GetListAsync(GetListParameters<ProjectFilter> parameters);
 
     /// <summary>
-    /// Получить проект по идентификатору
+    /// Получить проект
     /// </summary>
-    /// <param name="projectId">Идентификатор проекта</param>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <param name="teamId">Идентификатор команды</param>
     /// <returns></returns>
-    Task<ProjectModel> GetAsync(long projectId);
+    Task<ProjectModel> GetAsync(long eventId, long teamId);
 
     /// <summary>
-    /// Проверяет существование проекта по идентификатору
+    /// Удалить проект
     /// </summary>
-    /// <param name="projectId">Идентификатор проекта</param>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <param name="teamId">Идентификатор команды</param>
     /// <returns></returns>
-    Task<bool> Exists(long projectId);
+    Task DeleteAsync(long eventId, long teamId);
 }
