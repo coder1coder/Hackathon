@@ -1,4 +1,4 @@
-@import 'src/mixins';
+@import 'assets/styles/mixins';
 
 body {
   @include absolute0;
@@ -222,4 +222,8 @@ mat-tab-group.without-header .mat-tab-header {
 
 .mat-tab-group, .mat-tab-body-wrapper {
   height: 100%;
+}
+
+.background-white {
+  background-color: white;
 }

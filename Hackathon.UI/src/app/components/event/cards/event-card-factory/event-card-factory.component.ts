@@ -16,8 +16,9 @@ import {EventCreateEditCardComponent} from "../event-create-edit-card/event-crea
 import {finalize} from "rxjs/operators";
 import {EventService} from "../../../../services/event/event.service";
 import {EventMainViewCardComponent} from "../event-main-view-card/event-main-view-card.component";
-import {EventFinishedViewCardComponent} from "../event-finished-view-card/event-finished-view-card.component";
 import {EventCardStartedComponent} from "../event-card-started/event-card-started.component";
+import {EventCardPublishedComponent} from "../event-card-published/event-card-published.component";
+import {EventCardFinishedComponent} from "../event-card-finished/event-card-finished.component";
 
 @Component({
   selector: 'app-event-card-factory',
@@ -88,14 +89,14 @@ export class EventCardFactoryComponent implements OnInit {
 
     switch (this.event?.status) {
       case EventStatus.Draft: return EventCreateEditCardComponent;
-      case EventStatus.Published: return EventMainViewCardComponent;
+      case EventStatus.Published: return EventCardPublishedComponent;
       case EventStatus.Started: return EventCardStartedComponent;
       case EventStatus.Development: return EventMainViewCardComponent;
       case EventStatus.Prepare: return EventMainViewCardComponent;
       case EventStatus.Presentation: return EventMainViewCardComponent;
       case EventStatus.Decision: return EventMainViewCardComponent;
       case EventStatus.Award: return EventMainViewCardComponent;
-      case EventStatus.Finished: return EventFinishedViewCardComponent;
+      case EventStatus.Finished: return EventCardFinishedComponent;
     }
   }
 

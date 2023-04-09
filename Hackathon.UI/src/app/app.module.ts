@@ -60,19 +60,21 @@ import { EventDirective } from "./components/event/event.directive";
 import { EventCreateEditCardComponent } from "./components/event/cards/event-create-edit-card/event-create-edit-card.component";
 import { EventButtonActionsComponent } from './components/event/cards/components/actions/event-button-actions.component';
 import { EventMainViewCardComponent } from "./components/event/cards/event-main-view-card/event-main-view-card.component";
-import { EventFinishedViewCardComponent } from './components/event/cards/event-finished-view-card/event-finished-view-card.component';
 import { EventStatusComponent } from './components/event/cards/components/event-status/event-status.component';
-import {ImageFromStorageComponent} from "./components/custom/image-from-storage/image-from-storage.component";
-import {TeamComponent} from "./components/team/team/team.component";
-import {ChatTeamComponent} from "./components/chat/team/chat-team.component";
+import { ImageFromStorageComponent } from "./components/custom/image-from-storage/image-from-storage.component";
+import { TeamComponent } from "./components/team/team/team.component";
+import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import {
   EventStageDialogComponent
 } from "./components/event/cards/components/event-stage-dialog/event-stage-dialog.component";
-import {DragDropModule} from "@angular/cdk/drag-drop";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 import {
   CancelJoinRequestCommentDialog
 } from "./components/team/cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component";
-import {EventCardStartedComponent} from "./components/event/cards/event-card-started/event-card-started.component";
+import { EventCardStartedComponent } from "./components/event/cards/event-card-started/event-card-started.component";
+import { EventHeaderComponent } from './components/event/cards/components/event-header/event-header.component';
+import { EventCardPublishedComponent } from './components/event/cards/event-card-published/event-card-published.component';
+import { EventCardFinishedComponent } from "./components/event/cards/event-card-finished/event-card-finished.component";
 
 @NgModule({
   declarations: [
@@ -89,10 +91,12 @@ import {EventCardStartedComponent} from "./components/event/cards/event-card-sta
     EventNewStatusDialogComponent,
     EventButtonActionsComponent,
     EventStatusComponent,
+    EventHeaderComponent,
     ImageFromStorageComponent,
     EventMainViewCardComponent,
     EventCreateEditCardComponent,
-    EventFinishedViewCardComponent,
+    EventCardFinishedComponent,
+    EventCardPublishedComponent,
     EventCardFactoryComponent,
     EventDirective,
     EventStageDialogComponent,
