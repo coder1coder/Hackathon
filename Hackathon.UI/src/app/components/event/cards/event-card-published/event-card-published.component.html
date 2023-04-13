@@ -1,0 +1,170 @@
+<layout-default
+  [isLoading]="isLoading"
+  [hideTitleBar]="false" class="hackathon-background"
+  [containerCssClasses]="'container container-full'"
+  [layoutCssClasses]="'background-white'">
+  <div alert *ngIf="eventService.isEventOwner(event)">
+    <alert>Вы являетесь организатором события</alert>
+  </div>
+  <div actions>
+    <app-actions
+      [event]="event">
+    </app-actions>
+  </div>
+
+  <div class="event event-published">
+    <app-event-header
+      [event]="event">
+    </app-event-header>
+
+    <div class="event-content">
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Призовой фонд</div>
+        <div class="event-content__section-content">
+          <div class="event-content__award">
+            <div class="event-content__award-image">
+              <img src="assets/img/award.svg" alt="award">
+            </div>
+            <div class="event-content__award-title">
+              {{event?.award ?? 0}}₽
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Организатор</div>
+        <div class="event-content__section-content">
+
+          <div class="event-content__owner">
+            <div class="event-content__owner-image">
+              <image-from-storage [imageId]="event.owner?.profileImageId"></image-from-storage>
+            </div>
+            <div class="event-content__owner-name">
+              {{ event.owner?.fullName ?? event.owner.userName }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Общая информация</div>
+        <div class="event-content__section-content">
+          <div class="event-content__info">
+            <div class="event-content__info-content">
+              <div class="event-content__info-title">
+                Участники
+              </div>
+              <div class="event-content__info-desc">
+                {{ getUsersCount(event)}}/{{ event?.maxEventMembers }}
+              </div>
+            </div>
+
+            <div class="event-content__info-content">
+              <div class="event-content__info-title">
+                Регистрация участников
+              </div>
+              <div class="event-content__info-desc">
+                {{ event.memberRegistrationMinutes }}мин
+              </div>
+            </div>
+
+            <div class="event-content__info-content">
+              <div class="event-content__info-title">
+                Разработка
+              </div>
+              <div class="event-content__info-desc">
+                {{ event.developmentMinutes }}мин
+              </div>
+            </div>
+
+            <div class="event-content__info-content">
+              <div class="event-content__info-title">
+                Презентация
+              </div>
+              <div class="event-content__info-desc">
+                {{ event.teamPresentationMinutes }}мин
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Этапы</div>
+        <div class="event-content__section-content">
+          <div class="event-content__stages" *ngIf="event.stages?.length; else empty">
+            <div class="event-content__stage" *ngFor="let stage of event.stages">
+              <div class="event-content__stage-content">
+                <div class="event-content__stage-name">
+                  {{ stage.name }}
+                </div>
+                <div class="event-content__stage-duration">
+                  {{ stage.duration }}мин
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Задачи</div>
+        <div class="event-content__section-content">
+          <div class="event-content__tasks" *ngIf="event.tasks?.length; else empty">
+            <div class="event-content__task" *ngFor="let task of event.tasks">
+              <div class="event-content__task-content">
+                <div class="event-content__task-name">
+                  {{ task.title }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section">
+        <div class="event-content__section-title">Правила</div>
+        <div class="event-content__section-content">
+          <div class="event-content__rules" *ngIf="event.rules; else empty">
+           {{event.rules}}
+          </div>
+        </div>
+      </section>
+
+      <section class="event-content__section" *ngIf="userId === event.owner.id">
+        <div class="event-content__section-title">Уведомления</div>
+        <div class="event-content__section-content">
+          <div class="event-content__statuses" *ngIf="event.changeEventStatusMessages?.length; else empty">
+            <div class="event-content__status-content status-header">
+              <div class="event-content__status-name">
+                Статус
+              </div>
+              <div class="event-content__status-message">
+                Сообщение
+              </div>
+            </div>
+            <div class="event-content__status" *ngFor="let eventStatus of event.changeEventStatusMessages">
+              <div class="event-content__status-content">
+                <div class="event-content__status-name">
+                  {{ eventStatusTranslator.Translate(eventStatus.status) }}
+                </div>
+                <div class="event-content__status-message">
+                  {{ eventStatus.message }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</layout-default>
+
+<ng-template #empty>
+  <div>Нет элементов для отображения</div>
+</ng-template>
