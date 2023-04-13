@@ -1,33 +1,15 @@
 <layout-default
   [title]="'Событие: ' + event.name"
   [isLoading]="isLoading"
-  [hideTitlebar]="true" class="hackathon-background"
-  containerClasses="container container-full">
+  [hideTitleBar]="true" class="hackathon-background"
+  containerCssClasses="container container-full">
 
   <div class="event event-finished">
-    <div class="event-header">
-
-      <div class="event-header__cover">
-        <image-from-storage [imageId]="event.imageId"></image-from-storage>
-        <div class="event-header__cover-shadow"></div>
-      </div>
-
-      <div class="event-header__content">
-
-        <div class="container">
-          <div class="event-header__title">{{ event.name }}</div>
-          <div class="event-header__description">{{ event.description }}</div>
-          <div class="event-header__meta">
-            событие от {{ startDate }} завершено
-          </div>
-
-        </div>
-      </div>
-    </div>
-
+    <app-event-header
+    [event]="event">
+    </app-event-header>
 
     <div class="event-content">
-
       <section class="event-content__section">
         <div class="event-content__section-title">Участники и команды</div>
         <div class="event-content__section-content">

@@ -1,4 +1,4 @@
-@import "src/variables";
+@import "../../../assets/styles/variables";
 
 .bell {
   margin-right: 8px;
@@ -6,4 +6,8 @@
 
 mat-toolbar {
   background-color: $additional-color;
+}
+
+.logo {
+  padding-right: 10px;
 }

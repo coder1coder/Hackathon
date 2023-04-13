@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {EventCardBaseComponent} from "../components/event-card-base.component";
 import {Event} from "../../../../models/Event/Event";
-import {DATE_FORMAT} from "../../../../common/date-formats";
-import * as moment from "moment/moment";
 import {RouterService} from "../../../../services/router.service";
 import {Team} from "../../../../models/Team/Team";
 import {AuthService} from "../../../../services/auth.service";
@@ -11,10 +9,10 @@ import {IProject} from "../../../../models/Project/IProject";
 
 @Component({
   selector: 'app-event-finished-view-card',
-  templateUrl: './event-finished-view-card.component.html',
-  styleUrls: ['./event-finished-view-card.component.scss']
+  templateUrl: './event-card-finished.component.html',
+  styleUrls: ['./event-card-finished.component.scss']
 })
-export class EventFinishedViewCardComponent extends EventCardBaseComponent implements OnInit {
+export class EventCardFinishedComponent extends EventCardBaseComponent implements OnInit {
 
   private readonly userId: number;
 
@@ -27,10 +25,6 @@ export class EventFinishedViewCardComponent extends EventCardBaseComponent imple
   }
 
   ngOnInit(): void {
-  }
-
-  public get startDate(): string {
-    return moment(this.event?.start).local().format(DATE_FORMAT)
   }
 
   public getEventMembers(): IUser[]{

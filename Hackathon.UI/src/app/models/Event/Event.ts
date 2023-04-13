@@ -25,6 +25,7 @@ export class Event {
   award!: string;
   imageId: string;
   imageUrl?: string;
+  rules?: string;
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];

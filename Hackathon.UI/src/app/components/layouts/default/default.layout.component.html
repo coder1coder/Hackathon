@@ -1,13 +1,16 @@
 <toolbar [logoMinWidth]="logoMinWidth" [toolbarMenuItems]="toolbarMenuItems"></toolbar>
 
-<div class="layout-default__page-bar" *ngIf="!hideTitlebar && !isLoading">
-  <div class="layout-default__title">{{ title }}</div>
+<div class="layout-default__page-bar {{layoutCssClasses}}" *ngIf="!hideTitleBar && !isLoading">
+  <div>
+    <div class="layout-default__title" *ngIf="title">{{ title }}</div>
+    <ng-content select="[alert]"></ng-content>
+  </div>
   <div class="layout-default__actions">
     <ng-content select="[actions]"></ng-content>
   </div>
 </div>
 
-<div class="{{ containerClasses }}" *ngIf="!(isLoading && hideContentWhileLoading)">
+<div class="{{ containerCssClasses }}" *ngIf="!(isLoading && hideContentWhileLoading)">
   <ng-content></ng-content>
 </div>
 

@@ -44,8 +44,9 @@ export class EventButtonActionsComponent implements OnInit {
           this.eventService.reloadEvent.next(true);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail);
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
         }
       });
   }
@@ -58,8 +59,9 @@ export class EventButtonActionsComponent implements OnInit {
           this.eventService.reloadEvent.next(true);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail);
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
         }
       });
   }
@@ -72,8 +74,9 @@ export class EventButtonActionsComponent implements OnInit {
           this.eventService.reloadEvent.next(true);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail);
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
         }
       });
   }
@@ -86,8 +89,9 @@ export class EventButtonActionsComponent implements OnInit {
           this.eventService.reloadEvent.next(true);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail);
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
         }
       });
   }
@@ -100,8 +104,9 @@ export class EventButtonActionsComponent implements OnInit {
             this.snack.open(`Событие удалено`));
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail);
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
         }
       });
   }
@@ -114,8 +119,10 @@ export class EventButtonActionsComponent implements OnInit {
           this.eventService.reloadEvent.next(true);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snack.open(problemDetails.detail)}
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
+        }
       });
   }
 
