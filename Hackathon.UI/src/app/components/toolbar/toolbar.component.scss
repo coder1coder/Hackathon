@@ -5,9 +5,17 @@
 }
 
 mat-toolbar {
-  background-color: $additional-color;
+  background-color: $white-color-90;
 }
 
 .logo {
   padding-right: 10px;
+}
+
+.toggle {
+  font-size: 14px;
+}
+
+.toolbar {
+  //box-shadow: 0 15px 15px #f3f3f3;
 }

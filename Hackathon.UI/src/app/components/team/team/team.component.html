@@ -2,11 +2,11 @@
   *ngIf="team"
   animationDuration="0ms"
   dynamicHeight
-  class="vertical-tabs"
+  class="vertical-tabs team-chat-theme"
   (selectedTabChange)="tabChanged($event)"
 >
 
-  <mat-tab class="mat-tab-body-position-absolute" *ngIf="isTeamMember">
+  <mat-tab class=" mat-tab-body-position-absolute" *ngIf="isTeamMember">
 
     <ng-template mat-tab-label>
       <mat-icon>chat</mat-icon>

@@ -1,0 +1,49 @@
+@import 'variables';
+
+.mat-list-base .mat-list-item{
+  font-size: 14px;
+}
+
+.mat-tab-label-content mat-icon {
+  margin-right: .5em;
+}
+
+mat-tab-group.vertical-tabs {
+
+  @include flex-row;
+  column-gap: 2em;
+  height: 100%;
+
+  mat-tab-header{
+    border: 0;
+  }
+
+  mat-ink-bar {
+    display: none;
+  }
+
+  .mat-tab-labels {
+    flex-direction: column;
+
+    .mat-tab-label{
+      justify-content: left;
+    }
+  }
+
+  .mat-tab-label-active{
+    opacity: 1;
+  }
+
+  .mat-tab-body-wrapper {
+    flex: 1 1 auto;
+    padding-left: 1em;
+  }
+}
+
+mat-tab-group.without-header .mat-tab-header {
+  display: none;
+}
+
+.mat-tab-group, .mat-tab-body-wrapper {
+  height: 100%;
+}

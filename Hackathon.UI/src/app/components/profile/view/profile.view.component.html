@@ -1,4 +1,7 @@
-<layout-default title="Профиль" [isLoading]="isLoading">
+<layout-default
+  [title]="'Профиль'"
+  [isLoading]="isLoading"
+>
 
   <div actions *ngIf="user">
     <button *ngIf="!isEditMode" mat-button color="primary" (click)="userEdit()">Редактировать</button>

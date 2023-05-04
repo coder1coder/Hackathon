@@ -1,8 +1,9 @@
 <layout-default
-  title="События"
-  containerCssClasses="{{layoutCssClasses}}"
+  [title]="'События'"
+  [containerCssClasses]="layoutCssClasses"
   [isLoading]="isLoading"
-  [hideContentWhileLoading]="false">
+  [hideContentWhileLoading]="false"
+>
 
   <div actions>
     <button mat-button color="primary" (click)="this.router.Events.New()">
@@ -11,7 +12,7 @@
     </button>
   </div>
 
-  <div class="event-block">
+  <div class="event-block dark-theme-color">
     <div class="mb-1-5em">
       <form [formGroup]="filterForm" class="events__filter">
         <mat-form-field appearance="outline">
@@ -71,7 +72,7 @@
          (scrolled)="fetch()">
 
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
-        <div class="card" (click)="rowClick(item)">
+        <div class="card dark-theme-background" (click)="rowClick(item)">
 
           <div class="card__image">
             <image-from-storage [imageId]="item.imageId"></image-from-storage>

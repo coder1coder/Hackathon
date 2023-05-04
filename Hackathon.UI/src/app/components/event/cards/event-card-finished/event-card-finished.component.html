@@ -2,7 +2,8 @@
   [title]="'Событие: ' + event.name"
   [isLoading]="isLoading"
   [hideTitleBar]="true" class="hackathon-background"
-  containerCssClasses="container container-full">
+  [containerCssClasses]="'dark-theme-color'"
+>
 
   <div class="event event-finished">
     <app-event-header
