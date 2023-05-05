@@ -35,7 +35,7 @@ export class SignalRService
     try
     {
       this._connection.start().then(_=>{
-        console.log("SignalR Connected");
+        console.debug("SignalR Connected");
       });
     }
     catch (err)

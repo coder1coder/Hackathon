@@ -32,7 +32,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -64,7 +64,7 @@ public class TeamApiTests: BaseIntegrationTest
         SetToken(user.Token);
 
         //act
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
@@ -88,7 +88,7 @@ public class TeamApiTests: BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        await TeamApiClient.Create(new CreateTeamRequest
+        await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -97,7 +97,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, secondUserToken) = await RegisterUser();
         SetToken(secondUserToken);
 
-       await TeamApiClient.Create(new CreateTeamRequest
+       await TeamApiClient.CreateAsync(new CreateTeamRequest
        {
            Name = Guid.NewGuid().ToString()[..4],
            Type = TeamType.Public
@@ -124,7 +124,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -153,7 +153,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -186,7 +186,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -227,7 +227,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -258,7 +258,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -288,7 +288,7 @@ public class TeamApiTests: BaseIntegrationTest
         var (_, teamOwnerToken) = await RegisterUser();
         SetToken(teamOwnerToken);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Private
@@ -332,7 +332,7 @@ public class TeamApiTests: BaseIntegrationTest
         var teamOwner = await RegisterUser();
         SetToken(teamOwner.Token);
 
-        var teamCreateResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             Type = TeamType.Public

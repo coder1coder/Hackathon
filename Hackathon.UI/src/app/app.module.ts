@@ -75,6 +75,8 @@ import { EventCardStartedComponent } from "./components/event/cards/event-card-s
 import { EventHeaderComponent } from './components/event/cards/components/event-header/event-header.component';
 import { EventCardPublishedComponent } from './components/event/cards/event-card-published/event-card-published.component';
 import { EventCardFinishedComponent } from "./components/event/cards/event-card-finished/event-card-finished.component";
+import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.component";
+import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
 
 @NgModule({
   declarations: [
@@ -109,6 +111,9 @@ import { EventCardFinishedComponent } from "./components/event/cards/event-card-
     ChatTeamComponent,
     UserTeamComponent,
     CancelJoinRequestCommentDialog,
+
+    ProjectDialog,
+    ProjectGitDialog,
 
     UserListComponent,
 

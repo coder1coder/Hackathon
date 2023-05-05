@@ -34,11 +34,15 @@ export class EventCardFinishedComponent extends EventCardBaseComponent implement
   public getEventProjects(): IProject[]{
     return [{
       imageId: undefined,
+      eventId: 0,
+      teamId: 0,
       name: `Система безконтактного приема товара с использованием устройств МАЛИНА-0912`,
       description: `Программное обеспечение для управления системой бесконтактного приема товара с использованием устройств МАЛИНА-0912 от российских производителей`
     },
       {
         imageId: undefined,
+        eventId: 0,
+        teamId: 0,
         name: `Мобильное приложения для контроля региональных поставок `,
         description: `Мобильное приложение под ОС Android позволяет контролировать логистику товаров на региональном уровне`
       }];

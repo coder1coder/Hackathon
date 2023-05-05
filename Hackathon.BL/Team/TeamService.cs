@@ -224,7 +224,6 @@ public class TeamService : ITeamService
             {
                 EventId = x.EventId,
                 EventName = x.EventName,
-                ProjectId = x.Id,
                 ProjectName = x.Name,
                 TeamId = x.TeamId,
                 TeamName = x.TeamName

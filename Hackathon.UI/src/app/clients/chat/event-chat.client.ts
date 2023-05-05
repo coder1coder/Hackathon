@@ -1,6 +1,5 @@
 import {HttpClient} from "@angular/common/http";
 import {BaseApiClient} from "../base.client";
-import {TeamChatMessage} from "../../models/chat/TeamChatMessage";
 import {Observable} from "rxjs";
 import {BaseCollection} from "../../models/BaseCollection";
 import {Injectable} from "@angular/core";
