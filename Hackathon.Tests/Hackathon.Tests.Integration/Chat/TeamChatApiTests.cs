@@ -21,7 +21,7 @@ public class TeamChatApiTests: BaseIntegrationTest
         var newUser = await RegisterUser();
         SetToken(newUser.Token);
 
-        var createTeamResponse = await TeamApiClient.Create(new CreateTeamRequest
+        var createTeamResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..30],
             Type = TeamType.Public

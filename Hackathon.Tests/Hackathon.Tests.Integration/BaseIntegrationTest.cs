@@ -29,7 +29,7 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
     protected readonly IUserApi UsersApi;
     protected readonly IEventApi EventsApi;
     protected readonly ITeamApi TeamApiClient;
-    protected readonly IProjectApi ProjectsApi;
+    protected readonly IProjectApiClient ProjectsApiClient;
     protected readonly IFriendshipApi FriendshipApi;
     protected readonly ITeamChatApiClient TeamChatApiClient;
     protected readonly IEventChatApiClient EventChatApiClient;
@@ -96,7 +96,7 @@ public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFacto
         UsersApi = RestService.For<IUserApi>(_httpClient, refitSettings);
         EventsApi = RestService.For<IEventApi>(_httpClient, refitSettings);
         TeamApiClient = RestService.For<ITeamApi>(_httpClient, refitSettings);
-        ProjectsApi = RestService.For<IProjectApi>(_httpClient, refitSettings);
+        ProjectsApiClient = RestService.For<IProjectApiClient>(_httpClient, refitSettings);
         FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, refitSettings);
         TeamChatApiClient = RestService.For<ITeamChatApiClient>(_httpClient, refitSettings);
         EventChatApiClient = RestService.For<IEventChatApiClient>(_httpClient, refitSettings);

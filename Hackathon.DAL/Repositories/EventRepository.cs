@@ -43,8 +43,8 @@ public class EventRepository : IEventRepository
         var eventEntity = await _dbContext.Events
             .AsNoTracking()
             .Include(x => x.Teams)
-                .ThenInclude(x => x.Members)
-                    .ThenInclude(x => x.Member)
+            .ThenInclude(x => x.Members)
+            .ThenInclude(x => x.Member)
             .Include(x => x.Owner)
             .Include(x=>x.Stages)
             .FirstOrDefaultAsync(x => x.Id == eventId);

@@ -8,10 +8,10 @@ public sealed class GitParameters
     public string Branch { get; set; }
 
     public bool IsFull =>
-        !string.IsNullOrEmpty(Url)
-        && !string.IsNullOrEmpty(UserName)
-        && !string.IsNullOrEmpty(Repository)
-        && !string.IsNullOrEmpty(Branch);
+        !string.IsNullOrWhiteSpace(Url)
+        && !string.IsNullOrWhiteSpace(UserName)
+        && !string.IsNullOrWhiteSpace(Repository)
+        && !string.IsNullOrWhiteSpace(Branch);
 
     public string ToZipLink()
         => $"{Url}/{UserName}/{Repository}/archive/refs/heads/{Branch}.zip";

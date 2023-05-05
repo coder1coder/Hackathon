@@ -12,18 +12,18 @@ public interface IFileStorageRepository
     /// <param name="storageFile"></param>
     /// <returns></returns>
     Task AddAsync(StorageFile storageFile);
-    
+
     /// <summary>
     /// Получить информацию о файле
     /// </summary>
-    /// <param name="id">Идентификатор файла</param>
+    /// <param name="fileId">Идентификатор файла</param>
     /// <returns></returns>
-    Task<StorageFile> GetAsync(Guid id);
-    
+    Task<StorageFile> GetAsync(Guid fileId);
+
     /// <summary>
     /// Удалить запись о файле
     /// </summary>
-    /// <param name="id">Идентификатор файла</param>
+    /// <param name="fileId">Идентификатор файла</param>
     /// <returns></returns>
-    Task RemoveAsync(Guid id);
+    Task RemoveAsync(Guid fileId);
 }

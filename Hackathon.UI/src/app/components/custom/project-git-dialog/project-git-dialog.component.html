@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Проект</h2>
+<div mat-dialog-content>
+  <form [formGroup]="form" class="form-vertical">
+    <div class="form-vertical__fields">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Git-репозиторий</mat-label>
+        <input matInput
+               autocomplete="off"
+               id="linkToGitBranch"
+               formControlName="linkToGitBranch">
+
+      </mat-form-field>
+
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">OK</button>
+  <button mat-button mat-dialog-close="">Отмена</button>
+</div>

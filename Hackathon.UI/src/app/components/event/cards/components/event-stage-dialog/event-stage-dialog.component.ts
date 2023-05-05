@@ -23,8 +23,10 @@ export class EventStageDialogComponent implements OnInit {
   public form = new FormGroup({});
   matcher = new CustomErrorStateMatcher();
 
-  constructor(private fb: FormBuilder,public dialogRef: MatDialogRef<EventStageDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private dialogData: EventStageDialogData
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<EventStageDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private dialogData: EventStageDialogData
   ) {
   }
 

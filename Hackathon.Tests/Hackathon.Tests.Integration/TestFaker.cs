@@ -35,7 +35,7 @@ public class TestFaker
         return faker.Generate(count);
     }
 
-    public IEnumerable<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
+    public List<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
     {
         var eventEntities = GetEventEntities(count, userId, eventStatus);
         return _mapper.Map<List<EventModel>>(eventEntities);
@@ -43,21 +43,17 @@ public class TestFaker
 
     #endregion
 
-    #region Entities
-
-    private static IEnumerable<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)
-    {
-        var faker = new Faker<EventEntity>();
-
-        faker
+    private static List<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)
+        => new Faker<EventEntity>()
             .RuleFor(x=>x.Id, f => f.Random.Long(1))
             .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
             .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
+            .RuleFor(x => x.IsCreateTeamsAutomatically, true)
             .RuleFor(x => x.MemberRegistrationMinutes, f => f.Random.Int(1, 30))
             .RuleFor(x => x.DevelopmentMinutes, f => f.Random.Int(1, 30))
             .RuleFor(x => x.TeamPresentationMinutes, f => f.Random.Int(1, 30))
             .RuleFor(x => x.MaxEventMembers, _ => 30)
-            .RuleFor(x => x.MinTeamMembers, _ => 3)
+            .RuleFor(x => x.MinTeamMembers, _ => 1)
             .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
             .RuleFor(x => x.OwnerId, ownerId)
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
@@ -76,11 +72,6 @@ public class TestFaker
             .RuleFor(x=>x.Tasks, f=> f.Random.WordsArray(EventTasksAmount).Select(x=>new EventTaskItem
             {
                 Title = x
-            }));
-
-        return faker.Generate(count);
-    }
-
-    #endregion
-
+            }).ToArray())
+            .Generate(count);
 }

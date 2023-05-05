@@ -19,7 +19,7 @@ public interface IEventApi
     Task<IApiResponse<EventModel>> Get(long id);
 
     [Post(BaseRoute + "/{id}/join")]
-    Task Join(long id);
+    Task JoinAsync(long id);
 
     /// <summary>
     /// Переключить событие на следующий этап

@@ -62,8 +62,10 @@ public static class OperationResultExtensions
             Instance = instance
         };
 
-        foreach (var (key, value) in result.Errors.Values)
-            problemDetails.Extensions.TryAdd(key, value);
+        problemDetails.Extensions["errors"] = result.Errors.Values;
+
+        // foreach (var (key, value) in result.Errors.Values)
+        //     problemDetails.Extensions.TryAdd(key, value);
 
         return problemDetails;
     }

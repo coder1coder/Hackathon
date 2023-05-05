@@ -25,22 +25,22 @@ public class FileStorageRepository: IFileStorageRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<StorageFile> GetAsync(Guid id)
+    public async Task<StorageFile> GetAsync(Guid fileId)
     {
         var entity = await _dbContext.StorageFiles
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == fileId);
 
         return entity is not null
             ? _mapper.Map<StorageFile>(entity)
             : null;
     }
 
-    public async Task RemoveAsync(Guid id)
+    public async Task RemoveAsync(Guid fileId)
     {
         var entity = await _dbContext.StorageFiles
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == fileId);
 
         if (entity is not null)
         {

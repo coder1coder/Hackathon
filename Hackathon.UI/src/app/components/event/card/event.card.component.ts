@@ -19,6 +19,7 @@ import {EventService} from "../../../services/event/event.service";
   templateUrl: './event.card.component.html',
   styleUrls: ['./event.card.component.scss']
 })
+
 export class EventCardComponent implements AfterViewInit {
 
   public event: Event = new Event();

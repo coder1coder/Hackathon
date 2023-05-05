@@ -18,11 +18,9 @@ public class ProjectEntityConfiguration: IEntityTypeConfiguration<ProjectEntity>
             .Property(x => x.Description)
             .HasMaxLength(1000);
 
+        builder.HasKey(x => new {x.EventId, x.TeamId});
+
         builder.HasOne(x => x.Event);
         builder.HasOne(x => x.Team);
-
-        builder
-            .Property(x => x.IsDeleted)
-            .HasDefaultValue(false);
     }
 }

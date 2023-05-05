@@ -18,7 +18,11 @@ namespace Hackathon.BL.Validation;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterValidators(this IServiceCollection services) => services
-        .AddScoped<IValidator<ProjectCreateParameters>, ProjectCreateModelValidator>()
+        .AddScoped<IValidator<IHasProjectIdentity>, ProjectIdentityParametersValidator>()
+        .AddScoped<IValidator<BaseProjectParameters>, BaseProjectParametersValidator>()
+        .AddScoped<IValidator<ProjectCreateParameters>, ProjectCreateParametersValidator>()
+        .AddScoped<IValidator<ProjectUpdateParameters>, ProjectUpdateParametersValidator>()
+        .AddScoped<IValidator<UpdateProjectFromGitBranchParameters>, UpdateProjectFromGitParametersValidator>()
         .AddScoped<IValidator<CreateTeamModel>, CreateTeamModelValidator>()
         .AddScoped<IValidator<TeamMemberModel>, TeamAddMemberModelValidator>()
         .AddScoped<IValidator<GetListParameters<TeamFilter>>, GetListParametersValidator<TeamFilter>>()
@@ -29,7 +33,6 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<EventCreateParameters>, CreateEventModelValidator>()
         .AddScoped<IValidator<EventUpdateParameters>, UpdateEventModelValidator>()
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
-        .AddScoped<IValidator<ProjectUpdateFromGitParameters>, ProjectUpdateFromGitParametersValidator>()
         .AddScoped<IValidator<INewChatMessage>, CreateChatMessageValidator>()
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>();
 }
