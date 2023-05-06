@@ -1,8 +1,8 @@
 <layout-default
   [isLoading]="isLoading"
   [hideTitleBar]="false" class="hackathon-background"
-  [containerCssClasses]="'container container-full'"
-  [layoutCssClasses]="'background-white'">
+  [containerCssClasses]="'dark-theme-color'"
+>
   <div alert *ngIf="eventService.isEventOwner(event)">
     <alert>Вы являетесь организатором события</alert>
   </div>

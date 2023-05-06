@@ -8,7 +8,6 @@
   &__vertical-fields {
 
     @include flex-column;
-    max-width: 600px;
     width: 100%;
   }
 }

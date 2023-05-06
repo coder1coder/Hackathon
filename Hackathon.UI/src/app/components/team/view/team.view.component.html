@@ -1,14 +1,14 @@
-<layout-default title="Команда">
+<layout-default
+  [title]="'Команда'"
+>
 
   <div actions>
-
     <button mat-button color="primary" *ngIf="canJoinToTeam" (click)="joinToTeam()">Вступить в команду</button>
     <button mat-button color="primary" *ngIf="canSendRequestJoinToTeam" (click)="sendRequestJoinToTeam()">Подать заявку на вступление</button>
     <button mat-button color="accent" *ngIf="hasSentJoinRequest" (click)="cancelSentJoinRequest()">Отменить заявку на вступление</button>
 
     <button mat-button color="primary" *ngIf="canLeaveTeam" (click)="leaveTeam()">Покинуть команду</button>
-
   </div>
-  <team [team]="team"></team>
 
+  <team [team]="team"></team>
 </layout-default>

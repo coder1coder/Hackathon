@@ -27,7 +27,12 @@
     padding-top: 5em;
     padding-bottom: 5em;
 
-    & .container {
+    & .header-container {
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+      height: 100%;
+      position: relative;
       max-width: $event-finished-content-max-width;
     }
   }

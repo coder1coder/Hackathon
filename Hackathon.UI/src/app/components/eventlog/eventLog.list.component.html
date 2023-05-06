@@ -1,4 +1,6 @@
-<layout-default title="Журнал событий">
+<layout-default
+  [title]="'Журнал событий'"
+>
 
   <div *ngIf="items.length > 0">
     <table mat-table [dataSource]="items">

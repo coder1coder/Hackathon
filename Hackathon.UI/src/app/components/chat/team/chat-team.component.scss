@@ -19,7 +19,6 @@
 
   &__members {
     width: 200px;
-    background-color: $additional-color;
   }
 
   main {
@@ -31,18 +30,15 @@
     width: 100%;
     box-sizing: border-box;
 
-    padding-left: 1em;
-    padding-bottom: 1em;
-    padding-top: 1em;
+    padding: 1em;
   }
-
 }
 
 .chat {
 
   &__body {
     flex: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   &__footer {
@@ -84,22 +80,20 @@
       flex-direction: column;
       padding: 4px 8px;
       border-radius: 4px;
-      background: #f8f8f8;
       min-width: 40%;
 
       &.your {
-        background: #3f51b5;
-        color: #f8f8f8;
+        background: $chat-color-content;
+        color: $white-color !important;;
       }
     }
 
     &-meta {
       padding-top: 3px;
-      color: #333;
       font-size: .8em;
 
       &.your {
-        color: #fff;
+        color: $white-color !important;
       }
     }
   }

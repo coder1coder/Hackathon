@@ -1,4 +1,6 @@
-<layout-default title="Новая команда">
+<layout-default
+  [title]="'Новая команда'"
+>
 
   <form [formGroup]="form" class="form-vertical" >
     <div class="vertical__fields">
@@ -8,7 +10,7 @@
                id="name" formControlName="name"
                required>
       </mat-form-field>
-      
+
     </div>
     <div class="vertical__fields">
       <mat-form-field appearance="fill">

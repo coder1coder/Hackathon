@@ -1,229 +1,61 @@
+@use '@angular/material' as mat;
+@import 'assets/styles/theme';
+@import 'assets/styles/variables';
 @import 'assets/styles/mixins';
+@import 'assets/styles/common';
+@import 'assets/styles/mat-custom';
+
+@include mat.core();
+
+$theme-mat-primary: mat.define-palette(mat.$indigo-palette);
+$theme-mat-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$theme-mat-warn: mat.define-palette(mat.$red-palette);
+
+$theme-light: mat.define-light-theme((
+  color: (
+    primary: $theme-mat-primary,
+    accent: $theme-mat-accent,
+    warn: $theme-mat-warn,
+  )
+));
+
+$theme-dark: mat.define-dark-theme((
+  color: (
+    primary: $theme-mat-primary,
+    accent: $theme-mat-accent,
+    warn: $theme-mat-warn,
+  ),
+  container: (
+    color: $black-color,
+    background: $black-color
+  )
+));
+
+.theme-dark-mode {
+  @include mat.all-component-themes($theme-dark);
+}
+
+.theme-light-mode {
+  @include mat.all-component-themes($theme-light);
+}
 
 body {
   @include absolute0;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 400;
+
+  .theme-dark-mode & {
+    background: $black-color-70;
+  }
+  .theme-light-mode & {
+    background: $white-color;
+  }
 }
 
 html {
   max-height: 100%;
   height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-weight: 400;
-}
-
-@keyframes slide{
-  0% { background-position-y: 0; }
-  100% {  background-position-y: -1920px; }
-}
-
-.hackathon-background {
-  background: url('assets/img/back.png');
-  animation: slide 180s linear infinite;
-}
-
-b {
-  font-weight: 500;
-}
-
-table {
-  width: 100%;
-
-  tr {
-    cursor: pointer;
-  }
-}
-
-.container {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-  height: 100%;
-  position: relative;
-
-  &-full {
-    max-width: 100%;
-  }
-
-  &-padding {
-    padding: 2em;
-  }
-
-  &-center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
-.mb-1-5em {
-  margin-bottom: 1.5em;
-}
-
-.form {
-  height: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  &-vertical {
-    &__fields {
-      display: flex;
-      flex-direction: column;
-      max-width: 400px;
-      width: 300px;
-    }
-
-    &__bottom {
-      padding-top: 1em;
-    }
-
-    &__buttons {
-      display: flex;
-      column-gap: 10px;
-    }
-  }
-}
-
-.table-list-actions-column {
-  width: 40px;
-}
-
-.not-elements-found-message {
-  margin-bottom: 10px;
-  font-size: .9em;
-  opacity: .5;
-}
-
-.empty {
-  position: relative;
-  padding-bottom: 5em;
-
-  &::after {
-    color: dimgray;
-    padding: 2em 0;
-    content: 'Нет элементов для отображения';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    z-index: 1;
-  }
-}
-.mat-list-base .mat-list-item{
-  font-size: 14px;
-}
-
-.mat-tab-label-content mat-icon {
-  margin-right: .5em;
-}
-
-mat-tab-group.vertical-tabs {
-
-  @include flex-row;
-  column-gap: 2em;
-  height: 100%;
-
-  mat-tab-header{
-    border: 0;
-  }
-
-  mat-ink-bar {
-    display: none;
-  }
-
-  .mat-tab-labels {
-    flex-direction: column;
-
-    .mat-tab-label{
-      justify-content: left;
-    }
-  }
-
-  .mat-tab-label-active{
-    opacity: 1;
-  }
-
-  .mat-tab-body-wrapper {
-    flex: 1 1 auto;
-    box-shadow: -20px 0px 20px 0px rgb(248 248 248);
-    padding-left: 1em;
-  }
-}
-
-.d-flex {
-  display: flex;
-}
-
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-align-items-center {
-  align-items: center;
-}
-
-.flex-justify-content-center {
-  justify-content: center;
-}
-
-.container-event {
-  padding: 0 1em 0 1em;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-column-gap: 16px;
-  grid-row-gap: 16px;
-}
-
-.grid-1-2 {
-  grid-column: span 3;
-}
-
-.grid-1-4 {
-  grid-column: span 4;
-}
-
-.h-100 {
-  height: 100% !important;
-}
-
-.relative {
-  position: relative;
-}
-
-mat-tab-group.without-header .mat-tab-header {
-  display: none;
-}
-
-.padding-1em {
-  padding: 1em;
-}
-
-.mat-tab-group, .mat-tab-body-wrapper {
-  height: 100%;
-}
-
-.background-white {
-  background-color: white;
 }

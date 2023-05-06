@@ -1,0 +1,169 @@
+@import 'variables';
+
+.hackathon-background {
+  background: url('../img/back.png');
+  animation: slide 180s linear infinite;
+
+  .theme-dark-mode & {
+    background: url('../img/back-dark.png');
+    animation: slide 180s linear infinite;
+  }
+}
+
+@keyframes slide {
+  0% { background-position-y: 0; }
+  100% {  background-position-y: -1920px; }
+}
+
+table {
+  width: 100%;
+
+  tr {
+    cursor: pointer;
+  }
+}
+
+.container {
+  .theme-dark-mode & {
+    background: $grey-color-10;
+    color: white;
+  }
+
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  height: 100%;
+  position: relative;
+
+  &-full {
+    max-width: 100%;
+  }
+
+  &-padding {
+    padding: 2em;
+  }
+
+  &-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.mb-1-5em {
+  margin-bottom: 1.5em;
+}
+
+.form {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &-vertical {
+    &__fields {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      width: 300px;
+    }
+
+    &__bottom {
+      padding-top: 1em;
+    }
+
+    &__buttons {
+      display: flex;
+      column-gap: 10px;
+    }
+  }
+}
+
+.table-list-actions-column {
+  width: 40px;
+}
+
+.not-elements-found-message {
+  margin-bottom: 10px;
+  font-size: .9em;
+  opacity: .5;
+}
+
+.empty {
+  position: relative;
+  padding-bottom: 5em;
+
+  &::after {
+    color: dimgray;
+    padding: 2em 0;
+    content: 'Нет элементов для отображения';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-align-items-center {
+  align-items: center;
+}
+
+.flex-justify-content-center {
+  justify-content: center;
+}
+
+.container-event {
+  padding: 15px 1em 0 1em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+}
+
+.grid-1-2 {
+  grid-column: span 3;
+}
+
+.grid-1-4 {
+  grid-column: span 4;
+}
+
+.h-100 {
+  height: 100% !important;
+}
+
+.relative {
+  position: relative;
+}
+
+.padding-1em {
+  padding: 1em;
+}
+

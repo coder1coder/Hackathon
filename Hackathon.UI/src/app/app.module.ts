@@ -77,6 +77,7 @@ import { EventCardPublishedComponent } from './components/event/cards/event-card
 import { EventCardFinishedComponent } from "./components/event/cards/event-card-finished/event-card-finished.component";
 import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.component";
 import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -163,6 +164,7 @@ import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-g
     MatGridListModule,
     MatTabsModule,
     MatCardModule,
+    MatSlideToggleModule,
     InfiniteScrollModule
   ],
   providers: [
