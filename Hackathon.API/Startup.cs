@@ -27,6 +27,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Prometheus;
 using StackExchange.Redis;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -151,6 +152,9 @@ public class Startup
         IOptions<AppSettings> appSettings,
         IOptions<DataSettings> dataSettings)
     {
+        app.UseMetricServer();
+        app.UseHttpMetrics();
+
         var appConfig = appSettings.Value;
 
         if (dataSettings?.Value?.ApplyMigrationsAtStart == true)

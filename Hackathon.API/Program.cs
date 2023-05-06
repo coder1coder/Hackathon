@@ -1,9 +1,11 @@
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Exceptions;
+using Serilog.Exceptions.Core;
 using System;
+using System.IO;
 
 namespace Hackathon.API;
 
@@ -29,8 +31,12 @@ public class Program
         Host
             .CreateDefaultBuilder(args)
             .UseSerilog((context, _, configuration) => configuration
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder())
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
                 .ReadFrom.Configuration(context.Configuration)
-                .WriteTo.Console())
+            )
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder

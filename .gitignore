@@ -34,7 +34,8 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-./Hackathon.Infrastucture/minio/
-./minio/
-/minio/
-minio/
+docker/minio/
+docker/grafana/*
+!docker/grafana/provisioning
+
+logs/

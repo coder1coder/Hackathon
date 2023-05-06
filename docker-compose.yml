@@ -39,7 +39,32 @@ services:
       MINIO_ROOT_PASSWORD: minio123
     command: server --console-address ":9001" /data
     volumes:
-      - ./minio:/data
+      - ./docker/minio:/data
     ports:
       - "9000:9000"
       - "9001:9001"
+
+  grafana:
+    container_name: hackathon_grafana
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/hackathon.json
+    volumes:
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/
+    ports:
+      - "3000:3000"
+
+  loki:
+    container_name: hackathon_loki
+    image: grafana/loki:2.8.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+  prometheus:
+    container_name: hackathon_prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
