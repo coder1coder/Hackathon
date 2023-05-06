@@ -1,4 +1,6 @@
-<layout-default title="Уведомления">
+<layout-default
+  [title]="'Уведомления'"
+>
 
   <ng-template [ngIf]="items != undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
 

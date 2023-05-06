@@ -43,6 +43,6 @@ export class Event {
   }
 
   public static getMembers(event:Event): IUser[]{
-    return  event.teams?.flatMap(x=>x.members);
+    return event.teams?.flatMap(x=>x.members);
   }
 }

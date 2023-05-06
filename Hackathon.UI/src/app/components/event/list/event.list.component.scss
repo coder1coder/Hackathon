@@ -1,3 +1,5 @@
+@import 'src/assets/styles/variables';
+
 $cards-gap: .5em;
 $card-width: 33%;
 
@@ -51,7 +53,6 @@ $card-width: 33%;
     flex-basis: $card-width;
     max-width: $card-width;
 
-    background: #fff;
     box-sizing: border-box;
     box-shadow: 0 0 10px #e3e3e3;
     cursor: pointer;

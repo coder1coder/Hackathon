@@ -1,4 +1,6 @@
-<layout-default title="Пользователи">
+<layout-default
+  [title]="'Пользователи'"
+>
 
   <div *ngIf="items.length > 0">
     <table mat-table [dataSource]="items">

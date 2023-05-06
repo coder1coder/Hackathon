@@ -1,7 +1,8 @@
 <layout-default
   [isLoading]="isLoading"
   [showLoadingIndicator]="false"
-  title="{{ team ? 'Моя команда: ' + team?.name : 'Моя команда' }}">
+  [title]="team ? 'Моя команда: ' + team?.name : 'Моя команда'"
+>
 
   <div actions *ngIf="team">
     <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>

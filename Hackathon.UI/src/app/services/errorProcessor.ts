@@ -7,16 +7,14 @@ import {Injectable} from "@angular/core";
 })
 export class ErrorProcessor
 {
-  constructor(private snackService: SnackService) {
-  }
+  constructor(private snackService: SnackService) { }
 
   public Process(errorContext: any, defaultErrorMessage: string | null = null):void{
-
     let errorMessage = defaultErrorMessage ?? "Произошла непредвиденная ошибка";
 
     if (errorContext.error !== undefined) {
-      let problemDetails: IProblemDetails = <IProblemDetails>errorContext.error;
-      errorMessage = (problemDetails.errors) ? Object.values(problemDetails.errors)[0] : errorContext.title;
+      const problemDetails: IProblemDetails = <IProblemDetails>errorContext.error;
+      errorMessage = Boolean(problemDetails?.errors) ? Object.values(problemDetails.errors)[0] : (problemDetails?.detail || errorContext.title);
     }
 
     this.snackService.open(errorMessage);

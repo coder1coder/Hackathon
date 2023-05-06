@@ -1,0 +1,57 @@
+@import 'variables';
+
+.dark-theme-background {
+  .theme-dark-mode & {
+    background: $grey-color-10;
+    color: $white-color;
+  }
+  .theme-light-mode & {
+    background: $white-color;
+    color: $black-color;
+  }
+}
+
+.dark-theme-color {
+  .theme-dark-mode & {
+    color: $white-color;
+  }
+  .theme-light-mode & {
+    color: $black-color;
+  }
+}
+
+.team-chat-theme {
+  .theme-dark-mode & {
+    .mat-tab-body-wrapper {
+      background: $black-color-80;
+      box-shadow: none;
+      color: $white-color;
+      .chat__message-meta {
+        color: $grey-color-30;
+      }
+      .event-started__content-top {
+        border-bottom: 1px solid $grey-color-10;
+      }
+    }
+  }
+  .theme-light-mode & {
+    .mat-tab-body-wrapper {
+      box-shadow: -20px 0px 20px 0px rgb(248 248 248);
+      .chat__message-meta {
+        color: $black-color-70;
+      }
+      .event-started__content-top {
+        border-bottom: 1px solid #ededed;
+      }
+    }
+  }
+}
+
+.loader-theme {
+  .theme-dark-mode & {
+    background: rgba(122, 120, 120, 0.75);
+  }
+  .theme-light-mode & {
+    background: rgba(255, 255, 255, 0.75);
+  }
+}

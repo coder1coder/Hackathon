@@ -1,7 +1,8 @@
 @import "../../../../../assets/styles/mixins";
+@import "../../../../../assets/styles/variables";
 
 :host{
-  background-color: #fff;
+  //background-color: #fff;
 
   & .mat-tab-header {
     background-color: red;
@@ -17,8 +18,6 @@
 
   &-sidebar{
     @include flex-column;
-
-    background-color: #FBFBFB;
     padding: 1em;
     box-sizing: border-box;
 
@@ -38,7 +37,6 @@
 
     &-top{
       padding: 1em;
-      border-bottom: 1px solid #ededed;
     }
   }
 

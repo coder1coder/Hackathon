@@ -6,7 +6,7 @@
       <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
         <profile-image [userId]="message.ownerId" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
         <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
-          <div class="chat__message-owner">{{ message.ownerFullName }}</div>
+          <div class="chat__message-owner">{{ message.ownerFullName}}</div>
           <div class="chat__message-text">{{ message.message }} </div>
           <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
         </div>
@@ -28,7 +28,7 @@
 
   </main>
 
-  <aside class="chat__members" *ngIf="showMembers">
+  <aside class="chat__members dark-theme-background" *ngIf="showMembers">
     <mat-list>
       <mat-list-item *ngFor="let member of this.members">{{ member.fullName ?? member.userName }}</mat-list-item>
     </mat-list>
