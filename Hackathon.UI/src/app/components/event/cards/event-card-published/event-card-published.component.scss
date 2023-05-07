@@ -4,7 +4,6 @@
 .event {
   @include flex-column;
   overflow-x: hidden;
-
   font-size: 16px;
 
   &-content {
@@ -90,6 +89,16 @@
 
     .status-header {
       color: #888a9d;
+    }
+  }
+}
+
+::ng-deep {
+  .event-alert {
+    alert {
+      margin: 0;
+      font-size: 14px;
+      padding: 5px 10px 5px 10px;
     }
   }
 }
