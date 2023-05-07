@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ThemeChangeService} from "./services/theme-change.service";
-import {fromMobx} from "./common/functions/from-mobx.function";
 
 @Component({
   selector: 'app-root',
@@ -16,14 +15,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initThemeMode();
-  }
-
-  private initThemeMode(): void {
-    fromMobx(() => this.themeChangeService.themeMode)
-    .subscribe((theme) => {
-      const mode = this.themeChangeService.getMode();
-      this.themeChangeService.setThemeMode(mode ?? theme);
-    })
+    this.themeChangeService.initThemeMode();
   }
 }

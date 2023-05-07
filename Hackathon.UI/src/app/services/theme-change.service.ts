@@ -4,6 +4,7 @@ import {AuthConstants} from "./auth.constants";
 import {IThemeModeInterface} from "../common/theme-mode.interface";
 import {DOCUMENT} from "@angular/common";
 import {OverlayContainer} from "@angular/cdk/overlay";
+import {fromMobx} from "../common/functions/from-mobx.function";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,14 @@ export class ThemeChangeService {
     makeObservable(this);
   }
 
+  public initThemeMode(): void {
+    fromMobx(() => this.themeMode)
+      .subscribe((theme) => {
+        const mode = this.getMode();
+        this.setThemeMode(mode ?? theme);
+      })
+  }
+
   public setMode(isDarkMode: boolean): void {
     runInAction(() => {
       this.themeMode = {
@@ -32,12 +41,12 @@ export class ThemeChangeService {
     })
   }
 
-  public getMode(): IThemeModeInterface {
+  private getMode(): IThemeModeInterface {
     const mode = this.storage.getItem(AuthConstants.STORAGE_MODE_KEY);
     return mode != undefined ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
   }
 
-  public setThemeMode(theme: IThemeModeInterface): void {
+  private setThemeMode(theme: IThemeModeInterface): void {
     if (theme.isDarkMode) {
       this.overlay.getContainerElement().classList.add(theme.modeClass);
       this.overlay.getContainerElement().classList.remove(this.lightClassName);
