@@ -1,3 +1,8 @@
+<ng-template #iconTabTemplate let-icon="icon" let-text="text">
+  <mat-icon>{{ icon }}</mat-icon>
+  {{ text }}
+</ng-template>
+
 <mat-tab-group
   *ngIf="team"
   animationDuration="0ms"
@@ -9,8 +14,7 @@
   <mat-tab class=" mat-tab-body-position-absolute" *ngIf="isTeamMember">
 
     <ng-template mat-tab-label>
-      <mat-icon>chat</mat-icon>
-      Чат
+      <ng-container [ngTemplateOutlet]="iconTabTemplate" [ngTemplateOutletContext]="{icon: 'chat', text: 'Чат'}"></ng-container>
     </ng-template>
 
     <chat-team [chatId]="team.id"></chat-team>
@@ -19,8 +23,7 @@
   <mat-tab>
 
     <ng-template mat-tab-label>
-      <mat-icon>group</mat-icon>
-      Участники
+      <ng-container [ngTemplateOutlet]="iconTabTemplate" [ngTemplateOutletContext]="{icon: 'group', text: 'Участники'}"></ng-container>
     </ng-template>
 
     <table mat-table [dataSource]="team.members" [class.empty]="team.members?.length == 0">
@@ -50,8 +53,7 @@
   <mat-tab>
 
     <ng-template mat-tab-label>
-      <mat-icon>calendar_month</mat-icon>
-      События
+      <ng-container [ngTemplateOutlet]="iconTabTemplate" [ngTemplateOutletContext]="{icon: 'calendar_month', text: 'События'}"></ng-container>
     </ng-template>
 
     <table mat-table [dataSource]="teamEvents" [class.empty]="teamEvents.length == 0">
@@ -82,8 +84,7 @@
   <mat-tab *ngIf="team && team.owner?.id == authorizedUserId">
 
     <ng-template mat-tab-label>
-      <mat-icon>present_to_all</mat-icon>
-      Завяки на вступление
+      <ng-container [ngTemplateOutlet]="iconTabTemplate" [ngTemplateOutletContext]="{icon: 'present_to_all', text: 'Завяки на вступление'}"></ng-container>
     </ng-template>
 
     <table mat-table [dataSource]="sentTeamJoinRequestsDataSource" [class.empty]="sentTeamJoinRequestsDataSource?.data?.length == 0">
