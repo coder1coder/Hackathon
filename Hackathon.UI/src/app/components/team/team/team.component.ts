@@ -54,6 +54,13 @@ export class TeamComponent {
     return this.team?.members.some(member => member.id === this.authorizedUserId);
   }
 
+  public getMemberStatus(memberId:number):string {
+    if (!Boolean(this.team)) return '';
+    return (this.team.owner?.id === memberId)
+      ? 'Владелец'
+      : 'Участник'
+  }
+
   public tabChanged(event: MatTabChangeEvent): void {
 
     if (!this.team)
