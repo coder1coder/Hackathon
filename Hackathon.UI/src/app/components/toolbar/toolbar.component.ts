@@ -4,9 +4,8 @@ import {RouterService} from "../../services/router.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CustomDialog, ICustomDialogData} from "../custom/custom-dialog/custom-dialog.component";
 import {MenuItem} from "../../common/MenuItem";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {takeUntil} from "rxjs";
-import {WithFormComponentBase} from "../WithFormComponentBase";
+import {FormBuilder} from "@angular/forms";
+import {Subject, takeUntil} from "rxjs";
 import {ThemeChangeService} from "../../services/theme-change.service";
 import {fromMobx} from "../../common/functions/from-mobx.function";
 
@@ -16,11 +15,9 @@ import {fromMobx} from "../../common/functions/from-mobx.function";
   styleUrls: ['./toolbar.component.scss'],
 })
 
-export class ToolbarComponent extends WithFormComponentBase implements OnInit {
+export class ToolbarComponent implements OnInit {
 
-  public form: FormGroup = this.fb.group({
-    toggleControl: [null]
-  });
+  public isDarkMode: boolean = false;
 
   public userName:string | undefined;
   public userId:number | undefined;
@@ -30,6 +27,8 @@ export class ToolbarComponent extends WithFormComponentBase implements OnInit {
   @Input() secondToolbar: TemplateRef<any> | null;
   @Input() secondToolbarCssClasses: string;
 
+  private destroy$ = new Subject();
+
   constructor(
     private authService:AuthService,
     private routerService:RouterService,
@@ -37,7 +36,6 @@ export class ToolbarComponent extends WithFormComponentBase implements OnInit {
     private fb: FormBuilder,
     private themeChangeService: ThemeChangeService
   ) {
-    super();
   }
 
   ngOnInit() {
@@ -67,14 +65,14 @@ export class ToolbarComponent extends WithFormComponentBase implements OnInit {
         }
       })
 
-    this.getFormControl('toggleControl').valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((darkMode) => this.themeChangeService.setMode(darkMode))
-
     fromMobx(() => this.themeChangeService.themeMode)
       .pipe(takeUntil(this.destroy$))
       .subscribe((theme) => {
-        this.getFormControl('toggleControl').setValue(theme.isDarkMode, {emitEvent: false})
+        this.isDarkMode = theme.isDarkMode;
       })
+  }
+
+  toggleApplicationTheme() {
+    this.themeChangeService.setMode(!this.themeChangeService.themeMode.isDarkMode);
   }
 }
