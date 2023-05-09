@@ -78,6 +78,7 @@ import { EventCardFinishedComponent } from "./components/event/cards/event-card-
 import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.component";
 import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -136,37 +137,38 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     CustomDialog,
     LineInfoComponent,
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
 
-    DragDropModule,
-    MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatToolbarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatSelectModule,
-    RecaptchaModule,
-    MatBadgeModule,
-    MatGridListModule,
-    MatTabsModule,
-    MatCardModule,
-    MatSlideToggleModule,
-    InfiniteScrollModule
-  ],
+        DragDropModule,
+        MatInputModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatToolbarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatSelectModule,
+        RecaptchaModule,
+        MatBadgeModule,
+        MatGridListModule,
+        MatTabsModule,
+        MatCardModule,
+        MatSlideToggleModule,
+        InfiniteScrollModule,
+        MatButtonToggleModule
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
