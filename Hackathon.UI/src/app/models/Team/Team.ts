@@ -6,7 +6,12 @@ export class Team implements ITeam {
   members: IUser[] = [];
   owner?: IUser;
   project: any //TODO: add typed
-  type: TeamType
+  type: TeamType;
+
+  getMemberStatus = (memberId: number) =>
+  {
+    return this.owner?.id == memberId ? 'Владелец' : 'Участник'
+  }
 }
 
 export interface ITeam {
