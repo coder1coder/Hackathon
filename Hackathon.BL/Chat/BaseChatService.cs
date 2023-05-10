@@ -1,5 +1,4 @@
 using BackendTools.Common.Models;
-using FluentValidation;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Notification;
@@ -16,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public abstract class ChatService<TNewChatMessage, TChatMessage>
+public abstract class BaseChatService<TNewChatMessage, TChatMessage>
     where TNewChatMessage: class, INewChatMessage
     where TChatMessage: class, IChatMessage
 {
@@ -27,21 +26,17 @@ public abstract class ChatService<TNewChatMessage, TChatMessage>
     private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
 
-    private readonly IValidator<INewChatMessage> _newMessageValidator;
-
-    protected ChatService(
+    protected BaseChatService(
         IChatRepository<TChatMessage> repository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IValidator<INewChatMessage> newMessageValidator,
         IMapper mapper)
     {
         _repository = repository;
         _chatMessageHub = chatMessageHub;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _newMessageValidator = newMessageValidator;
         _mapper = mapper;
     }
 
@@ -51,9 +46,13 @@ public abstract class ChatService<TNewChatMessage, TChatMessage>
         return Result<BaseCollection<TChatMessage>>.FromValue(messages);
     }
 
+    protected abstract Task<Result> ValidateAsync(TNewChatMessage message);
+
     protected async Task<Result> SendAsync(long ownerId, TNewChatMessage newChatMessage)
     {
-        await _newMessageValidator.ValidateAndThrowAsync(newChatMessage);
+        var validationResult = await ValidateAsync(newChatMessage);
+        if (!validationResult.IsSuccess)
+            return validationResult;
 
         var typedChatMessage = await GetTypedChatMessage<TChatMessage>(ownerId, newChatMessage);
 

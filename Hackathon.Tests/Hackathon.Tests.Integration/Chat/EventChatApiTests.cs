@@ -1,4 +1,5 @@
 using Hackathon.Common.Models.Chat.Event;
+using Hackathon.Common.Models.Event;
 using Hackathon.Contracts.Requests.Event;
 using System;
 using System.Linq;
@@ -23,12 +24,36 @@ public class EventChatApiTests: BaseIntegrationTest
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
 
-        var eventCreateResponse = await EventsApi.Create(createEventRequest);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        // Публикуем событие, чтобы можно было регистрироваться участникам
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Published
+        });
+
+        // Присоединяемся к событию в качестве участника
+        await EventsApi.JoinAsync(createEventResponse.Id);
+
+        // Регистрируем нового участника в событии
+        var user = await RegisterUser();
+        SetToken(user.Token);
+        await EventsApi.JoinAsync(createEventResponse.Id);
+
+        // Начинаем событие
+        SetToken(TestUser.Token);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Started
+        });
 
         var newMessage = new NewEventChatMessage
         {
             Message = Guid.NewGuid().ToString(),
-            EventId = eventCreateResponse.Id,
+            EventId = createEventResponse.Id,
             UserId = newUser.Id
         };
 
@@ -36,13 +61,13 @@ public class EventChatApiTests: BaseIntegrationTest
         await EventChatApiClient.SendAsync(newMessage);
 
         //assert
-        var messages = await EventChatRepository.GetMessagesAsync(eventCreateResponse.Id);
+        var messages = await EventChatRepository.GetMessagesAsync(createEventResponse.Id);
 
         var messageFromRepository = messages?.Items?.FirstOrDefault();
 
         Assert.NotNull(messageFromRepository);
         Assert.Equal(newMessage.Message, messageFromRepository.Message);
-        Assert.Equal(newUser.Id, messageFromRepository.OwnerId);
+        Assert.Equal(TestUser.Id, messageFromRepository.OwnerId);
         Assert.Equal(newUser.Id, messageFromRepository.UserId);
     }
 }

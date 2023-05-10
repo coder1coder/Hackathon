@@ -31,8 +31,8 @@ public static class ServiceCollectionExtensions
         EmailSettings emailSettings, S3Options s3Options)
     {
         services
-            .AddScoped<ITeamChatService, TeamChatService>()
-            .AddScoped<IEventChatService, EventChatService>()
+            .AddScoped<ITeamChatService, TeamBaseChatService>()
+            .AddScoped<IEventChatService, EventBaseChatService>()
 
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEmailService, EmailService>()

@@ -34,7 +34,7 @@ public class PublicTeamService: IPublicTeamService
         if (user is null)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        if (team.HasMember(authorizedUserId))
+        if (team.HasMemberWithId(authorizedUserId))
             return Result.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         await _teamRepository.AddMemberAsync(new TeamMemberModel

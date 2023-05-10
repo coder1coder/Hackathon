@@ -165,10 +165,10 @@ public class TeamService : ITeamService
         if (!userExists)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        if (!team.HasMember(teamMemberModel.MemberId))
+        if (!team.HasMemberWithId(teamMemberModel.MemberId))
             return Result.NotValid(TeamMessages.UserIsNotOnTeam);
 
-        if (team.HasOwner(teamMemberModel.MemberId))
+        if (team.HasOwnerWithId(teamMemberModel.MemberId))
         {
             await RemoveOwnerAsync(team);
         }
