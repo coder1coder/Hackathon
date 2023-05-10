@@ -5,6 +5,7 @@ using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Event;
@@ -33,6 +34,8 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<EventCreateParameters>, CreateEventModelValidator>()
         .AddScoped<IValidator<EventUpdateParameters>, UpdateEventModelValidator>()
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
+        .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>()
         .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
-        .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>();
+        .AddScoped<INewEventChatMessageValidator, NewEventChatMessageValidator>()
+        .AddScoped<INewTeamChatMessageValidator, NewTeamChatMessageValidator>();
 }

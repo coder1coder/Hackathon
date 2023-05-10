@@ -1,5 +1,4 @@
 using BackendTools.Common.Models;
-using FluentValidation;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Notification;
@@ -18,6 +17,7 @@ namespace Hackathon.BL.Chat;
 public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
 {
     private readonly ITeamRepository _teamRepository;
+    private readonly INewTeamChatMessageValidator _chatMessageValidator;
 
     public TeamBaseChatService(
         ITeamChatRepository teamChatRepository,
@@ -25,11 +25,15 @@ public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMe
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IValidator<INewChatMessage> newMessageValidator,
-        IMapper mapper):base(teamChatRepository, chatMessageHub, userRepository, notificationService, newMessageValidator, mapper)
+        INewTeamChatMessageValidator chatMessageValidator,
+        IMapper mapper):base(teamChatRepository, chatMessageHub, userRepository, notificationService, mapper)
     {
         _teamRepository = teamRepository;
+        _chatMessageValidator = chatMessageValidator;
     }
+
+    protected override Task<Result> ValidateAsync(NewTeamChatMessage message)
+        => _chatMessageValidator.ValidateAsync(message);
 
     public new Task<Result> SendAsync(long ownerId, NewTeamChatMessage newTeamChatMessage)
         => base.SendAsync(ownerId, newTeamChatMessage);
