@@ -53,7 +53,7 @@ public class PrivateTeamService: IPrivateTeamService
         if (!team.OwnerId.HasValue)
             return Result<long>.NotValid("Запрос на вступление в команду можно отправить только для пользовательских команд");
 
-        if (team.HasMember(parameters.UserId))
+        if (team.HasMemberWithId(parameters.UserId))
             return Result<long>.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         if (team.IsFull())
@@ -156,7 +156,7 @@ public class PrivateTeamService: IPrivateTeamService
         if (team is null)
             return Result.NotFound(TeamMessages.TeamDoesNotExists);
 
-        if (team.HasMember(request.UserId))
+        if (team.HasMemberWithId(request.UserId))
             return Result<long>.NotValid(TeamMessages.UserAlreadyIsTheTeamMember);
 
         await _teamJoinRequestsRepository.SetStatusWithCommentAsync(requestId, TeamJoinRequestStatus.Accepted);

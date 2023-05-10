@@ -65,4 +65,11 @@ public interface IEventRepository
     /// <param name="stageId">Идентификатор этапа события</param>
     /// <returns></returns>
     Task SetCurrentStageId(long eventId, long stageId);
+
+    /// <summary>
+    /// Получить мероприятия по идентификатору временной команды
+    /// </summary>
+    /// <param name="temporaryTeamId">Идентификатор временной команды</param>
+    /// <returns></returns>
+    Task<EventModel> GetByTemporaryTeamIdAsync(long temporaryTeamId);
 }

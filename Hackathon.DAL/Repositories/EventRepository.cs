@@ -183,6 +183,20 @@ public class EventRepository : IEventRepository
         }
     }
 
+    public async Task<EventModel> GetByTemporaryTeamIdAsync(long temporaryTeamId)
+    {
+        var team = await _dbContext.Teams.AsNoTracking()
+            .Include(x => x.Events)
+            .FirstOrDefaultAsync(x =>
+                x.Id == temporaryTeamId
+                && !x.OwnerId.HasValue
+                && !x.IsDeleted);
+
+        var eventEntity = team?.Events?.FirstOrDefault();
+
+        return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
+    }
+
     private static Expression<Func<EventEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy switch
         {

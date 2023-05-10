@@ -16,18 +16,21 @@ namespace Hackathon.DAL;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterRepositories(this IServiceCollection services) => services
-        .AddScoped<ITeamJoinRequestsRepository, TeamJoinRequestRepository>()
-        .AddScoped<ITeamRepository, TeamRepository>()
-        .AddScoped<ITeamChatRepository, TeamChatRepository>()
-        .AddScoped<IEventChatRepository, EventChatRepository>()
-        .AddScoped<IEmailConfirmationRepository, EmailConfirmationRepository>()
-        .AddScoped<IEventLogRepository, EventLogRepository>()
-        .AddScoped<IEventRepository, EventRepository>()
-        .AddScoped<IFileStorageRepository, FileStorageRepository>()
-        .AddScoped<IFriendshipRepository, FriendshipRepository>()
-        .AddScoped<INotificationRepository, NotificationRepository>()
-        .AddScoped<IProjectRepository, ProjectRepository>()
-        .AddScoped<IUserProfileReactionRepository, UserProfileReactionRepository>()
-        .AddScoped<IUserRepository, UserRepository>();
+    public static void RegisterRepositories(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ITeamJoinRequestsRepository, TeamJoinRequestRepository>()
+            .AddScoped<ITeamRepository, TeamRepository>()
+            .AddScoped<ITeamChatRepository, TeamChatRepository>()
+            .AddScoped<IEventChatRepository, EventChatRepository>()
+            .AddScoped<IEmailConfirmationRepository, EmailConfirmationRepository>()
+            .AddScoped<IEventLogRepository, EventLogRepository>()
+            .AddScoped<IEventRepository, EventRepository>()
+            .AddScoped<IFileStorageRepository, FileStorageRepository>()
+            .AddScoped<IFriendshipRepository, FriendshipRepository>()
+            .AddScoped<INotificationRepository, NotificationRepository>()
+            .AddScoped<IProjectRepository, ProjectRepository>()
+            .AddScoped<IUserProfileReactionRepository, UserProfileReactionRepository>()
+            .AddScoped<IUserRepository, UserRepository>();
+    }
 }

@@ -278,7 +278,7 @@ public class TeamApiTests: BaseIntegrationTest
         var response = await TeamApiClient.Get(teamId);
 
         //assert
-        response.HasMember(userId).Should().BeTrue();
+        response.HasMemberWithId(userId).Should().BeTrue();
     }
 
     [Fact]
@@ -348,6 +348,6 @@ public class TeamApiTests: BaseIntegrationTest
 
         //assert
         var teamWithNewMember = await TeamApiClient.Get(teamId);
-        teamWithNewMember.HasMember(userId);
+        teamWithNewMember.HasMemberWithId(userId);
     }
 }
