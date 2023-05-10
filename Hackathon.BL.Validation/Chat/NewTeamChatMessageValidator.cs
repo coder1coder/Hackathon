@@ -1,6 +1,6 @@
 using BackendTools.Common.Models;
 using Hackathon.BL.Validation.Event;
-using Hackathon.Common.Abstraction.Chat;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.ErrorMessages;
@@ -10,7 +10,7 @@ using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Validation.Chat;
 
-public class NewTeamChatMessageValidator: INewTeamChatMessageValidator
+public class NewTeamChatMessageValidator: IValidator<NewTeamChatMessage>
 {
     private readonly FluentValidation.IValidator<INewChatMessage> _modelValidator;
     private readonly ITeamRepository _teamRepository;
@@ -26,7 +26,7 @@ public class NewTeamChatMessageValidator: INewTeamChatMessageValidator
         _eventRepository = eventRepository;
     }
 
-    public async Task<Result> ValidateAsync(NewTeamChatMessage model)
+    public async Task<Result> ValidateAsync(NewTeamChatMessage model, long? authorizedUserId = null)
     {
         var validationResult = await _modelValidator.ValidateAsync(model);
 
