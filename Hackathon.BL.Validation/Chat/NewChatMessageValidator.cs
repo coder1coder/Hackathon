@@ -3,9 +3,9 @@ using Hackathon.Common.Models.Chat;
 
 namespace Hackathon.BL.Validation.Chat;
 
-public class CreateChatMessageValidator: AbstractValidator<INewChatMessage>
+public class NewChatMessageValidator: AbstractValidator<INewChatMessage>
 {
-    public CreateChatMessageValidator()
+    public NewChatMessageValidator()
     {
         RuleFor(x => x.Message)
             .NotEmpty()

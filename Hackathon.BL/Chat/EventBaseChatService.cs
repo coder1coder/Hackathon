@@ -1,5 +1,4 @@
 using BackendTools.Common.Models;
-using FluentValidation;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.IntegrationEvents;
@@ -15,21 +14,26 @@ using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public class EventChatService: ChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
+public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
 {
     private readonly IEventRepository _eventRepository;
+    private readonly INewEventChatMessageValidator _validator;
 
-    public EventChatService(
+    public EventBaseChatService(
         IEventChatRepository eventChatRepository,
         IEventRepository eventRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IValidator<INewChatMessage> newMessageValidator,
-        IMapper mapper):base(eventChatRepository, chatMessageHub, userRepository, notificationService, newMessageValidator, mapper)
+        INewEventChatMessageValidator validator,
+        IMapper mapper):base(eventChatRepository, chatMessageHub, userRepository, notificationService, mapper)
     {
         _eventRepository = eventRepository;
+        _validator = validator;
     }
+
+    protected override Task<Result> ValidateAsync(NewEventChatMessage message)
+        => _validator.ValidateAsync(message);
 
     public new Task<Result> SendAsync(long ownerId, NewEventChatMessage newEventChatMessage)
         => base.SendAsync(ownerId, newEventChatMessage);
