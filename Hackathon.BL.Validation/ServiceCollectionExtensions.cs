@@ -33,6 +33,6 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<EventCreateParameters>, CreateEventModelValidator>()
         .AddScoped<IValidator<EventUpdateParameters>, UpdateEventModelValidator>()
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
-        .AddScoped<IValidator<INewChatMessage>, CreateChatMessageValidator>()
+        .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>();
 }
