@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public class EventChatService: ChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
+public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
 {
     private readonly IEventRepository _eventRepository;
 
-    public EventChatService(
+    public EventBaseChatService(
         IEventChatRepository eventChatRepository,
         IEventRepository eventRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public abstract class ChatService<TNewChatMessage, TChatMessage>
+public abstract class BaseChatService<TNewChatMessage, TChatMessage>
     where TNewChatMessage: class, INewChatMessage
     where TChatMessage: class, IChatMessage
 {
@@ -29,7 +29,7 @@ public abstract class ChatService<TNewChatMessage, TChatMessage>
 
     private readonly IValidator<INewChatMessage> _newMessageValidator;
 
-    protected ChatService(
+    protected BaseChatService(
         IChatRepository<TChatMessage> repository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,

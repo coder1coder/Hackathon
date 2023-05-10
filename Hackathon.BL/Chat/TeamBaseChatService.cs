@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Hackathon.BL.Chat;
 
-public class TeamChatService: ChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
+public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
 {
     private readonly ITeamRepository _teamRepository;
 
-    public TeamChatService(
+    public TeamBaseChatService(
         ITeamChatRepository teamChatRepository,
         ITeamRepository teamRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
