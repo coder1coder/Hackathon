@@ -6,4 +6,5 @@ public static class UserMessages
     public const string ReactionNotExistMessage = "Реакции на профиль пользователя не существует";
     public const string ReactionsAreNotAvailableOnYourOwnProfile = "Реакции не доступны на собственном профиле";
     public const string UserDoesNotExists = "Пользователь не существует";
+    public const string ProfileFileImageIsNotBeEmpty = "Файл не может быть пустым";
 }

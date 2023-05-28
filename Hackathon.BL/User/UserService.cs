@@ -9,10 +9,11 @@ using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
+using Hackathon.Common.ErrorMessages;
 using MapsterMapper;
 using Microsoft.Extensions.Options;
 using System;
-using System.IO;
+using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -141,17 +142,20 @@ public class UserService: IUserService
 
         return models;
     }
-
-
-
-    public async Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream)
+    
+    public async Task<Result<Guid>> UploadProfileImageAsync(long userId, IFormFile file)
     {
+        if (file is null)
+            return Result<Guid>.NotValid((UserMessages.ProfileFileImageIsNotBeEmpty));
+        
+        await using var stream = file.OpenReadStream();
+        
         var getUserResult = await GetAsync(userId);
 
         if (!getUserResult.IsSuccess)
             return Result<Guid>.FromErrors(getUserResult.Errors);
 
-        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, filename, userId);
+        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, file.FileName, userId);
 
         if (getUserResult.Data.ProfileImageId is not null) {
 

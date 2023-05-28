@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Bogus;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities.Event;
 using MapsterMapper;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Hackathon.Tests.Integration;
 
@@ -41,6 +43,26 @@ public class TestFaker
         return _mapper.Map<List<EventModel>>(eventEntities);
     }
 
+    public static IFormFile GetFormFile()
+    {
+        var content = Path.GetTempFileName();
+        var fileName = "test.jpg";
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.Write(content);
+        writer.Flush();
+        stream.Position = 0;
+        
+        var fileMock = new FormFile(stream, 0, stream.Length, "file", fileName)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = "image/jpeg",
+            ContentDisposition = $"form-data; name=\"file\"; filename=\"{fileName}\""
+        };
+        
+        return fileMock;
+    }
+    
     #endregion
 
     private static List<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)

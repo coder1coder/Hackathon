@@ -4,9 +4,9 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.Contracts.Requests.Event;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Refit;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Event;
@@ -162,5 +162,19 @@ public class EventControllerTests : BaseIntegrationTest
         Assert.NotNull(eventCreationResponse.Content?.Tasks);
         eventCreationResponse.Content.Tasks.Should().HaveCount(TestFaker.EventTasksAmount);
         eventCreationResponse.Content.Tasks.Should().NotContainNulls();
+    }
+
+    [Fact]
+    public async Task UploadEventImage_Should_Return_Valid_Guid()
+    {
+        //arrange
+        var file = TestFaker.GetFormFile();
+        var streamPath = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
+        
+        //act
+        var uploadFileId = await EventsApi.UploadEventImage(streamPath);
+        
+        //assert
+        Assert.NotEqual(uploadFileId, Guid.Empty);
     }
 }

@@ -6,16 +6,19 @@ import {BaseCollection} from "../models/BaseCollection";
 import {GetListParameters} from "../models/GetListParameters";
 import {UserFilter} from "../models/User/UserFilter";
 import {IUpdateUser, IUser} from "../models/User/IUser";
+import {FileUploadService} from "./file-upload.service";
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class UserService {
 
   private api: string = `${environment.api}/user`;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private fileUploadService: FileUploadService
+  ) {
     const headers = new HttpHeaders()
       .set('content-type', 'application/json');
 
@@ -32,13 +35,11 @@ export class UserService {
     return this.http.get<IUser>(`${this.api}/${userId}`);
   }
 
-  public setImage(file: File): Observable<string> {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    return this.http.post<string>(this.api+'/profile/image/upload', formData, {
-      headers: new HttpHeaders().set('Content-Disposition', 'multipart/event-create-edit-card-data')
-    })
+  /** Загрузить изображение профиля
+   * @param files Объекты типа элемента HTML input type="file"
+   */
+  public setImage(files: FileList): Observable<string> {
+    return this.fileUploadService.uploadFile(files, '/user/profile/image/upload');
   }
 
   public createEmailConfirmationRequest(): Observable<void>{

@@ -20,6 +20,8 @@ using MassTransit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.FileStorage;
+using Microsoft.AspNetCore.Http;
 
 namespace Hackathon.BL.Event;
 
@@ -31,6 +33,7 @@ public class EventService : IEventService
     private readonly IValidator<EventCreateParameters> _createEventModelValidator;
     private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
     private readonly IEventRepository _eventRepository;
+    private readonly IFileStorageService _fileStorageService;
     private readonly IUserRepository _userRepository;
     private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
@@ -47,7 +50,8 @@ public class EventService : IEventService
         IUserRepository userRepository,
         INotificationService notificationService,
         IBus messageBus,
-        IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub)
+        IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
+        IFileStorageService fileStorageService)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -58,6 +62,7 @@ public class EventService : IEventService
         _notificationService = notificationService;
         _messageBus = messageBus;
         _integrationEventHub = integrationEventHub;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -267,6 +272,23 @@ public class EventService : IEventService
         await _eventRepository.SetCurrentStageId(eventId, nextStageId);
 
         return Result.Success;
+    }
+
+    /// <summary>
+    /// Загрузить изображение события
+    /// </summary>
+    /// <param name="file">Файл http запроса</param>
+    /// <returns></returns>
+    public async Task<Result<Guid>> UploadEventImageAsync(IFormFile file)
+    {
+        if (file is null)
+            return Result<Guid>.NotValid((EventMessages.EventFileImageIsNotBeEmpty));
+        
+        await using var stream = file.OpenReadStream();
+        
+        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName);
+       
+        return Result<Guid>.FromValue(uploadResult.Id);
     }
 
     /// <summary>

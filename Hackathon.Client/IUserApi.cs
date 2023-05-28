@@ -24,4 +24,13 @@ public interface IUserApi
 
     [Delete(BaseRoute + "/{userId}/reactions/{reaction}")]
     public Task RemoveReaction(long userId, UserProfileReaction reaction);
+
+    /// <summary>
+    /// Загрузить картинку профиля пользователя
+    /// </summary>
+    /// <param name="stream">Файл изображения</param>
+    /// <returns></returns>
+    [Post(BaseRoute + "/profile/image/upload")]
+    [Multipart]
+    Task<Guid> UploadProfileImage([AliasAs("file")] StreamPart stream);
 }

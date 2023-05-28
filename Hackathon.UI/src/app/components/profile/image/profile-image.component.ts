@@ -6,7 +6,7 @@ import {SafeUrl} from "@angular/platform-browser";
 import {IUser} from "../../../models/User/IUser";
 import {AuthService} from "../../../services/auth.service";
 import {FileStorageService} from "src/app/services/file-storage.service";
-import {FileUtils} from "../../../common/FileUtils";
+import {UploadFileErrorMessages} from "../../../common/error-messages/upload-file-error-messages";
 
 @Component({
   selector: 'profile-image',
@@ -40,30 +40,21 @@ export class ProfileImageComponent implements OnInit {
     this.loadData();
   }
 
-  public selectFile(event: any): void {
-    if ( !(event?.target?.files?.length > 0) )
-      return;
+  public selectFile(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
 
-    let file:File = event.target.files[0];
-
-    if (!FileUtils.IsImage(file)) {
-      this.snackService.open('Файл не является картинкой');
-      return;
-    }
-
-    if (file.size / FileUtils.Divider > FileUtils.MaxFileSize) {
-      this.snackService.open('Максимальный объем файла 2МБ');
-      return;
-    }
-
-    this.userService.setImage(file)
+    this.userService.setImage(files)
       .pipe(
         takeUntil(this.destroy$),
-        mergeMap((res: any) =>{
-          return this.fileStorageService.getById(res.data);
-        })
+        mergeMap((imageId: string) => this.fileStorageService.getById(imageId))
       )
-      .subscribe((res : SafeUrl) => this.image = res)
+      .subscribe({
+        next: (res: SafeUrl) => this.image = res,
+        error: (err: Error) => {
+          this.snackService.open(err?.message ?? UploadFileErrorMessages.FileUploadError)
+        }}
+      );
   }
 
   private loadData(): void {
@@ -71,9 +62,7 @@ export class ProfileImageComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         filter((v) => Boolean(v)),
-        switchMap(userId => {
-          return this.userService.getById(userId);
-        }),
+        switchMap(userId => this.userService.getById(userId)),
         switchMap((user: IUser) => {
           this.userNameSymbols = user.userName?.split(' ')
               .reduce((x,y) => x.concat(y))

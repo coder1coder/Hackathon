@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SafeUrl} from "@angular/platform-browser";
 import {FileStorageService} from "../../../services/file-storage.service";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'image-from-storage',
@@ -10,11 +11,10 @@ import {FileStorageService} from "../../../services/file-storage.service";
 export class ImageFromStorageComponent implements OnInit {
 
   @Input() imageId: string | undefined;
-  imageUrl:SafeUrl;
+  public imageUrl: SafeUrl;
 
-  constructor(
-    private fileStorageService: FileStorageService
-  ) { }
+  private destroy$ = new Subject();
+  constructor(private fileStorageService: FileStorageService) {}
 
   ngOnInit(): void {
     this.setSafeUrl();
@@ -23,9 +23,8 @@ export class ImageFromStorageComponent implements OnInit {
   private setSafeUrl(): void {
     if (this.imageId){
       this.fileStorageService.getById(this.imageId)
-        .subscribe({next: (url:SafeUrl) =>{
-            this.imageUrl = url
-          }})
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({next: (url:SafeUrl) => this.imageUrl = url});
     }
   }
 }
