@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Abstraction.Event;
+﻿using System;
+using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -109,4 +110,21 @@ public class EventController: BaseController
     [HttpDelete("{id:long}")]
     public Task<IActionResult> Delete([FromRoute] long id)
         => GetResult(() => _eventService.DeleteAsync(id));
+    
+    /// <summary>
+    /// Загрузить изображение события
+    /// </summary>
+    /// <param name="file">Файл изображения</param>
+    /// <returns></returns>
+    [HttpPost("image/upload")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    public async Task<IActionResult> UploadEventImage(IFormFile file)
+    {
+        var uploadEventImageResult = await _eventService.UploadEventImageAsync(file);
+        if (!uploadEventImageResult.IsSuccess)
+            return await GetResult(() => Task.FromResult(uploadEventImageResult));
+
+        return Ok(uploadEventImageResult.Data);
+    }
 }

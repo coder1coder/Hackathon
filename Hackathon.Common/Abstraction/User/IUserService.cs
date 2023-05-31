@@ -3,7 +3,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using System;
-using System.IO;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace Hackathon.Common.Abstraction.User;
@@ -49,10 +49,9 @@ public interface IUserService
     /// Загрузить картинку профиля пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <param name="filename">Имя файла картинки</param>
-    /// <param name="stream">Новая картинка профиля</param>
+    /// <param name="file">Файл изображения</param>
     /// <returns></returns>
-    Task<Result<Guid>> UploadProfileImageAsync(long userId, string filename, Stream stream);
+    Task<Result<Guid>> UploadProfileImageAsync(long userId, IFormFile file);
 
     /// <summary>
     /// Редактирование профиля пользователя

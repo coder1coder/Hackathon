@@ -8,4 +8,5 @@ public static class EventMessages
     public const string UserIsNotInEvent = "Пользователь не состоит в событии";
     public const string CantLeaveEventWhenItsAlreadyStarted = "Нельзя покидать событие, когда оно уже начато";
     public const string CantSetEventStatus =  "Невозможно сменить статус события";
+    public const string EventFileImageIsNotBeEmpty = "Файл не может быть пустым";
 }

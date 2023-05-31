@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
@@ -11,6 +11,7 @@ import {GetListParameters} from "../../models/GetListParameters";
 import {EventFilter} from "../../models/Event/EventFilter";
 import {Event} from "../../models/Event/Event";
 import {IEventListItem} from "../../models/Event/IEventListItem";
+import {FileUploadService} from "../file-upload.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +21,8 @@ export class EventHttpService {
 
   constructor(
     private http: HttpClient,
+    private fileUploadService: FileUploadService
   ) {
-    const headers = new HttpHeaders()
-      .set('content-type', 'application/json');
-    http.options(this.api, {
-      'headers': headers
-    });
   }
 
   public getList(params?: GetListParameters<EventFilter>): Observable<BaseCollection<IEventListItem>>{
@@ -62,5 +59,12 @@ export class EventHttpService {
 
   public leave(eventId:number): Observable<void> {
     return this.http.post<void>(`${this.api}/Event/${eventId}/leave`, {});
+  }
+
+  /** Загрузить изображение события
+   * @param files Объекты типа элемента HTML input type="file"
+   */
+  public setEventImage(files: FileList): Observable<string> {
+    return this.fileUploadService.uploadFile(files, '/Event/image/upload');
   }
 }

@@ -83,22 +83,16 @@ public class UserController: BaseController
         => Ok(await _userService.GetAsync(request));
 
     /// <summary>
-    /// Загрузить картинку профиля пользователя.
+    /// Загрузить картинку профиля пользователя
     /// </summary>
-    /// <param name="file">Файл картинка.</param>
+    /// <param name="file">Файл изображения</param>
     /// <returns></returns>
     [HttpPost("profile/image/upload")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public async Task<IActionResult> UploadProfileImage(IFormFile file)
     {
-        //TODO: вынести в BL
-        if (file is null)
-            return BadRequest("Файл не может быть пустым.");
-
-        await using var stream = file.OpenReadStream();
-
-        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(AuthorizedUserId, file.FileName, stream);
+        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(AuthorizedUserId, file);
         if (!uploadProfileImageResult.IsSuccess)
             return await GetResult(() => Task.FromResult(uploadProfileImageResult));
 
