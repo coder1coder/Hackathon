@@ -3,6 +3,7 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Hackathon.Common.Abstraction.Event;
 
@@ -81,4 +82,11 @@ public interface IEventService
     /// <param name="eventId">Идентификатор события</param>
     /// <returns></returns>
     Task<Result> GoNextStage(long userId, long eventId);
+    
+    /// <summary>
+    /// Загрузить изображение события
+    /// </summary>
+    /// <param name="file">Файл http запроса</param>
+    /// <returns></returns>
+    Task<Result<Guid>> UploadEventImageAsync(IFormFile file);
 }

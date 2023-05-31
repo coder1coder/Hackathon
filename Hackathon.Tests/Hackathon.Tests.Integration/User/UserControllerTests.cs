@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Contracts.Requests.User;
+using Refit;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.User;
@@ -32,4 +34,17 @@ public class UserControllerTests: BaseIntegrationTest
         );
     }
 
+    [Fact]
+    public async Task UploadProfileImage_Should_Return_Valid_Guid()
+    {
+        //arrange
+        var file = TestFaker.GetFormFile();
+        var streamPath = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
+        
+        //act
+        var uploadFileId = await UsersApi.UploadProfileImage(streamPath);
+        
+        //assert
+        Assert.NotEqual(uploadFileId, Guid.Empty);
+    }
 }

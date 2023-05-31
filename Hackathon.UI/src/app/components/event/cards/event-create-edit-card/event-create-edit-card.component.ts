@@ -10,26 +10,24 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {EventNewStatusDialogComponent} from "../components/status/event-new-status-dialog.component";
 import {SnackService} from "../../../../services/snack.service";
-import {Observable} from "rxjs";
+import {Observable, takeUntil} from "rxjs";
 import * as moment from "moment/moment";
 import {AuthService} from "../../../../services/auth.service";
 import {RouterService} from "../../../../services/router.service";
-import {FileUtils} from "../../../../common/FileUtils";
 import {FileStorageService} from "../../../../services/file-storage.service";
-import {Bucket} from "../../../../common/Bucket";
-import {IStorageFile} from "../../../../models/FileStorage/IStorageFile";
 import {SafeUrl} from "@angular/platform-browser";
-import {EventErrorMessages} from "src/app/common/EventErrorMessages";
+import {EventErrorMessages} from "src/app/common/error-messages/event-error-messages";
 import {EventCardBaseComponent} from "../components/event-card-base.component";
 import {EventHttpService} from "../../../../services/event/event.http-service";
 import {EventService} from "../../../../services/event/event.service";
-import { EventStage } from "src/app/models/Event/EventStage";
+import {EventStage} from "src/app/models/Event/EventStage";
 import {
   EventStageDialogComponent,
   EventStageDialogData
 } from "../components/event-stage-dialog/event-stage-dialog.component";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {IEventTaskItem} from "../../../../models/Event/IEventTaskItem";
+import {UploadFileErrorMessages} from "../../../../common/error-messages/upload-file-error-messages";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -278,40 +276,19 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     this.eventImage = undefined;
   }
 
-  public selectEventImage(e: any): void{
+  public selectEventImage(event: Event): void{
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
 
-    if ( !(e?.target?.files?.length > 0) )
-      return;
-
-    let file:File = e.target.files[0];
-
-    if (!FileUtils.IsImage(file)) {
-      this.snackService.open(EventErrorMessages.FileIsNotImage);
-      return;
-    }
-
-    if (file.size / FileUtils.Divider > FileUtils.MaxFileSize) {
-      this.snackService.open(EventErrorMessages.FileSizeOutOfRange);
-      return;
-    }
-
-    this.fileStorageService
-      .upload(Bucket.Events, file)
+    this.eventHttpService.setEventImage(files)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (r : IStorageFile) =>{
-          this.form.controls['imageId'].setValue(r.id);
-          this.loadImage(r.id);
+        next: (imageId: string) => {
+          this.form.controls['imageId'].setValue(imageId);
+          this.loadImage(imageId);
         },
-        error: () => {
-          this.snackService.open(EventErrorMessages.FileUploadError)
-        }});
-  }
-
-  private loadImage(fileId:string){
-    this.fileStorageService.getById(fileId)
-      .subscribe({
-        next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
-        error: _ => this.snackService.open(EventErrorMessages.FileUploadError)});
+        error: (err: Error) => this.snackService.open(err?.message ?? UploadFileErrorMessages.FileUploadError)
+      });
   }
 
   private fetch(): void {
@@ -332,6 +309,14 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     if (this.event.imageId)  {
       this.loadImage(this.event.imageId);
     }
+  }
+
+  private loadImage(fileId: string): void {
+    this.fileStorageService.getById(fileId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
+        error: _ => this.snackService.open(UploadFileErrorMessages.FileUploadError)});
   }
 
   private initForm(): void {
