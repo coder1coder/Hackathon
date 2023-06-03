@@ -43,8 +43,9 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">Идентификатор обытия</param>
     /// <param name="eventStatus">Новый статус события</param>
+    /// <param name="skipValidation">Пропустить валидацию (Использовать только в служебных целях)</param>
     /// <returns></returns>
-    Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus);
+    Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus, bool skipValidation = false);
 
     /// <summary>
     /// Добавление пользователя к событию
@@ -82,7 +83,7 @@ public interface IEventService
     /// <param name="eventId">Идентификатор события</param>
     /// <returns></returns>
     Task<Result> GoNextStage(long userId, long eventId);
-    
+
     /// <summary>
     /// Загрузить изображение события
     /// </summary>

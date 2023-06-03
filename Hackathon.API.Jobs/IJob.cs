@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Hackathon.Common.Abstraction.Jobs;
+namespace Hackathon.Jobs;
 
 public interface IJob
 {

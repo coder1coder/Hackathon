@@ -81,7 +81,7 @@ public class EventRepository : IEventRepository
             if (parameters.Filter.StartTo.HasValue)
             {
                 var startTo = parameters.Filter.StartTo.Value.ToUtcWithoutSeconds();
-                query = query.Where(x => x.Start <= startTo);
+                query = query.Where(x => x.Start < startTo);
             }
 
             if (parameters.Filter.TeamsIds is not null)
