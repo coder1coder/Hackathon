@@ -1,5 +1,8 @@
 ﻿namespace Hackathon.Common.Models.Event;
 
+/// <summary>
+/// Статус мероприятия
+/// </summary>
 public enum EventStatus
 {
     /// <summary>
@@ -22,35 +25,6 @@ public enum EventStatus
     /// </summary>
     /// <remarks>Регистрация закрыта. Организатор приветствует участников</remarks>
     Started = 2,
-
-    /// <summary>
-    /// Разработка проекта
-    /// </summary>
-    /// <remarks></remarks>
-    Development = 3,
-
-    /// <summary>
-    /// Подготовка к презентации
-    /// </summary>
-    Prepare = 4,
-
-    /// <summary>
-    /// Презентация проекта
-    /// </summary>
-    /// <remarks>Капитаны команд представляют свой проект</remarks>
-    Presentation = 5,
-
-    /// <summary>
-    /// Вынесение решения
-    /// </summary>
-    /// <remarks>Организатор принимает решение о победителе</remarks>
-    Decision = 6,
-
-    /// <summary>
-    /// Награждение
-    /// </summary>
-    /// <remarks>Объявление победителя</remarks>
-    Award = 7,
 
     /// <summary>
     /// Событие завершено

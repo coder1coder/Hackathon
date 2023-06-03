@@ -90,58 +90,48 @@ public class Startup
             });
         });
 
-        var databaseServiceLifetime = ServiceLifetime.Scoped;
-
-        if (_environment.EnvironmentName == "Tests")
-        {
-            databaseServiceLifetime = ServiceLifetime.Transient;
-        }
-
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContextPool<ApplicationDbContext>(options =>
         {
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
-
             if (appConfig.EnableSensitiveDataLogging == true)
                 options.EnableSensitiveDataLogging();
-        }, databaseServiceLifetime);
+        });
 
         services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
 
-        services.AddCors(options =>
-        {
-            options.AddPolicy("default", builder =>
-                builder
-                    .WithOrigins(appConfig.OriginsOptions.AllowUrls)
-                    .AllowCredentials()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
-        });
+        services
+            .AddCors(options =>
+            {
+                options.AddPolicy("default", builder =>
+                    builder
+                        .WithOrigins(appConfig.OriginsOptions.AllowUrls)
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            }).AddControllers(options =>
+            {
+                options.Filters.Add(new ExceptionActionFilter());
+                options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
+            }).AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
 
-        services.AddControllers(options =>
-        {
-            options.Filters.Add(new ExceptionActionFilter());
-            options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
-        }).AddJsonOptions(opt =>
-        {
-            opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        });
-
-        services.AddSignalR(x=>
-            x.EnableDetailedErrors = _environment.IsDevelopment());
-
-        services.AddMemoryCache();
-        services.AddAuthentication(authOptions);
-        services.AddAuthorization(x =>
-        {
-            x.AddPolicy(nameof(UserRole.Administrator), p =>
-                p
-                    .RequireAuthenticatedUser()
-                    .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
-            );
-        });
-
-        services.AddSwagger();
+        services
+            .AddMemoryCache()
+            .AddAuthentication(authOptions)
+            .AddAuthorization(x =>
+            {
+                x.AddPolicy(nameof(UserRole.Administrator), p =>
+                    p
+                        .RequireAuthenticatedUser()
+                        .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
+                );
+            })
+            .AddSwagger()
+            .AddSignalR(x=>
+                x.EnableDetailedErrors = _environment.IsDevelopment());
     }
 
     public void Configure(
@@ -152,8 +142,9 @@ public class Startup
         IOptions<AppSettings> appSettings,
         IOptions<DataSettings> dataSettings)
     {
-        app.UseMetricServer();
-        app.UseHttpMetrics();
+        app
+            .UseMetricServer()
+            .UseHttpMetrics();
 
         var appConfig = appSettings.Value;
 
@@ -176,26 +167,21 @@ public class Startup
         if (_environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
+        app.UseSwagger()
+        .UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint($"{appConfig.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
             c.DocExpansion(DocExpansion.None);
-        });
-
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        })
+        .UseForwardedHeaders(new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-        });
-
-        app.UseRouting();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseCors("default");
-
-        app.UseEndpoints(endpoints =>
+        })
+        .UseRouting()
+        .UseAuthentication()
+        .UseAuthorization()
+        .UseCors("default")
+        .UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapHub<IntegrationEventHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);

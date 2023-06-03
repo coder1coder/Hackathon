@@ -111,17 +111,20 @@ public class EventService : IEventService
         });
     }
 
-    public async Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus)
+    public async Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus, bool skipValidation = false)
     {
         var eventModel = await _eventRepository.GetAsync(eventId);
 
         if (eventModel == null)
             return Result.NotFound(EventErrorMessages.EventDoesNotExists);
 
-        var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(eventModel, eventStatus);
+        if (!skipValidation)
+        {
+            var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(eventModel, eventStatus);
 
-        if (!isValid)
-            return Result.NotValid(errorMessage);
+            if (!isValid)
+                return Result.NotValid(errorMessage);
+        }
 
         if (eventStatus == EventStatus.Started)
         {
@@ -228,7 +231,7 @@ public class EventService : IEventService
     {
         var now = DateTime.UtcNow.AddTicks(-timeBeforeStart.Ticks).ToUtcWithoutSeconds();
 
-        var result = await _eventRepository.GetListAsync(1, new Common.Models.GetListParameters<EventFilter>
+        var result = await _eventRepository.GetListAsync(default, new Common.Models.GetListParameters<EventFilter>
         {
             Filter = new EventFilter
             {
@@ -283,11 +286,11 @@ public class EventService : IEventService
     {
         if (file is null)
             return Result<Guid>.NotValid((EventMessages.EventFileImageIsNotBeEmpty));
-        
+
         await using var stream = file.OpenReadStream();
-        
+
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName);
-       
+
         return Result<Guid>.FromValue(uploadResult.Id);
     }
 
