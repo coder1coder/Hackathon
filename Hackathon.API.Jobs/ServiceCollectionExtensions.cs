@@ -11,5 +11,8 @@ public static class ServiceCollectionExtensions
 
         .AddScoped<PastEventStatusUpdateJob>()
         .AddHostedService<PastEventStatusUpdateHostedService>()
+
+        .AddScoped<StartedEventStatusUpdateJob>()
+        .AddHostedService<StartedEventStatusUpdateHostedService>()
     ;
 }
