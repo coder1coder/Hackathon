@@ -7,6 +7,7 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Project;
 using Hackathon.DAL.Entities;
+using Hackathon.DAL.Extensions;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,9 +27,9 @@ public class ProjectRepository: IProjectRepository
         _dbContext = dbContext;
     }
 
-    public async Task CreateAsync(ProjectCreateParameters projectCreateParameters)
+    public async Task CreateAsync(ProjectCreationParameters projectCreationParameters)
     {
-        var projectEntity = _mapper.Map<ProjectEntity>(projectCreateParameters);
+        var projectEntity = _mapper.Map<ProjectEntity>(projectCreationParameters);
         await _dbContext.Projects.AddAsync(projectEntity);
         await _dbContext.SaveChangesAsync();
     }
@@ -103,10 +104,13 @@ public class ProjectRepository: IProjectRepository
         };
     }
 
-    public async Task<ProjectModel> GetAsync(long eventId, long teamId)
+    public async Task<ProjectModel> GetAsync(long eventId, long teamId, bool includeTeamMembers = false)
     {
         var entity = await _dbContext.Projects
             .Include(x=>x.Team)
+            .ConditionalThenInclude(x=>x
+                .ThenInclude(s=>s.Members)
+                .ThenInclude(s=>s.Member), includeTeamMembers)
             .AsNoTracking()
             .FirstOrDefaultAsync(x =>
                 x.EventId == eventId

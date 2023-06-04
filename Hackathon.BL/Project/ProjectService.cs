@@ -14,8 +14,8 @@ namespace Hackathon.BL.Project;
 public class ProjectService: IProjectService
 {
     private readonly IProjectRepository _projectRepository;
-    private readonly IValidator<ProjectCreateParameters> _projectCreateModelValidator;
-    private readonly IValidator<ProjectUpdateParameters> _projectUpdateValidator;
+    private readonly Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters> _createValidator;
+    private readonly Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters> _projectUpdateValidator;
     private readonly IValidator<UpdateProjectFromGitBranchParameters> _updateProjectFromGitValidator;
 
     private readonly IGitHubIntegrationService _gitHubIntegrationService;
@@ -23,47 +23,42 @@ public class ProjectService: IProjectService
 
     public ProjectService(
         IProjectRepository projectRepository,
-        IValidator<ProjectCreateParameters> projectCreateModelValidator,
-        IValidator<ProjectUpdateParameters> projectUpdateValidator,
+        Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters> createValidator,
+        Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters> projectUpdateValidator,
         IValidator<UpdateProjectFromGitBranchParameters> updateProjectFromGitValidator,
         IGitHubIntegrationService gitHubIntegrationService,
         IFileStorageService fileStorageService)
     {
         _projectRepository = projectRepository;
-        _projectCreateModelValidator = projectCreateModelValidator;
+        _createValidator = createValidator;
         _gitHubIntegrationService = gitHubIntegrationService;
         _fileStorageService = fileStorageService;
         _updateProjectFromGitValidator = updateProjectFromGitValidator;
         _projectUpdateValidator = projectUpdateValidator;
     }
 
-    public async Task<Result> CreateAsync(ProjectCreateParameters projectCreateParameters)
+    public async Task<Result> CreateAsync(long authorizedUserId, ProjectCreationParameters projectCreationParameters)
     {
-        await _projectCreateModelValidator.ValidateAndThrowAsync(projectCreateParameters);
+        var validationResult = await _createValidator.ValidateAsync(projectCreationParameters, authorizedUserId);
+        if (!validationResult.IsSuccess)
+            return validationResult;
 
-        var project = await _projectRepository.GetAsync(projectCreateParameters.EventId, projectCreateParameters.TeamId);
-
-        if (project is not null)
-            return Result.NotValid(ProjectMessages.ProjectAlreadyExists);
-
-        await _projectRepository.CreateAsync(projectCreateParameters);
+        await _projectRepository.CreateAsync(projectCreationParameters);
         return Result.Success;
     }
 
-    public async Task<Result> UpdateAsync(ProjectUpdateParameters parameters, long userId)
+    public async Task<Result> UpdateAsync(long authorizedUserId, ProjectUpdateParameters parameters)
     {
-        await _projectUpdateValidator.ValidateAndThrowAsync(parameters);
-
-        var project = await _projectRepository.GetAsync(parameters.EventId, parameters.TeamId);
-
-        if (project is null)
-            return Result.NotFound(ProjectMessages.ProjectDoesNotExist);
+        var validationResult = await _projectUpdateValidator.ValidateAsync(parameters, authorizedUserId);
+        if (!validationResult.IsSuccess)
+            return validationResult;
 
         await _projectRepository.UpdateAsync(parameters);
         return Result.Success;
     }
 
-    public async Task<Result> UpdateProjectFromGitBranchAsync(UpdateProjectFromGitBranchParameters branchParameters, long userId)
+    public async Task<Result> UpdateProjectFromGitBranchAsync(long userId,
+        UpdateProjectFromGitBranchParameters branchParameters)
     {
         await _updateProjectFromGitValidator.ValidateAndThrowAsync(branchParameters);
 
@@ -103,10 +98,17 @@ public class ProjectService: IProjectService
         return Result.Success;
     }
 
-    public Task<ProjectModel> GetAsync(long eventId, long teamId)
-        => _projectRepository.GetAsync(eventId, teamId);
+    public async Task<Result<ProjectModel>> GetAsync(long authorizedUserId, long eventId, long teamId)
+    {
+        var projectModel = await _projectRepository.GetAsync(eventId, teamId, includeTeamMembers: true);
 
-    public async Task<Result> DeleteAsync(long eventId, long teamId, long authorizedUserId)
+        if (!projectModel.Team.HasMemberWithId(authorizedUserId))
+            return Result<ProjectModel>.Forbidden("Нет прав на выполнение операции");
+
+        return Result<ProjectModel>.FromValue(projectModel);
+    }
+
+    public async Task<Result> DeleteAsync(long authorizedUserId, long eventId, long teamId)
     {
         var project = await _projectRepository.GetAsync(eventId, teamId);
 

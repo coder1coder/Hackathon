@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
-using Hackathon.Common.Models.Team;
 using Hackathon.Contracts.Requests.Event;
 using Hackathon.Contracts.Requests.Project;
-using Hackathon.Contracts.Requests.Team;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Project;
@@ -23,39 +21,48 @@ public class ProjectControllerTests : BaseIntegrationTest
     public async Task Create_Should_Success()
     {
         //arrange
-        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-        var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-        var createEventResponse = await EventsApi.Create(eventRequest);
+        var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
+        var request = Mapper.Map<CreateEventRequest>(@event);
+        var createEventResponse = await EventsApi.Create(request);
 
+        // Публикуем событие, чтобы можно было регистрироваться участникам
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
-        {
-            Name = Guid.NewGuid().ToString()[..4],
-            EventId = createEventResponse.Id,
-            Type = (int)TeamType.Private
-        });
+        // Присоединяемся к событию в качестве участника
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
-        Assert.NotNull(teamCreateResponse.Content);
-
+        // Регистрируем нового участника в событии
         var user = await RegisterUser();
         SetToken(user.Token);
+        await EventsApi.JoinAsync(createEventResponse.Id);
+
+        // Начинаем событие
+        SetToken(TestUser.Token);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Started
+        });
+
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+        var temporaryTeamByUserId = getEventResponse.Content?.Teams?.FirstOrDefault(x => x.HasMemberWithId(TestUser.Id));
 
         //act
         await ProjectsApiClient.CreateAsync(new ProjectCreateRequest
         {
-            TeamId = teamCreateResponse.Content.Id,
+            TeamId = temporaryTeamByUserId?.Id ?? default,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
         });
 
         //assert
-        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, teamCreateResponse.Content.Id);
+        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? default);
         Assert.NotNull(project);
     }
 
@@ -63,31 +70,40 @@ public class ProjectControllerTests : BaseIntegrationTest
     public async Task Update_Should_Succeed()
     {
         //arrange
-        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-        var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-        var createEventResponse = await EventsApi.Create(eventRequest);
+        var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
+        var request = Mapper.Map<CreateEventRequest>(@event);
+        var createEventResponse = await EventsApi.Create(request);
 
+        // Публикуем событие, чтобы можно было регистрироваться участникам
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
-        {
-            Name = Guid.NewGuid().ToString()[..4],
-            EventId = createEventResponse.Id,
-            Type = (int)TeamType.Private
-        });
+        // Присоединяемся к событию в качестве участника
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
-        Assert.NotNull(teamCreateResponse.Content);
-
+        // Регистрируем нового участника в событии
         var user = await RegisterUser();
         SetToken(user.Token);
+        await EventsApi.JoinAsync(createEventResponse.Id);
+
+        // Начинаем событие
+        SetToken(TestUser.Token);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Started
+        });
+
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+        var temporaryTeamByUserId = getEventResponse.Content?.Teams?.FirstOrDefault(x => x.HasMemberWithId(TestUser.Id));
 
         var createParameters = new ProjectCreateRequest
         {
-            TeamId = teamCreateResponse.Content.Id,
+            TeamId = temporaryTeamByUserId?.Id ?? default,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
@@ -99,7 +115,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         var updateParameters = new ProjectUpdateParameters
         {
             EventId = createEventResponse.Id,
-            TeamId = teamCreateResponse.Content.Id,
+            TeamId = temporaryTeamByUserId?.Id ?? default,
             Description = Guid.NewGuid().ToString(),
             Name = Guid.NewGuid().ToString(),
         };
@@ -107,7 +123,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         await ProjectsApiClient.UpdateAsync(updateParameters);
 
         //assert
-        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, teamCreateResponse.Content.Id);
+        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? default);
 
         project.Name.Should().Be(updateParameters.Name);
         project.Description.Should().Be(updateParameters.Description);
@@ -117,31 +133,40 @@ public class ProjectControllerTests : BaseIntegrationTest
     public async Task UpdateFromGitBranch_Should_Success()
     {
         //arrange
-        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
-        var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-        var createEventResponse = await EventsApi.Create(eventRequest);
+        var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
+        var request = Mapper.Map<CreateEventRequest>(@event);
+        var createEventResponse = await EventsApi.Create(request);
 
+        // Публикуем событие, чтобы можно было регистрироваться участникам
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
 
-        var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
-        {
-            Name = Guid.NewGuid().ToString()[..4],
-            EventId = createEventResponse.Id,
-            Type = (int)TeamType.Private
-        });
+        // Присоединяемся к событию в качестве участника
+        await EventsApi.JoinAsync(createEventResponse.Id);
 
-        Assert.NotNull(teamCreateResponse.Content);
-
+        // Регистрируем нового участника в событии
         var user = await RegisterUser();
         SetToken(user.Token);
+        await EventsApi.JoinAsync(createEventResponse.Id);
+
+        // Начинаем событие
+        SetToken(TestUser.Token);
+
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.Started
+        });
+
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+        var temporaryTeamByUserId = getEventResponse.Content?.Teams?.FirstOrDefault(x => x.HasMemberWithId(TestUser.Id));
 
         var createParameters = new ProjectCreateRequest
         {
-            TeamId = teamCreateResponse.Content.Id,
+            TeamId = temporaryTeamByUserId?.Id ?? default,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
@@ -150,19 +175,19 @@ public class ProjectControllerTests : BaseIntegrationTest
         await ProjectsApiClient.CreateAsync(createParameters);
 
         //act
-        var request = new UpdateProjectFromGitBranchRequest
+        var updateProjectRequest = new UpdateProjectFromGitBranchRequest
         {
             EventId = createEventResponse.Id,
-            TeamId = teamCreateResponse.Content.Id,
+            TeamId = temporaryTeamByUserId?.Id ?? default,
             LinkToGitBranch = "https://github.com/coder1coder/Backend.Tools/tree/develop"
         };
 
-        await ProjectsApiClient.UpdateProjectFromGitBranch(request);
+        await ProjectsApiClient.UpdateProjectFromGitBranch(updateProjectRequest);
 
         //assert
-        var project = await ProjectsApiClient.GetAsync(request.EventId, request.TeamId);
+        var project = await ProjectsApiClient.GetAsync(updateProjectRequest.EventId, updateProjectRequest.TeamId);
 
-        project.LinkToGitBranch.Should().Be(request.LinkToGitBranch);
+        project.LinkToGitBranch.Should().Be(updateProjectRequest.LinkToGitBranch);
         project.FileIds.Should().NotBeNullOrEmpty();
     }
 
