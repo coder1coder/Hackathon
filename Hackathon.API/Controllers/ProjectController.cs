@@ -1,4 +1,5 @@
-﻿using Hackathon.Common.Abstraction.Project;
+﻿using System.Net;
+using Hackathon.Common.Abstraction.Project;
 using System.Threading.Tasks;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
@@ -28,8 +29,9 @@ public class ProjectController: BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("{eventId:long}/{teamId:long}")]
-    public Task<ProjectModel> Get([FromRoute] long eventId, [FromRoute] long teamId)
-        => _projectService.GetAsync(eventId, teamId);
+    [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(ProjectModel))]
+    public Task<IActionResult> Get([FromRoute] long eventId, [FromRoute] long teamId)
+        => GetResult(() => _projectService.GetAsync(AuthorizedUserId, eventId, teamId));
 
     /// <summary>
     /// Создать новый проект
@@ -39,8 +41,8 @@ public class ProjectController: BaseController
     [HttpPost]
     public Task<IActionResult> Create([FromBody] ProjectCreateRequest projectCreateRequest)
     {
-        var projectCreateModel = _mapper.Map<ProjectCreateParameters>(projectCreateRequest);
-        return GetResult(() => _projectService.CreateAsync(projectCreateModel));
+        var projectCreateModel = _mapper.Map<ProjectCreationParameters>(projectCreateRequest);
+        return GetResult(() => _projectService.CreateAsync(AuthorizedUserId, projectCreateModel));
     }
 
     /// <summary>
@@ -50,7 +52,7 @@ public class ProjectController: BaseController
     /// <returns></returns>
     [HttpPut]
     public Task<IActionResult> Update([FromBody] ProjectUpdateParameters parameters)
-        => GetResult(() => _projectService.UpdateAsync(parameters, AuthorizedUserId));
+        => GetResult(() => _projectService.UpdateAsync(AuthorizedUserId, parameters));
 
     /// <summary>
     /// Обновить проект из ветки Git-репозитория
@@ -61,7 +63,7 @@ public class ProjectController: BaseController
     public Task<IActionResult> UpdateProjectFromGitBranch([FromBody] UpdateProjectFromGitBranchRequest request)
     {
         var parameters = _mapper.Map<UpdateProjectFromGitBranchRequest, UpdateProjectFromGitBranchParameters>(request);
-        return GetResult(() => _projectService.UpdateProjectFromGitBranchAsync(parameters, AuthorizedUserId));
+        return GetResult(() => _projectService.UpdateProjectFromGitBranchAsync(AuthorizedUserId, parameters));
     }
 
     /// <summary>
@@ -72,5 +74,5 @@ public class ProjectController: BaseController
     /// <returns></returns>
     [HttpDelete("{eventId:long}/{teamId:long}")]
     public Task<IActionResult> Delete(long eventId, long teamId)
-        => GetResult(() => _projectService.DeleteAsync(eventId, teamId, AuthorizedUserId));
+        => GetResult(() => _projectService.DeleteAsync(AuthorizedUserId, eventId, teamId));
 }

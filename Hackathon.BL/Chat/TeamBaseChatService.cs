@@ -17,7 +17,7 @@ namespace Hackathon.BL.Chat;
 public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
 {
     private readonly ITeamRepository _teamRepository;
-    private readonly INewTeamChatMessageValidator _chatMessageValidator;
+    private readonly Common.Abstraction.IValidator<NewTeamChatMessage> _chatMessageValidator;
 
     public TeamBaseChatService(
         ITeamChatRepository teamChatRepository,
@@ -25,7 +25,7 @@ public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMe
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        INewTeamChatMessageValidator chatMessageValidator,
+        Common.Abstraction.IValidator<NewTeamChatMessage> chatMessageValidator,
         IMapper mapper):base(teamChatRepository, chatMessageHub, userRepository, notificationService, mapper)
     {
         _teamRepository = teamRepository;

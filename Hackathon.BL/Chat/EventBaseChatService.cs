@@ -17,7 +17,7 @@ namespace Hackathon.BL.Chat;
 public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
 {
     private readonly IEventRepository _eventRepository;
-    private readonly INewEventChatMessageValidator _validator;
+    private readonly Common.Abstraction.IValidator<NewEventChatMessage> _validator;
 
     public EventBaseChatService(
         IEventChatRepository eventChatRepository,
@@ -25,7 +25,7 @@ public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventCha
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
         IUserRepository userRepository,
         INotificationService notificationService,
-        INewEventChatMessageValidator validator,
+        Common.Abstraction.IValidator<NewEventChatMessage> validator,
         IMapper mapper):base(eventChatRepository, chatMessageHub, userRepository, notificationService, mapper)
     {
         _eventRepository = eventRepository;

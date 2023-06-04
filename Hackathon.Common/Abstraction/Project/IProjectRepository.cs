@@ -13,9 +13,9 @@ public interface IProjectRepository
     /// <summary>
     /// Создать проект
     /// </summary>
-    /// <param name="projectCreateParameters">Параметры</param>
+    /// <param name="projectCreationParameters">Параметры</param>
     /// <returns></returns>
-    Task CreateAsync(ProjectCreateParameters projectCreateParameters);
+    Task CreateAsync(ProjectCreationParameters projectCreationParameters);
 
     /// <summary>
     /// Обновить проект
@@ -43,8 +43,9 @@ public interface IProjectRepository
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
     /// <param name="teamId">Идентификатор команды</param>
+    /// <param name="includeTeamMembers">Включить в результат участников команды</param>
     /// <returns></returns>
-    Task<ProjectModel> GetAsync(long eventId, long teamId);
+    Task<ProjectModel> GetAsync(long eventId, long teamId, bool includeTeamMembers = false);
 
     /// <summary>
     /// Удалить проект

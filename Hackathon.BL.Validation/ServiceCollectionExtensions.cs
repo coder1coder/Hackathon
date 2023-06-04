@@ -5,9 +5,10 @@ using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Chat;
+using Hackathon.Common.Models.Chat.Event;
+using Hackathon.Common.Models.Chat.Team;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
@@ -21,8 +22,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection RegisterValidators(this IServiceCollection services) => services
         .AddScoped<IValidator<IHasProjectIdentity>, ProjectIdentityParametersValidator>()
         .AddScoped<IValidator<BaseProjectParameters>, BaseProjectParametersValidator>()
-        .AddScoped<IValidator<ProjectCreateParameters>, ProjectCreateParametersValidator>()
-        .AddScoped<IValidator<ProjectUpdateParameters>, ProjectUpdateParametersValidator>()
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters>, ProjectCreateParametersValidator>()
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters>, ProjectUpdateParametersValidator>()
         .AddScoped<IValidator<UpdateProjectFromGitBranchParameters>, UpdateProjectFromGitParametersValidator>()
         .AddScoped<IValidator<CreateTeamModel>, CreateTeamModelValidator>()
         .AddScoped<IValidator<TeamMemberModel>, TeamAddMemberModelValidator>()
@@ -36,6 +37,6 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>()
         .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
-        .AddScoped<INewEventChatMessageValidator, NewEventChatMessageValidator>()
-        .AddScoped<INewTeamChatMessageValidator, NewTeamChatMessageValidator>();
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<NewEventChatMessage>, NewEventChatMessageValidator>()
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<NewTeamChatMessage>, NewTeamChatMessageValidator>();
 }
