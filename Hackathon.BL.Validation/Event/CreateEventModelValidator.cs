@@ -11,6 +11,6 @@ public class CreateEventModelValidator : AbstractValidator<EventCreateParameters
 
         RuleFor(x => x.OwnerId)
             .GreaterThan(0)
-            .WithMessage("Идентификатор пользователя должен быть больше 0");
+            .WithMessage("Идентификатор пользователя должен быть больше {ComparisonValue}");
     }
 }
