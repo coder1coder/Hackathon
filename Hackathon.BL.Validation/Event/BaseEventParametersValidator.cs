@@ -1,4 +1,5 @@
 using FluentValidation;
+using Hackathon.Common;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Validation.Event;
@@ -18,28 +19,28 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 .WithMessage("Описание должно содержать минимум 100 символов");
 
             RuleFor(x => x.Start)
-               .GreaterThan(DateTime.UtcNow)
-               .WithMessage("Дата начала мероприятия должна быть позже текущего времени");
+               .GreaterThan(DateTime.UtcNow.Add(JobsConstants.StartedEventUpdateStatusJobFrequency))
+               .WithMessage("Дата начала мероприятия должна быть позже {ComparisonValue}");
 
             RuleFor(x => x.DevelopmentMinutes)
                 .GreaterThan(0)
-                .WithMessage("Продолжительность этапа разработки должна быть больше 0 минут");
+                .WithMessage("Продолжительность этапа разработки должна быть больше {ComparisonValue} минут");
 
             RuleFor(x => x.MaxEventMembers)
                 .GreaterThan(1)
-                .WithMessage("Максимальное количество участников события должно быть больше 1");
+                .WithMessage("Максимальное количество участников события должно быть больше {ComparisonValue}");
 
             RuleFor(x => x.MemberRegistrationMinutes)
                 .GreaterThan(0)
-                .WithMessage("Продолжительность этапа регистрации участников должна быть больше 0 минут");
+                .WithMessage("Продолжительность этапа регистрации участников должна быть больше {ComparisonValue} минут");
 
             RuleFor(x => x.MinTeamMembers)
                 .GreaterThan(0)
-                .WithMessage("Минимальное количество участников в команде должно быть больше 0");
+                .WithMessage("Минимальное количество участников в команде должно быть больше {ComparisonValue}");
 
             RuleFor(x => x.TeamPresentationMinutes)
                 .GreaterThan(0)
-                .WithMessage("Продолжительность этапа презентации должна быть больше 0 минут");
+                .WithMessage("Продолжительность этапа презентации должна быть больше {ComparisonValue} минут");
 
             When(x => x.ChangeEventStatusMessages is {Count: > 0}, () =>
             {

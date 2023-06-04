@@ -12,7 +12,7 @@ public abstract class DefaultBackgroundService<TJob>: BackgroundService where TJ
     private readonly ILogger<DefaultBackgroundService<TJob>> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    private TimeSpan Delay { get; } = TimeSpan.FromMinutes(1);
+    protected TimeSpan Delay = TimeSpan.FromMinutes(1);
 
     protected DefaultBackgroundService(
         ILogger<DefaultBackgroundService<TJob>> logger,
