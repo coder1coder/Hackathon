@@ -4,15 +4,13 @@ import {Team} from "../Team/Team";
 import {IUser} from "../User/IUser";
 import {EventStage} from "./EventStage";
 import {IEventTaskItem} from "./IEventTaskItem";
+import {IEventAgreement} from "./IEventAgreement";
 
 export class Event {
   id!: number;
   name!: string;
   description!: string;
   start!: Date;
-  memberRegistrationMinutes!: number;
-  developmentMinutes!: number;
-  teamPresentationMinutes!: number;
   maxEventMembers!: number;
   minTeamMembers!: number;
   isCreateTeamsAutomatically!: boolean;
@@ -25,7 +23,7 @@ export class Event {
   award!: string;
   imageId: string;
   imageUrl?: string;
-  rules?: string;
+  agreement?: IEventAgreement
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];

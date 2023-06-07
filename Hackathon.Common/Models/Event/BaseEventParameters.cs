@@ -22,21 +22,6 @@ public abstract class BaseEventParameters
     public DateTime Start { get; set; }
 
     /// <summary>
-    /// Продолжительность формированя команд в минутах
-    /// </summary>
-    public int MemberRegistrationMinutes { get; set; }
-
-    /// <summary>
-    /// Продолжительность этапа разработки в минутах
-    /// </summary>
-    public int DevelopmentMinutes { get; set; }
-
-    /// <summary>
-    /// Продолжительность выступления каждой команды в минутах
-    /// </summary>
-    public int TeamPresentationMinutes { get; set; }
-
-    /// <summary>
     /// Максимальное количество участников
     /// </summary>
     public int MaxEventMembers { get; set; }
@@ -71,11 +56,6 @@ public abstract class BaseEventParameters
     /// <remarks>Получается посредством загрузки файла в хранилище</remarks>
     /// </summary>
     public Guid? ImageId { get; set; }
-
-    /// <summary>
-    /// Правила участия
-    /// </summary>
-    public string Rules { get; set; }
 
     /// <summary>
     /// Задачи, которые ставятся перед участниками мероприятия

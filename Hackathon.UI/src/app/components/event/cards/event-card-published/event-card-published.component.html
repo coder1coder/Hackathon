@@ -7,9 +7,9 @@
     <alert>Вы являетесь организатором события</alert>
   </div>
   <div actions>
-    <app-actions
+    <event-button-actions
       [event]="event">
-    </app-actions>
+    </event-button-actions>
   </div>
 
   <div class="event event-published">
@@ -61,33 +61,6 @@
               </div>
             </div>
 
-            <div class="event-content__info-content">
-              <div class="event-content__info-title">
-                Регистрация участников
-              </div>
-              <div class="event-content__info-desc">
-                {{ event.memberRegistrationMinutes }}мин
-              </div>
-            </div>
-
-            <div class="event-content__info-content">
-              <div class="event-content__info-title">
-                Разработка
-              </div>
-              <div class="event-content__info-desc">
-                {{ event.developmentMinutes }}мин
-              </div>
-            </div>
-
-            <div class="event-content__info-content">
-              <div class="event-content__info-title">
-                Презентация
-              </div>
-              <div class="event-content__info-desc">
-                {{ event.teamPresentationMinutes }}мин
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -128,8 +101,8 @@
       <section class="event-content__section">
         <div class="event-content__section-title">Правила</div>
         <div class="event-content__section-content">
-          <div class="event-content__rules" *ngIf="event.rules; else empty">
-           {{event.rules}}
+          <div class="event-content__rules" *ngIf="event.agreement?.rules; else empty">
+           {{event.agreement?.rules}}
           </div>
         </div>
       </section>

@@ -2,6 +2,7 @@
 using Hackathon.DAL.Entities.Interfaces;
 using System;
 using System.Collections.Generic;
+using Hackathon.DAL.Entities.Event;
 
 namespace Hackathon.DAL.Entities.User;
 
@@ -56,6 +57,11 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// Запросы на вступление в команду
     /// </summary>
     public ICollection<TeamJoinRequestEntity> JoinRequests { get; set; } = new List<TeamJoinRequestEntity>();
+
+    /// <summary>
+    /// Принятые соглашения участия в мероприятии
+    /// </summary>
+    public ICollection<EventAgreementEntity> EventAgreements { get; set; } = new List<EventAgreementEntity>();
 
     /// <summary>
     /// Идентификатор аватара профиля в файловом хранилище

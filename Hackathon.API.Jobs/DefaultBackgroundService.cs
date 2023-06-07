@@ -29,11 +29,12 @@ public abstract class DefaultBackgroundService<TJob>: BackgroundService where TJ
             using var scope = _serviceScopeFactory.CreateScope();
             var job = scope.ServiceProvider.GetRequiredService<TJob>();
 
-            while (!stoppingToken.IsCancellationRequested)
+            do
             {
                 await job.ExecuteAsync();
                 await Task.Delay(Delay, stoppingToken);
-            }
+
+            } while (!stoppingToken.IsCancellationRequested);
         }
         catch (Exception e)
         {

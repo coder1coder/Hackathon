@@ -2,6 +2,7 @@
 using Hackathon.Common.Models.EventStage;
 using System;
 using System.Collections.Generic;
+using Hackathon.Common.Models.Event.Agreement;
 
 namespace Hackathon.Contracts.Requests.Event;
 
@@ -29,21 +30,6 @@ public class UpdateEventRequest
     /// Дата и время начала
     /// </summary>
     public DateTime Start { get; set; }
-
-    /// <summary>
-    /// Продолжительность формированя команд в минутах
-    /// </summary>
-    public int MemberRegistrationMinutes { get; set; }
-
-    /// <summary>
-    /// Продолжительность этапа разработки в минутах
-    /// </summary>
-    public int DevelopmentMinutes { get; set; }
-
-    /// <summary>
-    /// Продолжительность выступленя каждой команды в минутах
-    /// </summary>
-    public int TeamPresentationMinutes { get; set; }
 
     /// <summary>
     /// Максимальное количество участников
@@ -82,9 +68,9 @@ public class UpdateEventRequest
     public Guid? ImageId { get; set; }
 
     /// <summary>
-    /// Правила проведения мероприятия
+    /// Соглашение об участии в мероприятии
     /// </summary>
-    public string Rules { get; set; }
+    public EventAgreementUpdateParameters Agreement { get; set; }
 
     /// <summary>
     /// Задачи, которые ставятся перед участниками мероприятия

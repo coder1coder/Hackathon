@@ -1,6 +1,7 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
 import {EventStage} from "./EventStage";
 import {IEventTaskItem} from "./IEventTaskItem";
+import {IEventAgreement} from "./IEventAgreement";
 
 export interface ICreateEvent
 {
@@ -9,15 +10,12 @@ export interface ICreateEvent
 
   //описание
   description:string;
-  developmentMinutes: number;
   isCreateTeamsAutomatically: boolean;
   maxEventMembers: number;
-  memberRegistrationMinutes: number;
   minTeamMembers: number;
 
   //дата и время начала
   start: Date;
-  teamPresentationMinutes: number;
   changeEventStatusMessages: ChangeEventStatusMessage[];
 
   //Этапы события
@@ -29,8 +27,8 @@ export interface ICreateEvent
   //Идентификатор изображения
   imageId:string;
 
-  //Правила участия
-  rules: string;
+  //Соглашение об участии
+  agreement?: IEventAgreement | null;
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[]

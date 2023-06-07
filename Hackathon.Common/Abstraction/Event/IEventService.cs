@@ -90,4 +90,19 @@ public interface IEventService
     /// <param name="file">Файл http запроса</param>
     /// <returns></returns>
     Task<Result<Guid>> UploadEventImageAsync(IFormFile file);
+
+    /// <summary>
+    /// Получить соглашение мероприятия
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
+    Task<Result<EventAgreementModel>> GetAgreementAsync(long eventId);
+
+    /// <summary>
+    /// Принять соглашение мероприятия
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор пользователя</param>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
+    Task<Result> AcceptAgreementAsync(long authorizedUserId, long eventId);
 }

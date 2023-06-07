@@ -41,33 +41,35 @@ public class NotificationController: BaseController
     /// <summary>
     /// Отметить уведомления пользователя как прочтенные
     /// </summary>
-    /// <param name="ids"></param>
+    /// <param name="notificationIds">Идентификаторы уведомлений</param>
     /// <returns></returns>
     [HttpPost("read")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    public Task MarkAsRead([FromBody] Guid[] ids)
-        => _notificationService.MarkAsReadAsync(AuthorizedUserId, ids);
+    public Task MarkAsRead([FromBody] Guid[] notificationIds)
+        => _notificationService.MarkAsReadAsync(AuthorizedUserId, notificationIds);
 
     /// <summary>
     /// Удалить уведомления пользователя
     /// </summary>
-    /// <param name="ids"></param>
+    /// <param name="notificationIds">Идентификаторы уведомлений</param>
     /// <returns></returns>
     [HttpDelete("remove")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    public async Task Delete([FromBody] Guid[] ids)
-    {
-        await _notificationService.DeleteAsync(AuthorizedUserId, ids);
-    }
+    public Task Delete([FromBody] Guid[] notificationIds)
+        => _notificationService.DeleteAsync(AuthorizedUserId, notificationIds);
 
+    /// <summary>
+    /// Отправить информационное сообщение
+    /// </summary>
+    /// <param name="message">Сообщение</param>
+    /// <param name="recipientId">Идентификатор получателя (пользователя)</param>
     [HttpPost("push/info")]
-    public async Task PushInformationNotification([FromBody] string message, [Required] long to)
-    {
-        await _notificationService.PushAsync(new CreateNotificationModel<InfoNotificationData>
+    public Task PushInformationNotification([FromBody] string message, [Required] long recipientId)
+        => _notificationService.PushAsync(new CreateNotificationModel<InfoNotificationData>
         {
-            UserId = to,
+            UserId = recipientId,
             OwnerId = AuthorizedUserId,
             Type = NotificationType.Information,
             Data = new InfoNotificationData
@@ -75,8 +77,11 @@ public class NotificationController: BaseController
                 Message = message
             }
         });
-    }
 
+    /// <summary>
+    /// Получить количество непрочитанных уведомлений
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("unread/count")]
     public Task<long> GetUnreadNotificationsCount()
         => _notificationService.GetUnreadNotificationsCountAsync(AuthorizedUserId);

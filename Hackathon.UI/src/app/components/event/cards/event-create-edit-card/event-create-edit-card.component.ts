@@ -83,6 +83,18 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       this.fetch();
   }
 
+  private applyAgreement(event: ICreateEvent)
+  {
+    let agreementRules = this.form.get('agreementRules')?.value;
+    event.agreement = (agreementRules?.length > 0) ?
+      {
+        id: this.event?.agreement?.id,
+        rules: agreementRules,
+        requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value ?? false
+      }
+      : null;
+  }
+
   public saveForm(): () => void {
     return () => {
       let request: Observable<any>;
@@ -101,34 +113,29 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       if (!this.editMode) {
         let event: ICreateEvent = {
           name: this.form.get('name')?.value,
-          developmentMinutes: this.form.get('developmentMinutes')?.value,
           isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
           maxEventMembers: this.form.get('maxEventMembers')?.value,
-          memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
           minTeamMembers: this.form.get('minTeamMembers')?.value,
           start: this.form.get('start')?.value,
-          teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
           changeEventStatusMessages: this.eventStatusDataSource.data,
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value,
           stages: eventStages,
           tasks: eventTasks,
-          rules: this.form.get('rules')?.value
         };
+
+        this.applyAgreement(event);
 
         request = this.eventHttpService.create(event);
       } else {
         let event: IUpdateEvent = {
           id: Number(this.event?.id),
           name: this.form.get('name')?.value,
-          developmentMinutes: this.form.get('developmentMinutes')?.value,
           isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
           maxEventMembers: this.form.get('maxEventMembers')?.value,
-          memberRegistrationMinutes: this.form.get('memberRegistrationMinutes')?.value,
           minTeamMembers: this.form.get('minTeamMembers')?.value,
           start: this.form.get('start')?.value,
-          teamPresentationMinutes: this.form.get('teamPresentationMinutes')?.value,
           userId: Number(this.event?.owner?.id),
           changeEventStatusMessages: this.eventStatusDataSource.data,
           stages: eventStages,
@@ -136,8 +143,10 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           award: this.form.get('award')?.value,
           description: this.form.get('description')?.value,
           imageId: this.form.get('imageId')?.value,
-          rules: this.form.get('rules')?.value
+          agreement: this.event?.agreement
         };
+
+        this.applyAgreement(event);
 
         request = this.eventHttpService.update(event);
       }
@@ -160,6 +169,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       });
     }
   }
+
+
 
   public addStatus(): void {
     let filteredEventStatusValues = this.getAvlStatutes();
@@ -297,7 +308,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
     this.form.patchValue({
       ...this.event,
-      start: moment(this.event.start).local().format(this.dateFormat)
+      start: moment(this.event.start).local().format(this.dateFormat),
+      agreementRules: this.event?.agreement?.rules,
+      agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
@@ -325,14 +338,14 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       description: [null],
       start: [EventCreateEditCardComponent.getEventStartDefault()],
       memberRegistrationMinutes: [10],
-      developmentMinutes: [10],
       teamPresentationMinutes: [10],
       maxEventMembers: [50],
       minTeamMembers: [2],
       isCreateTeamsAutomatically: [true],
       award: ['0'],
       imageId: [null],
-      rules: [null]
+      agreementRules: [null],
+      agreementRequiresConfirmation: [false]
     });
   }
 

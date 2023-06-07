@@ -51,6 +51,12 @@ public class ApplicationDbContext: DbContext
     public DbSet<FriendshipEntity> Friendships { get; set; }
 
     /// <summary>
+    /// Соглашения об участии в мероприятии
+    /// </summary>
+    public DbSet<EventAgreementEntity> EventAgreements { get; set; }
+    public DbSet<EventAgreementUserEntity> EventAgreementUsers { get; set; }
+
+    /// <summary>
     ///
     /// </summary>
     public DbSet<EmailConfirmationRequestEntity> EmailConfirmations { get; set; }

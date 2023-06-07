@@ -11,7 +11,7 @@ public abstract class BaseUnitTest
     protected BaseUnitTest()
     {
         var config = new TypeAdapterConfig();
-        config.Scan(typeof(EventEntityMapping).Assembly);
+        config.Scan(typeof(EventMapping).Assembly);
 
         Mapper = new Mapper(config);
     }
