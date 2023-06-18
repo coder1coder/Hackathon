@@ -1,4 +1,6 @@
-﻿namespace Hackathon.Common.Models.Event;
+﻿using Hackathon.Common.Models.Event.Agreement;
+
+namespace Hackathon.Common.Models.Event;
 
 /// <summary>
 /// Модель события для создания
@@ -9,4 +11,9 @@ public class EventCreateParameters: BaseEventParameters
     /// Кто создал событие
     /// </summary>
     public long OwnerId { get; set; }
+
+    /// <summary>
+    /// Соглашение об участии в мероприятии
+    /// </summary>
+    public EventAgreementCreateParameters Agreement { get; set; }
 }

@@ -53,6 +53,10 @@ export class EventHttpService {
     });
   }
 
+  public acceptAgreement(eventId: number): Observable<void>{
+    return this.http.post<void>(`${this.api}/Event/${eventId}/agreement/accept`, {});
+  }
+
   public join(eventId: number): Observable<void> {
     return this.http.post<void>(`${this.api}/Event/${eventId}/Join`, {})
   }

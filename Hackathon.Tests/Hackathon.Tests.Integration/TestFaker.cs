@@ -37,7 +37,7 @@ public class TestFaker
         return faker.Generate(count);
     }
 
-    public List<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
+    public IEnumerable<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
     {
         var eventEntities = GetEventEntities(count, userId, eventStatus);
         return _mapper.Map<List<EventModel>>(eventEntities);
@@ -52,17 +52,17 @@ public class TestFaker
         writer.Write(content);
         writer.Flush();
         stream.Position = 0;
-        
+
         var fileMock = new FormFile(stream, 0, stream.Length, "file", fileName)
         {
             Headers = new HeaderDictionary(),
             ContentType = "image/jpeg",
             ContentDisposition = $"form-data; name=\"file\"; filename=\"{fileName}\""
         };
-        
+
         return fileMock;
     }
-    
+
     #endregion
 
     private static List<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)
@@ -71,9 +71,6 @@ public class TestFaker
             .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
             .RuleFor(x => x.Start, DateTime.UtcNow.AddDays(1))
             .RuleFor(x => x.IsCreateTeamsAutomatically, true)
-            .RuleFor(x => x.MemberRegistrationMinutes, f => f.Random.Int(1, 30))
-            .RuleFor(x => x.DevelopmentMinutes, f => f.Random.Int(1, 30))
-            .RuleFor(x => x.TeamPresentationMinutes, f => f.Random.Int(1, 30))
             .RuleFor(x => x.MaxEventMembers, _ => 30)
             .RuleFor(x => x.MinTeamMembers, _ => 1)
             .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
@@ -81,6 +78,11 @@ public class TestFaker
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
             .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
             .RuleFor(x => x.Description, f => f.Random.String2(400))
+            .RuleFor(x=>x.Agreement, f=>new EventAgreementEntity
+            {
+                Rules = f.Random.String2(10, 300),
+                RequiresConfirmation = false
+            })
             .RuleFor(x => x.Stages, (f, e) => new List<EventStageEntity>
             {
                 new ()

@@ -47,6 +47,7 @@ public class EventRepository : IEventRepository
             .ThenInclude(x => x.Member)
             .Include(x => x.Owner)
             .Include(x=>x.Stages)
+            .Include(x=>x.Agreement).ThenInclude(x=>x.Users)
             .FirstOrDefaultAsync(x => x.Id == eventId);
 
         return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
@@ -135,6 +136,7 @@ public class EventRepository : IEventRepository
     {
         var entity = await _dbContext.Events
             .Include(x=>x.Stages)
+            .Include(x=>x.Agreement)
             .FirstOrDefaultAsync(x =>
                 x.Id == eventUpdateParameters.Id);
 
@@ -142,6 +144,7 @@ public class EventRepository : IEventRepository
             return;
 
         _mapper.Map(eventUpdateParameters, entity);
+
         _dbContext.Events.Update(entity);
         await _dbContext.SaveChangesAsync();
     }

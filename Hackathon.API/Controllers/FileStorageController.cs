@@ -16,7 +16,12 @@ public class FileStorageController: BaseController
     {
         _fileStorageService = fileStorageService;
     }
-    
+
+    /// <summary>
+    /// Получить файл из хранилища
+    /// </summary>
+    /// <param name="storageFileId">Идентификатор файла</param>
+    /// <returns></returns>
     [HttpGet]
     [Route("get/{storageFileId:guid}")]
     public Task<Stream> Get([FromRoute] Guid storageFileId)

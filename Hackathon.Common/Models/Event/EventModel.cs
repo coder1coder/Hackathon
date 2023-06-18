@@ -28,6 +28,11 @@ public class EventModel : EventUpdateParameters
     public long CurrentStageId { get; set; }
 
     /// <summary>
+    /// Соглашение об участии в мероприятии
+    /// </summary>
+    public new EventAgreementModel Agreement { get; set; }
+
+    /// <summary>
     /// Получить команды связанные с событием, которые заполнены не полностью
     /// </summary>
     /// <returns></returns>

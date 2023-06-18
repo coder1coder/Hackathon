@@ -35,24 +35,9 @@ public class EventEntity : BaseEntity, ISoftDeletable
     public DateTime Start { get; set; }
 
     /// <summary>
-    /// Продолжительность формированя команд в минутах
-    /// </summary>
-    public int MemberRegistrationMinutes { get; set; }
-
-    /// <summary>
     /// Статус события
     /// </summary>
     public EventStatus Status { get; set; }
-
-    /// <summary>
-    /// Продолжительность этапа разработки в минутах
-    /// </summary>
-    public int DevelopmentMinutes { get; set; }
-
-    /// <summary>
-    /// Продолжительность выступленя каждой команды в минутах
-    /// </summary>
-    public int TeamPresentationMinutes { get; set; }
 
     /// <summary>
     /// Максимальное количество участников
@@ -100,11 +85,6 @@ public class EventEntity : BaseEntity, ISoftDeletable
     public Guid? ImageId { get; set; }
 
     /// <summary>
-    /// Правила участия в событии
-    /// </summary>
-    public string Rules { get; set; }
-
-    /// <summary>
     /// Признак удаления
     /// </summary>
     public bool IsDeleted { get; set; }
@@ -113,4 +93,9 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// Задачи, которые ставятся перед участниками мероприятия
     /// </summary>
     public EventTaskItem[] Tasks { get; set; } = Array.Empty<EventTaskItem>();
+
+    /// <summary>
+    /// Соглашение участия в мероприятии
+    /// </summary>
+    public EventAgreementEntity Agreement { get; set; }
 }

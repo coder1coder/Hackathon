@@ -1,11 +1,13 @@
+using System;
+using System.IO;
+using Hackathon.API.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
-using System;
-using System.IO;
 
 namespace Hackathon.API;
 
@@ -14,15 +16,16 @@ public class Program
     public static void Main(string[] args)
     {
         var appHost = CreateHostBuilder(args).Build();
-        var logger = appHost.Services.GetRequiredService<ILogger>();
+        var logger = appHost.Services.GetRequiredService<ILogger<Program>>();
 
         try
         {
+            appHost.Migrate(logger);
             appHost.Run();
         }
         catch (Exception e)
         {
-            logger.Error(e, "Возникла ошибка во время запуска приложения: {Message}", e.Message);
+            logger.LogError(e, "Возникла ошибка во время запуска приложения: {Message}", e.Message);
             throw;
         }
     }

@@ -9,6 +9,7 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.DAL.Repositories;
 using Hackathon.DAL.Repositories.Chat;
+using Hackathon.DAL.Repositories.Events;
 using Hackathon.DAL.Repositories.Team;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,6 +32,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<INotificationRepository, NotificationRepository>()
             .AddScoped<IProjectRepository, ProjectRepository>()
             .AddScoped<IUserProfileReactionRepository, UserProfileReactionRepository>()
-            .AddScoped<IUserRepository, UserRepository>();
+            .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IEventAgreementRepository, EventAgreementRepository>()
+            ;
     }
 }

@@ -71,17 +71,46 @@ public class EventController: BaseController
     /// <summary>
     /// Получить событие по идентификатору
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="eventId">Идентификатор мероприятия</param>
     /// <returns></returns>
-    [HttpGet("{id:long}")]
+    [HttpGet("{eventId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
-    public Task<IActionResult> Get([FromRoute] long id)
-        => GetResult(() => _eventService.GetAsync(id));
+    public Task<IActionResult> Get([FromRoute] long eventId)
+        => GetResult(() => _eventService.GetAsync(eventId));
 
+    /// <summary>
+    /// Присоединиться к мероприятию
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
     [HttpPost("{eventId:long}/join")]
     public Task<IActionResult> Join(long eventId)
         => GetResult(() => _eventService.JoinAsync(eventId, AuthorizedUserId));
 
+    /// <summary>
+    /// Получить соглашение мероприятия
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
+    [HttpGet("{eventId:long}/agreement")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventAgreementModel))]
+    public Task<IActionResult> GetAgreement(long eventId)
+        => GetResult(() => _eventService.GetAgreementAsync(eventId));
+
+    /// <summary>
+    /// Принять соглашение мероприятия
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
+    [HttpPost("{eventId:long}/agreement/accept")]
+    public Task<IActionResult> AcceptAgreement(long eventId)
+        => GetResult(() => _eventService.AcceptAgreementAsync(AuthorizedUserId, eventId));
+
+    /// <summary>
+    /// Покинуть мероприятие
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <returns></returns>
     [HttpPost("{eventId:long}/leave")]
     public Task<IActionResult> Leave(long eventId)
         => GetResult(() => _eventService.LeaveAsync(eventId, AuthorizedUserId));
@@ -106,11 +135,11 @@ public class EventController: BaseController
     /// <summary>
     /// Удалить событие
     /// </summary>
-    /// <param name="id"></param>
-    [HttpDelete("{id:long}")]
-    public Task<IActionResult> Delete([FromRoute] long id)
-        => GetResult(() => _eventService.DeleteAsync(id));
-    
+    /// <param name="eventId"></param>
+    [HttpDelete("{eventId:long}")]
+    public Task<IActionResult> Delete([FromRoute] long eventId)
+        => GetResult(() => _eventService.DeleteAsync(eventId));
+
     /// <summary>
     /// Загрузить изображение события
     /// </summary>

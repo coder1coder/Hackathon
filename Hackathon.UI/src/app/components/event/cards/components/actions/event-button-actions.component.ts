@@ -6,9 +6,12 @@ import {RouterService} from "../../../../../services/router.service";
 import {IProblemDetails} from "../../../../../models/IProblemDetails";
 import {EventService} from "../../../../../services/event/event.service";
 import {EventHttpService} from "../../../../../services/event/event.http-service";
+import {CustomDialog, ICustomDialogData} from "../../../../custom/custom-dialog/custom-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ErrorProcessor} from "../../../../../services/errorProcessor";
 
 @Component({
-  selector: 'app-actions',
+  selector: 'event-button-actions',
   templateUrl: './event-button-actions.component.html',
   styleUrls: ['./event-button-actions.component.scss']
 })
@@ -19,7 +22,9 @@ export class EventButtonActionsComponent implements OnInit {
     public eventService: EventService,
     private eventHttpService: EventHttpService,
     private snack: SnackService,
-    private router: RouterService
+    private router: RouterService,
+    public dialog: MatDialog,
+    private errorProcessor: ErrorProcessor,
   ) { }
 
   ngOnInit(): void {
@@ -52,16 +57,42 @@ export class EventButtonActionsComponent implements OnInit {
   }
 
   public enterToEvent(): void {
+
+    if (this.event?.agreement?.requiresConfirmation == true)
+    {
+      const data: ICustomDialogData = {
+        header: 'Правила участия в мероприятии',
+        content: this.event.agreement.rules,
+        acceptButtonText: `Принять`
+      };
+
+      this.dialog.open(CustomDialog, { data })
+        .afterClosed()
+        .subscribe(x => {
+          if (x) {
+            this.eventHttpService.acceptAgreement(this.event.id)
+              .subscribe({
+                next: (_) => {
+                  this.joinToEvent();
+                },
+                error: errorContext => {
+                  this.errorProcessor.Process(errorContext)
+                }
+              });
+          }
+        });
+    } else this.joinToEvent();
+  }
+
+  private joinToEvent(){
     this.eventHttpService.join(this.event.id)
       .subscribe({
         next: (_) => {
-          this.snack.open(`Вы зарегистрировались на мероприятие`);
+          this.snack.open(`Вы зарегистрировались на мероприятии`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
+        error: errorContext => {
+          this.errorProcessor.Process(errorContext)
         }
       });
   }
