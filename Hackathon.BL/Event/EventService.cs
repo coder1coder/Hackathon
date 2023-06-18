@@ -40,6 +40,7 @@ public class EventService : IEventService
     private readonly INotificationService _notificationService;
     private readonly IBus _messageBus;
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
+    private readonly IEventAgreementRepository _eventAgreementRepository;
 
     public EventService(
         IValidator<EventCreateParameters> createEventModelValidator,
@@ -51,7 +52,8 @@ public class EventService : IEventService
         INotificationService notificationService,
         IBus messageBus,
         IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
-        IFileStorageService fileStorageService)
+        IFileStorageService fileStorageService,
+        IEventAgreementRepository eventAgreementRepository)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -63,6 +65,7 @@ public class EventService : IEventService
         _messageBus = messageBus;
         _integrationEventHub = integrationEventHub;
         _fileStorageService = fileStorageService;
+        _eventAgreementRepository = eventAgreementRepository;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -140,6 +143,10 @@ public class EventService : IEventService
     public async Task<Result> JoinAsync(long eventId, long userId)
     {
         var eventModel = await _eventRepository.GetAsync(eventId);
+
+        if (eventModel.Agreement?.RequiresConfirmation == true
+            && eventModel.Agreement?.Users?.Any(x=>x.Id == userId) != true)
+            return Result.NotValid(EventMessages.AgreementShouldBeSigned);
 
         if (eventModel.Status != EventStatus.Published)
             return Result.NotValid(EventMessages.CantAttachToEvent);
@@ -292,6 +299,42 @@ public class EventService : IEventService
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName);
 
         return Result<Guid>.FromValue(uploadResult.Id);
+    }
+
+    public async Task<Result<EventAgreementModel>> GetAgreementAsync(long eventId)
+    {
+        var agreement = await _eventAgreementRepository.GetByEventId(eventId);
+        return agreement is null
+            ? Result<EventAgreementModel>.NotValid(EventErrorMessages.AgreementDoesNotExists)
+            : Result<EventAgreementModel>.FromValue(agreement);
+    }
+
+    public async Task<Result> AcceptAgreementAsync(long authorizedUserId, long eventId)
+    {
+        var user = await _userRepository.GetAsync(authorizedUserId);
+        if (user is null)
+            return Result.NotValid(UserErrorMessages.UserDoesNotExists);
+
+        var agreement = await _eventAgreementRepository.GetByEventId(eventId);
+        if (agreement is null)
+            return Result.NotValid(EventErrorMessages.AgreementDoesNotExists);
+
+        if (agreement.Event is null)
+            return Result.NotValid(EventErrorMessages.EventDoesNotExists);
+
+        if (agreement.Event.Status is not EventStatus.Published)
+            return Result.NotValid("Мероприятие должно быть опубликовано");
+
+        if (agreement.Users.Any(x=>x.Id == authorizedUserId))
+            return Result.Success;
+
+        if (!agreement.RequiresConfirmation)
+            return Result.Success;
+
+        agreement.Users.Add(user);
+
+        await _eventAgreementRepository.UpsertUserRelationAsync(agreement.EventId, authorizedUserId);
+        return Result.Success;
     }
 
     /// <summary>

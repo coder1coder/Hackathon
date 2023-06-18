@@ -53,11 +53,11 @@ public class TeamController : BaseController
     /// <summary>
     /// Получить команду по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    [HttpGet("{id:long}")]
+    /// <param name="teamId"></param>
+    [HttpGet("{teamId:long}")]
     [ProducesResponseType(typeof(TeamModel), (int)HttpStatusCode.OK)]
-    public Task<IActionResult> Get([FromRoute] long id)
-        => GetResult(() => _teamService.GetAsync(id));
+    public Task<IActionResult> Get([FromRoute] long teamId)
+        => GetResult(() => _teamService.GetAsync(teamId));
 
     /// <summary>
     /// Получить все команды

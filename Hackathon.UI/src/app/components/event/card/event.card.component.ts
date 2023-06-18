@@ -13,6 +13,8 @@ import {IUser} from "../../../models/User/IUser";
 import {Subject, takeUntil} from "rxjs";
 import {EventHttpService} from "../../../services/event/event.http-service";
 import {EventService} from "../../../services/event/event.service";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {CustomDialog, ICustomDialogData} from "../../custom/custom-dialog/custom-dialog.component";
 
 @Component({
   selector: 'event-card',
@@ -70,11 +72,12 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   public enterToEvent(): void {
+
     this.eventHttpService.join(this.eventId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (_) => {
-          this.snack.open(`Вы зарегистрировались на мероприятие`);
+          this.snack.open(`Вы зарегистрировались на мероприятии`);
           this.fetchEvent();
         },
         error: (err) => {

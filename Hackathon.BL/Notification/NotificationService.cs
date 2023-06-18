@@ -27,14 +27,14 @@ public class NotificationService: INotificationService
     public Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> listParameters, long userId)
         => _notificationRepository.GetList(listParameters, userId);
 
-    public Task MarkAsReadAsync(long userId, Guid[] ids)
-        => _notificationRepository.MarkAsRead(userId, ids);
+    public Task MarkAsReadAsync(long userId, Guid[] notificationIds)
+        => _notificationRepository.MarkAsRead(userId, notificationIds);
 
-    public async Task DeleteAsync(long userId, Guid[] ids = null)
+    public async Task DeleteAsync(long userId, Guid[] notificationIds = null)
     {
-        await _notificationRepository.Delete(userId, ids);
+        await _notificationRepository.Delete(userId, notificationIds);
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
-            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Deleted, ids));
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Deleted, notificationIds));
     }
 
     public async Task PushAsync<T>(CreateNotificationModel<T> model) where T: class
@@ -46,12 +46,12 @@ public class NotificationService: INotificationService
 
     public async Task PushManyAsync<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
     {
-        var ids = new List<Guid>();
+        var notificationIds = new List<Guid>();
         foreach (var model in models)
-            ids.Add(await _notificationRepository.Push(model));
+            notificationIds.Add(await _notificationRepository.Push(model));
 
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
-            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, ids.ToArray()));
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, notificationIds.ToArray()));
     }
 
     public Task<long> GetUnreadNotificationsCountAsync(long userId)

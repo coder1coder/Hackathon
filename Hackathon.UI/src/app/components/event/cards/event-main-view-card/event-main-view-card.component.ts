@@ -48,9 +48,6 @@ export class EventMainViewCardComponent extends EventCardBaseComponent implement
       { key: "Статус события", value: EventStatusTranslator.Translate(this.event.status ?? -1) },
       { key: "Участники", value: `${Event.getUsersCount(this.event)} / ${this.event?.maxEventMembers}`},
       { key: "Создавать команды автоматически", value: this.event.isCreateTeamsAutomatically ? 'Да' : 'Нет'},
-      { key: "Регистрация участников", value: this.event.memberRegistrationMinutes + ' мин'},
-      { key: "Разработка", value: this.event.developmentMinutes + ' мин'},
-      { key: "Презентация", value: this.event.teamPresentationMinutes + ' мин'},
       { key: "Награда / Призовой фонд", value: this.event.award + ' ₽'},
     ]
 

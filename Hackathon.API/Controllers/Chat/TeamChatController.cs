@@ -4,10 +4,12 @@ using Hackathon.Common.Models.Chat.Team;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers.Chat;
 
 [Route("api/chat/team")]
+[SwaggerTag("Чат команды")]
 public class TeamChatController: BaseController
 {
     private readonly ITeamChatService _teamChatService;

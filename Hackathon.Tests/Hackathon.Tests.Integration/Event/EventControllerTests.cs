@@ -21,26 +21,30 @@ public class EventControllerTests : BaseIntegrationTest
     [Fact]
     public async Task Get_ShouldReturn_Success()
     {
+        //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
 
         var baseCreateResponse = await EventsApi.Create(createEventRequest);
+
+        //act
         var getEventResponse = await EventsApi.Get(baseCreateResponse.Id);
-        eventModel = getEventResponse.Content;
 
-        Assert.NotNull(eventModel);
+        //assert
+        Assert.NotNull(getEventResponse.Content);
 
-        eventModel.Id.Should().Be(baseCreateResponse.Id);
-
-        eventModel.Should().BeEquivalentTo(createEventRequest, options =>
+        getEventResponse.Content.Id.Should().Be(baseCreateResponse.Id);
+        getEventResponse.Content.Should().BeEquivalentTo(createEventRequest, options =>
             options
                 .Excluding(x=>x.Stages)
+                .Excluding(x=>x.Agreement)
                 .Using<DateTime>(x =>
                     x.Subject.Should().BeCloseTo(x.Expectation, TimeSpan.FromMilliseconds(1)))
                 .WhenTypeIs<DateTime>());
 
-        eventModel.Stages.Should().BeEquivalentTo(createEventRequest.Stages, options =>
+        getEventResponse.Content.Stages.Should().BeEquivalentTo(createEventRequest.Stages, options =>
             options.Excluding(x=>x.EventId));
+        getEventResponse.Content.Agreement.Should().BeEquivalentTo(createEventRequest.Agreement);
     }
 
     [Fact]
@@ -170,11 +174,32 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var file = TestFaker.GetFormFile();
         var streamPath = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
-        
+
         //act
         var uploadFileId = await EventsApi.UploadEventImage(streamPath);
-        
+
         //assert
         Assert.NotEqual(uploadFileId, Guid.Empty);
+    }
+
+    [Fact]
+    public async Task Create_Should_Store_Agreement()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        var eventCreationResponse = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.NotNull(eventCreationResponse.Content?.Agreement);
+        eventCreationResponse.Content.Agreement
+            .Should()
+            .BeEquivalentTo(eventModel.Agreement, options =>
+                options.Excluding(x=>x.EventId)
+                    .Excluding(x=>x.Event));
+        Assert.True(eventCreationResponse.Content.Agreement.EventId > default(long));
     }
 }

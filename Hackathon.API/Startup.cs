@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,9 +55,13 @@ public class Startup
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
         services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
         services.Configure<AuthOptions>(authOptionsSection);
+        services.Configure<RouteOptions>(x =>
+        {
+            x.LowercaseUrls = true;
+        });
 
         var config = new TypeAdapterConfig();
-        config.Scan(typeof(EventEntityMapping).Assembly, typeof(UserMapping).Assembly);
+        config.Scan(typeof(EventMapping).Assembly, typeof(UserMapping).Assembly);
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
 
@@ -111,7 +116,6 @@ public class Startup
             }).AddControllers(options =>
             {
                 options.Filters.Add(new ExceptionActionFilter());
-                options.Conventions.Add(new RouteTokenTransformerConvention(new LowerCaseRouteTransformer()));
             }).AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -139,27 +143,13 @@ public class Startup
         IServiceProvider serviceProvider,
         ApplicationDbContext dbContext,
         ILogger<Startup> logger,
-        IOptions<AppSettings> appSettings,
-        IOptions<DataSettings> dataSettings)
+        IOptions<AppSettings> appSettings)
     {
         app
             .UseMetricServer()
             .UseHttpMetrics();
 
         var appConfig = appSettings.Value;
-
-        if (dataSettings?.Value?.ApplyMigrationsAtStart == true)
-        {
-            try
-            {
-                dbContext.Database.Migrate();
-                DbInitializer.Seed(dbContext, logger, dataSettings.Value.AdministratorDefaults);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Error while applying migrations");
-            }
-        }
 
         if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
             app.UsePathBase(appConfig.PathBase);

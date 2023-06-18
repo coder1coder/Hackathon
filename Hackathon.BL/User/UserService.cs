@@ -25,17 +25,11 @@ public class UserService: IUserService
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
     private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
-
     private readonly IUserRepository _userRepository;
-
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
-
     private readonly IFileStorageService _fileStorageService;
-
     private readonly int _requestLifetimeMinutes;
-
     private readonly IMapper _mapper;
-
     private readonly AuthOptions _authOptions;
 
     public UserService(
@@ -142,24 +136,24 @@ public class UserService: IUserService
 
         return models;
     }
-    
+
     public async Task<Result<Guid>> UploadProfileImageAsync(long userId, IFormFile file)
     {
         if (file is null)
             return Result<Guid>.NotValid((UserMessages.ProfileFileImageIsNotBeEmpty));
-        
-        await using var stream = file.OpenReadStream();
-        
-        var getUserResult = await GetAsync(userId);
 
-        if (!getUserResult.IsSuccess)
-            return Result<Guid>.FromErrors(getUserResult.Errors);
+        await using var stream = file.OpenReadStream();
+
+        var user = await _userRepository.GetAsync(userId);
+
+        if (user is null)
+            return Result<Guid>.NotFound(UserErrorMessages.UserDoesNotExists);
 
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Avatars, file.FileName, userId);
 
-        if (getUserResult.Data.ProfileImageId is not null) {
-
-            var deletionResult = await _fileStorageService.DeleteAsync(getUserResult.Data.ProfileImageId.Value);
+        if (user.ProfileImageId.HasValue)
+        {
+            var deletionResult = await _fileStorageService.DeleteAsync(user.ProfileImageId.Value);
             if (!deletionResult.IsSuccess)
                 return Result<Guid>.FromErrors(deletionResult.Errors);
         }

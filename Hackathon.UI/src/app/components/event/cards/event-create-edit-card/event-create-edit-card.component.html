@@ -3,10 +3,10 @@
 >
 
   <div actions>
-    <app-actions
+    <event-button-actions
     [event]="event"
     [submit]="submit">
-    </app-actions>
+    </event-button-actions>
   </div>
 
   <form [formGroup]="form" class="eventsNewForm">
@@ -62,14 +62,20 @@
               <mat-label>Правила проведения мероприятия</mat-label>
 
               <textarea matInput
-                        id="rules"
-                        formControlName="rules"
+                        id="agreementRules"
+                        formControlName="agreementRules"
                         autocomplete="off"
                         cdkTextareaAutosize
-                        #autosize="cdkTextareaAutosize"
-                        cdkAutosizeMinRows="15"
+                        cdkAutosizeMaxRows="10"
+                        cdkAutosizeMinRows="10"
               ></textarea>
             </mat-form-field>
+
+            <mat-checkbox id="agreementRequiresConfirmation"
+                          formControlName="agreementRequiresConfirmation"
+                          value="false">
+              Требуется подтверждение ознакомления с правилами
+            </mat-checkbox>
 
           </div>
           <div class="image-upload">

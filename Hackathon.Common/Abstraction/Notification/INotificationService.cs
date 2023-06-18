@@ -17,9 +17,21 @@ public interface INotificationService
     /// <returns></returns>
     Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> listParameters, long userId);
 
-    Task MarkAsReadAsync(long userId, Guid[] ids);
+    /// <summary>
+    /// Отметить уведомления прочитанными
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="notificationIds">Идентификаторы уведомлений</param>
+    /// <returns></returns>
+    Task MarkAsReadAsync(long userId, Guid[] notificationIds);
 
-    Task DeleteAsync(long userId, Guid[] ids = null);
+    /// <summary>
+    /// Удалить уведомления
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="notificationIds">Идентификаторы уведомлений</param>
+    /// <returns></returns>
+    Task DeleteAsync(long userId, Guid[] notificationIds = null);
 
     /// <summary>
     /// Отправить уведомление

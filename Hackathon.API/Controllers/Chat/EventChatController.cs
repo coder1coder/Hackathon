@@ -5,10 +5,12 @@ using Hackathon.Common.Models.Chat.Team;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Hackathon.API.Controllers.Chat;
 
 [Route("api/chat/event")]
+[SwaggerTag("Чат мероприятия")]
 public class EventChatController: BaseController
 {
     private readonly IEventChatService _eventChatService;
@@ -18,6 +20,11 @@ public class EventChatController: BaseController
         _eventChatService = eventChatService;
     }
 
+    /// <summary>
+    /// Отправить сообщение в чат мероприятия
+    /// </summary>
+    /// <param name="newEventChatMessage">Сообщение</param>
+    /// <returns></returns>
     [HttpPost("send")]
     public Task<IActionResult> SendEventChatMessage([FromBody] NewEventChatMessage newEventChatMessage)
         => GetResult(() => _eventChatService.SendAsync(AuthorizedUserId, newEventChatMessage));
