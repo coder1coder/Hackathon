@@ -7,13 +7,16 @@ namespace Hackathon.Jobs.Events;
 public class UnusedFilesDeleteJob : IJob
 {
     private readonly IFileStorageRepository _fileStorageRepository;
+    private readonly IFileStorageService _fileStorageService;
     private readonly ILogger<UnusedFilesDeleteJob> _logger;
 
     public UnusedFilesDeleteJob(
         IFileStorageRepository fileStorageRepository,
+        IFileStorageService fileStorageService,
         ILogger<UnusedFilesDeleteJob> logger)
     {
         _fileStorageRepository = fileStorageRepository;
+        _fileStorageService = fileStorageService;
         _logger = logger;
     }
 
@@ -24,11 +27,24 @@ public class UnusedFilesDeleteJob : IJob
         var countFiles = 0;
         foreach (var file in files)
         {
-            await _fileStorageRepository.RemoveAsync(file.Id);
-            countFiles++;
+            var result = await _fileStorageService.DeleteAsync(file.Id);
+            if (result.IsSuccess)
+            {
+                await _fileStorageRepository.RemoveAsync(file.Id);
+                countFiles++;
+            }
+            else
+            {
+                _logger.LogError("Не удалось удалить файл с Id: {Id}",
+                    file.Id);
+            }  
         }
 
-        _logger.LogInformation("Было удалено: {countFiles} файл/ов/а",
-            countFiles);
+        if (countFiles > 0)
+            _logger.LogInformation("Было удалено: {countFiles} неиспользуемых файл/ов/а",
+                countFiles);
+        else
+            _logger.LogInformation("Нет неиспользуемых файлов для удаления",
+                countFiles);
     }
 }
