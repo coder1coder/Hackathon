@@ -14,5 +14,8 @@ public static class ServiceCollectionExtensions
 
         .AddScoped<StartedEventStatusUpdateJob>()
         .AddHostedService<StartedEventStatusUpdateHostedService>()
+
+        .AddScoped<UnusedFilesDeleteJob>()
+        .AddHostedService<UnusedFilesDeleteHostedService>()
     ;
 }

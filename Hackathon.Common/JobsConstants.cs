@@ -8,4 +8,6 @@ public static class JobsConstants
     /// Периодичность работы службы обновления статуса начатого мероприятия
     /// </summary>
     public static TimeSpan StartedEventUpdateStatusJobFrequency = TimeSpan.FromMinutes(1);
+
+    public static TimeSpan UnusedFilesDeleteJobFrequency = TimeSpan.FromMinutes(1);
 }
