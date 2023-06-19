@@ -48,4 +48,16 @@ public class FileStorageRepository: IFileStorageRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public async Task UpdateFlagIsDeleted(Guid fileId, bool flagValue)
+    {
+        var entity = await _dbContext.StorageFiles
+            .FirstOrDefaultAsync(x => x.Id == fileId);
+
+        if (entity is not null)
+        {
+            entity.IsDeleted = flagValue;
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

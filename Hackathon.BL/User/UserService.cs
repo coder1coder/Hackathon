@@ -28,6 +28,7 @@ public class UserService: IUserService
     private readonly IUserRepository _userRepository;
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IFileStorageRepository _fileStorageRepository;
     private readonly int _requestLifetimeMinutes;
     private readonly IMapper _mapper;
     private readonly AuthOptions _authOptions;
@@ -41,6 +42,7 @@ public class UserService: IUserService
         IUserRepository userRepository,
         IEmailConfirmationRepository emailConfirmationRepository,
         IFileStorageService fileStorageService,
+        IFileStorageRepository fileStorageRepository,
         IMapper mapper)
     {
         _authOptions = authOptions?.Value ?? new AuthOptions();
@@ -50,6 +52,7 @@ public class UserService: IUserService
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
+        _fileStorageRepository = fileStorageRepository;
         _mapper = mapper;
         _requestLifetimeMinutes = emailSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
     }
@@ -153,9 +156,7 @@ public class UserService: IUserService
 
         if (user.ProfileImageId.HasValue)
         {
-            var deletionResult = await _fileStorageService.DeleteAsync(user.ProfileImageId.Value);
-            if (!deletionResult.IsSuccess)
-                return Result<Guid>.FromErrors(deletionResult.Errors);
+            await _fileStorageRepository.UpdateFlagIsDeleted(user.ProfileImageId.Value, true);
         }
 
         await _userRepository.UpdateProfileImageAsync(userId, uploadResult.Id);

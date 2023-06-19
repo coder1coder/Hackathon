@@ -26,4 +26,6 @@ public interface IFileStorageRepository
     /// <param name="fileId">Идентификатор файла</param>
     /// <returns></returns>
     Task RemoveAsync(Guid fileId);
+
+    Task UpdateFlagIsDeleted(Guid fileId, bool flagValue);
 }
