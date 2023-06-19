@@ -39,5 +39,8 @@ public class FileStorageEntity
     /// </summary>
     public long? OwnerId { get; set; }
 
-
+    /// <summary>
+    /// Флаг - нужно ли удалять файл
+    /// </summary>
+    public bool IsDeleted { get; set; }
 }
