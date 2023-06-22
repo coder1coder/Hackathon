@@ -18,50 +18,42 @@ using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
 using Xunit;
 using Bogus;
+using Hackathon.Common.Models;
 
 namespace Hackathon.BL.Tests.Event;
 
 public class EventServiceTests: BaseUnitTest
 {
     private readonly EventService _service;
-    private readonly Mock<IValidator<EventCreateParameters>> _createValidatorMock;
-    private readonly Mock<IValidator<EventUpdateParameters>> _updateValidatorMock;
-    private readonly Mock<IValidator<Common.Models.GetListParameters<EventFilter>>> _getListValidatorMock;
-    private readonly Mock<ITeamService> _teamServiceMock;
-    private readonly Mock<INotificationService> _notificationServiceMock;
-    private readonly Mock<IMessageHub<EventStatusChangedIntegrationEvent>> _integrationEventHubMock;
-    private readonly Mock<IFileStorageService> _fileStorageServiceMock;
     private readonly Mock<IEventRepository> _eventRepositoryMock;
-    private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IBus> _busMock;
-    private readonly Mock<IEventAgreementRepository> _eventAgreementRepositoryMock;
 
     public EventServiceTests()
     {
-        _createValidatorMock = new Mock<IValidator<EventCreateParameters>>();
-        _updateValidatorMock = new Mock<IValidator<EventUpdateParameters>>();
-        _getListValidatorMock = new Mock<IValidator<Common.Models.GetListParameters<EventFilter>>>();
-        _teamServiceMock = new Mock<ITeamService>();
-        _notificationServiceMock = new Mock<INotificationService>();
-        _fileStorageServiceMock = new Mock<IFileStorageService>();
+        var createValidatorMock = new Mock<IValidator<EventCreateParameters>>();
+        var updateValidatorMock = new Mock<IValidator<EventUpdateParameters>>();
+        var getListValidatorMock = new Mock<IValidator<GetListParameters<EventFilter>>>();
+        var teamServiceMock = new Mock<ITeamService>();
+        var notificationServiceMock = new Mock<INotificationService>();
+        var fileStorageServiceMock = new Mock<IFileStorageService>();
         _eventRepositoryMock = new Mock<IEventRepository>();
-        _userRepositoryMock = new Mock<IUserRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
         _busMock = new Mock<IBus>();
-        _integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
-        _eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
+        var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
+        var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
 
         _service = new EventService(
-            _createValidatorMock.Object,
-            _updateValidatorMock.Object,
-            _getListValidatorMock.Object,
+            createValidatorMock.Object,
+            updateValidatorMock.Object,
+            getListValidatorMock.Object,
             _eventRepositoryMock.Object,
-            _teamServiceMock.Object,
-            _userRepositoryMock.Object,
-            _notificationServiceMock.Object,
+            teamServiceMock.Object,
+            userRepositoryMock.Object,
+            notificationServiceMock.Object,
             _busMock.Object,
-            _integrationEventHubMock.Object,
-            _fileStorageServiceMock.Object,
-            _eventAgreementRepositoryMock.Object
+            integrationEventHubMock.Object,
+            fileStorageServiceMock.Object,
+            eventAgreementRepositoryMock.Object
         );
     }
 

@@ -116,7 +116,8 @@ public class ProjectService: IProjectService
             return Result.NotFound(ProjectMessages.ProjectDoesNotExist);
 
         //TODO: Ограничить права на удаление, когда будет капитан команды
-        //return Result.Forbidden("Нет прав на удаление проекта");
+        if (authorizedUserId == default)
+            return Result.Forbidden("Нет прав на удаление проекта");
 
         await _projectRepository.DeleteAsync(eventId, teamId);
         return Result.Success;

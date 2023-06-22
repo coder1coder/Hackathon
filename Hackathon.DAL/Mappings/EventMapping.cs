@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.DAL.Entities.Event;
-using Hackathon.DAL.Entities.User;
 using Mapster;
 
 namespace Hackathon.DAL.Mappings;

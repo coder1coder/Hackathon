@@ -36,7 +36,7 @@ public class PrivateTeamController: BaseController
         var createResult = await _privateTeamService.CreateJoinRequestAsync(new TeamJoinRequestCreateParameters
         {
             TeamId = teamId,
-            UserId = AuthorizedUserId,
+            UserId = AuthorizedUserId
         });
 
         if (!createResult.IsSuccess)

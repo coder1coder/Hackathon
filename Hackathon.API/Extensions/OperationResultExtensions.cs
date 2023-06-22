@@ -59,13 +59,12 @@ public static class OperationResultExtensions
         {
             Status = (int) status,
             Title = result.Errors.Type.ToDescription(),
-            Instance = instance
+            Instance = instance,
+            Extensions =
+            {
+                ["errors"] = result.Errors.Values
+            }
         };
-
-        problemDetails.Extensions["errors"] = result.Errors.Values;
-
-        // foreach (var (key, value) in result.Errors.Values)
-        //     problemDetails.Extensions.TryAdd(key, value);
 
         return problemDetails;
     }

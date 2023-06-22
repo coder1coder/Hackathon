@@ -12,12 +12,20 @@ public class MemberTeamEntity
     /// Идентификатор команды
     /// </summary>
     public long TeamId { get; set; }
+
+    /// <summary>
+    /// Команда
+    /// </summary>
     public TeamEntity Team { get; set; } = new();
 
     /// <summary>
     /// Идентификатор участника команды
     /// </summary>
     public long MemberId { get; set; }
+
+    /// <summary>
+    /// Участник команды
+    /// </summary>
     public UserEntity Member { get; set; } = new();
 
     /// <summary>

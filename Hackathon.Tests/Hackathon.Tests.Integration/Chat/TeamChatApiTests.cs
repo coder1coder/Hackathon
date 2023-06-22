@@ -18,8 +18,8 @@ public class TeamChatApiTests: BaseIntegrationTest
     public async Task SendAsync_Should_Success()
     {
         //arrange
-        var newUser = await RegisterUser();
-        SetToken(newUser.Token);
+        var (userId, authToken) = await RegisterUser();
+        SetToken(authToken);
 
         var createTeamResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
@@ -33,7 +33,7 @@ public class TeamChatApiTests: BaseIntegrationTest
         {
             Message = Guid.NewGuid().ToString(),
             TeamId = teamId,
-            UserId = newUser.Id
+            UserId = userId
         };
 
         //act
@@ -46,7 +46,7 @@ public class TeamChatApiTests: BaseIntegrationTest
 
         Assert.NotNull(messageFromRepository);
         Assert.Equal(newMessage.Message, messageFromRepository.Message);
-        Assert.Equal(newUser.Id, messageFromRepository.OwnerId);
-        Assert.Equal(newUser.Id, messageFromRepository.UserId);
+        Assert.Equal(userId, messageFromRepository.OwnerId);
+        Assert.Equal(userId, messageFromRepository.UserId);
     }
 }
