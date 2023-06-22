@@ -103,7 +103,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   }
 
   get members():IUser[]{
-    return (this.team) ? this.team.members : [];
+    return (this.team) ? this.team.members.filter(x=>x.id != this.currentUserId) : [];
   }
 
   get canSendMessage():boolean{
