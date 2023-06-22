@@ -22,6 +22,7 @@ using Hackathon.Common.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Mail;
+using Hackathon.Common.Abstraction.Email;
 
 namespace Hackathon.BL;
 

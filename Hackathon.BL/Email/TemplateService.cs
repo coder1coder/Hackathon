@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
+using Hackathon.Common.Abstraction.Email;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Email;
@@ -44,9 +45,4 @@ public class TemplateService: ITemplateService
 
         return Result<string>.FromValue(template);
     }
-}
-
-public interface ITemplateService
-{
-    Task<Result<string>> Generate(string templateName, Dictionary<string, string> templateParameters);
 }

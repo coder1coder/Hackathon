@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
+using Hackathon.Common.Abstraction.Email;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.User;
+using Hackathon.Common.Templates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -130,7 +132,7 @@ public class EmailConfirmationService: IEmailConfirmationService
 
     private async Task<Result> SendConfirmationEmail(UserModel userModel, string confirmationCode)
     {
-        var generateTemplateResult = await _templateService.Generate("EmailConfirmationRequestTemplate", new Dictionary<string, string>
+        var generateTemplateResult = await _templateService.Generate(TemplateNames.EmailConfirmationRequest, new Dictionary<string, string>
         {
             {"username", userModel.GetAnyName()},
             {"confirmationCode", confirmationCode}

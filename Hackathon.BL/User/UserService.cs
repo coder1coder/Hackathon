@@ -140,7 +140,7 @@ public class UserService: IUserService
     public async Task<Result<Guid>> UploadProfileImageAsync(long userId, IFormFile file)
     {
         if (file is null)
-            return Result<Guid>.NotValid((UserMessages.ProfileFileImageIsNotBeEmpty));
+            return Result<Guid>.NotValid(UserMessages.ProfileFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
 

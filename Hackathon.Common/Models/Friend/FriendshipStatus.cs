@@ -1,5 +1,8 @@
 namespace Hackathon.Common.Models.Friend;
 
+/// <summary>
+/// Статус дружбы
+/// </summary>
 public enum FriendshipStatus: byte
 {
     /// <summary>

@@ -59,9 +59,8 @@ public class ProjectCreateParametersValidator: Hackathon.Common.Abstraction.IVal
 
         var project = await _projectRepository.GetAsync(model.EventId, model.TeamId);
 
-        if (project is not null)
-            return Result.NotValid(ProjectMessages.ProjectAlreadyExists);
-
-        return Result.Success;
+        return project is not null
+            ? Result.NotValid(ProjectMessages.ProjectAlreadyExists)
+            : Result.Success;
     }
 }

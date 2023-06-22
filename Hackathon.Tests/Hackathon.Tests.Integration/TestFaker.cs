@@ -46,7 +46,7 @@ public class TestFaker
     public static IFormFile GetFormFile()
     {
         var content = Path.GetTempFileName();
-        var fileName = "test.jpg";
+        const string fileName = "test.jpg";
         var stream = new MemoryStream();
         var writer = new StreamWriter(stream);
         writer.Write(content);
