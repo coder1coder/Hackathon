@@ -102,6 +102,9 @@ public class ProjectService: IProjectService
     {
         var projectModel = await _projectRepository.GetAsync(eventId, teamId, includeTeamMembers: true);
 
+        if (projectModel is null)
+            return Result<ProjectModel>.NotFound(ProjectMessages.ProjectDoesNotExist);
+
         if (!projectModel.Team.HasMemberWithId(authorizedUserId))
             return Result<ProjectModel>.Forbidden("Нет прав на выполнение операции");
 
