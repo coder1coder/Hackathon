@@ -164,7 +164,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
         },
         error: err => {
           let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snackService.open(problemDetails.detail);
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snackService.open(msg);
         }
       });
     }

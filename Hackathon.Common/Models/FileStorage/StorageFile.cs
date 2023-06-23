@@ -40,7 +40,7 @@ public class StorageFile
     public long? OwnerId { get; set; }
 
     /// <summary>
-    /// Флаг - нужно ли удалять файл
+    /// Файл удален
     /// </summary>
     public bool IsDeleted { get; set; }
 }

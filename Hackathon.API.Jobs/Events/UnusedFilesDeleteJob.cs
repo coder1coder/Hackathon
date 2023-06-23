@@ -29,22 +29,17 @@ public class UnusedFilesDeleteJob : IJob
         {
             var result = await _fileStorageService.DeleteAsync(file.Id);
             if (result.IsSuccess)
-            {
-                await _fileStorageRepository.RemoveAsync(file.Id);
                 countFiles++;
-            }
             else
-            {
-                _logger.LogError("Не удалось удалить файл с Id: {Id}",
-                    file.Id);
-            }  
+                _logger.LogError("{Source} Не удалось удалить файл с Id: {Id}", 
+                    nameof(UnusedFilesDeleteJob), file.Id);
         }
 
         if (countFiles > 0)
-            _logger.LogInformation("Было удалено: {countFiles} неиспользуемых файл/ов/а",
-                countFiles);
+            _logger.LogInformation("{Source} Было удалено: {countFiles} неиспользуемых файл/ов/а",
+                nameof(UnusedFilesDeleteJob), countFiles);
         else
-            _logger.LogInformation("Нет неиспользуемых файлов для удаления",
-                countFiles);
+            _logger.LogInformation("{Source} Нет неиспользованных файлов для удаления",
+                nameof(UnusedFilesDeleteJob));
     }
 }

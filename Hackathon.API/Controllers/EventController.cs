@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -36,6 +36,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost]
     [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCreateResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
         var createEventModel = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);

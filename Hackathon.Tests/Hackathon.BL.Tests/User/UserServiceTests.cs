@@ -25,6 +25,7 @@ public class UserServiceTests: BaseUnitTest
     private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock;
     private readonly Mock<IOptions<AuthOptions>> _authOptionsMock;
     private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock;
+    private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
 
     public UserServiceTests()
     {
@@ -36,6 +37,7 @@ public class UserServiceTests: BaseUnitTest
         _signInValidatorMock = new Mock<IValidator<SignInModel>>();
         _userRepositoryMock = new Mock<IUserRepository>();
         _emailConfirmationRepositoryMock = new Mock<IEmailConfirmationRepository>();
+        _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
     }
 
     [Fact]
@@ -66,6 +68,7 @@ public class UserServiceTests: BaseUnitTest
             _userRepositoryMock.Object,
             _emailConfirmationRepositoryMock.Object,
             _fileStorageMock.Object,
+            _fileStorageRepositoryMock.Object,
             Mapper
             );
 

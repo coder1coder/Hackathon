@@ -9,5 +9,8 @@ public static class JobsConstants
     /// </summary>
     public static TimeSpan StartedEventUpdateStatusJobFrequency = TimeSpan.FromMinutes(1);
 
-    public static TimeSpan UnusedFilesDeleteJobFrequency = TimeSpan.FromMinutes(1);
+    /// <summary>
+    /// Периодичность работы службы удаления файлов в часах
+    /// </summary>
+    public static int UnusedFilesDeleteJobFrequency = 24;
 }

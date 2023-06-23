@@ -35,6 +35,7 @@ public class EventServiceTests: BaseUnitTest
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IBus> _busMock;
     private readonly Mock<IEventAgreementRepository> _eventAgreementRepositoryMock;
+    private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
 
     public EventServiceTests()
     {
@@ -49,6 +50,7 @@ public class EventServiceTests: BaseUnitTest
         _busMock = new Mock<IBus>();
         _integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
         _eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
+        _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
 
         _service = new EventService(
             _createValidatorMock.Object,
@@ -61,6 +63,7 @@ public class EventServiceTests: BaseUnitTest
             _busMock.Object,
             _integrationEventHubMock.Object,
             _fileStorageServiceMock.Object,
+            _fileStorageRepositoryMock.Object,
             _eventAgreementRepositoryMock.Object
         );
     }
