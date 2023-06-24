@@ -79,4 +79,20 @@ export class EventService {
   public isCreateEditEvent(event: Event): boolean {
     return event?.id === undefined || event?.status === EventStatus.Draft;
   }
+
+  public canView(event: Event): boolean {
+    const userId = this.authService.getUserId();
+    if (userId === undefined)
+    {
+      return false;
+    }
+
+    switch (event.status)
+    {
+      case EventStatus.Started:
+        return this.isAlreadyInEvent(event, userId) || this.isEventOwner(event);
+    }
+
+    return true;
+  }
 }

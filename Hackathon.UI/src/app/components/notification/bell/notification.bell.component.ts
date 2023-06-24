@@ -5,7 +5,6 @@ import {NotificationFilter} from "../../../models/Notification/NotificationFilte
 import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {Notification} from "../../../models/Notification/Notification";
 import {RouterService} from "../../../services/router.service";
-import {AudioService} from "../../../services/audio.service";
 import { AuthService } from "src/app/services/auth.service";
 
 @Component({
@@ -23,7 +22,6 @@ export class NotificationBellComponent implements AfterViewInit
   constructor(
     private notificationService: NotificationService,
     private router: RouterService,
-    private audioService: AudioService,
     private authService: AuthService
     ) {}
 
