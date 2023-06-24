@@ -7,7 +7,7 @@ import {RouterService} from "./router.service";
 @Injectable({
   providedIn: 'root'
 })
-export class RedirectService implements CanActivate {
+export class ProfilePageForLoggedUsersGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: RouterService) {}
 

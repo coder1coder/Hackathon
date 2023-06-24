@@ -55,7 +55,7 @@ import { FriendsListComponent } from "./components/friendship/list/friends-list.
 import { UserTeamComponent } from "./components/team/userTeam/userTeam.component";
 import { LineInfoComponent } from './components/line-info/line-info.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { EventCardFactoryComponent } from './components/event/cards/event-card-factory/event-card-factory.component';
+import { EventCardFactoryComponent } from './components/event/cards/event-card-factory.component';
 import { EventDirective } from "./components/event/event.directive";
 import { EventCreateEditCardComponent } from "./components/event/cards/event-create-edit-card/event-create-edit-card.component";
 import { EventButtonActionsComponent } from './components/event/cards/components/actions/event-button-actions.component';
