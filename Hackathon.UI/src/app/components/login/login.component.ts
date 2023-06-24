@@ -58,7 +58,7 @@ export class LoginComponent implements AfterViewInit  {
     if (!this.profileForm.valid) return;
 
     if (this.captchaEnabled && (this.captcha === "" || this.captcha.length === 0)) {
-      this.snackService.open("Докажите, что вы не робот!");
+      this.snackService.open(`Докажите, что вы не робот!`);
       return;
     }
 
@@ -109,7 +109,7 @@ export class LoginComponent implements AfterViewInit  {
               this.routerService.Profile.View();
             },
             error => {
-              this.errorProcessor.Process(error, "Неизвестная ошибка при авторизация через Google сервис");
+              this.errorProcessor.Process(error, `Неизвестная ошибка при авторизация через Google сервис`);
             });
         }
       })

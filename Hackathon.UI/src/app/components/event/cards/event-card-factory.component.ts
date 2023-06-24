@@ -4,21 +4,22 @@ import {
   OnInit, Type,
   ViewChild
 } from '@angular/core';
-import {EventDirective} from "../../event.directive";
-import {EventStatus} from "../../../../models/Event/EventStatus";
+import {EventDirective} from "../event.directive";
+import {EventStatus} from "../../../models/Event/EventStatus";
 import {ActivatedRoute} from "@angular/router";
-import {RouterService} from "../../../../services/router.service";
-import {SnackService} from "../../../../services/snack.service";
-import {EventHttpService} from "../../../../services/event/event.http-service";
+import {RouterService} from "../../../services/router.service";
+import {SnackService} from "../../../services/snack.service";
+import {EventHttpService} from "../../../services/event/event.http-service";
 import {Subject, takeUntil} from "rxjs";
-import {Event} from "../../../../models/Event/Event";
-import {EventCreateEditCardComponent} from "../event-create-edit-card/event-create-edit-card.component";
+import {Event} from "../../../models/Event/Event";
+import {EventCreateEditCardComponent} from "./event-create-edit-card/event-create-edit-card.component";
 import {finalize} from "rxjs/operators";
-import {EventService} from "../../../../services/event/event.service";
-import {EventMainViewCardComponent} from "../event-main-view-card/event-main-view-card.component";
-import {EventCardStartedComponent} from "../event-card-started/event-card-started.component";
-import {EventCardPublishedComponent} from "../event-card-published/event-card-published.component";
-import {EventCardFinishedComponent} from "../event-card-finished/event-card-finished.component";
+import {EventService} from "../../../services/event/event.service";
+import {EventMainViewCardComponent} from "./event-main-view-card/event-main-view-card.component";
+import {EventCardStartedComponent} from "./event-card-started/event-card-started.component";
+import {EventCardPublishedComponent} from "./event-card-published/event-card-published.component";
+import {EventCardFinishedComponent} from "./event-card-finished/event-card-finished.component";
+import {EventErrorMessages} from "../../../common/error-messages/event-error-messages";
 
 @Component({
   selector: 'app-event-card-factory',
@@ -46,6 +47,7 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.initSubscription();
     this.loadData();
   }
@@ -91,22 +93,18 @@ export class EventCardFactoryComponent implements OnInit {
       case EventStatus.Draft: return EventCreateEditCardComponent;
       case EventStatus.Published: return EventCardPublishedComponent;
       case EventStatus.Started: return EventCardStartedComponent;
-      case EventStatus.Development: return EventMainViewCardComponent;
-      case EventStatus.Prepare: return EventMainViewCardComponent;
-      case EventStatus.Presentation: return EventMainViewCardComponent;
-      case EventStatus.Decision: return EventMainViewCardComponent;
-      case EventStatus.Award: return EventMainViewCardComponent;
       case EventStatus.Finished: return EventCardFinishedComponent;
+      default: return EventMainViewCardComponent;
     }
   }
 
   private initEventId(): void {
     const {eventId} = this.activeRoute.snapshot.params;
-    if (Number(eventId)) {
-      this.eventId = eventId;
-    } else {
+
+    if (!Number(eventId))
       this.goBack();
-    }
+
+    this.eventId = eventId;
   }
 
   private initSubscription(): void {
@@ -119,6 +117,6 @@ export class EventCardFactoryComponent implements OnInit {
 
   private goBack(): void {
     this.router.Events.List().then(_=>
-      this.snackService.open(`Событие не найдено`))
+      this.snackService.open(EventErrorMessages.EventNotFound))
   }
 }
