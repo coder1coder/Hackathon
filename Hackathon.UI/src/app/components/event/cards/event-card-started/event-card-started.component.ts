@@ -23,6 +23,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
 {
   Pages = Pages;
   Event = Event;
+  ChatContext = ChatContext;
 
   set selectedChatIndex(value) { this._selectedChatIndex.next(value); };
   get selectedChatIndex() { return this._selectedChatIndex.getValue(); }
@@ -48,13 +49,13 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     this.fetchProject();
     this._selectedChatIndex.subscribe((value:number) =>{
       switch (value){
-        case Chat.EventChat:
+        case ChatContext.Event:
 
-          this.currentChatId = -1;
+          this.currentChatId = this.event.id;
 
           break;
 
-        case Chat.TeamChat:
+        case ChatContext.Team:
 
           let team = this.event.teams.find(x=> x.members.find(m=>m.id == this.currentUserId));
 
@@ -156,7 +157,7 @@ enum Pages {
   Project = 2
 }
 
-enum Chat {
-  EventChat = 0,
-  TeamChat = 1
+enum ChatContext {
+  Event = 0,
+  Team = 1
 }

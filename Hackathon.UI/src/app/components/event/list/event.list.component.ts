@@ -12,7 +12,7 @@ import {AuthService} from "../../../services/auth.service";
 import {PageSettingsDefaults} from "../../../models/PageSettings";
 import {DATE_FORMAT} from "../../../common/date-formats";
 import {of, Subject, switchMap, takeUntil} from "rxjs";
-import {EventHttpService} from "../../../services/event/event.http-service";
+import {EventClient} from "../../../services/event/event.client";
 
 @Component({
   selector: 'event-list',
@@ -36,7 +36,7 @@ export class EventListComponent implements OnInit {
 
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
-    private eventHttpService: EventHttpService,
+    private eventHttpService: EventClient,
     public router: RouterService,
     private authService: AuthService,
     private fb: FormBuilder,
