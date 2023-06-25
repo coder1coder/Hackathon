@@ -20,6 +20,7 @@ using Xunit;
 using Bogus;
 using Hackathon.Common.Models.FileStorage;
 using static System.Net.Mime.MediaTypeNames;
+using Hackathon.Common.Models;
 
 namespace Hackathon.BL.Tests.Event;
 
@@ -28,7 +29,6 @@ public class EventServiceTests: BaseUnitTest
     private readonly EventService _service;
     private readonly Mock<IEventRepository> _eventRepositoryMock;
     private readonly Mock<IBus> _busMock;
-    private readonly Mock<IEventAgreementRepository> _eventAgreementRepositoryMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
 
     public EventServiceTests()
@@ -42,8 +42,8 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock = new Mock<IEventRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
         _busMock = new Mock<IBus>();
-        _integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
-        _eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
+        var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
+        var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
 
         _service = new EventService(
@@ -55,10 +55,10 @@ public class EventServiceTests: BaseUnitTest
             userRepositoryMock.Object,
             notificationServiceMock.Object,
             _busMock.Object,
-            _integrationEventHubMock.Object,
-            _fileStorageServiceMock.Object,
+            integrationEventHubMock.Object,
+            fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
-            _eventAgreementRepositoryMock.Object
+            eventAgreementRepositoryMock.Object
         );
     }
 
