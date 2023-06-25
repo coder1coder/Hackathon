@@ -3,6 +3,9 @@ using System;
 
 namespace Hackathon.DAL.Entities;
 
+/// <summary>
+/// Проект
+/// </summary>
 public class ProjectEntity
 {
     /// <summary>
@@ -16,10 +19,13 @@ public class ProjectEntity
     public string Description { get; set; }
 
     /// <summary>
-    /// Идентификатор ивента
+    /// Идентификатор мероприятия
     /// </summary>
     public long EventId { get; set; }
 
+    /// <summary>
+    /// Мероприятие
+    /// </summary>
     public EventEntity Event { get; set; }
 
     /// <summary>
@@ -27,6 +33,9 @@ public class ProjectEntity
     /// </summary>
     public long TeamId { get; set; }
 
+    /// <summary>
+    /// Команда
+    /// </summary>
     public TeamEntity Team { get; set; }
 
     /// <summary>

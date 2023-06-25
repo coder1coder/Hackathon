@@ -18,8 +18,8 @@ public class EventChatApiTests: BaseIntegrationTest
     public async Task SendAsync_Should_Success()
     {
         //arrange
-        var newUser = await RegisterUser();
-        SetToken(newUser.Token);
+        var (userId, authToken) = await RegisterUser();
+        SetToken(authToken);
 
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
@@ -54,7 +54,7 @@ public class EventChatApiTests: BaseIntegrationTest
         {
             Message = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id,
-            UserId = newUser.Id
+            UserId = userId
         };
 
         //act
@@ -68,6 +68,6 @@ public class EventChatApiTests: BaseIntegrationTest
         Assert.NotNull(messageFromRepository);
         Assert.Equal(newMessage.Message, messageFromRepository.Message);
         Assert.Equal(TestUser.Id, messageFromRepository.OwnerId);
-        Assert.Equal(newUser.Id, messageFromRepository.UserId);
+        Assert.Equal(userId, messageFromRepository.UserId);
     }
 }

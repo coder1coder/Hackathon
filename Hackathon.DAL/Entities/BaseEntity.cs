@@ -1,5 +1,8 @@
 ﻿namespace Hackathon.DAL.Entities;
 
+/// <summary>
+/// Базовая сущность
+/// </summary>
 public abstract class BaseEntity
 {
     /// <summary>

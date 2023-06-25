@@ -10,8 +10,6 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
-using Hackathon.Common.Models.User;
-using MapsterMapper;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,8 +28,6 @@ public class TeamService : ITeamService
     private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
     private readonly IValidator<Common.Models.GetListParameters<TeamFilter>> _getFilterModelValidator;
 
-    private readonly IMapper _mapper;
-
     public TeamService(
         IValidator<CreateTeamModel> createTeamModelValidator,
         IValidator<TeamMemberModel> teamAddMemberModelValidator,
@@ -39,7 +35,6 @@ public class TeamService : ITeamService
         ITeamRepository teamRepository,
         IEventRepository eventRepository,
         IProjectRepository projectRepository,
-        IMapper mapper,
         IUserRepository userRepository)
     {
         _createTeamModelValidator = createTeamModelValidator;
@@ -49,7 +44,6 @@ public class TeamService : ITeamService
         _teamRepository = teamRepository;
         _eventRepository = eventRepository;
         _projectRepository = projectRepository;
-        _mapper = mapper;
         _userRepository = userRepository;
     }
 
@@ -146,8 +140,8 @@ public class TeamService : ITeamService
         {
             Id = userTeam.Id,
             Name = userTeam.Name,
-            Owner = _mapper.Map<UserModel, UserShortModel>(userTeam.Owner),
-            Members = _mapper.Map<UserModel[], UserShortModel[]>(userTeam.Members)
+            Owner = userTeam.Owner,
+            Members = userTeam.Members
         });
     }
 

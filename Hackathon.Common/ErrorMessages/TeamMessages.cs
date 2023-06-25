@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Hackathon.Common.ErrorMessages;
 
 public static class TeamMessages

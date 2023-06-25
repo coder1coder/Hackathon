@@ -30,9 +30,9 @@ public class EventChatController: BaseController
         => GetResult(() => _eventChatService.SendAsync(AuthorizedUserId, newEventChatMessage));
 
     /// <summary>
-    /// Получить список сообщений чата команды
+    /// Получить список сообщений чата мероприятия
     /// </summary>
-    /// <param name="eventId">Идентификатор события</param>
+    /// <param name="eventId">Идентификатор мероприятия</param>
     /// <param name="offset"></param>
     /// <param name="limit"></param>
     /// <returns></returns>

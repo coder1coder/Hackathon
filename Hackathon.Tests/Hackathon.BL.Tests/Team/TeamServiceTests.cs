@@ -1,4 +1,7 @@
-﻿using Bogus;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Bogus;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Hackathon.BL.Team;
@@ -11,11 +14,7 @@ using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
-using Hackathon.Common.Models.User;
 using Moq;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Hackathon.BL.Tests.Team;
@@ -57,7 +56,6 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            Mapper,
             _userRepositoryMock.Object);
 
         //act
@@ -98,7 +96,6 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            Mapper,
             _userRepositoryMock.Object);
 
         //act
@@ -125,7 +122,7 @@ public class TeamServiceTests : BaseUnitTest
         //arrange
         var memberId = 1;
 
-        var fakeMembers = new Faker<UserModel>()
+        var fakeMembers = new Faker<TeamMember>()
             .RuleFor(x => x.Id, memberId++)
             .Generate(TeamModel.MembersLimit)
             .ToArray();

@@ -52,8 +52,11 @@
                 </mat-select>
               </div>
             </div>
-            <div class="event-started__chat-wrapper">
-              <chat-team [chatId]="currentChatId" [showMembers]="true"></chat-team>
+            <div class="event-started__chat-wrapper" [ngSwitch]="selectedChatIndex">
+
+              <chat-team [teamId]="currentChatId" [showMembers]="true" *ngSwitchCase="ChatContext.Team"></chat-team>
+              <chat-event [eventId]="currentChatId" [showMembers]="true" *ngSwitchCase="ChatContext.Event"></chat-event>
+
             </div>
           </div>
 

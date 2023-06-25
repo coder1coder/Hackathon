@@ -187,7 +187,7 @@ public class EventService : IEventService
             var createTeamResult = await _teamService.CreateAsync(new CreateTeamModel
             {
                 EventId = eventId,
-                Name = GenerateAutoCreatedTeamName(eventId),
+                Name = GenerateAutoCreatedTeamName(eventId)
             });
 
             if (!createTeamResult.IsSuccess)
@@ -312,7 +312,7 @@ public class EventService : IEventService
     public async Task<Result<Guid>> UploadEventImageAsync(IFormFile file)
     {
         if (file is null)
-            return Result<Guid>.NotValid((EventMessages.EventFileImageIsNotBeEmpty));
+            return Result<Guid>.NotValid(EventMessages.EventFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
 

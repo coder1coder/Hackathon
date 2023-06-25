@@ -15,8 +15,8 @@ export class SnackService {
   constructor(private snackBar:MatSnackBar) {
   }
 
-  open(text:string, actions:Actions = Actions.OK, duration:number = 4000){
-    this.snackBar.open(text, actions, {
+  open(text:string, actions:Actions = Actions.OK, duration:number = 1500){
+    return this.snackBar.open(text, actions, {
       duration: duration
     });
   }

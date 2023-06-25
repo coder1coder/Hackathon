@@ -44,7 +44,7 @@ public class StartedEventStatusUpdateJob: IJob
                 try
                 {
                     var setStatusResult = await _eventService.SetStatusAsync(eventListItem.Id, EventStatus.Started);
-                    if (!setStatusResult.IsSuccess)
+                    if (setStatusResult.IsSuccess)
                     {
                         changesCount++;
                     }

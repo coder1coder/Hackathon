@@ -8,6 +8,9 @@ namespace Hackathon.DAL.Entities;
 /// </summary>
 public class EventLogEntity
 {
+    /// <summary>
+    /// Идентификатор записи
+    /// </summary>
     public Guid Id { get; set; }
 
     /// <summary>

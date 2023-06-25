@@ -117,7 +117,7 @@ public class ProjectControllerTests : BaseIntegrationTest
             EventId = createEventResponse.Id,
             TeamId = temporaryTeamByUserId?.Id ?? default,
             Description = Guid.NewGuid().ToString(),
-            Name = Guid.NewGuid().ToString(),
+            Name = Guid.NewGuid().ToString()
         };
 
         await ProjectsApiClient.UpdateAsync(updateParameters);

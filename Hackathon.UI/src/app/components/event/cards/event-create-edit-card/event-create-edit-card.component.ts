@@ -18,7 +18,7 @@ import {FileStorageService} from "../../../../services/file-storage.service";
 import {SafeUrl} from "@angular/platform-browser";
 import {EventErrorMessages} from "src/app/common/error-messages/event-error-messages";
 import {EventCardBaseComponent} from "../components/event-card-base.component";
-import {EventHttpService} from "../../../../services/event/event.http-service";
+import {EventClient} from "../../../../services/event/event.client";
 import {EventService} from "../../../../services/event/event.service";
 import {EventStage} from "src/app/models/Event/EventStage";
 import {
@@ -62,7 +62,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   constructor(
     private activateRoute: ActivatedRoute,
     private fileStorageService: FileStorageService,
-    private eventHttpService: EventHttpService,
+    private eventHttpService: EventClient,
     public eventService: EventService,
     private authService: AuthService,
     private snackService: SnackService,

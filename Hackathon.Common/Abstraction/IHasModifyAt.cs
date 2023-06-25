@@ -2,6 +2,9 @@ using System;
 
 namespace Hackathon.Common.Abstraction;
 
+/// <summary>
+/// Сущность имеет дату и время изменения
+/// </summary>
 public interface IHasModifyAt
 {
     /// <summary>

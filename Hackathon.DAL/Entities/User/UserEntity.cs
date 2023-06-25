@@ -41,6 +41,9 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// </summary>
     public string GoogleAccountId { get; set; }
 
+    /// <summary>
+    /// Сведения о Google аккаунте пользователя
+    /// </summary>
     public GoogleAccountEntity GoogleAccount { get; set; }
 
     /// <summary>
