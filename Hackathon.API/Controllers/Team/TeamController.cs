@@ -64,11 +64,8 @@ public class TeamController : BaseController
     /// </summary>
     [HttpPost("getTeams")]
     [ProducesResponseType(typeof(BaseCollection<TeamModel>), (int)HttpStatusCode.OK)]
-    public async Task<BaseCollection<TeamModel>> GetList([FromBody] GetListParameters<TeamFilter> listRequest)
-    {
-        var getFilterModel = _mapper.Map<GetListParameters<TeamFilter>>(listRequest);
-        return await _teamService.GetListAsync(getFilterModel);
-    }
+    public Task<BaseCollection<TeamModel>> GetList([FromBody] GetListParameters<TeamFilter> listRequest)
+        => _teamService.GetListAsync(listRequest);
 
     /// <summary>
     /// Получить общую информацию команды в которой состоит авторизованный пользователь

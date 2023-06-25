@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Hackathon.Common.Models.User;
+﻿namespace Hackathon.Common.Models.User;
 
 public class UserModel: UserShortModel
 {
@@ -12,12 +10,4 @@ public class UserModel: UserShortModel
     public UserEmailModel Email { get; set; } = new();
 
     public GoogleAccountModel GoogleAccount { get; set; }
-
-    /// <summary>
-    /// Дата добавления пользователя в команду
-    /// </summary>
-    public DateTime DateTimeAdd { get; set; } = new();
-
-    public string GetAnyName()
-        => FullName ?? UserName;
 }

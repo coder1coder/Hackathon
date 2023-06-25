@@ -32,6 +32,9 @@ public class UserShortModel
     /// </summary>
     public Guid? ProfileImageId { get; set; }
 
+    public string GetAnyName()
+        => FullName ?? UserName;
+
     public override string ToString()
         => string.IsNullOrWhiteSpace(FullName)
             ? UserName
