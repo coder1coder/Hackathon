@@ -16,7 +16,7 @@ import {FileUploadService} from "../file-upload.service";
 @Injectable({
   providedIn: 'root'
 })
-export class EventHttpService {
+export class EventClient {
   private api: string = environment.api;
 
   constructor(

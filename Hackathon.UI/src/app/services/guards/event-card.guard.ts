@@ -11,9 +11,9 @@ import {filter, Observable, Subject, takeUntil} from 'rxjs';
 import {EventService} from "../event/event.service";
 import {AuthService} from "../auth.service";
 import {RouterService} from "../router.service";
-import {EventHttpService} from "../event/event.http-service";
 import {map} from "rxjs/operators";
 import {SnackService} from "../snack.service";
+import {EventClient} from "../event/event.client";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class EventCardGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private eventService: EventService,
-    private eventClient: EventHttpService,
+    private eventClient: EventClient,
     private routerService: RouterService,
     private router: Router,
     private snackService: SnackService) {

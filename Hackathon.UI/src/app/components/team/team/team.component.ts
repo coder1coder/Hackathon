@@ -1,7 +1,7 @@
 import {Component, Input} from "@angular/core";
 import {Team} from "../../../models/Team/Team";
 import {RouterService} from "../../../services/router.service";
-import {EventHttpService} from "../../../services/event/event.http-service";
+import {EventClient} from "../../../services/event/event.client";
 import {EventFilter} from "../../../models/Event/EventFilter";
 import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {MatTabChangeEvent} from "@angular/material/tabs";
@@ -35,7 +35,7 @@ export class TeamComponent {
   constructor(
     public dialog: MatDialog,
     public router: RouterService,
-    private eventHttpService: EventHttpService,
+    private eventHttpService: EventClient,
     private authService: AuthService,
     private teamClient: TeamClient
   ) {
