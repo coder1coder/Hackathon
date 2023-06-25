@@ -37,8 +37,8 @@ public interface IFileStorageRepository
     Task UpdateFlagIsDeleted(Guid fileId, bool flagValue);
 
     /// <summary>
-    /// Получить файлы, которые нужно удалить
+    /// Получить Ids файлов, которые нужно удалить
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<StorageFile>> GetIsDeletedFilesAsync();
+    Task<Guid[]> GetIsDeletedFilesAsync();
 }

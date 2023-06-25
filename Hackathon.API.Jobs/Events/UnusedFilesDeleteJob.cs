@@ -22,17 +22,17 @@ public class UnusedFilesDeleteJob : IJob
 
     public async Task ExecuteAsync()
     {
-        var files = await _fileStorageRepository.GetIsDeletedFilesAsync();
+        var filesIds = await _fileStorageRepository.GetIsDeletedFilesAsync();
 
         var countFiles = 0;
-        foreach (var file in files)
+        foreach (var fileId in filesIds)
         {
-            var result = await _fileStorageService.DeleteAsync(file.Id);
+            var result = await _fileStorageService.DeleteAsync(fileId);
             if (result.IsSuccess)
                 countFiles++;
             else
                 _logger.LogError("{Source} Не удалось удалить файл с Id: {Id}", 
-                    nameof(UnusedFilesDeleteJob), file.Id);
+                    nameof(UnusedFilesDeleteJob), fileId);
         }
 
         if (countFiles > 0)

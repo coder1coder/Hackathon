@@ -40,16 +40,11 @@ public class FileStorageRepository: IFileStorageRepository
             : null;
     }
 
-    public async Task<IEnumerable<StorageFile>> GetIsDeletedFilesAsync()
-    {
-        var files = await _dbContext.StorageFiles
-            .AsNoTracking()
-            .Where(x => x.IsDeleted == true)
-            .ProjectToType<StorageFile>()
+    public async Task<Guid[]> GetIsDeletedFilesAsync()
+        => await _dbContext.StorageFiles
+            .Where(x => x.IsDeleted)
+            .Select(x => x.Id)
             .ToArrayAsync();
-
-        return files;
-    }
 
     public async Task RemoveAsync(Guid fileId)
     {

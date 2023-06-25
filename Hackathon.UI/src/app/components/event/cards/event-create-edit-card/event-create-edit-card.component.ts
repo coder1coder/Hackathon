@@ -28,6 +28,7 @@ import {
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {IEventTaskItem} from "../../../../models/Event/IEventTaskItem";
 import {UploadFileErrorMessages} from "../../../../common/error-messages/upload-file-error-messages";
+import { ErrorProcessor } from "src/app/services/errorProcessor";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -67,7 +68,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private snackService: SnackService,
     private router: RouterService,
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private errorProcessor: ErrorProcessor
     ) {
     super();
     this.eventId = activateRoute.snapshot.params['eventId'];
@@ -162,10 +164,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
             this.router.Events.View(eventId);
           }
         },
-        error: err => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snackService.open(msg);
+        error: errorContext => {
+          this.errorProcessor.Process(errorContext);
         }
       });
     }

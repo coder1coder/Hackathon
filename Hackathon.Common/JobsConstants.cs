@@ -12,5 +12,5 @@ public static class JobsConstants
     /// <summary>
     /// Периодичность работы службы удаления файлов в часах
     /// </summary>
-    public static int UnusedFilesDeleteJobFrequency = 24;
+    public static int UnusedFilesDeleteJobFrequency = 48;
 }

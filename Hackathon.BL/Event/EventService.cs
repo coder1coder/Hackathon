@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
-using Hackathon.Common.Models.FileStorage;
 
 namespace Hackathon.BL.Event;
 
@@ -76,26 +75,14 @@ public class EventService : IEventService
     {
         await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
 
-        if (eventCreateParameters.ImageId.HasValue)
+        if (!await IsSuccessRemoveStorageFileFlag(eventCreateParameters.ImageId))
         {
-            var fileModel = await _fileStorageRepository.GetAsync(eventCreateParameters.ImageId.Value);
-
-            if (fileModel is not null)
-            {
-                //Снимаем ранее установленный флаг, чтобы не удалить фотографию события
-                await _fileStorageRepository.UpdateFlagIsDeleted(fileModel.Id, false);
-            }
-            else
-                return Result<long>.NotValid(EventErrorMessages.FileDoesNotExists);
+            eventCreateParameters.ImageId = null;
+            await CreateEvent(eventCreateParameters);
+            return Result<long>.NotValid(EventErrorMessages.EventSavedButImageDoesNotExists);
         }
 
-        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
-
-        await _messageBus.Publish(new EventLogModel(
-            EventLogType.Created,
-            $"Создано новое событие с идентификатором '{eventId}'",
-            eventCreateParameters.OwnerId
-        ));
+        var eventId = await CreateEvent(eventCreateParameters);
 
         return Result<long>.FromValue(eventId);
     }
@@ -111,24 +98,20 @@ public class EventService : IEventService
 
         if (eventModel.ImageId.GetValueOrDefault() != eventUpdateParameters.ImageId.GetValueOrDefault())
         {
-            if (eventUpdateParameters.ImageId.HasValue)
-            {
-                var fileModel = await _fileStorageRepository.GetAsync(eventUpdateParameters.ImageId.Value);
-
-                if (fileModel is not null)
-                {
-                    await _fileStorageRepository.UpdateFlagIsDeleted(fileModel.Id, false);
-                }
-                else
-                    return Result.NotValid(EventErrorMessages.FileDoesNotExists);
-            }
-
             //Помечаем старый файл, если такой существует, как удаленный
             if (eventModel.ImageId.HasValue)
                 await _fileStorageRepository.UpdateFlagIsDeleted(eventModel.ImageId.Value, true);
-        }   
+
+            if (!await IsSuccessRemoveStorageFileFlag(eventUpdateParameters.ImageId))
+            {
+                eventUpdateParameters.ImageId = null;
+                await _eventRepository.UpdateAsync(eventUpdateParameters);
+                return Result.NotValid(EventErrorMessages.EventSavedButImageDoesNotExists);
+            }     
+        }
 
         await _eventRepository.UpdateAsync(eventUpdateParameters);
+
         return Result.Success;
     }
 
@@ -422,4 +405,34 @@ public class EventService : IEventService
     /// <returns></returns>
     private static string GenerateAutoCreatedTeamName(long eventId)
         => $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}";
+
+    private async Task<bool> IsSuccessRemoveStorageFileFlag(Guid? fileId)
+    {
+        if (fileId.HasValue)
+        {
+            var fileModel = await _fileStorageRepository.GetAsync(fileId.Value);
+
+            if (fileModel is not null)
+            {
+                //Снимаем ранее установленный флаг, чтобы не удалить фотографию события
+                await _fileStorageRepository.UpdateFlagIsDeleted(fileModel.Id, false);
+            }
+            else
+                return false;
+        }
+
+        return true;
+    }
+
+    private async Task<long> CreateEvent(EventCreateParameters eventCreateParameters)
+    {
+        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
+        await _messageBus.Publish(new EventLogModel(
+            EventLogType.Created,
+            $"Создано новое событие с идентификатором '{eventId}'",
+            eventCreateParameters.OwnerId
+        ));
+
+        return eventId;
+    }
 }
