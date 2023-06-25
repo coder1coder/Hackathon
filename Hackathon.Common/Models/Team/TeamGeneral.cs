@@ -1,5 +1,3 @@
-using Hackathon.Common.Models.User;
-
 namespace Hackathon.Common.Models.Team;
 
 /// <summary>
@@ -20,10 +18,10 @@ public class TeamGeneral
     /// <summary>
     /// Владелец
     /// </summary>
-    public UserShortModel Owner { get; set; }
+    public TeamMember Owner { get; set; }
 
     /// <summary>
     /// Участники команды
     /// </summary>
-    public UserShortModel[] Members { get; set; }
+    public TeamMember[] Members { get; set; }
 }
