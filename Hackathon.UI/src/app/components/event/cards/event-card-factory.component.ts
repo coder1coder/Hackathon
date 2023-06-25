@@ -9,7 +9,6 @@ import {EventStatus} from "../../../models/Event/EventStatus";
 import {ActivatedRoute} from "@angular/router";
 import {RouterService} from "../../../services/router.service";
 import {SnackService} from "../../../services/snack.service";
-import {EventHttpService} from "../../../services/event/event.http-service";
 import {Subject, takeUntil} from "rxjs";
 import {Event} from "../../../models/Event/Event";
 import {EventCreateEditCardComponent} from "./event-create-edit-card/event-create-edit-card.component";
@@ -20,6 +19,7 @@ import {EventCardStartedComponent} from "./event-card-started/event-card-started
 import {EventCardPublishedComponent} from "./event-card-published/event-card-published.component";
 import {EventCardFinishedComponent} from "./event-card-finished/event-card-finished.component";
 import {EventErrorMessages} from "../../../common/error-messages/event-error-messages";
+import {EventClient} from "../../../services/event/event.client";
 
 @Component({
   selector: 'app-event-card-factory',
@@ -35,7 +35,7 @@ export class EventCardFactoryComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private eventHttpService: EventHttpService,
+    private eventHttpService: EventClient,
     private eventService: EventService,
     private router: RouterService,
     private activeRoute: ActivatedRoute,

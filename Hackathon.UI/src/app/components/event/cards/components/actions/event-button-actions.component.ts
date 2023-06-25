@@ -5,7 +5,7 @@ import {SnackService} from "../../../../../services/snack.service";
 import {RouterService} from "../../../../../services/router.service";
 import {IProblemDetails} from "../../../../../models/IProblemDetails";
 import {EventService} from "../../../../../services/event/event.service";
-import {EventHttpService} from "../../../../../services/event/event.http-service";
+import {EventClient} from "../../../../../services/event/event.client";
 import {CustomDialog, ICustomDialogData} from "../../../../custom/custom-dialog/custom-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ErrorProcessor} from "../../../../../services/errorProcessor";
@@ -20,7 +20,7 @@ export class EventButtonActionsComponent implements OnInit {
 
   constructor(
     public eventService: EventService,
-    private eventHttpService: EventHttpService,
+    private eventHttpService: EventClient,
     private snack: SnackService,
     private router: RouterService,
     public dialog: MatDialog,

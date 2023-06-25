@@ -11,10 +11,8 @@ import {IProblemDetails} from "../../../models/IProblemDetails";
 import {RouterService} from "../../../services/router.service";
 import {IUser} from "../../../models/User/IUser";
 import {Subject, takeUntil} from "rxjs";
-import {EventHttpService} from "../../../services/event/event.http-service";
 import {EventService} from "../../../services/event/event.service";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {CustomDialog, ICustomDialogData} from "../../custom/custom-dialog/custom-dialog.component";
+import {EventClient} from "../../../services/event/event.client";
 
 @Component({
   selector: 'event-card',
@@ -34,7 +32,7 @@ export class EventCardComponent implements AfterViewInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    public eventHttpService: EventHttpService,
+    public eventHttpService: EventClient,
     public eventService: EventService,
     private authService: AuthService,
     private snack: SnackService,

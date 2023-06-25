@@ -2,32 +2,35 @@ import {AfterViewInit, Component, Injectable, Input, OnInit} from '@angular/core
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {BaseCollection} from "../../../models/BaseCollection";
-import {TeamClient} from "../../../services/team-client.service";
-import {ChatMessageOption, TeamChatMessage} from "../../../models/chat/TeamChatMessage";
+import {ChatMessageOption} from "../../../models/chat/TeamChatMessage";
 import {BaseChatComponent} from "../base.chat.component";
 import {SignalRService} from "../../../services/signalr.service";
-import {TeamChatClient} from "../../../clients/chat/team-chat.client";
 import {BehaviorSubject} from "rxjs";
-import {Team} from "../../../models/Team/Team";
 import {IUser} from "../../../models/User/IUser";
+import {EventChatMessage} from "../../../models/chat/EventChatMessage";
+import {EventChatClient} from "../../../clients/chat/event-chat.client";
+import {Event} from "../../../models/Event/Event";
+import {EventClient} from "../../../services/event/event.client";
 
 @Component({
-  selector: 'chat-team',
+  selector: 'chat-event',
   templateUrl: '../base.chat.component.html',
   styleUrls: ['../base.chat.component.scss']
 })
 
 @Injectable()
-export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit, AfterViewInit {
+export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit, AfterViewInit {
 
   private _canView: boolean;
-  public team: Team | undefined;
-  public chatHeaderText = 'Чат команды';
 
-  @Input("teamId")
-  set teamId(value) { this._teamId.next(value); };
-  get teamId() { return this._teamId.getValue(); }
-  private _teamId = new BehaviorSubject<number>(0);
+  public event: Event | undefined;
+
+  public chatHeaderText = 'Чат мероприятия';
+
+  @Input("eventId")
+  set eventId(value) { this._eventId.next(value); };
+  get eventId() { return this._eventId.getValue(); }
+  private _eventId = new BehaviorSubject<number>(0);
 
   @Input()
   showMembers: boolean = false;
@@ -37,8 +40,8 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   constructor(
     authService: AuthService,
     private signalRService: SignalRService,
-    private teamService: TeamClient,
-    private teamChatClient: TeamChatClient
+    private eventClient: EventClient,
+    private eventChatClient: EventChatClient
     ) {
     super(authService)
     signalRService.onChatMessageChanged = (_=> this.fetchMessages());
@@ -48,20 +51,20 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
     this.initForm();
 
-    this._teamId.subscribe(value=>{
+    this._eventId.subscribe(value=>{
 
       if (value < 1)
         return;
 
-      this.fetchTeam();
+      this.fetchEvent();
       this.fetchMessages();
     })
   }
 
-  fetchTeam(){
-    this.teamService.getById(this.teamId)
+  fetchEvent(){
+    this.eventClient.getById(this.eventId)
     .subscribe(x=>{
-      this.team = x;
+      this.event = x;
     })
   }
 
@@ -70,11 +73,11 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   }
 
   fetchMessages(): void {
-    if (this._canView && this.teamId > 0)
+    if (this._canView && this.eventId > 0)
     {
-      this.teamChatClient.getListAsync(this.teamId)
+      this.eventChatClient.getListAsync(this.eventId)
         .subscribe({
-          next: (r: BaseCollection<TeamChatMessage>) =>  {
+          next: (r: BaseCollection<EventChatMessage>) =>  {
             this.messages = r.items
             this.scrollChatToLastMessage();
           },
@@ -88,22 +91,22 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
     if (this.authService.isLoggedIn())
     {
       this.currentUserId = this.authService.getUserId() ?? 0;
-      this._canView = this.teamId != null;
+      this._canView = this.eventId != null;
 
       this.fetchMessages();
     }
   }
 
   get canSendMessageWithNotify():boolean{
-    return this.team?.owner?.id == this.currentUserId;
+    return this.event?.owner?.id == this.currentUserId;
   }
 
   get members():IUser[]{
-    return (this.team) ? this.team.members.filter(x=>x.id != this.currentUserId) : [];
+    return (this.event) ? Event.getMembers(this.event).filter(x=>x.id != this.currentUserId) : [];
   }
 
   get canSendMessage():boolean{
-    return this.teamId !== undefined && this.teamId > 0 && this.form.valid;
+    return this.eventId !== undefined && this.eventId > 0 && this.form.valid;
   }
 
   sendMessage():void{
@@ -112,12 +115,15 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
       return
 
     let message = this.form.controls['message'].value;
-    let notifyTeam = this.canSendMessageWithNotify ? this.form.controls['notify'].value : false;
+    let notify = this.canSendMessageWithNotify ? this.form.controls['notify'].value : false;
 
-    let chatMessage = new TeamChatMessage(this.teamId, this.currentUserId, message,
-      notifyTeam ? ChatMessageOption.WithNotify : ChatMessageOption.Default);
+    let chatMessage = new EventChatMessage(
+      this.eventId,
+      this.currentUserId,
+      message,
+      notify ? ChatMessageOption.WithNotify : ChatMessageOption.Default);
 
-    this.teamChatClient.sendAsync(chatMessage)
+    this.eventChatClient.sendAsync(chatMessage)
       .subscribe(_ => {
         this.initForm();
       })

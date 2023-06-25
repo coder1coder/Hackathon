@@ -79,6 +79,7 @@ import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.c
 import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {ChatEventComponent} from "./components/chat/event/chat-event.component";
 
 @NgModule({
   declarations: [
@@ -110,9 +111,11 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     TeamNewComponent,
     TeamListComponent,
     TeamComponent,
-    ChatTeamComponent,
     UserTeamComponent,
     CancelJoinRequestCommentDialog,
+
+    ChatTeamComponent,
+    ChatEventComponent,
 
     ProjectDialog,
     ProjectGitDialog,

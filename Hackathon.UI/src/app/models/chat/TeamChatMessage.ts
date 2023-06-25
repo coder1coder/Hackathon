@@ -4,14 +4,16 @@ export class TeamChatMessage extends BaseChatMessage
 {
   teamId:number
 
-  constructor(ownerId:number, message:string) {
-    super(ChatMessageContext.TeamChat, ownerId, message);
+  constructor(teamId: number, ownerId:number, message:string, options: ChatMessageOption = ChatMessageOption.Default) {
+    super(ChatMessageContext.TeamChat, ownerId, message, options);
+    this.teamId = teamId;
   }
 }
 
 export enum ChatMessageContext
 {
-  TeamChat
+  TeamChat,
+  EventChat
 }
 
 export enum ChatMessageOption {
