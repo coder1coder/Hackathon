@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from "./components/nav-menu/nav-menu.component";
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
@@ -22,36 +21,23 @@ import { Pagination } from "./common/Pagination";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ConnectionRefusedInterceptor } from "./interceptors/connectionRefused.interceptor";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
-import { DefaultLayoutComponent } from "./components/layouts/default/default.layout.component";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { TeamNewComponent } from "./components/team/new/team.new.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { EventListComponent } from "./components/event/list/event.list.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { UserListComponent } from "./components/user/list/user.list.component";
 import { MatSelectModule } from '@angular/material/select';
 import { TeamListComponent } from "./components/team/list/team.list.component";
 import { EventNewStatusDialogComponent } from './components/event/cards/components/status/event-new-status-dialog.component';
 import { RecaptchaModule } from 'ng-recaptcha';
-import { NotificationBellComponent } from "./components/notification/bell/notification.bell.component";
 import { MatBadgeModule } from "@angular/material/badge";
-import { NotificationListComponent } from "./components/notification/list/notification.list.component";
 import { MatGridListModule } from "@angular/material/grid-list";
-import { NotificationInfoViewComponent } from "./components/notification/templates/info/notification.info.view.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TeamViewComponent } from "./components/team/view/team.view.component";
 import { MatCardModule } from "@angular/material/card";
 import { CustomDialog } from "./components/custom/custom-dialog/custom-dialog.component";
 import { ListDetailsComponent } from "./components/custom/list-details/list-details.component";
-import { AlertComponent } from "./components/custom/alert/alert.component";
-import { ProfileViewComponent } from "./components/profile/view/profile.view.component";
-import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
-import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { EventLogComponent } from "./components/eventlog/eventLog.list.component";
-import {
-  FriendshipOfferButtonComponent
-} from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
-import { FriendsListComponent } from "./components/friendship/list/friends-list.component";
 import { UserTeamComponent } from "./components/team/userTeam/userTeam.component";
 import { LineInfoComponent } from './components/line-info/line-info.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -63,7 +49,6 @@ import { EventMainViewCardComponent } from "./components/event/cards/event-main-
 import { EventStatusComponent } from './components/event/cards/components/event-status/event-status.component';
 import { ImageFromStorageComponent } from "./components/custom/image-from-storage/image-from-storage.component";
 import { TeamComponent } from "./components/team/team/team.component";
-import { ChatTeamComponent } from "./components/chat/team/chat-team.component";
 import {
   EventStageDialogComponent
 } from "./components/event/cards/components/event-stage-dialog/event-stage-dialog.component";
@@ -79,18 +64,20 @@ import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.c
 import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {ChatEventComponent} from "./components/chat/event/chat-event.component";
+import {NotificationModule} from "./components/notification/notification.module";
+import {ProfileModule} from "./components/profile/profile.module";
+import {ChatModule} from "./components/chat/chat.module";
+import {FriendshipModule} from "./components/friendship/friendship.module";
+import {CommonComponentsModule} from "./components/custom/common-components.module";
+import { LayoutModule } from './components/layouts/layout.module';
+import {UserComponentsModule} from "./components/user/user.module";
 
 @NgModule({
   declarations: [
 
     AppComponent,
-    NavMenuComponent,
     LoginComponent,
     RegisterComponent,
-
-    ProfileViewComponent,
-    ProfileImageComponent,
 
     EventListComponent,
     EventNewStatusDialogComponent,
@@ -114,64 +101,57 @@ import {ChatEventComponent} from "./components/chat/event/chat-event.component";
     UserTeamComponent,
     CancelJoinRequestCommentDialog,
 
-    ChatTeamComponent,
-    ChatEventComponent,
-
     ProjectDialog,
     ProjectGitDialog,
-
-    UserListComponent,
 
     NotFoundComponent,
 
     EventLogComponent,
 
-    NotificationBellComponent,
-    NotificationListComponent,
-    NotificationInfoViewComponent,
-
-    FriendshipOfferButtonComponent,
-    FriendsListComponent,
-
-    ToolbarComponent,
-    DefaultLayoutComponent,
     ListDetailsComponent,
-    AlertComponent,
     CustomDialog,
     LineInfoComponent,
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        FormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
 
-        DragDropModule,
-        MatInputModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatToolbarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatTooltipModule,
-        MatSelectModule,
-        RecaptchaModule,
-        MatBadgeModule,
-        MatGridListModule,
-        MatTabsModule,
-        MatCardModule,
-        MatSlideToggleModule,
-        InfiniteScrollModule,
-        MatButtonToggleModule
-    ],
+    ChatModule,
+    ProfileModule,
+    NotificationModule,
+    FriendshipModule,
+    CommonComponentsModule,
+    LayoutModule,
+    UserComponentsModule,
+
+    DragDropModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatListModule,
+    MatToolbarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatSelectModule,
+    RecaptchaModule,
+    MatBadgeModule,
+    MatGridListModule,
+    MatTabsModule,
+    MatCardModule,
+    MatSlideToggleModule,
+    InfiniteScrollModule,
+    MatButtonToggleModule
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -183,8 +163,11 @@ import {ChatEventComponent} from "./components/chat/event/chat-event.component";
       useClass: AuthInterceptor,
       multi: true
     },
-    { provide: MatPaginatorIntl, useClass: Pagination}
+    {provide: MatPaginatorIntl, useClass: Pagination}
+  ],
+  exports: [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

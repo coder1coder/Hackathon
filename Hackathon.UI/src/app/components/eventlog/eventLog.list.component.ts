@@ -23,7 +23,7 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
 
   fetch(getFilterModel: GetListParameters<IEventLogModel> | undefined): any {
 
-    this.authService.getCurrentUser()?.subscribe(x => {
+    this.authService.getCurrentUser()?.subscribe(_ => {
 
       let getFilterModel = new GetListParameters<IEventLogModel>();
       getFilterModel.Offset = this.pageSettings.pageIndex;

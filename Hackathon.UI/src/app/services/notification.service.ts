@@ -6,8 +6,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BaseCollection} from "../models/BaseCollection";
 import {GetListParameters} from "../models/GetListParameters";
-import {Notification} from "../models/Notification/Notification";
-import {NotificationFilter} from "../models/Notification/NotificationFilter";
+import {Notification} from "../models/notifications/Notification";
+import {NotificationFilter} from "../models/notifications/NotificationFilter";
 import {
   INotificationChangedIntegrationEvent
 } from "../models/IntegrationEvent/INotificationChangedIntegrationEvent";

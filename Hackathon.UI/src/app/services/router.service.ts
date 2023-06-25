@@ -47,7 +47,10 @@ export class UsersRouter
 export class ProfileRouter
 {
   constructor(private router: Router) {}
-  View = () => this.router.navigate(['profile'])
+  View = (userId:number | undefined = undefined) => this.router.navigate((userId === undefined)
+    ? ['profile']
+    : [`users/${userId}`]);
+
   Login = () => this.router.navigate(['login'])
   Logout = () => this.router.navigate(['logout'])
   Register = () => this.router.navigate(['/register']);

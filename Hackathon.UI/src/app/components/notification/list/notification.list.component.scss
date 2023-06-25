@@ -1,3 +1,33 @@
+@import "../../../../assets/styles/variables";
+
+.notifications{
+  &__wrapper {
+    display: flex;
+    column-gap: 100px;
+    margin: 0 auto;
+  }
+
+  &__groups {
+    &__item {
+
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      &-selected {
+        color: $primary-color;
+      }
+
+      &-name {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &__items {
+    flex: 1;
+  }
+}
+
 .mat-column-status {
   mat-icon {
     font-size: 10px;

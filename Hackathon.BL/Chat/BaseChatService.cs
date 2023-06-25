@@ -114,7 +114,7 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>
         {
             var notificationModels = userIdsToNotify
                 .Select(x =>
-                    NotificationFactory.InfoNotification(newChatMessage.Message, x, ownerId));
+                    NotificationFactory.NewChatMessage(ownerId, x, newChatMessage.Message, newChatMessage.Type));
 
             await _notificationService.PushManyAsync(notificationModels);
         }

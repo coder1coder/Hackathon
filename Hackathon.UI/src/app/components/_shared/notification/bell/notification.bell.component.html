@@ -1,0 +1,29 @@
+<button mat-icon-button [matMenuTriggerFor]="notificationBellMenu" (menuOpened)="menuOpened()">
+  <mat-icon
+    matBadge="{{ this.unreadNotificationsCount }}"
+    matBadgeColor="warn"
+    matBadgeHidden="{{ this.unreadNotificationsCount == 0 }}"
+  >
+    notifications_none
+  </mat-icon>
+</button>
+
+<mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu">
+
+  <mat-list role="list">
+    <div class="header">Уведомления</div>
+
+    <ng-template [ngIf]="notifications.items != undefined && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
+      <mat-list-item class="notify__item" role="listitem" *ngFor="let notification of notifications?.items">
+        <div class="notify__item__block">
+          <notification-item [notification]="notification"></notification-item>
+        </div>
+      </mat-list-item>
+    </ng-template>
+  </mat-list>
+  <button class="mat-button mat-primary" (click)="viewAll()" style="margin-top: 1em;">Перейти в центр уведомлений</button>
+</mat-menu>
+
+<ng-template #notificationsEmpty>
+  <mat-list-item role="listitem">Нет новых уведомлений</mat-list-item>
+</ng-template>

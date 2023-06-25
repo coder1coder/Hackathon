@@ -1,13 +1,9 @@
 import {Component, Input, OnInit, ViewChild} from "@angular/core";
-import {SnackService} from "../../../services/snack.service";
 import {UserService} from "../../../services/user.service";
 import {BehaviorSubject, filter, mergeMap, of, Subject, switchMap, takeUntil} from "rxjs";
 import {SafeUrl} from "@angular/platform-browser";
 import {IUser} from "../../../models/User/IUser";
-import {AuthService} from "../../../services/auth.service";
 import {FileStorageService} from "src/app/services/file-storage.service";
-import {UploadFileErrorMessages} from "../../../common/error-messages/upload-file-error-messages";
-import { IProblemDetails } from "src/app/models/IProblemDetails";
 import { ErrorProcessor } from "src/app/services/errorProcessor";
 
 @Component({
@@ -31,9 +27,7 @@ export class ProfileImageComponent implements OnInit {
 
   @ViewChild('selectedFile') selectedFile: HTMLInputElement | undefined;
   constructor(
-    private snackService: SnackService,
     private userService: UserService,
-    private authService: AuthService,
     private fileStorageService: FileStorageService,
     private errorProcessor: ErrorProcessor
     ) {

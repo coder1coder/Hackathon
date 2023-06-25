@@ -1,11 +1,12 @@
 import {AfterViewInit, Component} from "@angular/core";
-import {BaseCollection} from "../../../models/BaseCollection";
-import {NotificationService} from "../../../services/notification.service";
-import {NotificationFilter} from "../../../models/Notification/NotificationFilter";
-import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
-import {Notification} from "../../../models/Notification/Notification";
-import {RouterService} from "../../../services/router.service";
+import {BaseCollection} from "../../../../models/BaseCollection";
+import {NotificationService} from "../../../../services/notification.service";
+import {NotificationFilter} from "../../../../models/notifications/NotificationFilter";
+import {GetListParameters, SortOrder} from "../../../../models/GetListParameters";
+import {Notification} from "../../../../models/notifications/Notification";
+import {RouterService} from "../../../../services/router.service";
 import { AuthService } from "src/app/services/auth.service";
+import {NotificationType} from "../../../../models/notifications/NotificationType";
 
 @Component({
   selector: 'notification-bell',
@@ -16,6 +17,7 @@ import { AuthService } from "src/app/services/auth.service";
 export class NotificationBellComponent implements AfterViewInit
 {
   Notification = Notification
+  NotificationType = NotificationType
   notifications:BaseCollection<Notification> = new BaseCollection<Notification>();
   unreadNotificationsCount:number = 0;
 
@@ -52,6 +54,8 @@ export class NotificationBellComponent implements AfterViewInit
 
   fetch(){
     let filter = new GetListParameters<NotificationFilter>();
+    filter.Filter = new NotificationFilter();
+    filter.Filter.isRead = false;
     filter.SortOrder = SortOrder.Desc;
     filter.SortBy = "createdAt";
 
@@ -65,18 +69,5 @@ export class NotificationBellComponent implements AfterViewInit
   menuOpened(){
     if (this.unreadNotificationsCount > 0)
       this.markAllAsRead();
-  }
-
-  remove(event:MouseEvent, ids:string[]){
-      event.stopPropagation();
-      this.notificationService.remove(ids).subscribe(_=>{
-        this.notifications.items = this.notifications.items.filter(x=> x.id !== undefined && !ids.includes(x.id));
-        this.notifications.totalCount = this.notifications.totalCount - ids.length;
-      });
-  }
-
-  removeAll(event:MouseEvent){
-    let ids = this.notifications.items.map(x=>x.id!);
-    this.remove(event, ids);
   }
 }

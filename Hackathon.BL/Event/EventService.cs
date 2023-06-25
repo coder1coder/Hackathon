@@ -395,7 +395,7 @@ public class EventService : IEventService
             return;
 
         var notificationModels = usersIds.Select(x =>
-            NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+            NotificationFactory.EventStatusChanged(x, changeEventStatusMessage));
 
         await _notificationService.PushManyAsync(notificationModels);
     }

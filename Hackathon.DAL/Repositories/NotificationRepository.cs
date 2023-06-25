@@ -6,7 +6,6 @@ using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
 using Hackathon.DAL.Entities;
-using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +44,9 @@ public class NotificationRepository: INotificationRepository
         if (parameters.Filter?.IsRead != null)
             query = query.Where(x => x.IsRead == parameters.Filter.IsRead.Value);
 
+        if (parameters.Filter?.Group is not null)
+            query = query.Where(x => parameters.Filter.Group.Value.GetNotificationTypes().Contains(x.Type));
+
         if (!string.IsNullOrWhiteSpace(parameters.SortBy)
             && string.Equals(parameters.SortBy, nameof(NotificationEntity.CreatedAt), StringComparison.CurrentCultureIgnoreCase))
         {
@@ -53,13 +55,14 @@ public class NotificationRepository: INotificationRepository
                 : query.OrderByDescending(x => x.CreatedAt);
         }
 
+        var items = await query
+            .Skip(parameters.Offset)
+            .Take(parameters.Limit)
+            .ToArrayAsync();
+
         return new BaseCollection<NotificationModel>
         {
-            Items = await query
-                .Skip(parameters.Offset)
-                .Take(parameters.Limit)
-                .ProjectToType<NotificationModel>()
-                .ToListAsync(),
+            Items = _mapper.Map<NotificationEntity[], NotificationModel[]>(items),
             TotalCount = total
         };
     }

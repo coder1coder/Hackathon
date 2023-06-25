@@ -19,7 +19,7 @@ public interface IFriendshipService
     /// <summary>
     /// Создать или принять предложение дружбы
     /// </summary>
-    Task<Result> CreateOrAcceptOfferAsync(long proposerId, long userId);
+    Task<Result> CreateOrAcceptOfferAsync(long proposerId, long recipientId);
 
     /// <summary>
     /// Отклонить предложение дружбы

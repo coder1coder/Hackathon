@@ -1,18 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'line-info',
-  templateUrl: './line-info.component.html',
+  template: `
+    <div class="info-line grid">
+      <div class="info-label grid-1-2">
+        <span>{{label}}: </span>
+      </div>
+      <div class="info-value grid-1-4">{{value ? value : 'Не указано'}}</div>
+    </div>
+  `,
   styleUrls: ['./line-info.component.scss']
 })
-export class LineInfoComponent implements OnInit {
-
+export class LineInfoComponent {
   @Input() label: string;
   @Input() value: string | number;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

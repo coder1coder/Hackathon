@@ -1,14 +1,14 @@
 import {Component, Input, OnInit, TemplateRef} from "@angular/core";
-import {AuthService} from "../../services/auth.service";
-import {RouterService} from "../../services/router.service";
 import {MatDialog} from "@angular/material/dialog";
-import {CustomDialog, ICustomDialogData} from "../custom/custom-dialog/custom-dialog.component";
-import {MenuItem} from "../../common/MenuItem";
 import {FormBuilder} from "@angular/forms";
 import {Subject, takeUntil} from "rxjs";
-import {ThemeChangeService} from "../../services/theme-change.service";
-import {fromMobx} from "../../common/functions/from-mobx.function";
-
+import {MenuItem} from "../../../common/MenuItem";
+import {UserRole} from "../../../models/User/UserRole";
+import {AuthService} from "../../../services/auth.service";
+import {RouterService} from "../../../services/router.service";
+import {ThemeChangeService} from "../../../services/theme-change.service";
+import {CustomDialog, ICustomDialogData} from "../../custom/custom-dialog/custom-dialog.component";
+import {fromMobx} from "../../../common/functions/from-mobx.function";
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html',
@@ -23,7 +23,14 @@ export class ToolbarComponent implements OnInit {
   public userId:number | undefined;
 
   @Input() logoMinWidth: string = "initial";
-  @Input() toolbarMenuItems: MenuItem[] = [];
+  toolbarMenuItems: MenuItem[] = [
+    new MenuItem('/events','События'),
+    new MenuItem('/team','Моя команда'),
+    new MenuItem('#', 'Администрирование', [UserRole.Administrator],[
+      new MenuItem('/users','Пользователи'),
+      new MenuItem('/eventLog','Журнал событий'),
+    ]),
+  ];
   @Input() secondToolbar: TemplateRef<any> | null;
   @Input() secondToolbarCssClasses: string;
 

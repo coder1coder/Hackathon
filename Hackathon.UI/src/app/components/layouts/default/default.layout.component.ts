@@ -1,6 +1,5 @@
-import {Component, Input} from "@angular/core";
-import {MenuItem} from "../../../common/MenuItem";
-import {UserRole} from "../../../models/User/UserRole";
+import {Component} from "@angular/core";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   selector: 'layout-default',
@@ -10,25 +9,26 @@ import {UserRole} from "../../../models/User/UserRole";
 
 export class DefaultLayoutComponent {
 
-  @Input() title: string;
-  @Input() hideTitleBar: boolean = false;
-  @Input() hideContentWhileLoading: boolean = true;
-  @Input() isLoading: boolean = false;
-  @Input() showLoadingIndicator: boolean = true;
-  @Input() containerCssClasses: string = 'container container-full container-padding';
-  @Input() layoutCssClasses: string = '';
-  @Input() logoMinWidth: string = `initial`;
+  public title: string;
+  public hideTitleBar: boolean;
+  public hideContentWhileLoading: boolean;
+  public isLoading: boolean;
+  public showLoadingIndicator: boolean;
+  public containerCssClasses: string;
+  public layoutCssClasses: string;
+  public logoMinWidth: string;
 
-  toolbarMenuItems = [
-    new MenuItem('/events','События'),
-    new MenuItem('/team','Моя команда'),
-    new MenuItem('#', 'Администрирование', [UserRole.Administrator],[
-      new MenuItem('/users','Пользователи'),
-      new MenuItem('/eventLog','Журнал событий'),
-    ]),
-  ]
+  constructor(private appStateService: AppStateService) {
 
-  constructor() {
+    this.title = appStateService.title;
+    this.hideTitleBar = appStateService.hideTitleBar;
+    this.hideContentWhileLoading = appStateService.hideContentWhileLoading;
+    this.isLoading = appStateService.isLoading;
+    this.showLoadingIndicator = appStateService.showLoadingIndicator;
+    this.containerCssClasses = appStateService.containerCssClasses;
+    this.layoutCssClasses = appStateService.layoutCssClasses;
+    this.logoMinWidth = appStateService.logoMinWidth;
+
   }
 }
 

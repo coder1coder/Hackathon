@@ -1,0 +1,33 @@
+<div *ngIf="viewModel && viewModel.notification" [class.notification]="true" [class.notification-nonread]="!viewModel.notification?.isRead">
+
+  <mat-icon class="notification-icon" [attr.icon]="viewModel?.icon">
+    {{ viewModel?.icon }}
+  </mat-icon>
+
+  <div class="notification-content">
+    <div class="notification-title">{{ viewModel?.title }}</div>
+    <div class="notification-details">
+        <ng-content></ng-content>
+    </div>
+    <div class="notification-buttons">
+      <ng-content select="[buttons]"></ng-content>
+    </div>
+
+  </div>
+
+  <div class="notification-date">{{ viewModel.notification.createdAt?.toLocaleString() | date:'EEEE dd.MM.y' }}</div>
+
+  <div class="notification-actions">
+
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onRemove.emit(viewModel.notification.id)">
+        <mat-icon color="accent">delete_outline</mat-icon>
+        <span>Удалить</span>
+      </button>
+    </mat-menu>
+
+  </div>
+</div>

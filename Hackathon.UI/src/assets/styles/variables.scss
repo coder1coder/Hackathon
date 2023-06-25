@@ -1,4 +1,5 @@
 $primary-color: #665CD4;
+$secondary-color: #3f51b5;
 
 $white-color: #ffffff;
 $white-color-80: #ededed;
@@ -12,4 +13,4 @@ $grey-color-10: #424242;
 $grey-color-30: #ffffff63;
 
 $event-finished-content-max-width: 1200px;
-$chat-color-content: #3f51b5;
+$chat-color-content: $secondary-color;

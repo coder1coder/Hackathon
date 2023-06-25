@@ -2,12 +2,10 @@ using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Hackathon.API.Controllers;
@@ -16,12 +14,10 @@ namespace Hackathon.API.Controllers;
 public class NotificationController: BaseController
 {
     private readonly INotificationService _notificationService;
-    private readonly IMapper _mapper;
 
-    public NotificationController(INotificationService notificationService, IMapper mapper)
+    public NotificationController(INotificationService notificationService)
     {
         _notificationService = notificationService;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -32,11 +28,8 @@ public class NotificationController: BaseController
     [HttpPost("list")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(BaseCollection<NotificationModel>), StatusCodes.Status200OK)]
-    public async Task<BaseCollection<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
-    {
-        var filterModel = _mapper.Map<GetListParameters<NotificationFilterModel>>(request);
-        return await _notificationService.GetListAsync(filterModel, AuthorizedUserId);
-    }
+    public Task<BaseCollection<NotificationModel>> GetList([FromBody] GetListParameters<NotificationFilterModel> request)
+        => _notificationService.GetListAsync(request, AuthorizedUserId);
 
     /// <summary>
     /// Отметить уведомления пользователя как прочтенные
@@ -59,24 +52,6 @@ public class NotificationController: BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     public Task Delete([FromBody] Guid[] notificationIds)
         => _notificationService.DeleteAsync(AuthorizedUserId, notificationIds);
-
-    /// <summary>
-    /// Отправить информационное сообщение
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    /// <param name="recipientId">Идентификатор получателя (пользователя)</param>
-    [HttpPost("push/info")]
-    public Task PushInformationNotification([FromBody] string message, [Required] long recipientId)
-        => _notificationService.PushAsync(new CreateNotificationModel<InfoNotificationData>
-        {
-            UserId = recipientId,
-            OwnerId = AuthorizedUserId,
-            Type = NotificationType.Information,
-            Data = new InfoNotificationData
-            {
-                Message = message
-            }
-        });
 
     /// <summary>
     /// Получить количество непрочитанных уведомлений

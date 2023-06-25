@@ -1,5 +1,3 @@
-import {EventStatus} from "../Event/EventStatus";
-
 export enum FriendshipStatus
 {
   /**  Предлоджение дружбы отправлено */

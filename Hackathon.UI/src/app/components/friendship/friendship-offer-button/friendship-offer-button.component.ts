@@ -8,7 +8,7 @@ import {FriendshipStatus, GetOfferOption, IFriendship} from "../../../models/Fri
 
 @Component({
   selector: `friendship-offer-button`,
-  templateUrl: `./friendship-offer-button.component.html`
+  template: `<button *ngIf="statusText" mat-button mat-stroked-button (click)="doAction()" [disabled]="!isEnabled">{{ statusText }}</button>`
 })
 export class FriendshipOfferButtonComponent implements OnInit,  AfterViewInit
 {
@@ -21,7 +21,7 @@ export class FriendshipOfferButtonComponent implements OnInit,  AfterViewInit
 
   public isEnabled: boolean = false;
 
-  public statusText: string = 'Нельзя определить статус';
+  public statusText: string;
   public friendship?: IFriendship;
 
   constructor(
@@ -53,6 +53,7 @@ export class FriendshipOfferButtonComponent implements OnInit,  AfterViewInit
     }
 
     this.resolveStatus();
+
   }
 
   private resolveStatus(){

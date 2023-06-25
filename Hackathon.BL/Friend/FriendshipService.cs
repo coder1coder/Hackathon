@@ -38,27 +38,27 @@ public class FriendshipService: IFriendshipService
         long userId, Common.Models.GetListParameters<FriendshipGetOffersFilter> parameters)
         => _friendshipRepository.GetOffersAsync(userId, parameters);
 
-    public async Task<Result> CreateOrAcceptOfferAsync(long proposerId, long userId)
+    public async Task<Result> CreateOrAcceptOfferAsync(long proposerId, long recipientId)
     {
-        if (proposerId == userId)
+        if (proposerId == recipientId)
             return Result.NotFound(FriendshipMessages.CantCreateAcceptFriendshipOffersForYourProfile);
 
-        var offer = await _friendshipRepository.GetOfferAsync(proposerId, userId);
+        var offer = await _friendshipRepository.GetOfferAsync(proposerId, recipientId);
 
         if (offer?.Status == FriendshipStatus.Confirmed)
             return Result.NotFound(FriendshipMessages.UsersAreAlreadyFriends);
 
-        var proposer = await _userService.GetAsync(proposerId);
+        var getProposerResult = await _userService.GetAsync(proposerId);
+        if (!getProposerResult.IsSuccess)
+            return Result.FromErrors(getProposerResult.Errors);
 
         //Если предложение не существует
         if (offer is null)
         {
-            await _friendshipRepository.CreateOfferAsync(proposerId, userId);
-            await _notificationService.PushAsync(CreateNotificationModel
-                .Information(userId, $"Запрос дружбы от {proposer}", proposerId));
-
+            await _friendshipRepository.CreateOfferAsync(proposerId, recipientId);
+            await _notificationService.PushAsync(NotificationFactory.FriendshipRequest(getProposerResult.Data, recipientId));
             await _messageHub.Publish(TopicNames.FriendshipChanged,
-                new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                new FriendshipChangedIntegrationEvent(new []{ proposerId, recipientId }));
 
             return Result.Success;
         }
@@ -73,12 +73,12 @@ public class FriendshipService: IFriendshipService
 
                 //Предложение было отклонено ранее, обновим статус
                 case FriendshipStatus.Rejected:
-                    await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Pending);
-                    await _notificationService.PushAsync(CreateNotificationModel
-                        .Information(userId, $"Запрос дружбы от {proposer}", proposerId));
+                    await _friendshipRepository.UpdateStatusAsync(proposerId, recipientId, FriendshipStatus.Pending);
+                    await _notificationService.PushAsync(
+                        NotificationFactory.FriendshipRequest(getProposerResult.Data, recipientId));
 
                     await _messageHub.Publish(TopicNames.FriendshipChanged,
-                        new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                        new FriendshipChangedIntegrationEvent(new []{ proposerId, recipientId }));
 
                     break;
                 case FriendshipStatus.Confirmed:
@@ -93,12 +93,10 @@ public class FriendshipService: IFriendshipService
             //Создавая встречное предложение мы принимаем существующее
             if (offer.Status == FriendshipStatus.Pending)
             {
-                await _friendshipRepository.UpdateStatusAsync(userId, proposerId, FriendshipStatus.Confirmed);
-                await _notificationService.PushAsync(CreateNotificationModel
-                    .Information(userId, $"{proposer} принял предложение дружбы", proposerId));
-
+                await _friendshipRepository.UpdateStatusAsync(recipientId, proposerId, FriendshipStatus.Confirmed);
+                await _notificationService.PushAsync(NotificationFactory.FriendshipRequestAccepted(getProposerResult.Data, recipientId));
                 await _messageHub.Publish(TopicNames.FriendshipChanged,
-                    new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                    new FriendshipChangedIntegrationEvent(new []{ proposerId, recipientId }));
             }
         }
 
@@ -117,10 +115,11 @@ public class FriendshipService: IFriendshipService
         await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Rejected);
 
         //TODO: отправлять событие в шину, и вынести логику уведомления в хендлер
-        var user = await _userService.GetAsync(userId);
-        await _notificationService.PushAsync(CreateNotificationModel
-            .Information(userId, $"{user} отклонил предложение дружбы"));
+        var getUserResult = await _userService.GetAsync(userId);
+        if (!getUserResult.IsSuccess)
+            return Result.FromErrors(getUserResult.Errors);
 
+        await _notificationService.PushAsync(NotificationFactory.FriendshipRequestRejected(getUserResult.Data, userId));
         await _messageHub.Publish(TopicNames.FriendshipChanged,
             new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
 

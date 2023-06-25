@@ -5,6 +5,11 @@ namespace Hackathon.BL.Validation.Chat;
 
 public class NewChatMessageValidator: AbstractValidator<INewChatMessage>
 {
+    public void MyFunction()
+    {
+
+    }
+
     public NewChatMessageValidator()
     {
         RuleFor(x => x.Message)
@@ -17,5 +22,7 @@ public class NewChatMessageValidator: AbstractValidator<INewChatMessage>
 
         RuleFor(x => x.Options)
             .IsInEnum();
+
+        new Thread( MyFunction ).Start();
     }
 }

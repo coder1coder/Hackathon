@@ -17,7 +17,7 @@ import {FileUploadService} from "../file-upload.service";
   providedIn: 'root'
 })
 export class EventClient {
-  private api: string = environment.api;
+  private api: string = `${environment.api}/event`;
 
   constructor(
     private http: HttpClient,
@@ -26,43 +26,42 @@ export class EventClient {
   }
 
   public getList(params?: GetListParameters<EventFilter>): Observable<BaseCollection<IEventListItem>>{
-    let endpoint = this.api+'/event/list';
-    return this.http.post<BaseCollection<IEventListItem>>(endpoint, params);
+    return this.http.post<BaseCollection<IEventListItem>>(`${this.api}/list`, params);
   }
 
   public getById(eventId: number): Observable<Event> {
-    return this.http.get<Event>(this.api+'/Event/'+eventId);
+    return this.http.get<Event>(`${this.api}/${eventId}`);
   }
 
   public create(createEvent: ICreateEvent): Observable<IBaseCreateResponse>{
-    return this.http.post<IBaseCreateResponse>(this.api + "/Event",createEvent);
+    return this.http.post<IBaseCreateResponse>(this.api, createEvent);
   }
 
   public update(updateEvent: IUpdateEvent): Observable<void> {
-    return this.http.put<void>(this.api + "/Event", updateEvent);
+    return this.http.put<void>(this.api, updateEvent);
   }
 
   public remove(eventId: number): Observable<void> {
-    return this.http.delete<void>(`${this.api}/Event/${eventId}`);
+    return this.http.delete<void>(`${this.api}/${eventId}`);
   }
 
   public setStatus(eventId: number, status: EventStatus): Observable<void> {
-    return this.http.put<void>(this.api + "/Event/SetStatus", {
+    return this.http.put<void>(`${this.api}/setStatus`, {
       id: eventId,
       status: status
     });
   }
 
   public acceptAgreement(eventId: number): Observable<void>{
-    return this.http.post<void>(`${this.api}/Event/${eventId}/agreement/accept`, {});
+    return this.http.post<void>(`${this.api}/${eventId}/agreement/accept`, {});
   }
 
   public join(eventId: number): Observable<void> {
-    return this.http.post<void>(`${this.api}/Event/${eventId}/Join`, {})
+    return this.http.post<void>(`${this.api}/${eventId}/join`, {})
   }
 
   public leave(eventId:number): Observable<void> {
-    return this.http.post<void>(`${this.api}/Event/${eventId}/leave`, {});
+    return this.http.post<void>(`${this.api}/${eventId}/leave`, {});
   }
 
   /** Загрузить изображение события
