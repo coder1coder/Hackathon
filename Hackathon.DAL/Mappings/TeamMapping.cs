@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Hackathon.Common.Models.Team;
-using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
 using Mapster;
 using System.Collections.Generic;
@@ -21,13 +20,19 @@ public class TeamMapping: IRegister
             .Map(x => x.Members, s =>
                 s.Members.Select(x => x.Member))
             .MaxDepth(3)
-            .AfterMapping((_, d) =>
+            .AfterMapping((s, d) =>
             {
-                var members = new List<UserModel>(d.Members);
+                var members = new List<TeamMember>(d.Members);
                 if (d.Owner is not null && members.All(x => x.Id != d.OwnerId))
                     members.Add(d.Owner);
 
                 d.Members = members.ToArray();
+
+                foreach (var teamMember in d.Members)
+                {
+                    teamMember.DateTimeAdd =
+                        s.Members.FirstOrDefault(x => x.MemberId == teamMember.Id)?.DateTimeAdd ?? default;
+                }
             });
 
         config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
