@@ -21,6 +21,9 @@ using Bogus;
 using Hackathon.Common.Models.FileStorage;
 using static System.Net.Mime.MediaTypeNames;
 using Hackathon.Common.Models;
+using Amazon.Runtime.Internal.Util;
+using Hackathon.BL.User;
+using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Tests.Event;
 
@@ -30,6 +33,7 @@ public class EventServiceTests: BaseUnitTest
     private readonly Mock<IEventRepository> _eventRepositoryMock;
     private readonly Mock<IBus> _busMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
+    private readonly Mock<ILogger<EventService>> _loggerMock;
 
     public EventServiceTests()
     {
@@ -45,6 +49,7 @@ public class EventServiceTests: BaseUnitTest
         var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
+        _loggerMock = new Mock<ILogger<EventService>>();
 
         _service = new EventService(
             createValidatorMock.Object,
@@ -58,7 +63,8 @@ public class EventServiceTests: BaseUnitTest
             integrationEventHubMock.Object,
             fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
-            eventAgreementRepositoryMock.Object
+            eventAgreementRepositoryMock.Object,
+            _loggerMock.Object
         );
     }
 
@@ -119,32 +125,6 @@ public class EventServiceTests: BaseUnitTest
     }
 
     [Fact]
-    public async Task Create_Should_Return_Error_Since_FileNotFound_In_Repository()
-    {
-        //arrange
-        var createdId = new Random().Next(0, 11);
-        var imageId = Guid.NewGuid();
-        StorageFile image = null;
-
-        var eventCreateParameners = new EventCreateParameters
-        {
-            ImageId = imageId,
-            Stages = new List<EventStageModel>()
-        };
-
-        _fileStorageRepositoryMock.Setup(x => x.GetAsync(eventCreateParameners.ImageId.Value))
-            .ReturnsAsync(image);
-
-        //act
-        var result = await _service.CreateAsync(eventCreateParameners);
-
-        //assert
-        Assert.NotNull(result);
-        Assert.True(result.Data == 0);
-        Assert.True(!result.IsSuccess);
-    }
-
-    [Fact]
     public async Task Update_Should_Return_Result_Success()
     {
         //arrange
@@ -190,39 +170,5 @@ public class EventServiceTests: BaseUnitTest
         //assert
         Assert.NotNull(updateResult);
         Assert.True(updateResult.IsSuccess);
-    }
-
-    [Fact]
-    public async Task Update_Should_Return_Error_Since_FileNotFound_In_Repository()
-    {
-        //arrange
-        var imageId = Guid.NewGuid();
-        StorageFile image = null;
-        var eventUpdateParameters = new Faker<EventUpdateParameters>()
-            .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
-            .RuleFor(x => x.ImageId, f => Guid.NewGuid())
-            .Generate();
-
-        _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
-            .Returns(Task.FromResult(new EventModel()
-            {
-                ImageId = imageId
-            }));
-
-        _eventRepositoryMock.Setup(x => x.UpdateAsync(eventUpdateParameters))
-            .Returns(Task.CompletedTask);
-
-        _fileStorageRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.ImageId.Value))
-            .ReturnsAsync(image);
-
-        _fileStorageRepositoryMock.Setup(x => x.UpdateFlagIsDeleted(imageId, false))
-            .Returns(Task.CompletedTask);
-
-        //act
-        var updateResult = await _service.UpdateAsync(eventUpdateParameters);
-
-        //assert
-        Assert.NotNull(updateResult);
-        Assert.True(!updateResult.IsSuccess);
     }
 }

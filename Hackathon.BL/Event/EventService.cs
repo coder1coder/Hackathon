@@ -22,6 +22,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
+using Hackathon.Common.Models.FileStorage;
+using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Event;
 
@@ -42,6 +44,7 @@ public class EventService : IEventService
     private readonly IBus _messageBus;
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
+    private readonly ILogger<EventService> _logger;
 
     public EventService(
         IValidator<EventCreateParameters> createEventModelValidator,
@@ -55,7 +58,8 @@ public class EventService : IEventService
         IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
-        IEventAgreementRepository eventAgreementRepository)
+        IEventAgreementRepository eventAgreementRepository,
+        ILogger<EventService> logger)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -69,20 +73,21 @@ public class EventService : IEventService
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
+        _logger = logger;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
     {
         await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
 
-        if (!await IsSuccessRemoveStorageFileFlag(eventCreateParameters.ImageId))
-        {
-            eventCreateParameters.ImageId = null;
-            await CreateEvent(eventCreateParameters);
-            return Result<long>.NotValid(EventErrorMessages.EventSavedButImageDoesNotExists);
-        }
+        await AssignImageIdFromTemporaryFile(eventCreateParameters);
 
-        var eventId = await CreateEvent(eventCreateParameters);
+        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
+        await _messageBus.Publish(new EventLogModel(
+            EventLogType.Created,
+            $"Создано новое событие с идентификатором '{eventId}'",
+            eventCreateParameters.OwnerId
+        ));
 
         return Result<long>.FromValue(eventId);
     }
@@ -102,12 +107,7 @@ public class EventService : IEventService
             if (eventModel.ImageId.HasValue)
                 await _fileStorageRepository.UpdateFlagIsDeleted(eventModel.ImageId.Value, true);
 
-            if (!await IsSuccessRemoveStorageFileFlag(eventUpdateParameters.ImageId))
-            {
-                eventUpdateParameters.ImageId = null;
-                await _eventRepository.UpdateAsync(eventUpdateParameters);
-                return Result.NotValid(EventErrorMessages.EventSavedButImageDoesNotExists);
-            }     
+            await AssignImageIdFromTemporaryFile(eventUpdateParameters);   
         }
 
         await _eventRepository.UpdateAsync(eventUpdateParameters);
@@ -316,10 +316,7 @@ public class EventService : IEventService
 
         await using var stream = file.OpenReadStream();
 
-        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName);
-
-        //Обращаемся к загруженному файлу и ставим флаг - как удаляемый
-        await _fileStorageRepository.UpdateFlagIsDeleted(uploadResult.Id, true);
+        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName, null, true);
 
         return Result<Guid>.FromValue(uploadResult.Id);
     }
@@ -406,33 +403,33 @@ public class EventService : IEventService
     private static string GenerateAutoCreatedTeamName(long eventId)
         => $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}";
 
-    private async Task<bool> IsSuccessRemoveStorageFileFlag(Guid? fileId)
+    private async Task AssignImageIdFromTemporaryFile(BaseEventParameters parameters)
     {
-        if (fileId.HasValue)
+        if (!parameters.ImageId.HasValue)
+            return;
+
+        StorageFile fileModel = null;
+
+        try
         {
-            var fileModel = await _fileStorageRepository.GetAsync(fileId.Value);
+            fileModel = await _fileStorageRepository.GetAsync(parameters.ImageId.Value);
 
             if (fileModel is not null)
             {
                 //Снимаем ранее установленный флаг, чтобы не удалить фотографию события
                 await _fileStorageRepository.UpdateFlagIsDeleted(fileModel.Id, false);
             }
-            else
-                return false;
+
         }
-
-        return true;
-    }
-
-    private async Task<long> CreateEvent(EventCreateParameters eventCreateParameters)
-    {
-        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
-        await _messageBus.Publish(new EventLogModel(
-            EventLogType.Created,
-            $"Создано новое событие с идентификатором '{eventId}'",
-            eventCreateParameters.OwnerId
-        ));
-
-        return eventId;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                        "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
+                        nameof(EventService), fileModel.Id);
+        }
+        finally
+        {
+            parameters.ImageId = fileModel?.Id;
+        }
     }
 }

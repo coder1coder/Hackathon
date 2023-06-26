@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +27,8 @@ public class FileStorageService : IFileStorageService
         _fileStorageRepository = fileStorageRepository;
     }
 
-    public async Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null)
+    public async Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null, 
+        bool isDeleted = false)
     {
         try
         {
@@ -63,7 +64,8 @@ public class FileStorageService : IFileStorageService
                 FilePath = uniqueFileName.ToString(),
                 Length = streamLength,
                 MimeType = mimeType,
-                OwnerId = ownerId
+                OwnerId = ownerId,
+                IsDeleted = isDeleted
             };
 
             await _fileStorageRepository.AddAsync(storageFile);
