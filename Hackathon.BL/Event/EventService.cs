@@ -1,4 +1,4 @@
-﻿using BackendTools.Common.Models;
+using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
@@ -22,6 +22,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
+using Hackathon.Common.Models.FileStorage;
+using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Event;
 
@@ -34,6 +36,7 @@ public class EventService : IEventService
     private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IFileStorageRepository _fileStorageRepository;
     private readonly IUserRepository _userRepository;
     private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
@@ -41,6 +44,7 @@ public class EventService : IEventService
     private readonly IBus _messageBus;
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
+    private readonly ILogger<EventService> _logger;
 
     public EventService(
         IValidator<EventCreateParameters> createEventModelValidator,
@@ -53,7 +57,9 @@ public class EventService : IEventService
         IBus messageBus,
         IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
         IFileStorageService fileStorageService,
-        IEventAgreementRepository eventAgreementRepository)
+        IFileStorageRepository fileStorageRepository,
+        IEventAgreementRepository eventAgreementRepository,
+        ILogger<EventService> logger)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -65,14 +71,18 @@ public class EventService : IEventService
         _messageBus = messageBus;
         _integrationEventHub = integrationEventHub;
         _fileStorageService = fileStorageService;
+        _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
+        _logger = logger;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
     {
         await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
-        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
 
+        await AssignImageIdFromTemporaryFile(eventCreateParameters);
+
+        var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
         await _messageBus.Publish(new EventLogModel(
             EventLogType.Created,
             $"Создано новое событие с идентификатором '{eventId}'",
@@ -86,12 +96,22 @@ public class EventService : IEventService
     {
         await _updateEventModelValidator.ValidateAndThrowAsync(eventUpdateParameters);
 
-        var isEventExists = await _eventRepository.ExistsAsync(eventUpdateParameters.Id);
+        var eventModel = await _eventRepository.GetAsync(eventUpdateParameters.Id);
 
-        if (!isEventExists)
+        if (eventModel is null)
             return Result.NotFound(EventErrorMessages.EventDoesNotExists);
 
+        if (eventModel.ImageId.GetValueOrDefault() != eventUpdateParameters.ImageId.GetValueOrDefault())
+        {
+            //Помечаем старый файл, если такой существует, как удаленный
+            if (eventModel.ImageId.HasValue)
+                await _fileStorageRepository.UpdateFlagIsDeleted(eventModel.ImageId.Value, true);
+
+            await AssignImageIdFromTemporaryFile(eventUpdateParameters);   
+        }
+
         await _eventRepository.UpdateAsync(eventUpdateParameters);
+
         return Result.Success;
     }
 
@@ -296,7 +316,7 @@ public class EventService : IEventService
 
         await using var stream = file.OpenReadStream();
 
-        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName);
+        var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName, null, true);
 
         return Result<Guid>.FromValue(uploadResult.Id);
     }
@@ -382,4 +402,34 @@ public class EventService : IEventService
     /// <returns></returns>
     private static string GenerateAutoCreatedTeamName(long eventId)
         => $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}";
+
+    private async Task AssignImageIdFromTemporaryFile(BaseEventParameters parameters)
+    {
+        if (!parameters.ImageId.HasValue)
+            return;
+
+        StorageFile fileModel = null;
+
+        try
+        {
+            fileModel = await _fileStorageRepository.GetAsync(parameters.ImageId.Value);
+
+            if (fileModel is not null)
+            {
+                //Снимаем ранее установленный флаг, чтобы не удалить фотографию события
+                await _fileStorageRepository.UpdateFlagIsDeleted(fileModel.Id, false);
+            }
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                        "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
+                        nameof(EventService), fileModel.Id);
+        }
+        finally
+        {
+            parameters.ImageId = fileModel?.Id;
+        }
+    }
 }

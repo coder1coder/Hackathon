@@ -38,4 +38,9 @@ public class StorageFile
     /// Идентификатор пользователя загрузившего файл
     /// </summary>
     public long? OwnerId { get; set; }
+
+    /// <summary>
+    /// Файл удален
+    /// </summary>
+    public bool IsDeleted { get; set; }
 }

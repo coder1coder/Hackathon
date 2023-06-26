@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using BackendTools.Common.Models;
 using Hackathon.API;
@@ -49,7 +49,8 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>
                 It.IsAny<Stream>(),
                 It.IsAny<Bucket>(),
                 It.IsAny<string>(),
-                It.IsAny<long?>()
+                It.IsAny<long?>(),
+                It.IsAny<bool>()
             )).ReturnsAsync(new StorageFile{ Id = Guid.NewGuid(), BucketName = Bucket.Avatars.ToBucketName() }
         );
 

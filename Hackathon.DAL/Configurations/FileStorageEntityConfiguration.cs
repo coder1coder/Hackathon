@@ -13,5 +13,6 @@ public class FileStorageEntityConfiguration: IEntityTypeConfiguration<FileStorag
         builder.Property(x => x.BucketName).IsRequired();
         builder.Property(x => x.FileName).IsRequired();
         builder.Property(x => x.FilePath).IsRequired();
+        builder.HasIndex(x => x.IsDeleted);
     }
 }

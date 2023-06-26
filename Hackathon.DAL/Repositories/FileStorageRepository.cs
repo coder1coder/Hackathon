@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.FileStorage;
+using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.DAL.Entities;
+using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +40,12 @@ public class FileStorageRepository: IFileStorageRepository
             : null;
     }
 
+    public async Task<Guid[]> GetIsDeletedFilesAsync()
+        => await _dbContext.StorageFiles
+            .Where(x => x.IsDeleted)
+            .Select(x => x.Id)
+            .ToArrayAsync();
+
     public async Task RemoveAsync(Guid fileId)
     {
         var entity = await _dbContext.StorageFiles
@@ -45,6 +55,18 @@ public class FileStorageRepository: IFileStorageRepository
         if (entity is not null)
         {
             _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task UpdateFlagIsDeleted(Guid fileId, bool flagValue)
+    {
+        var entity = await _dbContext.StorageFiles
+            .FirstOrDefaultAsync(x => x.Id == fileId);
+
+        if (entity is not null)
+        {
+            entity.IsDeleted = flagValue;
             await _dbContext.SaveChangesAsync();
         }
     }

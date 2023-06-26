@@ -14,7 +14,8 @@ export class ErrorProcessor
 
     if (errorContext.error !== undefined) {
       const problemDetails: IProblemDetails = <IProblemDetails>errorContext.error;
-      errorMessage = Boolean(problemDetails?.errors) ? Object.values(problemDetails.errors)[0] : (problemDetails?.detail || errorContext.title);
+      errorMessage = Boolean(problemDetails?.errors) ? Object.values(problemDetails.errors)[0] : 
+        (problemDetails?.detail || errorContext.title || problemDetails["validation-error"]);
     }
 
     this.snackService.open(errorMessage);
