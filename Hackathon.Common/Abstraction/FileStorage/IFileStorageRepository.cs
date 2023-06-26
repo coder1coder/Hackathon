@@ -1,5 +1,6 @@
 using Hackathon.Common.Models.FileStorage;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hackathon.Common.Abstraction.FileStorage;
@@ -26,4 +27,18 @@ public interface IFileStorageRepository
     /// <param name="fileId">Идентификатор файла</param>
     /// <returns></returns>
     Task RemoveAsync(Guid fileId);
+
+    /// <summary>
+    /// Обновить флаг IsDeleted у файла
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="flagValue"></param>
+    /// <returns></returns>
+    Task UpdateFlagIsDeleted(Guid fileId, bool flagValue);
+
+    /// <summary>
+    /// Получить Ids файлов, которые нужно удалить
+    /// </summary>
+    /// <returns></returns>
+    Task<Guid[]> GetIsDeletedFilesAsync();
 }

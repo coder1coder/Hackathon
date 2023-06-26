@@ -53,6 +53,7 @@ public class Startup
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
         services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
+        services.Configure<FileSettings>(Configuration.GetSection(nameof(FileSettings)));
         services.Configure<AuthOptions>(authOptionsSection);
         services.Configure<RouteOptions>(x =>
         {

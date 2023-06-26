@@ -1,4 +1,4 @@
-﻿using BackendTools.Common.Models;
+using BackendTools.Common.Models;
 using Hackathon.Common.Models.FileStorage;
 using System;
 using System.IO;
@@ -16,7 +16,7 @@ public interface IFileStorageService
     /// <param name="fileName">Имя файла</param>
     /// <param name="ownerId">Идентификатор владельца</param>
     /// <returns></returns>
-    Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null);
+    Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null, bool isDeleted = false);
 
     /// <summary>
     /// Получить файл из хранилища
