@@ -5,11 +5,13 @@ using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
+using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Chat.Event;
 using Hackathon.Common.Models.Chat.Team;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
@@ -38,5 +40,6 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>()
         .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
         .AddScoped<Hackathon.Common.Abstraction.IValidator<NewEventChatMessage>, NewEventChatMessageValidator>()
-        .AddScoped<Hackathon.Common.Abstraction.IValidator<NewTeamChatMessage>, NewTeamChatMessageValidator>();
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<NewTeamChatMessage>, NewTeamChatMessageValidator>()
+        .AddScoped<IValidator<FileImage>, UploadImageValidator>();
 }

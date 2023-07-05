@@ -16,6 +16,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Models.FileStorage;
 
 namespace Hackathon.BL.User;
 
@@ -25,6 +26,7 @@ public class UserService: IUserService
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
     private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
+    private readonly IValidator<FileImage> _uploadProfileImageValidator;
     private readonly IUserRepository _userRepository;
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IFileStorageService _fileStorageService;
@@ -32,10 +34,13 @@ public class UserService: IUserService
     private readonly int _requestLifetimeMinutes;
     private readonly IMapper _mapper;
     private readonly AuthOptions _authOptions;
+    private readonly FileSettings _fileSettings;
 
     public UserService(
         IOptions<EmailSettings> emailSettings,
         IOptions<AuthOptions> authOptions,
+        IOptions<FileSettings> fileSettings,
+        IValidator<FileImage> uploadProfileImageValidator,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
         IValidator<UpdateUserParameters> updateUserParametersValidator,
@@ -46,9 +51,11 @@ public class UserService: IUserService
         IMapper mapper)
     {
         _authOptions = authOptions?.Value ?? new AuthOptions();
+        _fileSettings = fileSettings?.Value ?? new FileSettings();
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
         _updateUserParametersValidator = updateUserParametersValidator;
+        _uploadProfileImageValidator = uploadProfileImageValidator;
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
@@ -146,6 +153,13 @@ public class UserService: IUserService
             return Result<Guid>.NotValid(UserMessages.ProfileFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
+
+        var profileImageSettings = _fileSettings.FileImage.ProfileFileImage;
+
+        var image = new ProfileFileImage(stream, file.FileName,
+            profileImageSettings.MinLength, profileImageSettings.MaxLength);
+
+        await _uploadProfileImageValidator.ValidateAndThrowAsync(image);
 
         var user = await _userRepository.GetAsync(userId);
 
