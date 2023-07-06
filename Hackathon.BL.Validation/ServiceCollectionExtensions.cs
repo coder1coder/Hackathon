@@ -2,6 +2,7 @@ using FluentValidation;
 using Hackathon.BL.Validation.Chat;
 using Hackathon.BL.Validation.Common;
 using Hackathon.BL.Validation.Event;
+using Hackathon.BL.Validation.ImageFile;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;

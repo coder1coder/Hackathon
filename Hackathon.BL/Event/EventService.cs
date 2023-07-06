@@ -24,6 +24,8 @@ using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
+using Hackathon.Common.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Hackathon.BL.Event;
 
@@ -34,6 +36,7 @@ public class EventService : IEventService
 {
     private readonly IValidator<EventCreateParameters> _createEventModelValidator;
     private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
+    private readonly IValidator<FileImage> _uploadProfileImageValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
@@ -45,11 +48,13 @@ public class EventService : IEventService
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
+    private readonly FileSettings _fileSettings;
 
     public EventService(
         IValidator<EventCreateParameters> createEventModelValidator,
         IValidator<EventUpdateParameters> updateEventModelValidator,
         IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
+        IValidator<FileImage> uploadProfileImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,
@@ -59,11 +64,13 @@ public class EventService : IEventService
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
         IEventAgreementRepository eventAgreementRepository,
-        ILogger<EventService> logger)
+        ILogger<EventService> logger,
+        IOptions<FileSettings> fileSettings)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
         _getFilterModelValidator = getFilterModelValidator;
+        _uploadProfileImageValidator = uploadProfileImageValidator;
         _eventRepository = eventRepository;
         _teamService = teamService;
         _userRepository = userRepository;
@@ -74,6 +81,7 @@ public class EventService : IEventService
         _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
         _logger = logger;
+        _fileSettings = fileSettings?.Value ?? new FileSettings();
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -315,6 +323,13 @@ public class EventService : IEventService
             return Result<Guid>.NotValid(EventMessages.EventFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
+
+        var eventImageSettings = _fileSettings.FileImage.EventFileImage;
+
+        var image = new EventFileImage(stream, file.FileName,
+            eventImageSettings.MinLength, eventImageSettings.MaxLength);
+
+        await _uploadProfileImageValidator.ValidateAndThrowAsync(image);
 
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName, null, true);
 

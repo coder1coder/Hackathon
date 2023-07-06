@@ -1,8 +1,7 @@
 using FluentValidation;
-using Hackathon.BL.Validation.User;
 using Hackathon.Common.Models.FileStorage;
 
-namespace Hackathon.BL.Validation.Common;
+namespace Hackathon.BL.Validation.ImageFile;
 
 public class UploadImageValidator : AbstractValidator<FileImage>
 {

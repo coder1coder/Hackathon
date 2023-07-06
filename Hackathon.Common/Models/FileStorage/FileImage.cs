@@ -8,51 +8,51 @@ namespace Hackathon.Common.Models.FileStorage
 {
     public abstract class FileImage
     {
-        public const string ErrorSizeMessage = "Минимальный размер изображения должен быть: {0} x {1}";
-        public const string ErrorLengthMessage = "Размер изображения должен быть в пределах от {0} байт до {1} МБ";
-        public const string ErrorExtensionMessage = "Формат изображения должен быть: {0}";
+        private const string ErrorSizeMessage = "Минимальный размер изображения должен быть: {0} x {1}";
+        private const string ErrorLengthMessage = "Размер изображения должен быть в пределах от {0} байт до {1} МБ";
+        private const string ErrorExtensionMessage = "Формат изображения должен быть: {0}";
 
         private string[] _allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
 
         /// <summary>
         /// Минимальная ширина
         /// </summary>
-        public abstract int MinWidth { get; }
+        protected abstract int MinWidth { get; }
 
         /// <summary>
         /// Минимальная высота
         /// </summary>
-        public abstract int MinHeight { get; }
+        protected abstract int MinHeight { get; }
 
         /// <summary>
         /// Минимальный размер в байтах
         /// </summary>
-        public long MinLength { get; }
+        private long MinLength { get; }
 
         /// <summary>
         /// Максимальный размер в байтах
         /// </summary>
-        public long MaxLength { get; }
+        private long MaxLength { get; }
 
         /// <summary>
         /// Ширина в px
         /// </summary>
-        public int Width { get; }
+        private int Width { get; }
 
         /// <summary>
         /// Высота в px
         /// </summary>
-        public int Height { get; }
+        private int Height { get; }
 
         /// <summary>
         /// Размер в байтах
         /// </summary>
-        public long Length { get; }
+        private long Length { get; }
 
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string Extension { get; }
+        private string Extension { get; }
 
         public FileImage(Stream stream, string fileName, long minLength, long maxLenght)
         {
@@ -65,7 +65,7 @@ namespace Hackathon.Common.Models.FileStorage
             Length = stream.Length;
             MinLength = minLength;
             MaxLength = maxLenght;
-            Extension = Path.GetExtension(fileName);
+            Extension = Path.GetExtension(fileName)?.ToLower();
         }
 
         public Result IsValid()
@@ -93,7 +93,7 @@ namespace Hackathon.Common.Models.FileStorage
 
         private double GetMB()
         {
-            return Math.Round(MaxLength / 1024d);
+            return Math.Round(MaxLength / 1024d / 1000d);
         }
     }
 }
