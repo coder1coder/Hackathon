@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Models.FileStorage;
+using Hackathon.BL.Validation.Extensions;
 
 namespace Hackathon.BL.User;
 
@@ -26,7 +27,7 @@ public class UserService: IUserService
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
     private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
-    private readonly IValidator<FileImage> _uploadProfileImageValidator;
+    private readonly IValidator<IFileImage> _profileImageValidator;
     private readonly IUserRepository _userRepository;
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IFileStorageService _fileStorageService;
@@ -34,13 +35,11 @@ public class UserService: IUserService
     private readonly int _requestLifetimeMinutes;
     private readonly IMapper _mapper;
     private readonly AuthOptions _authOptions;
-    private readonly FileSettings _fileSettings;
 
     public UserService(
         IOptions<EmailSettings> emailSettings,
         IOptions<AuthOptions> authOptions,
-        IOptions<FileSettings> fileSettings,
-        IValidator<FileImage> uploadProfileImageValidator,
+        IValidator<IFileImage> profileImageValidator,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
         IValidator<UpdateUserParameters> updateUserParametersValidator,
@@ -51,11 +50,10 @@ public class UserService: IUserService
         IMapper mapper)
     {
         _authOptions = authOptions?.Value ?? new AuthOptions();
-        _fileSettings = fileSettings?.Value ?? new FileSettings();
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
         _updateUserParametersValidator = updateUserParametersValidator;
-        _uploadProfileImageValidator = uploadProfileImageValidator;
+        _profileImageValidator = profileImageValidator;
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
@@ -154,12 +152,9 @@ public class UserService: IUserService
 
         await using var stream = file.OpenReadStream();
 
-        var profileImageSettings = _fileSettings.FileImage.ProfileFileImage;
+        var image = ProfileFileImage.FromStream(stream, file.FileName);
 
-        var image = new ProfileFileImage(stream, file.FileName,
-            profileImageSettings.MinLength, profileImageSettings.MaxLength);
-
-        await _uploadProfileImageValidator.ValidateAndThrowAsync(image);
+        await _profileImageValidator.ValidateAndThrowAsync(image, options => options.IncludeRuleSets("ProfileImage"));
 
         var user = await _userRepository.GetAsync(userId);
 

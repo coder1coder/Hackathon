@@ -42,5 +42,5 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
         .AddScoped<Hackathon.Common.Abstraction.IValidator<NewEventChatMessage>, NewEventChatMessageValidator>()
         .AddScoped<Hackathon.Common.Abstraction.IValidator<NewTeamChatMessage>, NewTeamChatMessageValidator>()
-        .AddScoped<IValidator<FileImage>, UploadImageValidator>();
+        .AddScoped<IValidator<IFileImage>, FileImageValidator>();
 }

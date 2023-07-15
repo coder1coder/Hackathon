@@ -8,7 +8,12 @@ public class FileSettings
     public int UnusedFilesDeleteJobFrequencyInHours { get; set; } = JobsConstants.UnusedFilesDeleteJobFrequency;
 
     /// <summary>
-    /// Настройки файлов изображений
+    /// Настройки изображений профиля
     /// </summary>
-    public FileImageSettings FileImage { get; set; }
+    public ImageSettings ProfileFileImage { get; set; }
+
+    /// <summary>
+    /// Настройки изображений события
+    /// </summary>
+    public ImageSettings EventFileImage { get; set; }
 }
