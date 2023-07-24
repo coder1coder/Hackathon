@@ -7,6 +7,8 @@ import {IUser} from "../../../models/User/IUser";
 import {AuthService} from "../../../services/auth.service";
 import {FileStorageService} from "src/app/services/file-storage.service";
 import {UploadFileErrorMessages} from "../../../common/error-messages/upload-file-error-messages";
+import { IProblemDetails } from "src/app/models/IProblemDetails";
+import { ErrorProcessor } from "src/app/services/errorProcessor";
 
 @Component({
   selector: 'profile-image',
@@ -32,7 +34,8 @@ export class ProfileImageComponent implements OnInit {
     private snackService: SnackService,
     private userService: UserService,
     private authService: AuthService,
-    private fileStorageService: FileStorageService
+    private fileStorageService: FileStorageService,
+    private errorProcessor: ErrorProcessor
     ) {
   }
 
@@ -51,8 +54,8 @@ export class ProfileImageComponent implements OnInit {
       )
       .subscribe({
         next: (res: SafeUrl) => this.image = res,
-        error: (err: Error) => {
-          this.snackService.open(err?.message ?? UploadFileErrorMessages.FileUploadError)
+        error: err => {
+          this.errorProcessor.Process(err);
         }}
       );
   }

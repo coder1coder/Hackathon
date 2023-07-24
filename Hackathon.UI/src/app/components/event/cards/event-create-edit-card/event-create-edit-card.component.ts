@@ -299,7 +299,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           this.form.controls['imageId'].setValue(imageId);
           this.loadImage(imageId);
         },
-        error: (err: Error) => this.snackService.open(err?.message ?? UploadFileErrorMessages.FileUploadError)
+        error: (err: Error) => {
+          this.errorProcessor.Process(err);
+        }
       });
   }
 

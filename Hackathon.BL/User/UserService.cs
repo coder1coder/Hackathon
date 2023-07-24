@@ -16,6 +16,8 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Models.FileStorage;
+using Hackathon.BL.Validation.Extensions;
 
 namespace Hackathon.BL.User;
 
@@ -25,6 +27,7 @@ public class UserService: IUserService
     private readonly IValidator<SignUpModel> _signUpModelValidator;
     private readonly IValidator<SignInModel> _signInModelValidator;
     private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
+    private readonly IValidator<IFileImage> _profileImageValidator;
     private readonly IUserRepository _userRepository;
     private readonly IEmailConfirmationRepository _emailConfirmationRepository;
     private readonly IFileStorageService _fileStorageService;
@@ -36,6 +39,7 @@ public class UserService: IUserService
     public UserService(
         IOptions<EmailSettings> emailSettings,
         IOptions<AuthOptions> authOptions,
+        IValidator<IFileImage> profileImageValidator,
         IValidator<SignUpModel> signUpModelValidator,
         IValidator<SignInModel> signInModelValidator,
         IValidator<UpdateUserParameters> updateUserParametersValidator,
@@ -49,6 +53,7 @@ public class UserService: IUserService
         _signUpModelValidator = signUpModelValidator;
         _signInModelValidator = signInModelValidator;
         _updateUserParametersValidator = updateUserParametersValidator;
+        _profileImageValidator = profileImageValidator;
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
@@ -146,6 +151,10 @@ public class UserService: IUserService
             return Result<Guid>.NotValid(UserMessages.ProfileFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
+
+        var image = ProfileFileImage.FromStream(stream, file.FileName);
+
+        await _profileImageValidator.ValidateAndThrowAsync(image, options => options.IncludeRuleSets("ProfileImage"));
 
         var user = await _userRepository.GetAsync(userId);
 

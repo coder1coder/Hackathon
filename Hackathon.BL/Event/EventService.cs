@@ -24,6 +24,9 @@ using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
+using Hackathon.Common.Configuration;
+using Microsoft.Extensions.Options;
+using Hackathon.BL.Validation.Extensions;
 
 namespace Hackathon.BL.Event;
 
@@ -34,6 +37,7 @@ public class EventService : IEventService
 {
     private readonly IValidator<EventCreateParameters> _createEventModelValidator;
     private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
+    private readonly IValidator<IFileImage> _eventImageValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
@@ -50,6 +54,7 @@ public class EventService : IEventService
         IValidator<EventCreateParameters> createEventModelValidator,
         IValidator<EventUpdateParameters> updateEventModelValidator,
         IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
+        IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,
@@ -64,6 +69,7 @@ public class EventService : IEventService
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
         _getFilterModelValidator = getFilterModelValidator;
+        _eventImageValidator = eventImageValidator;
         _eventRepository = eventRepository;
         _teamService = teamService;
         _userRepository = userRepository;
@@ -315,6 +321,10 @@ public class EventService : IEventService
             return Result<Guid>.NotValid(EventMessages.EventFileImageIsNotBeEmpty);
 
         await using var stream = file.OpenReadStream();
+
+        var image = EventFileImage.FromStream(stream, file.FileName);
+
+        await _eventImageValidator.ValidateAndThrowAsync(image, options => options.IncludeRuleSets("EventImage"));
 
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName, null, true);
 
