@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;

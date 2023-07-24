@@ -50,11 +50,13 @@ public class EventServiceTests: BaseUnitTest
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
         _loggerMock = new Mock<ILogger<EventService>>();
+        var eventImageValidator = new Mock<IValidator<IFileImage>>();
 
         _service = new EventService(
             createValidatorMock.Object,
             updateValidatorMock.Object,
             getListValidatorMock.Object,
+            eventImageValidator.Object,
             _eventRepositoryMock.Object,
             teamServiceMock.Object,
             userRepositoryMock.Object,

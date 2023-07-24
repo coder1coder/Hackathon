@@ -8,6 +8,7 @@ using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
+using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -26,6 +27,7 @@ public class UserServiceTests: BaseUnitTest
     private readonly Mock<IOptions<AuthOptions>> _authOptionsMock;
     private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
+    private readonly Mock<IValidator<IFileImage>> _profileImageValidator;
 
     public UserServiceTests()
     {
@@ -38,6 +40,7 @@ public class UserServiceTests: BaseUnitTest
         _userRepositoryMock = new Mock<IUserRepository>();
         _emailConfirmationRepositoryMock = new Mock<IEmailConfirmationRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
+        _profileImageValidator = new Mock<IValidator<IFileImage>>();
     }
 
     [Fact]
@@ -62,6 +65,7 @@ public class UserServiceTests: BaseUnitTest
         var sut = new UserService(
             _emailSettingsMock.Object,
             _authOptionsMock.Object,
+            _profileImageValidator.Object,
             _signUpValidatorMock.Object,
             _signInValidatorMock.Object,
             _updateUserParametersValidator.Object,
