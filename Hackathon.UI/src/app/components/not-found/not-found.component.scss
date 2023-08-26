@@ -11,7 +11,7 @@
   width: 100%;
   height: 100%;
   line-height: 1.4;
-  padding: 0px 0px;
+  padding: 0 0;
 
   &-404 {
     position: relative;
@@ -21,14 +21,14 @@
   }
 
   h2 {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: Titillium Web Bold, Roboto, sans-serif;
     font-size: 26px;
     font-weight: 700;
     margin: 0;
   }
 
   h3 {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: Titillium Web Regular, Roboto Regular, sans-serif;
     font-size: 26px;
     font-weight: 500;
     margin: 0;

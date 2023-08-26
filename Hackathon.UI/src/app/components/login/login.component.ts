@@ -15,46 +15,44 @@ import {ErrorProcessor} from "../../services/errorProcessor";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-
 export class LoginComponent implements AfterViewInit  {
 
   @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
-  welcomeText: string = 'Добро пожаловать в систему Hackathon';
-
-  profileForm = new FormGroup({
+  public welcomeText: string = 'Добро пожаловать в систему Hackathon';
+  public isLoading: boolean = false;
+  public isPassFieldHide: boolean = true;
+  public siteKey: string;
+  public captchaEnabled: boolean = environment.captchaEnabled;
+  public googleClientEnabled: boolean = true;
+  public profileForm = new FormGroup({
     login: new FormControl(''),
     password: new FormControl('')
   })
 
-  isLoading: boolean = false;
-  isPassFieldHide: boolean = true;
-  siteKey!: string;
+  private captcha: string = "";
 
-  captchaEnabled:boolean = environment.captchaEnabled;
-  captcha: string = "";
-
-  constructor (private router: Router,
-              private routerService: RouterService,
-              private errorProcessor: ErrorProcessor,
-              private snackService: SnackService,
-              private authService: AuthService,
-              ) {
-
+  constructor (
+    private router: Router,
+    private routerService: RouterService,
+    private errorProcessor: ErrorProcessor,
+    private snackService: SnackService,
+    private authService: AuthService,
+  ) {
     if (router.url === '/logout')
       this.signOut();
 
     //if user is logged redirect to homepage
-    if (this.authService.isLoggedIn())
-      this.routerService.Profile.View();
+    if (this.authService.isLoggedIn()) this.routerService.Profile.View();
   }
 
   ngAfterViewInit(): void {
     this.profileForm.controls['login'].setErrors({ 'incorrect': false });
     this.profileForm.controls['password'].setErrors({ 'incorrect': false });
-    setTimeout(() => this.inputLogin?.nativeElement.focus())
+    setTimeout(() => this.inputLogin?.nativeElement.focus());
+    this.initSubscribe();
   }
 
-  signIn(){
+  public signIn(): void {
     if (!this.profileForm.valid) return;
 
     if (this.captchaEnabled && (this.captcha === "" || this.captcha.length === 0)) {
@@ -63,59 +61,59 @@ export class LoginComponent implements AfterViewInit  {
     }
 
     this.setLoading(true);
-
-    let login = this.profileForm.controls['login'].value;
-    let password = this.profileForm.controls['password'].value;
-
+    const login = this.profileForm.controls['login'].value;
+    const password = this.profileForm.controls['password'].value;
     this.authService.login(login, password)
       .pipe(
         finalize(() => this.setLoading(false))
       )
-      .subscribe(_ => {
+      .subscribe({
+        next: () => {
           this.routerService.Profile.View();
         },
-        errorContext => {
+        error: (errorContext) => {
           this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
           this.errorProcessor.Process(errorContext);
-        });
+        }
+      });
   }
 
-  signUp(){
+  public signUp(): void {
     this.routerService.Profile.Register();
   }
 
-  signOut() {
+  public getCaptchaResponse(captchaResponse: string): void {
+    this.captcha = captchaResponse;
+  }
+
+  public signInByGoogle(): void {
+    this.authService.signInByGoogle()
+      .then(user => {
+        let googleUser = this.initGoogleUser(user);
+        if (googleUser.isLoggedIn) {
+          this.authService.loginByGoogle(googleUser)
+          .subscribe({
+            next: () => {
+              this.routerService.Profile.View();
+            },
+            error: (err) => this.errorProcessor.Process(err, `Неизвестная ошибка при авторизация через Google сервис`)
+          });
+        }
+      })
+  }
+
+  private signOut(): void {
     this.authService.logout();
     this.routerService.Profile.Login();
   }
 
-  setLoading(isLoading:boolean){
+  private setLoading(isLoading: boolean): void {
     setTimeout(()=>{
       this.isLoading = isLoading;
     })
   }
 
-  getCaptchaResponse(captchaResponse: string) {
-    this.captcha = captchaResponse;
-  }
-
-  signInByGoogle() {
-    this.authService.signInByGoogle()
-      .then(user => {
-        let googleUser = this.initGoogleUser(user);
-        if(googleUser.isLoggedIn) {
-          this.authService.loginByGoogle(googleUser)
-          .subscribe(_ => {
-              this.routerService.Profile.View();
-            },
-            error => {
-              this.errorProcessor.Process(error, `Неизвестная ошибка при авторизация через Google сервис`);
-            });
-        }
-      })
-  }
-
-  initGoogleUser(user: any): GoogleUser {
+  private initGoogleUser(user: void | gapi.auth2.GoogleUser): GoogleUser {
     let googleUser = new GoogleUser();
     if(user != undefined) {
 
@@ -138,4 +136,12 @@ export class LoginComponent implements AfterViewInit  {
 
     return googleUser;
   }
+
+  private initSubscribe(): void {
+    this.authService.isGoogleClientEnabled()
+      .subscribe((res: boolean) => {
+        this.googleClientEnabled = res;
+      })
+  }
 }
+
