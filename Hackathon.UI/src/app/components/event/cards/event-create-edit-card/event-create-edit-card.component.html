@@ -268,7 +268,7 @@
         <div class="eventsNewForm__vertical-fields">
 
           <table mat-table [dataSource]="eventStatusDataSource"
-                 [class.empty]="eventStatusDataSource.data.length == 0">
+                 [class.empty]="eventStatusDataSource.data.length === 0">
 
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Статус</th>

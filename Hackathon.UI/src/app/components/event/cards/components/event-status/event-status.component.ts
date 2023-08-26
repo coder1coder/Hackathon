@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {EventStatus, EventStatusTranslator} from "../../../../../models/Event/EventStatus";
 
 @Component({
@@ -6,18 +6,8 @@ import {EventStatus, EventStatusTranslator} from "../../../../../models/Event/Ev
   templateUrl: './event-status.component.html',
   styleUrls: ['./event-status.component.scss']
 })
-export class EventStatusComponent implements OnInit {
+export class EventStatusComponent {
 
   @Input() status: EventStatus;
   public eventStatusTranslator = EventStatusTranslator;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  confirm():void{
-
-  }
-
 }

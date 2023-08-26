@@ -64,11 +64,6 @@
   }
 
   &-google {
-
-    &__button {
-
-    }
-
     &__block {
       @include flex-row;
       align-items: center;
@@ -80,10 +75,6 @@
       text-align: center;
       font-size: 18px;
       font-weight: lighter;
-    }
-
-    &__svg {
-      margin-top: 12px
     }
   }
 

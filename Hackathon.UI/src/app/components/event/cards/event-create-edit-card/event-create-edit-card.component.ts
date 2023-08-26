@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {IProblemDetails} from "../../../../models/IProblemDetails";
 import {ActivatedRoute} from "@angular/router";
 import {ICreateEvent} from "../../../../models/Event/ICreateEvent";
 import {IUpdateEvent} from "../../../../models/Event/IUpdateEvent";
@@ -170,8 +169,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       });
     }
   }
-
-
 
   public addStatus(): void {
     let filteredEventStatusValues = this.getAvlStatutes();
