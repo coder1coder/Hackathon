@@ -63,7 +63,7 @@ export class AuthService {
     if (!this.isLoggedIn())
       return null;
 
-    let tokenInfo = this.getTokenInfo();
+    const tokenInfo = this.getTokenInfo();
     if (tokenInfo == undefined)
       return null;
 
@@ -98,11 +98,9 @@ export class AuthService {
     return this.googleSigninService.signIn();
   }
 
-  // public signOutByGoogle(): any {
-  //   this.storage.removeItem(AuthConstants.STORAGE_AUTH_KEY);
-  //   this.storage.removeItem(AuthConstants.STORAGE_USER_KEY);
-  //   return this.googleSigninService.signOut();
-  // }
+  public isGoogleClientEnabled(): Observable<boolean> {
+    return this.googleSigninService.getGoogleServiceEnabled$;
+  }
 
   private getTokenInfo() : IGetTokenResponse | undefined {
     let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);

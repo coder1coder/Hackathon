@@ -1,4 +1,6 @@
 @use '@angular/material' as mat;
+@import 'assets/styles/fonts';
+@import 'assets/styles/material-fonts';
 @import 'assets/styles/theme';
 @import 'assets/styles/variables';
 @import 'assets/styles/mixins';
@@ -35,6 +37,13 @@ $theme-dark: mat.define-dark-theme((
 
 .theme-dark-mode {
   @include mat.all-component-themes($theme-dark);
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 40rem grey inset;
+  }
 }
 
 .theme-light-mode {
@@ -44,7 +53,7 @@ $theme-dark: mat.define-dark-theme((
 body {
   @include absolute0;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto Regular, Helvetica Neue, sans-serif;
   font-weight: 400;
 
   .theme-dark-mode & {
