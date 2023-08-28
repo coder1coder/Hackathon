@@ -1,0 +1,45 @@
+name: Deploy apps to Production
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '6.0.x' ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: Hackathon/Hackathon.Api
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      working-directory: Hackathon/Hackathon.Api
+
+    - name: Publish Hackathon.Api
+      run: dotnet publish -c Release -o hackathon_api
+      working-directory: Hackathon/Hackathon.Api
+
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Install rsync
+      run: sudo apt-get install -y rsync
+
+    - name: Deploy Hackathon.Api
+      run: rsync -avz -e 'ssh' Hackathon/Hackathon.Api ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/hackathon.api/
