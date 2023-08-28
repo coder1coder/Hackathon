@@ -4,9 +4,12 @@ import {ToolbarComponent} from "./toolbar/toolbar.component";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
-import {ProfileModule} from "../profile/profile.module";
 import {NavMenuComponent} from "./nav-menu/nav-menu.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {CommonModule} from "@angular/common";
+import {SharedModule} from "../_shared/shared.module";
+import {MatButtonModule} from "@angular/material/button";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations:[
@@ -15,16 +18,18 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     NavMenuComponent
   ],
   imports: [
-    ProfileModule,
-
+    MatButtonModule,
     MatIconModule,
     MatToolbarModule,
     MatMenuModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CommonModule,
+    SharedModule,
+    RouterModule
   ],
-  exports:[
-    DefaultLayoutComponent,
+  exports: [
     ToolbarComponent,
+    DefaultLayoutComponent,
   ]
 })
 export class LayoutModule{}

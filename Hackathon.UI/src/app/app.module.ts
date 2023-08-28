@@ -65,12 +65,12 @@ import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-g
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {NotificationModule} from "./components/notification/notification.module";
-import {ProfileModule} from "./components/profile/profile.module";
 import {ChatModule} from "./components/chat/chat.module";
 import {FriendshipModule} from "./components/friendship/friendship.module";
 import {CommonComponentsModule} from "./components/custom/common-components.module";
 import { LayoutModule } from './components/layouts/layout.module';
 import {UserComponentsModule} from "./components/user/user.module";
+import {SharedModule} from "./components/_shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -120,7 +120,6 @@ import {UserComponentsModule} from "./components/user/user.module";
     BrowserAnimationsModule,
 
     ChatModule,
-    ProfileModule,
     NotificationModule,
     FriendshipModule,
     CommonComponentsModule,
@@ -150,7 +149,8 @@ import {UserComponentsModule} from "./components/user/user.module";
     MatCardModule,
     MatSlideToggleModule,
     InfiniteScrollModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    SharedModule
   ],
   providers: [
     {

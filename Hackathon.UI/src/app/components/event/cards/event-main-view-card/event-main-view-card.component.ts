@@ -10,6 +10,7 @@ import {RouterService} from "../../../../services/router.service";
 import {KeyValue} from "@angular/common";
 import {EventService} from "../../../../services/event/event.service";
 import {EventCardBaseComponent} from "../components/event-card-base.component";
+import {AppStateService} from "../../../../services/state/app-state.service";
 
 @Component({
   selector: 'event-event-main-view-card',
@@ -28,7 +29,8 @@ export class EventMainViewCardComponent extends EventCardBaseComponent implement
     private activateRoute: ActivatedRoute,
     public eventService: EventService,
     private authService: AuthService,
-    public router: RouterService
+    public router: RouterService,
+    private appStateService: AppStateService
   ) {
     super();
     this.eventId = activateRoute.snapshot.params['eventId'];
@@ -36,6 +38,9 @@ export class EventMainViewCardComponent extends EventCardBaseComponent implement
   }
 
   ngOnInit(): void {
+
+    this.appStateService.title = `Событие: ${this.event.name}`;
+
     this.initData();
   }
 

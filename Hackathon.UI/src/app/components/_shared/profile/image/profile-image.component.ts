@@ -1,14 +1,22 @@
 import {Component, Input, OnInit, ViewChild} from "@angular/core";
-import {UserService} from "../../../services/user.service";
 import {BehaviorSubject, filter, mergeMap, of, Subject, switchMap, takeUntil} from "rxjs";
 import {SafeUrl} from "@angular/platform-browser";
-import {IUser} from "../../../models/User/IUser";
 import {FileStorageService} from "src/app/services/file-storage.service";
 import { ErrorProcessor } from "src/app/services/errorProcessor";
+import { UserService } from "src/app/services/user.service";
+import {IUser} from "../../../../models/User/IUser";
 
 @Component({
   selector: 'profile-image',
-  templateUrl: './profile-image.component.html',
+  template: `
+    <div class="noSelect" *ngIf="!image" [innerText]="userNameSymbols"></div>
+    <img *ngIf="image" [src]="image" alt="">
+
+    <input type="file" #selectedFile (change)="selectFile($event)">
+    <button (click)="selectedFile.click()" *ngIf="canUpload">
+        <mat-icon>photo_camera</mat-icon>
+    </button>
+  `,
   styleUrls:['./profile-image.component.scss']
 })
 

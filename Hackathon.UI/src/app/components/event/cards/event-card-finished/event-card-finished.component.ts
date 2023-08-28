@@ -6,6 +6,7 @@ import {Team} from "../../../../models/Team/Team";
 import {AuthService} from "../../../../services/auth.service";
 import {IUser} from "../../../../models/User/IUser";
 import {IProject} from "../../../../models/Project/IProject";
+import {AppStateService} from "../../../../services/state/app-state.service";
 
 @Component({
   selector: 'app-event-finished-view-card',
@@ -18,13 +19,17 @@ export class EventCardFinishedComponent extends EventCardBaseComponent implement
 
   constructor(
     public router: RouterService,
-    private authService: AuthService
+    private authService: AuthService,
+    private appStateService: AppStateService
   ) {
     super();
     this.userId = authService.getUserId() ?? 0;
   }
 
   ngOnInit(): void {
+    this.appStateService.title = 'Событие: ' + this.event.name;
+    this.appStateService.hideTitleBar = true;
+    this.appStateService.containerCssClasses = `dark-theme-color`;
   }
 
   public getEventMembers(): IUser[]{

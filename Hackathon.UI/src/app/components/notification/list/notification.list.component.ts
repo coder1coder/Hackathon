@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {BaseCollection} from "../../../models/BaseCollection";
 import {NotificationService} from "../../../services/notification.service";
 import {GetListParameters} from "../../../models/GetListParameters";
@@ -8,6 +8,7 @@ import {AuthService} from "../../../services/auth.service";
 import {NotificationType} from "../../../models/notifications/NotificationType";
 import {PageResultComponent} from "../../page-result.component";
 import {NotificationGroup} from "../../../models/notifications/notification-group";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   selector: 'notification-list',
@@ -15,7 +16,7 @@ import {NotificationGroup} from "../../../models/notifications/notification-grou
   styleUrls: ['./notification.list.component.scss']
 })
 
-export class NotificationListComponent extends PageResultComponent<Notification> implements AfterViewInit{
+export class NotificationListComponent extends PageResultComponent<Notification> implements OnInit, AfterViewInit{
 
   Notification = Notification;
   NotificationType = NotificationType;
@@ -23,7 +24,10 @@ export class NotificationListComponent extends PageResultComponent<Notification>
 
   byNotificationGroupFilter?: NotificationGroup;
 
-  constructor(private notificationService: NotificationService, private authService: AuthService) {
+  constructor(
+    private notificationService: NotificationService,
+    private authService: AuthService,
+    private appStateService: AppStateService) {
     super(NotificationListComponent.name);
   }
 
@@ -35,6 +39,10 @@ export class NotificationListComponent extends PageResultComponent<Notification>
         this.fetch();
     }
 
+  }
+
+  ngOnInit(): void {
+    this.appStateService.title = `Уведомления`
   }
 
   override fetch() {

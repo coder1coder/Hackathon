@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../../services/user.service";
 import {BaseCollection} from "../../../models/BaseCollection";
 import {BaseTableListComponent} from "../../BaseTableListComponent";
@@ -7,6 +7,7 @@ import {AuthService} from "../../../services/auth.service";
 import {UserFilter} from "../../../models/User/UserFilter";
 import {IUser} from "../../../models/User/IUser";
 import {RouterService} from "../../../services/router.service";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   selector: 'user-list',
@@ -14,12 +15,17 @@ import {RouterService} from "../../../services/router.service";
   styleUrls: ['./user.list.component.scss']
 })
 
-export class UserListComponent extends BaseTableListComponent<IUser>{
+export class UserListComponent extends BaseTableListComponent<IUser> implements OnInit{
 
   constructor(private usersService: UserService,
               private routerService: RouterService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private appStateService: AppStateService) {
     super(UserListComponent.name);
+  }
+
+  ngOnInit(): void {
+    this.appStateService.title = `Пользователи`
   }
 
   getDisplayColumns(): string[] {

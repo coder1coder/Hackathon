@@ -13,6 +13,7 @@ import {PageSettingsDefaults} from "../../../models/PageSettings";
 import {DATE_FORMAT} from "../../../common/date-formats";
 import {of, Subject, switchMap, takeUntil} from "rxjs";
 import {EventClient} from "../../../services/event/event.client";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   selector: 'event-list',
@@ -40,10 +41,16 @@ export class EventListComponent implements OnInit {
     public router: RouterService,
     private authService: AuthService,
     private fb: FormBuilder,
+    private appStateService: AppStateService
   ) {
   }
 
   ngOnInit() {
+
+    this.appStateService.title = `События`;
+    this.appStateService.containerCssClasses = `layoutCssClasses`;
+    this.appStateService.hideContentWhileLoading = false;
+
     this.initDefaultSettings();
     this.initFormFilter();
     this.fetch(true);

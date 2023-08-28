@@ -4,7 +4,6 @@ import {Subject} from "rxjs";
 
 @Injectable()
 export abstract class EventCardBaseComponent implements OnDestroy {
-  @Input() isLoading: boolean = false;
   @Input() event: Event;
 
   protected eventId: number;

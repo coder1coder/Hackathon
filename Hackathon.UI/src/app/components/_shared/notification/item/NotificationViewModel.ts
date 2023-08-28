@@ -1,4 +1,4 @@
-import {Notification} from "../../../models/notifications/Notification";
+import {Notification} from "src/app/models/notifications/Notification";
 
 export class NotificationViewModel
 {

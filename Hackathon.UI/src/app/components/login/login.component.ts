@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from "../../services/auth.service";
 import {finalize} from "rxjs/operators";
@@ -9,6 +9,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {RouterService} from "../../services/router.service";
 import {SnackService} from "../../services/snack.service";
 import {ErrorProcessor} from "../../services/errorProcessor";
+import {AppStateService} from "../../services/state/app-state.service";
 
 @Component({
   selector: 'app-login',
@@ -37,6 +38,7 @@ export class LoginComponent implements AfterViewInit  {
     private errorProcessor: ErrorProcessor,
     private snackService: SnackService,
     private authService: AuthService,
+    private appStateService: AppStateService
   ) {
     if (router.url === '/logout')
       this.signOut();

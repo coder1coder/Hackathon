@@ -11,6 +11,7 @@ import {SnackService} from "../../../../services/snack.service";
 import {ErrorProcessor} from "../../../../services/errorProcessor";
 import {ProjectGitDialog} from "../../../custom/project-git-dialog/project-git-dialog.component";
 import {IProjectUpdateFromGitBranch} from "../../../../models/Project/IProjectUpdateFromGitBranch";
+import {AppStateService} from "../../../../services/state/app-state.service";
 
 @Component({
   selector: `event-card-started`,
@@ -40,11 +41,17 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     private errorProcessor: ErrorProcessor,
     private authService:AuthService,
     private projectApiClient: ProjectClient,
-    private dialogService: MatDialog) {
+    private dialogService: MatDialog,
+    private appStateService: AppStateService) {
     super();
   }
 
   ngOnInit(): void {
+
+    this.appStateService.hideTitleBar = true;
+    this.appStateService.logoMinWidth =(this.sideBarWidthPx - 16).toString();
+    this.appStateService.containerCssClasses = `relative`;
+
     this.currentUserId = this.authService.getUserId();
     this.fetchProject();
     this._selectedChatIndex.subscribe((value:number) =>{

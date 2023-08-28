@@ -9,7 +9,7 @@ import {AppStateService} from "../../../services/state/app-state.service";
 
 export class DefaultLayoutComponent {
 
-  public title: string;
+  public title: string | undefined;
   public hideTitleBar: boolean;
   public hideContentWhileLoading: boolean;
   public isLoading: boolean;
@@ -20,14 +20,14 @@ export class DefaultLayoutComponent {
 
   constructor(private appStateService: AppStateService) {
 
-    this.title = appStateService.title;
-    this.hideTitleBar = appStateService.hideTitleBar;
-    this.hideContentWhileLoading = appStateService.hideContentWhileLoading;
-    this.isLoading = appStateService.isLoading;
-    this.showLoadingIndicator = appStateService.showLoadingIndicator;
-    this.containerCssClasses = appStateService.containerCssClasses;
-    this.layoutCssClasses = appStateService.layoutCssClasses;
-    this.logoMinWidth = appStateService.logoMinWidth;
+    this.appStateService.onTitleChanged.subscribe({next: (value) => this.title = value});
+    this.appStateService.onHideTitleBarChanged.subscribe({next: (value) => this.hideTitleBar = value});
+    this.appStateService.onHideContentWhileLoadingChanged.subscribe({next: (value) => this.hideContentWhileLoading = value});
+    this.appStateService.onIsLoadingChanged.subscribe({next: (value) => this.isLoading = value});
+    this.appStateService.onShowLoadingIndicatorChanged.subscribe({next: (value) => this.showLoadingIndicator = value});
+    this.appStateService.onContainerCssClassesChanged.subscribe({next: (value) => this.containerCssClasses = value});
+    this.appStateService.onLogoMinWidthChanged.subscribe({next: (value) => this.logoMinWidth = value});
+    this.appStateService.onLayoutCssClassesChanged.subscribe({next: (value) => this.layoutCssClasses = value});
 
   }
 }

@@ -1,8 +1,4 @@
-<layout-default
-  [isLoading]="isLoading"
-  [hideTitleBar]="false" class="hackathon-background"
-  [containerCssClasses]="'dark-theme-color'"
->
+
   <div class="event-alert" alert *ngIf="eventService.isEventOwner(event)">
     <alert>Вы являетесь организатором события</alert>
   </div>
@@ -135,8 +131,6 @@
 
     </div>
   </div>
-
-</layout-default>
 
 <ng-template #empty>
   <div>Нет элементов для отображения</div>

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, Input, Output} from "@angular/core";
 import {NotificationViewModel} from "../NotificationViewModel";
-import {Notification} from "../../../../models/notifications/Notification";
-import {NotificationType} from "../../../../models/notifications/NotificationType";
+import {Notification} from "src/app/models/notifications/Notification";
+import {NotificationType} from "src/app/models/notifications/NotificationType";
 
 @Component({
   selector: 'base-notification-component',

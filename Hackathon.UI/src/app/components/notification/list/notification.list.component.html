@@ -1,69 +1,66 @@
-<layout-default [title]="'Уведомления'" >
-  <div *ngIf="items != undefined && items.length > 0" actions>
-    <div class="button notification-button">
-      <button mat-button color="primary"
-              *ngIf="false"
-              (click)="removeAll()"
-              [disabled]="false">
-        Удалить все уведомления
-      </button>
+<div *ngIf="items != undefined && items.length > 0" actions>
+  <div class="button notification-button">
+    <button mat-button color="primary"
+            *ngIf="false"
+            (click)="removeAll()"
+            [disabled]="false">
+      Удалить все уведомления
+    </button>
+  </div>
+</div>
+
+<div class="notifications__wrapper">
+  <div class="notifications__groups">
+    <div class="notifications__groups__item">
+      <button mat-button class="notifications__groups__item-name"
+              [class.notifications__groups__item-selected]="byNotificationGroupFilter == undefined"
+              (click)="resetByGroupFilter()">Все</button>
+    </div>
+    <div class="notifications__groups__item">
+      <button mat-button class="notifications__groups__item-name"
+              [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Events"
+              (click)="setByGroupFilter(NotificationGroup.Events)">Мероприятия</button>
+    </div>
+    <div class="notifications__groups__item">
+      <button mat-button class="notifications__groups__item-name"
+              [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Teams"
+              (click)="setByGroupFilter(NotificationGroup.Teams)">Команды</button>
+    </div>
+    <div class="notifications__groups__item">
+      <button mat-button class="notifications__groups__item-name"
+              [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Friends"
+              (click)="setByGroupFilter(NotificationGroup.Friends)">Друзья</button>
+    </div>
+    <div class="notifications__groups__item">
+      <button mat-button class="notifications__groups__item-name"
+              [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.System"
+              (click)="setByGroupFilter(NotificationGroup.System)">Система</button>
     </div>
   </div>
+  <div class="notifications__items">
 
-  <div class="notifications__wrapper">
-      <div class="notifications__groups">
-        <div class="notifications__groups__item">
-          <button mat-button class="notifications__groups__item-name"
-                  [class.notifications__groups__item-selected]="byNotificationGroupFilter == undefined"
-                  (click)="resetByGroupFilter()">Все</button>
-        </div>
-        <div class="notifications__groups__item">
-          <button mat-button class="notifications__groups__item-name"
-                  [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Events"
-                  (click)="setByGroupFilter(NotificationGroup.Events)">Мероприятия</button>
-        </div>
-        <div class="notifications__groups__item">
-          <button mat-button class="notifications__groups__item-name"
-                  [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Teams"
-                  (click)="setByGroupFilter(NotificationGroup.Teams)">Команды</button>
-        </div>
-        <div class="notifications__groups__item">
-          <button mat-button class="notifications__groups__item-name"
-                  [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.Friends"
-                  (click)="setByGroupFilter(NotificationGroup.Friends)">Друзья</button>
-        </div>
-        <div class="notifications__groups__item">
-          <button mat-button class="notifications__groups__item-name"
-                  [class.notifications__groups__item-selected]="byNotificationGroupFilter == NotificationGroup.System"
-                  (click)="setByGroupFilter(NotificationGroup.System)">Система</button>
-        </div>
-      </div>
-      <div class="notifications__items">
+    <ng-template [ngIf]="items != undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
 
-        <ng-template [ngIf]="items != undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
+      <notification-item [notification]="notification" *ngFor="let notification of items"
+                         (click)="rowClick(notification)"
+                         (onRemoved)="onNotificationRemoved($event)"></notification-item>
 
-          <notification-item [notification]="notification" *ngFor="let notification of items"
-                             (click)="rowClick(notification)"
-                             (onRemoved)="onNotificationRemoved($event)"></notification-item>
+      <mat-paginator [length]="pageSettings.length"
+                     [pageSize]="pageSettings.pageSize"
+                     [pageSizeOptions]="[5, 10, 25, 100]"
+                     (page)="setPageSettings($event)"
+                     aria-label="Select page">
+      </mat-paginator>
 
-          <mat-paginator [length]="pageSettings.length"
-                         [pageSize]="pageSettings.pageSize"
-                         [pageSizeOptions]="[5, 10, 25, 100]"
-                         (page)="setPageSettings($event)"
-                         aria-label="Select page">
-          </mat-paginator>
+    </ng-template>
 
-        </ng-template>
+    <ng-template #notificationsEmpty>
+      <mat-list role="list">
+        <mat-list-item role="listitem">
+          Нет уведомлений
+        </mat-list-item>
+      </mat-list>
+    </ng-template>
 
-        <ng-template #notificationsEmpty>
-          <mat-list role="list">
-            <mat-list-item role="listitem">
-              Нет уведомлений
-            </mat-list-item>
-          </mat-list>
-        </ng-template>
-
-      </div>
-    </div>
-
-</layout-default>
+  </div>
+</div>

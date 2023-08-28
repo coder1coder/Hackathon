@@ -4,6 +4,7 @@ import { EventService } from "../../../../services/event/event.service";
 import { Event } from "../../../../models/Event/Event";
 import { EventStatusTranslator } from "../../../../models/Event/EventStatus";
 import { AuthService } from "../../../../services/auth.service";
+import {AppStateService} from "../../../../services/state/app-state.service";
 
 @Component({
   selector: 'app-event-card-published',
@@ -17,15 +18,19 @@ export class EventCardPublishedComponent extends EventCardBaseComponent implemen
 
   constructor(
     public eventService: EventService,
-    private authService: AuthService
+    private authService: AuthService,
+    private appStateService: AppStateService
   ) {
     super();
     this.userId = authService.getUserId() ?? 0;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.appStateService.hideTitleBar = false;
+    this.appStateService.containerCssClasses = `dark-theme-color`;
+  }
 
   public getUsersCount(event: Event): number {
-    return Event.getUsersCount(this.event);
+    return Event.getUsersCount(event);
   }
 }

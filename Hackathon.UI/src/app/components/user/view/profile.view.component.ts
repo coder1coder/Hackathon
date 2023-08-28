@@ -17,6 +17,7 @@ import {WithFormComponentBase} from "../../WithFormComponentBase";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IKeyValue} from "../../../common/key-value.interface";
 import {emailRegex} from "../../../common/patterns/email-regex";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -35,7 +36,6 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
   public authUserId: number;
   public isEditMode: boolean = false;
   public canUploadImage: boolean = false;
-  public isLoading: boolean = true;
   public userProfileReaction = UserProfileReaction;
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
@@ -50,7 +50,8 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
     private userService: UserService,
     private userProfileReactionService: UserProfileReactionService,
     private snackService: SnackService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appStateService: AppStateService
   ) {
     super();
     this.userService = userService;
@@ -60,6 +61,9 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
   }
 
   ngOnInit(): void {
+
+    this.appStateService.title = `Профиль`;
+
     this.fetchData();
     this.initForm();
   }
@@ -75,7 +79,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
   public userEdit(): void {
     this.isEditMode = true;
     if (Boolean(this.user)) {
-      this.form.setValue(this.mapUserValue(this.user));
+      this.form.setValue(ProfileViewComponent.mapUserValue(this.user));
     }
   }
 
@@ -84,7 +88,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
       id: this.userId,
       ...this.form.getRawValue()
     };
-    if (JSON.stringify(request) !== JSON.stringify(this.mapUserValue(this.user))) {
+    if (JSON.stringify(request) !== JSON.stringify(ProfileViewComponent.mapUserValue(this.user))) {
       this.userService.updateUser(request)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -162,7 +166,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
   }
 
   private fetchData(): void {
-    this.isLoading = true;
+    this.appStateService.isLoading = true;
     this.userService.getById(this.userId)
       ?.pipe(
         takeUntil(this.destroy$),
@@ -180,7 +184,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
           return of(null)
         })
       ).subscribe((res) => {
-        this.isLoading = false;
+        this.appStateService.isLoading = false;
         this.userTeam = res
       }
     )
@@ -193,7 +197,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
     })
   }
 
-  private mapUserValue(user: IUser): IKeyValue {
+  private static mapUserValue(user: IUser): IKeyValue {
     return {
       fullName: user.fullName ? user.fullName : null,
       email: user.email?.address ? user.email.address : null,

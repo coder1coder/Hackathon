@@ -10,6 +10,7 @@ import {ITeamJoinRequest, TeamJoinRequestStatus, TeamJoinRequestStatusTranslator
 import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {ITeamJoinRequestFilter} from "../../../models/Team/ITeamJoinRequestFilter";
 import {MatTableDataSource} from "@angular/material/table";
+import {AppStateService} from "../../../services/state/app-state.service";
 
 @Component({
   selector: 'userTeam',
@@ -19,7 +20,6 @@ import {MatTableDataSource} from "@angular/material/table";
 
 export class UserTeamComponent implements OnInit {
   public team: Team;
-  public isLoading: boolean = true;
 
   private destroy$ = new Subject();
 
@@ -30,7 +30,8 @@ export class UserTeamComponent implements OnInit {
     public routerService: RouterService,
     private teamClient: TeamClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public appStateService: AppStateService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +39,9 @@ export class UserTeamComponent implements OnInit {
 
     this.fetchTeam();
     this.fetchSentJoinRequests();
+
+    this.appStateService.showLoadingIndicator = false;
+    this.appStateService.title = this.team ? 'Моя команда: ' + this.team?.name : 'Моя команда';
   }
 
   public leaveTeam(): void  {
@@ -52,25 +56,25 @@ export class UserTeamComponent implements OnInit {
   }
 
   private fetchTeam() {
-    this.isLoading = true;
+    this.appStateService.isLoading = true;
 
     this.teamClient.getMyTeam()
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false),
+        finalize(() => this.appStateService.isLoading = false),
       )
       .subscribe({
         next: (res) => {
           this.team = res;
         },
         error: () => {
-          this.isLoading = false;
+          this.appStateService.isLoading = false;
         }
       });
   }
 
   private fetchSentJoinRequests() {
-    this.isLoading = true;
+    this.appStateService.isLoading = true;
 
     let parameters: GetListParameters<ITeamJoinRequestFilter> = {
       Filter: {
@@ -85,14 +89,14 @@ export class UserTeamComponent implements OnInit {
     this.teamClient.getJoinRequests(parameters)
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false),
+        finalize(() => this.appStateService.isLoading = false),
       )
       .subscribe({
         next: (res) => {
           this.sentTeamJoinRequestsDataSource.data = res?.items;
         },
         error: () => {
-          this.isLoading = false;
+          this.appStateService.isLoading = false;
         }
       });
   }
@@ -103,7 +107,7 @@ export class UserTeamComponent implements OnInit {
       comment: null
     })
       .subscribe({
-        next: (res) => {
+        next: (_) => {
           this.fetchSentJoinRequests();
         },
         error: () => {

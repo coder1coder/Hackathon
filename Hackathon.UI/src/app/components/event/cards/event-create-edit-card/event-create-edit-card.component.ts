@@ -28,6 +28,7 @@ import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {IEventTaskItem} from "../../../../models/Event/IEventTaskItem";
 import {UploadFileErrorMessages} from "../../../../common/error-messages/upload-file-error-messages";
 import { ErrorProcessor } from "src/app/services/errorProcessor";
+import {AppStateService} from "../../../../services/state/app-state.service";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -68,7 +69,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private errorProcessor: ErrorProcessor
+    private errorProcessor: ErrorProcessor,
+    private appStateService: AppStateService
     ) {
     super();
     this.eventId = activateRoute.snapshot.params['eventId'];
@@ -76,6 +78,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   }
 
   ngOnInit(): void {
+
+      this.appStateService.title = this.editMode ? 'Событие' : 'Новое событие';
      this.initForm();
   }
 
