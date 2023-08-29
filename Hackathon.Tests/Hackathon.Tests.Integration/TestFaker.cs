@@ -8,6 +8,9 @@ using Hackathon.DAL.Entities.Event;
 using MapsterMapper;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace Hackathon.Tests.Integration;
 
@@ -43,16 +46,13 @@ public class TestFaker
         return _mapper.Map<List<EventModel>>(eventEntities);
     }
 
-    public static IFormFile GetFormFile()
+    public static IFormFile GetEmptyImage(MemoryStream stream, int width, int height)
     {
-        var content = Path.GetTempFileName();
-        const string fileName = "test.jpg";
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        writer.Write(content);
-        writer.Flush();
-        stream.Position = 0;
+        using var image = new Image<Rgba32>(width, height);
+        image.Mutate(ctx => ctx.BackgroundColor(Rgba32.ParseHex("#ffffff")));
+        image.SaveAsJpeg(stream);
 
+        var fileName = $"{Guid.NewGuid()}.jpg";
         var fileMock = new FormFile(stream, 0, stream.Length, "file", fileName)
         {
             Headers = new HeaderDictionary(),

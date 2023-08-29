@@ -4,8 +4,10 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.Contracts.Requests.Event;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.BL.Validation.ImageFile;
 using Refit;
 using Xunit;
 
@@ -172,7 +174,8 @@ public class EventControllerTests : BaseIntegrationTest
     public async Task UploadEventImage_Should_Return_Valid_Guid()
     {
         //arrange
-        var file = TestFaker.GetFormFile();
+        await using var memoryStream = new MemoryStream();
+        var file = TestFaker.GetEmptyImage(memoryStream, FileImageValidator.MinWidthEventImage, FileImageValidator.MinHeightEventImage);
         var streamPath = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
 
         //act

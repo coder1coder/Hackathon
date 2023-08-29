@@ -7,17 +7,17 @@ namespace Hackathon.BL.Validation.ImageFile;
 
 public class FileImageValidator : AbstractValidator<IFileImage>
 {
-    private string[] _allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
+    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png" };
 
-    public int MinWidthProfileImage => 150;
-    public int MinHeightProfileImage => 150;
+    public const int MinWidthProfileImage = 150;
+    public const int MinHeightProfileImage = 150;
 
-    public int MinWidthEventImage => 500;
-    public int MinHeightEventImage => 500;
+    public const int MinWidthEventImage = 500;
+    public const int MinHeightEventImage = 500;
 
-    public FileImageValidator(IOptions<FileSettings> fileSettings)
+    public FileImageValidator(IOptions<FileSettings> fileSettingsOptions)
     {
-        var _fileSettings = fileSettings?.Value ?? new FileSettings();
+        var fileSettings = fileSettingsOptions?.Value ?? new FileSettings();
 
         //Правила валидации для изображений профиля
         RuleSet("ProfileImage", () =>
@@ -31,8 +31,8 @@ public class FileImageValidator : AbstractValidator<IFileImage>
                 .WithMessage(GetErrorSizeMessage(MinWidthProfileImage, MinHeightProfileImage));
 
             RuleFor(x => x.Length)
-                .Must(length => length >= _fileSettings.ProfileFileImage.MinLength && length <= _fileSettings.ProfileFileImage.MaxLength)
-                .WithMessage(GetErrorLengthMessage(_fileSettings.ProfileFileImage.MinLength, _fileSettings.ProfileFileImage.MaxLength));
+                .Must(length => length >= fileSettings.ProfileFileImage.MinLength && length <= fileSettings.ProfileFileImage.MaxLength)
+                .WithMessage(GetErrorLengthMessage(fileSettings.ProfileFileImage.MinLength, fileSettings.ProfileFileImage.MaxLength));
 
             RuleFor(x => x.Extension)
                 .Must(extension => _allowedExtensions.Contains(extension))
@@ -51,8 +51,8 @@ public class FileImageValidator : AbstractValidator<IFileImage>
                 .WithMessage(GetErrorSizeMessage(MinWidthEventImage, MinHeightEventImage));
 
             RuleFor(x => x.Length)
-                .Must(length => length >= _fileSettings.EventFileImage.MinLength && length <= _fileSettings.EventFileImage.MaxLength)
-                .WithMessage(GetErrorLengthMessage(_fileSettings.EventFileImage.MinLength, _fileSettings.EventFileImage.MaxLength));
+                .Must(length => length >= fileSettings.EventFileImage.MinLength && length <= fileSettings.EventFileImage.MaxLength)
+                .WithMessage(GetErrorLengthMessage(fileSettings.EventFileImage.MinLength, fileSettings.EventFileImage.MaxLength));
 
             RuleFor(x => x.Extension)
                 .Must(extension => _allowedExtensions.Contains(extension))
@@ -62,13 +62,10 @@ public class FileImageValidator : AbstractValidator<IFileImage>
 
     private string GetErrorSizeMessage(int minWidth, int minHeight) => string.Format(FileImageErrorMessages.ErrorSizeMessage,
         minWidth, minHeight);
-    private string GetErrorLengthMessage(long minLength, long maxLength) => string.Format(FileImageErrorMessages.ErrorLengthMessage, 
-        minLength, GetMB(maxLength));
+    private string GetErrorLengthMessage(long minLength, long maxLength) => string.Format(FileImageErrorMessages.ErrorLengthMessage,
+        minLength, GetMegabytesFromBytes(maxLength));
     private string GetErrorExtensionMessage() => string.Format(FileImageErrorMessages.ErrorExtensionMessage,
         string.Join(" ", _allowedExtensions));
 
-    private double GetMB(long maxLength)
-    {
-        return Math.Round(maxLength / 1024d / 1000d);
-    }
+    private static double GetMegabytesFromBytes(long bytes) => Math.Round(bytes / 1024d / 1000d);
 }

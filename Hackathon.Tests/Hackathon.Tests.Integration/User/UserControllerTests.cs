@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Contracts.Requests.User;
 using Refit;
 using Xunit;
@@ -38,12 +40,13 @@ public class UserControllerTests: BaseIntegrationTest
     public async Task UploadProfileImage_Should_Return_Valid_Guid()
     {
         //arrange
-        var file = TestFaker.GetFormFile();
+        await using var stream = new MemoryStream();
+        var file = TestFaker.GetEmptyImage(stream, FileImageValidator.MinWidthProfileImage, FileImageValidator.MinHeightProfileImage);
         var streamPath = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
-        
+
         //act
         var uploadFileId = await UsersApi.UploadProfileImage(streamPath);
-        
+
         //assert
         Assert.NotEqual(uploadFileId, Guid.Empty);
     }
