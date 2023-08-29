@@ -1,0 +1,54 @@
+name: Deploy UI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./Hackathon.UI
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+
+      - name: NPM Install
+        run: npm install
+        working-directory: ${{env.working-directory}}
+
+      - name: NPM Install Angular
+        run: npm install -g @angular/cli > /dev/null
+
+      - name: NPM build Angular Production
+        run: ng build --prod
+        working-directory: ${{env.working-directory}}
+
+      - name: LS 1
+        run: ls -la
+
+      - name: LS 2
+        run: ls -la
+        working-directory: ${{env.working-directory}}
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
+
+      - name: Deploy Hackathon.UI
+        run: rsync -avz -e 'ssh' dist/hackathon.ui/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.SSH_DEPLOY_UI_PATH }}
+        working-directory: ${{env.working-directory}}

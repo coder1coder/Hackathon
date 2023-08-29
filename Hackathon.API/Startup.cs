@@ -65,11 +65,8 @@ public class Startup
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
 
-        var emailSettings = Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
-        var s3Options = Configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
-
         services
-            .RegisterServices(emailSettings, s3Options)
+            .RegisterServices(Configuration)
             .RegisterValidators()
             .RegisterIntegrationEvents()
             .RegisterApiJobs()
@@ -151,8 +148,8 @@ public class Startup
 
         var appConfig = appSettings.Value;
 
-        if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
-            app.UsePathBase(appConfig.PathBase);
+        // if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
+        //     app.UsePathBase(appConfig.PathBase);
 
         if (_environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
@@ -160,7 +157,7 @@ public class Startup
         app.UseSwagger()
         .UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint($"{appConfig.PathBase?.Trim()}/swagger/v1/swagger.json", "Hackathon.API v1");
+            // c.SwaggerEndpoint($"{appConfig.PathBase?.Trim().TrimEnd('/')}/swagger/v1/swagger.json", "Hackathon.API v1");
             c.DocExpansion(DocExpansion.None);
         })
         .UseForwardedHeaders(new ForwardedHeadersOptions

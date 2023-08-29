@@ -5,6 +5,7 @@ public sealed class EmailSenderSettings
     /// <summary>
     /// Сервер
     /// </summary>
+    /// <remarks>Не может быть NULL или Empty, при регистрации сервиса упадет ошибка</remarks>
     public string Server { get; set; }
 
     /// <summary>

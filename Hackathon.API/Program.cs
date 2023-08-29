@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Hackathon.API.Extensions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,11 @@ public class Program
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host
             .CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((context, x) =>
+            {
+                x.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true, false)
+                    .AddEnvironmentVariables();
+            })
             .UseSerilog((context, _, configuration) => configuration
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder())

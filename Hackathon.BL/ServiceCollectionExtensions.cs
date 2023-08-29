@@ -23,14 +23,19 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Mail;
 using Hackathon.Common.Abstraction.Email;
+using Microsoft.Extensions.Configuration;
 
 namespace Hackathon.BL;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services,
-        EmailSettings emailSettings, S3Options s3Options)
+        IConfiguration configuration)
     {
+        var emailSettings = configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>() ?? new EmailSettings();
+
+        var s3Options = configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
+
         services
             .AddScoped<ITeamChatService, TeamBaseChatService>()
             .AddScoped<IEventChatService, EventBaseChatService>()
@@ -57,7 +62,8 @@ public static class ServiceCollectionExtensions
                 EnableSsl = emailSettings.EmailSender?.EnableSsl ?? default,
                 UseDefaultCredentials = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(emailSettings.EmailSender?.Username,
+                Credentials = new NetworkCredential(
+                    emailSettings.EmailSender?.Username,
                     emailSettings.EmailSender?.Password)
             })
             .AddSingleton(new AmazonS3Client(

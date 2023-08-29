@@ -1,8 +1,6 @@
-name: Deploy apps to Production
+name: Deploy API
 
-on:
-  push:
-    branches: [ master ]
+on: workflow_dispatch
 
 jobs:
   build:
@@ -21,15 +19,12 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: Hackathon/Hackathon.Api
 
     - name: Build
       run: dotnet build --no-restore --configuration Release
-      working-directory: Hackathon/Hackathon.Api
 
     - name: Publish Hackathon.Api
       run: dotnet publish -c Release -o hackathon_api
-      working-directory: Hackathon/Hackathon.Api
 
     - name: Configure SSH
       run: |
@@ -42,4 +37,4 @@ jobs:
       run: sudo apt-get install -y rsync
 
     - name: Deploy Hackathon.Api
-      run: rsync -avz -e 'ssh' Hackathon/Hackathon.Api ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/hackathon.api/
+      run: rsync -avz -e 'ssh' hackathon_api/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/hackathon.api/
