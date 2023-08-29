@@ -28,10 +28,10 @@ namespace Hackathon.Common.Models.FileStorage
 
         private EventFileImage()
         {
-            
+
         }
 
-        private EventFileImage(int width, int height, long length, string extension) 
+        private EventFileImage(int width, int height, long length, string extension)
         {
             Width = width;
             Height = height;
@@ -47,7 +47,7 @@ namespace Hackathon.Common.Models.FileStorage
                 return new EventFileImage(image.Width, image.Height, stream.Length,
                     Path.GetExtension(fileName)?.ToLower());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new EventFileImage();
             }

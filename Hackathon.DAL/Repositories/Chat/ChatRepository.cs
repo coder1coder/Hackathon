@@ -1,14 +1,13 @@
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
-using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Hackathon.DAL.Repositories.Chat;
 
@@ -30,7 +29,7 @@ where TChatMessage: class, IChatMessage
     public async Task<BaseCollection<TChatMessage>> GetMessagesByKeyAsync(string key, int offset = 0, int limit = 300)
     {
         var items = RedisDatabase.SetScan(GetRedisKey(key))
-            .Select(x => JsonConvert.DeserializeObject<TChatMessage>(x))
+            .Select(x => JsonSerializer.Deserialize<TChatMessage>(x))
             .ToArray();
 
         var totalCount = items.Length;

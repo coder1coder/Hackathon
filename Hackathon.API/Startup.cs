@@ -1,6 +1,9 @@
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Threading.Tasks;
+using FluentValidation;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
 using Hackathon.API.Mapping;
@@ -18,8 +21,11 @@ using Mapster;
 using MapsterMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +49,8 @@ public class Startup
     }
 
     private IConfiguration Configuration { get; }
+
+    private const string CorsPolicy = "CorsPolicy";
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -104,9 +112,9 @@ public class Startup
         services
             .AddCors(options =>
             {
-                options.AddPolicy("default", builder =>
+                options.AddPolicy(CorsPolicy, builder =>
                     builder
-                        .WithOrigins(appConfig.OriginsOptions.AllowUrls)
+                        .SetIsOriginAllowed(x => OriginHelper.IsAllowed(appConfig.OriginsOptions.AllowUrls, x))
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod());
@@ -142,14 +150,14 @@ public class Startup
         ILogger<Startup> logger,
         IOptions<AppSettings> appSettings)
     {
+        //глобальный обработчик исключений должен быть первым
+        app.UseExceptionHandler(p => p.Run(HandleError));
+
         app
             .UseMetricServer()
             .UseHttpMetrics();
 
         var appConfig = appSettings.Value;
-
-        // if (!string.IsNullOrWhiteSpace(appConfig.PathBase))
-        //     app.UsePathBase(appConfig.PathBase);
 
         if (_environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
@@ -157,7 +165,6 @@ public class Startup
         app.UseSwagger()
         .UseSwaggerUI(c =>
         {
-            // c.SwaggerEndpoint($"{appConfig.PathBase?.Trim().TrimEnd('/')}/swagger/v1/swagger.json", "Hackathon.API v1");
             c.DocExpansion(DocExpansion.None);
         })
         .UseForwardedHeaders(new ForwardedHeadersOptions
@@ -165,9 +172,9 @@ public class Startup
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         })
         .UseRouting()
+        .UseCors(CorsPolicy)
         .UseAuthentication()
         .UseAuthorization()
-        .UseCors("default")
         .UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -176,5 +183,39 @@ public class Startup
             endpoints.MapHub<IntegrationEventHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
             endpoints.MapHub<IntegrationEventHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);
         });
+    }
+
+    private static async Task HandleError(HttpContext context)
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
+        if (exception == null)
+            return;
+
+        var response = MapException(exception);
+
+        context.Response.StatusCode = response.Status!.Value;
+        await context.Response.WriteAsJsonAsync(response);
+    }
+
+    private static ProblemDetails MapException(Exception exception)
+    {
+        if (exception is ValidationException)
+        {
+            return new ProblemDetails
+            {
+                Status = (int) HttpStatusCode.BadRequest,
+                Type = exception.GetType().Name,
+                Title = exception.Message,
+                Detail = exception.InnerException?.Message
+            };
+        }
+
+        return new ProblemDetails
+        {
+            Title = exception.Message,
+            Detail = HttpStatusCode.InternalServerError.ToString(),
+            Status = (int) HttpStatusCode.InternalServerError
+        };
     }
 }

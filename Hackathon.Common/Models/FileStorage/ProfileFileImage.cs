@@ -28,7 +28,7 @@ namespace Hackathon.Common.Models.FileStorage
 
         private ProfileFileImage()
         {
-            
+
         }
 
         private ProfileFileImage(int width, int height, long length, string extension)
@@ -48,7 +48,7 @@ namespace Hackathon.Common.Models.FileStorage
                 return new ProfileFileImage(image.Width, image.Height, stream.Length,
                         Path.GetExtension(fileName)?.ToLower());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ProfileFileImage();
             }
