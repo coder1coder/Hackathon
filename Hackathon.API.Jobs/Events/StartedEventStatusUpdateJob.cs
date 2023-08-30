@@ -4,23 +4,24 @@ using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Microsoft.Extensions.Logging;
+using Quartz;
 
 namespace Hackathon.Jobs.Events;
 
-public class StartedEventStatusUpdateJob: IJob
+public class StartedEventStatusUpdateJob: BaseJob<StartedEventStatusUpdateJob>
 {
     private readonly IEventService _eventService;
     private readonly ILogger<StartedEventStatusUpdateJob> _logger;
 
     public StartedEventStatusUpdateJob(
         IEventService eventService,
-        ILogger<StartedEventStatusUpdateJob> logger)
+        ILogger<StartedEventStatusUpdateJob> logger):base(logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task ExecuteAsync()
+    protected override async Task DoWork(IJobExecutionContext context)
     {
         var result = await _eventService.GetListAsync(default, new GetListParameters<EventFilter>
         {

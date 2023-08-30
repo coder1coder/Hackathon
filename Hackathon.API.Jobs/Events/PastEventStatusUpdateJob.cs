@@ -4,26 +4,27 @@ using Hackathon.Common.Models.Event;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Quartz;
 
 namespace Hackathon.Jobs.Events;
 
 /// <summary>
 /// Переводит в статус "Завершено" мероприятия, дата окончания которых меньше текущей
 /// </summary>
-public class PastEventStatusUpdateJob: IJob
+public sealed class PastEventStatusUpdateJob: BaseJob<PastEventStatusUpdateJob>
 {
     private readonly IEventService _eventService;
     private readonly ILogger<PastEventStatusUpdateJob> _logger;
 
     public PastEventStatusUpdateJob(
         IEventService eventService,
-        ILogger<PastEventStatusUpdateJob> logger)
+        ILogger<PastEventStatusUpdateJob> logger):base(logger)
     {
         _eventService = eventService;
         _logger = logger;
     }
 
-    public async Task ExecuteAsync()
+    protected override async Task DoWork(IJobExecutionContext context)
     {
         var result = await _eventService.GetListAsync(default, new GetListParameters<EventFilter>
         {
@@ -66,6 +67,5 @@ public class PastEventStatusUpdateJob: IJob
             _logger.LogInformation("{Source}: нет мероприятий для перевода в статус <Завершено>",
                 nameof(PastEventStatusUpdateJob));
         }
-
     }
 }

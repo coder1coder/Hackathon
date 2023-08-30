@@ -23,7 +23,8 @@ using Xunit;
 
 namespace Hackathon.Tests.Integration;
 
-public abstract class BaseIntegrationTest: IClassFixture<TestWebApplicationFactory>
+[Collection(nameof(ApiTestsCollection))]
+public abstract class BaseIntegrationTest
 {
     protected readonly IAuthApi AuthApi;
     protected readonly IUserApi UsersApi;
