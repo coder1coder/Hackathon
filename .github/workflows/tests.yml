@@ -35,6 +35,13 @@ jobs:
           - 5676:5672
           - 15676:15672
 
+      redis:
+        image: redis
+        env:
+          REDIS_PASSWORD: redis
+        ports:
+          - 9379:6379
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET

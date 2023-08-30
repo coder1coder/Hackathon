@@ -32,7 +32,7 @@ public class EmailServiceTests: BaseIntegrationTest
         _service = new EmailService(emailSettingsMock.Object, NullLogger<EmailService>.Instance, smtpClient);
     }
 
-    [Fact]
+    [Fact(DisplayName = "Отправка Email", Skip = "Предназначен только для локальной проверки")]
     public async Task SendAsync_Test()
     {
         var result = await _service.SendAsync(new EmailParameters
