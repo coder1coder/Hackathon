@@ -8,22 +8,25 @@ public enum EventStatus
     /// <summary>
     /// Черновик
     /// </summary>
-    /// <remarks>Могут вноситься любые правки</remarks>
     Draft = default,
+
+    /// <summary>
+    /// На модерации
+    /// </summary>
+    OnModeration = 3,
 
     /// <summary>
     /// Опубликовано
     /// </summary>
     /// <remarks>
-    /// Нельзя вносить изменения в общие параметры.
-    /// Регистрация участников, команд
+    /// Нельзя вносить изменения в общие параметры
     /// </remarks>
     Published = 1,
 
     /// <summary>
     /// Событие начато
     /// </summary>
-    /// <remarks>Регистрация закрыта. Организатор приветствует участников</remarks>
+    /// <remarks>Регистрация закрыта</remarks>
     Started = 2,
 
     /// <summary>

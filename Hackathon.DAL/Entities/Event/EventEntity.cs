@@ -3,6 +3,7 @@ using Hackathon.DAL.Entities.Interfaces;
 using Hackathon.DAL.Entities.User;
 using System;
 using System.Collections.Generic;
+using Hackathon.DAL.Entities.ApprovalApplications;
 
 namespace Hackathon.DAL.Entities.Event;
 
@@ -98,4 +99,14 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// Соглашение участия в мероприятии
     /// </summary>
     public EventAgreementEntity Agreement { get; set; }
+
+    /// <summary>
+    /// Идентификатор заявки на согласование
+    /// </summary>
+    public long? ApprovalApplicationId { get; set; }
+
+    /// <summary>
+    /// Заявка на согласование
+    /// </summary>
+    public ApprovalApplication ApprovalApplication { get; set; }
 }
