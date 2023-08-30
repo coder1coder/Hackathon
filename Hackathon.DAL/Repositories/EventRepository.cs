@@ -137,6 +137,7 @@ public class EventRepository : IEventRepository
         var entity = await _dbContext.Events
             .Include(x=>x.Stages)
             .Include(x=>x.Agreement)
+            .Include(x=>x.ApprovalApplication)
             .FirstOrDefaultAsync(x =>
                 x.Id == eventUpdateParameters.Id);
 

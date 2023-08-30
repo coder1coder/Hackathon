@@ -19,9 +19,10 @@ public interface IEventService
     /// <summary>
     /// Редактирование события
     /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="eventUpdateParameters"></param>
     /// <returns></returns>
-    Task<Result> UpdateAsync(EventUpdateParameters eventUpdateParameters);
+    Task<Result> UpdateAsync(long authorizedUserId, EventUpdateParameters eventUpdateParameters);
 
     /// <summary>
     /// Получение информации о событии по идентификатору
@@ -33,10 +34,10 @@ public interface IEventService
     /// <summary>
     /// Получение информации о событиях
     /// </summary>
-    /// <param name="userId">Идентификатор авторизованного пользователя</param>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="getListParameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<Result<BaseCollection<EventListItem>>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters);
+    Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> getListParameters);
 
     /// <summary>
     /// Изменение статуса события

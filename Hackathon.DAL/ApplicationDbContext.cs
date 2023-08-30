@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Hackathon.DAL.Entities.ApprovalApplications;
 
 namespace Hackathon.DAL;
 
@@ -57,9 +58,14 @@ public class ApplicationDbContext: DbContext
     public DbSet<EventAgreementUserEntity> EventAgreementUsers { get; set; }
 
     /// <summary>
-    ///
+    /// Запросы на подтверждение Email пользователя
     /// </summary>
     public DbSet<EmailConfirmationRequestEntity> EmailConfirmations { get; set; }
+
+    /// <summary>
+    /// Заявки на согласование
+    /// </summary>
+    public DbSet<ApprovalApplicationEntity> ApprovalApplications { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
