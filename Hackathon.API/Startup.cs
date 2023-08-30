@@ -77,7 +77,7 @@ public class Startup
             .RegisterServices(Configuration)
             .RegisterValidators()
             .RegisterIntegrationEvents()
-            .RegisterApiJobs()
+            .RegisterApiJobs(Configuration)
             .RegisterIntegrationServices()
             .RegisterRepositories();
 

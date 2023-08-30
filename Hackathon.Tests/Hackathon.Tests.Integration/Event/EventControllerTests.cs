@@ -165,6 +165,8 @@ public class EventControllerTests : BaseIntegrationTest
         var eventCreationResponse = await EventsApi.Get(createEventResponse.Id);
 
         //assert
+        Assert.NotNull(eventCreationResponse);
+        Assert.NotNull(eventCreationResponse.Content);
         Assert.NotNull(eventCreationResponse.Content?.Tasks);
         eventCreationResponse.Content.Tasks.Should().HaveCount(TestFaker.EventTasksAmount);
         eventCreationResponse.Content.Tasks.Should().NotContainNulls();
@@ -197,12 +199,16 @@ public class EventControllerTests : BaseIntegrationTest
         var eventCreationResponse = await EventsApi.Get(createEventResponse.Id);
 
         //assert
-        Assert.NotNull(eventCreationResponse.Content?.Agreement);
+        Assert.NotNull(eventCreationResponse);
+        Assert.NotNull(eventCreationResponse.Content);
+        Assert.NotNull(eventCreationResponse.Content.Agreement);
+
         eventCreationResponse.Content.Agreement
             .Should()
             .BeEquivalentTo(eventModel.Agreement, options =>
                 options.Excluding(x=>x.EventId)
                     .Excluding(x=>x.Event));
+
         Assert.True(eventCreationResponse.Content.Agreement.EventId > default(long));
     }
 }

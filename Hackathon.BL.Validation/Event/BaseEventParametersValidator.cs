@@ -19,7 +19,7 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 .WithMessage("Описание должно содержать минимум 100 символов");
 
             RuleFor(x => x.Start)
-               .GreaterThan(DateTime.UtcNow.Add(JobsConstants.StartedEventUpdateStatusJobFrequency))
+               .GreaterThan(DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)))
                .WithMessage("Дата начала мероприятия должна быть позже {ComparisonValue}");
 
             RuleFor(x => x.MaxEventMembers)
