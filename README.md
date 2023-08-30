@@ -1,5 +1,5 @@
 # Hackathon
-[![.NET](https://github.com/coder1coder/Hackathon/actions/workflows/main.yml/badge.svg)](https://github.com/coder1coder/Hackathon/actions/workflows/main.yml)
+[![Tests](https://github.com/coder1coder/Hackathon/actions/workflows/tests.yml/badge.svg?branch=develop)](https://github.com/coder1coder/Hackathon/actions/workflows/tests.yml)
 
 Сервис позволяет организовать хакатон, все самые полезные функции в одном инструменте.
 
