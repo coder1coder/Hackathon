@@ -28,9 +28,12 @@ jobs:
 
       rabbit:
         image: 'rabbitmq:latest'
+        env:
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
         ports:
-          - 5676:5676
-          - 15676:15676
+          - 5676:5672
+          - 15676:15672
 
     steps:
     - uses: actions/checkout@v2
