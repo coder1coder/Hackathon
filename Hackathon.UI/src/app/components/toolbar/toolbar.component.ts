@@ -23,7 +23,6 @@ export class ToolbarComponent implements OnInit {
   public userId:number | undefined;
 
   @Input() logoMinWidth: string = "initial";
-  @Input() toolbarMenuItems: MenuItem[] = [];
   @Input() secondToolbar: TemplateRef<any> | null;
   @Input() secondToolbarCssClasses: string;
 
