@@ -37,4 +37,11 @@ public interface IEventApi
     [Post(BaseRoute + "/image/upload")]
     [Multipart]
     Task<Guid> UploadEventImage([AliasAs("file")] StreamPart stream);
+
+    /// <summary>
+    /// Обновить событие
+    /// </summary>
+    /// <param name="request"></param>
+    [Put(BaseRoute)]
+    Task<IApiResponse> Update([Body] UpdateEventRequest request);
 }

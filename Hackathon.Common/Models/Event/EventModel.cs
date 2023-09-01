@@ -33,6 +33,11 @@ public class EventModel : EventUpdateParameters
     public new EventAgreementModel Agreement { get; set; }
 
     /// <summary>
+    /// Идентификатор заявки на согласование
+    /// </summary>
+    public long? ApprovalApplicationId { get; set; }
+
+    /// <summary>
     /// Получить команды связанные с событием, которые заполнены не полностью
     /// </summary>
     /// <returns></returns>
