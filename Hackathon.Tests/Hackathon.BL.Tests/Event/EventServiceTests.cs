@@ -17,9 +17,11 @@ using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
 using Xunit;
 using Bogus;
+using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models;
+using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Tests.Event;
@@ -47,6 +49,7 @@ public class EventServiceTests: BaseUnitTest
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
         var loggerMock = new Mock<ILogger<EventService>>();
         var eventImageValidator = new Mock<IValidator<IFileImage>>();
+        var approvalApplicationRepositoryMock = new Mock<IApprovalApplicationRepository>();
 
         _service = new EventService(
             createValidatorMock.Object,
@@ -62,7 +65,8 @@ public class EventServiceTests: BaseUnitTest
             fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
             eventAgreementRepositoryMock.Object,
-            loggerMock.Object
+            loggerMock.Object,
+            approvalApplicationRepositoryMock.Object
         );
     }
 
@@ -126,18 +130,25 @@ public class EventServiceTests: BaseUnitTest
     public async Task Update_Should_Return_Result_Success()
     {
         //arrange
+        var ownerId = Random.Shared.Next(1, int.MaxValue);
         var eventUpdateParameters = new Faker<EventUpdateParameters>()
             .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
             .Generate();
 
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
-            .Returns(Task.FromResult(new EventModel()));
+            .Returns(Task.FromResult(new EventModel
+            {
+                Owner = new UserModel
+                {
+                    Id = ownerId
+                }
+            }));
 
         _eventRepositoryMock.Setup(x => x.UpdateAsync(eventUpdateParameters))
             .Returns(Task.CompletedTask);
 
         //act
-        var updateResult = await _service.UpdateAsync(eventUpdateParameters);
+        var updateResult = await _service.UpdateAsync(ownerId, eventUpdateParameters);
 
         //assert
         Assert.NotNull(updateResult);
@@ -148,6 +159,7 @@ public class EventServiceTests: BaseUnitTest
     public async Task Update_Should_Return_Result_Success_With_Identical_File_Ids()
     {
         //arrange
+        var authorizedUserId = Random.Shared.Next(1, int.MaxValue);
         var eventUpdateParameters = new Faker<EventUpdateParameters>()
             .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
             .RuleFor(x => x.ImageId, _ => Guid.NewGuid())
@@ -156,6 +168,10 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
             .Returns(Task.FromResult(new EventModel()
             {
+                Owner = new UserModel
+                {
+                    Id = authorizedUserId
+                },
                 ImageId = eventUpdateParameters.ImageId
             }));
 
@@ -163,7 +179,7 @@ public class EventServiceTests: BaseUnitTest
             .Returns(Task.CompletedTask);
 
         //act
-        var updateResult = await _service.UpdateAsync(eventUpdateParameters);
+        var updateResult = await _service.UpdateAsync(authorizedUserId, eventUpdateParameters);
 
         //assert
         Assert.NotNull(updateResult);

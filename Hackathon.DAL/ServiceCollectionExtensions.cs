@@ -1,3 +1,4 @@
+using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.EventLog;
@@ -8,6 +9,7 @@ using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.DAL.Repositories;
+using Hackathon.DAL.Repositories.ApprovalApplications;
 using Hackathon.DAL.Repositories.Chat;
 using Hackathon.DAL.Repositories.Events;
 using Hackathon.DAL.Repositories.Team;
@@ -34,6 +36,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserProfileReactionRepository, UserProfileReactionRepository>()
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IEventAgreementRepository, EventAgreementRepository>()
+            .AddScoped<IApprovalApplicationRepository, ApprovalApplicationRepository>()
             ;
     }
 }

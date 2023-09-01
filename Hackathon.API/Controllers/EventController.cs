@@ -58,7 +58,7 @@ public class EventController: BaseController
     /// <param name="request"></param>
     [HttpPut]
     public Task<IActionResult> Update(UpdateEventRequest request)
-        => GetResult(() => _eventService.UpdateAsync(_mapper.Map<EventUpdateParameters>(request)));
+        => GetResult(() => _eventService.UpdateAsync(AuthorizedUserId, _mapper.Map<EventUpdateParameters>(request)));
 
     /// <summary>
     /// Получить все события

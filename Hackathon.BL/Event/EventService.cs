@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.BL.Validation.ImageFile;
+using Hackathon.Common.Abstraction.ApprovalApplications;
 
 namespace Hackathon.BL.Event;
 
@@ -48,6 +49,7 @@ public class EventService : IEventService
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
+    private readonly IApprovalApplicationRepository _approvalApplicationRepository;
 
     public EventService(
         IValidator<EventCreateParameters> createEventModelValidator,
@@ -63,7 +65,7 @@ public class EventService : IEventService
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
         IEventAgreementRepository eventAgreementRepository,
-        ILogger<EventService> logger)
+        ILogger<EventService> logger, IApprovalApplicationRepository approvalApplicationRepository)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -79,6 +81,7 @@ public class EventService : IEventService
         _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
         _logger = logger;
+        _approvalApplicationRepository = approvalApplicationRepository;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -97,7 +100,7 @@ public class EventService : IEventService
         return Result<long>.FromValue(eventId);
     }
 
-    public async Task<Result> UpdateAsync(EventUpdateParameters eventUpdateParameters)
+    public async Task<Result> UpdateAsync(long authorizedUserId, EventUpdateParameters eventUpdateParameters)
     {
         await _updateEventModelValidator.ValidateAndThrowAsync(eventUpdateParameters);
 
@@ -105,6 +108,20 @@ public class EventService : IEventService
 
         if (eventModel is null)
             return Result.NotFound(EventErrorMessages.EventDoesNotExists);
+
+        if (eventModel.Owner?.Id != authorizedUserId)
+            return Result.Forbidden(EventErrorMessages.NoRightsExecuteOperation);
+
+        if (eventModel.Status != EventStatus.Draft
+            && eventModel.Status != EventStatus.OnModeration)
+            return Result.NotValid(EventErrorMessages.IncorrectStatusForUpdating);
+
+        if (eventModel.Status == EventStatus.OnModeration)
+        {
+            await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.GetValueOrDefault());
+
+            eventModel.Status = EventStatus.Draft;
+        }
 
         if (eventModel.ImageId.GetValueOrDefault() != eventUpdateParameters.ImageId.GetValueOrDefault())
         {
@@ -126,10 +143,10 @@ public class EventService : IEventService
         return Result<EventModel>.FromValue(@event);
     }
 
-    public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long userId, Common.Models.GetListParameters<EventFilter> getListParameters)
+    public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> getListParameters)
     {
         await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
-        var events = await _eventRepository.GetListAsync(userId, getListParameters);
+        var events = await _eventRepository.GetListAsync(authorizedUserId, getListParameters);
 
         return Result<BaseCollection<EventListItem>>.FromValue(new BaseCollection<EventListItem>
         {
@@ -261,6 +278,7 @@ public class EventService : IEventService
         if (eventModel.Status != EventStatus.Draft)
             return Result.NotValid(EventMessages.CantDeleteEventWithStatusOtherThаnDraft);
 
+        await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.GetValueOrDefault());
         await _eventRepository.DeleteAsync(eventId);
         return Result.Success;
     }

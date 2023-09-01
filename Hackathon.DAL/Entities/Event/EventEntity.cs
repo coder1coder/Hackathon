@@ -108,5 +108,5 @@ public class EventEntity : BaseEntity, ISoftDeletable
     /// <summary>
     /// Заявка на согласование
     /// </summary>
-    public ApprovalApplication ApprovalApplication { get; set; }
+    public ApprovalApplicationEntity ApprovalApplication { get; set; }
 }
