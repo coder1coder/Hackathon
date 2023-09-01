@@ -18,11 +18,10 @@ using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
 using Xunit;
 using Bogus;
+using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Models.FileStorage;
-using static System.Net.Mime.MediaTypeNames;
 using Hackathon.Common.Models;
-using Amazon.Runtime.Internal.Util;
-using Hackathon.BL.User;
+using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Tests.Event;
@@ -33,7 +32,6 @@ public class EventServiceTests: BaseUnitTest
     private readonly Mock<IEventRepository> _eventRepositoryMock;
     private readonly Mock<IBus> _busMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
-    private readonly Mock<ILogger<EventService>> _loggerMock;
 
     public EventServiceTests()
     {
@@ -49,8 +47,9 @@ public class EventServiceTests: BaseUnitTest
         var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
-        _loggerMock = new Mock<ILogger<EventService>>();
+        var loggerMock = new Mock<ILogger<EventService>>();
         var eventImageValidator = new Mock<IValidator<IFileImage>>();
+        var approvalApplicationRepositoryMock = new Mock<IApprovalApplicationRepository>();
 
         _service = new EventService(
             createValidatorMock.Object,
@@ -66,7 +65,8 @@ public class EventServiceTests: BaseUnitTest
             fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
             eventAgreementRepositoryMock.Object,
-            _loggerMock.Object
+            loggerMock.Object,
+            approvalApplicationRepositoryMock.Object
         );
     }
 
@@ -130,18 +130,25 @@ public class EventServiceTests: BaseUnitTest
     public async Task Update_Should_Return_Result_Success()
     {
         //arrange
+        var ownerId = Random.Shared.Next(1, int.MaxValue);
         var eventUpdateParameters = new Faker<EventUpdateParameters>()
             .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
             .Generate();
 
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
-            .Returns(Task.FromResult(new EventModel()));
+            .Returns(Task.FromResult(new EventModel
+            {
+                Owner = new UserModel
+                {
+                    Id = ownerId
+                }
+            }));
 
         _eventRepositoryMock.Setup(x => x.UpdateAsync(eventUpdateParameters))
             .Returns(Task.CompletedTask);
 
         //act
-        var updateResult = await _service.UpdateAsync(eventUpdateParameters);
+        var updateResult = await _service.UpdateAsync(ownerId, eventUpdateParameters);
 
         //assert
         Assert.NotNull(updateResult);
@@ -152,14 +159,19 @@ public class EventServiceTests: BaseUnitTest
     public async Task Update_Should_Return_Result_Success_With_Identical_File_Ids()
     {
         //arrange
+        var authorizedUserId = Random.Shared.Next(1, int.MaxValue);
         var eventUpdateParameters = new Faker<EventUpdateParameters>()
             .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
-            .RuleFor(x => x.ImageId, f => Guid.NewGuid())
+            .RuleFor(x => x.ImageId, _ => Guid.NewGuid())
             .Generate();
 
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
             .Returns(Task.FromResult(new EventModel()
             {
+                Owner = new UserModel
+                {
+                    Id = authorizedUserId
+                },
                 ImageId = eventUpdateParameters.ImageId
             }));
 
@@ -167,7 +179,7 @@ public class EventServiceTests: BaseUnitTest
             .Returns(Task.CompletedTask);
 
         //act
-        var updateResult = await _service.UpdateAsync(eventUpdateParameters);
+        var updateResult = await _service.UpdateAsync(authorizedUserId, eventUpdateParameters);
 
         //assert
         Assert.NotNull(updateResult);

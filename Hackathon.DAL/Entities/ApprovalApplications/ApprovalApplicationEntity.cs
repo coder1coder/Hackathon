@@ -8,7 +8,7 @@ namespace Hackathon.DAL.Entities.ApprovalApplications;
 /// <summary>
 /// Заявка на согласование
 /// </summary>
-public class ApprovalApplication: BaseEntity
+public class ApprovalApplicationEntity: BaseEntity
 {
     /// <summary>
     /// Статус согласования
