@@ -122,7 +122,7 @@ public class EventController: BaseController
     /// <param name="setStatusRequest"></param>
     [HttpPut(nameof(SetStatus))]
     public Task<IActionResult> SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
-        => GetResult(() => _eventService.SetStatusAsync(setStatusRequest.Id, setStatusRequest.Status));
+        => GetResult(() => _eventService.SetStatusAsync(AuthorizedUserId, setStatusRequest.Id, setStatusRequest.Status));
 
     /// <summary>
     /// Переключить событие на следующий этап

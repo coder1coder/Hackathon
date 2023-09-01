@@ -3,6 +3,7 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using System;
 using System.Threading.Tasks;
+using Hackathon.Common.Models.User;
 using Microsoft.AspNetCore.Http;
 
 namespace Hackathon.Common.Abstraction.Event;
@@ -42,11 +43,16 @@ public interface IEventService
     /// <summary>
     /// Изменение статуса события
     /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="eventId">Идентификатор обытия</param>
     /// <param name="eventStatus">Новый статус события</param>
     /// <param name="skipValidation">Пропустить валидацию (Использовать только в служебных целях)</param>
+    /// <param name="skipUserValidation">Пропустить валидацию пользователя (Использовать только в служебных целях)</param>
+    /// <param name="skipUserValidationRole">Роль пользователя которая будет использоваться без валидации пользователя</param>
     /// <returns></returns>
-    Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus, bool skipValidation = false);
+    Task<Result> SetStatusAsync(long authorizedUserId, long eventId, EventStatus eventStatus,
+        bool skipValidation = false, bool skipUserValidation = false,
+        UserRole skipUserValidationRole = UserRole.Default);
 
     /// <summary>
     /// Добавление пользователя к событию
@@ -59,10 +65,10 @@ public interface IEventService
     /// <summary>
     /// Покинуть событие
     /// </summary>
-    /// <param name="eventId"></param>
-    /// <param name="userId"></param>
+    /// <param name="eventId">Идентификатор обытия</param>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <returns></returns>
-    Task<Result> LeaveAsync(long eventId, long userId);
+    Task<Result> LeaveAsync(long eventId, long authorizedUserId);
 
     /// <summary>
     /// Удаление события
