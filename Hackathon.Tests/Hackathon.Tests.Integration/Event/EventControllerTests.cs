@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.ImageFile;
 using Refit;
 using Xunit;
@@ -210,5 +211,28 @@ public class EventControllerTests : BaseIntegrationTest
                     .Excluding(x=>x.Event));
 
         Assert.True(eventCreationResponse.Content.Agreement.EventId > default(long));
+    }
+
+    [Fact(DisplayName = "Обновление карточки мероприятия не владельцем")]
+    public async Task Update_When_UserIsNotOwner()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        var anotherUser = await RegisterUser();
+        SetToken(anotherUser.Token);
+        var updateEventRequest = Mapper.Map<CreateEventRequest, UpdateEventRequest>(createEventRequest);
+        updateEventRequest.Id = createEventResponse.Id;
+        var response = await EventsApi.Update(updateEventRequest);
+
+        //assert
+        Assert.NotNull(response);
+        Assert.False(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Error);
+        Assert.NotNull(response.Error.Content);
+        Assert.Contains(EventErrorMessages.NoRightsExecuteOperation, response.Error.Content);
     }
 }
