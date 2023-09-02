@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.User;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
@@ -37,41 +38,43 @@ public class StartedEventStatusUpdateJob: BaseJob<StartedEventStatusUpdateJob>
         if (!result.IsSuccess)
             return;
 
-        if (result.Data.Items is {Count: > 0})
-        {
-            var changesCount = 0;
-            foreach (var eventListItem in result.Data.Items)
-            {
-                try
-                {
-                    var setStatusResult = await _eventService.SetStatusAsync(eventListItem.Id, EventStatus.Started);
-                    if (setStatusResult.IsSuccess)
-                    {
-                        changesCount++;
-                    }
-                    else
-                    {
-                        _logger.LogWarning("{Source} Не удалось обновить статус мероприятия в <Начато>: {@Reason}",
-                            nameof(StartedEventStatusUpdateJob),
-                            string.Join(", ", setStatusResult.Errors.Values.Values));
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e,
-                        "{Source}: ошибка во время обновления статуса мероприятия",
-                        nameof(StartedEventStatusUpdateJob));
-                }
-            }
-
-            _logger.LogInformation("{Source}: {EventsCount} мероприятий переведны в статус <Начато>",
-                nameof(StartedEventStatusUpdateJob),
-                changesCount);
-        }
-        else
+        if (result.Data.Items is not { Count: > 0 })
         {
             _logger.LogInformation("{Source}: нет мероприятий для перевода в статус <Начато>",
                 nameof(StartedEventStatusUpdateJob));
+            return;
         }
+
+        var changesCount = 0;
+        foreach (var eventListItem in result.Data.Items)
+        {
+            try
+            {
+                var setStatusResult = await _eventService.SetStatusAsync(default, eventListItem.Id,
+                    EventStatus.Started,
+                    skipUserValidation: true,
+                    skipUserValidationRole: UserRole.Administrator,
+                    skipValidation: false);
+
+                if (!setStatusResult.IsSuccess)
+                {
+                    _logger.LogWarning("{Source} Не удалось обновить статус мероприятия в <Начато>: {@Reason}",
+                        nameof(StartedEventStatusUpdateJob),
+                        string.Join(", ", setStatusResult.Errors.Values.Values));
+                    continue;
+                }
+
+                changesCount++;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{Source}: ошибка во время обновления статуса мероприятия",
+                    nameof(StartedEventStatusUpdateJob));
+            }
+        }
+
+        _logger.LogInformation("{Source}: {EventsCount} мероприятий переведны в статус <Начато>",
+            nameof(StartedEventStatusUpdateJob),
+            changesCount);
     }
 }

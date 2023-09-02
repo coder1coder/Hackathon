@@ -47,7 +47,7 @@ public sealed class PastEventStatusUpdateJob: BaseJob<PastEventStatusUpdateJob>
             {
                 try
                 {
-                    await _eventService.SetStatusAsync(eventListItem.Id, EventStatus.Finished, skipValidation: true);
+                    await _eventService.SetStatusAsync(default, eventListItem.Id, EventStatus.Finished, skipValidation: true, skipUserValidation: true);
                     processed++;
                 }
                 catch (Exception e)

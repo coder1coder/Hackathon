@@ -14,6 +14,4 @@ public class EventAgreementCreateParameters
     /// Требуется ли подтверждение соглашения
     /// </summary>
     public bool RequiresConfirmation { get; set; }
-
-
 }

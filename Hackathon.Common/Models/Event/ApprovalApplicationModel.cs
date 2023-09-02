@@ -19,7 +19,7 @@ public class ApprovalApplicationModel
     /// <summary>
     /// Подписант
     /// </summary>
-    public long SignerId { get; set; }
+    public long? SignerId { get; set; }
 
     /// <summary>
     /// Идентификатор автора запроса
