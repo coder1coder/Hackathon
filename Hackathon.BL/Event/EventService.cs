@@ -27,6 +27,7 @@ using Hackathon.BL.Validation.Extensions;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Common.Abstraction.ApprovalApplications;
+using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.Event;
 
@@ -156,16 +157,34 @@ public class EventService : IEventService
         });
     }
 
-    public async Task<Result> SetStatusAsync(long eventId, EventStatus eventStatus, bool skipValidation = false)
+    public async Task<Result> SetStatusAsync(
+        long authorizedUserId,
+        long eventId,
+        EventStatus eventStatus,
+        bool skipValidation = false,
+        bool skipUserValidation = false,
+        UserRole skipUserValidationRole = UserRole.Default)
     {
         var eventModel = await _eventRepository.GetAsync(eventId);
 
         if (eventModel == null)
             return Result.NotFound(EventErrorMessages.EventDoesNotExists);
 
+        var userRole = skipUserValidationRole;
+
+        if (!skipUserValidation)
+        {
+            var user = await _userRepository.GetAsync(authorizedUserId);
+
+            if (user is null)
+                return Result.Forbidden(UserErrorMessages.UserDoesNotExists);
+
+            userRole = user.Role;
+        }
+
         if (!skipValidation)
         {
-            var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(eventModel, eventStatus);
+            var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(userRole, eventModel, eventStatus);
 
             if (!isValid)
                 return Result.NotValid(errorMessage);
@@ -233,8 +252,8 @@ public class EventService : IEventService
     /// Покинуть событие
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
-    /// <param name="userId">Идентификатор пользователя</param>
-    public async Task<Result> LeaveAsync(long eventId, long userId)
+    /// <param name="authorizedUserId">Идентификатор пользователя</param>
+    public async Task<Result> LeaveAsync(long eventId, long authorizedUserId)
     {
         var eventModel = await _eventRepository.GetAsync(eventId);
 
@@ -244,12 +263,12 @@ public class EventService : IEventService
         if (eventModel.Status != EventStatus.Published)
             return Result.NotValid(EventMessages.CantLeaveEventWhenItsAlreadyStarted);
 
-        var userExists = await _userRepository.ExistsAsync(userId);
+        var userExists = await _userRepository.ExistsAsync(authorizedUserId);
 
         if (!userExists)
             return Result.NotValid(UserErrorMessages.UserDoesNotExists);
 
-        var userTeam = GetTeamContainsMember(eventModel, userId);
+        var userTeam = GetTeamContainsMember(eventModel, authorizedUserId);
         if (userTeam == null)
             return Result.NotValid(EventMessages.UserIsNotInEvent);
 
@@ -259,7 +278,7 @@ public class EventService : IEventService
         await _teamService.RemoveMemberAsync(new TeamMemberModel
         {
             TeamId = userTeam.Id,
-            MemberId = userId
+            MemberId = authorizedUserId
         });
 
         return Result.Success;
