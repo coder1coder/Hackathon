@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hackathon.Common.Models.Event;
 
@@ -33,9 +34,10 @@ public class EventFilter
     public EventStatus[] Statuses { get; set; }
 
     /// <summary>
-    /// Исключить события других пользователей в статусе черновик
+    /// Статусы по которым мероприятия других пользователей будут исключены из результатов
     /// </summary>
-    public bool ExcludeOtherUsersDraftedEvents { get; set; } = true;
+    [NotMapped]
+    public EventStatus[] ExcludeOtherUsersEventsByStatuses { get; set; }
 
     /// <summary>
     /// Идентификаторы команд принимавших участие в событии
