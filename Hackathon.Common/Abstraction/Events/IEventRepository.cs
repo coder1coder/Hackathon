@@ -22,10 +22,10 @@ public interface IEventRepository
     Task<EventModel> GetAsync(long eventId);
 
     /// <summary>
-    /// Получение информации о событиях
+    /// Получение список мероприятий
     /// </summary>
     /// <param name="userId">Идентификатор авторизованного пользователя</param>
-    /// <param name="parameters">Фильтр, пагинация</param>
+    /// <param name="parameters">Параметры фильтрации и пагинации</param>
     /// <returns></returns>
     Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> parameters);
 
