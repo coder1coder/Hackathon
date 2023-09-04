@@ -6,7 +6,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Hackathon.BL.Team;
 using Hackathon.BL.Validation.Team;
-using Hackathon.Common.Abstraction.Event;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;

@@ -1,9 +1,9 @@
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Events;
 using Quartz;
 
 namespace Hackathon.Jobs.Events;

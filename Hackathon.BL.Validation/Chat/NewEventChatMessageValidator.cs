@@ -1,7 +1,7 @@
 using BackendTools.Common.Models;
 using Hackathon.BL.Validation.Event;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Abstraction.Event;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Chat.Event;
 using Hackathon.Common.Models.Event;

@@ -17,9 +17,14 @@ public class ApprovalApplicationModel
     public ApprovalApplicationStatus ApplicationStatus { get; set; }
 
     /// <summary>
-    /// Подписант
+    /// Идентификатор подписанта
     /// </summary>
     public long? SignerId { get; set; }
+
+    /// <summary>
+    /// Подписант
+    /// </summary>
+    public UserShortModel Signer { get; set; }
 
     /// <summary>
     /// Идентификатор автора запроса
@@ -29,7 +34,7 @@ public class ApprovalApplicationModel
     /// <summary>
     /// Автор запроса
     /// </summary>
-    public UserModel Author { get; set; }
+    public UserShortModel Author { get; set; }
 
     /// <summary>
     /// Комментарий
@@ -45,4 +50,9 @@ public class ApprovalApplicationModel
     /// Дата и время решения по заявке
     /// </summary>
     public DateTimeOffset? DecisionAt { get; set; }
+
+    /// <summary>
+    /// Данные мероприятия
+    /// </summary>
+    public EventListItem Event { get; set; }
 }
