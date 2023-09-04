@@ -16,15 +16,23 @@ public class ApprovalApplicationEntity: BaseEntity
     public ApprovalApplicationStatus ApplicationStatus { get; set; }
 
     /// <summary>
-    /// Подписант
+    /// Идентификатор подписанта
     /// </summary>
     public long SignerId { get; set; }
 
     /// <summary>
-    /// Автор запроса
+    /// Подписант
+    /// </summary>
+    public UserEntity Signer { get; set; }
+
+    /// <summary>
+    /// Идентификатор автора запроса
     /// </summary>
     public long AuthorId { get; set; }
 
+    /// <summary>
+    /// Автор запроса
+    /// </summary>
     public UserEntity Author { get; set; }
 
     /// <summary>

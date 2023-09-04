@@ -1,9 +1,9 @@
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models.Notification;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Events;
 using Microsoft.Extensions.Logging;
 using Quartz;
 

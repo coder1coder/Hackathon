@@ -1,7 +1,6 @@
 using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
@@ -13,6 +12,7 @@ using Hackathon.Common.Models.Team;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Events;
 
 namespace Hackathon.BL.Team;
 

@@ -1,4 +1,3 @@
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
@@ -11,6 +10,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Events;
 
 namespace Hackathon.DAL.Repositories;
 
