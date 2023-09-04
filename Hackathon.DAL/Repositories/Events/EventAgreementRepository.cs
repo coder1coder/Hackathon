@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction.Event;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.Event;
 using Hackathon.DAL.Entities.Event;
 using MapsterMapper;

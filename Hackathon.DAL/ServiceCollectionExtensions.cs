@@ -1,7 +1,7 @@
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Chat;
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.EventLog;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Notifications;

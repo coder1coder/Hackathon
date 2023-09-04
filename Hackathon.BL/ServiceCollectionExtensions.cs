@@ -10,7 +10,6 @@ using Hackathon.BL.Project;
 using Hackathon.BL.Team;
 using Hackathon.BL.User;
 using Hackathon.Common.Abstraction.Chat;
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Friend;
@@ -21,8 +20,10 @@ using Hackathon.Common.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Mail;
+using Hackathon.BL.ApprovalApplications;
 using Hackathon.Common.Abstraction.Email;
 using Hackathon.Common.Abstraction.Notifications;
+using Hackathon.Common.Abstraction.Events;
 using Microsoft.Extensions.Configuration;
 
 namespace Hackathon.BL;
@@ -39,7 +40,7 @@ public static class ServiceCollectionExtensions
         services
             .AddScoped<ITeamChatService, TeamBaseChatService>()
             .AddScoped<IEventChatService, EventBaseChatService>()
-
+            .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEmailService, EmailService>()
             .AddScoped<ITemplateService, TemplateService>()

@@ -1,5 +1,7 @@
 using System;
-using Hackathon.Common.Abstraction.Event;
+using System.Net;
+using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -9,10 +11,8 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net;
-using System.Threading.Tasks;
 
-namespace Hackathon.API.Controllers;
+namespace Hackathon.API.Controllers.Events;
 
 /// <summary>
 /// События

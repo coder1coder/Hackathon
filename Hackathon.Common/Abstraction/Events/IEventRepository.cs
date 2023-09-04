@@ -1,9 +1,9 @@
-﻿using Hackathon.Common.Models;
+﻿using System.Threading.Tasks;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using System.Threading.Tasks;
 
-namespace Hackathon.Common.Abstraction.Event;
+namespace Hackathon.Common.Abstraction.Events;
 
 public interface IEventRepository
 {
