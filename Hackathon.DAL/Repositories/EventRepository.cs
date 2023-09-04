@@ -69,9 +69,11 @@ public class EventRepository : IEventRepository
             if (parameters.Filter.Statuses is not null)
                 query = query.Where(x => parameters.Filter.Statuses.Contains(x.Status));
 
-            if (parameters.Filter.ExcludeOtherUsersDraftedEvents)
-                query = query.Where(x =>
-                    !(x.OwnerId != userId && x.Status == EventStatus.Draft));
+            if (parameters.Filter.ExcludeOtherUsersEventsByStatuses is { Length: > 0 })
+            {
+                query = query.Where(x => !(x.OwnerId != userId
+                                           && parameters.Filter.ExcludeOtherUsersEventsByStatuses.Contains(x.Status)));
+            }
 
             if (parameters.Filter.StartFrom.HasValue)
             {
