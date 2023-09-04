@@ -36,9 +36,9 @@ public interface IEventService
     /// Получение информации о событиях
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
-    /// <param name="getListParameters">Фильтр, пагинация</param>
+    /// <param name="parameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> getListParameters);
+    Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> parameters);
 
     /// <summary>
     /// Изменение статуса события

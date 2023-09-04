@@ -144,10 +144,22 @@ public class EventService : IEventService
         return Result<EventModel>.FromValue(@event);
     }
 
-    public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> getListParameters)
+    public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> parameters)
     {
-        await _getFilterModelValidator.ValidateAndThrowAsync(getListParameters);
-        var events = await _eventRepository.GetListAsync(authorizedUserId, getListParameters);
+        await _getFilterModelValidator.ValidateAndThrowAsync(parameters);
+
+        var user = await _userRepository.GetAsync(authorizedUserId);
+        if (user is null)
+            return Result<BaseCollection<EventListItem>>.Forbidden(UserMessages.UserDoesNotExists);
+
+        parameters.Filter ??= new EventFilter();
+        parameters.Filter.ExcludeOtherUsersEventsByStatuses = new[]
+        {
+            EventStatus.Draft,
+            EventStatus.OnModeration
+        };
+
+        var events = await _eventRepository.GetListAsync(authorizedUserId, parameters);
 
         return Result<BaseCollection<EventListItem>>.FromValue(new BaseCollection<EventListItem>
         {
