@@ -249,12 +249,18 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public async Task<Result> DeleteAsync(long eventId)
+    public async Task<Result> DeleteAsync(long eventId, long userId)
     {
-        var eventExists = await _eventRepository.ExistsAsync(eventId);
+        var eventModel = await _eventRepository.GetAsync(eventId);
 
-        if (!eventExists)
-            Result.NotValid(EventErrorMessages.EventDoesNotExists);
+        if (eventModel is null)
+            return Result.NotValid(EventErrorMessages.EventDoesNotExists);
+
+        if (eventModel.Owner?.Id != userId)
+            return Result.NotValid(EventMessages.CantDeleteEventUserWhoNotOwner);
+
+        if (eventModel.Status != EventStatus.Draft)
+            return Result.NotValid(EventMessages.CantDeleteEventWithStatusOtherThаnDraft);
 
         await _eventRepository.DeleteAsync(eventId);
         return Result.Success;

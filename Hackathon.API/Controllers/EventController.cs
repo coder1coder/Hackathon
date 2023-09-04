@@ -139,7 +139,7 @@ public class EventController: BaseController
     /// <param name="eventId"></param>
     [HttpDelete("{eventId:long}")]
     public Task<IActionResult> Delete([FromRoute] long eventId)
-        => GetResult(() => _eventService.DeleteAsync(eventId));
+        => GetResult(() => _eventService.DeleteAsync(eventId, AuthorizedUserId));
 
     /// <summary>
     /// Загрузить изображение события
