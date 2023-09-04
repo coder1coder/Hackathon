@@ -1,4 +1,4 @@
-﻿using BackendTools.Common.Models;
+using BackendTools.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using System;
@@ -67,8 +67,9 @@ public interface IEventService
     /// Удаление события
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
+    /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<Result> DeleteAsync(long eventId);
+    Task<Result> DeleteAsync(long eventId, long userId);
 
     /// <summary>
     /// Получить предстоящие события
