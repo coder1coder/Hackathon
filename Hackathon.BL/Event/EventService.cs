@@ -2,7 +2,6 @@ using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.Team;
@@ -26,6 +25,7 @@ using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
 using Hackathon.Common.Abstraction.ApprovalApplications;
+using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.Event;

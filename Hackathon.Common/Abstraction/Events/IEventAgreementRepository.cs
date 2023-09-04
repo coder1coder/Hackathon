@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Models.Event;
 
-namespace Hackathon.Common.Abstraction.Event;
+namespace Hackathon.Common.Abstraction.Events;
 
 public interface IEventAgreementRepository
 {
