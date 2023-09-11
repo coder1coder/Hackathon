@@ -137,10 +137,22 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public async Task<Result<EventModel>> GetAsync(long eventId)
+    public async Task<Result<EventModel>> GetAsync(long? authorizedUserId, long eventId)
     {
         var @event = await _eventRepository.GetAsync(eventId);
-        return Result<EventModel>.FromValue(@event);
+        if (@event is null)
+            return Result<EventModel>.NotFound(EventErrorMessages.EventDoesNotExists);
+
+        var userModel = await _userRepository.GetAsync(authorizedUserId.GetValueOrDefault());
+
+        var canReadEvent =
+            @event.Status is EventStatus.OnModeration && userModel?.Role is UserRole.Administrator
+            || @event.Owner?.Id == authorizedUserId.GetValueOrDefault()
+            || @event.Status is EventStatus.Published or EventStatus.Started or EventStatus.Finished;
+
+        return !canReadEvent
+            ? Result<EventModel>.Forbidden(EventErrorMessages.NoRightsExecuteOperation)
+            : Result<EventModel>.FromValue(@event);
     }
 
     public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> parameters)

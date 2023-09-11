@@ -28,9 +28,10 @@ public interface IEventService
     /// <summary>
     /// Получение информации о событии по идентификатору
     /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="eventId">Идентификатор события</param>
     /// <returns></returns>
-    Task<Result<EventModel>> GetAsync(long eventId);
+    Task<Result<EventModel>> GetAsync(long? authorizedUserId, long eventId);
 
     /// <summary>
     /// Получение информации о событиях
