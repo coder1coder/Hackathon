@@ -8,12 +8,28 @@ public static class ChangeEventStatusValidator
 {
     public static (bool, string) ValidateAsync(UserRole userRole, EventModel eventModel, EventStatus newStatus)
     {
+        var eventStatusOrdered = new[]
+        {
+            EventStatus.Draft,
+            EventStatus.OnModeration,
+            EventStatus.Published,
+            EventStatus.Started,
+            EventStatus.Finished
+        };
+
+        var currentStatusIndex = Array.IndexOf(eventStatusOrdered, eventModel.Status);
+        var newStatusIndex = Array.IndexOf(eventStatusOrdered, newStatus);
+
         var canChangeStatus =
-            //пользователь завершает мероприятие
-            newStatus == EventStatus.Finished
-            ||
-            //новый статус является следующим в последовательности
-            (int)eventModel.Status == (int)newStatus - 1;
+            currentStatusIndex >= 0 && newStatusIndex >= 0
+            &&
+            (
+                //пользователь завершает мероприятие
+                newStatus == EventStatus.Finished
+                ||
+                //новый статус является следующим в последовательности
+                currentStatusIndex == newStatusIndex - 1
+            );
 
         if (!canChangeStatus)
             return (false, EventMessages.CantSetEventStatus);
@@ -34,8 +50,8 @@ public static class ChangeEventStatusValidator
             ? (true, string.Empty)
             : (false, "Только мероприятия находящиеся на модерации или не прошедшие её могут быть переведены в статус Черновик");
 
-    private static (bool, string) ValidateOnModeration(EventStatus eventStatus)
-        => eventStatus == EventStatus.Draft
+    private static (bool, string) ValidateOnModeration(EventStatus currentEventStatus)
+        => currentEventStatus == EventStatus.Draft
             ? (true, string.Empty)
             : (false, "Отправить на модерацию можно только мероприятие в статусе Черновик");
 

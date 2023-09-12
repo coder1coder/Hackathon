@@ -6,6 +6,7 @@ using Hackathon.Contracts.Requests.Project;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Models.User;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Project;
@@ -29,8 +30,18 @@ public class ProjectControllerTests : BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
+
+        SetToken(TestUser.Token);
 
         // Присоединяемся к событию в качестве участника
         await EventsApi.JoinAsync(createEventResponse.Id);
@@ -78,8 +89,18 @@ public class ProjectControllerTests : BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
+
+        SetToken(TestUser.Token);
 
         // Присоединяемся к событию в качестве участника
         await EventsApi.JoinAsync(createEventResponse.Id);
@@ -141,8 +162,18 @@ public class ProjectControllerTests : BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
+
+        SetToken(TestUser.Token);
 
         // Присоединяемся к событию в качестве участника
         await EventsApi.JoinAsync(createEventResponse.Id);
