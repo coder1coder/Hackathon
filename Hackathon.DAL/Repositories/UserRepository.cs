@@ -162,4 +162,20 @@ public class UserRepository: IUserRepository
         _dbContext.Users.Update(entity);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task SetRole(long userId, UserRole userRole)
+    {
+        var entity = await _dbContext.Users
+            .FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (entity is null)
+            return;
+
+        if (entity.Role != userRole)
+        {
+            entity.Role = userRole;
+            _dbContext.Users.Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

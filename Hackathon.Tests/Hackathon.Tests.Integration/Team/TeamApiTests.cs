@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Hackathon.Common.Models.User;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Team;
@@ -22,6 +23,7 @@ public class TeamApiTests: BaseIntegrationTest
     [Fact]
     public async Task Create_Should_Success()
     {
+        //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
         var createEventResponse = await EventsApi.Create(eventRequest);
@@ -29,21 +31,32 @@ public class TeamApiTests: BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
 
+        SetToken(TestUser.Token);
+
+        //act
         var teamCreateResponse = await TeamApiClient.CreateAsync(new CreateTeamRequest
         {
             Name = Guid.NewGuid().ToString()[..4],
             EventId = createEventResponse.Id
         });
 
+        //assert
         Assert.True(teamCreateResponse.IsSuccessStatusCode);
         Assert.NotNull(teamCreateResponse.Content);
         teamCreateResponse.Content.Id.Should().BeGreaterThan(0);
-        var teamExist = await TeamRepository.ExistAsync(teamCreateResponse.Content.Id);
-
-        teamExist.Should().BeTrue();
+        var teamExists = await TeamRepository.ExistAsync(teamCreateResponse.Content.Id);
+        Assert.True(teamExists);
     }
 
     [Fact]
@@ -54,6 +67,14 @@ public class TeamApiTests: BaseIntegrationTest
         var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
         var createEventResponse = await EventsApi.Create(eventRequest);
 
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
@@ -85,8 +106,18 @@ public class TeamApiTests: BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
+
+        SetToken(TestUser.Token);
 
         await TeamApiClient.CreateAsync(new CreateTeamRequest
         {

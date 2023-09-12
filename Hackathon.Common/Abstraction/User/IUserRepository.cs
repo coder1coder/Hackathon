@@ -65,4 +65,12 @@ public interface IUserRepository
     /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
     /// <returns></returns>
     Task UpdateAsync(UpdateUserParameters updateUserParameters);
+
+    /// <summary>
+    /// Обновить роль для записи пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="userRole">Роль</param>
+    /// <returns></returns>
+    Task SetRole(long userId, UserRole userRole);
 }

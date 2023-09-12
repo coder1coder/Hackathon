@@ -77,7 +77,7 @@ public class EventController: BaseController
     [HttpGet("{eventId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
     public Task<IActionResult> Get([FromRoute] long eventId)
-        => GetResult(() => _eventService.GetAsync(eventId));
+        => GetResult(() => _eventService.GetAsync(AuthorizedUserId, eventId));
 
     /// <summary>
     /// Присоединиться к мероприятию

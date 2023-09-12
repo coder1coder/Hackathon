@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Mail;
 using Hackathon.BL.ApprovalApplications;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.Email;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.Events;
@@ -38,6 +39,7 @@ public static class ServiceCollectionExtensions
         var s3Options = configuration.GetSection(nameof(S3Options)).Get<S3Options>() ?? new S3Options();
 
         services
+            .AddScoped<IMessageBusService, MessageBusService>()
             .AddScoped<ITeamChatService, TeamBaseChatService>()
             .AddScoped<IEventChatService, EventBaseChatService>()
             .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()

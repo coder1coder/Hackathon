@@ -40,7 +40,7 @@ public class TestFaker
         return faker.Generate(count);
     }
 
-    public IEnumerable<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = null)
+    public IEnumerable<EventModel> GetEventModels(int count, long userId, EventStatus? eventStatus = EventStatus.Draft)
     {
         var eventEntities = GetEventEntities(count, userId, eventStatus);
         return _mapper.Map<List<EventModel>>(eventEntities);
@@ -65,7 +65,7 @@ public class TestFaker
 
     #endregion
 
-    private static List<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = null)
+    private static List<EventEntity> GetEventEntities(int count, long ownerId, EventStatus? eventStatus = EventStatus.Draft)
         => new Faker<EventEntity>()
             .RuleFor(x=>x.Id, f => f.Random.Long(1))
             .RuleFor(x => x.Name, f => f.Random.String2(6, 20))
@@ -73,7 +73,7 @@ public class TestFaker
             .RuleFor(x => x.IsCreateTeamsAutomatically, true)
             .RuleFor(x => x.MaxEventMembers, _ => 30)
             .RuleFor(x => x.MinTeamMembers, _ => 1)
-            .RuleFor(x => x.Status, _ => eventStatus ?? EventStatus.Draft)
+            .RuleFor(x => x.Status, _ => eventStatus)
             .RuleFor(x => x.OwnerId, ownerId)
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
             .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
