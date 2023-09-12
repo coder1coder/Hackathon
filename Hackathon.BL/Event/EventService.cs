@@ -14,7 +14,6 @@ using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvent;
-using MassTransit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Common.Abstraction.ApprovalApplications;
@@ -36,32 +36,28 @@ namespace Hackathon.BL.Event;
 /// </summary>
 public class EventService : IEventService
 {
-    private readonly IValidator<EventCreateParameters> _createEventModelValidator;
-    private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
-    private readonly IValidator<IFileImage> _eventImageValidator;
+    private readonly FluentValidation.IValidator<EventCreateParameters> _createEventModelValidator;
+    private readonly FluentValidation.IValidator<EventUpdateParameters> _updateEventModelValidator;
+    private readonly FluentValidation.IValidator<IFileImage> _eventImageValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
+    private readonly FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
-    private readonly IBus _messageBus;
+    private readonly IMessageBusService _messageBusService;
     private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
 
-    public EventService(
-        IValidator<EventCreateParameters> createEventModelValidator,
-        IValidator<EventUpdateParameters> updateEventModelValidator,
-        IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
-        IValidator<IFileImage> eventImageValidator,
+    public EventService(FluentValidation.IValidator<EventCreateParameters> createEventModelValidator, FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator, FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, FluentValidation.IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IBus messageBus,
+        IMessageBusService messageBusService,
         IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
@@ -76,7 +72,7 @@ public class EventService : IEventService
         _teamService = teamService;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _messageBus = messageBus;
+        _messageBusService = messageBusService;
         _integrationEventHub = integrationEventHub;
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
@@ -92,7 +88,8 @@ public class EventService : IEventService
         await AssignImageIdFromTemporaryFile(eventCreateParameters);
 
         var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
-        await _messageBus.Publish(new EventLogModel(
+
+        await _messageBusService.TryPublish(new EventLogModel(
             EventLogType.Created,
             $"Создано новое событие с идентификатором '{eventId}'",
             eventCreateParameters.OwnerId
@@ -138,10 +135,22 @@ public class EventService : IEventService
         return Result.Success;
     }
 
-    public async Task<Result<EventModel>> GetAsync(long eventId)
+    public async Task<Result<EventModel>> GetAsync(long? authorizedUserId, long eventId)
     {
         var @event = await _eventRepository.GetAsync(eventId);
-        return Result<EventModel>.FromValue(@event);
+        if (@event is null)
+            return Result<EventModel>.NotFound(EventErrorMessages.EventDoesNotExists);
+
+        var userModel = await _userRepository.GetAsync(authorizedUserId.GetValueOrDefault());
+
+        var canReadEvent =
+            @event.Status is EventStatus.OnModeration && userModel?.Role is UserRole.Administrator
+            || @event.Owner?.Id == authorizedUserId.GetValueOrDefault()
+            || @event.Status is EventStatus.Published or EventStatus.Started or EventStatus.Finished;
+
+        return !canReadEvent
+            ? Result<EventModel>.Forbidden(EventErrorMessages.NoRightsExecuteOperation)
+            : Result<EventModel>.FromValue(@event);
     }
 
     public async Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> parameters)
@@ -437,10 +446,21 @@ public class EventService : IEventService
 
     private async Task NotifyEventMembers(EventModel eventModel, EventStatus eventStatus)
     {
-        var changeEventStatusMessage = eventModel.ChangeEventStatusMessages
-                                           .FirstOrDefault(x => x.Status == eventStatus)
-                                           ?.Message
-                                       ?? eventStatus.ToDefaultChangedEventStatusMessage(eventModel.Name);
+        var changeEventStatusMessage =
+
+        eventModel.ChangeEventStatusMessages
+            .FirstOrDefault(x => x.Status == eventStatus)
+            ?.Message ??
+
+        eventStatus switch
+        {
+            EventStatus.Started => $"Событие '{eventModel.Name}' началось",
+            EventStatus.Finished => $"Событие '{eventModel.Name}' завершено",
+            _ => null
+        };
+
+        if (changeEventStatusMessage is null)
+            return;
 
         var usersIds = eventModel.Teams
             .SelectMany(x => x.Members?.Select(z => z.Id))

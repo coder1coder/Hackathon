@@ -6,9 +6,11 @@ using Hackathon.Contracts.Requests.Event;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.ImageFile;
+using Hackathon.Common.Models.User;
 using Refit;
 using Xunit;
 
@@ -51,7 +53,7 @@ public class EventControllerTests : BaseIntegrationTest
     }
 
     [Fact]
-    public async Task SetStatus_FromDraft_ToPublished_ShouldReturn_Success()
+    public async Task SetStatus_FromDraft_ToOnModeration_ShouldReturn_Success()
     {
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
@@ -62,7 +64,7 @@ public class EventControllerTests : BaseIntegrationTest
             .Invoking(async () => await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
             {
                 Id = createEventResponse.Id,
-                Status = EventStatus.Published
+                Status = EventStatus.OnModeration
             }))
             .Should()
             .NotThrowAsync();
@@ -71,40 +73,7 @@ public class EventControllerTests : BaseIntegrationTest
         eventModel = getEventResponse.Content;
 
         Assert.NotNull(eventModel);
-
-        eventModel.Status.Should().Be(EventStatus.Published);
-    }
-
-    [Fact]
-    public async Task StartEvent_ShouldSuccess()
-    {
-        var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
-        var request = Mapper.Map<CreateEventRequest>(@event);
-        var createEventResponse = await EventsApi.Create(request);
-
-        // Публикуем событие, чтобы можно было регистрироваться участникам
-        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
-        {
-            Id = createEventResponse.Id,
-            Status = EventStatus.Published
-        });
-
-        // Присоединяемся к событию в качестве участника
-        await EventsApi.JoinAsync(createEventResponse.Id);
-
-        // Регистрируем нового участника в событии
-        var user = await RegisterUser();
-        SetToken(user.Token);
-        await EventsApi.JoinAsync(createEventResponse.Id);
-
-        // Начинаем событие
-        SetToken(TestUser.Token);
-
-        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
-        {
-            Id = createEventResponse.Id,
-            Status = EventStatus.Started
-        });
+        Assert.Equal(EventStatus.OnModeration, eventModel.Status);
     }
 
     [Fact]
@@ -125,9 +94,18 @@ public class EventControllerTests : BaseIntegrationTest
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
             Status = EventStatus.Published
         });
 
+        SetToken(TestUser.Token);
         await EventsApi.JoinAsync(createEventResponse.Id);
 
         var user = await RegisterUser();
@@ -234,5 +212,104 @@ public class EventControllerTests : BaseIntegrationTest
         Assert.NotNull(response.Error);
         Assert.NotNull(response.Error.Content);
         Assert.Contains(EventErrorMessages.NoRightsExecuteOperation, response.Error.Content);
+    }
+
+    [Fact(DisplayName = "Событие в статусе <Черновик> не доступно для другого пользователя")]
+    public async Task Drafted_Events_NotAvailable_For_AnotherUser()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        var anotherUser = await RegisterUser();
+        SetToken(anotherUser.Token);
+        var response = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact(DisplayName = "Событие в статусе <Черновик> доступно для владельца")]
+    public async Task Drafted_Events_Available_For_Owner()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        var response = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content);
+    }
+
+    [Fact(DisplayName = "Событие в статусе <На модерации> не доступно для другого пользователя")]
+    public async Task OnModeration_Events_NotAvailable_For_AnotherUser()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        //act
+        var anotherUser = await RegisterUser();
+        SetToken(anotherUser.Token);
+        var response = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact(DisplayName = "Событие в статусе <На модерации> доступно для владельца")]
+    public async Task OnModeration_Events_Available_For_Owner()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        //act
+        var response = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content);
+    }
+
+    [Fact(DisplayName = "Событие в статусе <На модерации> доступно для администратора")]
+    public async Task OnModeration_Events_Available_For_Administrator()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        //act
+        var administrator = await RegisterUser(UserRole.Administrator);
+        SetToken(administrator.Token);
+        var response = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.NotNull(response.Content);
     }
 }

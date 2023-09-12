@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentValidation;
 using Hackathon.BL.Event;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Team;
@@ -16,6 +15,7 @@ using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
 using Xunit;
 using Bogus;
+using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.Events;
@@ -30,25 +30,25 @@ public class EventServiceTests: BaseUnitTest
 {
     private readonly EventService _service;
     private readonly Mock<IEventRepository> _eventRepositoryMock;
-    private readonly Mock<IBus> _busMock;
+    private readonly Mock<IMessageBusService> _messageBusServiceMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
 
     public EventServiceTests()
     {
-        var createValidatorMock = new Mock<IValidator<EventCreateParameters>>();
-        var updateValidatorMock = new Mock<IValidator<EventUpdateParameters>>();
-        var getListValidatorMock = new Mock<IValidator<GetListParameters<EventFilter>>>();
+        var createValidatorMock = new Mock<FluentValidation.IValidator<EventCreateParameters>>();
+        var updateValidatorMock = new Mock<FluentValidation.IValidator<EventUpdateParameters>>();
+        var getListValidatorMock = new Mock<FluentValidation.IValidator<GetListParameters<EventFilter>>>();
         var teamServiceMock = new Mock<ITeamService>();
         var notificationServiceMock = new Mock<INotificationService>();
         var fileStorageServiceMock = new Mock<IFileStorageService>();
         _eventRepositoryMock = new Mock<IEventRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
-        _busMock = new Mock<IBus>();
+        _messageBusServiceMock = new Mock<IMessageBusService>();
         var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
         var loggerMock = new Mock<ILogger<EventService>>();
-        var eventImageValidator = new Mock<IValidator<IFileImage>>();
+        var eventImageValidator = new Mock<FluentValidation.IValidator<IFileImage>>();
         var approvalApplicationRepositoryMock = new Mock<IApprovalApplicationRepository>();
 
         _service = new EventService(
@@ -60,7 +60,7 @@ public class EventServiceTests: BaseUnitTest
             teamServiceMock.Object,
             userRepositoryMock.Object,
             notificationServiceMock.Object,
-            _busMock.Object,
+            _messageBusServiceMock.Object,
             integrationEventHubMock.Object,
             fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
@@ -79,7 +79,7 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<EventCreateParameters>()))
             .ReturnsAsync(createdId);
 
-        _busMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
+        _messageBusServiceMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
             .Returns(Task.CompletedTask);
 
         //act
@@ -115,7 +115,7 @@ public class EventServiceTests: BaseUnitTest
         _fileStorageRepositoryMock.Setup(x => x.UpdateFlagIsDeleted(eventCreateParameners.ImageId.Value, false))
             .Returns(Task.CompletedTask);
 
-        _busMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
+        _messageBusServiceMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
             .Returns(Task.CompletedTask);
 
         //act

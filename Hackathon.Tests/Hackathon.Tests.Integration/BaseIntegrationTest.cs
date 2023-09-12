@@ -78,7 +78,7 @@ public abstract class BaseIntegrationTest
         var defaultToken = AuthTokenGenerator.GenerateToken(new UserModel
         {
             Id = 1,
-            Role = UserRole.Administrator
+            Role = UserRole.Default
         }, _authOptions).Token ?? "";
 
         TestUser = (1, defaultToken);
@@ -108,16 +108,18 @@ public abstract class BaseIntegrationTest
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    protected async Task<(long Id, string Token)> RegisterUser()
+    protected async Task<(long Id, string Token)> RegisterUser(UserRole userRole = UserRole.Default)
     {
         var fakeUser = TestFaker.GetSignUpModels(1).First();
         var fakeRequest = Mapper.Map<SignUpRequest>(fakeUser);
         var response = await UsersApi.SignUp(fakeRequest);
 
+        await UserRepository.SetRole(response.Id, userRole);
+
         var authTokenModel = AuthTokenGenerator.GenerateToken(new UserModel
         {
             Id = response.Id,
-            Role = UserRole.Default
+            Role = userRole
         }, _authOptions);
 
         return (response.Id, authTokenModel.Token);
