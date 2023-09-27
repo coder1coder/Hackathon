@@ -43,8 +43,10 @@ public static class ServiceCollectionExtensions
         var settings = configuration?.GetSection($"Jobs:{typeof(TJob).Name}")
             .Get<TJobSettings>() ?? new TJobSettings();
 
-        if (string.IsNullOrWhiteSpace(settings.IntervalCronExpression) ||
-            !CronExpression.IsValidExpression(settings.IntervalCronExpression))
+        if (settings.ScheduleType == JobScheduleType.Cron
+            &&
+            (string.IsNullOrWhiteSpace(settings.CronExpression) ||
+            !CronExpression.IsValidExpression(settings.CronExpression)))
             return;
 
         quartz.AddJob<TJob>(x => x
@@ -55,12 +57,30 @@ public static class ServiceCollectionExtensions
             ? new DateTimeOffset(settings.StartAt.Value)
             : DateTimeOffset.UtcNow;
 
-        quartz.AddTrigger(x => x
-            .ForJob(key)
-            .WithIdentity(GetTriggerName(key.Name))
-            .StartAt(startAt)
-            .WithCronSchedule(settings.IntervalCronExpression, builder =>
-                builder.WithMisfireHandlingInstructionDoNothing()));
+        switch (settings.ScheduleType)
+        {
+            case JobScheduleType.Interval:
+                quartz.AddTrigger(x => x
+                    .ForJob(key)
+                    .WithIdentity(GetTriggerName(key.Name))
+                    .StartAt(startAt)
+                    .WithCalendarIntervalSchedule(s=>s
+                        .WithIntervalInDays(settings.IntervalInDays.GetValueOrDefault())
+                        .WithMisfireHandlingInstructionDoNothing())
+                );
+
+                break;
+
+            case JobScheduleType.Cron:
+            default:
+                quartz.AddTrigger(x => x
+                    .ForJob(key)
+                    .WithIdentity(GetTriggerName(key.Name))
+                    .StartAt(startAt)
+                    .WithCronSchedule(settings.CronExpression, builder =>
+                        builder.WithMisfireHandlingInstructionDoNothing()));
+                break;
+        }
     }
 
     /// <summary>
