@@ -1,4 +1,3 @@
-using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
@@ -9,6 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Notifications;
 
 namespace Hackathon.API.Controllers;
 
@@ -71,7 +71,7 @@ public class NotificationController: BaseController
         {
             UserId = recipientId,
             OwnerId = AuthorizedUserId,
-            Type = NotificationType.Information,
+            Type = NotificationType.System,
             Data = new InfoNotificationData
             {
                 Message = message

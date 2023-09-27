@@ -14,7 +14,6 @@ using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Friend;
-using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
@@ -23,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Mail;
 using Hackathon.Common.Abstraction.Email;
+using Hackathon.Common.Abstraction.Notifications;
 using Microsoft.Extensions.Configuration;
 
 namespace Hackathon.BL;

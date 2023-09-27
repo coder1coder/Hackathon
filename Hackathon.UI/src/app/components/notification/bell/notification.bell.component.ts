@@ -74,9 +74,4 @@ export class NotificationBellComponent implements AfterViewInit
         this.notifications.totalCount = this.notifications.totalCount - ids.length;
       });
   }
-
-  removeAll(event:MouseEvent){
-    let ids = this.notifications.items.map(x=>x.id!);
-    this.remove(event, ids);
-  }
 }

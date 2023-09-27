@@ -2,7 +2,6 @@ using BackendTools.Common.Models;
 using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.IntegrationEvents;
-using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Chat;
@@ -11,6 +10,7 @@ using Hackathon.IntegrationEvents.IntegrationEvent;
 using MapsterMapper;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Common.Abstraction.Notifications;
 
 namespace Hackathon.BL.Chat;
 

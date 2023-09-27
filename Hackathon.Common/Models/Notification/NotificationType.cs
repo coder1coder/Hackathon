@@ -5,7 +5,18 @@ namespace Hackathon.Common.Models.Notification;
 /// </summary>
 public enum NotificationType
 {
-    Information = 0,
+    /// <summary>
+    /// Системное уведомление
+    /// </summary>
+    System = 0,
+
+    /// <summary>
+    /// Приглашение в команду
+    /// </summary>
     TeamInvite = 1,
+
+    /// <summary>
+    /// Приглашение на мероприятие
+    /// </summary>
     EventInvite = 2
 }

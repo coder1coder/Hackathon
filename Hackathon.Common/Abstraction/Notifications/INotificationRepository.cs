@@ -1,10 +1,10 @@
+using System;
+using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Notification;
-using System;
-using System.Threading.Tasks;
 
-namespace Hackathon.Common.Abstraction.Notification;
+namespace Hackathon.Common.Abstraction.Notifications;
 
 public interface INotificationRepository
 {

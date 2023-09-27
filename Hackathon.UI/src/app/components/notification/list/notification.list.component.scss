@@ -1,3 +1,25 @@
+@import "../../../../assets/styles/mixins";
+
+.notification-list{
+  display: flex;
+  column-gap: 30px;
+}
+
+.notification-list-items{
+  flex: 1;
+  @include card;
+  padding: 0;
+}
+
+.notification-list-filter{
+  width: 300px;
+  @include card;
+
+  &-title {
+    font-size: 22px;
+  }
+}
+
 .mat-column-status {
   mat-icon {
     font-size: 10px;

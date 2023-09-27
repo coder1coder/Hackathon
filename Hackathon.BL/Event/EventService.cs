@@ -4,7 +4,6 @@ using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.Event;
 using Hackathon.Common.Abstraction.IntegrationEvents;
-using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
@@ -25,6 +24,7 @@ using Microsoft.AspNetCore.Http;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
+using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.BL.Validation.ImageFile;
 
 namespace Hackathon.BL.Event;

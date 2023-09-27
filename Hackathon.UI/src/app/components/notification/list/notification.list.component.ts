@@ -15,6 +15,10 @@ import {AuthService} from "../../../services/auth.service";
 
 export class NotificationListComponent extends BaseTableListComponent<Notification>{
 
+  public getDisplayColumns(): string[]{
+    return [];
+  }
+
   Notification = Notification;
 
   constructor(private notificationService: NotificationService, private authService: AuthService) {
@@ -55,16 +59,8 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
     });
   }
 
-  public getDisplayColumns(): string[] {
-    return ['notify', 'type', 'createdAt', 'actions'];
-  }
-
   public removeAll(event:MouseEvent) {
     let ids = this.items.map(x => x.id!);
     this.remove(event, ids);
-  }
-
-  public get isNotificationsExists() : boolean {
-    return  this.items.length === 0;
   }
 }

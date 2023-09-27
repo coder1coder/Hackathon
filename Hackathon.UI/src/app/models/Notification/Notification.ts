@@ -13,14 +13,29 @@ export class Notification
     return JSON.parse(data);
   }
 
-  public static getTypeName(type:NotificationType){
+  public static getTypeName(type?:NotificationType){
     switch (type){
       case NotificationType.Information:
-        return 'Информация';
+        return 'Системное уведомление';
       case NotificationType.TeamInvite:
         return 'Приглашение в команду';
       case NotificationType.EventInvite:
         return 'Приглашение в событие';
+      default:
+        return ``;
+    }
+  }
+
+  public static getTypeIcon(type?:NotificationType):string {
+    switch (type){
+      case NotificationType.Information:
+        return 'info_outline';
+      case NotificationType.TeamInvite:
+        return 'group_add';
+      case NotificationType.EventInvite:
+        return 'calendar_add_on';
+      default:
+        return ``;
     }
   }
 }
