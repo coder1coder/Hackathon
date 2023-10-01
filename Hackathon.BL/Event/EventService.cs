@@ -24,9 +24,8 @@ using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
-using Hackathon.Common.Configuration;
-using Microsoft.Extensions.Options;
 using Hackathon.BL.Validation.Extensions;
+using Hackathon.BL.Validation.ImageFile;
 
 namespace Hackathon.BL.Event;
 
@@ -113,7 +112,7 @@ public class EventService : IEventService
             if (eventModel.ImageId.HasValue)
                 await _fileStorageRepository.UpdateFlagIsDeleted(eventModel.ImageId.Value, true);
 
-            await AssignImageIdFromTemporaryFile(eventUpdateParameters);   
+            await AssignImageIdFromTemporaryFile(eventUpdateParameters);
         }
 
         await _eventRepository.UpdateAsync(eventUpdateParameters);
@@ -330,7 +329,8 @@ public class EventService : IEventService
 
         var image = EventFileImage.FromStream(stream, file.FileName);
 
-        await _eventImageValidator.ValidateAndThrowAsync(image, options => options.IncludeRuleSets("EventImage"));
+        await _eventImageValidator.ValidateAndThrowAsync(image, options =>
+            options.IncludeRuleSets(FileImageValidatorRuleSets.EventImage));
 
         var uploadResult = await _fileStorageService.UploadAsync(stream, Bucket.Events, file.FileName, null, true);
 
@@ -441,7 +441,7 @@ public class EventService : IEventService
         {
             _logger.LogError(ex,
                         "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
-                        nameof(EventService), fileModel.Id);
+                        nameof(EventService), fileModel?.Id);
         }
         finally
         {

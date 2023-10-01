@@ -20,7 +20,7 @@ public class FileImageValidator : AbstractValidator<IFileImage>
         var fileSettings = fileSettingsOptions?.Value ?? new FileSettings();
 
         //Правила валидации для изображений профиля
-        RuleSet("ProfileImage", () =>
+        RuleSet(FileImageValidatorRuleSets.ProfileImage, () =>
         {
             RuleFor(x => x.Width)
                 .Must(width => width >= MinWidthProfileImage)
@@ -40,7 +40,7 @@ public class FileImageValidator : AbstractValidator<IFileImage>
         });
 
         //Правила валидации для изображений события
-        RuleSet("EventImage", () =>
+        RuleSet(FileImageValidatorRuleSets.EventImage, () =>
         {
             RuleFor(x => x.Width)
                 .Must(width => width >= MinWidthEventImage)
@@ -60,9 +60,9 @@ public class FileImageValidator : AbstractValidator<IFileImage>
         });
     }
 
-    private string GetErrorSizeMessage(int minWidth, int minHeight) => string.Format(FileImageErrorMessages.ErrorSizeMessage,
+    private static string GetErrorSizeMessage(int minWidth, int minHeight) => string.Format(FileImageErrorMessages.ErrorSizeMessage,
         minWidth, minHeight);
-    private string GetErrorLengthMessage(long minLength, long maxLength) => string.Format(FileImageErrorMessages.ErrorLengthMessage,
+    private static string GetErrorLengthMessage(long minLength, long maxLength) => string.Format(FileImageErrorMessages.ErrorLengthMessage,
         minLength, GetMegabytesFromBytes(maxLength));
     private string GetErrorExtensionMessage() => string.Format(FileImageErrorMessages.ErrorExtensionMessage,
         string.Join(" ", _allowedExtensions));

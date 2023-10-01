@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.BL.Validation.Extensions;
+using Hackathon.BL.Validation.ImageFile;
 
 namespace Hackathon.BL.User;
 
@@ -154,7 +155,8 @@ public class UserService: IUserService
 
         var image = ProfileFileImage.FromStream(stream, file.FileName);
 
-        await _profileImageValidator.ValidateAndThrowAsync(image, options => options.IncludeRuleSets("ProfileImage"));
+        await _profileImageValidator.ValidateAndThrowAsync(image, options =>
+            options.IncludeRuleSets(FileImageValidatorRuleSets.ProfileImage));
 
         var user = await _userRepository.GetAsync(userId);
 
