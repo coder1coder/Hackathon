@@ -43,12 +43,6 @@ public static class ServiceCollectionExtensions
         var settings = configuration?.GetSection($"Jobs:{typeof(TJob).Name}")
             .Get<TJobSettings>() ?? new TJobSettings();
 
-        if (settings.ScheduleType == JobScheduleType.Cron
-            &&
-            (string.IsNullOrWhiteSpace(settings.CronExpression) ||
-            !CronExpression.IsValidExpression(settings.CronExpression)))
-            return;
-
         quartz.AddJob<TJob>(x => x
             .WithIdentity(key)
         );
@@ -73,6 +67,11 @@ public static class ServiceCollectionExtensions
 
             case JobScheduleType.Cron:
             default:
+
+                if (string.IsNullOrWhiteSpace(settings.CronExpression)
+                    || !CronExpression.IsValidExpression(settings.CronExpression))
+                    return;
+
                 quartz.AddTrigger(x => x
                     .ForJob(key)
                     .WithIdentity(GetTriggerName(key.Name))
