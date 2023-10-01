@@ -32,7 +32,9 @@ public class EmailServiceTests: BaseIntegrationTest
         _service = new EmailService(emailSettingsMock.Object, NullLogger<EmailService>.Instance, smtpClient);
     }
 
+#pragma warning disable xUnit1004
     [Fact(DisplayName = "Отправка Email", Skip = "Предназначен только для локальной проверки")]
+#pragma warning restore xUnit1004
     public async Task SendAsync_Test()
     {
         var result = await _service.SendAsync(new EmailParameters

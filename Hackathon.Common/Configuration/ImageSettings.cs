@@ -1,18 +1,17 @@
-namespace Hackathon.Common.Configuration
+namespace Hackathon.Common.Configuration;
+
+/// <summary>
+/// Настройки изображения
+/// </summary>
+public class ImageSettings
 {
     /// <summary>
-    /// Настройки изображения
+    /// Минимальный вес изображения(в байтах)
     /// </summary>
-    public class ImageSettings
-    {
-        /// <summary>
-        /// Минимальный вес изображения(в байтах)
-        /// </summary>
-        public int MinLength { get; set; }
+    public int MinLength { get; set; }
 
-        /// <summary>
-        /// Максимальный вес изображения(в байтах)
-        /// </summary>
-        public int MaxLength { get; set; }
-    }
+    /// <summary>
+    /// Максимальный вес изображения(в байтах)
+    /// </summary>
+    public int MaxLength { get; set; }
 }

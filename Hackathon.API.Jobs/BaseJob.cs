@@ -9,6 +9,7 @@ public abstract class BaseJob<TJob>: IJob
 {
     public static JobKey Key => new(typeof(TJob).Name);
 
+    // ReSharper disable once UnusedParameter.Global
     protected abstract Task DoWork(IJobExecutionContext context);
 
     private readonly ILogger<TJob> _logger;

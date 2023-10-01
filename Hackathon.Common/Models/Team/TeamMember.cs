@@ -8,5 +8,5 @@ public class TeamMember: UserShortModel
     /// <summary>
     /// Дата добавления пользователя в команду
     /// </summary>
-    public DateTime DateTimeAdd { get; set; } = new();
+    public DateTime DateTimeAdd { get; set; }
 }

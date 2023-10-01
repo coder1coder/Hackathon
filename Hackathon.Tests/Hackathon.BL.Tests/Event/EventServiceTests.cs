@@ -19,10 +19,7 @@ using Hackathon.Common.Abstraction.FileStorage;
 using Xunit;
 using Bogus;
 using Hackathon.Common.Models.FileStorage;
-using static System.Net.Mime.MediaTypeNames;
 using Hackathon.Common.Models;
-using Amazon.Runtime.Internal.Util;
-using Hackathon.BL.User;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Tests.Event;
@@ -33,7 +30,6 @@ public class EventServiceTests: BaseUnitTest
     private readonly Mock<IEventRepository> _eventRepositoryMock;
     private readonly Mock<IBus> _busMock;
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
-    private readonly Mock<ILogger<EventService>> _loggerMock;
 
     public EventServiceTests()
     {
@@ -49,7 +45,7 @@ public class EventServiceTests: BaseUnitTest
         var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
-        _loggerMock = new Mock<ILogger<EventService>>();
+        var loggerMock = new Mock<ILogger<EventService>>();
         var eventImageValidator = new Mock<IValidator<IFileImage>>();
 
         _service = new EventService(
@@ -66,7 +62,7 @@ public class EventServiceTests: BaseUnitTest
             fileStorageServiceMock.Object,
             _fileStorageRepositoryMock.Object,
             eventAgreementRepositoryMock.Object,
-            _loggerMock.Object
+            loggerMock.Object
         );
     }
 
@@ -154,7 +150,7 @@ public class EventServiceTests: BaseUnitTest
         //arrange
         var eventUpdateParameters = new Faker<EventUpdateParameters>()
             .RuleFor(x => x.Id, f => f.Random.Long(1, 10))
-            .RuleFor(x => x.ImageId, f => Guid.NewGuid())
+            .RuleFor(x => x.ImageId, _ => Guid.NewGuid())
             .Generate();
 
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))

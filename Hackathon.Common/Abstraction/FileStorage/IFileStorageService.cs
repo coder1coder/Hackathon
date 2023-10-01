@@ -15,6 +15,7 @@ public interface IFileStorageService
     /// <param name="bucket">Bucket</param>
     /// <param name="fileName">Имя файла</param>
     /// <param name="ownerId">Идентификатор владельца</param>
+    /// <param name="isDeleted">Признак удаленного файла</param>
     /// <returns></returns>
     Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null, bool isDeleted = false);
 

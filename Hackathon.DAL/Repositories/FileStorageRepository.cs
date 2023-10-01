@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.FileStorage;
-using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.DAL.Entities;
-using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 

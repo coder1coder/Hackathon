@@ -84,7 +84,8 @@ public class FriendshipService: IFriendshipService
                 case FriendshipStatus.Confirmed:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(offer.Status),
+                        "Статус дружбы не определен");
             }
         }
         //Если предложение дружбы создано другим пользователем

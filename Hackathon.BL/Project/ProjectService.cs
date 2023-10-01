@@ -105,10 +105,9 @@ public class ProjectService: IProjectService
         if (projectModel is null)
             return Result<ProjectModel>.NotFound(ProjectMessages.ProjectDoesNotExist);
 
-        if (!projectModel.Team.HasMemberWithId(authorizedUserId))
-            return Result<ProjectModel>.Forbidden("Нет прав на выполнение операции");
-
-        return Result<ProjectModel>.FromValue(projectModel);
+        return !projectModel.Team.HasMemberWithId(authorizedUserId)
+            ? Result<ProjectModel>.Forbidden("Нет прав на выполнение операции")
+            : Result<ProjectModel>.FromValue(projectModel);
     }
 
     public async Task<Result> DeleteAsync(long authorizedUserId, long eventId, long teamId)

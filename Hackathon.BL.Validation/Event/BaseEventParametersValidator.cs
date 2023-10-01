@@ -1,5 +1,4 @@
 using FluentValidation;
-using Hackathon.Common;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.BL.Validation.Event;

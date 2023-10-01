@@ -30,9 +30,8 @@ public class NewEventChatMessageValidator: IValidator<NewEventChatMessage>
         if (@event is null)
             return Result.NotValid(EventErrorMessages.EventDoesNotExists);
 
-        if (@event.Status is not EventStatus.Started)
-            return Result.NotValid(ChatErrorMessages.MessageCanBeSentOnlyForStartedEvent);
-
-        return Result.Success;
+        return @event.Status is not EventStatus.Started
+            ? Result.NotValid(ChatErrorMessages.MessageCanBeSentOnlyForStartedEvent)
+            : Result.Success;
     }
 }

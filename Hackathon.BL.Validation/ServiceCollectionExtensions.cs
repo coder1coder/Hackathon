@@ -6,7 +6,6 @@ using Hackathon.BL.Validation.ImageFile;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Chat.Event;

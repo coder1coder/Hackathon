@@ -1,25 +1,24 @@
-namespace Hackathon.Common.Models.FileStorage
+namespace Hackathon.Common.Models.FileStorage;
+
+public interface IFileImage
 {
-    public interface IFileImage
-    {
-        /// <summary>
-        /// Ширина в px
-        /// </summary>
-        public int Width { get; }
+    /// <summary>
+    /// Ширина в px
+    /// </summary>
+    public int Width { get; }
 
-        /// <summary>
-        /// Высота в px
-        /// </summary>
-        public int Height { get; }
+    /// <summary>
+    /// Высота в px
+    /// </summary>
+    public int Height { get; }
 
-        /// <summary>
-        /// Размер в байтах
-        /// </summary>
-        public long Length { get; }
+    /// <summary>
+    /// Размер в байтах
+    /// </summary>
+    public long Length { get; }
 
-        /// <summary>
-        /// Расширение файла
-        /// </summary>
-        public string Extension { get; }
-    }
+    /// <summary>
+    /// Расширение файла
+    /// </summary>
+    public string Extension { get; }
 }

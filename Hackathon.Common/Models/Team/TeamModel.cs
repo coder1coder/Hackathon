@@ -1,5 +1,4 @@
 ﻿using System;
-using Hackathon.Common.Models.User;
 using System.Linq;
 
 namespace Hackathon.Common.Models.Team;

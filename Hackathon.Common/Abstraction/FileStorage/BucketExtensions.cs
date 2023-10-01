@@ -10,7 +10,7 @@ public static class BucketExtensions {
             Bucket.Avatars => nameof(Bucket.Avatars).ToLower(),
             Bucket.Events => nameof(Bucket.Events).ToLower(),
             Bucket.Projects => nameof(Bucket.Projects).ToLower(),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(bucket), "Бакет не определен")
         };
     }
 }
