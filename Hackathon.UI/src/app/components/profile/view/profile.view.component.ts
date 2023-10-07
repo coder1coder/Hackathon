@@ -34,11 +34,13 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
   public userTeam: Team | null;
   public authUserId: number;
   public isEditMode: boolean = false;
-  public canUploadImage: boolean = false;
   public isLoading: boolean = true;
   public userProfileReaction = UserProfileReaction;
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
+
+  public canUploadImage: boolean = false;
+  public canViewEmail: boolean = false;
 
   private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   private emailRegexp: RegExp = emailRegex;
@@ -169,6 +171,7 @@ export class ProfileViewComponent extends WithFormComponentBase implements OnIni
         switchMap((user)=> {
           const currentUserId = this.authService.getUserId();
           this.canUploadImage = currentUserId === this.userId;
+          this.canViewEmail = currentUserId === this.userId;
           this.user = user;
 
           if (this.userId != this.authUserId) {

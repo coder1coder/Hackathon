@@ -27,7 +27,7 @@
             <td>Полное имя</td>
             <td [innerText]="user?.fullName"></td>
           </tr>
-          <tr>
+          <tr *ngIf="canViewEmail">
             <td class="email">E-mail</td>
             <td>
               <div>{{ user?.email?.address }}</div>
