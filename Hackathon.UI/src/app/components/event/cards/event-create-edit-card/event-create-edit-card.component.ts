@@ -73,6 +73,11 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     super();
     this.eventId = activateRoute.snapshot.params['eventId'];
     this.editMode = this.eventId !== undefined && !isNaN(Number(this.eventId));
+
+    let defaultEventStage = new EventStage();
+    defaultEventStage.name = `Основная часть мероприятия`;
+    defaultEventStage.duration = 60;
+    this.eventStagesDataSource.data.push(defaultEventStage);
   }
 
   ngOnInit(): void {
