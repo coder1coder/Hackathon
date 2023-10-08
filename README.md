@@ -31,12 +31,20 @@ docker-compose up -d
 
 Запустить веб-апи
 ```
+cd .\Hackathon.API\
+dotnet ef database update
+cd ../ (вернуться в директорию Hackathon.sln)
 dotnet build
 dotnet run --no-build
 ```
 
-Запустить клиентское приложение
+Запустить UI клиентское приложение
 ```
-cd .\Hackathon.UI\src\
-ng serve
+Скачиваем и устанавливаем node.js не ниже v16
+Стабильная версия для проекта v16.15.1
+cd .\Hackathon.UI\
+npm i (установка зависимостей)
+ng serve (запуск dev-сервера, перейдите по адресу http://localhost:4200/)
 ```
+[Скачать Node.js](https://nodejs.org/en/download)<br>
+[Скачать Node.js v16.15.1](https://nodejs.org/dist/v16.15.1/)
