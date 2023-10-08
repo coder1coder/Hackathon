@@ -38,6 +38,8 @@ export class ProjectDialog implements OnInit {
     this.form = this.formBuilder.group({
       name: new FormControl(this.dialogData?.project?.name, [
         Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100)
       ]),
       description: new FormControl(this.dialogData?.project?.description),
       eventId: new FormControl(this.dialogData?.project?.eventId),
