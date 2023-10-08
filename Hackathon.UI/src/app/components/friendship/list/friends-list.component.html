@@ -11,7 +11,13 @@
               *ngIf="this.status == FriendshipStatus.Pending"
               (click)="rejectOffer(Number(user.id))"><mat-icon>delete_forever</mat-icon></button>
     </div>
-    <span class="friends-list__item-user" (click)="openUserProfile(Number(user.id))">{{ user.fullName ?? user.userName }}</span>
+
+    <span class="friends-list__item-user" (click)="openUserProfile(Number(user.id))">
+          <profile-image [userId]="user.id"
+                         *ngIf="user.id"
+                         [canUpload]="false" class="size35"></profile-image>
+      {{ user.fullName ?? user.userName }}
+    </span>
   </mat-list-item>
 </mat-list>
 <div class="no-data-text" *ngIf="users != undefined && users.length == 0">{{ getNoDataText() }}</div>

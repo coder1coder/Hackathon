@@ -10,6 +10,10 @@
       &-user {
         cursor: pointer;
 
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+
         &:hover {
           color: #3f51b5;
         }
