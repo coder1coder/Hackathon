@@ -6,6 +6,8 @@ import {GetListParameters} from "../../models/GetListParameters";
 import {IEventLogModel} from "../../models/EventLog/IEventLogModel";
 import {BaseCollection} from "../../models/BaseCollection";
 import {EventLogService} from "../../services/eventLog/eventLog.service";
+import * as moment from "moment/moment";
+import { DATE_FORMAT } from "src/app/common/date-formats";
 
 @Component({
   selector: 'eventLog-list',
@@ -39,6 +41,10 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
         });
 
     });
+  }
+
+  public formatDateTime(date: Date): string {
+    return moment(date).local().format(DATE_FORMAT)
   }
 
   getDisplayColumns(): string[] {
