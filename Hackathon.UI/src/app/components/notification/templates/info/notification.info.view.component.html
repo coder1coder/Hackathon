@@ -1,6 +1,6 @@
 <ng-template [ngIf]="notify !== undefined" [ngIfElse]="bad">
 
-<div class=`notify__${notify?.id}`>
+<div>
   <div class="notify__info-message">
     <div mat-line>{{ Notification.getParsedData(notify.data)?.Message }}</div>
   </div>

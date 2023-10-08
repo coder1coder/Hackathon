@@ -1,6 +1,6 @@
 @import "../../../../assets/styles/variables";
 
-.notification-item{
+.notification-item {
     display: flex;
     column-gap: 15px;
     padding: 15px 15px 30px 15px;
@@ -25,6 +25,10 @@
 }
 
 .notification-content{
+  display: flex;
+}
+
+.notification-content, .notification-body{
     flex: 1;
 }
 
@@ -32,4 +36,21 @@
     color: #999;
     font-size: 12px;
     line-height: 40px;
+}
+
+.notification-body {
+}
+
+.notification-item.shortView {
+  padding: 10px;
+
+  .notification-date {
+    line-height:initial;
+    padding-top: 10px;
+  }
+
+  .notification-content{
+    flex-direction: column;
+  }
+
 }

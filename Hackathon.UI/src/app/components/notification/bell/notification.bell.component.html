@@ -10,7 +10,11 @@
 
 <mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu">
   <ng-template [ngIf]="notifications.items != undefined && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
-    <notification-item *ngFor="let item of notifications?.items" [notification]="item"></notification-item>
+    <notification-item *ngFor="let item of notifications?.items"
+                       [notification]="item"
+                       [shortView]="true"
+
+    ></notification-item>
   </ng-template>
   <button
     *ngIf="notifications.items.length > 0"

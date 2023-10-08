@@ -1,28 +1,30 @@
-<div class="notification-item" *ngIf="notification != undefined">
+<div class="notification-item" *ngIf="notification != undefined" [class.shortView]="shortView">
     <mat-icon class="notification-icon">
         {{ Notification.getTypeIcon(notification.type) }}
     </mat-icon>
     <div class="notification-content">
-      <div class="notification-title">{{ Notification.getTypeName(notification.type) }}</div>
+
       <div class="notification-body">
-    
-        <div [ngSwitch]="notification.type">
-            <notification-info-view *ngSwitchCase="0"
-                                    [notify]="notification"
-                                    [hideDate]="true">
-            </notification-info-view>
-        </div>
-    
+        <div class="notification-title">{{ Notification.getTypeName(notification.type) }}</div>
+        <ng-container [ngSwitch]="notification.type">
+          <notification-info-view *ngSwitchCase="0"
+                                  [notify]="notification"
+                                  [hideDate]="true"></notification-info-view>
+        </ng-container>
       </div>
+
+      <div class="notification-meta">
+        <div class="notification-date">{{ notification.createdAt?.toLocaleString() | date:'dd.MM.y, HH:mm' }}</div>
+      </div>
+
     </div>
-    <div class="notification-date">{{ notification.createdAt?.toLocaleString() | date:'dd.MM.y, HH:mm' }}</div>
-    <div class="notification-actions">
+    <div class="notification-actions" *ngIf="!hideActions">
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="remove($event, [notification.id!])">
-          <mat-icon color="accent">delete_outline</mat-icon> 
+          <mat-icon color="accent">delete_outline</mat-icon>
           <span>Удалить</span>
         </button>
       </mat-menu>

@@ -11,12 +11,13 @@ export class NotificationItemComponent
 {
     Notification = Notification;
 
-    @Input() notification: Notification | undefined; 
+    @Input() notification: Notification | undefined;
+    @Input() hideActions: boolean = true;
+    @Input() shortView: boolean = false;
 
     constructor(
         private notificationService: NotificationService
-        ) {
-        }
+        ) {}
 
     public remove(event:MouseEvent, ids:string[]) {
         this.notificationService.remove(ids).subscribe(_=>
