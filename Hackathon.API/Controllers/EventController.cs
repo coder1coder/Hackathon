@@ -149,12 +149,6 @@ public class EventController: BaseController
     [HttpPost("image/upload")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    public async Task<IActionResult> UploadEventImage(IFormFile file)
-    {
-        var uploadEventImageResult = await _eventService.UploadEventImageAsync(file);
-        if (!uploadEventImageResult.IsSuccess)
-            return await GetResult(() => Task.FromResult(uploadEventImageResult));
-
-        return Ok(uploadEventImageResult.Data);
-    }
+    public Task<IActionResult> UploadEventImage(IFormFile file)
+        => GetResult(() => _eventService.UploadEventImageAsync(file));
 }
