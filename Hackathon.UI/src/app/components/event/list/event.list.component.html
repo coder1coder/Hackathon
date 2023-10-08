@@ -13,7 +13,7 @@
   </div>
 
   <div class="event-block dark-theme-color">
-    <div class="mb-1-5em">
+    <div class="mb-1-5em" *ngIf="isFilterEnabled">
       <form [formGroup]="filterForm" class="events__filter">
         <mat-form-field appearance="outline">
           <mat-label>Наименование события</mat-label>
@@ -87,9 +87,7 @@
                 {{getDateTimeFormat(item.start)}}
               </div>
 
-              <app-event-status
-              [status]="item.status">
-              </app-event-status>
+              <app-event-status [status]="item.status"></app-event-status>
 
               <div class="owner">/ Организатор: {{item?.ownerName }}</div>
 

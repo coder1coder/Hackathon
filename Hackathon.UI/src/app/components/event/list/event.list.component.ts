@@ -30,6 +30,7 @@ export class EventListComponent implements OnInit {
   public eventStatusTranslator = EventStatusTranslator;
   public isLoading: boolean = true;
   public isFullListDisplayed: boolean = false;
+  public isFilterEnabled: boolean = false;
 
   private params = new GetListParameters<EventFilter>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
