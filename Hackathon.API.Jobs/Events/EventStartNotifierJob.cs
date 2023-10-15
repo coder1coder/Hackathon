@@ -1,4 +1,3 @@
-using Hackathon.Common.Abstraction.Notification;
 using Hackathon.Common.Models.Notification;
 using System;
 using System.Linq;

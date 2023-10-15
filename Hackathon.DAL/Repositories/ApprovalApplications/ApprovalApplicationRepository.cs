@@ -66,4 +66,18 @@ public class ApprovalApplicationRepository: IApprovalApplicationRepository
             Total = totalCount
             };
     }
+
+    public async Task<ApprovalApplicationModel> GetAsync(long approvalApplicationId)
+    {
+        var entity = await _dbContext.ApprovalApplications
+            .Include(x=>x.Event)
+            .Include(x=>x.Author)
+            .Include(x=>x.Signer)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == approvalApplicationId);
+
+        return entity is null
+            ? null
+            : _mapper.Map<ApprovalApplicationEntity, ApprovalApplicationModel>(entity);
+    }
 }

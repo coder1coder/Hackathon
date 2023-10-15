@@ -17,4 +17,12 @@ public interface IApprovalApplicationService
     /// <param name="parameters">Параметры фильтрации и пагинации</param>
     /// <returns></returns>
     Task<Result<Page<ApprovalApplicationModel>>> GetListAsync(long authorizedUserId, GetListParameters<ApprovalApplicationFilter> parameters);
+
+    /// <summary>
+    /// Получить заявку на согласование по идентификатору заявки
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <returns></returns>
+    Task<Result<ApprovalApplicationModel>> GetAsync(long authorizedUserId, long approvalApplicationId);
 }

@@ -20,4 +20,11 @@ public interface IApprovalApplicationRepository
     /// <param name="parameters">Параметры фильтрации и пагинации</param>
     /// <returns></returns>
     Task<Page<ApprovalApplicationModel>> GetListAsync(GetListParameters<ApprovalApplicationFilter> parameters);
+
+    /// <summary>
+    /// Получить заявку на согласование по идентификатору заявки
+    /// </summary>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <returns></returns>
+    Task<ApprovalApplicationModel> GetAsync(long approvalApplicationId);
 }
