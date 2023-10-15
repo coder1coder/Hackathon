@@ -9,7 +9,6 @@ using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.IntegrationEvents.IntegrationEvent;
-using MassTransit;
 using Moq;
 using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
@@ -100,26 +99,26 @@ public class EventServiceTests: BaseUnitTest
         var createdId = new Random().Next(0, 11);
         var imageId = Guid.NewGuid();
 
-        var eventCreateParameners = new EventCreateParameters
+        var eventCreateParameters = new EventCreateParameters
         {
             ImageId = imageId,
             Stages = new List<EventStageModel>()
         };
 
-        _eventRepositoryMock.Setup(x => x.CreateAsync(eventCreateParameners))
+        _eventRepositoryMock.Setup(x => x.CreateAsync(eventCreateParameters))
             .ReturnsAsync(createdId);
 
-        _fileStorageRepositoryMock.Setup(x => x.GetAsync(eventCreateParameners.ImageId.Value))
+        _fileStorageRepositoryMock.Setup(x => x.GetAsync(eventCreateParameters.ImageId.Value))
             .ReturnsAsync(new StorageFile());
 
-        _fileStorageRepositoryMock.Setup(x => x.UpdateFlagIsDeleted(eventCreateParameners.ImageId.Value, false))
+        _fileStorageRepositoryMock.Setup(x => x.UpdateFlagIsDeleted(eventCreateParameters.ImageId.Value, false))
             .Returns(Task.CompletedTask);
 
         _messageBusServiceMock.Setup(x => x.Publish(It.IsAny<EventLogModel>(), default))
             .Returns(Task.CompletedTask);
 
         //act
-        var result = await _service.CreateAsync(eventCreateParameners);
+        var result = await _service.CreateAsync(eventCreateParameters);
 
         //assert
         Assert.NotNull(result);
