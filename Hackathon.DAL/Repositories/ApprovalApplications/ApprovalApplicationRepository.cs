@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Common.Abstraction.ApprovalApplications;
@@ -79,5 +80,23 @@ public class ApprovalApplicationRepository: IApprovalApplicationRepository
         return entity is null
             ? null
             : _mapper.Map<ApprovalApplicationEntity, ApprovalApplicationModel>(entity);
+    }
+
+    public async Task UpdateStatusAsync(long signerId, long approvalApplicationId, ApprovalApplicationStatus status, string comment = null)
+    {
+        var entity = await _dbContext.ApprovalApplications
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == approvalApplicationId);
+
+        if (entity is null)
+            return;
+
+        entity.ApplicationStatus = status;
+        entity.SignerId = signerId;
+        entity.DecisionAt = DateTimeOffset.UtcNow;
+        entity.Comment = comment;
+
+        _dbContext.Update(entity);
+        await _dbContext.SaveChangesAsync();
     }
 }
