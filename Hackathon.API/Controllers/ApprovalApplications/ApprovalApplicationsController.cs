@@ -34,4 +34,23 @@ public class ApprovalApplicationsController: BaseController
     [HttpGet("{approvalApplicationId:long}")]
     public Task<IActionResult> Get(long approvalApplicationId)
         => GetResult(() => _approvalApplicationService.GetAsync(AuthorizedUserId, approvalApplicationId));
+
+    /// <summary>
+    /// Согласовать заявку на согласование
+    /// </summary>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <returns></returns>
+    [HttpPost("{approvalApplicationId:long}/approve")]
+    public Task<IActionResult> Approve(long approvalApplicationId)
+        => GetResult(() => _approvalApplicationService.ApproveAsync(AuthorizedUserId, approvalApplicationId));
+
+    /// <summary>
+    /// Отклонить заявку на согласование
+    /// </summary>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <param name="parameters">Параметры решения</param>
+    /// <returns></returns>
+    [HttpPost("{approvalApplicationId:long}/reject")]
+    public Task<IActionResult> Reject(long approvalApplicationId, [FromBody] ApprovalApplicationRejectParameters parameters)
+        => GetResult(() => _approvalApplicationService.RejectAsync(AuthorizedUserId, approvalApplicationId, parameters));
 }

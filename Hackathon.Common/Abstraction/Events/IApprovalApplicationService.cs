@@ -25,4 +25,21 @@ public interface IApprovalApplicationService
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
     /// <returns></returns>
     Task<Result<ApprovalApplicationModel>> GetAsync(long authorizedUserId, long approvalApplicationId);
+
+    /// <summary>
+    /// Согласовать заявку на согласование
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <returns></returns>
+    Task<Result> ApproveAsync(long authorizedUserId, long approvalApplicationId);
+
+    /// <summary>
+    /// Отклонить заявку на согласование
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <param name="parameters">Параметры решения</param>
+    /// <returns></returns>
+    Task<Result> RejectAsync(long authorizedUserId, long approvalApplicationId, ApprovalApplicationRejectParameters parameters);
 }
