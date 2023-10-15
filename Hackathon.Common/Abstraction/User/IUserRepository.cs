@@ -73,4 +73,10 @@ public interface IUserRepository
     /// <param name="userRole">Роль</param>
     /// <returns></returns>
     Task SetRole(long userId, UserRole userRole);
+
+    /// <summary>
+    /// Получить идентификаторы администраторов
+    /// </summary>
+    /// <returns></returns>
+    Task<long[]> GetAdministratorIdsAsync();
 }

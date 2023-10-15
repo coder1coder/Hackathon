@@ -441,7 +441,27 @@ public class EventService : IEventService
         await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
         await _integrationEventHub.Publish(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
+
+        if (eventStatus == EventStatus.OnModeration)
+        {
+            await NotifyAdministrators(eventModel);
+        }
+
         await NotifyEventMembers(eventModel, eventStatus);
+    }
+
+    private async Task NotifyAdministrators(EventModel eventModel)
+    {
+        var administratorIds = await _userRepository.GetAdministratorIdsAsync();
+        if (administratorIds is not {Length: > 0})
+            return;
+
+        var notifications = administratorIds.Select(administratorId =>
+                CreateNotificationModel.Information(administratorId,
+                $"Заявка на согласование мероприятия <{eventModel.Name}>",
+                    eventModel.OwnerId));
+
+        await _notificationService.PushManyAsync(notifications);
     }
 
     private async Task NotifyEventMembers(EventModel eventModel, EventStatus eventStatus)
