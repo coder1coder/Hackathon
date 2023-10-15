@@ -25,4 +25,13 @@ public class ApprovalApplicationsController: BaseController
     [HttpGet]
     public Task<IActionResult> GetList([FromQuery] GetListParameters<ApprovalApplicationFilter> parameters)
         => GetResult(() => _approvalApplicationService.GetListAsync(AuthorizedUserId, parameters));
+
+    /// <summary>
+    /// Получить заявку на согласование по идентификатору заявки
+    /// </summary>
+    /// <param name="approvalApplicationId">Идентификатор заявки</param>
+    /// <returns></returns>
+    [HttpGet("{approvalApplicationId:long}")]
+    public Task<IActionResult> Get(long approvalApplicationId)
+        => GetResult(() => _approvalApplicationService.GetAsync(AuthorizedUserId, approvalApplicationId));
 }

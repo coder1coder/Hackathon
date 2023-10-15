@@ -14,6 +14,8 @@ public class ApprovalApplicationService: IApprovalApplicationService
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
     private readonly IUserRepository _userRepository;
 
+    private const string NoRightsExecutingOperation = "Нет прав на выполнение операции";
+
     public ApprovalApplicationService(
         IApprovalApplicationRepository approvalApplicationRepository,
         IUserRepository userRepository)
@@ -27,10 +29,26 @@ public class ApprovalApplicationService: IApprovalApplicationService
         var user = await _userRepository.GetAsync(authorizedUserId);
 
         if (user is not { Role: UserRole.Administrator })
-            return Result<Page<ApprovalApplicationModel>>.Forbidden("Нет прав на выполнение операции");
+            return Result<Page<ApprovalApplicationModel>>.Forbidden(NoRightsExecutingOperation);
 
         var pagedApprovalApplications = await _approvalApplicationRepository.GetListAsync(parameters);
 
         return Result<Page<ApprovalApplicationModel>>.FromValue(pagedApprovalApplications);
+    }
+
+    public async Task<Result<ApprovalApplicationModel>> GetAsync(long authorizedUserId, long approvalApplicationId)
+    {
+        var authorizedUser = await _userRepository.GetAsync(authorizedUserId);
+        if (authorizedUser is null)
+            return Result<ApprovalApplicationModel>.Forbidden(NoRightsExecutingOperation);
+
+        var approvalApplication = await _approvalApplicationRepository.GetAsync(approvalApplicationId);
+        if (approvalApplication is null)
+            return Result<ApprovalApplicationModel>.NotFound("Заявка на согласование не найдена");
+
+        if (authorizedUser.Role != UserRole.Administrator || authorizedUser.Id != approvalApplication.AuthorId)
+            return Result<ApprovalApplicationModel>.Forbidden(NoRightsExecutingOperation);
+
+        return Result<ApprovalApplicationModel>.FromValue(approvalApplication);
     }
 }
