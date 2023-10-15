@@ -52,7 +52,11 @@ public class EventService : IEventService
     private readonly ILogger<EventService> _logger;
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
 
-    public EventService(FluentValidation.IValidator<EventCreateParameters> createEventModelValidator, FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator, FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, FluentValidation.IValidator<IFileImage> eventImageValidator,
+    public EventService(
+        FluentValidation.IValidator<EventCreateParameters> createEventModelValidator,
+        FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator,
+        FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, 
+        FluentValidation.IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,

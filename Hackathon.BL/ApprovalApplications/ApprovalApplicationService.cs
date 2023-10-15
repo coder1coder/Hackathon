@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using FluentValidation;
-using Hackathon.BL.Validation.ApprovalApplications;
+using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Notifications;
@@ -17,7 +17,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
 {
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
     private readonly IUserRepository _userRepository;
-    private readonly ApprovalApplicationRejectParametersValidator _rejectParametersValidator;
+    private readonly IValidator<ApprovalApplicationRejectParameters> _rejectParametersValidator;
     private readonly INotificationService _notificationService;
 
     private const string NoRightsExecutingOperation = "Нет прав на выполнение операции";
@@ -27,7 +27,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
     public ApprovalApplicationService(
         IApprovalApplicationRepository approvalApplicationRepository,
         IUserRepository userRepository,
-        ApprovalApplicationRejectParametersValidator rejectParametersValidator,
+        IValidator<ApprovalApplicationRejectParameters> rejectParametersValidator,
         INotificationService notificationService)
     {
         _approvalApplicationRepository = approvalApplicationRepository;
@@ -52,7 +52,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
     {
         var authorizedUser = await _userRepository.GetAsync(authorizedUserId);
         if (authorizedUser is null)
-            return Result<ApprovalApplicationModel>.Forbidden(NoRightsExecutingOperation);
+            return Result<ApprovalApplicationModel>.NotFound(UserErrorMessages.UserDoesNotExists);
 
         var approvalApplication = await _approvalApplicationRepository.GetAsync(approvalApplicationId);
         if (approvalApplication is null)
@@ -103,7 +103,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
             return Result.NotValid(ApprovalApplicationAlreadyHasDecision);
 
         await _approvalApplicationRepository.UpdateStatusAsync(approvalApplicationId, approvalApplicationId,
-            ApprovalApplicationStatus.Approved, parameters.Comment);
+            ApprovalApplicationStatus.Rejected, parameters.Comment);
 
         await _notificationService.PushAsync(
             CreateNotificationModel.Information(approvalApplication.AuthorId,
