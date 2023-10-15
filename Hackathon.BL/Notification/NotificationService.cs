@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Notifications;
@@ -39,19 +40,16 @@ public class NotificationService: INotificationService
 
     public async Task PushAsync<T>(CreateNotificationModel<T> model) where T: class
     {
-        var notificationId = await _notificationRepository.Push(model);
+        var notificationIds = await _notificationRepository.PushManyAsync(new []{ model });
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
-            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, new []{ notificationId }));
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, notificationIds));
     }
 
     public async Task PushManyAsync<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
     {
-        var notificationIds = new List<Guid>();
-        foreach (var model in models)
-            notificationIds.Add(await _notificationRepository.Push(model));
-
+        var notificationIds = await _notificationRepository.PushManyAsync(models.ToArray());
         await _notificationsHub.Publish(TopicNames.NotificationChanged,
-            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, notificationIds.ToArray()));
+            new NotificationChangedIntegrationEvent(NotificationChangedOperation.Created, notificationIds));
     }
 
     public Task<long> GetUnreadNotificationsCountAsync(long userId)

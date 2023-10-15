@@ -13,6 +13,11 @@ public class EventModel : EventUpdateParameters
     public EventStatus Status { get; set; }
 
     /// <summary>
+    /// Кто создал событие
+    /// </summary>
+    public long OwnerId { get; set; }
+
+    /// <summary>
     /// Организатор
     /// </summary>
     public UserModel Owner { get; set; }

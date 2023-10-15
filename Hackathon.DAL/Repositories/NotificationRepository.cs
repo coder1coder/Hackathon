@@ -26,12 +26,14 @@ public class NotificationRepository: INotificationRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class
+    public async Task<Guid[]> PushManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class
     {
-        var notification = _mapper.Map<NotificationEntity>(model);
-        await _dbContext.Notifications.AddAsync(notification);
+        var notificationEntities = _mapper.Map<NotificationEntity[]>(notifications);
+        await _dbContext.Notifications.AddRangeAsync(notificationEntities);
         await _dbContext.SaveChangesAsync();
-        return notification.Id;
+        return notificationEntities
+            .Select(x => x.Id)
+            .ToArray();
     }
 
     public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> parameters, long userId)
