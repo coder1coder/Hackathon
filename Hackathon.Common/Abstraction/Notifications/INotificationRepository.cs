@@ -9,11 +9,11 @@ namespace Hackathon.Common.Abstraction.Notifications;
 public interface INotificationRepository
 {
     /// <summary>
-    /// Создать новое уведомление в БД
+    /// Сохранить уведомления
     /// </summary>
-    /// <param name="model"></param>
+    /// <param name="notifications">Уведомления</param>
     /// <returns></returns>
-    Task<Guid> Push<T>(CreateNotificationModel<T> model) where T : class;
+    Task<Guid[]> PushManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class;
 
     /// <summary>
     /// Получить список уведомлений пользователя по заданным параметрам фильтрации и пагинации

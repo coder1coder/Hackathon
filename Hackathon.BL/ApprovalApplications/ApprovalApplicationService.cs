@@ -4,9 +4,11 @@ using FluentValidation;
 using Hackathon.BL.Validation.ApprovalApplications;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
+using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.ApprovalApplications;
@@ -15,21 +17,23 @@ public class ApprovalApplicationService: IApprovalApplicationService
 {
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ApprovalApplicationRejectParametersValidator _rejectParametersValidator;
+    private readonly INotificationService _notificationService;
 
     private const string NoRightsExecutingOperation = "Нет прав на выполнение операции";
     private const string ApprovalApplicationDoesntExist = "Заявка на согласование не найдена";
     private const string ApprovalApplicationAlreadyHasDecision = "По заявке на согласование уже вынесено решение";
 
-    private readonly ApprovalApplicationRejectParametersValidator _rejectParametersValidator;
-
     public ApprovalApplicationService(
         IApprovalApplicationRepository approvalApplicationRepository,
         IUserRepository userRepository,
-        ApprovalApplicationRejectParametersValidator rejectParametersValidator)
+        ApprovalApplicationRejectParametersValidator rejectParametersValidator,
+        INotificationService notificationService)
     {
         _approvalApplicationRepository = approvalApplicationRepository;
         _userRepository = userRepository;
         _rejectParametersValidator = rejectParametersValidator;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<Page<ApprovalApplicationModel>>> GetListAsync(long authorizedUserId, GetListParameters<ApprovalApplicationFilter> parameters)
@@ -76,6 +80,10 @@ public class ApprovalApplicationService: IApprovalApplicationService
         await _approvalApplicationRepository.UpdateStatusAsync(approvalApplicationId, approvalApplicationId,
             ApprovalApplicationStatus.Approved);
 
+        await _notificationService.PushAsync(
+            CreateNotificationModel.Information(approvalApplication.AuthorId, "Заявка на согласование одобрена",
+                authorizedUserId));
+
         return Result.Success;
     }
 
@@ -96,6 +104,10 @@ public class ApprovalApplicationService: IApprovalApplicationService
 
         await _approvalApplicationRepository.UpdateStatusAsync(approvalApplicationId, approvalApplicationId,
             ApprovalApplicationStatus.Approved, parameters.Comment);
+
+        await _notificationService.PushAsync(
+            CreateNotificationModel.Information(approvalApplication.AuthorId,
+                $"Заявка на согласование отклонена:\n{parameters.Comment}",  authorizedUserId));
 
         return Result.Success;
     }

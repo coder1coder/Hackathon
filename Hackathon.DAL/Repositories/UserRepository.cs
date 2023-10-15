@@ -178,4 +178,11 @@ public class UserRepository: IUserRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public Task<long[]> GetAdministratorIdsAsync()
+        => _dbContext.Users
+            .AsNoTracking()
+            .Where(x => x.Role == UserRole.Administrator)
+            .Select(x => x.Id)
+            .ToArrayAsync();
 }
