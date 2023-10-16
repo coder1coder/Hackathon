@@ -1,35 +1,27 @@
 import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
-import {EventStage} from "./EventStage";
-import {IEventTaskItem} from "./IEventTaskItem";
-import {IEventAgreement} from "./IEventAgreement";
+import { EventStage } from "./EventStage";
+import { IEventTaskItem } from "./IEventTaskItem";
+import { IEventAgreement } from "./IEventAgreement";
 
-export interface ICreateEvent
-{
-  //наименование
+export interface ICreateEvent {
+  /** наименование */
   name: string;
-
-  //описание
-  description:string;
+  /** описание */
+  description: string;
   isCreateTeamsAutomatically: boolean;
   maxEventMembers: number;
   minTeamMembers: number;
-
-  //дата и время начала
+  /** дата и время начала */
   start: Date;
   changeEventStatusMessages: ChangeEventStatusMessage[];
-
-  //Этапы события
+  /** Этапы события */
   stages: EventStage[];
-
-  //Награда, призовой фонд
-  award:string;
-
-  //Идентификатор изображения
-  imageId:string;
-
-  //Соглашение об участии
-  agreement?: IEventAgreement | null;
-
-  //Задачи, которые ставятся перед участниками мероприятия
-  tasks: IEventTaskItem[]
+  /** Награда, призовой фонд */
+  award: string;
+  /** Идентификатор изображения */
+  imageId: string;
+  /** Соглашение об участии */
+  agreement?: IEventAgreement;
+  /** задачи, которые ставятся перед участниками мероприятия */
+  tasks: IEventTaskItem[];
 }

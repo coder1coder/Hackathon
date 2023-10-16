@@ -7,9 +7,10 @@ import {ICreateUser} from '../models/User/CreateUser';
 import {IGetTokenResponse} from "../models/IGetTokenResponse";
 import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
 import {AuthConstants} from "./auth.constants";
-import {GoogleSigninService} from './google-signin.service';
+import {GoogleSignInService} from './google-sign-in.service';
 import {GoogleUser} from '../models/User/GoogleUser';
 import {IUser} from "../models/User/IUser";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private googleSigninService: GoogleSigninService
+    private googleSignInService: GoogleSignInService
     ) {
   }
 
@@ -59,13 +60,11 @@ export class AuthService {
     return tokenInfo?.userId;
   }
 
-  public getCurrentUser(): Observable<IUser> | null {
-    if (!this.isLoggedIn())
-      return null;
-
+  public getCurrentUser(): Observable<IUser> {
     const tokenInfo = this.getTokenInfo();
-    if (tokenInfo == undefined)
-      return null;
+    if (!this.isLoggedIn() || tokenInfo == undefined) {
+      return of(null);
+    }
 
     return this.http.get<IUser>(this.api+'/User/'+tokenInfo.userId, {
       headers: new HttpHeaders()
@@ -87,19 +86,19 @@ export class AuthService {
       TokenId: googleUserModel.TokenId,
       loginHint: googleUserModel.loginHint,
       isLoggedIn: googleUserModel.isLoggedIn
-    }).pipe(map(r=>{
-        this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(r));
-      this.authChange.emit(true);
-        return r;
+    }).pipe(map(res => {
+        this.storage.setItem(AuthConstants.STORAGE_AUTH_KEY, JSON.stringify(res));
+        this.authChange.emit(true);
+        return res;
       }));
   }
 
-  public signInByGoogle(): Promise<void | gapi.auth2.GoogleUser> {
-    return this.googleSigninService.signIn();
+  public signInByGoogle(): Promise<gapi.auth2.GoogleUser> {
+    return this.googleSignInService.signIn();
   }
 
   public isGoogleClientEnabled(): Observable<boolean> {
-    return this.googleSigninService.getGoogleServiceEnabled$;
+    return this.googleSignInService.getGoogleServiceEnabled$;
   }
 
   private getTokenInfo() : IGetTokenResponse | undefined {

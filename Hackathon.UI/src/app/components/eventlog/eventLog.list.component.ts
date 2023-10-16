@@ -1,56 +1,60 @@
-import {Component} from "@angular/core";
-import {BaseTableListComponent} from "../BaseTableListComponent";
-import {RouterService} from "../../services/router.service";
-import {AuthService} from "../../services/auth.service";
-import {GetListParameters} from "../../models/GetListParameters";
-import {IEventLogModel} from "../../models/EventLog/IEventLogModel";
-import {BaseCollection} from "../../models/BaseCollection";
-import {EventLogService} from "../../services/eventLog/eventLog.service";
+import { Component } from "@angular/core";
+import { BaseTableListComponent } from "../../common/base-components/base-table-list.component";
+import { RouterService } from "../../services/router.service";
+import { GetListParameters } from "../../models/GetListParameters";
+import { IEventLogModel } from "../../models/EventLog/IEventLogModel";
+import { BaseCollection } from "../../models/BaseCollection";
+import { EventLogService } from "../../services/eventLog/eventLog.service";
 import * as moment from "moment/moment";
-import { DATE_FORMAT } from "src/app/common/date-formats";
+import { DATE_FORMAT_DD_MM_YYYY } from "src/app/common/date-formats";
+import { mergeMap, takeUntil } from "rxjs";
+import { fromMobx } from "../../common/functions/from-mobx.function";
+import { CurrentUserStore } from "../../shared/stores/current-user.store";
 
 @Component({
   selector: 'eventLog-list',
   templateUrl: './eventLog.list.component.html',
-  styleUrls: ['./eventLog.list.component.scss']
+  styleUrls: ['./eventLog.list.component.scss'],
 })
 
 export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
 
-  constructor(private eventLogService: EventLogService,
-              private routerService: RouterService,
-              private authService: AuthService) {
+  constructor(
+    private eventLogService: EventLogService,
+    private routerService: RouterService,
+    private currentUserStore: CurrentUserStore,
+  ) {
     super(EventLogComponent.name);
   }
 
-  fetch(getFilterModel: GetListParameters<IEventLogModel> | undefined): any {
+  fetch(getFilterModel: GetListParameters<IEventLogModel>): void {
+    fromMobx(() => this.currentUserStore.currentUser)
+      .pipe(
+        mergeMap(() => {
+          let getFilterModel = new GetListParameters<IEventLogModel>();
+          getFilterModel.Offset = this.pageSettings.pageIndex;
+          getFilterModel.Limit = this.pageSettings.pageSize;
 
-    this.authService.getCurrentUser()?.subscribe(x => {
-
-      let getFilterModel = new GetListParameters<IEventLogModel>();
-      getFilterModel.Offset = this.pageSettings.pageIndex;
-      getFilterModel.Limit = this.pageSettings.pageSize;
-
-      this.eventLogService.getList(getFilterModel)
-        .subscribe({
-          next: (r: BaseCollection<IEventLogModel>) =>  {
-            this.items = r.items;
-            this.pageSettings.length = r.totalCount;
-          },
-          error: () => {}
-        });
-
-    });
+          return this.eventLogService.getList(getFilterModel);
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: (res: BaseCollection<IEventLogModel>) =>  {
+          this.items = res.items;
+          this.pageSettings.length = res.totalCount;
+        },
+        error: () => {},
+      });
   }
 
   public formatDateTime(date: Date): string {
-    return moment(date).local().format(DATE_FORMAT)
+    return moment(date).local().format(DATE_FORMAT_DD_MM_YYYY);
   }
 
   getDisplayColumns(): string[] {
     return ['description', 'userName', 'timestamp'];
   }
 
-  rowClick(item: IEventLogModel): any {
-  }
+  rowClick(item: IEventLogModel): void { /* unused */}
 }

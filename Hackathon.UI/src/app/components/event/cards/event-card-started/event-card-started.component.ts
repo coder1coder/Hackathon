@@ -8,7 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ProjectClient} from "../../../../clients/project/project.client";
 import {ProjectDialog} from "../../../custom/project-dialog/project-dialog.component";
 import {SnackService} from "../../../../services/snack.service";
-import {ErrorProcessor} from "../../../../services/errorProcessor";
+import {ErrorProcessorService} from "../../../../services/error-processor.service";
 import {ProjectGitDialog} from "../../../custom/project-git-dialog/project-git-dialog.component";
 import {IProjectUpdateFromGitBranch} from "../../../../models/Project/IProjectUpdateFromGitBranch";
 
@@ -37,7 +37,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
 
   constructor(
     private snackService: SnackService,
-    private errorProcessor: ErrorProcessor,
+    private errorProcessor: ErrorProcessorService,
     private authService:AuthService,
     private projectApiClient: ProjectClient,
     private dialogService: MatDialog) {

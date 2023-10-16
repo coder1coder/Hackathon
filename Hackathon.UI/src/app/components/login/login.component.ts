@@ -1,14 +1,16 @@
 import '@angular/compiler';
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from "../../services/auth.service";
-import {finalize} from "rxjs/operators";
-import {environment} from "../../../environments/environment";
-import {GoogleUser} from 'src/app/models/User/GoogleUser';
-import {FormControl, FormGroup} from '@angular/forms';
-import {RouterService} from "../../services/router.service";
-import {SnackService} from "../../services/snack.service";
-import {ErrorProcessor} from "../../services/errorProcessor";
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from "../../services/auth.service";
+import { finalize } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
+import { GoogleUser } from 'src/app/models/User/GoogleUser';
+import { FormBuilder } from '@angular/forms';
+import { RouterService } from "../../services/router.service";
+import { SnackService } from "../../services/snack.service";
+import { ErrorProcessorService } from "../../services/error-processor.service";
+import { Subject, takeUntil } from "rxjs";
+import {IProblemDetails} from "../../models/IProblemDetails";
 
 @Component({
   selector: 'app-login',
@@ -17,32 +19,36 @@ import {ErrorProcessor} from "../../services/errorProcessor";
 })
 export class LoginComponent implements AfterViewInit  {
 
-  @ViewChild('login', {static: true}) inputLogin:ElementRef | undefined;
+  @ViewChild('login', { static: true }) inputLogin: ElementRef;
+
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
   public isLoading: boolean = false;
   public isPassFieldHide: boolean = true;
   public siteKey: string;
   public captchaEnabled: boolean = environment.captchaEnabled;
   public googleClientEnabled: boolean = true;
-  public profileForm = new FormGroup({
-    login: new FormControl(''),
-    password: new FormControl('')
-  })
+  public profileForm = this.fb.group({
+    login: [null],
+    password: [null],
+  });
 
   private captcha: string = "";
+  private destroy$ = new Subject();
 
   constructor (
     private router: Router,
     private routerService: RouterService,
-    private errorProcessor: ErrorProcessor,
+    private errorProcessor: ErrorProcessorService,
     private snackService: SnackService,
     private authService: AuthService,
+    private fb: FormBuilder,
   ) {
-    if (router.url === '/logout')
+    if (router.url === '/logout') {
       this.signOut();
-
-    //if user is logged redirect to homepage
-    if (this.authService.isLoggedIn()) this.routerService.Profile.View();
+    }
+    if (this.authService.isLoggedIn()) {
+      this.routerService.Profile.View();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -63,9 +69,11 @@ export class LoginComponent implements AfterViewInit  {
     this.setLoading(true);
     const login = this.profileForm.controls['login'].value;
     const password = this.profileForm.controls['password'].value;
+
     this.authService.login(login, password)
       .pipe(
-        finalize(() => this.setLoading(false))
+        finalize(() => this.setLoading(false)),
+        takeUntil(this.destroy$),
       )
       .subscribe({
         next: () => {
@@ -87,19 +95,31 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   public signInByGoogle(): void {
+    this.setLoading(true);
     this.authService.signInByGoogle()
-      .then(user => {
-        let googleUser = this.initGoogleUser(user);
+      .then((user: gapi.auth2.GoogleUser) => {
+        const googleUser = this.initGoogleUser(user);
         if (googleUser.isLoggedIn) {
           this.authService.loginByGoogle(googleUser)
-          .subscribe({
-            next: () => {
-              this.routerService.Profile.View();
-            },
-            error: (err) => this.errorProcessor.Process(err, `Неизвестная ошибка при авторизация через Google сервис`)
-          });
+            .pipe(
+              finalize(() => this.setLoading(false)),
+              takeUntil(this.destroy$)
+            )
+            .subscribe({
+              next: () => {
+                this.routerService.Profile.View();
+              },
+              error: (err) => this.errorProcessor.Process(err, `Неизвестная ошибка при авторизация через Google сервис`),
+            });
         }
-      })
+      }).catch((error) => {
+      if (error?.error?.detail) {
+        const details: IProblemDetails = <IProblemDetails>error.error;
+        this.snackService.open(details.detail);
+      } else {
+        this.snackService.open('Неизвестная ошибка при авторизация через Google сервис');
+      }
+    });
   }
 
   private signOut(): void {
@@ -108,23 +128,23 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   private setLoading(isLoading: boolean): void {
-    setTimeout(()=>{
+    setTimeout(() => {
       this.isLoading = isLoading;
     })
   }
 
-  private initGoogleUser(user: void | gapi.auth2.GoogleUser): GoogleUser {
+  private initGoogleUser(user: gapi.auth2.GoogleUser): GoogleUser {
     let googleUser = new GoogleUser();
-    if(user != undefined) {
+    if (user !== undefined) {
 
-      let profile = user.getBasicProfile();
+      const profile = user.getBasicProfile();
       googleUser.id = profile.getId();
       googleUser.fullName = profile.getName();
       googleUser.givenName = profile.getGivenName();
       googleUser.imageUrl = profile.getImageUrl();
       googleUser.email = profile.getEmail();
 
-      let authResponse = user.getAuthResponse();
+      const authResponse = user.getAuthResponse();
       googleUser.accessToken = authResponse.access_token;
       googleUser.expiresAt = authResponse.expires_at;
       googleUser.expiresIn = authResponse.expires_in;
@@ -139,6 +159,7 @@ export class LoginComponent implements AfterViewInit  {
 
   private initSubscribe(): void {
     this.authService.isGoogleClientEnabled()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: boolean) => {
         this.googleClientEnabled = res;
       })

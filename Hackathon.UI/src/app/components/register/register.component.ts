@@ -1,15 +1,15 @@
 import '@angular/compiler';
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {ICreateUser} from 'src/app/models/User/CreateUser';
-import {AuthService} from "../../services/auth.service";
-import {Location} from "@angular/common";
-import {IProblemDetails} from "../../models/IProblemDetails";
-import {SnackService} from "../../services/snack.service";
-import {takeUntil} from 'rxjs';
-import {WithFormComponentBase} from "../WithFormComponentBase";
-import {RouterService} from "../../services/router.service";
-import {emailRegex} from "../../common/patterns/email-regex";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ICreateUser } from 'src/app/models/User/CreateUser';
+import { AuthService } from "../../services/auth.service";
+import { Location } from "@angular/common";
+import { IProblemDetails } from "../../models/IProblemDetails";
+import { SnackService } from "../../services/snack.service";
+import { takeUntil } from 'rxjs';
+import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
+import { RouterService } from "../../services/router.service";
+import { emailRegex } from "../../common/patterns/email-regex";
 
 @Component({
   selector: 'app-register',
@@ -17,9 +17,9 @@ import {emailRegex} from "../../common/patterns/email-regex";
   styleUrls: ['./register.component.scss'],
 })
 
-export class RegisterComponent extends WithFormComponentBase implements OnInit {
+export class RegisterComponent extends WithFormBaseComponent implements OnInit {
 
-  @ViewChild('login', {static: true}) inputLogin: ElementRef | undefined;
+  @ViewChild('login', {static: true}) inputLogin: ElementRef;
 
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';
@@ -33,7 +33,8 @@ export class RegisterComponent extends WithFormComponentBase implements OnInit {
     private location: Location,
     private authService: AuthService,
     private snackbar: SnackService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder
+  ) {
     super();
   }
 
@@ -46,24 +47,24 @@ export class RegisterComponent extends WithFormComponentBase implements OnInit {
       userName: this.getFormControl('login').value,
       password: this.getFormControl('password').value,
       email: this.getFormControl('email').value,
-      fullname: this.getFormControl('fullname').value
+      fullName: this.getFormControl('fullName').value
     };
 
     this.authService.register(createUser)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) =>{
+        next: (res) => {
           this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
         },
         error: (err) => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snackbar.open(problemDetails.detail);
         },
         complete: () => {
-          setTimeout(()=>{
+          setTimeout(() => {
             this.routerService.Profile.Login();
           }, 1000);
-        }
+        },
       });
   }
 
@@ -80,7 +81,7 @@ export class RegisterComponent extends WithFormComponentBase implements OnInit {
       login: [null, [Validators.required]],
       password: [null, [Validators.required]],
       email: [null, [Validators.required, Validators.pattern(this.emailRegexp)]],
-      fullname: [null, [Validators.required]],
+      fullName: [null, [Validators.required]],
     });
 
     this.form.valueChanges

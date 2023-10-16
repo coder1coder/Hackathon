@@ -7,7 +7,7 @@ import { EventStatusTranslator, EventStatus } from "../../../../../models/Event/
 @Component({
   selector: 'app-event-new-status-dialog',
   templateUrl: './event-new-status-dialog.component.html',
-  styleUrls: ['./event-new-status-dialog.component.scss']
+  styleUrls: ['./event-new-status-dialog.component.scss'],
 })
 
 export class EventNewStatusDialogComponent implements OnInit {
