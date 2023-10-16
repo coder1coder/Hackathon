@@ -77,6 +77,31 @@ public class EventControllerTests : BaseIntegrationTest
     }
 
     [Fact]
+    public async Task SetStatus_FromDraft_ToOnModeration_ShouldCreate_Application()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+
+        //act
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+        eventModel = getEventResponse.Content;
+
+        //assert
+        Assert.NotNull(eventModel);
+        Assert.Equal(EventStatus.OnModeration, eventModel.Status);
+        Assert.True(eventModel.ApprovalApplicationId.HasValue);
+    }
+
+    [Fact]
     public async Task GoNextStage_ShouldSuccess()
     {
         //arrange

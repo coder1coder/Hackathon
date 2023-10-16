@@ -27,6 +27,7 @@ using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
+using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.Event;
@@ -55,7 +56,7 @@ public class EventService : IEventService
     public EventService(
         FluentValidation.IValidator<EventCreateParameters> createEventModelValidator,
         FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator,
-        FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, 
+        FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
         FluentValidation.IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
@@ -120,7 +121,8 @@ public class EventService : IEventService
 
         if (eventModel.Status == EventStatus.OnModeration)
         {
-            await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.GetValueOrDefault());
+            if (eventModel.ApprovalApplicationId.HasValue)
+                await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.Value);
 
             eventModel.Status = EventStatus.Draft;
         }
@@ -199,6 +201,7 @@ public class EventService : IEventService
 
         if (!skipUserValidation)
         {
+            //TODO: get user role only
             var user = await _userRepository.GetAsync(authorizedUserId);
 
             if (user is null)
@@ -215,10 +218,31 @@ public class EventService : IEventService
                 return Result.NotValid(errorMessage);
         }
 
-        if (eventStatus == EventStatus.Started)
+        switch (eventStatus)
         {
-            var initialStageId = eventModel.Stages.OrderBy(x => x.Order).FirstOrDefault()?.Id ?? default;
-            await _eventRepository.SetCurrentStageId(eventId, initialStageId);
+            case EventStatus.OnModeration:
+                await _approvalApplicationRepository.AddAsync(new NewApprovalApplicationParameters
+                {
+                    EventId = eventModel.Id,
+                    AuthorId = authorizedUserId,
+                    ApplicationStatus = ApprovalApplicationStatus.Requested,
+                    RequestedAt = DateTimeOffset.UtcNow
+                });
+                break;
+
+            case EventStatus.Started:
+            {
+                var initialStageId = eventModel.Stages.OrderBy(x => x.Order).FirstOrDefault()?.Id ?? default;
+                await _eventRepository.SetCurrentStageId(eventId, initialStageId);
+                break;
+            }
+
+            case EventStatus.Draft:
+            case EventStatus.Published:
+            case EventStatus.Finished:
+            default:
+                //nothing
+                break;
         }
 
         await ChangeEventStatusAndPublishMessage(eventModel, eventStatus);
