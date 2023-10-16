@@ -8,6 +8,13 @@ namespace Hackathon.Common.Abstraction.ApprovalApplications;
 public interface IApprovalApplicationRepository
 {
     /// <summary>
+    /// Добавить заявку на согласование
+    /// </summary>
+    /// <param name="parameters">Параметры</param>
+    /// <returns></returns>
+    Task AddAsync(NewApprovalApplicationParameters parameters);
+
+    /// <summary>
     /// Удалить заявку на согласование
     /// </summary>
     /// <param name="approvalApplicationId">Идентификатор</param>
