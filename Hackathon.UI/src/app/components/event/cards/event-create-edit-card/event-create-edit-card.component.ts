@@ -1,62 +1,63 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
-import {ICreateEvent} from "../../../../models/Event/ICreateEvent";
-import {IUpdateEvent} from "../../../../models/Event/IUpdateEvent";
-import {EventStatus, EventStatusTranslator} from "src/app/models/Event/EventStatus";
-import {ChangeEventStatusMessage} from "src/app/models/Event/ChangeEventStatusMessage";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {EventNewStatusDialogComponent} from "../components/status/event-new-status-dialog.component";
-import {SnackService} from "../../../../services/snack.service";
-import {Observable, takeUntil} from "rxjs";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { ICreateEvent } from "../../../../models/Event/ICreateEvent";
+import { IUpdateEvent } from "../../../../models/Event/IUpdateEvent";
+import { EventStatus, EventStatusTranslator } from "src/app/models/Event/EventStatus";
+import { ChangeEventStatusMessage } from "src/app/models/Event/ChangeEventStatusMessage";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
+import { EventNewStatusDialogComponent } from "../components/status/event-new-status-dialog.component";
+import { SnackService } from "../../../../services/snack.service";
+import { Observable, takeUntil } from "rxjs";
 import * as moment from "moment/moment";
-import {AuthService} from "../../../../services/auth.service";
-import {RouterService} from "../../../../services/router.service";
-import {FileStorageService} from "../../../../services/file-storage.service";
-import {SafeUrl} from "@angular/platform-browser";
-import {EventErrorMessages} from "src/app/common/error-messages/event-error-messages";
-import {EventCardBaseComponent} from "../components/event-card-base.component";
-import {EventClient} from "../../../../services/event/event.client";
-import {EventService} from "../../../../services/event/event.service";
-import {EventStage} from "src/app/models/Event/EventStage";
+import { AuthService } from "../../../../services/auth.service";
+import { RouterService } from "../../../../services/router.service";
+import { FileStorageService } from "../../../../services/file-storage.service";
+import { SafeUrl } from "@angular/platform-browser";
+import { EventErrorMessages } from "src/app/common/error-messages/event-error-messages";
+import { EventCardBaseComponent } from "../components/event-card-base.component";
+import { EventClient } from "../../../../services/event/event.client";
+import { EventService } from "../../../../services/event/event.service";
+import { EventStage } from "src/app/models/Event/EventStage";
 import {
   EventStageDialogComponent,
   EventStageDialogData
 } from "../components/event-stage-dialog/event-stage-dialog.component";
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
-import {IEventTaskItem} from "../../../../models/Event/IEventTaskItem";
-import {UploadFileErrorMessages} from "../../../../common/error-messages/upload-file-error-messages";
-import { ErrorProcessor } from "src/app/services/errorProcessor";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { IEventTaskItem } from "../../../../models/Event/IEventTaskItem";
+import { UploadFileErrorMessages } from "../../../../common/error-messages/upload-file-error-messages";
+import { ErrorProcessorService } from "src/app/services/error-processor.service";
+import { DATE_FORMAT_YYYY_MM_DD } from "../../../../common/date-formats";
+import { checkValue } from "../../../../common/functions/check-value";
+import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
+import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
 
 @Component({
   selector: 'event-create-edit-card',
   templateUrl: './event-create-edit-card.component.html',
-  styleUrls: ['./event-create-edit-card.component.scss']
+  styleUrls: ['./event-create-edit-card.component.scss'],
 })
 
 export class EventCreateEditCardComponent extends EventCardBaseComponent implements OnInit, AfterViewInit {
 
-  private dateFormat: string = 'yyyy-MM-DDTHH:mm';
-  private eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
+  @ViewChild('eventStagesTable') eventStagesTable: MatTable<EventStage>;
+  @ViewChild('eventTasksTable') eventTasksTable: MatTable<IEventTaskItem>;
+  @ViewChild('eventStatusTable') eventStatusTable: MatTable<ChangeEventStatusMessage>;
+  @ViewChild('newTaskInput') newTaskInput: ElementRef;
 
   public editMode: boolean = false;
   public submit: () => void = this.saveForm();
-  public EventStatusTranslator = EventStatusTranslator;
+  public eventStatusTranslator = EventStatusTranslator;
   public displayedColumns: string[] = ['status', 'message', 'actions'];
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
-
-  @ViewChild('eventTasksTable') eventTasksTable: MatTable<any>;
   public eventTasksDataSource = new MatTableDataSource<IEventTaskItem>([]);
-
-  @ViewChild('eventStagesTable') eventStagesTable: MatTable<any>;
   public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
-
-  @ViewChild('newTaskInput') newTaskInput: ElementRef;
-
   public form = new FormGroup({});
-  public eventImage: any;
-  public minDate = moment(new Date()).format(this.dateFormat).toString();
+  public eventImage: SafeUrl;
+  public minDate: string;
+
+  private eventStatusValues: (string | EventStatus)[];
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -68,98 +69,56 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private errorProcessor: ErrorProcessor
+    private errorProcessor: ErrorProcessorService,
     ) {
     super();
-    this.eventId = activateRoute.snapshot.params['eventId'];
-    this.editMode = this.eventId !== undefined && !isNaN(Number(this.eventId));
-
-    let defaultEventStage = new EventStage();
-    defaultEventStage.name = `Основная часть мероприятия`;
-    defaultEventStage.duration = 60;
-    this.eventStagesDataSource.data.push(defaultEventStage);
   }
 
   ngOnInit(): void {
+     this.initVariables();
      this.initForm();
   }
 
   ngAfterViewInit(): void {
-    if (this.editMode)
-      this.fetch();
+    if (this.editMode) this.fetch();
   }
 
-  private applyAgreement(event: ICreateEvent)
-  {
-    let agreementRules = this.form.get('agreementRules')?.value;
-    event.agreement = (agreementRules?.length > 0) ?
+  private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
+    const agreementRules = this.form.get('agreementRules')?.value;
+    event.agreement = agreementRules?.length > 0 ?
       {
-        id: this.event?.agreement?.id,
+        id: checkValue(this.event?.agreement?.id),
         rules: agreementRules,
-        requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value ?? false
-      }
+        requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value,
+      } as IEventAgreement
       : null;
   }
 
   public saveForm(): () => void {
     return () => {
-      let request: Observable<any>;
-
-      let eventStages = this.eventStagesDataSource.data;
+      const eventStages = this.eventStagesDataSource.data;
       eventStages.forEach((value, index) => {
         value.eventId = this.event?.id;
         value.order = index * 10;
       });
 
-      let eventTasks = this.eventTasksDataSource.data;
+      const eventTasks = this.eventTasksDataSource.data;
       eventTasks.forEach((value, index) => {
         value.order = index * 10;
       });
+      const eventData: ICreateEvent | IUpdateEvent = this.editMode ?
+        this.eventDataForUpdate(eventStages, eventTasks) :
+        this.eventDataForCreate(eventStages, eventTasks);
 
-      if (!this.editMode) {
-        let event: ICreateEvent = {
-          name: this.form.get('name')?.value,
-          isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
-          maxEventMembers: this.form.get('maxEventMembers')?.value,
-          minTeamMembers: this.form.get('minTeamMembers')?.value,
-          start: this.form.get('start')?.value,
-          changeEventStatusMessages: this.eventStatusDataSource.data,
-          award: this.form.get('award')?.value,
-          description: this.form.get('description')?.value,
-          imageId: this.form.get('imageId')?.value,
-          stages: eventStages,
-          tasks: eventTasks,
-        };
+      const request: Observable<void> | Observable<IBaseCreateResponse> = this.editMode ?
+        this.eventHttpService.update(eventData as IUpdateEvent) :
+        this.eventHttpService.create(eventData);
 
-        this.applyAgreement(event);
+      this.applyAgreement(eventData);
 
-        request = this.eventHttpService.create(event);
-      } else {
-        let event: IUpdateEvent = {
-          id: Number(this.event?.id),
-          name: this.form.get('name')?.value,
-          isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
-          maxEventMembers: this.form.get('maxEventMembers')?.value,
-          minTeamMembers: this.form.get('minTeamMembers')?.value,
-          start: this.form.get('start')?.value,
-          userId: Number(this.event?.owner?.id),
-          changeEventStatusMessages: this.eventStatusDataSource.data,
-          stages: eventStages,
-          tasks: eventTasks,
-          award: this.form.get('award')?.value,
-          description: this.form.get('description')?.value,
-          imageId: this.form.get('imageId')?.value,
-          agreement: this.event?.agreement
-        };
-
-        this.applyAgreement(event);
-
-        request = this.eventHttpService.update(event);
-      }
-
-      request.subscribe({
-        next: r => {
-          const eventId = (this.editMode) ? this.eventId : r.id;
+      (request as Observable<IBaseCreateResponse>).subscribe({
+        next: (res: IBaseCreateResponse) => {
+          const eventId = (this.editMode) ? this.eventId : res.id;
           const afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
           this.eventService.reloadEvent.emit(true);
           this.snackService.open(afterOperationMessage);
@@ -176,27 +135,28 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   }
 
   public addStatus(): void {
-    let filteredEventStatusValues = this.getAvlStatutes();
+    const filteredEventStatusValues = this.getAvlStatutes();
     this.dialog.open(EventNewStatusDialogComponent, {
       data: {
-        statuses: filteredEventStatusValues
-      }
+        statuses: filteredEventStatusValues,
+      },
     })
     .afterClosed()
     .subscribe(result => {
-      let changeEventStatusMessage = <ChangeEventStatusMessage> result;
-      if(changeEventStatusMessage?.status !== undefined){
+      const changeEventStatusMessage = <ChangeEventStatusMessage> result;
+      if (changeEventStatusMessage?.status !== undefined) {
         this.eventStatusDataSource.data.push(changeEventStatusMessage);
-        this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+        this.eventStatusTable.renderRows();
       }
     });
   }
 
   public removeStatus(item: ChangeEventStatusMessage): void {
     const index = this.eventStatusDataSource.data.indexOf(item);
-    if (index > -1)
+    if (index > -1) {
       this.eventStatusDataSource.data.splice(index, 1);
-      this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+      this.eventStatusTable.renderRows();
+    }
   }
 
   public editStatus(item: ChangeEventStatusMessage): void {
@@ -205,21 +165,21 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     this.dialog.open(EventNewStatusDialogComponent, {
       data: {
         statuses: filteredEventStatusValues,
-        editStatus: item
+        editStatus: item,
       }
     })
     .afterClosed()
     .subscribe(result => {
-      if(result) {
-        let updateStatusIndex = this.eventStatusDataSource.data.indexOf(item);
+      if (result) {
+        const updateStatusIndex = this.eventStatusDataSource.data.indexOf(item);
         this.eventStatusDataSource.data[updateStatusIndex] = result;
-        this.eventStatusDataSource.data = this.eventStatusDataSource.data;
+        this.eventStatusTable.renderRows();
       }
     });
   }
 
   public isCanAddStatus(): boolean {
-    let dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
+    const dataValues = Object.values(this.eventStatusDataSource.data).filter(x => !isNaN(Number(x.status)))
                             .map(x => x.status).sort(function(a, b) { return a - b; });
 
     return Array.isArray(this.eventStatusValues) &&
@@ -228,13 +188,12 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
            this.eventStatusValues.every((val, index) => val === dataValues[index]);
   }
 
-  public isCanAddEventStage():boolean {
+  public isCanAddEventStage(): boolean {
     return true;
   }
 
-  public showEventStageCreateView():void{
-
-    let data = new EventStageDialogData();
+  public showEventStageCreateView(): void {
+    const data = new EventStageDialogData();
     data.eventStages = this.eventStagesDataSource.data;
     data.eventStage = undefined;
 
@@ -243,17 +202,16 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     })
       .afterClosed()
       .subscribe(data => {
-        let model = <EventStage> data;
-        if(model?.name !== undefined){
+        const model = <EventStage> data;
+        if (model?.name !== undefined) {
           this.eventStagesDataSource.data.push(data);
-          this.eventStagesDataSource.data = this.eventStagesDataSource.data;
+          this.eventStagesTable.renderRows();
         }
       });
   }
 
-  public updateEventStage(eventStage: EventStage):void {
-
-    let data = new EventStageDialogData();
+  public updateEventStage(eventStage: EventStage): void {
+    const data = new EventStageDialogData();
     data.eventStages = this.eventStagesDataSource.data;
     data.eventStage = eventStage;
 
@@ -263,36 +221,34 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       .afterClosed()
       .subscribe(result => {
         if (result) {
-          let idx = this.eventStagesDataSource.data.indexOf(eventStage);
-
+          const idx = this.eventStagesDataSource.data.indexOf(eventStage);
           this.eventStagesDataSource.data[idx].name = result.name;
           this.eventStagesDataSource.data[idx].duration = result.duration;
-
-          this.eventStagesDataSource.data = this.eventStagesDataSource.data;
+          this.eventStagesTable.renderRows();
         }
       });
   }
 
-  public removeEventStage(eventStage: EventStage):void {
+  public removeEventStage(eventStage: EventStage): void {
     const index = this.eventStagesDataSource.data.indexOf(eventStage);
     if (index > -1) this.eventStagesDataSource.data.splice(index, 1);
-    this.eventStagesDataSource.data = this.eventStagesDataSource.data;
+    this.eventStagesTable.renderRows();
   }
 
-  public removeEventTask(eventTask: IEventTaskItem):void{
+  public removeEventTask(eventTask: IEventTaskItem): void {
     const index = this.eventTasksDataSource.data.indexOf(eventTask);
     if (index > -1) this.eventTasksDataSource.data.splice(index, 1);
-    this.eventTasksDataSource.data = this.eventTasksDataSource.data;
+    this.eventTasksTable.renderRows();
   }
 
-  public clearEventImage(): void{
+  public clearEventImage(): void {
     this.form.controls['imageId'].reset();
-    this.eventImage = undefined;
+    this.eventImage = null;
   }
 
-  public selectEventImage(event: Event): void{
+  public selectEventImage(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const files = target.files as FileList;
+    const files = target.files;
 
     this.eventHttpService.setEventImage(files)
       .pipe(takeUntil(this.destroy$))
@@ -308,23 +264,23 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   }
 
   private fetch(): void {
-    if (this.eventId == undefined)
-      return;
+    if (!this.eventId) return;
 
     this.form.patchValue({
       ...this.event,
-      start: moment(this.event.start).local().format(this.dateFormat),
-      agreementRules: this.event?.agreement?.rules,
-      agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation
+      start: moment(this.event.start).local().format(DATE_FORMAT_YYYY_MM_DD),
+      agreementRules: checkValue(this.event?.agreement?.rules),
+      agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation,
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
     this.eventStagesDataSource.data = this.event.stages;
 
-    if (this.event.tasks)
+    if (this.event.tasks) {
       this.eventTasksDataSource.data = this.event.tasks;
+    }
 
-    if (this.event.imageId)  {
+    if (this.event.imageId) {
       this.loadImage(this.event.imageId);
     }
   }
@@ -356,9 +312,10 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
   private static getEventStartDefault(): string {
     const now = new Date();
-    const offset = new Date().getTimezoneOffset() * 1000 * 60
-    now.setHours( now.getHours() + 1 );
+    const offset = new Date().getTimezoneOffset() * 1000 * 60;
+    now.setHours( now.getHours() + 1);
     now.setMilliseconds(now.getMilliseconds() - offset);
+
     return (new Date(now.getTime())).toISOString().slice(0, -8);
   }
 
@@ -371,30 +328,74 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     return avlStatutes;
   }
 
-  public dropEventStageRow(event: CdkDragDrop<MatTableDataSource<EventStage>, EventStage>) {
+  public dropEventStageRow(event: CdkDragDrop<MatTableDataSource<EventStage>, EventStage>): void {
     const previousIndex = this.eventStagesDataSource.data.findIndex(row => row === event.item.data);
     moveItemInArray(this.eventStagesDataSource.data, previousIndex, event.currentIndex);
     this.eventStagesTable.renderRows();
   }
 
-  public dropEventTaskRow(event: CdkDragDrop<MatTableDataSource<IEventTaskItem>, IEventTaskItem>){
+  public dropEventTaskRow(event: CdkDragDrop<MatTableDataSource<IEventTaskItem>, IEventTaskItem>): void {
     const previousIndex = this.eventTasksDataSource.data.findIndex(row => row === event.item.data);
     moveItemInArray(this.eventTasksDataSource.data, previousIndex, event.currentIndex);
     this.eventTasksTable.renderRows();
   }
 
-  public addEventTaskFromInput(){
-    let value = this.newTaskInput.nativeElement.value;
+  public addEventTaskFromInput(): void {
+    const value = this.newTaskInput.nativeElement.value;
 
-    if (!value)
-      return;
-
-    if (this.eventTasksDataSource.data.find(x=> x.title == value))
-      return;
+    if (!value) return;
+    if (this.eventTasksDataSource.data.find(x=> x.title == value)) return;
 
     this.eventTasksDataSource.data.push({title: value, order: 0});
     this.eventTasksTable.renderRows();
     this.newTaskInput.nativeElement.value = null;
     this.newTaskInput.nativeElement.focus();
+  }
+
+  private initVariables(): void {
+    this.eventId = this.activateRoute.snapshot.params['eventId'];
+    this.editMode = this.eventId !== undefined && !isNaN(Number(this.eventId));
+    this.minDate = moment(new Date()).format(DATE_FORMAT_YYYY_MM_DD).toString();
+    this.eventStatusValues = Object.values(EventStatus).filter(x => !isNaN(Number(x)));
+
+    const defaultEventStage = new EventStage();
+    defaultEventStage.name = `Основная часть мероприятия`;
+    defaultEventStage.duration = 60;
+    this.eventStagesDataSource.data.push(defaultEventStage);
+  }
+
+  private eventDataForCreate(eventStages: EventStage[], eventTaskItems: IEventTaskItem[]): ICreateEvent {
+    return {
+      name: checkValue(this.form.get('name')?.value),
+      isCreateTeamsAutomatically: checkValue(this.form.get('isCreateTeamsAutomatically')?.value),
+      maxEventMembers: checkValue(this.form.get('maxEventMembers')?.value),
+      minTeamMembers: this.form.get('minTeamMembers')?.value,
+      start: checkValue(this.form.get('start')?.value),
+      changeEventStatusMessages: this.eventStatusDataSource.data,
+      award: checkValue(this.form.get('award')?.value),
+      description: checkValue(this.form.get('description')?.value),
+      imageId: checkValue(this.form.get('imageId')?.value),
+      stages: eventStages,
+      tasks: eventTaskItems,
+    };
+  }
+
+  private eventDataForUpdate(eventStages: EventStage[], eventTaskItems: IEventTaskItem[]): IUpdateEvent {
+    return {
+      id: checkValue<number>(this.event?.id),
+      name: checkValue(this.form.get('name')?.value),
+      isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
+      maxEventMembers: checkValue(this.form.get('maxEventMembers')?.value),
+      minTeamMembers: checkValue(this.form.get('minTeamMembers')?.value),
+      start: checkValue(this.form.get('start')?.value),
+      userId: checkValue<number>(this.event?.owner?.id),
+      changeEventStatusMessages: this.eventStatusDataSource.data,
+      stages: eventStages,
+      tasks: eventTaskItems,
+      award: checkValue(this.form.get('award')?.value),
+      description: checkValue(this.form.get('description')?.value),
+      imageId: checkValue(this.form.get('imageId')?.value),
+      agreement: checkValue(this.event?.agreement),
+    };
   }
 }

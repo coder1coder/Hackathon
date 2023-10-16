@@ -1,58 +1,65 @@
-import {Component} from '@angular/core';
-import {UserService} from "../../../services/user.service";
-import {BaseCollection} from "../../../models/BaseCollection";
-import {BaseTableListComponent} from "../../BaseTableListComponent";
-import {GetListParameters} from "../../../models/GetListParameters";
-import {AuthService} from "../../../services/auth.service";
-import {UserFilter} from "../../../models/User/UserFilter";
-import {IUser} from "../../../models/User/IUser";
-import {RouterService} from "../../../services/router.service";
+import { Component } from '@angular/core';
+import { UserService } from "../../../services/user.service";
+import { BaseCollection } from "../../../models/BaseCollection";
+import { BaseTableListComponent } from "../../../common/base-components/base-table-list.component";
+import { GetListParameters } from "../../../models/GetListParameters";
+import { UserFilter } from "../../../models/User/UserFilter";
+import { IUser } from "../../../models/User/IUser";
+import { RouterService } from "../../../services/router.service";
+import { CurrentUserStore } from "../../../shared/stores/current-user.store";
+import { fromMobx } from "../../../common/functions/from-mobx.function";
+import { mergeMap, takeUntil } from "rxjs";
 
 @Component({
   selector: 'user-list',
   templateUrl: './user.list.component.html',
-  styleUrls: ['./user.list.component.scss']
+  styleUrls: ['./user.list.component.scss'],
 })
 
-export class UserListComponent extends BaseTableListComponent<IUser>{
+export class UserListComponent extends BaseTableListComponent<IUser> {
 
-  constructor(private usersService: UserService,
-              private routerService: RouterService,
-              private authService: AuthService) {
+  constructor(
+    private usersService: UserService,
+    private routerService: RouterService,
+    private currentUserStore: CurrentUserStore,
+  ) {
     super(UserListComponent.name);
   }
 
-  getDisplayColumns(): string[] {
+  public getDisplayColumns(): string[] {
     return ['userName', 'email', 'fullName', 'actions'];
   }
 
-  override fetch(){
+  override fetch(): void {
+    const userFilter = new UserFilter();
+    fromMobx(() => this.currentUserStore.currentUser)
+      .pipe(
+        mergeMap((user: IUser) => {
+          if (user?.id != null) {
+            userFilter.excludeIds = [user.id];
+          }
 
-    let filter = new UserFilter();
+          let getFilterModel = new GetListParameters<UserFilter>();
+          getFilterModel.Offset = this.pageSettings.pageIndex;
+          getFilterModel.Limit = this.pageSettings.pageSize;
+          getFilterModel.Filter = userFilter;
 
-    this.authService.getCurrentUser()?.subscribe(x => {
-      if (x?.id != null)
-        filter.excludeIds = [x.id];
-
-      let getFilterModel = new GetListParameters<UserFilter>();
-      getFilterModel.Offset = this.pageSettings.pageIndex;
-      getFilterModel.Limit = this.pageSettings.pageSize;
-      getFilterModel.Filter = filter;
-
-      this.usersService.getList(getFilterModel)
-        .subscribe({
-          next: (r: BaseCollection<IUser>) =>  {
-            this.items = r.items;
-            this.pageSettings.length = r.totalCount;
-          },
-          error: () => {}
-        });
-
-    });
+          return this.usersService.getList(getFilterModel);
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(({
+        next: (res: BaseCollection<IUser>) =>  {
+          this.items = res.items;
+          this.pageSettings.length = res.totalCount;
+        },
+        error: () => {}
+      }))
   }
 
-  rowClick(user: IUser){
-    if (user.id)
+  public rowClick(user: IUser): void {
+    if (user.id) {
       this.routerService.Users.View(user.id);
+    }
   }
 }

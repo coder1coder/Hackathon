@@ -1,17 +1,17 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs";
-import {BaseCollection} from "../../models/BaseCollection";
-import {ICreateEvent} from "../../models/Event/ICreateEvent";
-import {IUpdateEvent} from "../../models/Event/IUpdateEvent";
-import {IBaseCreateResponse} from "../../models/IBaseCreateResponse";
-import {EventStatus} from "../../models/Event/EventStatus";
-import {GetListParameters} from "../../models/GetListParameters";
-import {EventFilter} from "../../models/Event/EventFilter";
-import {Event} from "../../models/Event/Event";
-import {IEventListItem} from "../../models/Event/IEventListItem";
-import {FileUploadService} from "../file-upload.service";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from "../../../environments/environment";
+import { Observable } from "rxjs";
+import { BaseCollection } from "../../models/BaseCollection";
+import { ICreateEvent } from "../../models/Event/ICreateEvent";
+import { IUpdateEvent } from "../../models/Event/IUpdateEvent";
+import { IBaseCreateResponse } from "../../models/IBaseCreateResponse";
+import { EventStatus } from "../../models/Event/EventStatus";
+import { GetListParameters } from "../../models/GetListParameters";
+import { EventFilter } from "../../models/Event/EventFilter";
+import { Event } from "../../models/Event/Event";
+import { IEventListItem } from "../../models/Event/IEventListItem";
+import { FileUploadService } from "../file-upload.service";
 
 @Injectable({
   providedIn: 'root'

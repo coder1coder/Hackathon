@@ -1,7 +1,6 @@
 <layout-default
   [title]="editMode ? 'Событие' : 'Новое событие'"
 >
-
   <div actions>
     <event-button-actions
     [event]="event"
@@ -10,78 +9,82 @@
   </div>
 
   <form [formGroup]="form" class="eventsNewForm">
-
     <mat-tab-group animationDuration="0" dynamicHeight>
-
       <mat-tab label="Общая информация">
         <div class=" event-form__tab-common padding-top-1em">
           <div class="eventsNewForm__vertical-fields">
             <mat-form-field appearance="outline">
               <mat-label>Наименование события</mat-label>
-              <input matInput autocomplete="off"
-                     id="name"
-                     formControlName="name"
-                     required>
+              <input
+                matInput
+                autocomplete="off"
+                id="name"
+                formControlName="name"
+                required
+              >
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Описание</mat-label>
-
-              <textarea matInput
-                        id="description"
-                        formControlName="description"
-                        autocomplete="off"
-                        cdkTextareaAutosize
-                        #autosize="cdkTextareaAutosize"
-                        cdkAutosizeMinRows="5"
-                        cdkAutosizeMaxRows="5"
-                        required></textarea>
+              <textarea
+                matInput
+                id="description"
+                formControlName="description"
+                autocomplete="off"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="5"
+                cdkAutosizeMaxRows="5"
+                required
+              ></textarea>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Дата и время начала</mat-label>
-              <input matInput
-                     type="datetime-local"
-                     autocomplete="off"
-                     id="start"
-                     formControlName="start"
-                     required
-                     min="{{minDate}}">
-
+              <input
+                matInput
+                type="datetime-local"
+                autocomplete="off"
+                id="start"
+                formControlName="start"
+                required
+                min="{{minDate}}"
+              >
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Награда / Призовой фонд</mat-label>
-              <input matInput autocomplete="off"
-                     id="award"
-                     formControlName="award"
-                     required>
+              <input
+                matInput
+                autocomplete="off"
+                id="award"
+                formControlName="award"
+                required
+              >
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Правила проведения мероприятия</mat-label>
-
-              <textarea matInput
-                        id="agreementRules"
-                        formControlName="agreementRules"
-                        autocomplete="off"
-                        cdkTextareaAutosize
-                        cdkAutosizeMaxRows="10"
-                        cdkAutosizeMinRows="10"
+              <textarea
+                matInput
+                id="agreementRules"
+                formControlName="agreementRules"
+                autocomplete="off"
+                cdkTextareaAutosize
+                cdkAutosizeMaxRows="10"
+                cdkAutosizeMinRows="10"
               ></textarea>
             </mat-form-field>
-
-            <mat-checkbox id="agreementRequiresConfirmation"
-                          formControlName="agreementRequiresConfirmation"
-                          value="false">
+            <mat-checkbox
+              id="agreementRequiresConfirmation"
+              formControlName="agreementRequiresConfirmation"
+              value="false"
+            >
               Требуется подтверждение ознакомления с правилами
             </mat-checkbox>
 
           </div>
           <div class="image-upload">
-
             <div class="event-image">
-
               <div class="event-image__image">
                 <img *ngIf="eventImage; else noImage" [src]="eventImage" alt="event image">
                 <ng-template #noImage>
@@ -100,30 +103,32 @@
                   удалить изображение
                 </button>
               </div>
-
             </div>
-
           </div>
         </div>
       </mat-tab>
 
       <mat-tab label="Этапы">
-
         <div style="padding: 1em">
-          <button mat-button
-                  (click)="showEventStageCreateView()"
-                  [disabled]="!isCanAddEventStage()">Добавить новый этап</button>
+          <button
+            mat-button
+            (click)="showEventStageCreateView()"
+            [disabled]="!isCanAddEventStage()"
+          >Добавить новый этап
+          </button>
         </div>
 
-        <table #eventStagesTable
-               mat-table [dataSource]="eventStagesDataSource" [class.empty]="eventStagesDataSource.data.length == 0"
-               cdkDropList
-               [cdkDropListData]="eventStagesDataSource"
-               (cdkDropListDropped)="dropEventStageRow($event)">
-
+        <table
+          #eventStagesTable
+          mat-table [dataSource]="eventStagesDataSource" [class.empty]="eventStagesDataSource.data.length == 0"
+          cdkDropList
+          [cdkDropListData]="eventStagesDataSource"
+          (cdkDropListDropped)="dropEventStageRow($event)"
+        >
+          <caption></caption>
           <ng-container matColumnDef="preRow">
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let eventStage">
+            <td mat-cell *matCellDef>
               <mat-icon>drag_handle</mat-icon>
             </td>
           </ng-container>
@@ -164,43 +169,47 @@
               [cdkDragData]="row"
           ></tr>
         </table>
-
       </mat-tab>
 
       <mat-tab label="Команды">
         <div class="eventsNewForm__vertical-fields padding-top-1em">
         <mat-form-field appearance="outline">
           <mat-label>Минимальное количество участников в команде</mat-label>
-          <input matInput
-                 type="number"
-                 min="1"
-                 id="minTeamMembers"
-                 formControlName="minTeamMembers"
-                 required>
+          <input
+            matInput
+            type="number"
+            min="1"
+            id="minTeamMembers"
+            formControlName="minTeamMembers"
+            required
+          >
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Максимальное количество участников</mat-label>
-          <input matInput
-                 autocomplete="off"
-                 type="number"
-                 min="2"
-                 id="maxEventMembers"
-                 formControlName="maxEventMembers"
-                 required>
+          <input
+            matInput
+            autocomplete="off"
+            type="number"
+            min="2"
+            id="maxEventMembers"
+            formControlName="maxEventMembers"
+            required
+          >
         </mat-form-field>
 
-        <mat-checkbox id="isCreateTeamsAutomatically"
-                      formControlName="isCreateTeamsAutomatically"
-                      value="false"
-                      required>
+        <mat-checkbox
+          id="isCreateTeamsAutomatically"
+          formControlName="isCreateTeamsAutomatically"
+          value="false"
+          required
+        >
           Создавать команды автоматически
         </mat-checkbox>
         </div>
       </mat-tab>
 
       <mat-tab label="Задачи">
-
         <div class="padding-top-1em">
           <alert>Список задач будет отображен участникам сразу после начала мероприятия</alert>
         </div>
@@ -208,27 +217,29 @@
           <div style="width: 100%;">
             <mat-form-field appearance="outline" class="padding-bottom-0" style="width: 100%;">
               <mat-label>Новая задача</mat-label>
-              <input matInput
-                     autocomplete="off"
-                     #newTaskInput
-                     (keydown.control.enter)="addEventTaskFromInput()"
+              <input
+                matInput
+                autocomplete="off"
+                #newTaskInput
+                (keydown.control.enter)="addEventTaskFromInput()"
               >
               <mat-hint>Для добавления нажмите Ctrl + Enter</mat-hint>
             </mat-form-field>
           </div>
-
         </div>
 
-        <table #eventTasksTable
-               mat-table [dataSource]="eventTasksDataSource"
-               [class.empty]="eventTasksDataSource.data.length == 0"
-               cdkDropList
-               [cdkDropListData]="eventTasksDataSource"
-               (cdkDropListDropped)="dropEventTaskRow($event)">
-
+        <table
+          #eventTasksTable
+          mat-table [dataSource]="eventTasksDataSource"
+          [class.empty]="eventTasksDataSource.data.length == 0"
+          cdkDropList
+          [cdkDropListData]="eventTasksDataSource"
+          (cdkDropListDropped)="dropEventTaskRow($event)"
+        >
+          <caption></caption>
           <ng-container matColumnDef="preRow">
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let eventTask">
+            <td mat-cell *matCellDef>
               <mat-icon>drag_handle</mat-icon>
             </td>
           </ng-container>
@@ -260,19 +271,20 @@
               [cdkDragData]="row"
           ></tr>
         </table>
-
       </mat-tab>
 
       <mat-tab label="Уведомления">
-
         <div class="eventsNewForm__vertical-fields">
-
-          <table mat-table [dataSource]="eventStatusDataSource"
-                 [class.empty]="eventStatusDataSource.data.length === 0">
-
+          <table
+            #eventStatusTable
+            mat-table
+            [dataSource]="eventStatusDataSource"
+            [class.empty]="eventStatusDataSource.data.length === 0"
+          >
+            <caption></caption>
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Статус</th>
-              <td mat-cell *matCellDef="let element">{{EventStatusTranslator.Translate(element.status)}}</td>
+              <td mat-cell *matCellDef="let element">{{eventStatusTranslator.Translate(element.status)}}</td>
             </ng-container>
 
             <ng-container matColumnDef="message">
@@ -301,19 +313,17 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
           </table>
 
-          <button [disabled]="isCanAddStatus()"
-                  mat-button
-                  (click)="addStatus()">Добавить новый статус</button>
-
+          <button
+            [disabled]="isCanAddStatus()"
+            mat-button
+            (click)="addStatus()"
+          >Добавить новый статус
+          </button>
         </div>
-
       </mat-tab>
-
     </mat-tab-group>
-
   </form>
 
   <div class="loader" *ngIf="isLoading">

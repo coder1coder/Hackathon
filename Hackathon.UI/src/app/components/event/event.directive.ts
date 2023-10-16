@@ -4,9 +4,5 @@ import { Directive, ViewContainerRef } from '@angular/core';
   selector: '[event-item]'
 })
 export class EventDirective {
-
-  constructor(
-    public viewContainerRef: ViewContainerRef,
-  ) { }
-
+  constructor(public viewContainerRef: ViewContainerRef) {}
 }

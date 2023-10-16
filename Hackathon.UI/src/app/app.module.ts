@@ -75,11 +75,11 @@ import { EventCardStartedComponent } from "./components/event/cards/event-card-s
 import { EventHeaderComponent } from './components/event/cards/components/event-header/event-header.component';
 import { EventCardPublishedComponent } from './components/event/cards/event-card-published/event-card-published.component';
 import { EventCardFinishedComponent } from "./components/event/cards/event-card-finished/event-card-finished.component";
-import {ProjectDialog} from "./components/custom/project-dialog/project-dialog.component";
-import {ProjectGitDialog} from "./components/custom/project-git-dialog/project-git-dialog.component";
+import { ProjectDialog } from "./components/custom/project-dialog/project-dialog.component";
+import { ProjectGitDialog } from "./components/custom/project-git-dialog/project-git-dialog.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {ChatEventComponent} from "./components/chat/event/chat-event.component";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { ChatEventComponent } from "./components/chat/event/chat-event.component";
 import { NotificationItemComponent } from './components/notification/item/notification-item.component';
 
 @NgModule({

@@ -1,13 +1,13 @@
-import {Component, Input, OnInit, TemplateRef} from "@angular/core";
-import {AuthService} from "../../services/auth.service";
-import {RouterService} from "../../services/router.service";
-import {MatDialog} from "@angular/material/dialog";
-import {CustomDialog, ICustomDialogData} from "../custom/custom-dialog/custom-dialog.component";
-import {MenuItem} from "../../common/MenuItem";
-import {FormBuilder} from "@angular/forms";
-import {Subject, takeUntil} from "rxjs";
-import {ThemeChangeService} from "../../services/theme-change.service";
-import {fromMobx} from "../../common/functions/from-mobx.function";
+import { Component, Input, OnInit, TemplateRef } from "@angular/core";
+import { RouterService } from "../../services/router.service";
+import { MatDialog } from "@angular/material/dialog";
+import { CustomDialog, ICustomDialogData } from "../custom/custom-dialog/custom-dialog.component";
+import { FormBuilder } from "@angular/forms";
+import { Subject, takeUntil } from "rxjs";
+import { ThemeChangeService } from "../../services/theme-change.service";
+import { fromMobx } from "../../common/functions/from-mobx.function";
+import { IUser } from "../../models/User/IUser";
+import { CurrentUserStore } from "../../shared/stores/current-user.store";
 
 @Component({
   selector: 'toolbar',
@@ -18,9 +18,8 @@ import {fromMobx} from "../../common/functions/from-mobx.function";
 export class ToolbarComponent implements OnInit {
 
   public isDarkMode: boolean = false;
-
-  public userName:string | undefined;
-  public userId:number | undefined;
+  public userName: string;
+  public userId: number;
 
   @Input() logoMinWidth: string = "initial";
   @Input() secondToolbar: TemplateRef<any> | null;
@@ -29,23 +28,28 @@ export class ToolbarComponent implements OnInit {
   private destroy$ = new Subject();
 
   constructor(
-    private authService:AuthService,
     private routerService:RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private themeChangeService: ThemeChangeService
+    private themeChangeService: ThemeChangeService,
+    private currentUserStore: CurrentUserStore,
   ) {
   }
 
   ngOnInit() {
-   this.initSubscribe();
+    this.currentUserStore.loadCurrentUser();
+    this.initSubscribe();
+  }
+
+  public get UserId(): number {
+    return this.userId;
   }
 
   public logout(): void {
     const data: ICustomDialogData = {
       header: 'Выход',
       content: `Вы уверены, что хотите выйти?`,
-      acceptButtonText: `Да`
+      acceptButtonText: `Да`,
     };
 
     this.dialog.open(CustomDialog, { data })
@@ -56,11 +60,12 @@ export class ToolbarComponent implements OnInit {
   }
 
   private initSubscribe(): void {
-    this.authService.getCurrentUser()
-      ?.subscribe((curUser) => {
-        if (curUser != null) {
+    fromMobx(() => this.currentUserStore.currentUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((curUser: IUser) => {
+        if (curUser) {
           this.userId = curUser.id;
-          this.userName = curUser.fullName ?? curUser.userName
+          this.userName = curUser.fullName ?? curUser.userName;
         }
       })
 

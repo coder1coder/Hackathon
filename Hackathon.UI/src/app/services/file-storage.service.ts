@@ -1,9 +1,9 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {environment} from 'src/environments/environment';
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {map} from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +21,7 @@ export class FileStorageService {
       this.cache.set(key, response);
     }
 
-    return (this.cache.get(key) as Observable<ArrayBuffer>)
-      .pipe(map((x: ArrayBuffer) => this.getSafeUrlFromByteArray(x)));
+    return (this.cache.get(key)).pipe(map((x: ArrayBuffer) => this.getSafeUrlFromByteArray(x)));
   }
 
   public getSafeUrlFromByteArray(buffer: ArrayBuffer): SafeUrl {

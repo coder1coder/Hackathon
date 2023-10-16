@@ -1,14 +1,14 @@
-import {Injectable, Input, OnDestroy} from "@angular/core";
-import {Event} from "../../../../models/Event/Event";
-import {Subject} from "rxjs";
+import { Injectable, Input, OnDestroy } from "@angular/core";
+import { Event } from "../../../../models/Event/Event";
+import { Subject } from "rxjs";
 
 @Injectable()
 export abstract class EventCardBaseComponent implements OnDestroy {
+
   @Input() isLoading: boolean = false;
   @Input() event: Event;
 
   protected eventId: number;
-
   protected destroy$ = new Subject();
 
   ngOnDestroy(): void {

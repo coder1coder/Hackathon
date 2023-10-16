@@ -1,5 +1,5 @@
-import {EventStatus} from "./EventStatus";
-import {SafeUrl} from "@angular/platform-browser";
+import { EventStatus } from "./EventStatus";
+import { SafeUrl } from "@angular/platform-browser";
 
 export interface IEventListItem {
   id: number;
@@ -15,5 +15,6 @@ export interface IEventListItem {
   teamsCount: number;
   membersCount: number;
   imageId?: string;
-  imageUrl?: SafeUrl; //не возвращается с бэка, инициализируется после получения imageId
+  /** не возвращается с бэка, инициализируется после получения imageId */
+  imageUrl?: SafeUrl;
 }

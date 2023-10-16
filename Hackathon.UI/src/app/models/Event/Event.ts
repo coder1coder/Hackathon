@@ -7,14 +7,14 @@ import {IEventTaskItem} from "./IEventTaskItem";
 import {IEventAgreement} from "./IEventAgreement";
 
 export class Event {
-  id!: number;
-  name!: string;
-  description!: string;
-  start!: Date;
-  maxEventMembers!: number;
-  minTeamMembers!: number;
-  isCreateTeamsAutomatically!: boolean;
-  changeEventStatusMessages!: ChangeEventStatusMessage[];
+  id: number;
+  name: string;
+  description: string;
+  start: Date;
+  maxEventMembers: number;
+  minTeamMembers: number;
+  isCreateTeamsAutomatically: boolean;
+  changeEventStatusMessages: ChangeEventStatusMessage[];
   status!: EventStatus;
   ownerId?: number;
   owner!: IUser
@@ -23,7 +23,8 @@ export class Event {
   award!: string;
   imageId: string;
   imageUrl?: string;
-  agreement?: IEventAgreement
+  agreement?: IEventAgreement;
+  ApprovalApplicationId?: number;
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];

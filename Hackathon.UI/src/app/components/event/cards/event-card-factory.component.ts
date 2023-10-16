@@ -4,26 +4,26 @@ import {
   OnInit, Type,
   ViewChild
 } from '@angular/core';
-import {EventDirective} from "../event.directive";
-import {EventStatus} from "../../../models/Event/EventStatus";
-import {ActivatedRoute} from "@angular/router";
-import {RouterService} from "../../../services/router.service";
-import {SnackService} from "../../../services/snack.service";
-import {Subject, takeUntil} from "rxjs";
-import {Event} from "../../../models/Event/Event";
-import {EventCreateEditCardComponent} from "./event-create-edit-card/event-create-edit-card.component";
-import {finalize} from "rxjs/operators";
-import {EventService} from "../../../services/event/event.service";
-import {EventMainViewCardComponent} from "./event-main-view-card/event-main-view-card.component";
-import {EventCardStartedComponent} from "./event-card-started/event-card-started.component";
-import {EventCardPublishedComponent} from "./event-card-published/event-card-published.component";
-import {EventCardFinishedComponent} from "./event-card-finished/event-card-finished.component";
-import {EventErrorMessages} from "../../../common/error-messages/event-error-messages";
-import {EventClient} from "../../../services/event/event.client";
+import { EventDirective } from "../event.directive";
+import { EventStatus } from "../../../models/Event/EventStatus";
+import { ActivatedRoute } from "@angular/router";
+import { RouterService } from "../../../services/router.service";
+import { SnackService } from "../../../services/snack.service";
+import { Subject, takeUntil } from "rxjs";
+import { Event } from "../../../models/Event/Event";
+import { EventCreateEditCardComponent } from "./event-create-edit-card/event-create-edit-card.component";
+import { finalize } from "rxjs/operators";
+import { EventService } from "../../../services/event/event.service";
+import { EventMainViewCardComponent } from "./event-main-view-card/event-main-view-card.component";
+import { EventCardStartedComponent } from "./event-card-started/event-card-started.component";
+import { EventCardPublishedComponent } from "./event-card-published/event-card-published.component";
+import { EventCardFinishedComponent } from "./event-card-finished/event-card-finished.component";
+import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
+import { EventClient } from "../../../services/event/event.client";
 
 @Component({
   selector: 'app-event-card-factory',
-  template: `<ng-template event-item></ng-template>`
+  template: `<ng-template event-item></ng-template>`,
 })
 export class EventCardFactoryComponent implements OnInit {
 
@@ -47,7 +47,6 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.initSubscription();
     this.loadData();
   }
@@ -56,8 +55,9 @@ export class EventCardFactoryComponent implements OnInit {
     this.isLoading = true;
     this.eventHttpService.getById(this.eventId)
       .pipe(
+        finalize(() => this.isLoading = false),
         takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false))
+      )
       .subscribe({
         next: (res: Event) => {
           if (res) {
@@ -68,7 +68,7 @@ export class EventCardFactoryComponent implements OnInit {
             this.goBack();
           }
         },
-        error: () => this.goBack()
+        error: () => this.goBack(),
       })
   }
 
@@ -84,7 +84,15 @@ export class EventCardFactoryComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  private getComponentByEventStatus(): Type<any> {
+  private getComponentByEventStatus():
+    Type<
+      EventCreateEditCardComponent |
+      EventCardPublishedComponent |
+      EventCardStartedComponent |
+      EventCardFinishedComponent |
+      EventMainViewCardComponent
+      >
+  {
     if (!Object.values(EventStatus).includes(Number(this.event?.status))) {
       this.goBack();
     }
@@ -99,24 +107,27 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   private initEventId(): void {
-    const {eventId} = this.activeRoute.snapshot.params;
+    const { eventId } = this.activeRoute.snapshot.params;
 
-    if (!Number(eventId))
+    if (!Number(eventId)) {
       this.goBack();
+    }
 
     this.eventId = eventId;
   }
 
   private initSubscription(): void {
-    this.eventService.reloadEvent.subscribe((isReload: boolean) => {
-      if (isReload) {
-        this.loadData();
-      }
-    });
+    this.eventService.reloadEvent
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isReload: boolean) => {
+        if (isReload) {
+          this.loadData();
+        }
+      });
   }
 
   private goBack(): void {
     this.router.Events.List().then(_=>
-      this.snackService.open(EventErrorMessages.EventNotFound))
+      this.snackService.open(EventErrorMessages.EventNotFound));
   }
 }
