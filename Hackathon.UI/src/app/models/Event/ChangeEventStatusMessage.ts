@@ -1,9 +1,8 @@
 import { EventStatus } from "./EventStatus"
 
-export class ChangeEventStatusMessage
-{
-  status!: EventStatus;
-  message!: string;
+export class ChangeEventStatusMessage {
+  status: EventStatus;
+  message: string;
 
   constructor(status:EventStatus, message:string) {
     this.status = status;

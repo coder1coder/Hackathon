@@ -23,7 +23,7 @@ export class FileUploadService {
     return of(files)
       .pipe(
         map((fileList: FileList) => {
-          if (!(fileList?.length > 0)) throw new Error(UploadFileErrorMessages.FileUploadError);
+          if (fileList?.length <= 0) throw new Error(UploadFileErrorMessages.FileUploadError);
           const file: File = fileList[0];
           if (!FileUtils.IsImage(file)) throw new Error(UploadFileErrorMessages.FileIsNotImage);
           if (file.size / FileUtils.Divider > FileUtils.MaxFileSize) throw new Error(UploadFileErrorMessages.FileSizeOutOfRange);

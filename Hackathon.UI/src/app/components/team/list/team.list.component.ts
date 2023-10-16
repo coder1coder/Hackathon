@@ -1,6 +1,6 @@
 import {Component, Injectable} from '@angular/core';
 import {BaseCollection} from "../../../models/BaseCollection";
-import {BaseTableListComponent} from "../../BaseTableListComponent";
+import {BaseTableListComponent} from "../../../common/base-components/base-table-list.component";
 import {Team, TeamType} from "../../../models/Team/Team";
 import {TeamClient} from "../../../services/team-client.service";
 import {AuthService} from "../../../services/auth.service";

@@ -10,7 +10,7 @@ import {MatSelect} from "@angular/material/select";
 import {IEventListItem} from "../../../models/Event/IEventListItem";
 import {AuthService} from "../../../services/auth.service";
 import {PageSettingsDefaults} from "../../../models/PageSettings";
-import {DATE_FORMAT} from "../../../common/date-formats";
+import {DATE_FORMAT_DD_MM_YYYY} from "../../../common/date-formats";
 import {of, Subject, switchMap, takeUntil} from "rxjs";
 import {EventClient} from "../../../services/event/event.client";
 
@@ -55,7 +55,7 @@ export class EventListComponent implements OnInit {
   }
 
   public getDateTimeFormat(date: Date): string {
-    return moment(date).local().format(DATE_FORMAT)
+    return moment(date).local().format(DATE_FORMAT_DD_MM_YYYY)
   }
 
   public fetch(reloadLimit?: boolean): void {

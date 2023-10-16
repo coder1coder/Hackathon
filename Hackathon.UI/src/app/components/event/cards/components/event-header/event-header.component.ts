@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import * as moment from "moment/moment";
-import { DATE_FORMAT } from "../../../../../common/date-formats";
+import { DATE_FORMAT_DD_MM_YYYY } from "../../../../../common/date-formats";
 import { Event } from "../../../../../models/Event/Event";
 
 @Component({
@@ -8,16 +8,10 @@ import { Event } from "../../../../../models/Event/Event";
   templateUrl: './event-header.component.html',
   styleUrls: ['./event-header.component.scss']
 })
-export class EventHeaderComponent implements OnInit {
-
+export class EventHeaderComponent {
   @Input() event: Event;
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
   public get startDate(): string {
-    return moment(this.event?.start).local().format(DATE_FORMAT)
+    return moment(this.event?.start).local().format(DATE_FORMAT_DD_MM_YYYY)
   }
 }

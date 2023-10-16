@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: 'layout-default',
@@ -7,7 +7,6 @@ import {Component, Input} from "@angular/core";
 })
 
 export class DefaultLayoutComponent {
-
   @Input() title: string;
   @Input() hideTitleBar: boolean = false;
   @Input() hideContentWhileLoading: boolean = true;
@@ -16,8 +15,5 @@ export class DefaultLayoutComponent {
   @Input() containerCssClasses: string = 'container container-full container-padding';
   @Input() layoutCssClasses: string = '';
   @Input() logoMinWidth: string = `initial`;
-
-  constructor() {
-  }
 }
 

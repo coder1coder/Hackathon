@@ -1,22 +1,23 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Event} from "../../../../../models/Event/Event";
-import {EventStatus} from "../../../../../models/Event/EventStatus";
-import {SnackService} from "../../../../../services/snack.service";
-import {RouterService} from "../../../../../services/router.service";
-import {IProblemDetails} from "../../../../../models/IProblemDetails";
-import {EventService} from "../../../../../services/event/event.service";
-import {EventClient} from "../../../../../services/event/event.client";
-import {CustomDialog, ICustomDialogData} from "../../../../custom/custom-dialog/custom-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {ErrorProcessor} from "../../../../../services/errorProcessor";
+import { Component, Input } from '@angular/core';
+import { Event } from "../../../../../models/Event/Event";
+import { EventStatus } from "../../../../../models/Event/EventStatus";
+import { SnackService } from "../../../../../services/snack.service";
+import { RouterService } from "../../../../../services/router.service";
+import { IProblemDetails } from "../../../../../models/IProblemDetails";
+import { EventService } from "../../../../../services/event/event.service";
+import { EventClient } from "../../../../../services/event/event.client";
+import { CustomDialog, ICustomDialogData } from "../../../../custom/custom-dialog/custom-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { ErrorProcessorService } from "../../../../../services/error-processor.service";
 
 @Component({
   selector: 'event-button-actions',
   templateUrl: './event-button-actions.component.html',
   styleUrls: ['./event-button-actions.component.scss']
 })
-export class EventButtonActionsComponent implements OnInit {
+export class EventButtonActionsComponent {
   @Input() event: Event;
+  @Input() submit: () => void;
 
   constructor(
     public eventService: EventService,
@@ -24,17 +25,12 @@ export class EventButtonActionsComponent implements OnInit {
     private snack: SnackService,
     private router: RouterService,
     public dialog: MatDialog,
-    private errorProcessor: ErrorProcessor,
-  ) { }
-
-  ngOnInit(): void {
-  }
-
-  @Input() submit: () => void;
+    private errorProcessor: ErrorProcessorService,
+  ) {}
 
   public createNewTeam(): void {
     if (this.event?.status !== EventStatus.Published) {
-      this.snack.open('Событие должно быть опубликовано')
+      this.snack.open('Событие должно быть опубликовано');
       return;
     }
 
@@ -57,19 +53,17 @@ export class EventButtonActionsComponent implements OnInit {
   }
 
   public enterToEvent(): void {
-
-    if (this.event?.agreement?.requiresConfirmation == true)
-    {
+    if (this.event?.agreement?.requiresConfirmation)  {
       const data: ICustomDialogData = {
         header: 'Правила участия в мероприятии',
         content: this.event.agreement.rules,
-        acceptButtonText: `Принять`
+        acceptButtonText: `Принять`,
       };
 
       this.dialog.open(CustomDialog, { data })
         .afterClosed()
-        .subscribe(x => {
-          if (x) {
+        .subscribe(res => {
+          if (res) {
             this.eventHttpService.acceptAgreement(this.event.id)
               .subscribe({
                 next: (_) => {
@@ -84,15 +78,15 @@ export class EventButtonActionsComponent implements OnInit {
     } else this.joinToEvent();
   }
 
-  private joinToEvent(){
+  private joinToEvent(): void {
     this.eventHttpService.join(this.event.id)
       .subscribe({
-        next: (_) => {
+        next: () => {
           this.snack.open(`Вы зарегистрировались на мероприятии`);
           this.eventService.reloadEvent.next(true);
         },
         error: errorContext => {
-          this.errorProcessor.Process(errorContext)
+          this.errorProcessor.Process(errorContext);
         }
       });
   }
@@ -156,5 +150,4 @@ export class EventButtonActionsComponent implements OnInit {
         }
       });
   }
-
 }

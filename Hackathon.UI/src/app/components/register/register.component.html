@@ -7,7 +7,8 @@
              id="login"
              #login
              formControlName="login"
-             required>
+             required
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -15,7 +16,6 @@
       <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
              autocomplete="off"
              id="password"
-             #password
              formControlName="password"
              required
       >
@@ -33,19 +33,19 @@
       <input matInput
              autocomplete="off"
              id="email"
-             #email
              formControlName="email"
-             required>
+             required
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Полное имя</mat-label>
       <input matInput
              autocomplete="off"
-             id="fullname"
-             #fullname
-             formControlName="fullname"
-             required>
+             id="fullName"
+             formControlName="fullName"
+             required
+      >
     </mat-form-field>
   </div>
   <div class="registerForm__bottom">
