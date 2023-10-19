@@ -2,8 +2,7 @@
   <mat-icon
     matBadge="{{ this.unreadNotificationsCount }}"
     matBadgeColor="warn"
-    matBadgeHidden="{{ this.unreadNotificationsCount == 0 }}"
-  >
+    matBadgeHidden="{{ this.unreadNotificationsCount == 0 }}">
     notifications_none
   </mat-icon>
 </button>
@@ -13,6 +12,7 @@
     <notification-item *ngFor="let item of notifications?.items"
                        [notification]="item"
                        [shortView]="true"
+                       (click)="$event.stopPropagation();"
 
     ></notification-item>
   </ng-template>
