@@ -179,6 +179,9 @@ public class UserRepository: IUserRepository
         }
     }
 
+    public async Task<UserRole?> GetRoleAsync(long userId)
+        => (await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id == userId))?.Role;
+
     public Task<long[]> GetAdministratorIdsAsync()
         => _dbContext.Users
             .AsNoTracking()
