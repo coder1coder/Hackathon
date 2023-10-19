@@ -75,6 +75,13 @@ public interface IUserRepository
     Task SetRole(long userId, UserRole userRole);
 
     /// <summary>
+    /// Получить роль пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <returns></returns>
+    Task<UserRole?> GetRoleAsync(long userId);
+
+    /// <summary>
     /// Получить идентификаторы администраторов
     /// </summary>
     /// <returns></returns>

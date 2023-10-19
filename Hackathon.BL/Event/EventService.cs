@@ -201,13 +201,12 @@ public class EventService : IEventService
 
         if (!skipUserValidation)
         {
-            //TODO: get user role only
-            var user = await _userRepository.GetAsync(authorizedUserId);
+            var authorizedUserRole = await _userRepository.GetRoleAsync(authorizedUserId);
 
-            if (user is null)
+            if (authorizedUserRole is null)
                 return Result.Forbidden(UserErrorMessages.UserDoesNotExists);
 
-            userRole = user.Role;
+            userRole = authorizedUserRole.Value;
         }
 
         if (!skipValidation)
