@@ -150,4 +150,19 @@ export class EventButtonActionsComponent {
         }
       });
   }
+
+  public setOnModeration(): void {
+    this.eventHttpService.setStatus(this.event.id, EventStatus.OnModeration)
+      .subscribe({
+        next: () => {
+          this.snack.open(`Событие отправлено на модерацию`);
+          this.eventService.reloadEvent.next(true);
+        },
+        error: (err) => {
+          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
+          this.snack.open(msg);
+        }
+      });
+  }
 }

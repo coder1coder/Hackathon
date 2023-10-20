@@ -10,7 +10,7 @@ export class EventService {
   public reloadEvent = new EventEmitter<boolean>();
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
   ) {
   }
 
@@ -18,13 +18,13 @@ export class EventService {
     let userId = this.authService.getUserId();
     return userId !== undefined
       && !this.isAlreadyInEvent(event, userId)
-      && event.status === EventStatus.Published
+      && event.status === EventStatus.Published;
   }
 
   public isCanFinishEvent(event: Event): boolean {
     return this.isEventOwner(event)
       && event.status !== EventStatus.Finished
-      && event.status !== EventStatus.Draft
+      && event.status !== EventStatus.Draft;
   }
 
   public isCanPublishEvent(event: Event): boolean {
@@ -50,7 +50,7 @@ export class EventService {
   public isCanAddTeam(event: Event): boolean {
     return this.isEventOwner(event)
       && event.status === EventStatus.Published
-      && !event.isCreateTeamsAutomatically
+      && !event.isCreateTeamsAutomatically;
   }
 
   public isAlreadyInEvent(event: Event, userId: number): boolean {
@@ -65,8 +65,15 @@ export class EventService {
   }
 
   public isCanPublish(event: Event): boolean {
-    return event?.id !== undefined && !isNaN(Number(event?.id))
+    return event?.id !== undefined
+      && !isNaN(Number(event?.id))
+      && Boolean(event?.ApprovalApplicationId)
       && this.isCanPublishEvent(event);
+  }
+
+  public isCanOnModeration(event: Event): boolean {
+    return event?.id !== undefined && !isNaN(Number(event?.id))
+    && this.isEventOwner(event) && event.status === EventStatus.Draft;
   }
 
   public isCanDeleteEvent(event: Event): boolean {
@@ -77,18 +84,18 @@ export class EventService {
   }
 
   public isCreateEditEvent(event: Event): boolean {
-    return event?.id === undefined || event?.status === EventStatus.Draft;
+    return event?.id === undefined ||
+      event?.status === EventStatus.Draft ||
+      event?.status === EventStatus.OnModeration;
   }
 
   public canView(event: Event): boolean {
     const userId = this.authService.getUserId();
-    if (userId === undefined)
-    {
+    if (userId === undefined) {
       return false;
     }
 
-    switch (event.status)
-    {
+    switch (event.status) {
       case EventStatus.Started:
         return this.isAlreadyInEvent(event, userId) || this.isEventOwner(event);
     }
