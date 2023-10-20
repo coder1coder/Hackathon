@@ -39,5 +39,10 @@ public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
             .IsRequired();
 
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);
+
+        builder.HasOne(x => x.ApprovalApplication)
+            .WithOne(x => x.Event)
+            .HasForeignKey<EventEntity>(s=>s.ApprovalApplicationId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

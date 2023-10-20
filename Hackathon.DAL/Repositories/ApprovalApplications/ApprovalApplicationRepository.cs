@@ -24,11 +24,9 @@ public class ApprovalApplicationRepository: IApprovalApplicationRepository
 
     public async Task AddAsync(NewApprovalApplicationParameters parameters)
     {
-        var eventEntity = await _dbContext.Events.FirstOrDefaultAsync(x =>
-            x.Id == parameters.EventId);
-
         var entity = _mapper.Map<NewApprovalApplicationParameters, ApprovalApplicationEntity>(parameters);
-        entity.Event = eventEntity;
+        entity.Event = await _dbContext.Events.FirstOrDefaultAsync(x =>
+            x.Id == parameters.EventId);
 
         _dbContext.ApprovalApplications.Add(entity);
         await _dbContext.SaveChangesAsync();

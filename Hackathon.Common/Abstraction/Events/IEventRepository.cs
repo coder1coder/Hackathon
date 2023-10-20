@@ -52,13 +52,6 @@ public interface IEventRepository
     Task DeleteAsync(long eventId);
 
     /// <summary>
-    /// Проверяет, существует ли событие
-    /// </summary>
-    /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
-    Task<bool> ExistsAsync(long eventId);
-
-    /// <summary>
     /// Установить идентификатор текущего этапа события
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>

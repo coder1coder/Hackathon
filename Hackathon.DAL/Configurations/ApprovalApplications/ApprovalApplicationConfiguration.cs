@@ -14,10 +14,11 @@ public class ApprovalApplicationConfiguration: IEntityTypeConfiguration<Approval
             .HasMaxLength(300);
 
         builder.HasOne(x => x.Author)
-            .WithMany();
+            .WithMany()
+            .HasForeignKey(x => x.AuthorId);
 
-        builder.HasOne(x => x.Event)
-            .WithOne(x => x.ApprovalApplication)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Signer)
+            .WithMany()
+            .HasForeignKey(x => x.SignerId);
     }
 }

@@ -174,11 +174,6 @@ public class EventRepository : IEventRepository
         }
     }
 
-    public Task<bool> ExistsAsync(long eventId)
-        => _dbContext.Events.AnyAsync(x =>
-            x.Id == eventId
-            && !x.IsDeleted);
-
     public async Task SetCurrentStageId(long eventId, long stageId)
     {
         var eventEntity = await _dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventId);
