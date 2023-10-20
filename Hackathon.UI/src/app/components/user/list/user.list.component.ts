@@ -24,6 +24,7 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
     private currentUserStore: CurrentUserStore,
   ) {
     super(UserListComponent.name);
+    this.currentUserStore.loadCurrentUser();
   }
 
   public getDisplayColumns(): string[] {
