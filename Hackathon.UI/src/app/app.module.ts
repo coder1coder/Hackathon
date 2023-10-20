@@ -81,10 +81,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { ChatEventComponent } from "./components/chat/event/chat-event.component";
 import { NotificationItemComponent } from './components/notification/item/notification-item.component';
+import { ApprovalApplicationListComponent } from './components/approval-application/list/approval-application-list.component';
 
 @NgModule({
   declarations: [
-
     AppComponent,
     NavMenuComponent,
     LoginComponent,
@@ -141,6 +141,8 @@ import { NotificationItemComponent } from './components/notification/item/notifi
     AlertComponent,
     CustomDialog,
     LineInfoComponent,
+
+    ApprovalApplicationListComponent,
   ],
     imports: [
         BrowserModule,

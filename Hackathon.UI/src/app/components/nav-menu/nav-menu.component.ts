@@ -30,6 +30,7 @@ export class NavMenuComponent {
             new MenuItem('#', 'Администрирование', [UserRole.Administrator],[
               new MenuItem('/users','Пользователи'),
               new MenuItem('/eventLog','Журнал событий'),
+              new MenuItem('/approval-applications','Запросы на согласования'),
             ])
           ].filter(item=> !item.onlyForRoles || item.onlyForRoles.includes(user.role));
         }
