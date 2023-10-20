@@ -22,8 +22,8 @@ public class ApprovalApplicationsController: BaseController
     /// </summary>
     /// <param name="parameters">Параметры фильтрации и пагинации</param>
     /// <returns></returns>
-    [HttpGet]
-    public Task<IActionResult> GetList([FromQuery] GetListParameters<ApprovalApplicationFilter> parameters)
+    [HttpPost("list")]
+    public Task<IActionResult> GetList([FromBody] GetListParameters<ApprovalApplicationFilter> parameters)
         => GetResult(() => _approvalApplicationService.GetListAsync(AuthorizedUserId, parameters));
 
     /// <summary>
