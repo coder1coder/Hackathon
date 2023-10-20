@@ -25,6 +25,7 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
     private currentUserStore: CurrentUserStore,
   ) {
     super(EventLogComponent.name);
+    this.currentUserStore.loadCurrentUser();
   }
 
   fetch(getFilterModel: GetListParameters<IEventLogModel>): void {
