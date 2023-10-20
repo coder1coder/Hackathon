@@ -78,7 +78,7 @@ public class TestFaker
             .RuleFor(x => x.ChangeEventStatusMessages, _ => new List<ChangeEventStatusMessage>())
             .RuleFor(x => x.Award, f => f.Random.Number(1, 1000).ToString())
             .RuleFor(x => x.Description, f => f.Random.String2(400))
-            .RuleFor(x=>x.Agreement, f=>new EventAgreementEntity
+            .RuleFor(x => x.Agreement, f=>new EventAgreementEntity
             {
                 Rules = f.Random.String2(10, 300),
                 RequiresConfirmation = false

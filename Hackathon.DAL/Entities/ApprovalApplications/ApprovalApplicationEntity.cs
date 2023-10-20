@@ -18,7 +18,7 @@ public class ApprovalApplicationEntity: BaseEntity
     /// <summary>
     /// Идентификатор подписанта
     /// </summary>
-    public long SignerId { get; set; }
+    public long? SignerId { get; set; }
 
     /// <summary>
     /// Подписант

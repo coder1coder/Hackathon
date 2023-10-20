@@ -337,4 +337,32 @@ public class EventControllerTests : BaseIntegrationTest
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(response.Content);
     }
+
+    [Fact]
+    public async Task Update_ShouldNot_RemoveEvent()
+    {
+        //arrange
+        var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
+        var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        var createEventResponse = await EventsApi.Create(createEventRequest);
+        await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
+        {
+            Id = createEventResponse.Id,
+            Status = EventStatus.OnModeration
+        });
+
+        var updateEventRequest = Mapper.Map<CreateEventRequest, UpdateEventRequest>(createEventRequest);
+        updateEventRequest.Id = createEventResponse.Id;
+        foreach (var stage in updateEventRequest.Stages)
+            stage.EventId = createEventResponse.Id;
+
+        //act
+        await EventsApi.Update(updateEventRequest);
+        var getEventResponse = await EventsApi.Get(createEventResponse.Id);
+
+        //assert
+        Assert.NotNull(getEventResponse);
+        Assert.True(getEventResponse.IsSuccessStatusCode);
+        Assert.NotNull(getEventResponse.Content);
+    }
 }
