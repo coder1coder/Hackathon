@@ -98,7 +98,9 @@ export class EventCardFactoryComponent implements OnInit {
     }
 
     switch (this.event?.status) {
-      case EventStatus.Draft: return EventCreateEditCardComponent;
+      case EventStatus.Draft:
+      case EventStatus.OnModeration:
+        return EventCreateEditCardComponent;
       case EventStatus.Published: return EventCardPublishedComponent;
       case EventStatus.Started: return EventCardStartedComponent;
       case EventStatus.Finished: return EventCardFinishedComponent;
