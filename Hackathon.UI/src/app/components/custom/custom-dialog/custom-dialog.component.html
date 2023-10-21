@@ -7,7 +7,7 @@
           [mat-dialog-close]="true"
           [innerText]="data.acceptButtonText ?? 'OK' "></button>
   <button mat-button
-          mat-dialog-close=""
+          [mat-dialog-close]="false"
           cdkFocusInitial
           [innerText]="data.cancelButtonText ?? 'Отмена'"></button>
 </mat-dialog-actions>

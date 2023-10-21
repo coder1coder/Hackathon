@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { DictionariesLoading } from "../../common/base-components/dictionaries-loading.component";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { FileStorageService } from "../../services/file-storage.service";
 import { UserService } from "../../services/user.service";
@@ -12,7 +11,7 @@ import { SafeUrl } from "@angular/platform-browser";
 @Injectable({
   providedIn:'root'
 })
-export class ProfileUserStore extends DictionariesLoading {
+export class ProfileUserStore {
   @observable protected users$: Map<number, IUser> = new Map<number, IUser>();
   private fetchObservableMap: Map<number, Observable<IUser>> = new Map<number, Observable<IUser>>();
 
@@ -20,7 +19,6 @@ export class ProfileUserStore extends DictionariesLoading {
     private fileStorageService: FileStorageService,
     private userService: UserService,
   ) {
-    super();
     makeObservable(this);
   }
 
@@ -41,6 +39,14 @@ export class ProfileUserStore extends DictionariesLoading {
     user.profileImageId = imageId;
     this.fileStorageService.getById(user.profileImageId)
       .pipe(tap((safeUrl) => this.updateUserImage([safeUrl, user])));
+  }
+
+  @action
+  public clearStore(): void {
+    runInAction(() => {
+      this.users$.clear();
+      this.fetchObservableMap.clear();
+    });
   }
 
   private fetchUser(userId: number): Observable<IUser> {

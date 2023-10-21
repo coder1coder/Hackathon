@@ -1,16 +1,26 @@
 @import 'src/assets/styles/variables';
 
 :host {
-
   display: inline-flex;
   column-gap: 1em;
   margin: .5em .2em 1em;
   align-items: center;
   border: 1px solid #d0e5ed;
   border-radius: 4px;
-  padding: 10px 15px 10px 15px;
   background-color: #f0fbff;
   color: $black-color;
+
+  .alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 15px 10px 15px;
+  }
+
+  .icon {
+    display: flex;
+    margin-right: 15px;
+  }
 
   &.closed {
     display: none;
@@ -38,7 +48,7 @@
     }
   }
 
-  &[danger] {
+  &[danger], .gpp_bad {
     background-color: #f8d7da;
     border: 1px solid #f5c2c7;
 
@@ -47,4 +57,12 @@
     }
   }
 
+  .verified_user {
+    background-color: #d7f8de;
+    border: 1px solid #bcf8c8;
+
+    mat-icon{
+      color: #458420;
+    }
+  }
 }

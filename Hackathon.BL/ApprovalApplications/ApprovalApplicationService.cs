@@ -58,7 +58,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
         if (approvalApplication is null)
             return Result<ApprovalApplicationModel>.NotFound(ApprovalApplicationDoesntExist);
 
-        if (authorizedUser.Role != UserRole.Administrator || authorizedUser.Id != approvalApplication.AuthorId)
+        if (authorizedUser.Id != approvalApplication.AuthorId)
             return Result<ApprovalApplicationModel>.Forbidden(NoRightsExecutingOperation);
 
         return Result<ApprovalApplicationModel>.FromValue(approvalApplication);
@@ -77,7 +77,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
         if (approvalApplication.ApplicationStatus is not ApprovalApplicationStatus.Requested)
             return Result.NotValid(ApprovalApplicationAlreadyHasDecision);
 
-        await _approvalApplicationRepository.UpdateStatusAsync(approvalApplicationId, approvalApplicationId,
+        await _approvalApplicationRepository.UpdateStatusAsync(authorizedUserId, approvalApplicationId,
             ApprovalApplicationStatus.Approved);
 
         await _notificationService.PushAsync(
@@ -102,7 +102,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
         if (approvalApplication.ApplicationStatus is not ApprovalApplicationStatus.Requested)
             return Result.NotValid(ApprovalApplicationAlreadyHasDecision);
 
-        await _approvalApplicationRepository.UpdateStatusAsync(approvalApplicationId, approvalApplicationId,
+        await _approvalApplicationRepository.UpdateStatusAsync(authorizedUserId, approvalApplicationId,
             ApprovalApplicationStatus.Rejected, parameters.Comment);
 
         await _notificationService.PushAsync(

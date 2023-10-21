@@ -13,14 +13,14 @@ $event-status-icon-size: 10px;
     color: lightgray;
   }
   .mat-icon {
-    &-published {
+    &-requested {
       color: #eb832b;
     }
-    &-started {
+    &-approved {
       color: seagreen;
     }
-    &-onmoderation {
-      color: cornflowerblue;
+    &-rejected {
+      color: #842029;
     }
   }
 }

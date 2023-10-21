@@ -10,7 +10,7 @@ import { RouterService } from "../../services/router.service";
 import { SnackService } from "../../services/snack.service";
 import { ErrorProcessorService } from "../../services/error-processor.service";
 import { Subject, takeUntil } from "rxjs";
-import {IProblemDetails} from "../../models/IProblemDetails";
+import { IProblemDetails } from "../../models/IProblemDetails";
 
 @Component({
   selector: 'app-login',

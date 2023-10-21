@@ -8,6 +8,7 @@ import { ThemeChangeService } from "../../services/theme-change.service";
 import { fromMobx } from "../../common/functions/from-mobx.function";
 import { IUser } from "../../models/User/IUser";
 import { CurrentUserStore } from "../../shared/stores/current-user.store";
+import {ProfileUserStore} from "../../shared/stores/profile-user.store";
 
 @Component({
   selector: 'toolbar',
@@ -33,6 +34,7 @@ export class ToolbarComponent implements OnInit {
     private fb: FormBuilder,
     private themeChangeService: ThemeChangeService,
     private currentUserStore: CurrentUserStore,
+    private profileUserStore: ProfileUserStore,
   ) {
   }
 
@@ -55,7 +57,11 @@ export class ToolbarComponent implements OnInit {
     this.dialog.open(CustomDialog, { data })
       .afterClosed()
       .subscribe(x => {
-        if (x) this.routerService.Profile.Logout();
+        if (x) {
+          this.currentUserStore.clearStore();
+          this.profileUserStore.clearStore();
+          this.routerService.Profile.Logout();
+        }
       });
   }
 

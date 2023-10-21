@@ -82,6 +82,9 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { ChatEventComponent } from "./components/chat/event/chat-event.component";
 import { NotificationItemComponent } from './components/notification/item/notification-item.component';
 import { ApprovalApplicationListComponent } from './components/approval-application/list/approval-application-list.component';
+import { ApprovalApplicationStatusComponent } from './components/approval-application/approval-application-status/approval-application-status.component';
+import { ApprovalApplicationFilterComponent } from './components/approval-application/approval-application-filter/approval-application-filter.component';
+import { ApprovalApplicationRejectModalComponent } from './components/approval-application/approval-application-reject-modal/approval-application-reject-modal.component';
 
 @NgModule({
   declarations: [
@@ -143,6 +146,9 @@ import { ApprovalApplicationListComponent } from './components/approval-applicat
     LineInfoComponent,
 
     ApprovalApplicationListComponent,
+    ApprovalApplicationStatusComponent,
+    ApprovalApplicationFilterComponent,
+    ApprovalApplicationRejectModalComponent,
   ],
     imports: [
         BrowserModule,

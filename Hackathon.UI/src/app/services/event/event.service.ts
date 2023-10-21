@@ -1,7 +1,8 @@
-import {Event} from "../../models/Event/Event";
-import {EventStatus} from "../../models/Event/EventStatus";
-import {AuthService} from "../auth.service";
-import {EventEmitter, Injectable} from "@angular/core";
+import { Event } from "../../models/Event/Event";
+import { EventStatus } from "../../models/Event/EventStatus";
+import { AuthService } from "../auth.service";
+import { EventEmitter, Injectable } from "@angular/core";
+import { ApprovalApplicationStatusEnum } from "../../models/approval-application/approval-application-status.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,6 @@ export class EventService {
     return this.isEventOwner(event)
       && event.status !== EventStatus.Finished
       && event.status !== EventStatus.Draft;
-  }
-
-  public isCanPublishEvent(event: Event): boolean {
-    return this.isEventOwner(event)
-      && event.status === EventStatus.Draft;
   }
 
   public isCanStartEvent(event: Event): boolean {
@@ -67,13 +63,16 @@ export class EventService {
   public isCanPublish(event: Event): boolean {
     return event?.id !== undefined
       && !isNaN(Number(event?.id))
-      && Boolean(event?.ApprovalApplicationId)
-      && this.isCanPublishEvent(event);
+      && Boolean(event?.approvalApplicationId)
+      && this.isEventOwner(event)
+      && event?.status === EventStatus.OnModeration
+      && event?.approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved;
   }
 
   public isCanOnModeration(event: Event): boolean {
-    return event?.id !== undefined && !isNaN(Number(event?.id))
-    && this.isEventOwner(event) && event.status === EventStatus.Draft;
+    return Boolean(event?.id)
+      && this.isEventOwner(event)
+      && !event.approvalApplicationId;
   }
 
   public isCanDeleteEvent(event: Event): boolean {

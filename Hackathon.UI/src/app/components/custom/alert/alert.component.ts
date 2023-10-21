@@ -1,31 +1,27 @@
-import {Attribute, Component, HostBinding, Input} from "@angular/core";
+import { Attribute, Component, HostBinding, Input } from "@angular/core";
 
 @Component({
   selector: 'alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+  styleUrls: ['./alert.component.scss'],
 })
 
 export class AlertComponent {
 
-  @Input()
-  public showIcon:boolean = true;
-
-  @Input()
-  public closeable:boolean = false;
+  @Input() showIcon: boolean = true;
+  @Input() closeable: boolean = false;
+  @Input() icon = 'info_outline';
 
   @HostBinding(`class.closed`) isClosed = false;
-
-  public icon = 'info_outline';
 
   constructor(
     @Attribute('warn') public isWarn?: boolean,
     @Attribute('danger') public isDanger?: boolean) {
 
-    if (this.isWarn != null)
+    if (this.isWarn !== null)
       this.icon = 'warning_amber';
 
-    if (this.isDanger != null)
+    if (this.isDanger !== null)
       this.icon = 'error_outline';
 
   }

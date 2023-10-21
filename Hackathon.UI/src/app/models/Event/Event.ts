@@ -1,10 +1,11 @@
-import {ChangeEventStatusMessage} from "./ChangeEventStatusMessage";
-import {EventStatus} from "./EventStatus";
-import {Team} from "../Team/Team";
-import {IUser} from "../User/IUser";
-import {EventStage} from "./EventStage";
-import {IEventTaskItem} from "./IEventTaskItem";
-import {IEventAgreement} from "./IEventAgreement";
+import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
+import { EventStatus } from "./EventStatus";
+import { Team } from "../Team/Team";
+import { IUser } from "../User/IUser";
+import { EventStage } from "./EventStage";
+import { IEventTaskItem } from "./IEventTaskItem";
+import { IEventAgreement } from "./IEventAgreement";
+import { IApprovalApplication } from "../approval-application/approval-application.interface";
 
 export class Event {
   id: number;
@@ -15,16 +16,17 @@ export class Event {
   minTeamMembers: number;
   isCreateTeamsAutomatically: boolean;
   changeEventStatusMessages: ChangeEventStatusMessage[];
-  status!: EventStatus;
+  status: EventStatus;
   ownerId?: number;
-  owner!: IUser
+  owner: IUser
   teams: Team[] = []
   stages: EventStage[] = []
-  award!: string;
+  award: string;
   imageId: string;
   imageUrl?: string;
   agreement?: IEventAgreement;
-  ApprovalApplicationId?: number;
+  approvalApplicationId?: number;
+  approvalApplication?: IApprovalApplication
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];

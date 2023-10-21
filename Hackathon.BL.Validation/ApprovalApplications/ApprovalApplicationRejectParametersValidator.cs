@@ -11,6 +11,8 @@ public class ApprovalApplicationRejectParametersValidator: AbstractValidator<App
             .NotEmpty()
             .WithMessage("Комментарий к решению не указан")
             .MinimumLength(10)
-            .WithMessage("Комментарий к решению слишком короткий");
+            .WithMessage("Комментарий к решению слишком короткий")
+            .MaximumLength(100)
+            .WithMessage("Комментарий к решению слишком длинный");
     }
 }
