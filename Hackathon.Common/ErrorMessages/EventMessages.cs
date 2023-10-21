@@ -10,6 +10,6 @@ public static class EventMessages
     public const string CantLeaveEventWhenItsAlreadyStarted = "Нельзя покидать событие, когда оно уже начато";
     public const string CantSetEventStatus =  "Невозможно сменить статус события";
     public const string EventFileImageIsNotBeEmpty = "Файл не может быть пустым";
-    public const string CantDeleteEventWithStatusOtherThаnDraft = "Нельзя удалить событие со статусом отличным от статуса - Черновик";
+    public const string CantDeleteEventWithStatusOtherThаnDraftOnModeration = "Нельзя удалить событие со статусом отличным от статуса - Черновик или На модерации";
     public const string CantDeleteEventUserWhoNotOwner = "Нельзя удалить событие кому-то помимо организатора";
 }

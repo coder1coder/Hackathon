@@ -4,7 +4,7 @@ import { IEventListItem } from "../Event/IEventListItem";
 
 export interface IApprovalApplication {
   id: number;
-  approvalApplicationStatus: ApprovalApplicationStatusEnum;
+  applicationStatus: ApprovalApplicationStatusEnum;
   signerId?: number;
   signer: IUser;
   authorId: number;
@@ -13,4 +13,9 @@ export interface IApprovalApplication {
   requestedAt: Date;
   decisionAt: Date;
   event: IEventListItem;
+}
+
+export interface IApprovalApplicationFilter {
+  eventId?: number;
+  status?: ApprovalApplicationStatusEnum;
 }

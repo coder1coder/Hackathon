@@ -3,7 +3,6 @@ import { Event } from "../../../../../models/Event/Event";
 import { EventStatus } from "../../../../../models/Event/EventStatus";
 import { SnackService } from "../../../../../services/snack.service";
 import { RouterService } from "../../../../../services/router.service";
-import { IProblemDetails } from "../../../../../models/IProblemDetails";
 import { EventService } from "../../../../../services/event/event.service";
 import { EventClient } from "../../../../../services/event/event.client";
 import { CustomDialog, ICustomDialogData } from "../../../../custom/custom-dialog/custom-dialog.component";
@@ -13,7 +12,7 @@ import { ErrorProcessorService } from "../../../../../services/error-processor.s
 @Component({
   selector: 'event-button-actions',
   templateUrl: './event-button-actions.component.html',
-  styleUrls: ['./event-button-actions.component.scss']
+  styleUrls: ['./event-button-actions.component.scss'],
 })
 export class EventButtonActionsComponent {
   @Input() event: Event;
@@ -40,15 +39,11 @@ export class EventButtonActionsComponent {
   public startEvent(): void {
     this.eventHttpService.setStatus(this.event.id, EventStatus.Started)
       .subscribe({
-        next: (_) =>  {
+        next: () =>  {
           this.snack.open(`Событие начато`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 
@@ -69,9 +64,7 @@ export class EventButtonActionsComponent {
                 next: (_) => {
                   this.joinToEvent();
                 },
-                error: errorContext => {
-                  this.errorProcessor.Process(errorContext)
-                }
+                error: (err) => this.errorProcessor.Process(err),
               });
           }
         });
@@ -94,45 +87,33 @@ export class EventButtonActionsComponent {
   public leaveFromEvent(): void {
     this.eventHttpService.leave(this.event.id)
       .subscribe({
-        next: (_) => {
+        next: () => {
           this.snack.open(`Вы покинули мероприятие`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 
   public finishEvent(): void {
     this.eventHttpService.setStatus(this.event.id, EventStatus.Finished)
       .subscribe({
-        next: (_) =>  {
+        next: () =>  {
           this.snack.open(`Событие завершено`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 
   public deleteEvent(): void {
     this.eventHttpService.remove(this.event.id)
       .subscribe({
-        next: (_) => {
+        next: () => {
           this.router.Events.List().then(_=>
             this.snack.open(`Событие удалено`));
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 
@@ -143,11 +124,7 @@ export class EventButtonActionsComponent {
           this.snack.open(`Событие опубликовано`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 
@@ -158,11 +135,7 @@ export class EventButtonActionsComponent {
           this.snack.open(`Событие отправлено на модерацию`);
           this.eventService.reloadEvent.next(true);
         },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          const msg = (problemDetails?.detail || problemDetails["validation-error"]) ?? 'Неизвестная ошибка';
-          this.snack.open(msg);
-        }
+        error: (err) => this.errorProcessor.Process(err),
       });
   }
 }

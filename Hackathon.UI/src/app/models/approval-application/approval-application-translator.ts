@@ -5,8 +5,8 @@ export class ApprovalApplicationTranslator {
   public static Translate = (e: ApprovalApplicationStatusEnum): string => {
     switch (e) {
       case ApprovalApplicationStatusEnum.Requested: return 'Запрос отправлен';
-      case ApprovalApplicationStatusEnum.Approved: return 'Запрос одобрен';
-      case ApprovalApplicationStatusEnum.Rejected: return 'Запорос отклонён';
+      case ApprovalApplicationStatusEnum.Approved: return 'Запрос согласован';
+      case ApprovalApplicationStatusEnum.Rejected: return 'Запрос отклонён';
 
       default: return ApprovalApplicationStatusEnum[e];
     }

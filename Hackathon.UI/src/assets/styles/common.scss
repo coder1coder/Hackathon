@@ -136,6 +136,14 @@ table {
   justify-content: center;
 }
 
+.flex-dir-column {
+  flex-direction: column;
+}
+
+.flex-dir-row {
+  flex-direction: row;
+}
+
 .container-event {
   padding: 15px 1em 0 1em;
 }

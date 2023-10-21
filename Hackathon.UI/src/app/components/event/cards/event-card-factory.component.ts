@@ -20,6 +20,7 @@ import { EventCardPublishedComponent } from "./event-card-published/event-card-p
 import { EventCardFinishedComponent } from "./event-card-finished/event-card-finished.component";
 import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
 import { EventClient } from "../../../services/event/event.client";
+import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
 
 @Component({
   selector: 'app-event-card-factory',
@@ -41,12 +42,13 @@ export class EventCardFactoryComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private snackService: SnackService,
-    private cdr: ChangeDetectorRef
+    private approvalApplicationsService: ApprovalApplicationsService,
+    private cdr: ChangeDetectorRef,
   ) {
-    this.initEventId();
   }
 
   ngOnInit(): void {
+    this.initEventId();
     this.initSubscription();
     this.loadData();
   }
@@ -59,10 +61,10 @@ export class EventCardFactoryComponent implements OnInit {
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (res: Event) => {
-          if (res) {
+        next: (event) => {
+          if (event) {
             this.isLoading = false;
-            this.event = res;
+            this.event = event;
             this.renderEventCard();
           } else {
             this.goBack();
@@ -73,18 +75,18 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   private renderEventCard(): void {
-    let viewContainerRef = this.eventDirective?.viewContainerRef;
+    const viewContainerRef = this.eventDirective?.viewContainerRef;
     if (!viewContainerRef) return;
     viewContainerRef.clear();
-    let eventFactory = this.componentFactoryResolver
-      .resolveComponentFactory<any>(this.getComponentByEventStatus());
-    let eventRef = viewContainerRef.createComponent(eventFactory);
+    const eventFactory = this.componentFactoryResolver
+      .resolveComponentFactory<any>(this.getComponentByEventType());
+    const eventRef = viewContainerRef.createComponent(eventFactory);
     eventRef.instance.event = this.event;
     eventRef.instance.isLoading = this.isLoading;
     this.cdr.detectChanges();
   }
 
-  private getComponentByEventStatus():
+  private getComponentByEventType():
     Type<
       EventCreateEditCardComponent |
       EventCardPublishedComponent |
@@ -110,11 +112,9 @@ export class EventCardFactoryComponent implements OnInit {
 
   private initEventId(): void {
     const { eventId } = this.activeRoute.snapshot.params;
-
-    if (!Number(eventId)) {
+    if (Number.isNaN(eventId)) {
       this.goBack();
     }
-
     this.eventId = eventId;
   }
 
@@ -129,6 +129,7 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   private goBack(): void {
+    debugger
     this.router.Events.List().then(_=>
       this.snackService.open(EventErrorMessages.EventNotFound));
   }

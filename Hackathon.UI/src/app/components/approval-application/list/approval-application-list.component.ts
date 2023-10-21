@@ -2,11 +2,23 @@ import { Component } from '@angular/core';
 import { RouterService } from "../../../services/router.service";
 import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
 import { BaseTableListComponent} from "../../../common/base-components/base-table-list.component";
-import { IApprovalApplication } from "../../../models/approval-application/approval-application.interface";
-import { UserFilter } from "../../../models/User/UserFilter";
-import { takeUntil } from "rxjs";
+import {
+  IApprovalApplication,
+  IApprovalApplicationFilter,
+} from "../../../models/approval-application/approval-application.interface";
+import { filter, mergeMap, takeUntil } from "rxjs";
 import { GetListParameters } from "../../../models/GetListParameters";
 import { BaseCollection } from "../../../models/BaseCollection";
+import { TABLE_DATE_FORMAT } from "../../../common/date-formats";
+import { ErrorProcessorService } from "../../../services/error-processor.service";
+import { CustomDialog, ICustomDialogData } from "../../custom/custom-dialog/custom-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { SnackService } from "../../../services/snack.service";
+import { ApplicationApprovalErrorMessages } from "../../../common/error-messages/application-approval-error-messages";
+import {
+  ApprovalApplicationRejectModalComponent
+} from "../approval-application-reject-modal/approval-application-reject-modal.component";
+import { ApprovalApplicationStatusEnum } from "../../../models/approval-application/approval-application-status.enum";
 
 @Component({
   selector: 'app-approval-applications',
@@ -15,25 +27,47 @@ import { BaseCollection } from "../../../models/BaseCollection";
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
 
+  public tableDateFormat = TABLE_DATE_FORMAT;
+
+  private approvalApplicationFilter: IApprovalApplicationFilter;
+
   constructor(
     private approvalApplicationsService: ApprovalApplicationsService,
     private routerService: RouterService,
+    private errorProcessor: ErrorProcessorService,
+    private dialog: MatDialog,
+    private snackService: SnackService,
   ) {
     super(ApprovalApplicationListComponent.name);
   }
 
   public getDisplayColumns(): string[] {
-    return ['ApprovalApplicationStatus', 'email', 'fullName', 'actions'];
+    return ['author', 'event', 'requestedAt', 'decisionAt', 'applicationStatus', 'comment', 'actions'];
+  }
+
+  public filterChanged(filterData: IApprovalApplicationFilter): void {
+    this.approvalApplicationFilter = filterData;
+    this.fetch();
+  }
+
+  public approvalApplicationHasActiveStatus(approvalApplication: IApprovalApplication): boolean {
+    return approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Rejected ||
+      approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved;
+  }
+
+  private getFilterDate(): GetListParameters<IApprovalApplicationFilter> {
+    let getFilterModel = new GetListParameters<IApprovalApplicationFilter>();
+    getFilterModel.Offset = this.pageSettings.pageIndex;
+    getFilterModel.Limit = this.pageSettings.pageSize;
+    getFilterModel.Filter = {
+      eventId: this.approvalApplicationFilter?.eventId ?? null,
+      status: this.approvalApplicationFilter?.status ?? null,
+    };
+    return getFilterModel;
   }
 
   override fetch(): void {
-    const userFilter = new UserFilter();
-    let getFilterModel = new GetListParameters<UserFilter>();
-    getFilterModel.Offset = this.pageSettings.pageIndex;
-    getFilterModel.Limit = this.pageSettings.pageSize;
-    getFilterModel.Filter = userFilter;
-
-    this.approvalApplicationsService.getApprovalApplicationList(getFilterModel)
+    this.approvalApplicationsService.getApprovalApplicationList(this.getFilterDate())
      .pipe(takeUntil(this.destroy$))
       .subscribe(({
         next: (res: BaseCollection<IApprovalApplication>) =>  {
@@ -45,6 +79,51 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
   }
 
   public rowClick(approvalApplication: IApprovalApplication): void {
-    console.log('approvalApplication', approvalApplication)
+    const eventId = approvalApplication?.event?.id;
+    if (eventId) {
+      this.routerService.Events.View(eventId);
+    } else {
+      this.errorProcessor.Process(null);
+    }
+  }
+
+  public approveRequest(approvalApplication: IApprovalApplication): void {
+    const data: ICustomDialogData = {
+      header: 'Согласование заявки',
+      content: `Вы уверены, что хотите согласовать событие:<br>${approvalApplication?.event?.name}?`,
+      acceptButtonText: `Да`,
+    };
+
+    this.dialog.open(CustomDialog, { data })
+      .afterClosed()
+      .pipe(
+        filter((v) => !!v),
+        mergeMap(() => this.approvalApplicationsService.approveApprovalApplication(approvalApplication.id)),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => {
+          this.snackService.open(ApplicationApprovalErrorMessages.RequestApproved);
+          this.fetch();
+        },
+        error: (error) => this.errorProcessor.Process(error)
+      });
+  }
+
+  public rejectRequest(approvalApplication: IApprovalApplication): void {
+    this.dialog.open(ApprovalApplicationRejectModalComponent, { data: approvalApplication})
+      .afterClosed()
+      .pipe(
+        filter((v) => !!v),
+        mergeMap((comment: string) => this.approvalApplicationsService.rejectApprovalApplication(approvalApplication.id, comment)),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => {
+          this.snackService.open(ApplicationApprovalErrorMessages.RequestRejected);
+          this.fetch();
+        },
+        error: (error) => this.errorProcessor.Process(error)
+      });
   }
 }

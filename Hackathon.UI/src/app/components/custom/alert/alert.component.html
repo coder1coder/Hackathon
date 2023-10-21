@@ -1,3 +1,10 @@
-<mat-icon *ngIf="showIcon" [innerText]="icon"></mat-icon>
-<div><ng-content></ng-content></div>
-<mat-icon (click)="isClosed = true" class="alert-close" *ngIf="closeable">close</mat-icon>
+<div class="alert {{icon}}">
+  <div class="icon">
+    <mat-icon *ngIf="showIcon" [innerText]="icon"></mat-icon>
+  </div>
+  <div>
+    <div><ng-content></ng-content></div>
+    <mat-icon (click)="isClosed = true" class="alert-close" *ngIf="closeable">close</mat-icon>
+  </div>
+</div>
+

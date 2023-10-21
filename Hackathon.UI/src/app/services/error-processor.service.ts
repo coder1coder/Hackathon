@@ -13,7 +13,7 @@ export class ErrorProcessorService {
   public Process(errorContext: any, defaultErrorMessage: string | null = null):void{
     let errorMessage = defaultErrorMessage ?? this.UNKNOWN_ERROR;
 
-    if (errorContext.error !== undefined) {
+    if (errorContext?.error) {
       const problemDetails: IProblemDetails = <IProblemDetails>errorContext.error;
       errorMessage = problemDetails?.errors ? Object.values(problemDetails.errors)[0] :
         (problemDetails?.detail || errorContext.title || problemDetails["validation-error"] || this.UNKNOWN_ERROR);

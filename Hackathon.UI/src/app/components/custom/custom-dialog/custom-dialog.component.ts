@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import {ThemePalette} from "@angular/material/core/common-behaviors/color";
+import { ThemePalette } from "@angular/material/core/common-behaviors/color";
 
 @Component({
   selector: 'save-delete-modal',
@@ -8,7 +8,6 @@ import {ThemePalette} from "@angular/material/core/common-behaviors/color";
   styleUrls: ['./custom-dialog.component.scss']
 })
 export class CustomDialog {
-
   constructor(
     public dialogRef: MatDialogRef<CustomDialog>,
     @Inject(MAT_DIALOG_DATA) public data: ICustomDialogData

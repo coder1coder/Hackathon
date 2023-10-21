@@ -106,7 +106,7 @@ public class ApprovalApplicationRepository: IApprovalApplicationRepository
         entity.DecisionAt = DateTimeOffset.UtcNow;
         entity.Comment = comment;
 
-        _dbContext.Update(entity);
+        _dbContext.ApprovalApplications.Update(entity);
         await _dbContext.SaveChangesAsync();
     }
 }

@@ -31,7 +31,7 @@ export class UserService {
     return this.http.post<BaseCollection<IUser>>(this.api+'/list', getFilterModel);
   }
 
-  public getById(userId:number): Observable<IUser> {
+  public getById(userId: number): Observable<IUser> {
     return this.http.get<IUser>(`${this.api}/${userId}`);
   }
 

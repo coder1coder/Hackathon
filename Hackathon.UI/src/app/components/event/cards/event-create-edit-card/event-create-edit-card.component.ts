@@ -9,7 +9,7 @@ import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { EventNewStatusDialogComponent } from "../components/status/event-new-status-dialog.component";
 import { SnackService } from "../../../../services/snack.service";
-import { Observable, takeUntil } from "rxjs";
+import {delay, Observable, takeUntil} from "rxjs";
 import * as moment from "moment/moment";
 import { AuthService } from "../../../../services/auth.service";
 import { RouterService } from "../../../../services/router.service";
@@ -32,6 +32,7 @@ import { DATE_FORMAT_YYYY_MM_DD } from "../../../../common/date-formats";
 import { checkValue } from "../../../../common/functions/check-value";
 import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
 import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
+import { ApprovalApplicationStatusEnum } from "../../../../models/approval-application/approval-application-status.enum";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -56,6 +57,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   public form = new FormGroup({});
   public eventImage: SafeUrl;
   public minDate: string;
+  public approvalApplicationStatusEnum = ApprovalApplicationStatusEnum;
 
   private eventStatusValues: (string | EventStatus)[];
 
@@ -116,15 +118,20 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
       this.applyAgreement(eventData);
 
-      (request as Observable<IBaseCreateResponse>).subscribe({
-        next: (res: IBaseCreateResponse) => {
+      (request as Observable<IBaseCreateResponse>)
+        .pipe(
+          delay(150),
+          takeUntil(this.destroy$),
+        )
+        .subscribe({
+        next: (res) => {
           const eventId = (this.editMode) ? this.eventId : res.id;
           const afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
-          this.eventService.reloadEvent.emit(true);
           this.snackService.open(afterOperationMessage);
-
+          this.eventStatusTable.renderRows();
           if (eventId) {
             this.router.Events.View(eventId);
+            this.eventService.reloadEvent.emit(true);
           }
         },
         error: errorContext => {
@@ -141,14 +148,15 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
         statuses: filteredEventStatusValues,
       },
     })
-    .afterClosed()
-    .subscribe(result => {
-      const changeEventStatusMessage = <ChangeEventStatusMessage> result;
-      if (changeEventStatusMessage?.status !== undefined) {
-        this.eventStatusDataSource.data.push(changeEventStatusMessage);
-        this.eventStatusTable.renderRows();
-      }
-    });
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        const changeEventStatusMessage = <ChangeEventStatusMessage> result;
+        if (changeEventStatusMessage?.status !== undefined) {
+          this.eventStatusDataSource.data.push(changeEventStatusMessage);
+          this.eventStatusTable.renderRows();
+        }
+      });
   }
 
   public removeStatus(item: ChangeEventStatusMessage): void {
@@ -168,14 +176,15 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
         editStatus: item,
       }
     })
-    .afterClosed()
-    .subscribe(result => {
-      if (result) {
-        const updateStatusIndex = this.eventStatusDataSource.data.indexOf(item);
-        this.eventStatusDataSource.data[updateStatusIndex] = result;
-        this.eventStatusTable.renderRows();
-      }
-    });
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) {
+          const updateStatusIndex = this.eventStatusDataSource.data.indexOf(item);
+          this.eventStatusDataSource.data[updateStatusIndex] = result;
+          this.eventStatusTable.renderRows();
+        }
+      });
   }
 
   public isCanAddStatus(): boolean {
@@ -219,6 +228,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       data: data
     })
       .afterClosed()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         if (result) {
           const idx = this.eventStagesDataSource.data.indexOf(eventStage);
@@ -306,7 +316,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       award: ['0'],
       imageId: [null],
       agreementRules: [null],
-      agreementRequiresConfirmation: [false]
+      agreementRequiresConfirmation: [false],
     });
   }
 
@@ -321,7 +331,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
   private getAvlStatutes(): (string | EventStatus)[] {
     let avlStatutes = this.eventStatusValues;
-    if(this.eventStatusDataSource.data.length > 0) {
+    if (this.eventStatusDataSource.data.length > 0) {
       avlStatutes = avlStatutes.filter(item => this.eventStatusDataSource.data.every(e => item != e.status));
     }
 
