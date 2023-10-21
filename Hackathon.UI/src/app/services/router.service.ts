@@ -5,10 +5,12 @@ import { Injectable } from "@angular/core";
 export class RouterService {
   constructor(
     public Events: EventsRouter,
-    public Teams:TeamsRouter,
-    public Users:UsersRouter,
-    public Profile:ProfileRouter,
+    public Teams: TeamsRouter,
+    public Users: UsersRouter,
+    public Profile: ProfileRouter,
     public Notifications: NotificationsRouter,
+    public ApprovalApplications: ApprovalApplicationsRouter,
+    public ErrorRouter: ErrorRouter,
     private router: Router,
   ) {
   }
@@ -58,4 +60,10 @@ export class NotificationsRouter {
 export class ApprovalApplicationsRouter {
   constructor(private router: Router) {}
   List = () => this.router.navigate(['approval-applications']);
+}
+
+@Injectable({ providedIn: 'root' })
+export class ErrorRouter {
+  constructor(private router: Router) {}
+  NotFound = () => this.router.navigate(['not-found']);
 }

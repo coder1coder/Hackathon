@@ -35,7 +35,6 @@ export class EventStageDialogComponent implements OnInit {
   }
 
   private initForm(): void {
-
     this.form = this.fb.group({
       name: new FormControl(this.dialogData?.eventStage?.name, [
         Validators.required,

@@ -342,8 +342,8 @@ public class EventService : IEventService
         if (eventModel.Owner?.Id != userId)
             return Result.NotValid(EventMessages.CantDeleteEventUserWhoNotOwner);
 
-        if (eventModel.Status != EventStatus.Draft)
-            return Result.NotValid(EventMessages.CantDeleteEventWithStatusOtherThаnDraft);
+        if (eventModel.Status is not (EventStatus.Draft or EventStatus.OnModeration))
+            return Result.NotValid(EventMessages.CantDeleteEventWithStatusOtherThаnDraftOnModeration);
 
         await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.GetValueOrDefault());
         await _eventRepository.DeleteAsync(eventId);

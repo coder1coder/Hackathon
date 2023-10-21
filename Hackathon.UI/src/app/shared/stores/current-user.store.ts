@@ -19,7 +19,8 @@ export class CurrentUserStore extends DictionariesLoading {
     makeObservable(this);
   }
 
-  @action loadCurrentUser(needReload: boolean = false): void {
+  @action
+  public loadCurrentUser(needReload: boolean = false): void {
     if (needReload || (!this.isDictLoading('loadCurrentUser') && !this.currentUser)) {
       this.changeLoadingStatus('loadCurrentUser');
       this.authService.getCurrentUser().subscribe((res) => {
@@ -29,5 +30,12 @@ export class CurrentUserStore extends DictionariesLoading {
         })
       })
     }
+  }
+
+  @action
+  public clearStore(): void {
+    runInAction(() => {
+      this.currentUser = null;
+    });
   }
 }

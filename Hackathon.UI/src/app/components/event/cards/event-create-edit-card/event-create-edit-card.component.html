@@ -8,6 +8,33 @@
     </event-button-actions>
   </div>
 
+  <alert
+    *ngIf="event?.approvalApplication?.applicationStatus === approvalApplicationStatusEnum.Requested">
+    <div>
+      Событие находится на модерации<br>
+      Дата запроса: {{event?.approvalApplication.requestedAt | date:'dd.MM.y, HH:mm'}}
+    </div>
+  </alert>
+  <alert
+    *ngIf="event?.approvalApplication?.applicationStatus === approvalApplicationStatusEnum.Approved"
+    [icon]="'verified_user'"
+  >
+    <div>
+      Событие прошло модерацию (теперь вы можете его опубликовать)<br>
+      Дата решения: {{event?.approvalApplication.decisionAt | date:'dd.MM.y, HH:mm'}}
+    </div>
+  </alert>
+  <alert
+    *ngIf="event?.approvalApplication?.applicationStatus === approvalApplicationStatusEnum.Rejected"
+    [icon]="'gpp_bad'"
+  >
+    <div>
+      Событие не прошло модерацию (необходимо обновить данные и сохранить событие)<br>
+      Дата решения: {{event?.approvalApplication.decisionAt | date:'dd.MM.y, HH:mm'}}<br>
+      Комментарий: {{event?.approvalApplication.comment}}
+    </div>
+  </alert>
+
   <form [formGroup]="form" class="eventsNewForm">
     <mat-tab-group animationDuration="0" dynamicHeight>
       <mat-tab label="Общая информация">

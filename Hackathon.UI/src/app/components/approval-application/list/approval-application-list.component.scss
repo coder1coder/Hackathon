@@ -15,3 +15,9 @@
     padding-bottom: 1em;
   }
 }
+
+.mat-column-event,
+.mat-column-comment{
+  overflow-wrap: break-word;
+  word-break: break-word;
+}

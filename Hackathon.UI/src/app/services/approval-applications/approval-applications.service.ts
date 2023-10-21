@@ -4,8 +4,10 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { GetListParameters } from "../../models/GetListParameters";
 import { BaseCollection } from "../../models/BaseCollection";
-import { IApprovalApplication } from "../../models/approval-application/approval-application.interface";
-import {EventFilter} from "../../models/Event/EventFilter";
+import {
+  IApprovalApplication,
+  IApprovalApplicationFilter
+} from "../../models/approval-application/approval-application.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class ApprovalApplicationsService {
    * @param params Параметры фильтрации и пагинации
    * @returns Параметры фильтрации и пагинации
    */
-  public getApprovalApplicationList(params?: GetListParameters<EventFilter>): Observable<BaseCollection<IApprovalApplication>> {
+  public getApprovalApplicationList(params?: GetListParameters<IApprovalApplicationFilter>): Observable<BaseCollection<IApprovalApplication>> {
     return this.http.post<BaseCollection<IApprovalApplication>>(`${this.api}/approvalapplications/list`, params);
   }
 

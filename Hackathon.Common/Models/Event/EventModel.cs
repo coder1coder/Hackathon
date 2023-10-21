@@ -8,11 +8,6 @@ namespace Hackathon.Common.Models.Event;
 public class EventModel : EventUpdateParameters
 {
     /// <summary>
-    /// Статус события
-    /// </summary>
-    public EventStatus Status { get; set; }
-
-    /// <summary>
     /// Кто создал событие
     /// </summary>
     public long OwnerId { get; set; }
