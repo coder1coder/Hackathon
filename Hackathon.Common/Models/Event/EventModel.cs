@@ -43,6 +43,11 @@ public class EventModel : EventUpdateParameters
     public long? ApprovalApplicationId { get; set; }
 
     /// <summary>
+    /// Заявление на согласование
+    /// </summary>
+    public ApprovalApplicationModel ApprovalApplication { get; set; }
+
+    /// <summary>
     /// Получить команды связанные с событием, которые заполнены не полностью
     /// </summary>
     /// <returns></returns>

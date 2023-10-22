@@ -211,7 +211,7 @@ public class EventService : IEventService
 
         if (!skipValidation)
         {
-            var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(userRole, eventModel, eventStatus);
+            var (isValid, errorMessage) = ChangeEventStatusValidator.ValidateAsync(authorizedUserId, userRole, eventModel, eventStatus);
 
             if (!isValid)
                 return Result.NotValid(errorMessage);

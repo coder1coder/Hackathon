@@ -19,12 +19,11 @@ public class EventChatApiTests: BaseIntegrationTest
     public async Task SendAsync_Should_Success()
     {
         //arrange
-        var (userId, authToken) = await RegisterUser();
-        SetToken(authToken);
-
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
 
+        var (eventOwnerId, eventOwnerToken) = await RegisterUser();
+        SetToken(eventOwnerToken);
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам
@@ -36,6 +35,11 @@ public class EventChatApiTests: BaseIntegrationTest
 
         var administrator = await RegisterUser(UserRole.Administrator);
         SetToken(administrator.Token);
+
+        var getEventApiResponse = await EventsApi.Get(createEventResponse.Id);
+        await ApprovalApplicationApiClient.Approve(getEventApiResponse.Content!.ApprovalApplicationId.GetValueOrDefault());
+
+        SetToken(eventOwnerToken);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
@@ -65,7 +69,7 @@ public class EventChatApiTests: BaseIntegrationTest
         {
             Message = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id,
-            UserId = userId
+            UserId = eventOwnerId
         };
 
         //act
@@ -79,6 +83,6 @@ public class EventChatApiTests: BaseIntegrationTest
         Assert.NotNull(messageFromRepository);
         Assert.Equal(newMessage.Message, messageFromRepository.Message);
         Assert.Equal(TestUser.Id, messageFromRepository.OwnerId);
-        Assert.Equal(userId, messageFromRepository.UserId);
+        Assert.Equal(eventOwnerId, messageFromRepository.UserId);
     }
 }
