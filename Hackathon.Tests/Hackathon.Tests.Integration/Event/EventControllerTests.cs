@@ -124,6 +124,12 @@ public class EventControllerTests : BaseIntegrationTest
 
         var administrator = await RegisterUser(UserRole.Administrator);
         SetToken(administrator.Token);
+
+        var getEventApiResponse = await EventsApi.Get(createEventResponse.Id);
+        await ApprovalApplicationApiClient.Approve(getEventApiResponse.Content!.ApprovalApplicationId.GetValueOrDefault());
+
+        SetToken(TestUser.Token);
+
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
             Id = createEventResponse.Id,
