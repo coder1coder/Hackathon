@@ -34,6 +34,7 @@ public abstract class BaseIntegrationTest
     protected readonly IFriendshipApi FriendshipApi;
     protected readonly ITeamChatApiClient TeamChatApiClient;
     protected readonly IEventChatApiClient EventChatApiClient;
+    protected readonly IApprovalApplicationApiClient ApprovalApplicationApiClient;
 
     protected readonly IEventLogService EventLogService;
     protected readonly IUserRepository UserRepository;
@@ -101,6 +102,7 @@ public abstract class BaseIntegrationTest
         FriendshipApi = RestService.For<IFriendshipApi>(_httpClient, refitSettings);
         TeamChatApiClient = RestService.For<ITeamChatApiClient>(_httpClient, refitSettings);
         EventChatApiClient = RestService.For<IEventChatApiClient>(_httpClient, refitSettings);
+        ApprovalApplicationApiClient = RestService.For<IApprovalApplicationApiClient>(_httpClient, refitSettings);
     }
 
     protected void SetToken(string token)

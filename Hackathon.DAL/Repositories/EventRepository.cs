@@ -47,6 +47,7 @@ public class EventRepository : IEventRepository
             .ThenInclude(x => x.Member)
             .Include(x => x.Owner)
             .Include(x=>x.Stages)
+            .Include(x=>x.ApprovalApplication)
             .Include(x=>x.Agreement).ThenInclude(x=>x.Users)
             .FirstOrDefaultAsync(x => x.Id == eventId);
 

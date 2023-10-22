@@ -1,4 +1,5 @@
 using Hackathon.Common.ErrorMessages;
+using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 
@@ -6,7 +7,7 @@ namespace Hackathon.BL.Validation.Event;
 
 public static class ChangeEventStatusValidator
 {
-    public static (bool, string) ValidateAsync(UserRole userRole, EventModel eventModel, EventStatus newStatus)
+    public static (bool, string) ValidateAsync(long userId, UserRole userRole, EventModel eventModel, EventStatus newStatus)
     {
         var eventStatusOrdered = new[]
         {
@@ -38,7 +39,7 @@ public static class ChangeEventStatusValidator
         {
             EventStatus.Draft => ValidateDraft(eventModel.Status),
             EventStatus.OnModeration => ValidateOnModeration(eventModel.Status),
-            EventStatus.Published => ValidatePublished(userRole),
+            EventStatus.Published => ValidatePublished(userId, userRole, eventModel.OwnerId, eventModel.ApprovalApplication?.ApplicationStatus),
             EventStatus.Started => CanBeStarted(eventModel),
 
             _ => (true, string.Empty)
@@ -55,10 +56,16 @@ public static class ChangeEventStatusValidator
             ? (true, string.Empty)
             : (false, "Отправить на модерацию можно только мероприятие в статусе Черновик");
 
-    private static (bool, string) ValidatePublished(UserRole userRole)
-        => userRole == UserRole.Administrator
-            ? (true, string.Empty)
-            : (false, "Мероприятие должно пройти модерацию прежде чем будет опубликовано");
+    private static (bool, string) ValidatePublished(long userId, UserRole userRole, long eventOwnerId, ApprovalApplicationStatus? moderationStatus)
+    {
+        if (userRole != UserRole.Administrator && userId != eventOwnerId)
+            return (false, "Нет прав на выполнение операции");
+
+        return moderationStatus is not ApprovalApplicationStatus.Approved
+            ? (false, "Мероприятие должно пройти модерацию прежде чем будет опубликовано")
+            : (true, null);
+    }
+
 
     private static (bool, string) CanBeStarted(EventModel eventModel)
     {
