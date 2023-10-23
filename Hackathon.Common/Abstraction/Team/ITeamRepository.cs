@@ -77,4 +77,12 @@ public interface ITeamRepository
     /// <param name="teamId">Идентификатор команды</param>
     /// <returns>Общее количество участников команды</returns>
     Task<int> GetMembersCountAsync(long teamId);
+
+    /// <summary>
+    /// Получить идентификаторы членов команды
+    /// </summary>
+    /// <param name="teamId">Идентификатор команды</param>
+    /// <param name="excludeMemberId">Идентификатор который нужно исключить</param>
+    /// <returns></returns>
+    Task<long[]> GetTeamMemberIdsAsync(long teamId, long? excludeMemberId = null);
 }

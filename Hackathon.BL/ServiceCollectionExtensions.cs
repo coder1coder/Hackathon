@@ -40,8 +40,8 @@ public static class ServiceCollectionExtensions
 
         services
             .AddScoped<IMessageBusService, MessageBusService>()
-            .AddScoped<ITeamChatService, TeamBaseChatService>()
-            .AddScoped<IEventChatService, EventBaseChatService>()
+            .AddScoped<ITeamChatService, TeamChatService>()
+            .AddScoped<IEventChatService, EventChatService>()
             .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEmailService, EmailService>()

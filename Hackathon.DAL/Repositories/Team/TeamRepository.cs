@@ -208,6 +208,14 @@ public class TeamRepository : ITeamRepository
         return teamMembers;
     }
 
+    public Task<long[]> GetTeamMemberIdsAsync(long teamId, long? excludeMemberId = null)
+        => _dbContext.TeamMembers
+            .Where(x=>
+                x.TeamId == teamId
+                && (!excludeMemberId.HasValue || x.MemberId == excludeMemberId))
+            .Select(x=>x.MemberId)
+            .ToArrayAsync();
+
     private static Expression<Func<TeamEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy switch
         {

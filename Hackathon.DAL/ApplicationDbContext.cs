@@ -41,6 +41,11 @@ public class ApplicationDbContext: DbContext
     public DbSet<TeamEntity> Teams { get; set; }
 
     /// <summary>
+    /// Связь пользователей с командами
+    /// </summary>
+    public DbSet<MemberTeamEntity> TeamMembers { get; set; }
+
+    /// <summary>
     /// Запросы на вступление в команду
     /// </summary>
     public DbSet<TeamJoinRequestEntity> TeamJoinRequests { get; set; }

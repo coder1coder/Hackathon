@@ -14,12 +14,12 @@ using Hackathon.Common.Abstraction.Notifications;
 
 namespace Hackathon.BL.Chat;
 
-public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
+public class EventChatService: BaseChatService<NewEventChatMessage, EventChatMessage>, IEventChatService
 {
     private readonly IEventRepository _eventRepository;
     private readonly Common.Abstraction.IValidator<NewEventChatMessage> _validator;
 
-    public EventBaseChatService(
+    public EventChatService(
         IEventChatRepository eventChatRepository,
         IEventRepository eventRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
@@ -42,9 +42,7 @@ public class EventBaseChatService: BaseChatService<NewEventChatMessage, EventCha
         => base.GetListAsync(eventId.ToString(), offset, limit);
 
     protected override void SetIntegrationEventUniqueParameter(ChatMessageChangedIntegrationEvent integrationEvent, NewEventChatMessage newEventChatMessage)
-    {
-        integrationEvent.EventId = newEventChatMessage.EventId;
-    }
+        => integrationEvent.EventId = newEventChatMessage.EventId;
 
     protected override Task EnrichMessageBeforeSaving<TChatMessageModel>(INewChatMessage newChatMessage, TChatMessageModel chatMessage)
     {

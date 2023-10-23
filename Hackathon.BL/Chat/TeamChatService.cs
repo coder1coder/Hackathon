@@ -8,18 +8,17 @@ using Hackathon.Common.Models.Chat;
 using Hackathon.Common.Models.Chat.Team;
 using Hackathon.IntegrationEvents.IntegrationEvent;
 using MapsterMapper;
-using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.Notifications;
 
 namespace Hackathon.BL.Chat;
 
-public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
+public class TeamChatService: BaseChatService<NewTeamChatMessage, TeamChatMessage>, ITeamChatService
 {
     private readonly ITeamRepository _teamRepository;
     private readonly Common.Abstraction.IValidator<NewTeamChatMessage> _chatMessageValidator;
 
-    public TeamBaseChatService(
+    public TeamChatService(
         ITeamChatRepository teamChatRepository,
         ITeamRepository teamRepository,
         IMessageHub<ChatMessageChangedIntegrationEvent> chatMessageHub,
@@ -56,13 +55,6 @@ public class TeamBaseChatService: BaseChatService<NewTeamChatMessage, TeamChatMe
         return Task.CompletedTask;
     }
 
-    protected override async Task<long[]> GetUserIdsToNotify(long ownerId, NewTeamChatMessage newChatMessage)
-    {
-        var team = await _teamRepository.GetAsync(newChatMessage.TeamId);
-
-        return team.Members
-            .Where(x=> x.Id != ownerId)
-            .Select(x => x.Id)
-            .ToArray();
-    }
+    protected override Task<long[]> GetUserIdsToNotify(long ownerId, NewTeamChatMessage newChatMessage)
+        => _teamRepository.GetTeamMemberIdsAsync(newChatMessage.TeamId, ownerId);
 }
