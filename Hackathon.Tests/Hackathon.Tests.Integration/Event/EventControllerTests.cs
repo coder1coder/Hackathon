@@ -136,7 +136,6 @@ public class EventControllerTests : BaseIntegrationTest
             Status = EventStatus.Published
         });
 
-        SetToken(TestUser.Token);
         await EventsApi.JoinAsync(createEventResponse.Id);
 
         var user = await RegisterUser();
