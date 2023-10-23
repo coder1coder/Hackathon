@@ -35,9 +35,6 @@ export class ConnectionRefusedInterceptor implements HttpInterceptor {
               if (error.status === ErrorCodesEnum.NOT_CONNECTED) {
                 this.router.Profile.Login().then(_=> this.authService.logout());
                 this.errorProcessor.Process(error, 'Нет ответа от сервера. Проверьте соединение');
-              } else if (error.status === ErrorCodesEnum.NOT_FOUND) {
-                this.router.ErrorRouter.NotFound();
-                this.errorProcessor.Process(error, 'Страница не найдена');
               } else if (error.status === ErrorCodesEnum.SERVER_ERROR) {
                 this.errorProcessor.Process(error, 'Ошибка сервера. Попробуйте повторить запрос.');
               } else if (error.status === ErrorCodesEnum.UN_AUTHTORIZED) {
