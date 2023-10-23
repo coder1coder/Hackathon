@@ -30,6 +30,13 @@ public interface IUserRepository
     Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> parameters);
 
     /// <summary>
+    /// Получить данные пользователя для авторизации в системе
+    /// </summary>
+    /// <param name="userName">Логин пользователя</param>
+    /// <returns></returns>
+    Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName);
+
+    /// <summary>
     /// Проверка наличия пользователя по идентификатору
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>

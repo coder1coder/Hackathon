@@ -15,10 +15,10 @@ public static class AuthTokenGenerator
     /// <summary>
     /// Сгенерировать токен
     /// </summary>
-    /// <param name="user">Пользователь</param>
+    /// <param name="userSignInDetails">Пользователь</param>
     /// <param name="authOptions">Параметры для генерации токена</param>
     /// <returns></returns>
-    public static AuthTokenModel GenerateToken(UserModel user, AuthOptions authOptions)
+    public static AuthTokenModel GenerateToken(UserSignInDetails userSignInDetails, AuthOptions authOptions)
     {
         var expires = DateTimeOffset.UtcNow.AddMinutes(authOptions.LifeTime);
 
@@ -26,12 +26,12 @@ public static class AuthTokenGenerator
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Role, ((int) user.Role).ToString())
+            new(ClaimTypes.NameIdentifier, userSignInDetails.UserId.ToString()),
+            new(ClaimTypes.Role, ((int) userSignInDetails.UserRole).ToString())
         };
 
-        if (user.GoogleAccount != null)
-            claims.Add(new Claim(AppClaimTypes.GoogleId, user.GoogleAccount.Id));
+        if (userSignInDetails.GoogleAccountId is not null)
+            claims.Add(new Claim(AppClaimTypes.GoogleId, userSignInDetails.GoogleAccountId));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -49,11 +49,11 @@ public static class AuthTokenGenerator
 
         return new AuthTokenModel
         {
-            UserId = user.Id,
+            UserId = userSignInDetails.UserId,
             Expires = expires.ToUnixTimeMilliseconds(),
             Token = tokenString,
-            Role = user.Role,
-            GoogleId = user.GoogleAccount?.Id
+            Role = userSignInDetails.UserRole,
+            GoogleId = userSignInDetails.GoogleAccountId
         };
     }
 }

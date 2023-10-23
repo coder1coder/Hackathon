@@ -76,10 +76,10 @@ public abstract class BaseIntegrationTest
             HandleCookies = false
         });
 
-        var defaultToken = AuthTokenGenerator.GenerateToken(new UserModel
+        var defaultToken = AuthTokenGenerator.GenerateToken(new UserSignInDetails
         {
-            Id = 1,
-            Role = UserRole.Default
+            UserId = 1,
+            UserRole = UserRole.Default
         }, _authOptions).Token ?? "";
 
         TestUser = (1, defaultToken);
@@ -118,10 +118,10 @@ public abstract class BaseIntegrationTest
 
         await UserRepository.SetRole(response.Id, userRole);
 
-        var authTokenModel = AuthTokenGenerator.GenerateToken(new UserModel
+        var authTokenModel = AuthTokenGenerator.GenerateToken(new UserSignInDetails
         {
-            Id = response.Id,
-            Role = userRole
+            UserId = response.Id,
+            UserRole = userRole
         }, _authOptions);
 
         return (response.Id, authTokenModel.Token);

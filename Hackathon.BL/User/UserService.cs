@@ -77,29 +77,21 @@ public class UserService: IUserService
     {
         await _signInModelValidator.ValidateAndThrowAsync(signInModel);
 
-        var users = await _userRepository.GetAsync(new Common.Models.GetListParameters<UserFilter>
-        {
-            Filter = new UserFilter
-            {
-                Username = signInModel.UserName
-            },
-            Limit = 1
-        });
+        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(signInModel.UserName);
 
-        if (users.Items.Count == 0)
+        if (userSignInDetails is null)
             return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
 
-        var user = users.Items.First();
-
-        var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, user.PasswordHash);
+        var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, userSignInDetails.PasswordHash);
 
         return !verified
             ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
-            : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(user, _authOptions));
+            : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions));
     }
 
     public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
     {
+        //TODO: расширить модель UserSignInDetails необходимыми данными и использовать GetUserSignInDetailsAsync
         var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(signInByGoogleModel.Id, signInByGoogleModel.Email);
 
         if (userModel != null)
@@ -121,7 +113,9 @@ public class UserService: IUserService
             userModel = await _userRepository.GetAsync(userId);
         }
 
-        return AuthTokenGenerator.GenerateToken(userModel, _authOptions);
+        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(userModel.UserName);
+
+        return AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions);
     }
 
     public async Task<Result<UserModel>> GetAsync(long userId)

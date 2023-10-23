@@ -2,8 +2,6 @@
 
 public class UserModel: UserShortModel
 {
-    public string PasswordHash { get; set; }
-
     /// <summary>
     /// Email пользователя
     /// </summary>
