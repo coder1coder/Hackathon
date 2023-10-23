@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
@@ -16,9 +15,6 @@ where TIntegrationEvent: IIntegrationEvent
         _contextHub = contextHub;
     }
 
-    public async Task Publish(string topic, TIntegrationEvent message)
-    {
-        var serializedObject = JsonSerializer.Serialize(message);
-        await _contextHub.Clients.All.SendCoreAsync(topic, new object[]{ serializedObject });
-    }
+    public Task Publish(string topic, TIntegrationEvent message)
+        => _contextHub.Clients.All.SendCoreAsync(topic, new object[]{ message });
 }
