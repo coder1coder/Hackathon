@@ -136,6 +136,10 @@ table {
   justify-content: center;
 }
 
+.flex-justify-content-end {
+  justify-content: end;
+}
+
 .flex-dir-column {
   flex-direction: column;
 }
@@ -177,4 +181,26 @@ table {
 
 .mat-button-wrapper {
   vertical-align: middle;
+}
+
+.btn-with-icon {
+  mat-icon {
+    margin-right: 5px;
+  }
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
+
+.white-space-break {
+  white-space: break-spaces;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
 }

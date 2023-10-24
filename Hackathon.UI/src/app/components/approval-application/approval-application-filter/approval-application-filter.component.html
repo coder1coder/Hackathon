@@ -3,14 +3,6 @@
     <form [formGroup]="form" class="applications__filter">
 
       <mat-form-field appearance="outline">
-        <mat-label>Событие</mat-label>
-        <mat-select formControlName="event">
-          <mat-divider></mat-divider>
-          <mat-option *ngFor="let request of approvalApplications" [value]="request.event">{{request.event.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
         <mat-label>Статус модерации</mat-label>
         <mat-select formControlName="status">
           <mat-divider></mat-divider>

@@ -1,9 +1,30 @@
-
 .info-line {
-  margin-bottom: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+
+  .info-line-label {
+    position: relative;
+    overflow: hidden;
+    max-width: 240px;
+    width: 100%;
+
+    span {
+      padding-right: 4px;
+    }
+
+    &.line-break {
+      &:after {
+        left: 220px;
+      }
+    }
+  }
+
+  .value {
+    max-width: fit-content;
+  }
 
   .info-value {
-    word-break: break-word;
+   word-break: break-word;
+   white-space: pre-line;
   }
 }
-

@@ -79,25 +79,18 @@
           </div>
 
           <div class="card-info">
-
             <div class="title">{{item.name}}</div>
             <div class="meta">
-
               <div class="start">
                 {{getDateTimeFormat(item.start)}}
               </div>
-
               <app-event-status [status]="item.status"></app-event-status>
-
               <div class="owner">/ Организатор: {{item?.ownerName }}</div>
-
             </div>
-
             <div class="details">
               <div class="teams-count">Команды: {{item.teamsCount}}</div>
               <div class="members-count">Участники: {{item.membersCount}} / {{item.maxEventMembers}}</div>
             </div>
-
           </div>
         </div>
       </ng-container>

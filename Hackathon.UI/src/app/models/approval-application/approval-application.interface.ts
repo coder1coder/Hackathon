@@ -16,6 +16,5 @@ export interface IApprovalApplication {
 }
 
 export interface IApprovalApplicationFilter {
-  eventId?: number;
   status?: ApprovalApplicationStatusEnum;
 }

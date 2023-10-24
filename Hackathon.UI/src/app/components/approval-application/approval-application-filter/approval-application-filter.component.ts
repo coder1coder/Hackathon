@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WithFormBaseComponent } from "../../../common/base-components/with-form-base.component";
 import { FormBuilder } from "@angular/forms";
 import {
@@ -12,38 +12,39 @@ import { ApprovalApplicationStatusEnum } from "../../../models/approval-applicat
   templateUrl: './approval-application-filter.component.html',
   styleUrls: ['./approval-application-filter.component.scss'],
 })
-export class ApprovalApplicationFilterComponent extends WithFormBaseComponent {
+export class ApprovalApplicationFilterComponent extends WithFormBaseComponent implements OnInit {
 
   @Input() isFilterEnabled: boolean = true;
   @Input() approvalApplications: IApprovalApplication[] = [];
   @Output() changeFilterEmit: EventEmitter<IApprovalApplicationFilter> = new EventEmitter<IApprovalApplicationFilter>();
 
-  public approvalApplicationStatuses = Object.keys(ApprovalApplicationStatusEnum)
-    .map(x => parseInt(x)).
-    filter(x => !isNaN(x));
+  public approvalApplicationStatuses = Object.keys(ApprovalApplicationStatusEnum).map(statusEnum => parseInt(statusEnum)).filter(statusEnum => !isNaN(statusEnum));
+
   public form = this.fb.group({
-    event: [null],
-    status: [null],
+    status: [ApprovalApplicationStatusEnum.Requested],
   });
 
   constructor(
     private fb: FormBuilder,
   ) {
-    super()
+    super();
+  }
+
+  public ngOnInit(): void {
+    this.submitFilter();
   }
 
   public submitFilter(): void {
     const filterData: IApprovalApplicationFilter = {
-      eventId: this.getFormControl('event')?.value?.id ? this.getFormControl('event').value.id : null,
       status: (this.getFormControl('status')?.value !== null || this.getFormControl('status')?.value !== undefined) ? this.getFormControl('status').value : null,
     };
     this.changeFilterEmit.emit(filterData);
+    this.form.markAsDirty();
   }
 
   public clearFilter(): void {
     this.form.reset();
     this.changeFilterEmit.emit({
-      eventId: null,
       status: null,
     });
   }

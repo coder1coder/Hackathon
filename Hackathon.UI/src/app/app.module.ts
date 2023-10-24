@@ -85,6 +85,7 @@ import { ApprovalApplicationListComponent } from './components/approval-applicat
 import { ApprovalApplicationStatusComponent } from './components/approval-application/approval-application-status/approval-application-status.component';
 import { ApprovalApplicationFilterComponent } from './components/approval-application/approval-application-filter/approval-application-filter.component';
 import { ApprovalApplicationRejectModalComponent } from './components/approval-application/approval-application-reject-modal/approval-application-reject-modal.component';
+import { ApprovalApplicationInfoModalComponent } from './components/approval-application/approval-application-info-modal/approval-application-info-modal.component';
 
 @NgModule({
   declarations: [
@@ -143,12 +144,14 @@ import { ApprovalApplicationRejectModalComponent } from './components/approval-a
     ListDetailsComponent,
     AlertComponent,
     CustomDialog,
+
     LineInfoComponent,
 
     ApprovalApplicationListComponent,
     ApprovalApplicationStatusComponent,
     ApprovalApplicationFilterComponent,
     ApprovalApplicationRejectModalComponent,
+    ApprovalApplicationInfoModalComponent,
   ],
     imports: [
         BrowserModule,

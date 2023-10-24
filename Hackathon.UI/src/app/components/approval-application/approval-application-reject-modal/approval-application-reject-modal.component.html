@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>Отклонить заявку</h2>
 <div mat-dialog-content>
-  <div class="sub-title">Вы уверены, что хотите отклонить событие:<br>{{approvalApplication?.event?.name ?? '-'}}?</div>
+  <div class="sub-title">Вы уверены, что хотите отклонить событие:<br>«{{approvalApplication?.event?.name ?? '-'}}»?</div>
   <form [formGroup]="form" class="form-vertical">
-  <div class="form-vertical__fields">
+  <div class="d-flex flex-column">
     <mat-form-field appearance="fill">
       <mat-label>Комментарий</mat-label>
       <textarea

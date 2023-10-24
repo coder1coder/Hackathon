@@ -11,7 +11,7 @@
 
   <div *ngIf="items.length > 0">
     <table mat-table [dataSource]="items">
-
+      <caption></caption>
       <ng-container matColumnDef="author">
         <th mat-header-cell *matHeaderCellDef>Автор</th>
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
@@ -42,11 +42,6 @@
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
           <app-approval-application-status [status]="element.applicationStatus" ></app-approval-application-status>
         </td>
-      </ng-container>
-
-      <ng-container matColumnDef="comment">
-        <th mat-header-cell *matHeaderCellDef>Комментарий</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{element.comment ?? '-'}}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
