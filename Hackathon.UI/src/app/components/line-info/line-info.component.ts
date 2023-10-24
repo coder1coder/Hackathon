@@ -1,21 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
-  selector: 'line-info',
-  template: `
-    <div class="info-line grid">
-      <div class="info-label grid-1-2">
-        <span>{{label}}: </span>
-      </div>
-      <div class="info-value grid-1-4">{{value ? value : 'Не указано'}}</div>
-    </div>
-  `,
-  styleUrls: ['./line-info.component.scss']
+  selector: 'app-line-info',
+  templateUrl: './line-info.component.html',
+  styleUrls: ['./line-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineInfoComponent {
-
   @Input() label: string;
   @Input() value: string | number;
-
-  constructor() { }
+  @Input() clickable: boolean = false;
+  @Input() customTemplate: TemplateRef<any>;
 }
