@@ -28,7 +28,7 @@
 
   </main>
 
-  <aside class="chat__members dark-theme-background" *ngIf="showMembers">
+  <aside class="chat__members theme-background" *ngIf="showMembers">
     <mat-list>
       <mat-list-item *ngFor="let member of this.members">{{ member.fullName ?? member.userName }}</mat-list-item>
     </mat-list>

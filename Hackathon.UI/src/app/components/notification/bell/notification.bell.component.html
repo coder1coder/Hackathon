@@ -7,7 +7,7 @@
   </mat-icon>
 </button>
 
-<mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu">
+<mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu theme-color">
   <ng-template [ngIf]="notifications.items != undefined && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
     <notification-item *ngFor="let item of notifications?.items"
                        [notification]="item"

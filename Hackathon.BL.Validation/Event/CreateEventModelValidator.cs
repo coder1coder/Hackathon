@@ -9,6 +9,10 @@ public class CreateEventModelValidator : AbstractValidator<EventCreateParameters
     {
         Include(baseEventParametersValidator);
 
+        RuleFor(x => x.ImageId)
+            .NotEmpty()
+            .WithMessage("Изображение обязательно к загрузке");
+        
         RuleFor(x => x.OwnerId)
             .GreaterThan(0)
             .WithMessage("Идентификатор пользователя должен быть больше {ComparisonValue}");

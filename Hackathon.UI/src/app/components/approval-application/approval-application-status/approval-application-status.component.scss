@@ -1,4 +1,5 @@
 $event-status-icon-size: 10px;
+@import '/src/assets/styles/variables';
 
 .status {
   display: flex;
@@ -20,7 +21,7 @@ $event-status-icon-size: 10px;
       color: seagreen;
     }
     &-rejected {
-      color: #842029;
+      color: $error-color;
     }
   }
 }

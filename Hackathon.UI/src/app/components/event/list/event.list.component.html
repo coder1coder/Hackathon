@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <div class="event-block dark-theme-color">
+  <div class="event-block theme-color">
     <div class="mb-1-5em" *ngIf="isFilterEnabled">
       <form [formGroup]="filterForm" class="events__filter">
         <mat-form-field appearance="outline">
@@ -72,7 +72,7 @@
          (scrolled)="fetch()">
 
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
-        <div class="card dark-theme-background" (click)="rowClick(item)">
+        <div class="card theme-background" (click)="rowClick(item)">
 
           <div class="card__image">
             <image-from-storage [imageId]="item.imageId"></image-from-storage>
@@ -85,7 +85,8 @@
                 {{getDateTimeFormat(item.start)}}
               </div>
               <app-event-status [status]="item.status"></app-event-status>
-              <div class="owner">/ Организатор: {{item?.ownerName }}</div>
+              /
+              <div class="owner">Организатор: {{item?.ownerName }}</div>
             </div>
             <div class="details">
               <div class="teams-count">Команды: {{item.teamsCount}}</div>
