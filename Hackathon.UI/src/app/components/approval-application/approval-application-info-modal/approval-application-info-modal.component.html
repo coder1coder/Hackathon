@@ -1,0 +1,71 @@
+<div class="info-modal">
+  <h2 mat-dialog-title>Заявка на модерацию события</h2>
+  <div mat-dialog-content class="info-modal-content">
+    <div class="event-image">
+      <image-from-storage [imageId]="approvalApplication.event.imageId"></image-from-storage>
+    </div>
+    <app-line-info
+      label="Наименование события"
+      [value]="approvalApplication.event.name"
+    ></app-line-info>
+    <app-line-info
+      label="Описание события"
+      [value]="approvalApplication.event.description"
+    ></app-line-info>
+    <app-line-info
+      label="Начало события"
+      [value]="approvalApplication?.event?.start | date: tableDateFormat"
+    ></app-line-info>
+    <app-line-info
+      label="Автор заявки"
+      [customTemplate]="authorTemplate"
+    ></app-line-info>
+    <app-line-info
+      label="Дата и время заявки"
+      [value]="approvalApplication?.requestedAt | date: tableDateFormat"
+    ></app-line-info>
+    <app-line-info
+      label="Статус модерации заявки"
+      [customTemplate]="statusTemplate"
+    ></app-line-info>
+    <app-line-info
+      label="Подписант"
+      [value]="approvalApplication.signer?.userName"
+    ></app-line-info>
+    <app-line-info
+      label="Дата и время решения по заявке"
+      [value]="approvalApplication?.decisionAt | date: tableDateFormat"
+    ></app-line-info>
+    <app-line-info
+      label="Комментрия к решению"
+      [value]="approvalApplication?.comment"
+    ></app-line-info>
+  </div>
+
+  <div mat-dialog-actions class="d-flex flex-justify-content-end">
+    <button class="btn-with-icon" mat-button (click)="approveRequest()"
+            *ngIf="!approvalApplicationHasActiveStatus">
+      <mat-icon color="primary">done</mat-icon>
+      <span>Согласовать</span>
+    </button>
+    <button class="btn-with-icon" mat-button (click)="rejectRequest()"
+            *ngIf="!approvalApplicationHasActiveStatus">
+      <mat-icon color="accent">close</mat-icon>
+      <span>Отклонить</span>
+    </button>
+    <button mat-button mat-dialog-close="">Закрыть</button>
+  </div>
+</div>
+
+<ng-template #authorTemplate>
+  <div class="d-flex flex-align-items-center">
+    <profile-image [canUpload]="false" [userId]="approvalApplication.authorId" class="size50"></profile-image>
+    <div class="ml12 clickable text-decoration-underline" mat-dialog-close="" (click)="goToUser(approvalApplication.author)">{{approvalApplication.author.userName}}</div>
+  </div>
+</ng-template>
+
+<ng-template #statusTemplate>
+  <div class="white-space-nowrap">
+    <app-approval-application-status [status]="approvalApplication.applicationStatus"></app-approval-application-status>
+  </div>
+</ng-template>
