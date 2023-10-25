@@ -13,7 +13,6 @@ using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using Hackathon.IntegrationEvents;
-using Hackathon.IntegrationEvents.IntegrationEvent;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +28,7 @@ using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.User;
+using Hackathon.IntegrationEvents.IntegrationEvents;
 
 namespace Hackathon.BL.Event;
 
@@ -48,7 +48,7 @@ public class EventService : IEventService
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
     private readonly IMessageBusService _messageBusService;
-    private readonly IMessageHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
+    private readonly IIntegrationEventsHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
@@ -63,7 +63,7 @@ public class EventService : IEventService
         IUserRepository userRepository,
         INotificationService notificationService,
         IMessageBusService messageBusService,
-        IMessageHub<EventStatusChangedIntegrationEvent> integrationEventHub,
+        IIntegrationEventsHub<EventStatusChangedIntegrationEvent> integrationEventHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
         IEventAgreementRepository eventAgreementRepository,
@@ -467,7 +467,7 @@ public class EventService : IEventService
     {
         await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
-        await _integrationEventHub.Publish(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
+        await _integrationEventHub.PublishAll(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
 
         if (eventStatus == EventStatus.OnModeration)
         {

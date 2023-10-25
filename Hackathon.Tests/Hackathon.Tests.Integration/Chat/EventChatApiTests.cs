@@ -1,10 +1,10 @@
-using Hackathon.Common.Models.Chat.Event;
-using Hackathon.Common.Models.Event;
-using Hackathon.Contracts.Requests.Event;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Chats.Abstractions.Models.Events;
+using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
+using Hackathon.Contracts.Requests.Event;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Chat;

@@ -10,6 +10,7 @@ import {TeamChatClient} from "../../../clients/chat/team-chat.client";
 import {BehaviorSubject} from "rxjs";
 import {Team} from "../../../models/Team/Team";
 import {IUser} from "../../../models/User/IUser";
+import { ITeamChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent';
 
 @Component({
   selector: 'chat-team',
@@ -41,7 +42,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
     private teamChatClient: TeamChatClient
     ) {
     super(authService)
-    signalRService.onChatMessageChanged = (_=> this.fetchMessages());
+    signalRService.onTeamChatNewMessage = (x=> this.handleNewMessageEvent(x));
   }
 
   ngOnInit(): void {
@@ -67,6 +68,21 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
   get canView(): boolean {
     return this._canView;
+  }
+
+  handleNewMessageEvent(x:ITeamChatNewMessageIntegrationEvent){
+
+    if (this._canView && this.teamId > 0 && this.teamId == x.teamId)
+    {
+      this.teamChatClient.getAsync(x.messageId)
+        .subscribe({
+          next: (r: TeamChatMessage) =>  {
+            this.messages.push(r);
+            this.scrollChatToLastMessage();
+          },
+          error: () => {}
+        });
+    }
   }
 
   fetchMessages(): void {

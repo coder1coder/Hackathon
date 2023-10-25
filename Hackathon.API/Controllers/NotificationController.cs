@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Hackathon.API.Module;
 using Hackathon.Common.Abstraction.Notifications;
 
 namespace Hackathon.API.Controllers;

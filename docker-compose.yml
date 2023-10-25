@@ -15,16 +15,6 @@ services:
     ports:
       - "5433:5432"
 
-  redis:
-    container_name: hackathon_redis
-    image: bitnami/redis:latest
-    environment:
-     - REDIS_PASSWORD=redis
-    expose:
-      - "9379"
-    ports:
-      - '9379:6379'
-
   rabbitmq:
     container_name: hackathon_rabbitmq
     image: rabbitmq:3.8-management-alpine

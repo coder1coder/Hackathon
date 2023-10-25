@@ -1,5 +1,4 @@
 using Amazon.S3;
-using Hackathon.BL.Chat;
 using Hackathon.BL.Email;
 using Hackathon.BL.Event;
 using Hackathon.BL.EventLog;
@@ -9,7 +8,6 @@ using Hackathon.BL.Notification;
 using Hackathon.BL.Project;
 using Hackathon.BL.Team;
 using Hackathon.BL.User;
-using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Friend;
@@ -40,8 +38,6 @@ public static class ServiceCollectionExtensions
 
         services
             .AddScoped<IMessageBusService, MessageBusService>()
-            .AddScoped<ITeamChatService, TeamChatService>()
-            .AddScoped<IEventChatService, EventChatService>()
             .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEmailService, EmailService>()

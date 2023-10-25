@@ -11,7 +11,7 @@ using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
 using Hackathon.IntegrationEvents;
-using Hackathon.IntegrationEvents.IntegrationEvent;
+using Hackathon.IntegrationEvents.IntegrationEvents;
 
 namespace Hackathon.BL.Friend;
 
@@ -20,18 +20,18 @@ public class FriendshipService: IFriendshipService
     private readonly IFriendshipRepository _friendshipRepository;
     private readonly INotificationService _notificationService;
     private readonly IUserService _userService;
-    private readonly IMessageHub<FriendshipChangedIntegrationEvent> _messageHub;
+    private readonly IIntegrationEventsHub<FriendshipChangedIntegrationEvent> _integrationEventsHub;
 
     public FriendshipService(
         IFriendshipRepository friendshipRepository,
         INotificationService notificationService,
         IUserService userService,
-        IMessageHub<FriendshipChangedIntegrationEvent> messageHub)
+        IIntegrationEventsHub<FriendshipChangedIntegrationEvent> integrationEventsHub)
     {
         _friendshipRepository = friendshipRepository;
         _notificationService = notificationService;
         _userService = userService;
-        _messageHub = messageHub;
+        _integrationEventsHub = integrationEventsHub;
     }
 
     public Task<BaseCollection<Friendship>> GetOffersAsync(
@@ -59,7 +59,7 @@ public class FriendshipService: IFriendshipService
             await _notificationService.PushAsync(CreateNotificationModel
                 .Information(userId, $"Запрос дружбы от {getUserResult.Data}", proposerId));
 
-            await _messageHub.Publish(TopicNames.FriendshipChanged,
+            await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                 new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
 
             return Result.Success;
@@ -79,7 +79,7 @@ public class FriendshipService: IFriendshipService
                     await _notificationService.PushAsync(CreateNotificationModel
                         .Information(userId, $"Запрос дружбы от {getUserResult.Data}", proposerId));
 
-                    await _messageHub.Publish(TopicNames.FriendshipChanged,
+                    await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                         new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
 
                     break;
@@ -100,7 +100,7 @@ public class FriendshipService: IFriendshipService
                 await _notificationService.PushAsync(CreateNotificationModel
                     .Information(userId, $"{getUserResult.Data} принял предложение дружбы", proposerId));
 
-                await _messageHub.Publish(TopicNames.FriendshipChanged,
+                await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                     new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
             }
         }
@@ -124,7 +124,7 @@ public class FriendshipService: IFriendshipService
         await _notificationService.PushAsync(CreateNotificationModel
             .Information(userId, $"{user} отклонил предложение дружбы"));
 
-        await _messageHub.Publish(TopicNames.FriendshipChanged,
+        await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
             new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
 
         return Result.Success;
@@ -138,7 +138,7 @@ public class FriendshipService: IFriendshipService
 
         await _friendshipRepository.RemoveOfferAsync(proposerId, userId);
 
-        await _messageHub.Publish(TopicNames.FriendshipChanged,
+        await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
             new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
 
         return Result.Success;
@@ -158,7 +158,7 @@ public class FriendshipService: IFriendshipService
             Status = FriendshipStatus.Pending
         });
 
-        await _messageHub.Publish(TopicNames.FriendshipChanged,
+        await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
             new FriendshipChangedIntegrationEvent(new []{ firstUserId, secondUserId }));
 
         return Result.Success;

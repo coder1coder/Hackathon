@@ -30,10 +30,13 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+        <PackageReference Include="System.Text.Json" Version="7.0.3" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
       <ProjectReference Include="..\Hackathon.BL\Hackathon.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats.Module\Hackathon.Chats.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
       <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />

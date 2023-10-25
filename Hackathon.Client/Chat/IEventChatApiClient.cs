@@ -1,4 +1,4 @@
-using Hackathon.Common.Models.Chat.Event;
+using Hackathon.Chats.Abstractions.Models.Events;
 using Refit;
 
 namespace Hackathon.Client.Chat;

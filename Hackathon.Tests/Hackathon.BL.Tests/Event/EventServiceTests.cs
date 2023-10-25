@@ -8,7 +8,6 @@ using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.EventStage;
-using Hackathon.IntegrationEvents.IntegrationEvent;
 using Moq;
 using System.Collections.Generic;
 using Hackathon.Common.Abstraction.FileStorage;
@@ -21,6 +20,7 @@ using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
+using Hackathon.IntegrationEvents.IntegrationEvents;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.BL.Tests.Event;
@@ -43,7 +43,7 @@ public class EventServiceTests: BaseUnitTest
         _eventRepositoryMock = new Mock<IEventRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
         _messageBusServiceMock = new Mock<IMessageBusService>();
-        var integrationEventHubMock = new Mock<IMessageHub<EventStatusChangedIntegrationEvent>>();
+        var integrationEventHubMock = new Mock<IIntegrationEventsHub<EventStatusChangedIntegrationEvent>>();
         var eventAgreementRepositoryMock = new Mock<IEventAgreementRepository>();
         _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
         var loggerMock = new Mock<ILogger<EventService>>();

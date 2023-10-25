@@ -2,13 +2,16 @@ import * as signalR from "@microsoft/signalr";
 import {environment} from "../../environments/environment";
 import {HubConnection} from "@microsoft/signalr";
 import {Injectable} from "@angular/core";
+import { IEventChatNewMessageIntegrationEvent } from "../models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent";
+import { ITeamChatNewMessageIntegrationEvent } from "../models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent";
 
 @Injectable({ providedIn: 'root' })
 export class SignalRService
 {
   private _connection!: HubConnection;
 
-  public onChatMessageChanged?:(x:any) => void
+  public onEventChatNewMessage?:(x:IEventChatNewMessageIntegrationEvent) => void
+  public onTeamChatNewMessage?:(x:ITeamChatNewMessageIntegrationEvent) => void
 
   constructor() {
     this.initSignalR();
@@ -21,11 +24,14 @@ export class SignalRService
 
     this._connection.onclose(()=>this.startConnection());
 
-    this._connection.on("ChatMessageChanged", (x) => {
+    this._connection.on("EventChatNewMessage", (x:IEventChatNewMessageIntegrationEvent) => {
+      if (this.onEventChatNewMessage)
+        this.onEventChatNewMessage(x)
+    });
 
-      if (this.onChatMessageChanged)
-        this.onChatMessageChanged(x)
-
+    this._connection.on("TeamChatNewMessage", (x:ITeamChatNewMessageIntegrationEvent) => {
+      if (this.onTeamChatNewMessage)
+        this.onTeamChatNewMessage(x)
     });
 
     this.startConnection();

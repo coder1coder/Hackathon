@@ -2,6 +2,7 @@ using Hackathon.Common.Abstraction.Team;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
+using Hackathon.API.Module;
 
 namespace Hackathon.API.Controllers.Team;
 

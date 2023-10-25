@@ -21,6 +21,10 @@ export class TeamChatClient extends BaseApiClient
     return this.http.post(this.baseRoute + `/send`, message);
   }
 
+  public getAsync(messageId: string):Observable<TeamChatMessage>{
+    return this.http.get<TeamChatMessage>(`${this.baseRoute}/messages/${messageId}`);
+  }
+
   public getListAsync(teamId:number, offset:number = 0, limit:number = 300): Observable<BaseCollection<TeamChatMessage>> {
     return this.http.post<BaseCollection<TeamChatMessage>>(this.baseRoute + `/${teamId}/list?offset=${offset}&limit=${limit}`, null);
   }

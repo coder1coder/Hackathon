@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using BackendTools.Common.Models;
 using Hackathon.API;
-using Hackathon.API.Extensions;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Models.FileStorage;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Hackathon.Tests.Integration;
@@ -22,8 +20,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>
     protected override IHost CreateHost(IHostBuilder builder)
     {
         var host = builder.Build();
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
-        host.Migrate(logger);
+        MigrationsTool.ApplyMigrations(host, Program.Modules);
         host.Start();
         return host;
     }

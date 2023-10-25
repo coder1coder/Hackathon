@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
@@ -7,6 +9,7 @@ using FluentValidation;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
 using Hackathon.API.Mapping;
+using Hackathon.API.Module;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
 using Hackathon.Common.Configuration;
@@ -14,7 +17,7 @@ using Hackathon.Common.Models.User;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
-using Hackathon.IntegrationEvents.IntegrationEvent;
+using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationServices;
 using Hackathon.Jobs;
 using Mapster;
@@ -34,7 +37,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Prometheus;
-using StackExchange.Redis;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Hackathon.API;
@@ -42,10 +44,13 @@ namespace Hackathon.API;
 public class Startup
 {
     private readonly IWebHostEnvironment _environment;
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+    private readonly IReadOnlyCollection<IApiModule> _modules;
+
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment, IReadOnlyCollection<IApiModule> modules)
     {
         Configuration = configuration;
         _environment = environment;
+        _modules = modules;
     }
 
     private IConfiguration Configuration { get; }
@@ -69,7 +74,12 @@ public class Startup
         });
 
         var config = new TypeAdapterConfig();
-        config.Scan(typeof(EventMapping).Assembly, typeof(UserMapping).Assembly);
+
+        var mappingAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
+        mappingAssemblies.Add(typeof(EventMapping).Assembly);
+        mappingAssemblies.Add(typeof(UserMapping).Assembly);
+        config.Scan(mappingAssemblies.ToArray());
+
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
 
@@ -81,7 +91,8 @@ public class Startup
             .RegisterIntegrationServices()
             .RegisterRepositories();
 
-        var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+        var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()
+                        ?? throw new AggregateException("Error while reading application configuration");
 
         services.AddMassTransit(x =>
         {
@@ -107,7 +118,8 @@ public class Startup
                 options.EnableSensitiveDataLogging();
         });
 
-        services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(Configuration.GetConnectionString("Redis")));
+        foreach (var apiModule in _modules)
+            apiModule.ConfigureServices(services, Configuration);
 
         services
             .AddCors(options =>
@@ -175,13 +187,16 @@ public class Startup
         .UseCors(CorsPolicy)
         .UseAuthentication()
         .UseAuthorization()
-        .UseEndpoints(endpoints =>
+        .UseEndpoints(endpointRouteBuilder =>
         {
-            endpoints.MapControllers();
-            endpoints.MapHub<IntegrationEventHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);
-            endpoints.MapHub<IntegrationEventHub<ChatMessageChangedIntegrationEvent>>(appConfig.Hubs.Chat);
-            endpoints.MapHub<IntegrationEventHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
-            endpoints.MapHub<IntegrationEventHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);
+            endpointRouteBuilder.MapControllers();
+            endpointRouteBuilder.MapHub<IntegrationEventsHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);
+
+            endpointRouteBuilder.MapHub<IntegrationEventsHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
+            endpointRouteBuilder.MapHub<IntegrationEventsHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);
+
+            foreach (var apiModule in _modules)
+                apiModule.ConfigureEndpoints(endpointRouteBuilder, appConfig);
         });
     }
 

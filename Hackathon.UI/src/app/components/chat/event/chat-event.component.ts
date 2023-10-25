@@ -11,6 +11,7 @@ import {EventChatMessage} from "../../../models/chat/EventChatMessage";
 import {EventChatClient} from "../../../clients/chat/event-chat.client";
 import {Event} from "../../../models/Event/Event";
 import {EventClient} from "../../../services/event/event.client";
+import { IEventChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent';
 
 @Component({
   selector: 'chat-event',
@@ -44,7 +45,8 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
     private eventChatClient: EventChatClient
     ) {
     super(authService)
-    signalRService.onChatMessageChanged = (_=> this.fetchMessages());
+    signalRService.onEventChatNewMessage = (x =>
+      this.handleNewMessageEvent(x));
   }
 
   ngOnInit(): void {
@@ -59,6 +61,21 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
       this.fetchEvent();
       this.fetchMessages();
     })
+  }
+
+  handleNewMessageEvent(x:IEventChatNewMessageIntegrationEvent){
+
+    if (this._canView && this.eventId > 0 && this.eventId == x.eventId)
+    {
+      this.eventChatClient.getAsync(x.messageId)
+        .subscribe({
+          next: (r: EventChatMessage) =>  {
+            this.messages.push(r);
+            this.scrollChatToLastMessage();
+          },
+          error: () => {}
+        });
+    }
   }
 
   fetchEvent(){

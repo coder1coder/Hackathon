@@ -1,5 +1,4 @@
 using Hackathon.Common.Abstraction.ApprovalApplications;
-using Hackathon.Common.Abstraction.Chat;
 using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.FileStorage;
@@ -10,7 +9,6 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.DAL.Repositories;
 using Hackathon.DAL.Repositories.ApprovalApplications;
-using Hackathon.DAL.Repositories.Chat;
 using Hackathon.DAL.Repositories.Events;
 using Hackathon.DAL.Repositories.Team;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +22,6 @@ public static class ServiceCollectionExtensions
         services
             .AddScoped<ITeamJoinRequestsRepository, TeamJoinRequestRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<ITeamChatRepository, TeamChatRepository>()
-            .AddScoped<IEventChatRepository, EventChatRepository>()
             .AddScoped<IEmailConfirmationRepository, EmailConfirmationRepository>()
             .AddScoped<IEventLogRepository, EventLogRepository>()
             .AddScoped<IEventRepository, EventRepository>()

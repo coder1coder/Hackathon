@@ -1,4 +1,4 @@
-using Hackathon.Common.Models.Chat.Team;
+using Hackathon.Chats.Abstractions.Models.Teams;
 using Refit;
 
 namespace Hackathon.Client.Chat;

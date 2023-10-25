@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats.BL\Hackathon.Chats.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats.DAL\Hackathon.Chats.DAL.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+    </ItemGroup>
+
+</Project>

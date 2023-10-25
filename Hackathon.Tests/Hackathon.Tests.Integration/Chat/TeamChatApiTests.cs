@@ -1,9 +1,9 @@
-using Hackathon.Common.Models.Chat.Team;
-using Hackathon.Common.Models.Team;
-using Hackathon.Contracts.Requests.Team;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackathon.Chats.Abstractions.Models.Teams;
+using Hackathon.Common.Models.Team;
+using Hackathon.Contracts.Requests.Team;
 using Xunit;
 
 namespace Hackathon.Tests.Integration.Chat;

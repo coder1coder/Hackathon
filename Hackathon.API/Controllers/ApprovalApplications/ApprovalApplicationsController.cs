@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BackendTools.Common.Models;
+using Hackathon.API.Module;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Microsoft.AspNetCore.Mvc;

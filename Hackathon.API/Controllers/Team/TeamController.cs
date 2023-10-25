@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
+using Hackathon.API.Module;
 
 namespace Hackathon.API.Controllers.Team;
 

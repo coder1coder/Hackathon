@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Hackathon.Common.Abstraction.Project;
 using System.Threading.Tasks;
+using Hackathon.API.Module;
 using Hackathon.Common.Models.Project;
 using Hackathon.Contracts.Requests.Project;
 using MapsterMapper;

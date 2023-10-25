@@ -1,11 +1,10 @@
-using System;
+using System.Collections.Generic;
 using System.IO;
-using Hackathon.API.Extensions;
+using Hackathon.API.Module;
+using Hackathon.Chats.Module;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
@@ -14,25 +13,20 @@ namespace Hackathon.API;
 
 public class Program
 {
+    public static readonly List<IApiModule> Modules = new();
+
     public static void Main(string[] args)
     {
-        var appHost = CreateHostBuilder(args).Build();
-        var logger = appHost.Services.GetRequiredService<ILogger<Program>>();
-
-        try
-        {
-            appHost.Migrate(logger);
-            appHost.Run();
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Возникла ошибка во время запуска приложения: {Message}", e.Message);
-            throw;
-        }
+        var host = CreateHostBuilder(args).Build();
+        MigrationsTool.ApplyMigrations(host, Modules);
+        host.Run();
     }
 
-    private static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        Modules.Add(new ChatsApiModule());
+
+        return Host
             .CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, x) =>
             {
@@ -51,6 +45,8 @@ public class Program
                 webBuilder
                     .UseKestrel()
                     .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseStartup<Startup>();
+                    .UseStartup(x =>
+                        new Startup(x.Configuration, x.HostingEnvironment, Modules));
             });
+    }
 }
