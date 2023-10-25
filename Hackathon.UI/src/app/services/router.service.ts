@@ -9,8 +9,6 @@ export class RouterService {
     public Users: UsersRouter,
     public Profile: ProfileRouter,
     public Notifications: NotificationsRouter,
-    public ApprovalApplications: ApprovalApplicationsRouter,
-    public ErrorRouter: ErrorRouter,
     private router: Router,
   ) {
   }

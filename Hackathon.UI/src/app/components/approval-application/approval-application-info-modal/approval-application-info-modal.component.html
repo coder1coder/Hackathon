@@ -1,21 +1,6 @@
 <div class="info-modal">
   <h2 mat-dialog-title>Заявка на модерацию события</h2>
   <div mat-dialog-content class="info-modal-content">
-    <div class="event-image">
-      <image-from-storage [imageId]="approvalApplication.event.imageId"></image-from-storage>
-    </div>
-    <app-line-info
-      label="Наименование события"
-      [value]="approvalApplication.event.name"
-    ></app-line-info>
-    <app-line-info
-      label="Описание события"
-      [value]="approvalApplication.event.description"
-    ></app-line-info>
-    <app-line-info
-      label="Начало события"
-      [value]="approvalApplication?.event?.start | date: tableDateFormat"
-    ></app-line-info>
     <app-line-info
       label="Автор заявки"
       [customTemplate]="authorTemplate"
@@ -27,6 +12,10 @@
     <app-line-info
       label="Статус модерации заявки"
       [customTemplate]="statusTemplate"
+    ></app-line-info>
+    <app-line-info
+      label="Cобытие"
+      [customTemplate]="eventTemplate"
     ></app-line-info>
     <app-line-info
       label="Подписант"
@@ -60,7 +49,7 @@
 <ng-template #authorTemplate>
   <div class="d-flex flex-align-items-center">
     <profile-image [canUpload]="false" [userId]="approvalApplication.authorId" class="size50"></profile-image>
-    <div class="ml12 clickable text-decoration-underline" mat-dialog-close="" (click)="goToUser(approvalApplication.author)">{{approvalApplication.author.userName}}</div>
+    <div class="ml12 clickable text-decoration-underline" mat-dialog-close="" (click)="goToUser(approvalApplication.authorId)">{{approvalApplication.author.userName}}</div>
   </div>
 </ng-template>
 
@@ -68,4 +57,8 @@
   <div class="white-space-nowrap">
     <app-approval-application-status [status]="approvalApplication.applicationStatus"></app-approval-application-status>
   </div>
+</ng-template>
+
+<ng-template #eventTemplate>
+  <div class="clickable text-decoration-underline" mat-dialog-close="" (click)="goToEvent(approvalApplication.event.id)">{{approvalApplication.event.name}}</div>
 </ng-template>

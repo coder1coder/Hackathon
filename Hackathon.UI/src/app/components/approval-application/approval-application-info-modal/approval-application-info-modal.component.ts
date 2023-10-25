@@ -3,8 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dial
 import { IApprovalApplication} from "../../../models/approval-application/approval-application.interface";
 import { ApprovalApplicationStatusEnum } from "../../../models/approval-application/approval-application-status.enum";
 import { TABLE_DATE_FORMAT } from "../../../common/date-formats";
-import { IUser } from "../../../models/User/IUser";
-import { RouterService } from "../../../services/router.service";
 import { CustomDialog, ICustomDialogData } from "../../custom/custom-dialog/custom-dialog.component";
 import { filter, mergeMap, Subject, takeUntil} from "rxjs";
 import { ApplicationApprovalErrorMessages } from "../../../common/error-messages/application-approval-error-messages";
@@ -14,6 +12,7 @@ import {
 import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
 import { SnackService } from "../../../services/snack.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-approval-application-info-modal',
@@ -29,7 +28,7 @@ export class ApprovalApplicationInfoModalComponent {
     public dialogRef: MatDialogRef<ApprovalApplicationInfoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public approvalApplication: IApprovalApplication,
     private dialog: MatDialog,
-    private routerService: RouterService,
+    private router: Router,
     private approvalApplicationsService: ApprovalApplicationsService,
     private errorProcessor: ErrorProcessorService,
     private snackService: SnackService,
@@ -41,10 +40,14 @@ export class ApprovalApplicationInfoModalComponent {
      this.approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved;
   }
 
-  public goToUser(user: IUser): void {
-    if (user.id) {
-      this.routerService.Users.View(user.id);
-    }
+  public goToUser(userId: number): void {
+    const url = this.router.createUrlTree(['users', `${userId}`]);
+    window.open(url.toString(), '_blank');
+  }
+
+  public goToEvent(eventId: number): void {
+    const url = this.router.createUrlTree(['events', `${eventId}`]);
+    window.open(url.toString(), '_blank');
   }
 
   public approveRequest(): void {
