@@ -8,7 +8,7 @@ import { ThemeChangeService } from "../../services/theme-change.service";
 import { fromMobx } from "../../common/functions/from-mobx.function";
 import { IUser } from "../../models/User/IUser";
 import { CurrentUserStore } from "../../shared/stores/current-user.store";
-import {ProfileUserStore} from "../../shared/stores/profile-user.store";
+import { ProfileUserStore } from "../../shared/stores/profile-user.store";
 
 @Component({
   selector: 'toolbar',

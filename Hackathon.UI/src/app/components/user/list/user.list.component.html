@@ -4,7 +4,7 @@
 
   <div *ngIf="items.length > 0">
     <table mat-table [dataSource]="items">
-
+      <caption></caption>
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.id}} </td>
@@ -15,7 +15,7 @@
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
 
           <div class="member">
-            <profile-image [canUpload]="false" [userId]="element.id" class="size35"></profile-image>
+            <profile-image [canUpload]="false" [user]="element" class="size35"></profile-image>
             <div>{{element.userName}}</div>
           </div>
 

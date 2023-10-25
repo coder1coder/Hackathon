@@ -1,60 +1,62 @@
-<form [formGroup]="form" class="registerForm" >
-  <div class="welcomeText">{{ welcomeText }}</div>
-  <div class="registerForm__fields">
-    <mat-form-field appearance="fill">
-      <mat-label>Имя пользователя</mat-label>
-      <input matInput autocomplete="off"
-             id="login"
-             #login
-             formControlName="login"
-             required
-      >
-    </mat-form-field>
+<form [formGroup]="form" class="registerForm hackathon-background">
+  <div class="registerForm__container dark-theme-background">
+    <div class="welcomeText">{{ welcomeText }}</div>
+    <div class="registerForm__fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Имя пользователя</mat-label>
+        <input matInput autocomplete="off"
+               id="login"
+               #login
+               formControlName="login"
+               required
+        >
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Пароль</mat-label>
-      <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
-             autocomplete="off"
-             id="password"
-             formControlName="password"
-             required
-      >
-      <mat-icon class="password__icon"
-      (click)="isPassFieldHide = !isPassFieldHide"
-      matSuffix
-      [attr.aria-pressed]="isPassFieldHide"
-      >
-      {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
-      </mat-icon>
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Пароль</mat-label>
+        <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
+               autocomplete="off"
+               id="password"
+               formControlName="password"
+               required
+        >
+        <mat-icon class="password__icon"
+                  (click)="isPassFieldHide = !isPassFieldHide"
+                  matSuffix
+                  [attr.aria-pressed]="isPassFieldHide"
+        >
+          {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>E-mail</mat-label>
-      <input matInput
-             autocomplete="off"
-             id="email"
-             formControlName="email"
-             required
-      >
-    </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>E-mail</mat-label>
+        <input matInput
+               autocomplete="off"
+               id="email"
+               formControlName="email"
+               required
+        >
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Полное имя</mat-label>
-      <input matInput
-             autocomplete="off"
-             id="fullName"
-             formControlName="fullName"
-             required
-      >
-    </mat-form-field>
-  </div>
-  <div class="registerForm__bottom">
-    <div class="registerForm__buttons">
-      <button mat-raised-button color="primary"
-       disabled="{{!isValid()}}"
-       (click)="signUp()">Регистрация</button>
-      <button mat-button
-      (click)="goBack()">Отмена</button>
+      <mat-form-field appearance="fill">
+        <mat-label>Полное имя</mat-label>
+        <input matInput
+               autocomplete="off"
+               id="fullName"
+               formControlName="fullName"
+               required
+        >
+      </mat-form-field>
+    </div>
+    <div class="registerForm__bottom">
+      <div class="registerForm__buttons">
+        <button mat-raised-button color="primary"
+                disabled="{{!isValid()}}"
+                (click)="signUp()">Регистрация</button>
+        <button mat-button
+                (click)="goBack()">Отмена</button>
+      </div>
     </div>
   </div>
 </form>
