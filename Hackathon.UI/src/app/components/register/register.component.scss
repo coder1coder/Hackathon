@@ -14,6 +14,17 @@
   height: 100%;
   box-sizing: border-box;
 
+  &__container {
+    box-sizing: border-box;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 0 5px 1px #cdcdcd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .welcomeText {
     padding-bottom: 35px;
     text-align: center;

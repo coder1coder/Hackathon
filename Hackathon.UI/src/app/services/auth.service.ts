@@ -1,16 +1,16 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
-import {Observable} from 'rxjs/internal/Observable';
-import {environment} from "../../environments/environment";
-import {map} from "rxjs/operators";
-import {ICreateUser} from '../models/User/CreateUser';
-import {IGetTokenResponse} from "../models/IGetTokenResponse";
-import {IBaseCreateResponse} from "../models/IBaseCreateResponse";
-import {AuthConstants} from "./auth.constants";
-import {GoogleSignInService} from './google-sign-in.service';
-import {GoogleUser} from '../models/User/GoogleUser';
-import {IUser} from "../models/User/IUser";
-import {of} from "rxjs";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { environment } from "../../environments/environment";
+import { map } from "rxjs/operators";
+import { ICreateUser } from '../models/User/CreateUser';
+import { IGetTokenResponse } from "../models/IGetTokenResponse";
+import { IBaseCreateResponse } from "../models/IBaseCreateResponse";
+import { AuthConstants } from "./auth.constants";
+import { GoogleSignInService } from './google-sign-in.service';
+import { GoogleUser } from '../models/User/GoogleUser';
+import { IUser } from "../models/User/IUser";
+import { of } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,8 @@ export class AuthService {
   }
 
   public isLoggedIn(): boolean {
-    let tokenInfo = this.getTokenInfo();
-    if (tokenInfo == undefined)
+    const tokenInfo = this.getTokenInfo();
+    if (!Boolean(tokenInfo))
       return false;
 
     return tokenInfo.expires >= Date.now();
@@ -55,14 +55,14 @@ export class AuthService {
     this.authChange.emit(false);
   }
 
-  public getUserId(): number | undefined {
-    let tokenInfo = this.getTokenInfo();
-    return tokenInfo?.userId;
+  public getUserId(): number {
+    const tokenInfo = this.getTokenInfo();
+    return tokenInfo?.userId ?? null;
   }
 
   public getCurrentUser(): Observable<IUser> {
     const tokenInfo = this.getTokenInfo();
-    if (!this.isLoggedIn() || tokenInfo == undefined) {
+    if (!this.isLoggedIn() || !Boolean(tokenInfo)) {
       return of(null);
     }
 
@@ -101,11 +101,9 @@ export class AuthService {
     return this.googleSignInService.getGoogleServiceEnabled$;
   }
 
-  private getTokenInfo() : IGetTokenResponse | undefined {
-    let authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
-    if (authInfo == undefined)
-      return undefined;
-
+  private getTokenInfo() : IGetTokenResponse {
+    const authInfo = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
+    if (!Boolean(authInfo)) return null;
     return JSON.parse(authInfo);
   }
 }
