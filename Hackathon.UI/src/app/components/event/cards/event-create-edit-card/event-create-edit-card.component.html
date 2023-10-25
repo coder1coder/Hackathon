@@ -4,8 +4,9 @@
   <div actions>
     <event-button-actions
     [event]="event"
-    [submit]="submit">
-    </event-button-actions>
+    [submit]="submit"
+    [formValidity]="formValidity"
+    ></event-button-actions>
   </div>
 
   <alert
@@ -35,7 +36,7 @@
     </div>
   </alert>
 
-  <form [formGroup]="form" class="eventsNewForm">
+  <form [formGroup]="form" class="eventsNewForm event-theme">
     <mat-tab-group animationDuration="0" dynamicHeight>
       <mat-tab label="Общая информация">
         <div class=" event-form__tab-common padding-top-1em">
@@ -47,8 +48,10 @@
                 autocomplete="off"
                 id="name"
                 formControlName="name"
+                minlength="5"
                 required
               >
+              <mat-error *ngIf="!getFormControl('name').valid">{{getErrorLengthMessage(getFormControl('name'), 5)}}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -61,8 +64,10 @@
                 cdkTextareaAutosize
                 cdkAutosizeMinRows="5"
                 cdkAutosizeMaxRows="5"
+                minlength="100"
                 required
               ></textarea>
+              <mat-error *ngIf="!getFormControl('description').valid">{{getErrorLengthMessage(getFormControl('description'), 100)}}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -112,7 +117,9 @@
           </div>
           <div class="image-upload">
             <div class="event-image">
-              <div class="event-image__image">
+              <div class="event-image__image"
+                 (click)="selectedFile.click()"
+                 [class.border-red]="isValidImage">
                 <img *ngIf="eventImage; else noImage" [src]="eventImage" alt="event image">
                 <ng-template #noImage>
                   <mat-icon style="color: #e5e5e5">image_outline</mat-icon>
@@ -121,13 +128,13 @@
 
               <div class="event-image__selector">
                 <input type="file" #selectedFile (change)="selectEventImage($event)">
-                <button mat-flat-button (click)="selectedFile.click()">
+                <button mat-button class="btn-with-icon" (click)="selectedFile.click()">
                   <mat-icon color="primary">photo_camera</mat-icon>
-                  выбрать изображение
+                  Выбрать изображение
                 </button>
-                <button mat-flat-button (click)="clearEventImage()">
+                <button mat-button class="btn-with-icon" (click)="clearEventImage()">
                   <mat-icon color="accent">delete</mat-icon>
-                  удалить изображение
+                  Удалить изображение
                 </button>
               </div>
             </div>

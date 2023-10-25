@@ -1,6 +1,6 @@
 @import 'variables';
 
-.dark-theme-background {
+.theme-background {
   .theme-dark-mode & {
     background: $grey-color-10;
     color: $white-color;
@@ -11,7 +11,7 @@
   }
 }
 
-.dark-theme-color {
+.theme-color {
   .theme-dark-mode & {
     color: $white-color;
   }
@@ -42,6 +42,43 @@
       }
       .event-started__content-top {
         border-bottom: 1px solid #ededed;
+      }
+    }
+  }
+}
+
+.event-theme {
+  .theme-dark-mode & {
+    .mat-tab-body-content {
+      .event-image {
+        &__image {
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        &__image:hover {
+          border: 2px solid rgb(255, 255, 255);
+        }
+      }
+      .border-red {
+        transition: all 0.1s ease-out;
+        border: 2px solid $error-color;
+      }
+    }
+  }
+  .theme-light-mode & {
+    .mat-tab-body-content {
+      .event-image {
+        &__image {
+          border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        &__image:hover {
+          border: 2px solid rgb(23, 20, 20);
+        }
+      }
+      .border-red {
+        transition: all 0.1s ease-out;
+        border: 2px solid $error-color;
       }
     }
   }

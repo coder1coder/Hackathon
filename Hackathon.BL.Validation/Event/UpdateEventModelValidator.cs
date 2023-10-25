@@ -8,7 +8,11 @@ public class UpdateEventModelValidator: AbstractValidator<EventUpdateParameters>
     public UpdateEventModelValidator(IValidator<BaseEventParameters> baseEventParametersValidator)
     {
         Include(baseEventParametersValidator);
-
+        
+        RuleFor(x => x.ImageId)
+            .NotEmpty()
+            .WithMessage("Изображение обязательно к загрузке");
+        
         RuleFor(x => x.Id)
             .GreaterThan(0)
             .WithMessage("необходимо указать корректный идентификатор");

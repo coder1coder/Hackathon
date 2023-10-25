@@ -1,18 +1,14 @@
-import {Component, Input} from '@angular/core';
-import {Notification} from "../../../../models/Notification/Notification";
+import { Component, Input } from '@angular/core';
+import { Notification } from "../../../../models/Notification/Notification";
 
 @Component({
   selector: 'notification-info-view',
   templateUrl: './notification.info.view.component.html',
-  styleUrls: ['./notification.info.view.component.scss']
+  styleUrls: ['./notification.info.view.component.scss'],
 })
 
 export class NotificationInfoViewComponent{
-
-  Notification = Notification;
+  notification = Notification;
   @Input() notify: Notification | undefined;
   @Input() hideDate: boolean = false;
-
-  constructor() {
-  }
 }

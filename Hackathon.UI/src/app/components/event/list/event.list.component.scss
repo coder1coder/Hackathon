@@ -1,7 +1,7 @@
 @import 'src/assets/styles/variables';
 
-$cards-gap: .5em;
-$card-width: 33%;
+$cards-gap: 0.8em;
+$card-width: 32.7%;
 
 .mat-column-status {
   mat-icon {
@@ -41,30 +41,30 @@ $card-width: 33%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-around;
   gap: $cards-gap;
   padding-bottom: 3em;
 
   .card {
     display: block;
-    flex-grow: 1;
-    flex-shrink: 1;
-
     flex-basis: $card-width;
     max-width: $card-width;
-
+    border-radius: 6px;
     box-sizing: border-box;
-    box-shadow: 0 0 10px #e3e3e3;
+    box-shadow: 0 0 5px #e3e3e3;
     cursor: pointer;
     transition: all 0.2s ease-out;
 
     &:hover {
-      box-shadow: 0 0 20px 0 rgb(195 195 195);
+      box-shadow: 0 0 10px 3px rgb(195 195 195);
       transform: translateY(-2px);
     }
 
     &__image {
-      height: 200px;
+      height: 250px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      overflow: hidden;
     }
 
     .card-info {

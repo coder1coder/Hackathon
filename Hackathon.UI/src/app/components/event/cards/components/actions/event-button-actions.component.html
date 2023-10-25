@@ -10,7 +10,7 @@
 </div>
 
 <div *ngIf="eventService.isCreateEditEvent(event)">
-  <button color="primary" mat-button (click)="submit()">Сохранить</button>
+  <button color="primary" mat-button (click)="submit()" [disabled]="!formValidity">Сохранить</button>
   <button *ngIf="eventService.isCanDeleteEvent(event)" mat-button (click)="deleteEvent()">Удалить</button>
   <button *ngIf="eventService.isCanPublish(event)" mat-button (click)="setPublish()">Опубликовать</button>
   <button *ngIf="eventService.isCanOnModeration(event)" mat-button (click)="setOnModeration()">На модерацию</button>

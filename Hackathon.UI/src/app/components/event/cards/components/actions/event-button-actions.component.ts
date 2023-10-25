@@ -17,6 +17,7 @@ import { ErrorProcessorService } from "../../../../../services/error-processor.s
 export class EventButtonActionsComponent {
   @Input() event: Event;
   @Input() submit: () => void;
+  @Input() formValidity: boolean = true;
 
   constructor(
     public eventService: EventService,

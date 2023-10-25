@@ -1,16 +1,14 @@
-<ng-template [ngIf]="notify !== undefined" [ngIfElse]="bad">
-
-<div>
-  <div class="notify__info-message">
-    <div mat-line>{{ Notification.getParsedData(notify.data)?.Message }}</div>
-  </div>
-  <div mat-line *ngIf="!hideDate">
-    <div class="notify-createdAt">
-      {{ notify.createdAt?.toLocaleString() | date:'EEEE dd.MM.y' }}
+<ng-template [ngIf]="notify" [ngIfElse]="bad">
+  <div>
+    <div class="notify__info-message">
+      <div mat-line>{{notification.getParsedData(notify.data)?.Message}}</div>
+    </div>
+    <div mat-line *ngIf="!hideDate">
+      <div class="notify-createdAt">
+        {{notify.createdAt?.toLocaleString() | date:'EEEE dd.MM.y'}}
+      </div>
     </div>
   </div>
-</div>
-
 </ng-template>
 
 <ng-template #bad>

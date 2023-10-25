@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { ICreateEvent } from "../../../../models/Event/ICreateEvent";
 import { IUpdateEvent } from "../../../../models/Event/IUpdateEvent";
@@ -9,7 +9,7 @@ import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { EventNewStatusDialogComponent } from "../components/status/event-new-status-dialog.component";
 import { SnackService } from "../../../../services/snack.service";
-import {delay, Observable, takeUntil} from "rxjs";
+import { delay, Observable, takeUntil } from "rxjs";
 import * as moment from "moment/moment";
 import { AuthService } from "../../../../services/auth.service";
 import { RouterService } from "../../../../services/router.service";
@@ -85,15 +85,20 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     if (this.editMode) this.fetch();
   }
 
-  private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
-    const agreementRules = this.form.get('agreementRules')?.value;
-    event.agreement = agreementRules?.length > 0 ?
-      {
-        id: checkValue(this.event?.agreement?.id),
-        rules: agreementRules,
-        requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value,
-      } as IEventAgreement
-      : null;
+  public get formValidity(): boolean {
+    return this.form.valid && !!this.eventImage;
+  }
+
+  public get isValidImage(): boolean {
+    return !this.eventImage && (this.form.dirty || this.editMode);
+  }
+
+  public getFormControl(controlName: string): FormControl {
+    return this.form.get(controlName) as FormControl;
+  }
+
+  public getErrorLengthMessage(control: FormControl, length: number) {
+    return control.hasError('minlength') ? `Минимальная длина ${length} символов` : '';
   }
 
   public saveForm(): () => void {
@@ -260,17 +265,19 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     const target = event.target as HTMLInputElement;
     const files = target.files;
 
-    this.eventHttpService.setEventImage(files)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (imageId: string) => {
-          this.form.controls['imageId'].setValue(imageId);
-          this.loadImage(imageId);
-        },
-        error: (err: Error) => {
-          this.errorProcessor.Process(err);
-        }
-      });
+    if (files?.length) {
+      this.eventHttpService.setEventImage(files)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (imageId: string) => {
+            this.form.controls['imageId'].setValue(imageId);
+            this.loadImage(imageId);
+          },
+          error: (err: Error) => {
+            this.errorProcessor.Process(err);
+          }
+        });
+    }
   }
 
   private fetch(): void {
@@ -301,6 +308,17 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       .subscribe({
         next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
         error: _ => this.snackService.open(UploadFileErrorMessages.FileUploadError)});
+  }
+
+  private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
+    const agreementRules = this.form.get('agreementRules')?.value;
+    event.agreement = agreementRules?.length > 0 ?
+      {
+        id: checkValue(this.event?.agreement?.id),
+        rules: agreementRules,
+        requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value,
+      } as IEventAgreement
+      : null;
   }
 
   private initForm(): void {
