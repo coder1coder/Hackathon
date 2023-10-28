@@ -24,6 +24,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         //arrange
         var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
         var request = Mapper.Map<CreateEventRequest>(@event);
+        request.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(request);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам
@@ -89,6 +90,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         //arrange
         var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
         var request = Mapper.Map<CreateEventRequest>(@event);
+        request.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(request);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам
@@ -168,6 +170,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         //arrange
         var @event = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
         var request = Mapper.Map<CreateEventRequest>(@event);
+        request.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(request);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам

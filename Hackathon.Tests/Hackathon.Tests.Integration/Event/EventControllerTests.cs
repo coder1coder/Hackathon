@@ -1,16 +1,16 @@
-﻿using Bogus;
-using FluentAssertions;
-using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.EventStage;
-using Hackathon.Contracts.Requests.Event;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Bogus;
+using FluentAssertions;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.ImageFile;
+using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.EventStage;
 using Hackathon.Common.Models.User;
+using Hackathon.Contracts.Requests.Event;
 using Refit;
 using Xunit;
 
@@ -29,7 +29,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-
+        createEventRequest.ImageId = await GetEventImageId();
         var baseCreateResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -57,7 +57,7 @@ public class EventControllerTests : BaseIntegrationTest
     {
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         await FluentActions
@@ -82,7 +82,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
-
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -114,6 +114,7 @@ public class EventControllerTests : BaseIntegrationTest
             .ToList();
 
         var request = Mapper.Map<CreateEventRequest>(@event);
+        request.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(request);
 
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
@@ -168,6 +169,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -202,6 +204,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -227,6 +230,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -250,6 +254,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id, EventStatus.Draft).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -267,6 +272,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         //act
@@ -283,6 +289,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
@@ -305,6 +312,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
@@ -326,6 +334,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {
@@ -349,6 +358,7 @@ public class EventControllerTests : BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var createEventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
         {

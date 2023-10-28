@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Chats.Abstractions.Repositories;
 using Hackathon.Client;
 using Hackathon.Client.Chat;
@@ -125,5 +128,14 @@ public abstract class BaseIntegrationTest
         }, _authOptions);
 
         return (response.Id, authTokenModel.Token);
+    }
+
+
+    protected async Task<Guid> GetEventImageId()
+    {
+        await using var memoryStream = new MemoryStream();
+        var file = TestFaker.GetEmptyImage(memoryStream, FileImageValidator.MinWidthEventImage, FileImageValidator.MinHeightEventImage);
+        var streamPart = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType, file.Name);
+        return await EventsApi.UploadEventImage(streamPart);
     }
 }

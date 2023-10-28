@@ -26,6 +26,7 @@ public class TeamApiTests: BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        eventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(eventRequest);
 
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
@@ -71,6 +72,7 @@ public class TeamApiTests: BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        eventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(eventRequest);
 
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>
@@ -113,6 +115,7 @@ public class TeamApiTests: BaseIntegrationTest
         //arrange
         var eventModel = TestFaker.GetEventModels(1, TestUser.Id).First();
         var eventRequest = Mapper.Map<CreateEventRequest>(eventModel);
+        eventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(eventRequest);
 
         await EventsApi.SetStatus(new SetStatusRequest<EventStatus>

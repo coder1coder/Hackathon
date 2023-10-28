@@ -24,6 +24,8 @@ public class EventChatApiTests: BaseIntegrationTest
 
         var (eventOwnerId, eventOwnerToken) = await RegisterUser();
         SetToken(eventOwnerToken);
+
+        createEventRequest.ImageId = await GetEventImageId();
         var createEventResponse = await EventsApi.Create(createEventRequest);
 
         // Публикуем событие, чтобы можно было регистрироваться участникам

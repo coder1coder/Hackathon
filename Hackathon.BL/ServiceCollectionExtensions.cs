@@ -65,7 +65,7 @@ public static class ServiceCollectionExtensions
                     emailSettings.EmailSender?.Username,
                     emailSettings.EmailSender?.Password)
             })
-            .AddSingleton(new AmazonS3Client(
+            .AddSingleton<IAmazonS3, AmazonS3Client>(_=>new AmazonS3Client(
                 s3Options.AccessKey,
                 s3Options.SecretKey,
                 new AmazonS3Config

@@ -16,18 +16,18 @@ public class FileStorageService : IFileStorageService
 {
     private const string FileWithIdNotFoundPattern = "Файл с индентификатором {0} не найден";
 
-    private readonly AmazonS3Client _s3Client;
+    private readonly IAmazonS3 _s3Client;
     private readonly ILogger<FileStorageService> _logger;
     private readonly IFileStorageRepository _fileStorageRepository;
 
-    public FileStorageService(AmazonS3Client s3Client, ILogger<FileStorageService> logger, IFileStorageRepository fileStorageRepository)
+    public FileStorageService(IAmazonS3 s3Client, ILogger<FileStorageService> logger, IFileStorageRepository fileStorageRepository)
     {
         _s3Client = s3Client;
         _logger = logger;
         _fileStorageRepository = fileStorageRepository;
     }
 
-    public async Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null, 
+    public async Task<StorageFile> UploadAsync(Stream stream, Bucket bucket, string fileName, long? ownerId = null,
         bool isDeleted = false)
     {
         try

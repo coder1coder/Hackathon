@@ -1,9 +1,7 @@
-using System;
-using System.IO;
-using BackendTools.Common.Models;
+using System.Threading;
+using Amazon.S3;
+using Amazon.S3.Model;
 using Hackathon.API;
-using Hackathon.Common.Abstraction.FileStorage;
-using Hackathon.Common.Models.FileStorage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -32,27 +30,27 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>
 
         builder.UseEnvironment("Tests");
 
-        var mock = new Mock<IFileStorageService>();
-        builder.ConfigureTestServices(x => x.AddScoped(_ => mock.Object));
-        InitMockStorageFileUpload(mock);
+        var s = builder.GetSetting("S3Options");
+
+        var s3ClientMock = new Mock<IAmazonS3>();
+        builder.ConfigureTestServices(x =>
+        {
+            x.AddSingleton(_ => s3ClientMock.Object);
+        });
+        InitMockStorageFileUpload(s3ClientMock);
 
         base.ConfigureWebHost(builder);
     }
 
-    private static void InitMockStorageFileUpload(Mock<IFileStorageService> fileStorageMock)
+    private static void InitMockStorageFileUpload(Mock<IAmazonS3> s3ClientMock)
     {
-        fileStorageMock.Setup(x =>
-            x.UploadAsync(
-                It.IsAny<Stream>(),
-                It.IsAny<Bucket>(),
-                It.IsAny<string>(),
-                It.IsAny<long?>(),
-                It.IsAny<bool>()
-            )).ReturnsAsync(new StorageFile{ Id = Guid.NewGuid(), BucketName = Bucket.Avatars.ToBucketName() }
-        );
+        s3ClientMock.Setup(x => x.ListBucketsAsync(default))
+            .ReturnsAsync(new ListBucketsResponse());
 
-        fileStorageMock.Setup(x =>
-                x.DeleteAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(Result.Success);
+        s3ClientMock.Setup(x => x.PutBucketAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new PutBucketResponse());
+
+        s3ClientMock.Setup(x => x.PutObjectAsync(It.IsAny<PutObjectRequest>(), default))
+            .ReturnsAsync(new PutObjectResponse());
     }
 }
