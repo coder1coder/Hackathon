@@ -48,14 +48,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
-    - name: Update database
-      run: |
-        dotnet tool install --global dotnet-ef
-        dotnet tool restore
-        dotnet ef database update -p Hackathon.DAL -s Hackathon.API
-      env:
-        ASPNETCORE_ENVIRONMENT: Tests
-    - name: Test
+    - name: Tests
       run: dotnet test --no-build --verbosity normal
       env:
         ASPNETCORE_ENVIRONMENT: Tests
