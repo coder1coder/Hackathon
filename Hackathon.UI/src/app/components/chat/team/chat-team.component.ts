@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Injectable, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {BaseCollection} from "../../../models/BaseCollection";
@@ -19,21 +19,22 @@ import { ITeamChatNewMessageIntegrationEvent } from 'src/app/models/chat/integra
 })
 
 @Injectable()
-export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit, AfterViewInit {
+export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
 
-  private _canView: boolean;
   public team: Team | undefined;
   public chatHeaderText = 'Чат команды';
 
   @Input("teamId")
-  set teamId(value) { this._teamId.next(value); };
-  get teamId() { return this._teamId.getValue(); }
-  private _teamId = new BehaviorSubject<number>(0);
+  set teamId(value) { this.entityId.next(value); };
+  get teamId() { return this.entityId.getValue(); }
+  entityId = new BehaviorSubject<number>(0);
+
+  public messages:TeamChatMessage[] = [];
 
   @Input()
   showMembers: boolean = false;
 
-  form:FormGroup;
+  @ViewChild('scrollMe') chatBody: ElementRef | undefined;
 
   constructor(
     authService: AuthService,
@@ -45,40 +46,21 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
     signalRService.onTeamChatNewMessage = (x=> this.handleNewMessageEvent(x));
   }
 
-  ngOnInit(): void {
-
-    this.initForm();
-
-    this._teamId.subscribe(value=>{
-
-      if (value < 1)
-        return;
-
-      this.fetchTeam();
-      this.fetchMessages();
-    })
-  }
-
-  fetchTeam(){
+  fetchEntity(){
     this.teamService.getById(this.teamId)
     .subscribe(x=>{
       this.team = x;
     })
   }
 
-  get canView(): boolean {
-    return this._canView;
-  }
-
   handleNewMessageEvent(x:ITeamChatNewMessageIntegrationEvent){
 
-    if (this._canView && this.teamId > 0 && this.teamId == x.teamId)
+    if (super.canView && this.teamId > 0 && this.teamId == x.teamId)
     {
       this.teamChatClient.getAsync(x.messageId)
         .subscribe({
           next: (r: TeamChatMessage) =>  {
             this.messages.push(r);
-            this.scrollChatToLastMessage();
           },
           error: () => {}
         });
@@ -86,27 +68,16 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   }
 
   fetchMessages(): void {
-    if (this._canView && this.teamId > 0)
+
+    if (this.canView && this.teamId > 0)
     {
       this.teamChatClient.getListAsync(this.teamId)
         .subscribe({
           next: (r: BaseCollection<TeamChatMessage>) =>  {
             this.messages = r.items
-            this.scrollChatToLastMessage();
           },
           error: () => {}
         });
-    }
-  }
-
-  updateChatView(){
-    this._canView = false;
-    if (this.authService.isLoggedIn())
-    {
-      this.currentUserId = this.authService.getUserId() ?? 0;
-      this._canView = this.teamId != null;
-
-      this.fetchMessages();
     }
   }
 
@@ -137,18 +108,5 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
       .subscribe(_ => {
         this.initForm();
       })
-  }
-
-  private initForm():void{
-    this.form = new FormGroup({
-      message: new FormControl('',[
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(200)
-      ]),
-      notify: new FormControl(false, [
-        Validators.required
-      ]),
-    })
   }
 }

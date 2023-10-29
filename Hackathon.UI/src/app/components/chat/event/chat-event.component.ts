@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Injectable, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {BaseCollection} from "../../../models/BaseCollection";
@@ -20,23 +20,22 @@ import { IEventChatNewMessageIntegrationEvent } from 'src/app/models/chat/integr
 })
 
 @Injectable()
-export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit, AfterViewInit {
-
-  private _canView: boolean;
+export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
 
   public event: Event | undefined;
 
   public chatHeaderText = 'Чат мероприятия';
 
+  @ViewChild('scrollMe') chatBody: ElementRef | undefined;
+
   @Input("eventId")
-  set eventId(value) { this._eventId.next(value); };
-  get eventId() { return this._eventId.getValue(); }
-  private _eventId = new BehaviorSubject<number>(0);
+  set eventId(value) { this.entityId.next(value); };
+  get eventId() { return this.entityId.getValue(); }
+  entityId = new BehaviorSubject<number>(0);
+  public messages:EventChatMessage[] = [];
 
   @Input()
   showMembers: boolean = false;
-
-  form:FormGroup;
 
   constructor(
     authService: AuthService,
@@ -49,23 +48,9 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
       this.handleNewMessageEvent(x));
   }
 
-  ngOnInit(): void {
-
-    this.initForm();
-
-    this._eventId.subscribe(value=>{
-
-      if (value < 1)
-        return;
-
-      this.fetchEvent();
-      this.fetchMessages();
-    })
-  }
-
   handleNewMessageEvent(x:IEventChatNewMessageIntegrationEvent){
 
-    if (this._canView && this.eventId > 0 && this.eventId == x.eventId)
+    if (this.canView && this.eventId > 0 && this.eventId == x.eventId)
     {
       this.eventChatClient.getAsync(x.messageId)
         .subscribe({
@@ -78,19 +63,16 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
     }
   }
 
-  fetchEvent(){
+  fetchEntity(){
     this.eventClient.getById(this.eventId)
     .subscribe(x=>{
       this.event = x;
     })
   }
 
-  get canView(): boolean {
-    return this._canView;
-  }
-
   fetchMessages(): void {
-    if (this._canView && this.eventId > 0)
+
+    if (this.canView && this.eventId > 0)
     {
       this.eventChatClient.getListAsync(this.eventId)
         .subscribe({
@@ -100,17 +82,6 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
           },
           error: () => {}
         });
-    }
-  }
-
-  updateChatView(){
-    this._canView = false;
-    if (this.authService.isLoggedIn())
-    {
-      this.currentUserId = this.authService.getUserId() ?? 0;
-      this._canView = this.eventId != null;
-
-      this.fetchMessages();
     }
   }
 
@@ -144,18 +115,5 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
       .subscribe(_ => {
         this.initForm();
       })
-  }
-
-  private initForm():void{
-    this.form = new FormGroup({
-      message: new FormControl('',[
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(200)
-      ]),
-      notify: new FormControl(false, [
-        Validators.required
-      ]),
-    })
   }
 }
