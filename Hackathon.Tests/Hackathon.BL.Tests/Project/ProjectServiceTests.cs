@@ -1,3 +1,4 @@
+using System;
 using BackendTools.Common.Models;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -56,19 +57,37 @@ public class ProjectServiceTests: BaseUnitTest
 
     [Theory]
     [MemberData(
-        nameof(ProjectServiceTestDataCollections.UpdateSuiteBranchLinks),
+        nameof(ProjectServiceTestDataCollections.ValidateSuiteValidBranchLinks),
         MemberType = typeof(ProjectServiceTestDataCollections))]
-    public async Task ValidateBranchLinks_SuiteBranchLinks_ReturnTrue(
-        UpdateProjectFromGitBranchParameters branchParameter)
+    public async Task ValidateBranchLinks_SuiteValidBranchLinks_ReturnTrue(
+        UpdateProjectFromGitBranchParameters branchParameters)
     {
         // arrange
         IValidator<UpdateProjectFromGitBranchParameters> validator =
             ProjectServiceHelpers.CreateValidator_UpdateProjectFromGitBranchParameters();
 
         // act
-        ValidationResult result = await validator.ValidateAsync(branchParameter);
+        ValidationResult result = await validator.ValidateAsync(branchParameters);
 
         // assert
         Assert.True(result.IsValid);
+    }
+
+    [Theory]
+    [MemberData(
+        nameof(ProjectServiceTestDataCollections.ValidateSuiteUnvalidBranchLinks),
+        MemberType = typeof(ProjectServiceTestDataCollections))]
+    public async Task ValidateBranchLinks_SuiteUnvalidBranchLinks_ReturnFalse(
+        UpdateProjectFromGitBranchParameters branchParameters)
+    {
+        // arrange
+        IValidator<UpdateProjectFromGitBranchParameters> validator =
+            ProjectServiceHelpers.CreateValidator_UpdateProjectFromGitBranchParameters();
+        
+        // act
+        ValidationResult result = await validator.ValidateAsync(branchParameters);
+
+        // assert
+        Assert.False(result.IsValid);
     }
 }
