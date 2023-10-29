@@ -1,4 +1,4 @@
-﻿using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using System;
 using System.Collections.Generic;
