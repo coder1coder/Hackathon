@@ -16,7 +16,7 @@ export class ErrorProcessorService {
     if (errorContext?.error) {
       const problemDetails: IProblemDetails = <IProblemDetails>errorContext.error;
       errorMessage = problemDetails?.errors ? Object.values(problemDetails.errors)[0] :
-        (problemDetails?.detail || errorContext.title || problemDetails["validation-error"] || this.UNKNOWN_ERROR);
+        (problemDetails?.detail || problemDetails.title || problemDetails["validation-error"] || this.UNKNOWN_ERROR);
     }
 
     this.snackService.open(errorMessage);

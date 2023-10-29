@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
 import { BehaviorSubject } from 'rxjs';
 import { SnackService } from "./snack.service";
-import { Actions } from "../common/Actions";
+import { ActionsEnum } from "../common/emuns/actions.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class GoogleSignInService {
       })
     } catch (e) {
       this.googleServiceEnabled$.next(false);
-      this.snackService.open('Google сервис не доступен в оффлайн режиме', Actions.OK, 4000);
+      this.snackService.open('Google сервис не доступен в оффлайн режиме', ActionsEnum.OK, 4000);
     }
   }
 

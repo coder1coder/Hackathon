@@ -1,21 +1,15 @@
-import {Injectable} from '@angular/core';
-import {environment} from "../../environments/environment";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Actions} from "../common/Actions";
+import { Injectable } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from "@angular/material/snack-bar";
+import { ActionsEnum } from "../common/emuns/actions.enum";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SnackService {
+  constructor(private snackBar:MatSnackBar) {}
 
-  api = environment.api;
-  storage = sessionStorage;
-
-  constructor(private snackBar:MatSnackBar) {
-  }
-
-  open(text:string, actions:Actions = Actions.OK, duration:number = 1500){
+  public open(text:string, actions:ActionsEnum = ActionsEnum.OK, duration:number = 1500): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(text, actions, {
       duration: duration
     });

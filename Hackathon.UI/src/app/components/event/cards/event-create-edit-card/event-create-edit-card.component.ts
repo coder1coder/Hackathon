@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { ICreateEvent } from "../../../../models/Event/ICreateEvent";
 import { IUpdateEvent } from "../../../../models/Event/IUpdateEvent";
@@ -28,7 +28,7 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { IEventTaskItem } from "../../../../models/Event/IEventTaskItem";
 import { UploadFileErrorMessages } from "../../../../common/error-messages/upload-file-error-messages";
 import { ErrorProcessorService } from "src/app/services/error-processor.service";
-import { DATE_FORMAT_YYYY_MM_DD } from "../../../../common/date-formats";
+import { DATE_FORMAT_DD_MM_YYYY, DATE_FORMAT_YYYY_MM_DD } from "../../../../common/consts/date-formats";
 import { checkValue } from "../../../../common/functions/check-value";
 import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
 import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
@@ -90,15 +90,19 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   }
 
   public get isValidImage(): boolean {
-    return !this.eventImage && (this.form.dirty || this.editMode);
+    return !this.getFormControl('imageId')?.value && (this.form.dirty || this.editMode);
   }
 
   public getFormControl(controlName: string): FormControl {
     return this.form.get(controlName) as FormControl;
   }
 
-  public getErrorLengthMessage(control: FormControl, length: number) {
+  public getErrorLengthMessage(control: FormControl, length: number): string {
     return control.hasError('minlength') ? `Минимальная длина ${length} символов` : '';
+  }
+
+  public getCustomErrorMessage(control: FormControl): string {
+    return control.hasError('customError') ? control.getError('customError') : '';
   }
 
   public saveForm(): () => void {
@@ -133,7 +137,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           const eventId = (this.editMode) ? this.eventId : res.id;
           const afterOperationMessage = (this.editMode) ? EventErrorMessages.EventUpdated : EventErrorMessages.EventAdded;
           this.snackService.open(afterOperationMessage);
-          this.eventStatusTable.renderRows();
+          if (this.eventStatusTable) {
+            this.eventStatusTable.renderRows();
+          }
           if (eventId) {
             this.router.Events.View(eventId);
             this.eventService.reloadEvent.emit(true);
@@ -257,8 +263,8 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
   }
 
   public clearEventImage(): void {
+    this.form.controls['fileImage'].reset();
     this.form.controls['imageId'].reset();
-    this.form.controls['image'].reset();
     this.eventImage = null;
   }
 
@@ -290,6 +296,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       start: moment(this.event.start).local().format(DATE_FORMAT_YYYY_MM_DD),
       agreementRules: checkValue(this.event?.agreement?.rules),
       agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation,
+      imageId: this.event.imageId,
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
@@ -307,6 +314,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
           error: (err: Error) =>  this.errorProcessor.Process(err, UploadFileErrorMessages.FileUploadError),
         });
     }
+
+    this.form.updateValueAndValidity();
+    this.form.controls['start'].markAsTouched();
   }
 
   private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
@@ -324,7 +334,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     this.form = this.fb.group({
       name: [null],
       description: [null],
-      start: [EventCreateEditCardComponent.getEventStartDefault()],
+      start: [EventCreateEditCardComponent.getEventStartDefault(), [this.startDateValidator().bind(this)]],
       memberRegistrationMinutes: [10],
       teamPresentationMinutes: [10],
       maxEventMembers: [50],
@@ -332,7 +342,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       isCreateTeamsAutomatically: [true],
       award: ['0'],
       imageId: [null],
-      image: [null],
+      fileImage: [null],
       agreementRules: [null],
       agreementRequiresConfirmation: [false],
     });
@@ -425,5 +435,24 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       imageId: checkValue(this.form.get('imageId')?.value),
       agreement: checkValue(this.event?.agreement),
     };
+  }
+
+  private get currentDate(): moment.Moment {
+    return moment(new Date(), DATE_FORMAT_YYYY_MM_DD);
+  }
+
+  private startDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control?.value) {
+        return null;
+      }
+
+      const minDate = this.currentDate;
+      if (moment(control.value).isBefore(minDate)) {
+        return { customError: `Дата начала мероприятия должна быть позже ${minDate.format(DATE_FORMAT_DD_MM_YYYY)}` };
+      }
+
+      return null;
+    }
   }
 }

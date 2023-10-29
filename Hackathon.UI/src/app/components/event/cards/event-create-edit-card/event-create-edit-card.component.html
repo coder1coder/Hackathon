@@ -81,6 +81,7 @@
                 required
                 min="{{minDate}}"
               >
+              <mat-error *ngIf="!getFormControl('start').valid">{{getCustomErrorMessage(getFormControl('start'))}}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -127,7 +128,7 @@
               </div>
 
               <div class="event-image__selector">
-                <input type="file" formControlName="image" #selectedFile (change)="selectEventImage($event)">
+                <input type="file" formControlName="fileImage" #selectedFile (change)="selectEventImage($event)">
                 <button mat-button class="btn-with-icon" (click)="selectedFile.click()">
                   <mat-icon color="primary">photo_camera</mat-icon>
                   Выбрать изображение

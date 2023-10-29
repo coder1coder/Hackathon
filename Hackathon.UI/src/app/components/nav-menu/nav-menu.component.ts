@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuItem } from "../../common/MenuItem";
+import { MenuItem } from "../../common/menu-item";
 import { UserRole } from 'src/app/models/User/UserRole';
 import { CurrentUserStore } from "../../shared/stores/current-user.store";
 import { fromMobx } from "../../common/functions/from-mobx.function";

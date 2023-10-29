@@ -9,7 +9,7 @@ import {
 import { filter, mergeMap, takeUntil } from "rxjs";
 import { GetListParameters } from "../../../models/GetListParameters";
 import { BaseCollection } from "../../../models/BaseCollection";
-import { TABLE_DATE_FORMAT } from "../../../common/date-formats";
+import { TABLE_DATE_FORMAT } from "../../../common/consts/date-formats";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
 import { CustomDialog, ICustomDialogData } from "../../custom/custom-dialog/custom-dialog.component";
 import { MatDialog } from "@angular/material/dialog";

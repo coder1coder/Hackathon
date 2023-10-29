@@ -3,9 +3,9 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Injectable()
 export class Pagination extends MatPaginatorIntl {
-  override itemsPerPageLabel = 'На странице';
+  public override itemsPerPageLabel = 'На странице';
 
-  override getRangeLabel = function (page: number, pageSize: number, length: number) {
+  public override getRangeLabel = function (page: number, pageSize: number, length: number) {
     if (length === 0 || pageSize === 0) {
       return '0 из ' + length;
     }
@@ -16,5 +16,4 @@ export class Pagination extends MatPaginatorIntl {
       startIndex + pageSize;
     return startIndex + 1 + ' - ' + endIndex + ' из ' + length;
   };
-
 }

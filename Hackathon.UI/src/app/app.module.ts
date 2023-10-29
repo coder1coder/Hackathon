@@ -18,7 +18,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorIntl, MatPaginatorModule } from "@angular/material/paginator";
-import { Pagination } from "./common/Pagination";
+import { Pagination } from "./common/pagination";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ConnectionRefusedInterceptor } from "./interceptors/connectionRefused.interceptor";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
