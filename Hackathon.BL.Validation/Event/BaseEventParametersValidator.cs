@@ -29,21 +29,27 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 .GreaterThan(0)
                 .WithMessage("Минимальное количество участников в команде должно быть больше {ComparisonValue}");
 
-            When(x => x.ChangeEventStatusMessages is {Count: > 0}, () =>
-            {
-                RuleForEach(x => x.ChangeEventStatusMessages).ChildRules(statusMessages =>
-                {
-                    statusMessages
-                        .RuleFor(x => x.Message)
-                        .NotEmpty()
-                        .WithMessage("Указаны не существующие статусы события");
+            RuleFor(x => x.ChangeEventStatusMessages)
+                .Empty()
+                .WithMessage("На текущий момент, список сообщений высылаемых командам при смене статусов не поддерживается");
 
-                    statusMessages
-                        .RuleFor(x => x.Status)
-                        .IsInEnum()
-                        .WithMessage("Нельзя указывать пустые сообщения для рассылки");
-                });
-            });
+            #region Противоречит условию выше
+            //When(x => x.ChangeEventStatusMessages is {Count: > 0}, () =>
+            //{
+            //    RuleForEach(x => x.ChangeEventStatusMessages).ChildRules(statusMessages =>
+            //    {
+            //        statusMessages
+            //            .RuleFor(x => x.Message)
+            //            .NotEmpty()
+            //            .WithMessage("Указаны не существующие статусы события");
+
+            //        statusMessages
+            //            .RuleFor(x => x.Status)
+            //            .IsInEnum()
+            //            .WithMessage("Нельзя указывать пустые сообщения для рассылки");
+            //    });
+            //});
+            #endregion
 
             RuleFor(x => x.Stages).NotEmpty().WithMessage("Необходимо указать хотя бы один этап события");
             RuleFor(x => x.Stages)

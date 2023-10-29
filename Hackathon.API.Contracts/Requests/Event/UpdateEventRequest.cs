@@ -47,6 +47,11 @@ public class UpdateEventRequest
     public bool IsCreateTeamsAutomatically { get; set; }
 
     /// <summary>
+    /// Список сообщений высылаемых командам при смене статусов
+    /// </summary>
+    public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
+
+    /// <summary>
     /// Этапы события
     /// </summary>
     public ICollection<EventStageModel> Stages { get; set; }

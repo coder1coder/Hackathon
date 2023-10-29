@@ -39,7 +39,7 @@ public abstract class BaseEventParameters
     /// <summary>
     /// Список сообщений высылаемых командам при смене статусов
     /// </summary>
-    public IList<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; } = new List<ChangeEventStatusMessage>();
+    public IList<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
 
     /// <summary>
     /// Этапы события
