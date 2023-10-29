@@ -31,7 +31,6 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   public chatContextEnum = ChatContextEnum;
   public selectedPageIndex: number = PagesEnum.Communication;
   public project: IProject | undefined;
-  public sideBarWidthPx: number = 200;
   public currentChatId: number = -1;
 
   private _selectedChatIndex = new BehaviorSubject<number>(0);
