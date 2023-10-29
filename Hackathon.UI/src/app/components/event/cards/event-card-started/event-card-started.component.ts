@@ -132,10 +132,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
 
     this.projectApiClient.getAsync(this.event.id, team.id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res: IProject) => this.project = res,
-        error: (errorContext) => this.errorProcessor.Process(errorContext),
-      });
+      .subscribe((res: IProject) => this.project = res);
   }
 }
 
