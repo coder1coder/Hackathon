@@ -1,4 +1,4 @@
-﻿using Hackathon.Common.Models.Event;
+using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using System;
 using System.Collections.Generic;
@@ -45,11 +45,6 @@ public class UpdateEventRequest
     /// Создавать команды автоматически
     /// </summary>
     public bool IsCreateTeamsAutomatically { get; set; }
-
-    /// <summary>
-    /// Список сообщений высылаемых командам при смене статусов
-    /// </summary>
-    public List<ChangeEventStatusMessage> ChangeEventStatusMessages { get; set; }
 
     /// <summary>
     /// Этапы события
