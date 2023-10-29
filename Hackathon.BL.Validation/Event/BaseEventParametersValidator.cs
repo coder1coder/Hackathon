@@ -33,7 +33,7 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
                 .Empty()
                 .WithMessage("На текущий момент, список сообщений высылаемых командам при смене статусов не поддерживается");
 
-            #region Противоречит условию выше
+            #region На данный момент, не может быть ситуации, когда свойство ChangeEventStatusMessages не пустое
             //When(x => x.ChangeEventStatusMessages is {Count: > 0}, () =>
             //{
             //    RuleForEach(x => x.ChangeEventStatusMessages).ChildRules(statusMessages =>
