@@ -11,7 +11,7 @@ import { IEventListItem } from "../../../models/Event/IEventListItem";
 import { AuthService } from "../../../services/auth.service";
 import { PageSettingsDefaults } from "../../../models/PageSettings";
 import { DATE_FORMAT_DD_MM_YYYY } from "../../../common/consts/date-formats";
-import { of, Subject, switchMap, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 import { EventClient } from "../../../services/event/event.client";
 
 @Component({
@@ -138,11 +138,7 @@ export class EventListComponent implements OnInit {
   private loadData(params?: GetListParameters<EventFilter>): void {
     this.isLoading = true;
     this.eventHttpService.getList(params)
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((r: BaseCollection<IEventListItem>) => {
-          return of(r);
-        }))
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (r: BaseCollection<IEventListItem>) =>  {
           this.eventList = r;
