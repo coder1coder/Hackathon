@@ -1,25 +1,23 @@
 @import "../../../../../assets/styles/mixins";
 @import "../../../../../assets/styles/variables";
 
-:host{
-  //background-color: #fff;
-
+:host {
   & .mat-tab-header {
     background-color: red;
   }
 }
 
-.event-started
-{
+.event-started {
   &-wrapper {
     @include absolute0;
     @include flex-row;
   }
 
-  &-sidebar{
+  &-sidebar {
     @include flex-column;
     padding: 1em;
     box-sizing: border-box;
+    width: 200px;
 
     mat-icon {
       color: #2A6BCB;
@@ -41,7 +39,6 @@
   }
 
   &__chat {
-
     @include flex-column;
     height: 100%;
 

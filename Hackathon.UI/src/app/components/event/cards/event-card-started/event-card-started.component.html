@@ -1,11 +1,10 @@
 <layout-default
   [title]="'Событие: ' + event.name"
-  [logoMinWidth]="(sideBarWidthPx - 16).toString()"
   [containerCssClasses]="'relative'"
 >
 
   <div class="event-started-wrapper">
-    <aside class="event-started-sidebar theme-background" [style.width.px]="sideBarWidthPx">
+    <aside class="event-started-sidebar theme-background">
       <button mat-button (click)="selectedPageIndex = pagesEnum.EventTasks" *ngIf="eventService.hasTasks(event)">
         <mat-icon>task</mat-icon>
         Задачи
