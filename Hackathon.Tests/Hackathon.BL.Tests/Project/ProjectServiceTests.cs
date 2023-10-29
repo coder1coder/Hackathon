@@ -1,7 +1,10 @@
 using BackendTools.Common.Models;
 using System.Threading.Tasks;
 using FluentValidation;
+using FluentValidation.Results;
 using Hackathon.BL.Project;
+using Hackathon.BL.Tests.Common.Project.Helpers;
+using Hackathon.BL.Tests.Common.Project.TestDataCollections;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 using Moq;
@@ -49,5 +52,23 @@ public class ProjectServiceTests: BaseUnitTest
         //assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+    }
+
+    [Theory]
+    [MemberData(
+        nameof(ProjectServiceTestDataCollections.UpdateSuiteBranchLinks),
+        MemberType = typeof(ProjectServiceTestDataCollections))]
+    public async Task ValidateBranchLinks_SuiteBranchLinks_ReturnTrue(
+        UpdateProjectFromGitBranchParameters branchParameter)
+    {
+        // arrange
+        IValidator<UpdateProjectFromGitBranchParameters> validator =
+            ProjectServiceHelpers.CreateValidator_UpdateProjectFromGitBranchParameters();
+
+        // act
+        ValidationResult result = await validator.ValidateAsync(branchParameter);
+
+        // assert
+        Assert.True(result.IsValid);
     }
 }

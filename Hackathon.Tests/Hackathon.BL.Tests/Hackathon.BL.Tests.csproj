@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Hackathon.BL.Tests.Common\Hackathon.BL.Tests.Common.csproj" />
       <ProjectReference Include="..\..\Hackathon.BL\Hackathon.BL.csproj" />
       <ProjectReference Include="..\..\Hackathon.DAL\Hackathon.DAL.csproj" />
       <ProjectReference Include="..\..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
