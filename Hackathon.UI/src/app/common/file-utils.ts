@@ -1,5 +1,4 @@
-export class FileUtils
-{
+export class FileUtils {
   public static MaxFileSize: number = 2048;
   public static Divider: number = 1024;
 

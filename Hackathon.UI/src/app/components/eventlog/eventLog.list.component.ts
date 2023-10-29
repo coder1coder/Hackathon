@@ -6,7 +6,7 @@ import { IEventLogModel } from "../../models/EventLog/IEventLogModel";
 import { BaseCollection } from "../../models/BaseCollection";
 import { EventLogService } from "../../services/eventLog/eventLog.service";
 import * as moment from "moment/moment";
-import { DATE_FORMAT_DD_MM_YYYY } from "src/app/common/date-formats";
+import { DATE_FORMAT_DD_MM_YYYY } from "src/app/common/consts/date-formats";
 import { mergeMap, takeUntil } from "rxjs";
 import { fromMobx } from "../../common/functions/from-mobx.function";
 import { CurrentUserStore } from "../../shared/stores/current-user.store";

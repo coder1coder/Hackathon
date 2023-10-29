@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {environment} from "../../environments/environment";
-import {HttpClient} from "@angular/common/http";
-import {Observable, of, switchMap} from "rxjs";
-import {map} from "rxjs/operators";
-import {UploadFileErrorMessages} from "../common/error-messages/upload-file-error-messages";
-import {FileUtils} from "../common/FileUtils";
+import { Injectable } from "@angular/core";
+import { environment } from "../../environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { Observable, of, switchMap } from "rxjs";
+import { map } from "rxjs/operators";
+import { UploadFileErrorMessages } from "../common/error-messages/upload-file-error-messages";
+import { FileUtils } from "../common/file-utils";
 
 @Injectable({
   providedIn: 'root'

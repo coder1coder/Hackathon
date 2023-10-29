@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IApprovalApplication} from "../../../models/approval-application/approval-application.interface";
 import { ApprovalApplicationStatusEnum } from "../../../models/approval-application/approval-application-status.enum";
-import { TABLE_DATE_FORMAT } from "../../../common/date-formats";
+import { TABLE_DATE_FORMAT } from "../../../common/consts/date-formats";
 import { CustomDialog, ICustomDialogData } from "../../custom/custom-dialog/custom-dialog.component";
 import { filter, mergeMap, Subject, takeUntil} from "rxjs";
 import { ApplicationApprovalErrorMessages } from "../../../common/error-messages/application-approval-error-messages";

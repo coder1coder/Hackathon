@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomErrorStateMatcher} from "../../../common/CustomErrorStateMatcher";
+import {CustomErrorStateMatcher} from "../../../common/functions/custom-error-state-matcher";
 import {IProject} from "../../../models/Project/IProject";
 
 @Component({

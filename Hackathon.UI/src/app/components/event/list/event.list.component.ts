@@ -1,18 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {BaseCollection} from "../../../models/BaseCollection";
-import {EventStatus, EventStatusTranslator} from "../../../models/Event/EventStatus";
-import {FormBuilder} from "@angular/forms";
-import {EventFilter} from "../../../models/Event/EventFilter";
-import {GetListParameters} from "../../../models/GetListParameters";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BaseCollection } from "../../../models/BaseCollection";
+import { EventStatus, EventStatusTranslator } from "../../../models/Event/EventStatus";
+import { FormBuilder } from "@angular/forms";
+import { EventFilter } from "../../../models/Event/EventFilter";
+import { GetListParameters } from "../../../models/GetListParameters";
 import * as moment from "moment/moment";
-import {RouterService} from "../../../services/router.service";
-import {MatSelect} from "@angular/material/select";
-import {IEventListItem} from "../../../models/Event/IEventListItem";
-import {AuthService} from "../../../services/auth.service";
-import {PageSettingsDefaults} from "../../../models/PageSettings";
-import {DATE_FORMAT_DD_MM_YYYY} from "../../../common/date-formats";
-import {of, Subject, switchMap, takeUntil} from "rxjs";
-import {EventClient} from "../../../services/event/event.client";
+import { RouterService } from "../../../services/router.service";
+import { MatSelect } from "@angular/material/select";
+import { IEventListItem } from "../../../models/Event/IEventListItem";
+import { AuthService } from "../../../services/auth.service";
+import { PageSettingsDefaults } from "../../../models/PageSettings";
+import { DATE_FORMAT_DD_MM_YYYY } from "../../../common/consts/date-formats";
+import { of, Subject, switchMap, takeUntil } from "rxjs";
+import { EventClient } from "../../../services/event/event.client";
 
 @Component({
   selector: 'event-list',
@@ -131,7 +131,7 @@ export class EventListComponent implements OnInit {
     if (this.filterForm.value.iAmOwner) {
       const userId = this.authService.getUserId();
       if (userId)
-        this.params.Filter.ownerIds = [userId]
+        this.params.Filter.ownerIds = [userId];
     }
   }
 

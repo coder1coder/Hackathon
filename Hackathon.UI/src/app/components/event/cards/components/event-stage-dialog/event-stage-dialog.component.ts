@@ -9,8 +9,8 @@ import {
   Validators
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {EventStage} from "../../../../../models/Event/EventStage";
-import {CustomErrorStateMatcher} from "../../../../../common/CustomErrorStateMatcher";
+import { EventStage } from "../../../../../models/Event/EventStage";
+import { CustomErrorStateMatcher } from "../../../../../common/functions/custom-error-state-matcher";
 
 @Component({
   selector: 'event-stage-dialog',

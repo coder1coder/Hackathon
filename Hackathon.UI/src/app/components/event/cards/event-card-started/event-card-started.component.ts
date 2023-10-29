@@ -1,163 +1,141 @@
-import {Component, Injectable, OnInit} from "@angular/core";
-import {BehaviorSubject, Observable} from "rxjs";
-import {IProject} from "../../../../models/Project/IProject";
-import {EventCardBaseComponent} from "../components/event-card-base.component";
-import {AuthService} from "../../../../services/auth.service";
-import {Event} from "../../../../models/Event/Event";
-import {MatDialog} from "@angular/material/dialog";
-import {ProjectClient} from "../../../../clients/project/project.client";
-import {ProjectDialog} from "../../../custom/project-dialog/project-dialog.component";
-import {SnackService} from "../../../../services/snack.service";
-import {ErrorProcessorService} from "../../../../services/error-processor.service";
-import {ProjectGitDialog} from "../../../custom/project-git-dialog/project-git-dialog.component";
-import {IProjectUpdateFromGitBranch} from "../../../../models/Project/IProjectUpdateFromGitBranch";
+import { Component, Injectable, OnInit } from "@angular/core";
+import { BehaviorSubject, EMPTY, switchMap, takeUntil } from "rxjs";
+import { IProject } from "../../../../models/Project/IProject";
+import { EventCardBaseComponent } from "../components/event-card-base.component";
+import { AuthService } from "../../../../services/auth.service";
+import { Event } from "../../../../models/Event/Event";
+import { MatDialog } from "@angular/material/dialog";
+import { ProjectClient } from "../../../../clients/project/project.client";
+import { ProjectDialog } from "../../../custom/project-dialog/project-dialog.component";
+import { SnackService } from "../../../../services/snack.service";
+import { ErrorProcessorService } from "../../../../services/error-processor.service";
+import { ProjectGitDialog } from "../../../custom/project-git-dialog/project-git-dialog.component";
+import { IProjectUpdateFromGitBranch } from "../../../../models/Project/IProjectUpdateFromGitBranch";
+import { PagesEnum } from "../../../../models/Event/pages.enum";
+import { ChatContextEnum } from "../../../../models/Event/chat-context.enum";
 
 @Component({
   selector: `event-card-started`,
   styleUrls: [`event-card-started.component.scss`],
-  templateUrl: `event-card-started.component.html`
+  templateUrl: `event-card-started.component.html`,
 })
 
 @Injectable()
-export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit
-{
-  Pages = Pages;
-  Event = Event;
-  ChatContext = ChatContext;
+export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
 
   set selectedChatIndex(value) { this._selectedChatIndex.next(value); };
   get selectedChatIndex() { return this._selectedChatIndex.getValue(); }
-  private _selectedChatIndex = new BehaviorSubject<number>(0);
 
-  currentUserId: number | undefined;
-  selectedPageIndex: number = Pages.Communication;
-  project: IProject | undefined;
-  sideBarWidthPx: number = 200;
-  currentChatId: number = -1;
+  public pagesEnum = PagesEnum;
+  public eventService = Event;
+  public chatContextEnum = ChatContextEnum;
+  public selectedPageIndex: number = PagesEnum.Communication;
+  public project: IProject | undefined;
+  public sideBarWidthPx: number = 200;
+  public currentChatId: number = -1;
+
+  private _selectedChatIndex = new BehaviorSubject<number>(0);
+  private currentUserId: number | undefined;
 
   constructor(
     private snackService: SnackService,
     private errorProcessor: ErrorProcessorService,
     private authService:AuthService,
     private projectApiClient: ProjectClient,
-    private dialogService: MatDialog) {
+    private dialogService: MatDialog,
+  ) {
     super();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.currentUserId = this.authService.getUserId();
     this.fetchProject();
-    this._selectedChatIndex.subscribe((value:number) =>{
-      switch (value){
-        case ChatContext.Event:
+    this._selectedChatIndex
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        switch (value){
+          case ChatContextEnum.Event:
+            this.currentChatId = this.event.id;
+            break;
+          case ChatContextEnum.Team:
+            const team = this.event.teams.find(x=> x.members.find(m=>m.id == this.currentUserId));
+            if (team)
+              this.currentChatId = team.id;
+            break;
+        }
+    });
+  }
 
-          this.currentChatId = this.event.id;
-
-          break;
-
-        case ChatContext.Team:
-
-          let team = this.event.teams.find(x=> x.members.find(m=>m.id == this.currentUserId));
-
-          if (team)
-            this.currentChatId = team.id;
-
-          break;
-      }
-    })
-    }
-
-  showProjectDialog() {
-
+  public showProjectDialog(): void {
     this.dialogService.open(ProjectDialog, {
       data: {
         project: this.project
       }
     })
       .afterClosed()
-      .subscribe((project: IProject) => {
-
-        if(project?.name !== undefined){
-
-          let action: Observable<object>;
-
-          if (project.eventId == 0 || project.teamId == 0)
-          {
-            project.eventId = this.event?.id ?? 0;
-            project.teamId = Event.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
-
-            action = this.projectApiClient.createAsync(project);
-          } else {
-            action = this.projectApiClient.updateAsync(project);
-          }
-
-          action.subscribe({
-            next:(_)=>{
-              this.fetchProject()
-            },
-            error: errorContext => {
-              this.errorProcessor.Process(errorContext)
+      .pipe(
+        switchMap((project: IProject) => {
+          if (project?.name) {
+            if (project.eventId == 0 || project.teamId == 0) {
+              project.eventId = this.event?.id ?? 0;
+              project.teamId = this.eventService.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
+              return this.projectApiClient.createAsync(project);
+            } else {
+              return this.projectApiClient.updateAsync(project);
             }
-          });
-        }
+          } else {
+            return EMPTY;
+          }
+        }),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => this.fetchProject(),
+        error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 
-  public showUpdateProjectFromBitBranchDialog(){
-
-    let dialogData = {
+  public showUpdateProjectFromBitBranchDialog(): void {
+    const dialogData: IProjectUpdateFromGitBranch = {
       eventId: this.project?.eventId,
       teamId: this.project?.teamId,
-      linkToGitBranch: this.project?.linkToGitBranch
-    } as IProjectUpdateFromGitBranch;
+      linkToGitBranch: this.project?.linkToGitBranch,
+    };
 
     this.dialogService.open(ProjectGitDialog, {
       data: dialogData
     })
       .afterClosed()
-      .subscribe((data: IProjectUpdateFromGitBranch) => {
-        this.projectApiClient
-          .updateProjectFromGitBranch(data)
-          .subscribe({
-            next: (_) =>  {
-              this.fetchProject()
-            },
-            error: (errorContext) => this.errorProcessor.Process(errorContext)
-          });
+      .pipe(
+        switchMap((data: IProjectUpdateFromGitBranch) =>  this.projectApiClient.updateProjectFromGitBranch(data)),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => this.fetchProject(),
+        error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 
-  private fetchProject() {
+  public removeProject(): void {
+    this.projectApiClient.remove(this.project?.eventId ?? 0, this.project?.teamId ?? 0)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.fetchProject());
+  }
 
-    this.project = undefined;
-
+  private fetchProject(): void {
+    this.project = null;
     if (!this.currentUserId || !this.event) return;
 
-    let team = Event.getMemberTeam(this.event, this.currentUserId);
+    const team = this.eventService.getMemberTeam(this.event, this.currentUserId);
 
     if (!team) return;
 
     this.projectApiClient.getAsync(this.event.id, team.id)
-      .subscribe((r: IProject) => {
-        this.project = r
-      });
-  }
-
-  removeProject() {
-    this.projectApiClient.remove(this.project?.eventId ?? 0, this.project?.teamId ?? 0)
-      .subscribe(_ => {
-        this.fetchProject()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: IProject) => this.project = res,
+        error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 }
 
-enum Pages {
-  EventTasks = 0,
-  Communication = 1,
-  Project = 2
-}
-
-enum ChatContext {
-  Event = 0,
-  Team = 1
-}
