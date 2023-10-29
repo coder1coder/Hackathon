@@ -127,7 +127,7 @@
               </div>
 
               <div class="event-image__selector">
-                <input type="file" #selectedFile (change)="selectEventImage($event)">
+                <input type="file" formControlName="image" #selectedFile (change)="selectEventImage($event)">
                 <button mat-button class="btn-with-icon" (click)="selectedFile.click()">
                   <mat-icon color="primary">photo_camera</mat-icon>
                   Выбрать изображение

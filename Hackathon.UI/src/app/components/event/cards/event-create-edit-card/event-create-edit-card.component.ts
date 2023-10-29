@@ -9,7 +9,7 @@ import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { EventNewStatusDialogComponent } from "../components/status/event-new-status-dialog.component";
 import { SnackService } from "../../../../services/snack.service";
-import { delay, Observable, takeUntil } from "rxjs";
+import { delay, Observable, switchMap, takeUntil } from "rxjs";
 import * as moment from "moment/moment";
 import { AuthService } from "../../../../services/auth.service";
 import { RouterService } from "../../../../services/router.service";
@@ -258,6 +258,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
   public clearEventImage(): void {
     this.form.controls['imageId'].reset();
+    this.form.controls['image'].reset();
     this.eventImage = null;
   }
 
@@ -267,15 +268,16 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
 
     if (files?.length) {
       this.eventHttpService.setEventImage(files)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (imageId: string) => {
+        .pipe(
+          switchMap((imageId: string) => {
             this.form.controls['imageId'].setValue(imageId);
-            this.loadImage(imageId);
-          },
-          error: (err: Error) => {
-            this.errorProcessor.Process(err);
-          }
+            return this.fileStorageService.getById(imageId);
+          }),
+          takeUntil(this.destroy$),
+        )
+        .subscribe({
+          next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
+          error: (err: Error) =>  this.errorProcessor.Process(err, UploadFileErrorMessages.FileUploadError),
         });
     }
   }
@@ -298,16 +300,13 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     }
 
     if (this.event.imageId) {
-      this.loadImage(this.event.imageId);
+      this.fileStorageService.getById(this.event.imageId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
+          error: (err: Error) =>  this.errorProcessor.Process(err, UploadFileErrorMessages.FileUploadError),
+        });
     }
-  }
-
-  private loadImage(fileId: string): void {
-    this.fileStorageService.getById(fileId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (safeUrl: SafeUrl) => this.eventImage = safeUrl,
-        error: _ => this.snackService.open(UploadFileErrorMessages.FileUploadError)});
   }
 
   private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
@@ -333,6 +332,7 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       isCreateTeamsAutomatically: [true],
       award: ['0'],
       imageId: [null],
+      image: [null],
       agreementRules: [null],
       agreementRequiresConfirmation: [false],
     });
