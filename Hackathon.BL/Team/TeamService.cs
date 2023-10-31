@@ -163,13 +163,9 @@ public class TeamService : ITeamService
             return Result.NotValid(TeamMessages.UserIsNotOnTeam);
 
         if (team.HasOwnerWithId(teamMemberModel.MemberId))
-        {
             await RemoveOwnerAsync(team);
-        }
         else
-        {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
-        }
 
         return Result.Success;
     }

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities;
 using Mapster;
@@ -30,10 +30,13 @@ public class TeamMapping: IRegister
 
                 foreach (var teamMember in d.Members)
                 {
-                    teamMember.DateTimeAdd =
-                        s.Members.FirstOrDefault(x => x.MemberId == teamMember.Id)?.DateTimeAdd ?? default;
+                    var memberEntity = s.Members.FirstOrDefault(x => x.MemberId == teamMember.Id);
+
+                    teamMember.DateTimeAdd = memberEntity?.DateTimeAdd ?? default;
+                    teamMember.TeamRole = memberEntity?.Role ?? TeamRole.Participant;
                 }
             });
+
 
         config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
             .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null)

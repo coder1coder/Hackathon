@@ -40,7 +40,8 @@ public class PublicTeamService: IPublicTeamService
         await _teamRepository.AddMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
-            MemberId = authorizedUserId
+            MemberId = authorizedUserId,
+            Role = TeamRole.Participant
         });
 
         return Result.Success;

@@ -9,4 +9,9 @@ public class TeamMember: UserShortModel
     /// Дата добавления пользователя в команду
     /// </summary>
     public DateTime DateTimeAdd { get; set; }
+
+    /// <summary>
+    /// Роль участника команды
+    /// </summary>
+    public TeamRole TeamRole { get; set; }
 }

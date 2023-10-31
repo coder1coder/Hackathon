@@ -1,3 +1,4 @@
+using Hackathon.Common.Models.Team;
 using Hackathon.DAL.Entities.User;
 using System;
 
@@ -32,4 +33,9 @@ public class MemberTeamEntity
     /// Дата/время добавления участника в команду (UTC)
     /// </summary>
     public DateTime DateTimeAdd { get; set; }
+
+    /// <summary>
+    /// Роль участника команды
+    /// </summary>
+    public TeamRole Role { get; set; }
 }

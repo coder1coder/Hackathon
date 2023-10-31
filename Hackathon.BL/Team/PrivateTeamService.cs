@@ -164,7 +164,8 @@ public class PrivateTeamService: IPrivateTeamService
         await _teamRepository.AddMemberAsync(new TeamMemberModel
         {
             TeamId = request.TeamId,
-            MemberId = request.UserId
+            MemberId = request.UserId,
+            Role = TeamRole.Participant
         });
 
         await _notificationService.PushAsync(CreateNotificationModel
