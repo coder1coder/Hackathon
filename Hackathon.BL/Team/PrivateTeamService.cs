@@ -4,11 +4,11 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction.Notifications;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 
 namespace Hackathon.BL.Team;
 

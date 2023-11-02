@@ -190,7 +190,6 @@ public class Startup
         .UseEndpoints(endpointRouteBuilder =>
         {
             endpointRouteBuilder.MapControllers();
-            endpointRouteBuilder.MapHub<IntegrationEventsHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);
 
             endpointRouteBuilder.MapHub<IntegrationEventsHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
             endpointRouteBuilder.MapHub<IntegrationEventsHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);

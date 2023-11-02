@@ -5,12 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="Templates\EmailConfirmationRequestTemplate.html">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
       <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />

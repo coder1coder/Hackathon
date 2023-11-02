@@ -6,10 +6,10 @@ using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Repositories;
 using Hackathon.Chats.Abstractions.Services;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.Notification;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 using MapsterMapper;
 
 namespace Hackathon.Chats.BL.Services;

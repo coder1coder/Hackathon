@@ -4,6 +4,8 @@ using Hackathon.BL.Email;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

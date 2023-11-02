@@ -4,12 +4,12 @@ using FluentValidation;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 
 namespace Hackathon.BL.ApprovalApplications;
 

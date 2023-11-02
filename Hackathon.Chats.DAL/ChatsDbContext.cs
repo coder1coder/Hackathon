@@ -1,5 +1,7 @@
 ﻿using Hackathon.Chats.DAL.Configurations;
 using Hackathon.Chats.DAL.Entities;
+using Hackathon.DAL.Entities.Interfaces;
+using Hackathon.DAL.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.Chats.DAL;
@@ -19,5 +21,6 @@ public class ChatsDbContext: DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ChatMessageEntityConfiguration).Assembly);
+        modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
     }
 }

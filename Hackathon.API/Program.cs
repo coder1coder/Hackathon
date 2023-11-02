@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Hackathon.API.Module;
 using Hackathon.Chats.Module;
+using Hackathon.Informing.Module;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,7 @@ public class Program
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         Modules.Add(new ChatsApiModule());
+        Modules.Add(new InformingApiModule());
 
         return Host
             .CreateDefaultBuilder(args)

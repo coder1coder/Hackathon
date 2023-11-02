@@ -15,11 +15,11 @@ using Xunit;
 using Bogus;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.ApprovalApplications;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
+using Hackathon.Informing.Abstractions.Services;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Microsoft.Extensions.Logging;
 

@@ -5,11 +5,11 @@ using Bogus;
 using FluentValidation;
 using Hackathon.BL.ApprovalApplications;
 using Hackathon.Common.Abstraction.ApprovalApplications;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
+using Hackathon.Informing.Abstractions.Services;
 using Moq;
 using Xunit;
 

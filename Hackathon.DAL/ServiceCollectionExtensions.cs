@@ -3,7 +3,6 @@ using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Friend;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
@@ -27,7 +26,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IEventRepository, EventRepository>()
             .AddScoped<IFileStorageRepository, FileStorageRepository>()
             .AddScoped<IFriendshipRepository, FriendshipRepository>()
-            .AddScoped<INotificationRepository, NotificationRepository>()
             .AddScoped<IProjectRepository, ProjectRepository>()
             .AddScoped<IUserProfileReactionRepository, UserProfileReactionRepository>()
             .AddScoped<IUserRepository, UserRepository>()

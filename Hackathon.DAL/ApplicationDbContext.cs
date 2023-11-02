@@ -51,7 +51,7 @@ public class ApplicationDbContext: DbContext
     public DbSet<TeamJoinRequestEntity> TeamJoinRequests { get; set; }
 
     public DbSet<ProjectEntity> Projects { get; set; }
-    public DbSet<NotificationEntity> Notifications { get; set; }
+
     public DbSet<FileStorageEntity> StorageFiles { get; set; }
     public DbSet<EventLogEntity> EventLog { get; set; }
     public DbSet<FriendshipEntity> Friendships { get; set; }
@@ -80,7 +80,7 @@ public class ApplicationDbContext: DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-            modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
+        modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
     }
 
     public override int SaveChanges()

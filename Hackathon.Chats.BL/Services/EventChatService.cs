@@ -8,8 +8,8 @@ using Hackathon.Chats.Abstractions.Models.Events;
 using Hackathon.Chats.Abstractions.Repositories;
 using Hackathon.Chats.Abstractions.Services;
 using Hackathon.Common.Abstraction.Events;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Informing.Abstractions.Services;
 using MapsterMapper;
 
 namespace Hackathon.Chats.BL.Services;

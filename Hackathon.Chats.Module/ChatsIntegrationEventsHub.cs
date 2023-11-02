@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Common.Abstraction.IntegrationEvents;
-using Hackathon.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Hackathon.Chats.Module;
@@ -31,8 +30,8 @@ public class ChatsIntegrationEventsHub: Hub, IChatsIntegrationEventsHub
     private static string ResolveTopicName<T>(T integrationEvent) where T : IIntegrationEvent
         => integrationEvent switch
         {
-            EventChatNewMessageIntegrationEvent _ => TopicNames.EventChatNewMessage,
-            TeamChatNewMessageIntegrationEvent _ => TopicNames.TeamChatNewMessage,
+            EventChatNewMessageIntegrationEvent _ => ChatsTopicNames.EventChatNewMessage,
+            TeamChatNewMessageIntegrationEvent _ => ChatsTopicNames.TeamChatNewMessage,
             _ => null
         };
 }

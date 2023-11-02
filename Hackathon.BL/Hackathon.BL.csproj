@@ -7,6 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
+      <ProjectReference Include="..\Hackathon.Informing.Abstractions\Hackathon.Informing.Abstractions.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
     </ItemGroup>
@@ -19,6 +20,7 @@
       <PackageReference Include="MassTransit" Version="8.0.2" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     </ItemGroup>
+
 
     <PropertyGroup>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>

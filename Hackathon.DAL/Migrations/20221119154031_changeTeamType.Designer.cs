@@ -242,34 +242,6 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("MembersTeams", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.Entities.NotificationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("jsonb");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notifications", (string)null);
-                });
-
             modelBuilder.Entity("Hackathon.Entities.ProjectEntity", b =>
                 {
                     b.Property<long>("Id")
