@@ -1,8 +1,9 @@
-﻿using Hackathon.Common.Models.Project;
+﻿using System.Collections.Generic;
+using Hackathon.Common.Models.Project;
 
-namespace Hackathon.BL.Tests.Common.Project.TestDataCollections;
+namespace Hackathon.BL.Tests.Project;
 
-public static class ProjectServiceTestDataCollections
+public static class DataCollections
 {
     public static IEnumerable<object[]> ValidateSuiteValidBranchLinks { get; }
         = ProjectServoceTestDataCollectionsInit.ValidateSuiteValidBranchLinksInit();

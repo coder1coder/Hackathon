@@ -1,11 +1,8 @@
-using System;
 using BackendTools.Common.Models;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using Hackathon.BL.Project;
-using Hackathon.BL.Tests.Common.Project.Helpers;
-using Hackathon.BL.Tests.Common.Project.TestDataCollections;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 using Moq;
@@ -57,14 +54,14 @@ public class ProjectServiceTests: BaseUnitTest
 
     [Theory]
     [MemberData(
-        nameof(ProjectServiceTestDataCollections.ValidateSuiteValidBranchLinks),
-        MemberType = typeof(ProjectServiceTestDataCollections))]
+        nameof(DataCollections.ValidateSuiteValidBranchLinks),
+        MemberType = typeof(DataCollections))]
     public async Task ValidateBranchLinks_SuiteValidBranchLinks_ReturnTrue(
         UpdateProjectFromGitBranchParameters branchParameters)
     {
         // arrange
         IValidator<UpdateProjectFromGitBranchParameters> validator =
-            ProjectServiceHelpers.CreateValidator_UpdateProjectFromGitBranchParameters();
+            Helpers.CreateValidator_UpdateProjectFromGitBranchParameters();
 
         // act
         ValidationResult result = await validator.ValidateAsync(branchParameters);
@@ -75,14 +72,14 @@ public class ProjectServiceTests: BaseUnitTest
 
     [Theory]
     [MemberData(
-        nameof(ProjectServiceTestDataCollections.ValidateSuiteUnvalidBranchLinks),
-        MemberType = typeof(ProjectServiceTestDataCollections))]
+        nameof(DataCollections.ValidateSuiteUnvalidBranchLinks),
+        MemberType = typeof(DataCollections))]
     public async Task ValidateBranchLinks_SuiteUnvalidBranchLinks_ReturnFalse(
         UpdateProjectFromGitBranchParameters branchParameters)
     {
         // arrange
         IValidator<UpdateProjectFromGitBranchParameters> validator =
-            ProjectServiceHelpers.CreateValidator_UpdateProjectFromGitBranchParameters();
+            Helpers.CreateValidator_UpdateProjectFromGitBranchParameters();
         
         // act
         ValidationResult result = await validator.ValidateAsync(branchParameters);

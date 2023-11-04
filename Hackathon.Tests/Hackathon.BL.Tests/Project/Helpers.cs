@@ -2,9 +2,9 @@
 using Hackathon.BL.Validation.Project;
 using Hackathon.Common.Models.Project;
 
-namespace Hackathon.BL.Tests.Common.Project.Helpers;
+namespace Hackathon.BL.Tests.Project;
 
-public static class ProjectServiceHelpers
+public static class Helpers
 {
     public static IValidator<UpdateProjectFromGitBranchParameters> CreateValidator_UpdateProjectFromGitBranchParameters()
     {
