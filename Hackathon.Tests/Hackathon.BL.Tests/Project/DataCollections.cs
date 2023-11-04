@@ -5,16 +5,7 @@ namespace Hackathon.BL.Tests.Project;
 
 public static class DataCollections
 {
-    public static IEnumerable<object[]> ValidateSuiteValidBranchLinks { get; }
-        = ProjectServoceTestDataCollectionsInit.ValidateSuiteValidBranchLinksInit();
-
-    public static IEnumerable<object[]> ValidateSuiteUnvalidBranchLinks { get; }
-        = ProjectServoceTestDataCollectionsInit.ValidateSuiteUnvalidBranchLinksInit();
-}
-
-internal static class ProjectServoceTestDataCollectionsInit
-{
-    public static IEnumerable<object[]> ValidateSuiteValidBranchLinksInit()
+    public static IEnumerable<object[]> ValidateSuiteValidBranchLinks()
     {
         string[] branchLinks =
         {
@@ -39,7 +30,7 @@ internal static class ProjectServoceTestDataCollectionsInit
         return list;
     }
 
-    public static IEnumerable<object[]> ValidateSuiteUnvalidBranchLinksInit()
+    public static IEnumerable<object[]> ValidateSuiteUnvalidBranchLinks()
     {
         string[] branchLinks =
         {
