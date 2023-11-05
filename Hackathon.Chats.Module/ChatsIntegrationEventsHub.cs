@@ -30,8 +30,8 @@ public class ChatsIntegrationEventsHub: Hub, IChatsIntegrationEventsHub
     private static string ResolveTopicName<T>(T integrationEvent) where T : IIntegrationEvent
         => integrationEvent switch
         {
-            EventChatNewMessageIntegrationEvent _ => ChatsTopicNames.EventChatNewMessage,
-            TeamChatNewMessageIntegrationEvent _ => ChatsTopicNames.TeamChatNewMessage,
+            EventChatNewMessageIntegrationEvent => ChatsTopicNames.EventChatNewMessage,
+            TeamChatNewMessageIntegrationEvent => ChatsTopicNames.TeamChatNewMessage,
             _ => null
         };
 }

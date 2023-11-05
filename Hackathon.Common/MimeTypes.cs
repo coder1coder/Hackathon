@@ -17,7 +17,6 @@ public static class MimeTypeMap
     private static IDictionary<string, string> BuildMappings()
     {
         var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
-
             #region Big freaking list of mime types
 
             // maps both ways,
@@ -725,17 +724,13 @@ public static class MimeTypeMap
             {"x-world/x-vrml", ".xof"},
 
             #endregion
-
         };
 
         var cache = mappings.ToList(); // need ToList() to avoid modifying while still enumerating
 
         foreach (var (key, value) in cache)
         {
-            if (!mappings.ContainsKey(value))
-            {
-                mappings.Add(value, key);
-            }
+            mappings.TryAdd(value, key);
         }
 
         return mappings;
@@ -760,7 +755,6 @@ public static class MimeTypeMap
             str = str.Remove(indexQuestionMark);
         }
 
-
         if (!str.StartsWith(Dot))
         {
             var index = str.LastIndexOf(Dot, StringComparison.Ordinal);
@@ -782,7 +776,5 @@ public static class MimeTypeMap
     /// <returns>The MIME type.</returns>
     /// <exception cref="ArgumentNullException" />
     public static string GetMimeType(string str)
-    {
-        return TryGetMimeType(str, out var result) ? result : DefaultMimeType;
-    }
+        => TryGetMimeType(str, out var result) ? result : DefaultMimeType;
 }

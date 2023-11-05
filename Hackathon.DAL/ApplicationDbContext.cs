@@ -100,15 +100,29 @@ public class ApplicationDbContext: DbContext
         var entries = ChangeTracker
             .Entries()
             .Where(e =>
-                (e.Entity is IHasCreatedAt or IHasModifyAt) && (e.State is EntityState.Added or EntityState.Modified));
+                e.Entity is IHasCreatedAt or IHasModifyAt 
+                && e.State is EntityState.Added or EntityState.Modified);
 
         foreach (var entityEntry in entries)
         {
-            if (entityEntry.State == EntityState.Added && entityEntry.Entity is IHasCreatedAt createdEntity)
-                createdEntity.CreatedAt = DateTime.UtcNow;
-
-            if (entityEntry.State == EntityState.Modified && entityEntry.Entity is IHasModifyAt modifiedEntity)
-                modifiedEntity.ModifyAt = DateTime.UtcNow;
+            switch (entityEntry.State)
+            {
+                case EntityState.Added when entityEntry.Entity is IHasCreatedAt createdEntity:
+                    createdEntity.CreatedAt = DateTime.UtcNow;
+                    break;
+                
+                case EntityState.Modified when entityEntry.Entity is IHasModifyAt modifiedEntity:
+                    modifiedEntity.ModifyAt = DateTime.UtcNow;
+                    break;
+                
+                case EntityState.Detached:
+                case EntityState.Unchanged:
+                case EntityState.Deleted:
+                    break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

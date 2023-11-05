@@ -60,7 +60,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var authOptionsSection = Configuration.GetSection(nameof(AuthOptions));
-        var authOptions = authOptionsSection?.Get<AuthOptions>();
+        var authOptions = authOptionsSection.Get<AuthOptions>();
 
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
@@ -113,7 +113,11 @@ public class Startup
 
         services.AddDbContextPool<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
+            var connectionString = Configuration.GetConnectionString("DefaultConnectionString");
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new AggregateException("Не удалось определить строку подключения для регистрации контекста базы данных");
+            
+            options.UseNpgsql();
             if (appConfig.EnableSensitiveDataLogging == true)
                 options.EnableSensitiveDataLogging();
         });

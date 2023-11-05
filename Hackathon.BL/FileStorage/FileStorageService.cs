@@ -118,7 +118,7 @@ public class FileStorageService : IFileStorageService
         }
 
         //Сначала удаляем из хранилища
-        var _ = await _s3Client.DeleteObjectAsync(
+        _ = await _s3Client.DeleteObjectAsync(
             fileInfo.BucketName,
             storageFileId.ToString());
 

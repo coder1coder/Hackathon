@@ -30,7 +30,7 @@ public class InformingIntegrationEventsHub: Hub, IInformingIntegrationEventsHub
     private static string ResolveTopicName<T>(T integrationEvent) where T : IIntegrationEvent
         => integrationEvent switch
         {
-            NotificationChangedIntegrationEvent _ => InformingTopicNames.NotificationChanged,
+            NotificationChangedIntegrationEvent => InformingTopicNames.NotificationChanged,
             _ => null
         };
 }

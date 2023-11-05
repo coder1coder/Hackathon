@@ -115,8 +115,7 @@ public class EventService : IEventService
         if (eventModel.Owner?.Id != authorizedUserId)
             return Result.Forbidden(EventErrorMessages.NoRightsExecuteOperation);
 
-        if (eventModel.Status != EventStatus.Draft
-            && eventModel.Status != EventStatus.OnModeration)
+        if (eventModel.Status != EventStatus.Draft && eventModel.Status != EventStatus.OnModeration)
             return Result.NotValid(EventErrorMessages.IncorrectStatusForUpdating);
 
         if (eventModel.Status == EventStatus.OnModeration)
@@ -231,7 +230,7 @@ public class EventService : IEventService
 
             case EventStatus.Started:
             {
-                var initialStageId = eventModel.Stages.OrderBy(x => x.Order).FirstOrDefault()?.Id ?? default;
+                var initialStageId = eventModel.Stages.MinBy(x => x.Order)?.Id ?? default;
                 await _eventRepository.SetCurrentStageId(eventId, initialStageId);
                 break;
             }
@@ -493,20 +492,8 @@ public class EventService : IEventService
 
     private async Task NotifyEventMembers(EventModel eventModel, EventStatus eventStatus)
     {
-        var changeEventStatusMessage =
-
-        eventModel.ChangeEventStatusMessages
-            .FirstOrDefault(x => x.Status == eventStatus)
-            ?.Message ??
-
-        eventStatus switch
-        {
-            EventStatus.Started => $"Событие '{eventModel.Name}' началось",
-            EventStatus.Finished => $"Событие '{eventModel.Name}' завершено",
-            _ => null
-        };
-
-        if (changeEventStatusMessage is null)
+        var eventStatusChangingMessage = ResolveEventStatusChangingMessage(eventModel, eventStatus);
+        if (eventStatusChangingMessage is null)
             return;
 
         var usersIds = eventModel.Teams
@@ -517,9 +504,23 @@ public class EventService : IEventService
             return;
 
         var notificationModels = usersIds.Select(x =>
-            NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+            NotificationFactory.InfoNotification(eventStatusChangingMessage, x));
 
         await _notificationService.PushManyAsync(notificationModels);
+    }
+
+    private static string ResolveEventStatusChangingMessage(BaseEventParameters eventModel, EventStatus eventStatus)
+    {
+        var eventStatusChangingMessageByOwner = eventModel.ChangeEventStatusMessages
+            .FirstOrDefault(x => x.Status == eventStatus)
+            ?.Message;
+        
+        return eventStatusChangingMessageByOwner ?? eventStatus switch
+        {
+            EventStatus.Started => $"Событие '{eventModel.Name}' началось",
+            EventStatus.Finished => $"Событие '{eventModel.Name}' завершено",
+            _ => null
+        };
     }
 
     private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)

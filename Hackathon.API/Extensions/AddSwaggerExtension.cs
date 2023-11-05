@@ -17,7 +17,7 @@ public static class AddSwaggerExtension
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = @"JWT авторизация",
+                Description = "JWT авторизация",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,

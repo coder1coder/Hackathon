@@ -192,8 +192,13 @@ public class TeamRepository : ITeamRepository
 
     public async Task<int> GetMembersCountAsync(long teamId)
     {
+        //TODO: изменить на код ниже когда будет выполнен тикет #320 
+        // _dbContext.TeamMembers.CountAsync(x=>
+        //     x.TeamId == teamId)
+        
         var teamEntity = await _dbContext.Teams
             .Include(team => team.Members)
+            .Include(teamEntity => teamEntity.Owner)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == teamId);
 
