@@ -223,37 +223,6 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("EventLog", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.FileStorageEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BucketName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long?>("Length")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("MimeType")
-                        .HasColumnType("text");
-
-                    b.Property<long?>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StorageFiles");
-                });
-
             modelBuilder.Entity("Hackathon.DAL.Entities.FriendshipEntity", b =>
                 {
                     b.Property<Guid>("Id")

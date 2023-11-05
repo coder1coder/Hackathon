@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hackathon.Common.Configuration;
+using Hackathon.Configuration;
+using Hackathon.Configuration.Jobs;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,9 @@ public abstract class ApiModule: IApiModule
 
     public abstract void ConfigureServices(IServiceCollection serviceCollection, IConfiguration configuration);
 
-    public abstract void ConfigureEndpoints(IEndpointRouteBuilder endpointRouteBuilder, AppSettings appSettings);
+    public virtual void ConfigureEndpoints(IEndpointRouteBuilder endpointRouteBuilder, AppSettings appSettings)
+    {
+    }
 
     protected void ConfigureDbContext<TDbContext>(IServiceCollection serviceCollection, string connectionString,
         bool enableSensitiveDataLogging = false, int poolSize = 300) where TDbContext: DbContext

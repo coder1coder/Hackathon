@@ -11,4 +11,9 @@
       <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.Configuration\Hackathon.Configuration.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
+    </ItemGroup>
 </Project>

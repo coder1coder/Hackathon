@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
+using Hackathon.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Hackathon.BL.Validation.User;

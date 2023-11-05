@@ -8,18 +8,16 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
-using Hackathon.API.Mapping;
 using Hackathon.API.Module;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationServices;
-using Hackathon.Jobs;
 using Mapster;
 using MapsterMapper;
 using MassTransit;
@@ -66,7 +64,6 @@ public class Startup
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
         services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
-        services.Configure<FileSettings>(Configuration.GetSection(nameof(FileSettings)));
         services.Configure<AuthOptions>(authOptionsSection);
         services.Configure<RouteOptions>(x =>
         {
@@ -77,17 +74,17 @@ public class Startup
 
         var mappingAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
         mappingAssemblies.Add(typeof(EventMapping).Assembly);
-        mappingAssemblies.Add(typeof(UserMapping).Assembly);
+        
         config.Scan(mappingAssemblies.ToArray());
 
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
 
         services
-            .RegisterServices(Configuration)
+            .RegisterServices()
             .RegisterValidators()
             .RegisterIntegrationEvents()
-            .RegisterApiJobs(Configuration)
+            .RegisterJobs(Configuration)
             .RegisterIntegrationServices()
             .RegisterRepositories();
 

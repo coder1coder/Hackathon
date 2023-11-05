@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hackathon.Common.Configuration;
+using Hackathon.Configuration;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

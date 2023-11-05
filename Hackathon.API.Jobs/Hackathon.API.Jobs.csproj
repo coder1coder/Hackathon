@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
     <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
     <ProjectReference Include="..\Hackathon.Informing.Abstractions\Hackathon.Informing.Abstractions.csproj" />
   </ItemGroup>

@@ -1,9 +1,7 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Hackathon.BL.Email;
-using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Configuration;
 using Hackathon.Informing.Abstractions.Services;
 using Hackathon.Informing.BL.Services;
 using Microsoft.Extensions.DependencyInjection;

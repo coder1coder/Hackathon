@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
 using Hackathon.BL.Validation.Event;
-using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.Event;
+using Hackathon.FileStorage.BL.Validators;
 using Refit;
 using Xunit;
 

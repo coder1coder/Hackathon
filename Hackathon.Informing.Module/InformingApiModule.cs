@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Hackathon.API.Module;
-using Hackathon.Common.Configuration;
+using Hackathon.Configuration;
 using Hackathon.Informing.Abstractions.IntegrationEvents;
 using Hackathon.Informing.Abstractions.Repositories;
 using Hackathon.Informing.Abstractions.Services;

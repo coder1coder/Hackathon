@@ -10,7 +10,7 @@ using Hackathon.Chats.BL.Services;
 using Hackathon.Chats.BL.Validators;
 using Hackathon.Chats.DAL;
 using Hackathon.Chats.DAL.Repositories;
-using Hackathon.Common.Configuration;
+using Hackathon.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;

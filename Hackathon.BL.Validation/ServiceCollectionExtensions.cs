@@ -2,14 +2,12 @@ using FluentValidation;
 using Hackathon.BL.Validation.ApprovalApplications;
 using Hackathon.BL.Validation.Common;
 using Hackathon.BL.Validation.Event;
-using Hackathon.BL.Validation.ImageFile;
 using Hackathon.BL.Validation.Project;
 using Hackathon.BL.Validation.Team;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.FileStorage;
 using Hackathon.Common.Models.Project;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
@@ -22,8 +20,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection RegisterValidators(this IServiceCollection services) => services
         .AddScoped<IValidator<IHasProjectIdentity>, ProjectIdentityParametersValidator>()
         .AddScoped<IValidator<BaseProjectParameters>, BaseProjectParametersValidator>()
-        .AddScoped<Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters>,
-            ProjectCreateParametersValidator>()
+        .AddScoped<Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters>, ProjectCreateParametersValidator>()
         .AddScoped<Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters>, ProjectUpdateParametersValidator>()
         .AddScoped<IValidator<UpdateProjectFromGitBranchParameters>, UpdateProjectFromGitParametersValidator>()
         .AddScoped<IValidator<CreateTeamModel>, CreateTeamModelValidator>()
@@ -37,6 +34,5 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<EventUpdateParameters>, UpdateEventModelValidator>()
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>()
-        .AddScoped<IValidator<IFileImage>, FileImageValidator>()
         .AddScoped<IValidator<ApprovalApplicationRejectParameters>, ApprovalApplicationRejectParametersValidator>();
 }

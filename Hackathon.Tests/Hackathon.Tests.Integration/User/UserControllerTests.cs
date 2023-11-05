@@ -3,8 +3,8 @@ using System.IO;
 using FluentAssertions;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Contracts.Requests.User;
+using Hackathon.FileStorage.BL.Validators;
 using Refit;
 using Xunit;
 

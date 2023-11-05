@@ -24,4 +24,5 @@
       <Compile Remove="Migrations\20230608061657_EventAgreement.Designer.cs" />
     </ItemGroup>
 
+
 </Project>

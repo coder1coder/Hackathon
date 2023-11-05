@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hackathon.API.Module;
-using Hackathon.Common.Configuration;
+using Hackathon.Configuration;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

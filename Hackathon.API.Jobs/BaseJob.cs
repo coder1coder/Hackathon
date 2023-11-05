@@ -5,16 +5,13 @@ using Quartz;
 
 namespace Hackathon.Jobs;
 
-public abstract class BaseJob<TJob>: IJob
+public abstract class BaseBackgroundJob<TJob>: IBackgroundJob, IJob
 {
-    public static JobKey Key => new(typeof(TJob).Name);
-
-    // ReSharper disable once UnusedParameter.Global
-    protected abstract Task DoWork(IJobExecutionContext context);
+    public abstract Task DoWork();
 
     private readonly ILogger<TJob> _logger;
 
-    protected BaseJob(ILogger<TJob> logger)
+    protected BaseBackgroundJob(ILogger<TJob> logger)
     {
        _logger = logger;
     }
@@ -23,7 +20,7 @@ public abstract class BaseJob<TJob>: IJob
     {
         try
         {
-            await DoWork(context);
+            await DoWork();
         }
         catch (Exception e)
         {

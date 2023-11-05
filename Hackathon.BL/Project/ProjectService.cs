@@ -1,6 +1,5 @@
 ﻿using BackendTools.Common.Models;
 using FluentValidation;
-using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Project;
@@ -8,6 +7,8 @@ using Hackathon.IntegrationServices.Github.Abstraction;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Hackathon.FileStorage.Abstraction.Models;
+using Hackathon.FileStorage.Abstraction.Services;
 
 namespace Hackathon.BL.Project;
 
