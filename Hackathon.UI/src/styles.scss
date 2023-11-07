@@ -7,6 +7,7 @@
 @import 'assets/styles/common';
 @import 'assets/styles/mat-custom';
 @import 'assets/styles/spaces';
+@import 'assets/styles/scrollbar';
 
 @include mat.core();
 
@@ -51,6 +52,11 @@ $theme-dark: mat.define-dark-theme((
   @include mat.all-component-themes($theme-light);
 }
 
+html {
+  max-height: 100%;
+  height: 100%;
+}
+
 body {
   @include absolute0;
   margin: 0;
@@ -63,9 +69,4 @@ body {
   .theme-light-mode & {
     background: $white-color;
   }
-}
-
-html {
-  max-height: 100%;
-  height: 100%;
 }

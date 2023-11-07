@@ -3,9 +3,8 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { FileStorageService } from "../../services/file-storage.service";
 import { UserService } from "../../services/user.service";
 import { IUser } from "../../models/User/IUser";
-import { map, mergeMap, shareReplay } from "rxjs/operators";
+import { map, shareReplay, switchMap } from "rxjs/operators";
 import { catchError, forkJoin, Observable, of, throwError } from "rxjs";
-import { fromMobx } from "../../common/functions/from-mobx.function";
 import { SafeUrl } from "@angular/platform-browser";
 
 @Injectable({
@@ -28,7 +27,7 @@ export class ProfileUserStore {
     }
 
     if (this.users$.has(userId)) {
-      return fromMobx(() => this.getEntity(userId));
+      return of(this.getEntity(userId));
     } else {
       return this.fetchUser(userId);
     }
@@ -58,13 +57,13 @@ export class ProfileUserStore {
       const request = this.userService.getById(userId)
         .pipe(
           shareReplay(1),
-          mergeMap((user: IUser) => {
+          switchMap((user: IUser) => {
             user.shortUserName = ProfileUserStore.setUserInitials(user);
-            this.fetchObservableMap.delete(userId);
+            user.bgColor = this.generateColorFromName(user.fullName ?? user.userName);
             this.addEntity(user);
             return user?.profileImageId ?
               forkJoin([this.fileStorageService.getById(user.profileImageId)
-                .pipe(catchError(() => of(null))),  of(user)]) :
+                .pipe(catchError(() => of(null))), of(user)]) :
               forkJoin([of(null), of(user)]);
           }),
           map((res: [SafeUrl, IUser]) => this.updateUserImage(res)),
@@ -87,20 +86,29 @@ export class ProfileUserStore {
   }
 
   private loadImageUpdateUser(user: IUser, imageId: string): Observable<IUser> {
-    if (!imageId) {
+    if (!user.shortUserName) {
       user.shortUserName = ProfileUserStore.setUserInitials(user);
+    }
+    if (!user.bgColor) {
+      user.bgColor = this.generateColorFromName(user.fullName ?? user.userName);
+    }
+    if (!imageId) {
       user.profileImageId = null;
       return of(this.updateUserImage([null, user]));
     }
-    user.profileImageId = imageId;
-    return this.fileStorageService.getById(user.profileImageId)
-      .pipe(map((safeUrl) => this.updateUserImage([safeUrl, user])));
+    user.profileImageId = imageId ?? null;
+    return user.profileImageId ?
+      this.fileStorageService.getById(user.profileImageId)
+        .pipe(map((safeUrl) => this.updateUserImage([safeUrl, user]))) :
+        of(this.updateUserImage([null, user]));
   }
 
   private updateUserImage(res: [SafeUrl, IUser]): IUser {
-    res[1].image = res[0];
-    this.addEntity(res[1]);
-    return res[1];
+    const user = res[1];
+    user.image = res[0];
+    this.addEntity(user);
+    this.fetchObservableMap.delete(user.id);
+    return user;
   }
 
   private static setUserInitials(user: IUser): string {
@@ -108,5 +116,45 @@ export class ProfileUserStore {
       .reduce((x,y) => x.concat(y))
       .substring(0,2)
       .toUpperCase() ?? '';
+  }
+
+  private readonly colors: string[] = [
+    '#50723C',
+    '#7C616C',
+    '#005377',
+    '#E2DE84',
+    '#ab2cb9',
+    '#8B9474',
+    '#4a8554',
+    '#9f4e00',
+    '#A4778B',
+    '#F5A65B',
+  ];
+
+  private generateColorFromName(name: string): string {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    const baseRGB = parseInt(this.generateColorForUser(name).slice(1), 16);
+    const baseRed = (baseRGB >> 16) & 255;
+    const baseGreen = (baseRGB >> 8) & 255;
+    const baseBlue = baseRGB & 255;
+    const brightnessOffset = (hash % 30) - 15;
+    const tonedRed = Math.max(0, Math.min(255, baseRed + brightnessOffset));
+    const tonedGreen = Math.max(0, Math.min(255, baseGreen + brightnessOffset));
+    const tonedBlue = Math.max(0, Math.min(255, baseBlue + brightnessOffset));
+
+    return `#${(1 << 24 | tonedRed << 16 | tonedGreen << 8 | tonedBlue).toString(16).slice(1)}`;
+  }
+
+  private generateColorForUser(userName: string): string {
+    let hash = 0;
+    for (let i = 0; i < userName.length; i++) {
+      hash = userName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % this.colors.length;
+    return this.colors[index];
   }
 }

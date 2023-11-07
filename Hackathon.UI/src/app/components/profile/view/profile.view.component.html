@@ -9,15 +9,15 @@
     <button *ngIf="isEditMode" mat-button color="primary" (click)="saveUserEdit()" [disabled]="!form.valid">Сохранить</button>
   </div>
 
-  <div class="profile">
+  <div class="profile" *ngIf="user">
 
     <div class="profile__left">
-      <profile-image [userId]="userId" [canUpload]="canUploadImage"></profile-image>
+      <profile-image [userId]="user.id" [canUpload]="canUploadImage"></profile-image>
     </div>
 
     <div class="profile__right">
       <form [formGroup]="form" class="profile__edit-form">
-       <table *ngIf="user !== undefined">
+       <table>
          <tr>
            <td>Имя пользователя</td>
            <td [innerText]="user?.userName"></td>
@@ -57,7 +57,7 @@
           <tr>
             <td>Полное имя</td>
             <td>
-              <mat-form-field floatLabel='never' appearance="fill">
+              <mat-form-field floatLabel='never' appearance="outline">
                 <input matInput autocomplete="off"
                        id="fullName"
                        #fullName
@@ -69,7 +69,7 @@
           <tr>
             <td>E-mail</td>
             <td>
-              <mat-form-field floatLabel='never' appearance="fill">
+              <mat-form-field floatLabel='never' appearance="outline">
                 <input matInput autocomplete="off"
                        id="email"
                        #email

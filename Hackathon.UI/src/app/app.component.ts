@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ThemeChangeService} from "./services/theme-change.service";
+import { Component, OnInit } from '@angular/core';
+import { ThemeChangeService } from "./services/theme-change.service";
 
 @Component({
   selector: 'app-root',
@@ -7,14 +7,11 @@ import {ThemeChangeService} from "./services/theme-change.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Hackathon.UI';
+  public title = 'Hackathon.UI';
 
-  constructor(
-    private themeChangeService: ThemeChangeService
-  ) {
-  }
+  constructor(private themeChangeService: ThemeChangeService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.themeChangeService.initThemeMode();
   }
 }

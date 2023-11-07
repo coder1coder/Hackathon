@@ -1,5 +1,4 @@
-export interface ICancelRequestParameters
-{
-  requestId:number;
-  comment:string | null;
+export interface ICancelRequestParameters {
+  requestId: number;
+  comment?: string;
 }

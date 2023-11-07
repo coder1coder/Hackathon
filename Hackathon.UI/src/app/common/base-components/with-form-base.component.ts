@@ -16,7 +16,7 @@ export abstract class WithFormBaseComponent implements OnDestroy {
   }
 
   getFormControl(controlName: string, defValue?: any, validators?: ValidatorFn[]): FormControl {
-    if (!this.form.get(controlName)) {
+    if (!this.form.contains(controlName)) {
       this.form.addControl(controlName, new FormControl(defValue, validators));
     }
     return this.form.get(controlName) as FormControl;
