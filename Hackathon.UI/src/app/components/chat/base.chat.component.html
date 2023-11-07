@@ -1,41 +1,52 @@
-<div class="chat" *ngIf="!isFloatMode else floatModeTemplate">
-
-  <main>
-
-    <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
-      <div class="chat__message" *ngFor="let message of messages" [class.your]="message.ownerId == currentUserId">
-        <profile-image [userId]="message.ownerId" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
-        <div class="chat__message-main" [class.your]="message.ownerId == currentUserId">
-          <div class="chat__message-owner">{{ message.ownerFullName}}</div>
-          <div class="chat__message-text">{{ message.message }} </div>
-          <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp }}</div>
+<ng-container *ngIf="isLoaded">
+  <div class="chat theme-background" *ngIf="!isFloatMode else floatModeTemplate">
+    <main class="main">
+      <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)">
+        <div class="chat__message" *ngFor="let message of sortMessages()" [class.your]="message.ownerId == currentUserId">
+          <profile-image [user]="getMember(message.ownerId)" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
+          <div class="chat__message-main" [style.background]="getMember(message.ownerId)?.bgColor" [class.your]="message.ownerId == currentUserId">
+            <div class="chat__message-owner">{{ message.ownerFullName}}</div>
+            <div class="chat__message-text">{{ message.message }} </div>
+            <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp | date: tableDateFormat }}</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="chat__footer">
-      <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
-        <mat-checkbox formControlName="notify" color="primary" *ngIf="canSendMessageWithNotify">
-          Уведомлять пользователей о сообщении
-        </mat-checkbox>
+      <div class="chat__footer">
+        <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
+          <mat-checkbox formControlName="notify" color="primary" *ngIf="canSendMessageWithNotify">
+            Уведомлять пользователей о сообщении
+          </mat-checkbox>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Сообщение</mat-label>
-          <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
-          <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
-        </mat-form-field>
-      </form>
-    </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Сообщение</mat-label>
+            <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
+            <mat-error *ngIf="!getFormControl('message').valid">{{getErrorLengthMessage(getFormControl('message'))}}</mat-error>
+            <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
+          </mat-form-field>
+        </form>
+      </div>
+    </main>
 
-  </main>
-
-  <aside class="chat__members theme-background" *ngIf="showMembers">
-    <mat-list>
-      <mat-list-item *ngFor="let member of this.members">{{ member.fullName ?? member.userName }}</mat-list-item>
-    </mat-list>
-  </aside>
-
-</div>
+    <aside class="chat__members" *ngIf="showMembers && members">
+      <mat-list>
+        <mat-list-item *ngFor="let member of members">
+          <div class="member">
+            <profile-image [canUpload]="false" [user]="getMember(member.id)" class="size35"></profile-image>
+            <div>{{ member.fullName ?? member.userName }}</div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </aside>
+  </div>
+</ng-container>
 
 <ng-template #floatModeTemplate>
   <div>floatmode...</div>
 </ng-template>
+
+<div class="chat flex-justify-content-center flex-align-items-center" *ngIf="!isLoaded">
+  <div class="loader">
+    <mat-progress-spinner color="primary" mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+</div>

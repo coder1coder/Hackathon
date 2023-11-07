@@ -1,5 +1,4 @@
-export interface IEventChatNewMessageIntegrationEvent
-{
+export interface IEventChatNewMessageIntegrationEvent {
   eventId: number;
   messageId:string;
 }

@@ -23,14 +23,14 @@ import { ChatContextEnum } from "../../../../models/Event/chat-context.enum";
 @Injectable()
 export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
 
-  set selectedChatIndex(value) { this._selectedChatIndex.next(value); };
-  get selectedChatIndex() { return this._selectedChatIndex.getValue(); }
+  public set selectedChatIndex(value) { this._selectedChatIndex.next(value); };
+  public get selectedChatIndex() { return this._selectedChatIndex.getValue(); };
 
   public pagesEnum = PagesEnum;
   public eventService = Event;
   public chatContextEnum = ChatContextEnum;
   public selectedPageIndex: number = PagesEnum.Communication;
-  public project: IProject | undefined;
+  public project: IProject;
   public currentChatId: number = -1;
 
   private _selectedChatIndex = new BehaviorSubject<number>(0);
@@ -126,12 +126,14 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     if (!this.currentUserId || !this.event) return;
 
     const team = this.eventService.getMemberTeam(this.event, this.currentUserId);
-
     if (!team) return;
 
     this.projectApiClient.getAsync(this.event.id, team.id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: IProject) => this.project = res);
+      .subscribe({
+        next: (res: IProject) => this.project = res,
+        error: () => {},
+      });
   }
 }
 

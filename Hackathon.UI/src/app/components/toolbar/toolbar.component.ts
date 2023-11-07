@@ -20,7 +20,7 @@ export class ToolbarComponent implements OnInit {
 
   public isDarkMode: boolean = false;
   public userName: string;
-  public userId: number;
+  public user: IUser;
 
   @Input() logoMinWidth: string = "initial";
   @Input() secondToolbar: TemplateRef<any> | null;
@@ -41,10 +41,6 @@ export class ToolbarComponent implements OnInit {
   ngOnInit() {
     this.currentUserStore.loadCurrentUser();
     this.initSubscribe();
-  }
-
-  public get UserId(): number {
-    return this.userId;
   }
 
   public logout(): void {
@@ -70,7 +66,7 @@ export class ToolbarComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((curUser: IUser) => {
         if (curUser) {
-          this.userId = curUser.id;
+          this.user = curUser;
           this.userName = curUser.fullName ?? curUser.userName;
         }
       })

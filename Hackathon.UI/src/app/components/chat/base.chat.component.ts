@@ -1,78 +1,136 @@
-import {AuthService} from "../../services/auth.service";
-import {AfterViewInit, ElementRef, Injectable, OnInit, ViewChild} from "@angular/core";
-import {FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
-import {BehaviorSubject} from "rxjs";
+import { AuthService } from "../../services/auth.service";
+import { ElementRef, HostListener, Injectable, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
+import { BehaviorSubject, from, mergeMap, Subject, takeUntil } from "rxjs";
+import { TABLE_DATE_FORMAT } from "../../common/consts/date-formats";
+import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
+import { ProfileUserStore } from "../../shared/stores/profile-user.store";
+import { IUser } from "../../models/User/IUser";
 
 @Injectable()
-export abstract class BaseChatComponent<TChatMessage> implements OnInit, AfterViewInit {
-
-  currentUserId:number;
-  isOpened = false
-  isFloatMode = false;
+export abstract class BaseChatComponent<TChatMessage>
+  extends WithFormBaseComponent implements OnInit, OnDestroy {
 
   @ViewChild('formComponent') formComponent: NgForm;
+  public currentUserId: number;
+  public isOpened: boolean = false
+  public isFloatMode: boolean = false;
+  public form: FormGroup = this.fb.group({});
+  public tableDateFormat = TABLE_DATE_FORMAT;
+  public isLoaded: boolean = false;
+  public chatMembers: Map<number, IUser> = new Map<number, IUser>();
 
-  protected abstract messages:TChatMessage[];
-  form:FormGroup;
+  protected abstract messages: TChatMessage[];
+  protected abstract chatBody: ElementRef;
+  protected destroy$ = new Subject();
+
+  private minLength: number = 2;
+  private maxLength: number = 200;
 
   protected constructor(
-    protected authService: AuthService) {
-    this.currentUserId = this.authService.getUserId() ?? -1;
-    authService.authChange.subscribe(_ => {
-      this.fetchEntity();
-      this.fetchMessages();
-    })
+    protected authService: AuthService,
+    protected fb: FormBuilder,
+    protected profileUserStore: ProfileUserStore,
+  ) {
+    super();
   }
 
-  ngAfterViewInit(): void {
-    this.fetchMessages();
+  @HostListener('document:keydown.enter', ['$event'])
+  public onPushEnter(): void {
+    this.scrollChatToLastMessage();
   }
 
-  ngOnInit() {
-
+  public ngOnInit(): void {
     this.initForm();
-
-    this.entityId.subscribe(value=>{
-
-      if (value < 1)
-        return;
-
-      this.fetchEntity();
-      this.fetchMessages();
-    })
+    this.initSubscriptions();
   }
 
-  initForm():void{
-    this.form = new FormGroup({
-      message: new FormControl('',[
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(200)
-      ]),
-      notify: new FormControl(false, [
-        Validators.required
-      ]),
-    })
+  public ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    this.chatMembers.clear();
+    this.isLoaded = false;
   }
 
   public get canView():boolean{
     return this.authService.isLoggedIn() && this.entityId.getValue() > 0;
   }
+  public abstract get members(): IUser[];
+  public abstract get canSendMessageWithNotify(): boolean;
+  public abstract entityId: BehaviorSubject<number>;
+  public abstract fetchEntity(needReload?: boolean): void;
+  public abstract fetchMessages(): void;
+  public abstract sendMessage(): void;
 
-  abstract chatBody: ElementRef | undefined;
+  public loadChatUsers(): void {
+    this.isLoaded = false;
+    this.chatMembers.clear();
+    from(this.members)
+      .pipe(
+        mergeMap((user: IUser) => this.profileUserStore.getUser(user.id)),
+        takeUntil(this.destroy$),
+      ).subscribe({
+        next: (user: IUser) => this.chatMembers.set(user.id, user),
+        complete: () => this.isLoaded = true,
+      });
+  }
 
-  abstract get canSendMessageWithNotify():boolean;
+  public initForm(): void{
+    this.form = this.fb.group({
+      message: new FormControl('',[
+        Validators.minLength(this.minLength),
+        Validators.maxLength(this.maxLength),
+      ]),
+      notify: new FormControl(false, [
+        Validators.required,
+      ]),
+    });
+  }
 
-  abstract entityId: BehaviorSubject<number>;
-  abstract fetchEntity():void;
-  abstract fetchMessages():void;
-  abstract sendMessage():void;
+  public sortMessages(): TChatMessage[] {
+    this.scrollChatToLastMessage();
+    return this.messages = this.messages.sort((a: TChatMessage, b: TChatMessage) => {
+      const timestampA = (a as any).timestamp as Date;
+      const timestampB = (b as any).timestamp as Date;
+      return <any>new Date(timestampA) - <any>new Date(timestampB);
+    });
+  }
 
-  protected scrollChatToLastMessage(){
-    if (this.chatBody !== undefined) {
-      let bottomPosition = Math.max(0, this.chatBody.nativeElement.scrollHeight - this.chatBody.nativeElement.offsetHeight);
-      this.chatBody.nativeElement.scrollTop = bottomPosition;
+  public getErrorLengthMessage(control: FormControl): string {
+    if (control.hasError('minlength')) {
+      return `Минимальная длина ${this.minLength} символов`;
+    } else if (control.hasError('maxlength')) {
+      return `Максимальная длина ${this.maxLength} символов`;
+    } else {
+      return '';
     }
   }
 
+  public scrollChatToLastMessage(): void {
+    if (this.chatBody !== undefined) {
+      this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
+    }
+  }
+
+  public getMember(id: number): IUser {
+    return this.chatMembers.get(id);
+  }
+
+  private initSubscriptions(): void {
+    this.entityId
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        if (value < 1) return;
+        this.fetchEntity(true);
+        this.fetchMessages();
+      });
+
+    this.currentUserId = this.authService.getUserId() ?? -1;
+    this.authService.authChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.fetchEntity(true);
+        this.fetchMessages();
+      });
+  }
 }

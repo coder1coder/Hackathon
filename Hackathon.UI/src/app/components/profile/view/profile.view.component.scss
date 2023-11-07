@@ -14,7 +14,7 @@
       padding-bottom: 10px;
     }
 
-    tr > td:first-child{
+    tr > td:first-child {
       color: #9FA2B4;
       width: 1px;
       white-space: nowrap;
@@ -23,14 +23,12 @@
   }
 }
 
-.reaction__list
-{
+.reaction__list {
   display: flex;
   padding-top: 1em;
   border-top: 1px solid #f5f5f5;
 
-  .reaction
-  {
+  .reaction  {
     display: block;
     height: 40px;
     width: 40px;
@@ -59,23 +57,22 @@ td.email {
   vertical-align: top;
 }
 
-.email-confirmation
-{
+.email-confirmation {
   &-status {
     color: rgb(210, 78, 78);
   }
 
-  &-link{
+  &-link {
     font-weight: 500;
     text-decoration: underline;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
       text-decoration: none;
     }
   }
 
-  &-description{
+  &-description {
     color: #9FA2B4;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -84,8 +81,8 @@ td.email {
 
 ::ng-deep {
   .profile__edit-form {
-    .mat-form-field-appearance-fill .mat-form-field-flex {
-      padding: 0 0.75em 0 0.75em;
+    .mat-form-field-appearance-outline .mat-form-field-infix {
+      padding: 0.45em 0 0.75em 0 !important;
     }
     .mat-form-field-wrapper {
       padding-bottom: 0;

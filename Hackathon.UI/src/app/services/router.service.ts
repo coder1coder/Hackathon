@@ -9,6 +9,7 @@ export class RouterService {
     public Users: UsersRouter,
     public Profile: ProfileRouter,
     public Notifications: NotificationsRouter,
+    public Error: ErrorRouter,
     private router: Router,
   ) {
   }

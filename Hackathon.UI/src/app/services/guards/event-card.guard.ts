@@ -1,19 +1,20 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
   NavigationEnd,
   Router,
   RouterStateSnapshot,
-  UrlTree
+  UrlTree,
 } from '@angular/router';
-import {filter, Observable, Subject, takeUntil} from 'rxjs';
-import {EventService} from "../event/event.service";
-import {AuthService} from "../auth.service";
-import {RouterService} from "../router.service";
-import {map} from "rxjs/operators";
-import {SnackService} from "../snack.service";
-import {EventClient} from "../event/event.client";
+import { catchError, filter, Observable, of, Subject, takeUntil } from 'rxjs';
+import { EventService } from "../event/event.service";
+import { AuthService } from "../auth.service";
+import { RouterService } from "../router.service";
+import { map } from "rxjs/operators";
+import { SnackService } from "../snack.service";
+import { EventClient } from "../event/event.client";
+import { GlobalErrorHandler } from "../../handlers/error.handler";
 
 @Injectable({
   providedIn: 'root'
@@ -30,51 +31,47 @@ export class EventCardGuard implements CanActivate {
     private eventClient: EventClient,
     private routerService: RouterService,
     private router: Router,
-    private snackService: SnackService) {
-
+    private snackService: SnackService,
+    private globalErrorHandler: GlobalErrorHandler,
+  ) {
     this.currentUrl = this.router.url;
-
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.previousUrl = this.currentUrl;
         this.currentUrl = event.url;
       }
     });
-
   }
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot,
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if (!this.authService.isLoggedIn()) {
-        this.routerService.Profile.Login();
-        return false;
-      }
+    if (!this.authService.isLoggedIn()) {
+      this.routerService.Profile.Login();
+      return false;
+    }
 
-      let eventId = Number(route.paramMap.get('eventId'));
-      if (isNaN(eventId))
-        return false;
+    const eventId = Number(route.paramMap.get('eventId'));
+    if (isNaN(eventId)) return false;
 
-      return this.eventClient
-        .getById(eventId)
-        .pipe(
-          takeUntil(this.destroy$),
-          filter((event) => !!event),
-          map((event)=>
-          {
-            let canView = this.eventService.canView(event);
-
-            if (!canView)
-            {
-              this.snackService.open(`Нет доступа на мероприятие`)
-
-              if (this.currentUrl == '/')
-                this.routerService.Homepage();
-
-            }
-
-            return canView;
-          }));
+    return this.eventClient.getById(eventId)
+      .pipe(
+        filter((event) => !!event),
+        map((event) => {
+          const canView = this.eventService.canView(event);
+          if (!canView) {
+            this.snackService.open(`Нет доступа на мероприятие`);
+            if (this.currentUrl == '/') this.routerService.Homepage();
+          }
+          return canView;
+        }),
+        catchError((err) => {
+          this.globalErrorHandler.handleError(err);
+          return of(err);
+        }),
+        takeUntil(this.destroy$),
+      );
   }
 }

@@ -46,8 +46,8 @@ const routes: Routes = [
 
   { path: 'eventLog', component: EventLogComponent, canActivate: [AuthGuard] },
 
+  { path: 'not-found', component: NotFoundComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] },
-  { path: 'not-found', component: NotFoundComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

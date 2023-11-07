@@ -20,7 +20,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorIntl, MatPaginatorModule } from "@angular/material/paginator";
 import { Pagination } from "./common/pagination";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { ConnectionRefusedInterceptor } from "./interceptors/connectionRefused.interceptor";
+import { errorHandler } from "./handlers/error.handler";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { DefaultLayoutComponent } from "./components/layouts/default/default.layout.component";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -186,18 +186,17 @@ import { ApprovalApplicationInfoModalComponent } from './components/approval-app
         MatButtonToggleModule
     ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ConnectionRefusedInterceptor,
-      multi: true
-    },
+    errorHandler,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
+      multi: true,
     },
-    { provide: MatPaginatorIntl, useClass: Pagination}
+    {
+      provide: MatPaginatorIntl,
+      useClass: Pagination,
+    },
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

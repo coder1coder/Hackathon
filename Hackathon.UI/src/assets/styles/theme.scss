@@ -24,7 +24,7 @@
   .theme-dark-mode & {
     .mat-tab-body-wrapper {
       background: $black-color-80;
-      box-shadow: none;
+      box-shadow: -8px 0 18px 0 #00000021;
       color: $white-color;
       .chat__message-meta {
         color: $grey-color-30;
@@ -33,16 +33,22 @@
         border-bottom: 1px solid $grey-color-10;
       }
     }
+    .chat__members {
+      box-shadow: inset 8px 0 18px 0 #00000021;
+    }
   }
   .theme-light-mode & {
     .mat-tab-body-wrapper {
-      box-shadow: -20px 0px 20px 0px rgb(248 248 248);
+      box-shadow: -20px 0 20px 0 rgb(248 248 248);
       .chat__message-meta {
         color: $black-color-70;
       }
       .event-started__content-top {
         border-bottom: 1px solid #ededed;
       }
+    }
+    .chat__members {
+      box-shadow: inset 20px 0 20px 0 rgb(248 248 248);
     }
   }
 }

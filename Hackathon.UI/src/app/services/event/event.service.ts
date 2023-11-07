@@ -33,7 +33,7 @@ export class EventService {
     const minimalMembers = event.minTeamMembers * 2;
     return this.isEventOwner(event)
       && event.status === EventStatus.Published
-      && totalMembers <= minimalMembers;
+      && totalMembers >= minimalMembers;
   }
 
   public isCanLeave(event: Event): boolean {
