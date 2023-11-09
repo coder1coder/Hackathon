@@ -21,7 +21,6 @@ namespace Hackathon.Informing.DAL.Migrations
              *
              */
             
-            /*
             migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
@@ -38,7 +37,6 @@ namespace Hackathon.Informing.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                 });
-            */
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

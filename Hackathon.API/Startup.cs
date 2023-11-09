@@ -117,7 +117,12 @@ public class Startup
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new AggregateException("Не удалось определить строку подключения для регистрации контекста базы данных");
             
-            options.UseNpgsql();
+            options.UseNpgsql(connectionString, builder =>
+            {
+                builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
+                builder.EnableRetryOnFailure();
+            });
+            
             if (appConfig.EnableSensitiveDataLogging == true)
                 options.EnableSensitiveDataLogging();
         });
