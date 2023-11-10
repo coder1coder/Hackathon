@@ -74,11 +74,11 @@ export class ToolbarComponent implements OnInit {
     fromMobx(() => this.themeChangeService.themeMode)
       .pipe(takeUntil(this.destroy$))
       .subscribe((theme) => {
-        this.isDarkMode = theme.isDarkMode;
+        if (theme) this.isDarkMode = theme?.isDarkMode;
       })
   }
 
-  toggleApplicationTheme() {
-    this.themeChangeService.setMode(!this.themeChangeService.themeMode.isDarkMode);
+  toggleApplicationTheme(): void {
+    this.themeChangeService.changeMode();
   }
 }
