@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ThemeChangeService } from "./services/theme-change.service";
+import { SignalRService } from "./services/signalr.service";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -9,9 +11,15 @@ import { ThemeChangeService } from "./services/theme-change.service";
 export class AppComponent implements OnInit {
   public title = 'Hackathon.UI';
 
-  constructor(private themeChangeService: ThemeChangeService) {}
+  constructor(
+    private signalRService: SignalRService,
+    private themeChangeService: ThemeChangeService,
+  ) {}
 
   ngOnInit(): void {
+    this.signalRService.initSignalR(environment.hubs.chat);
+    this.signalRService.initSignalR(environment.hubs.notification);
+    this.signalRService.initSignalR(environment.hubs.friendship);
     this.themeChangeService.initThemeMode();
   }
 }

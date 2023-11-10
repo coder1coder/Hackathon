@@ -5,6 +5,7 @@ import {FriendshipService} from "../../../services/friendship/friendship.service
 import {GetListParameters} from "../../../models/GetListParameters";
 import {FriendshipFilter} from "../../../models/Friendship/FriendshipFilter";
 import {FriendshipStatus, GetOfferOption, IFriendship} from "../../../models/Friendship/FriendshipStatus";
+import {SignalRService} from "../../../services/signalr.service";
 
 @Component({
   selector: `friendship-offer-button`,
@@ -26,7 +27,8 @@ export class FriendshipOfferButtonComponent implements OnInit,  AfterViewInit
 
   constructor(
     private authService: AuthService,
-    private friendshipService: FriendshipService
+    private friendshipService: FriendshipService,
+    private signalRService: SignalRService,
     ) {
 
   }
@@ -44,7 +46,7 @@ export class FriendshipOfferButtonComponent implements OnInit,  AfterViewInit
 
   ngAfterViewInit() {
 
-    this.friendshipService.onChanged = x => {
+    this.signalRService.onFriendshipChangedIntegration = x => {
 
       if (this.authUserId !== undefined
         && (x.userIds.indexOf(this.authUserId) >= 0 || x.userIds.indexOf(this.friendId) >= 0))

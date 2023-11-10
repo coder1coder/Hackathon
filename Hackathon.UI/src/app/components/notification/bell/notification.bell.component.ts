@@ -6,6 +6,7 @@ import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
 import {Notification} from "../../../models/Notification/Notification";
 import {RouterService} from "../../../services/router.service";
 import { AuthService } from "src/app/services/auth.service";
+import {SignalRService} from "../../../services/signalr.service";
 
 @Component({
   selector: 'notification-bell',
@@ -13,21 +14,21 @@ import { AuthService } from "src/app/services/auth.service";
   styleUrls: ['./notification.bell.component.scss'],
 })
 
-export class NotificationBellComponent implements AfterViewInit
-{
-  Notification = Notification
+export class NotificationBellComponent implements AfterViewInit {
+
   notifications:BaseCollection<Notification> = new BaseCollection<Notification>();
   unreadNotificationsCount:number = 0;
 
   constructor(
     private notificationService: NotificationService,
+    private signalRService: SignalRService,
     private router: RouterService,
     private authService: AuthService
     ) {}
 
   ngAfterViewInit(): void {
 
-    this.notificationService.onChanged = _ => {
+    this.signalRService.onNotificationChanged = () => {
       if(this.authService.isLoggedIn()) {
         this.updateUnreadNotificationsCount();
         this.fetch();
