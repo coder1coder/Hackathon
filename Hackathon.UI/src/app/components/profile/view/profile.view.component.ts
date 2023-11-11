@@ -15,7 +15,7 @@ import { Team } from "../../../models/Team/Team";
 import { UserEmailStatus } from "src/app/models/User/UserEmailStatus";
 import { WithFormBaseComponent } from "../../../common/base-components/with-form-base.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { IKeyValue } from "../../../common/key-value.interface";
+import { IKeyValue } from "../../../common/interfaces/key-value.interface";
 import { emailRegex } from "../../../common/patterns/email-regex";
 import { checkValue } from "../../../common/functions/check-value";
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";

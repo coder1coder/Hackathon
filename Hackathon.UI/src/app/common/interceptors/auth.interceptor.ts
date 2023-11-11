@@ -8,8 +8,8 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthConstants } from "../services/auth.constants";
-import { RouterService } from "../services/router.service";
+import { AuthConstants } from "../../services/auth.constants";
+import { RouterService } from "../../services/router.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

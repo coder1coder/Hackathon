@@ -72,7 +72,7 @@
          (scrolled)="fetch()">
 
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
-        <div class="card theme-background" (click)="rowClick(item)">
+        <div class="card theme-event-card-background" (click)="rowClick(item)">
 
           <div class="card__image">
             <image-from-storage [imageId]="item.imageId"></image-from-storage>

@@ -1,15 +1,18 @@
 import {
   ChangeDetectorRef,
-  Component, ComponentFactoryResolver,
-  OnInit, Type,
-  ViewChild
+  Component,
+  ComponentFactoryResolver,
+  OnDestroy,
+  OnInit,
+  Type,
+  ViewChild,
 } from '@angular/core';
 import { EventDirective } from "../event.directive";
 import { EventStatus } from "../../../models/Event/EventStatus";
 import { ActivatedRoute } from "@angular/router";
 import { RouterService } from "../../../services/router.service";
 import { SnackService } from "../../../services/snack.service";
-import { Subject, takeUntil } from "rxjs";
+import { forkJoin, of, Subject, switchMap, takeUntil } from "rxjs";
 import { Event } from "../../../models/Event/Event";
 import { EventCreateEditCardComponent } from "./event-create-edit-card/event-create-edit-card.component";
 import { finalize } from "rxjs/operators";
@@ -21,12 +24,14 @@ import { EventCardFinishedComponent } from "./event-card-finished/event-card-fin
 import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
 import { EventClient } from "../../../services/event/event.client";
 import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
+import { AuthService } from "../../../services/auth.service";
+import { GlobalErrorHandler } from "../../../common/handlers/error.handler";
 
 @Component({
   selector: 'app-event-card-factory',
   template: `<ng-template event-item></ng-template>`,
 })
-export class EventCardFactoryComponent implements OnInit {
+export class EventCardFactoryComponent implements OnInit, OnDestroy {
 
   @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;
 
@@ -36,13 +41,15 @@ export class EventCardFactoryComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
+    private authService: AuthService,
     private eventHttpService: EventClient,
     private eventService: EventService,
-    private router: RouterService,
+    private routerService: RouterService,
     private activeRoute: ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private snackService: SnackService,
     private approvalApplicationsService: ApprovalApplicationsService,
+    private globalErrorHandler: GlobalErrorHandler,
     private cdr: ChangeDetectorRef,
   ) {
   }
@@ -53,25 +60,33 @@ export class EventCardFactoryComponent implements OnInit {
     this.loadData();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
   private loadData(): void {
     this.isLoading = true;
     this.eventHttpService.getById(this.eventId)
       .pipe(
+        switchMap((event: Event) =>
+          forkJoin([this.eventService.checkAccessViewEventByModel(event), of(event)])),
         finalize(() => this.isLoading = false),
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (event) => {
-          if (event) {
-            this.isLoading = false;
+        next: ([isCanView, event]) => {
+          this.isLoading = false;
+          if (isCanView) {
             this.event = event;
             this.renderEventCard();
           } else {
-            this.goBack();
+            this.routerService.Events.List().then(() =>
+              this.snackService.open(EventErrorMessages.EventNoAccess));
           }
         },
-        error: () => this.goBack(),
-      })
+        error: (err) => this.globalErrorHandler.handleError(err),
+      });
   }
 
   private renderEventCard(): void {
@@ -111,6 +126,10 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   private initEventId(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.routerService.Profile.Login();
+    }
+
     const { eventId } = this.activeRoute.snapshot.params;
     if (Number.isNaN(eventId)) {
       this.goBack();
@@ -129,7 +148,7 @@ export class EventCardFactoryComponent implements OnInit {
   }
 
   private goBack(): void {
-    this.router.Events.List().then(_=>
+    this.routerService.Events.List().then(() =>
       this.snackService.open(EventErrorMessages.EventNotFound));
   }
 }

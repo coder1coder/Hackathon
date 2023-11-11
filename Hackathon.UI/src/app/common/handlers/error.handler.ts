@@ -1,9 +1,9 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from "../services/auth.service";
-import { RouterService } from "../services/router.service";
-import { ErrorCodesEnum } from "../models/error-codes.enum";
-import { ErrorProcessorService } from "../services/error-processor.service";
+import { AuthService } from "../../services/auth.service";
+import { RouterService } from "../../services/router.service";
+import { ErrorCodesEnum } from "../../models/error-codes.enum";
+import { ErrorProcessorService } from "../../services/error-processor.service";
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         } else if (error.status === ErrorCodesEnum.NOT_FOUND) {
           this.router.Error.NotFound();
         }
-      })
+      });
     }
     console.error(error);
   }

@@ -11,6 +11,19 @@
   }
 }
 
+.theme-event-card-background {
+  .theme-dark-mode & {
+    background: $black-color-light;
+    color: $white-color;
+    box-shadow: 0 0 5px #a1a1a1;
+  }
+  .theme-light-mode & {
+    background: $white-color-light;
+    color: $black-color;
+    box-shadow: 0 0 5px #939191;
+  }
+}
+
 .theme-color {
   .theme-dark-mode & {
     color: $white-color;

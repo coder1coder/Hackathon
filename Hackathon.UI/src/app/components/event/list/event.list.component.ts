@@ -13,6 +13,9 @@ import { PageSettingsDefaults } from "../../../models/PageSettings";
 import { DATE_FORMAT_DD_MM_YYYY } from "../../../common/consts/date-formats";
 import { Subject, takeUntil } from "rxjs";
 import { EventClient } from "../../../services/event/event.client";
+import { EventService } from "../../../services/event/event.service";
+import {EventErrorMessages} from "../../../common/error-messages/event-error-messages";
+import {SnackService} from "../../../services/snack.service";
 
 @Component({
   selector: 'event-list',
@@ -37,8 +40,10 @@ export class EventListComponent implements OnInit {
 
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
-    private eventHttpService: EventClient,
     public router: RouterService,
+    private eventHttpService: EventClient,
+    private eventService: EventService,
+    private snackService: SnackService,
     private authService: AuthService,
     private fb: FormBuilder,
   ) {
@@ -85,7 +90,17 @@ export class EventListComponent implements OnInit {
   }
 
   public rowClick(event: IEventListItem): void {
-    this.router.Events.View(event.id);
+    if (event.status === EventStatus.Started) {
+      this.eventService.checkAccessViewEventById(event?.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((isCanView: boolean) =>
+          isCanView ?
+            this.router.Events.View(event.id) :
+            this.router.Events.List().then(() =>
+              this.snackService.open(EventErrorMessages.EventNoAccess)))
+    } else {
+      this.router.Events.View(event.id);
+    }
   }
 
   public getAllEventStatuses(): number[] {
