@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using Hackathon.BL.Project;
+using Hackathon.BL.Validation.Project;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 using Moq;
@@ -12,14 +13,18 @@ namespace Hackathon.BL.Tests.Project;
 
 public class ProjectServiceTests: BaseUnitTest
 {
+    private readonly IValidator<UpdateProjectFromGitBranchParameters> _updateFromGitBranchValidator;
     private readonly Mock<Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters>> _createValidatorMock;
     private readonly Mock<Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters>> _updateValidatorMock;
-    private readonly Mock<IValidator<UpdateProjectFromGitBranchParameters>> _updateFromGitBranchValidator;
+    private readonly Mock<IValidator<UpdateProjectFromGitBranchParameters>> _updateFromGitBranchValidatorMock;
     private readonly Mock<IProjectRepository> _projectRepositoryMock;
 
     public ProjectServiceTests()
     {
-        _updateFromGitBranchValidator = new Mock<IValidator<UpdateProjectFromGitBranchParameters>>();
+        IValidator<IHasProjectIdentity> iHasProjectIdentityValidator = new ProjectIdentityParametersValidator();
+        _updateFromGitBranchValidator = new UpdateProjectFromGitParametersValidator(iHasProjectIdentityValidator);
+        
+        _updateFromGitBranchValidatorMock = new Mock<IValidator<UpdateProjectFromGitBranchParameters>>();
         _createValidatorMock = new Mock<Hackathon.Common.Abstraction.IValidator<ProjectCreationParameters>>();
         _updateValidatorMock = new Mock<Hackathon.Common.Abstraction.IValidator<ProjectUpdateParameters>>();
         _projectRepositoryMock = new Mock<IProjectRepository>();
@@ -36,7 +41,7 @@ public class ProjectServiceTests: BaseUnitTest
             _projectRepositoryMock.Object,
             _createValidatorMock.Object,
             _updateValidatorMock.Object,
-            _updateFromGitBranchValidator.Object,
+            _updateFromGitBranchValidatorMock.Object,
             null,
             null
         );
@@ -53,36 +58,43 @@ public class ProjectServiceTests: BaseUnitTest
     }
 
     [Theory]
-    [MemberData(
-        nameof(DataCollections.ValidateSuiteValidBranchLinks),
-        MemberType = typeof(DataCollections))]
-    public async Task ValidateBranchLinks_SuiteValidBranchLinks_ReturnTrue(
-        UpdateProjectFromGitBranchParameters branchParameters)
+    [InlineData("https://github.com/as_as-BR.0912/project_01.ASD-A/tree/main")]
+    [InlineData("https://github.com/ASDasd0099/ASDasd__0001--2s/tree/main/")]
+    [InlineData("https://github.com/Proger0014/url-shortener/tree/main")]
+    [InlineData("https://github.com/Asd.a9/Asd.a9_a/tree/main/")]
+    public async Task ValidateBranchLinks_SuiteValidBranchLinks_ReturnTrue(string branchLink)
     {
         // arrange
-        IValidator<UpdateProjectFromGitBranchParameters> validator =
-            Helpers.CreateValidator_UpdateProjectFromGitBranchParameters();
-
+        var value = new UpdateProjectFromGitBranchParameters()
+        {
+            LinkToGitBranch = branchLink,
+            EventId = 1,
+            TeamId = 1
+        };
+        
         // act
-        ValidationResult result = await validator.ValidateAsync(branchParameters);
+        var result = await _updateFromGitBranchValidator.ValidateAsync(value);
 
         // assert
         Assert.True(result.IsValid);
     }
 
     [Theory]
-    [MemberData(
-        nameof(DataCollections.ValidateSuiteUnvalidBranchLinks),
-        MemberType = typeof(DataCollections))]
-    public async Task ValidateBranchLinks_SuiteUnvalidBranchLinks_ReturnFalse(
-        UpdateProjectFromGitBranchParameters branchParameters)
+    [InlineData("https://github.com/as/_as-BR.0912/project_01.ASD-A/tree/main")]
+    [InlineData("https://github.com/ASDasd0099/ASDasd__0001--2s/tree/main/directory")]
+    [InlineData("https://github.com/Proger0014/url-shortenertree/main")]
+    public async Task ValidateBranchLinks_SuiteUnvalidBranchLinks_ReturnFalse(string branchLink)
     {
         // arrange
-        IValidator<UpdateProjectFromGitBranchParameters> validator =
-            Helpers.CreateValidator_UpdateProjectFromGitBranchParameters();
+        var value = new UpdateProjectFromGitBranchParameters()
+        {
+            LinkToGitBranch = branchLink,
+            EventId = 1,
+            TeamId = 1
+        };
         
         // act
-        ValidationResult result = await validator.ValidateAsync(branchParameters);
+        var result = await _updateFromGitBranchValidator.ValidateAsync(value);
 
         // assert
         Assert.False(result.IsValid);
