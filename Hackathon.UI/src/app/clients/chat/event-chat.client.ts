@@ -25,7 +25,7 @@ export class EventChatClient extends BaseApiClient
     return this.http.get<EventChatMessage>(`${this.baseRoute}/messages/${messageId}`);
   }
 
-  public getListAsync(eventId:number, offset:number = 0, limit:number = 300): Observable<BaseCollection<EventChatMessage>> {
+  public getListAsync(eventId: number, offset: number = 0, limit: number = 300): Observable<BaseCollection<EventChatMessage>> {
     return this.http.post<BaseCollection<EventChatMessage>>(this.baseRoute + `/${eventId}/list?offset=${offset}&limit=${limit}`, null);
   }
 }

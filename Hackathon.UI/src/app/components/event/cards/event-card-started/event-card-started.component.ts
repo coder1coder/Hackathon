@@ -13,6 +13,8 @@ import { ProjectGitDialog } from "../../../custom/project-git-dialog/project-git
 import { IProjectUpdateFromGitBranch } from "../../../../models/Project/IProjectUpdateFromGitBranch";
 import { PagesEnum } from "../../../../models/Event/pages.enum";
 import { ChatContextEnum } from "../../../../models/Event/chat-context.enum";
+import { Team } from "../../../../models/Team/Team";
+import { IUser } from "../../../../models/User/IUser";
 
 @Component({
   selector: `event-card-started`,
@@ -34,7 +36,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   public currentChatId: number = -1;
 
   private _selectedChatIndex = new BehaviorSubject<number>(0);
-  private currentUserId: number | undefined;
+  private currentUserId: number;
 
   constructor(
     private snackService: SnackService,
@@ -57,7 +59,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
             this.currentChatId = this.event.id;
             break;
           case ChatContextEnum.Team:
-            const team = this.event.teams.find(x=> x.members.find(m=>m.id == this.currentUserId));
+            const team = this.event.teams.find(
+              (team: Team) => team.members.find(
+                (member: IUser) => member.id === this.currentUserId));
             if (team)
               this.currentChatId = team.id;
             break;
@@ -75,7 +79,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
       .pipe(
         switchMap((project: IProject) => {
           if (project?.name) {
-            if (project.eventId == 0 || project.teamId == 0) {
+            if (project.eventId === 0 || project.teamId === 0) {
               project.eventId = this.event?.id ?? 0;
               project.teamId = this.eventService.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
               return this.projectApiClient.createAsync(project);

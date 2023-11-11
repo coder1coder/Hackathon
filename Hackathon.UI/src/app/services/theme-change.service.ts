@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { AuthConstants } from "./auth.constants";
-import { IThemeModeInterface } from "../common/theme-mode.interface";
+import { IThemeModeInterface } from "../common/interfaces/theme-mode.interface";
 import { DOCUMENT } from "@angular/common";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { fromMobx } from "../common/functions/from-mobx.function";

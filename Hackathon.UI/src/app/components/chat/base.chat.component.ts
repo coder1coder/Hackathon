@@ -6,19 +6,23 @@ import { TABLE_DATE_FORMAT } from "../../common/consts/date-formats";
 import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
 import { ProfileUserStore } from "../../shared/stores/profile-user.store";
 import { IUser } from "../../models/User/IUser";
+import { PaginationSorting } from "../../models/GetListParameters";
 
 @Injectable()
 export abstract class BaseChatComponent<TChatMessage>
   extends WithFormBaseComponent implements OnInit, OnDestroy {
 
   @ViewChild('formComponent') formComponent: NgForm;
+
   public currentUserId: number;
   public isOpened: boolean = false
   public isFloatMode: boolean = false;
   public form: FormGroup = this.fb.group({});
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
+  public isNeedReloadData: boolean = true;
   public chatMembers: Map<number, IUser> = new Map<number, IUser>();
+  public params = new PaginationSorting();
 
   protected abstract messages: TChatMessage[];
   protected abstract chatBody: ElementRef;
@@ -52,7 +56,7 @@ export abstract class BaseChatComponent<TChatMessage>
     this.isLoaded = false;
   }
 
-  public get canView():boolean{
+  public get canView(): boolean {
     return this.authService.isLoggedIn() && this.entityId.getValue() > 0;
   }
   public abstract get members(): IUser[];
@@ -71,7 +75,10 @@ export abstract class BaseChatComponent<TChatMessage>
         takeUntil(this.destroy$),
       ).subscribe({
         next: (user: IUser) => this.chatMembers.set(user.id, user),
-        complete: () => this.isLoaded = true,
+        complete: () => {
+          this.isLoaded = true;
+          this.scrollChatToLastMessage();
+        },
       });
   }
 
@@ -87,15 +94,6 @@ export abstract class BaseChatComponent<TChatMessage>
     });
   }
 
-  public sortMessages(): TChatMessage[] {
-    this.scrollChatToLastMessage();
-    return this.messages = this.messages.sort((a: TChatMessage, b: TChatMessage) => {
-      const timestampA = (a as any).timestamp as Date;
-      const timestampB = (b as any).timestamp as Date;
-      return <any>new Date(timestampA) - <any>new Date(timestampB);
-    });
-  }
-
   public getErrorLengthMessage(control: FormControl): string {
     if (control.hasError('minlength')) {
       return `Минимальная длина ${this.minLength} символов`;
@@ -107,9 +105,11 @@ export abstract class BaseChatComponent<TChatMessage>
   }
 
   public scrollChatToLastMessage(): void {
-    if (this.chatBody !== undefined) {
-      this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
-    }
+    setTimeout(() => {
+      if (this.chatBody?.nativeElement) {
+        this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
+      }
+    }, 100);
   }
 
   public getMember(id: number): IUser {
@@ -121,7 +121,7 @@ export abstract class BaseChatComponent<TChatMessage>
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         if (value < 1) return;
-        this.fetchEntity(true);
+        this.fetchEntity(this.isNeedReloadData);
         this.fetchMessages();
       });
 
@@ -129,7 +129,7 @@ export abstract class BaseChatComponent<TChatMessage>
     this.authService.authChange
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.fetchEntity(true);
+        this.fetchEntity(this.isNeedReloadData);
         this.fetchMessages();
       });
   }

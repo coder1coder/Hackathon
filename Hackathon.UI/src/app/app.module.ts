@@ -18,10 +18,10 @@ import { MatMenuModule } from "@angular/material/menu";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorIntl, MatPaginatorModule } from "@angular/material/paginator";
-import { Pagination } from "./common/pagination";
+import { Pagination } from "./common/interfaces/pagination";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { errorHandler } from "./handlers/error.handler";
-import { AuthInterceptor } from "./interceptors/auth.interceptor";
+import { errorHandler } from "./common/handlers/error.handler";
+import { AuthInterceptor } from "./common/interceptors/auth.interceptor";
 import { DefaultLayoutComponent } from "./components/layouts/default/default.layout.component";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { TeamNewComponent } from "./components/team/new/team.new.component";
@@ -48,9 +48,7 @@ import { ProfileViewComponent } from "./components/profile/view/profile.view.com
 import { ProfileImageComponent } from "./components/profile/image/profile-image.component";
 import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { EventLogComponent } from "./components/eventlog/eventLog.list.component";
-import {
-  FriendshipOfferButtonComponent
-} from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
+import { FriendshipOfferButtonComponent } from "./components/friendship/friendship-offer-button/friendship-offer-button.component";
 import { FriendsListComponent } from "./components/friendship/list/friends-list.component";
 import { UserTeamComponent } from "./components/team/userTeam/userTeam.component";
 import { LineInfoComponent } from './components/line-info/line-info.component';
@@ -183,7 +181,7 @@ import { ApprovalApplicationInfoModalComponent } from './components/approval-app
         MatCardModule,
         MatSlideToggleModule,
         InfiniteScrollModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
     ],
   providers: [
     errorHandler,

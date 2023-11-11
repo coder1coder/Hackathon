@@ -12,9 +12,9 @@ import { EventChatClient } from "../../../clients/chat/event-chat.client";
 import { Event } from "../../../models/Event/Event";
 import { EventClient } from "../../../services/event/event.client";
 import { IEventChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent';
-import { tap } from "rxjs/operators";
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
+import { PageSettingsDefaults } from "../../../models/PageSettings";
 
 @Component({
   selector: 'chat-event',
@@ -51,15 +51,10 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
   public handleNewMessageEvent(eventChatNewMessage: IEventChatNewMessageIntegrationEvent): void {
     if (this.canView && this.eventId > 0 && this.eventId == eventChatNewMessage.eventId) {
       this.eventChatClient.getAsync(eventChatNewMessage.messageId)
-        .pipe(
-          tap((res: EventChatMessage) => {
-            this.messages.push(res);
-            return res;
-          }),
-          takeUntil(this.destroy$),
-        )
+        .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () => {
+          next: (res: EventChatMessage) => {
+            this.messages.push(res);
             this.scrollChatToLastMessage();
           },
           error: () => {},
@@ -77,17 +72,18 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
       .subscribe((event: Event) => {
         this.event = event;
         this.loadChatUsers();
+        this.scrollChatToLastMessage();
       })
   }
 
   public fetchMessages(): void {
     if (this.canView && this.eventId > 0) {
-      this.eventChatClient.getListAsync(this.eventId)
+      this.eventChatClient.getListAsync(this.eventId, this.params.Offset, this.params.Limit)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (r: BaseCollection<EventChatMessage>) =>  {
-            this.messages = r.items;
-            this.scrollChatToLastMessage();
+          next: (r: BaseCollection<EventChatMessage>) => {
+            this.messages.unshift(...r.items);
+            this.params.Offset += PageSettingsDefaults.Limit
           },
           error: () => {},
         });

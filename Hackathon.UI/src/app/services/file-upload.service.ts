@@ -4,7 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { filter, Observable, of, switchMap } from "rxjs";
 import { map } from "rxjs/operators";
 import { UploadFileErrorMessages } from "../common/error-messages/upload-file-error-messages";
-import { FileUtils } from "../common/file-utils";
+import { FileUtils } from "../common/interfaces/file-utils";
 import { ErrorProcessorService } from "./error-processor.service";
 
 @Injectable({

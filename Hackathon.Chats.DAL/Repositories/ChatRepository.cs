@@ -39,9 +39,10 @@ public class ChatRepository<TChatMessage>: IChatRepository<TChatMessage> where T
             .ChatMessages.Where(x=>
                 x.ChatType == _chatType
                 && x.ChatId == chatId)
+            .OrderByDescending(x=>x.Timestamp)
             .Skip(offset)
             .Take(limit)
-            .OrderByDescending(x=>x.Timestamp)
+            .Reverse()
             .AsNoTracking()
             .ToArrayAsync();
 

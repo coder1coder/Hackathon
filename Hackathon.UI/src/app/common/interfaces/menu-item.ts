@@ -1,4 +1,4 @@
-import { UserRole } from "../models/User/UserRole";
+import { UserRole } from "../../models/User/UserRole";
 
 export class MenuItem {
   public unique: number;

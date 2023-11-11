@@ -7,12 +7,13 @@ import { ChatMessageOption, TeamChatMessage } from "../../../models/chat/TeamCha
 import { BaseChatComponent } from "../base.chat.component";
 import { SignalRService } from "../../../services/signalr.service";
 import { TeamChatClient } from "../../../clients/chat/team-chat.client";
-import { BehaviorSubject, Observable, of, takeUntil, tap } from "rxjs";
+import { BehaviorSubject, Observable, of, takeUntil } from "rxjs";
 import { Team } from "../../../models/Team/Team";
 import { IUser } from "../../../models/User/IUser";
 import { ITeamChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent';
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
+import { PageSettingsDefaults } from "../../../models/PageSettings";
 
 @Component({
   selector: 'chat-team',
@@ -49,15 +50,10 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
   public handleNewMessageEvent(teamChatNewMessage: ITeamChatNewMessageIntegrationEvent): void {
     if (super.canView && this.teamId > 0 && this.teamId == teamChatNewMessage.teamId) {
       this.teamChatClient.getAsync(teamChatNewMessage.messageId)
-        .pipe(
-          tap((res: TeamChatMessage) => {
-            this.messages.push(res);
-            return res;
-          }),
-          takeUntil(this.destroy$),
-        )
+        .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: () =>  {
+          next: (res: TeamChatMessage) =>  {
+            this.messages.push(res);
             this.scrollChatToLastMessage();
           },
           error: () => {},
@@ -84,9 +80,9 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
       this.teamChatClient.getListAsync(this.teamId)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (r: BaseCollection<TeamChatMessage>) =>  {
-            this.messages = r.items;
-            this.scrollChatToLastMessage();
+          next: (r: BaseCollection<TeamChatMessage>) => {
+            this.messages.unshift(...r.items);
+            this.params.Offset += PageSettingsDefaults.Limit
           },
           error: () => {},
         });
