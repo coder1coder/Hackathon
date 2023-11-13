@@ -9,6 +9,7 @@
   <div class="layout-default__page-bar" *ngIf="!hideTitleBar && !isLoading">
     <div>
       <div class="layout-default__title" *ngIf="title">{{ title }}</div>
+      <div class="layout-default__subTitle" *ngIf="subTitle">{{ subTitle }}</div>
       <ng-content select="[alert]"></ng-content>
     </div>
     <div class="layout-default__actions">

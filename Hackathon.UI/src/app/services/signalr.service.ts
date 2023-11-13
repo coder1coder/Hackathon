@@ -4,6 +4,7 @@ import { IEventChatNewMessageIntegrationEvent } from "../models/chat/integration
 import { ITeamChatNewMessageIntegrationEvent } from "../models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent";
 import { INotificationChangedIntegrationEvent } from "../models/IntegrationEvent/INotificationChangedIntegrationEvent";
 import { FriendshipChangedIntegrationEvent } from "../models/IntegrationEvent/IFriendshipChangedIntegrationEvent";
+import { IEventStageChangedIntegrationEvent } from "../models/IntegrationEvent/IEventStageChangedIntegrationEvent";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class SignalRService  {
   public onTeamChatNewMessage: (teamChatNewMessage: ITeamChatNewMessageIntegrationEvent) => void;
   public onNotificationChanged :(notificationChanged: INotificationChangedIntegrationEvent) => void;
   public onFriendshipChangedIntegration: (friendshipChangedIntegration: FriendshipChangedIntegrationEvent) => void;
+  public onEventStageChanged: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
 
   public initSignalR(hubUrl: string): void {
     this._connection = new signalR.HubConnectionBuilder()
@@ -23,6 +25,12 @@ export class SignalRService  {
       .build();
 
     this._connection.onclose(() => this.startConnection());
+
+    this._connection.on("EventStageChanged", (integrationEvent: IEventStageChangedIntegrationEvent) => {
+      if (this.onEventStageChanged) {
+        this.onEventStageChanged(integrationEvent);
+      }
+    });
 
     this._connection.on("EventChatNewMessage", (eventChatNewMessage: IEventChatNewMessageIntegrationEvent) => {
       if (this.onEventChatNewMessage) {

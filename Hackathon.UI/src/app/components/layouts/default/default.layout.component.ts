@@ -8,6 +8,7 @@ import { Component, Input } from "@angular/core";
 
 export class DefaultLayoutComponent {
   @Input() title: string;
+  @Input() subTitle: string;
   @Input() hideTitleBar: boolean = false;
   @Input() hideContentWhileLoading: boolean = true;
   @Input() isLoading: boolean = false;

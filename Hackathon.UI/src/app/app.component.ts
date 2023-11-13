@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     this.signalRService.initSignalR(environment.hubs.chat);
     this.signalRService.initSignalR(environment.hubs.notification);
     this.signalRService.initSignalR(environment.hubs.friendship);
+    this.signalRService.initSignalR(environment.hubs.event);
     this.themeChangeService.initThemeMode();
   }
 }

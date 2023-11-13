@@ -48,7 +48,6 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private snackService: SnackService,
-    private approvalApplicationsService: ApprovalApplicationsService,
     private globalErrorHandler: GlobalErrorHandler,
     private cdr: ChangeDetectorRef,
   ) {

@@ -2,7 +2,6 @@ using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.BL.Validation.Event;
 using Hackathon.BL.Validation.User;
-using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
@@ -11,7 +10,6 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Team;
-using Hackathon.IntegrationEvents;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +27,7 @@ using Hackathon.FileStorage.Abstraction.Services;
 using Hackathon.FileStorage.BL.Validators;
 using Hackathon.Informing.Abstractions.Models;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 
 namespace Hackathon.BL.Event;
@@ -48,7 +47,8 @@ public class EventService : IEventService
     private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
-    private readonly IIntegrationEventsHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
+    private readonly IMessageBusService _messageBusService;
+    private readonly IEventChangesIntegrationEventsHub _eventChangesIntegrationEventsHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
@@ -63,7 +63,8 @@ public class EventService : IEventService
         ITeamService teamService,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IIntegrationEventsHub<EventStatusChangedIntegrationEvent> integrationEventHub,
+        IMessageBusService messageBusService,
+        IEventChangesIntegrationEventsHub eventChangesIntegrationEventsHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
         IEventAgreementRepository eventAgreementRepository,
@@ -79,7 +80,8 @@ public class EventService : IEventService
         _teamService = teamService;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _integrationEventHub = integrationEventHub;
+        _messageBusService = messageBusService;
+        _eventChangesIntegrationEventsHub = eventChangesIntegrationEventsHub;
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
@@ -399,6 +401,7 @@ public class EventService : IEventService
         var nextStageId = orderedStages[++currentStageIndex].Id;
         await _eventRepository.SetCurrentStageId(eventId, nextStageId);
 
+        await _eventChangesIntegrationEventsHub.PublishAll(new EventStageChangedIntegrationEvent(eventId, nextStageId));
         return Result.Success;
     }
 
@@ -469,7 +472,7 @@ public class EventService : IEventService
     {
         await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
-        await _integrationEventHub.PublishAll(TopicNames.EventStatusChanged, new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
+        await _eventChangesIntegrationEventsHub.PublishAll(new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
 
         if (eventStatus == EventStatus.OnModeration)
         {
