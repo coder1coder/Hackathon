@@ -26,7 +26,7 @@ public static class JobsServiceCollectionExtensions
             AddJob<EventStartNotifierJob>(quartz, GetJobSettings<EventStartNotifierJob, EventStartNotifierJobSettings>(configuration));
             AddJob<PastEventStatusUpdateJob>(quartz, GetJobSettings<PastEventStatusUpdateJob, PastEventStatusUpdateJobSettings>(configuration));
             AddJob<StartedEventStatusUpdateJob>(quartz, GetJobSettings<StartedEventStatusUpdateJob, StartedEventStatusUpdateJobSettings>(configuration));
-            AddJob<UnusedFilesDeleteJob>(quartz, GetJobSettings<UnusedFilesDeleteJobSettings, UnusedFilesDeleteJobSettings>(configuration));
+            AddJob<UnusedFilesDeleteJob>(quartz, GetJobSettings<UnusedFilesDeleteJob, UnusedFilesDeleteJobSettings>(configuration));
         });
         
         return services.AddQuartzServer(x => x.WaitForJobsToComplete = true);
