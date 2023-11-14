@@ -14,11 +14,14 @@ public class TeamMapping: IRegister
             .ForType<CreateTeamModel, TeamEntity>()
             .IgnoreNullValues(true);
 
+        config.ForType<MemberTeamEntity, TeamMember>()
+            .Map(d => d, d => d.Member)
+            .Map(d => d.DateTimeAdd, src => src.DateTimeAdd)
+            .Map(d => d.TeamRole, src => src.Role);
+
         config
             .ForType<TeamEntity, TeamModel>()
             .IgnoreNullValues(true)
-            .Map(x => x.Members, s =>
-                s.Members.Select(x => x.Member))
             .MaxDepth(3)
             .AfterMapping((s, d) =>
             {
@@ -27,14 +30,6 @@ public class TeamMapping: IRegister
                     members.Add(d.Owner);
 
                 d.Members = members.ToArray();
-
-                foreach (var teamMember in d.Members)
-                {
-                    var memberEntity = s.Members.FirstOrDefault(x => x.MemberId == teamMember.Id);
-
-                    teamMember.DateTimeAdd = memberEntity?.DateTimeAdd ?? default;
-                    teamMember.TeamRole = memberEntity?.Role ?? TeamRole.Participant;
-                }
             });
 
 

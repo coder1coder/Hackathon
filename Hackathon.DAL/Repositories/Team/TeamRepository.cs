@@ -35,19 +35,6 @@ public class TeamRepository : ITeamRepository
 
             eventEntity?.Teams.Add(createTeamEntity);
         }
-        else //Создание команды юзером
-        {
-            var memberTeamEntity = new MemberTeamEntity
-            {
-                MemberId = createTeamEntity.OwnerId.Value,
-                Role = TeamRole.Owner,
-            };
-            _dbContext.Entry(memberTeamEntity).State = EntityState.Added;
-
-            createTeamEntity.Members.Add(memberTeamEntity);
-
-            await _dbContext.AddAsync(createTeamEntity);
-        }
 
         await _dbContext.SaveChangesAsync();
 
@@ -184,8 +171,16 @@ public class TeamRepository : ITeamRepository
 
         if (teamEntity is not null)
         {
-            var teamMemberNewOwner = teamEntity.Members.FirstOrDefault(x => x.MemberId == ownerId);
-            var teamMemberOldOwner = teamEntity.Members.FirstOrDefault(x => x.Role == TeamRole.Owner);
+            MemberTeamEntity teamMemberNewOwner = null, teamMemberOldOwner = null;
+
+            foreach (var member in teamEntity.Members)
+            {
+                if (member.MemberId == ownerId)
+                    teamMemberNewOwner = member; //Поиск нового владельца
+
+                if (member.Role == TeamRole.Owner)
+                    teamMemberOldOwner = member; //Поиск старого владельца
+            }
 
             if (teamMemberNewOwner is not null && teamMemberOldOwner is not null)
             {

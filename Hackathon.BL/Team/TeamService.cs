@@ -86,6 +86,17 @@ public class TeamService : ITeamService
 
         var newTeamId = await _teamRepository.CreateAsync(createTeamModel);
 
+        //Если команду создал пользователь, добавляем его в команду, как владельца
+        if (createTeamModel.OwnerId.HasValue)
+        {
+            await _teamRepository.AddMemberAsync(new TeamMemberModel
+            {
+                TeamId = newTeamId,
+                MemberId = createTeamModel.OwnerId.Value,
+                Role = TeamRole.Owner
+            });
+        }
+
         return Result<long>.FromValue(newTeamId);
     }
 
