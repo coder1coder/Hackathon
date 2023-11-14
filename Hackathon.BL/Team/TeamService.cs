@@ -257,7 +257,6 @@ public class TeamService : ITeamService
             .OrderByDescending(u => u.DateTimeAdd)
             .First();
 
-        team.OwnerId = newOwner.Id;
         await _teamRepository.SetOwnerAsync(team.Id, newOwner.Id);
     }
 }

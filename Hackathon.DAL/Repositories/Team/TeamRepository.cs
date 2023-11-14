@@ -182,7 +182,8 @@ public class TeamRepository : ITeamRepository
                     teamMemberOldOwner = member; //Поиск старого владельца
             }
 
-            if (teamMemberNewOwner is not null && teamMemberOldOwner is not null)
+            if (teamMemberNewOwner is not null && teamMemberOldOwner is not null
+                && teamMemberNewOwner != teamMemberOldOwner)
             {
                 _dbContext.TeamMembers.Remove(teamMemberOldOwner);
 
