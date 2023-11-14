@@ -35,6 +35,10 @@ public class TeamRepository : ITeamRepository
 
             eventEntity?.Teams.Add(createTeamEntity);
         }
+        else
+        {
+            await _dbContext.AddAsync(createTeamEntity);
+        }
 
         await _dbContext.SaveChangesAsync();
 
