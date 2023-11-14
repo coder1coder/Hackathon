@@ -32,7 +32,6 @@ public class TeamMapping: IRegister
                 d.Members = members.ToArray();
             });
 
-
         config.ForType<TeamJoinRequestEntity, TeamJoinRequestModel>()
             .Map(x=>x.TeamName, s=>s.Team.Name, z=> z.Team != null)
             .Map(x=>x.TeamOwnerId, s=>s.Team.OwnerId, z=>z.Team != null)
