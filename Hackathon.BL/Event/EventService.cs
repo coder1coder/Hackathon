@@ -10,24 +10,25 @@ using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.EventLog;
-using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.Team;
 using Hackathon.IntegrationEvents;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction.FileStorage;
 using Microsoft.AspNetCore.Http;
-using Hackathon.Common.Models.FileStorage;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Abstraction.Notifications;
-using Hackathon.BL.Validation.ImageFile;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.User;
+using Hackathon.FileStorage.Abstraction.Models;
+using Hackathon.FileStorage.Abstraction.Repositories;
+using Hackathon.FileStorage.Abstraction.Services;
+using Hackathon.FileStorage.BL.Validators;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 
 namespace Hackathon.BL.Event;
@@ -115,8 +116,7 @@ public class EventService : IEventService
         if (eventModel.Owner?.Id != authorizedUserId)
             return Result.Forbidden(EventErrorMessages.NoRightsExecuteOperation);
 
-        if (eventModel.Status != EventStatus.Draft
-            && eventModel.Status != EventStatus.OnModeration)
+        if (eventModel.Status != EventStatus.Draft && eventModel.Status != EventStatus.OnModeration)
             return Result.NotValid(EventErrorMessages.IncorrectStatusForUpdating);
 
         if (eventModel.Status == EventStatus.OnModeration)
@@ -231,7 +231,7 @@ public class EventService : IEventService
 
             case EventStatus.Started:
             {
-                var initialStageId = eventModel.Stages.OrderBy(x => x.Order).FirstOrDefault()?.Id ?? default;
+                var initialStageId = eventModel.Stages.MinBy(x => x.Order)?.Id ?? default;
                 await _eventRepository.SetCurrentStageId(eventId, initialStageId);
                 break;
             }
@@ -494,20 +494,8 @@ public class EventService : IEventService
 
     private async Task NotifyEventMembers(EventModel eventModel, EventStatus eventStatus)
     {
-        var changeEventStatusMessage =
-
-        eventModel.ChangeEventStatusMessages
-            .FirstOrDefault(x => x.Status == eventStatus)
-            ?.Message ??
-
-        eventStatus switch
-        {
-            EventStatus.Started => $"Событие '{eventModel.Name}' началось",
-            EventStatus.Finished => $"Событие '{eventModel.Name}' завершено",
-            _ => null
-        };
-
-        if (changeEventStatusMessage is null)
+        var eventStatusChangingMessage = ResolveEventStatusChangingMessage(eventModel, eventStatus);
+        if (eventStatusChangingMessage is null)
             return;
 
         var usersIds = eventModel.Teams
@@ -518,9 +506,23 @@ public class EventService : IEventService
             return;
 
         var notificationModels = usersIds.Select(x =>
-            NotificationFactory.InfoNotification(changeEventStatusMessage, x));
+            NotificationFactory.InfoNotification(eventStatusChangingMessage, x));
 
         await _notificationService.PushManyAsync(notificationModels);
+    }
+
+    private static string ResolveEventStatusChangingMessage(BaseEventParameters eventModel, EventStatus eventStatus)
+    {
+        var eventStatusChangingMessageByOwner = eventModel.ChangeEventStatusMessages
+            .FirstOrDefault(x => x.Status == eventStatus)
+            ?.Message;
+        
+        return eventStatusChangingMessageByOwner ?? eventStatus switch
+        {
+            EventStatus.Started => $"Событие '{eventModel.Name}' началось",
+            EventStatus.Finished => $"Событие '{eventModel.Name}' завершено",
+            _ => null
+        };
     }
 
     private static TeamModel GetTeamContainsMember(EventModel eventModel, long userId)

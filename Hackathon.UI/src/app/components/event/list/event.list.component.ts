@@ -140,9 +140,9 @@ export class EventListComponent implements OnInit {
     this.eventHttpService.getList(params)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (r: BaseCollection<IEventListItem>) =>  {
-          this.eventList = r;
-          if (this.eventList.items.length === r.totalCount) {
+        next: (res: BaseCollection<IEventListItem>) =>  {
+          this.eventList = res;
+          if (this.eventList.items.length === res.totalCount) {
             this.isFullListDisplayed = true;
           }
         },

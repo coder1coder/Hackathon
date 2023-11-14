@@ -7,8 +7,6 @@ namespace Hackathon.IntegrationEvents;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterIntegrationEvents(this IServiceCollection services) => services
-        .AddScoped<IIntegrationEventsHub<NotificationChangedIntegrationEvent>,
-            IntegrationEventsHub<NotificationChangedIntegrationEvent>>()
         .AddScoped<IIntegrationEventsHub<FriendshipChangedIntegrationEvent>,
             IntegrationEventsHub<FriendshipChangedIntegrationEvent>>()
         .AddScoped<IIntegrationEventsHub<EventStatusChangedIntegrationEvent>,

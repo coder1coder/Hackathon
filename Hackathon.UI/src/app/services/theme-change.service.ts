@@ -1,10 +1,11 @@
-import {Inject, Injectable} from "@angular/core";
-import {makeObservable, observable, runInAction} from "mobx";
-import {AuthConstants} from "./auth.constants";
-import {IThemeModeInterface} from "../common/theme-mode.interface";
-import {DOCUMENT} from "@angular/common";
-import {OverlayContainer} from "@angular/cdk/overlay";
-import {fromMobx} from "../common/functions/from-mobx.function";
+import { Inject, Injectable } from "@angular/core";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { AuthConstants } from "./auth.constants";
+import { IThemeModeInterface } from "../common/theme-mode.interface";
+import { DOCUMENT } from "@angular/common";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { fromMobx } from "../common/functions/from-mobx.function";
+import { filter } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -25,17 +26,20 @@ export class ThemeChangeService {
 
   public initThemeMode(): void {
     fromMobx(() => this.themeMode)
+      .pipe(filter(Boolean))
       .subscribe((theme) => {
         const mode = this.getMode();
         this.setThemeMode(mode ?? theme);
       })
   }
 
-  public setMode(isDarkMode: boolean): void {
+  @action
+  public changeMode(): void {
     runInAction(() => {
+      const currentMode: boolean = !Boolean(this.themeMode?.isDarkMode);
       this.themeMode = {
-        modeClass: isDarkMode ? this.darkClassName : this.lightClassName,
-        isDarkMode
+        modeClass: currentMode ? this.darkClassName : this.lightClassName,
+        isDarkMode: currentMode,
       };
       this.storage.setItem(AuthConstants.STORAGE_MODE_KEY, JSON.stringify(this.themeMode));
     })
@@ -43,11 +47,11 @@ export class ThemeChangeService {
 
   private getMode(): IThemeModeInterface {
     const mode = this.storage.getItem(AuthConstants.STORAGE_MODE_KEY);
-    return mode != undefined ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
+    return mode !== undefined ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
   }
 
   private setThemeMode(theme: IThemeModeInterface): void {
-    if (theme.isDarkMode) {
+    if (theme?.isDarkMode) {
       this.overlay.getContainerElement().classList.add(theme.modeClass);
       this.overlay.getContainerElement().classList.remove(this.lightClassName);
       if (this.document.firstElementChild !== null) this.document.firstElementChild.classList.add(theme.modeClass);

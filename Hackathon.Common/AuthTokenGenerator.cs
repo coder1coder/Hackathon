@@ -1,4 +1,3 @@
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Hackathon.Configuration;
 
 namespace Hackathon.Common;
 

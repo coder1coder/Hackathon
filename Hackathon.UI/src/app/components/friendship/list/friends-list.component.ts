@@ -6,6 +6,7 @@ import {BaseCollection} from "../../../models/BaseCollection";
 import {IUser} from "../../../models/User/IUser";
 import {RouterService} from "../../../services/router.service";
 import {AuthService} from "../../../services/auth.service";
+import {SignalRService} from "../../../services/signalr.service";
 
 @Component({
   selector: `friends-list`,
@@ -30,9 +31,12 @@ export class FriendsListComponent implements OnInit
 
   public authUserId: number | undefined;
 
-  constructor(private friendshipService: FriendshipService,
-              private routerService: RouterService,
-              private authService: AuthService) {
+  constructor(
+    private friendshipService: FriendshipService,
+    private routerService: RouterService,
+    private authService: AuthService,
+    private signalRService: SignalRService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -43,7 +47,7 @@ export class FriendsListComponent implements OnInit
 
     this.authUserId = this.authService.getUserId();
 
-    this.friendshipService.onChanged = x => {
+    this.signalRService.onFriendshipChangedIntegration = x => {
 
       if (this.authUserId !== undefined
         && (x.userIds.indexOf(this.authUserId) >= 0 || x.userIds.indexOf(this.userId) >= 0))

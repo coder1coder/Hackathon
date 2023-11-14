@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.Configuration\Hackathon.Configuration.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Configuration\Hackathon.FileStorage.Configuration.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AWSSDK.S3" Version="3.7.7.25" />
+      <PackageReference Include="FluentValidation" Version="10.3.6" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    </ItemGroup>
+
+</Project>

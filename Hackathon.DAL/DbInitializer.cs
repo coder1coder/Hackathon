@@ -1,6 +1,6 @@
 using System.Linq;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Configuration;
 using Hackathon.DAL.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,19 +13,19 @@ public static class DbInitializer
     {
         try
         {
-            if (!context.Users.Any(x=> x.UserName == administratorDefaults.Login))
+            if (context.Users.Any(x => x.UserName == administratorDefaults.Login)) 
+                return;
+            
+            var user = new UserEntity
             {
-                var user = new UserEntity
-                {
-                    UserName = administratorDefaults.Login,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
-                    FullName = administratorDefaults.Login,
-                    Email = "administrator@administrator.ru",
-                    Role = UserRole.Administrator
-                };
-                context.Add(user);
-                context.SaveChanges();
-            }
+                UserName = administratorDefaults.Login,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
+                FullName = administratorDefaults.Login,
+                Email = "administrator@administrator.ru",
+                Role = UserRole.Administrator
+            };
+            context.Add(user);
+            context.SaveChanges();
         }
         catch (DbUpdateException e)
         {

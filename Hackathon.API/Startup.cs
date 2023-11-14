@@ -8,18 +8,16 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
-using Hackathon.API.Mapping;
 using Hackathon.API.Module;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models.User;
+using Hackathon.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationServices;
-using Hackathon.Jobs;
 using Mapster;
 using MapsterMapper;
 using MassTransit;
@@ -60,13 +58,12 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var authOptionsSection = Configuration.GetSection(nameof(AuthOptions));
-        var authOptions = authOptionsSection?.Get<AuthOptions>();
+        var authOptions = authOptionsSection.Get<AuthOptions>();
 
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
         services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
         services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
-        services.Configure<FileSettings>(Configuration.GetSection(nameof(FileSettings)));
         services.Configure<AuthOptions>(authOptionsSection);
         services.Configure<RouteOptions>(x =>
         {
@@ -77,17 +74,17 @@ public class Startup
 
         var mappingAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
         mappingAssemblies.Add(typeof(EventMapping).Assembly);
-        mappingAssemblies.Add(typeof(UserMapping).Assembly);
+        
         config.Scan(mappingAssemblies.ToArray());
 
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
 
         services
-            .RegisterServices(Configuration)
+            .RegisterServices()
             .RegisterValidators()
             .RegisterIntegrationEvents()
-            .RegisterApiJobs(Configuration)
+            .RegisterJobs(Configuration)
             .RegisterIntegrationServices()
             .RegisterRepositories();
 
@@ -113,7 +110,16 @@ public class Startup
 
         services.AddDbContextPool<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnectionString"));
+            var connectionString = Configuration.GetConnectionString("DefaultConnectionString");
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new AggregateException("Не удалось определить строку подключения для регистрации контекста базы данных");
+            
+            options.UseNpgsql(connectionString, builder =>
+            {
+                builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
+                builder.EnableRetryOnFailure();
+            });
+            
             if (appConfig.EnableSensitiveDataLogging == true)
                 options.EnableSensitiveDataLogging();
         });
@@ -190,7 +196,6 @@ public class Startup
         .UseEndpoints(endpointRouteBuilder =>
         {
             endpointRouteBuilder.MapControllers();
-            endpointRouteBuilder.MapHub<IntegrationEventsHub<NotificationChangedIntegrationEvent>>(appConfig.Hubs.Notifications);
 
             endpointRouteBuilder.MapHub<IntegrationEventsHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
             endpointRouteBuilder.MapHub<IntegrationEventsHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);

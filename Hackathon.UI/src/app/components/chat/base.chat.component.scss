@@ -18,33 +18,41 @@
   max-height: 100%;
 
   &__members {
-    width: 200px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    height: 100%;
+    width: 300px;
+
+    .member {
+      @include flex-row;
+      column-gap: 1em;
+      align-items: center;
+      padding-top: 1em;
+      padding-bottom: 1em;
+    }
   }
 
   main {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-
-    padding: 1em;
   }
 }
 
 .chat {
-
   &__body {
     flex: 1;
     overflow-y: auto;
+    scroll-behavior: smooth;
+    height: 100%;
   }
 
   &__footer {
-    mat-form-field {
-      width: 100%;
-    }
+    width: 97%;
+    margin: auto;
   }
 
   &__send-message-box {
@@ -56,7 +64,7 @@
   &__message {
     display: flex;
     column-gap: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
 
     &.your {
       justify-content: right;
@@ -72,7 +80,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
     }
 
     &-main {
@@ -81,20 +88,17 @@
       padding: 4px 8px;
       border-radius: 4px;
       min-width: 40%;
-
+      max-width: 50%;
+      color: $white-color !important;
       &.your {
-        background: $chat-color-content;
-        color: $white-color !important;;
+        background: $chat-color-content !important;
       }
     }
 
     &-meta {
       padding-top: 3px;
       font-size: .8em;
-
-      &.your {
-        color: $white-color !important;
-      }
+      color: $white-color !important;
     }
   }
 }

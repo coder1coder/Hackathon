@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Configuration\Hackathon.FileStorage.Configuration.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.DAL\Hackathon.FileStorage.DAL.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+    </ItemGroup>
+
+
+
+</Project>

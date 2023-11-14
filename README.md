@@ -43,7 +43,8 @@ dotnet run --no-build
 Скачиваем и устанавливаем node.js не ниже v16
 Стабильная версия для проекта v16.15.1
 cd .\Hackathon.UI\
-npm i (установка зависимостей)
+npm install -g @angular/cli (установка Angular модуля)
+npm install (установка зависимостей)
 ng serve (запуск dev-сервера, перейдите по адресу http://localhost:4200/)
 ```
 [Скачать Node.js](https://nodejs.org/en/download)<br>

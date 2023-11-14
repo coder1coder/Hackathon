@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
-      <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,5 +23,6 @@
       <Compile Remove="Migrations\20230608061657_EventAgreement.cs" />
       <Compile Remove="Migrations\20230608061657_EventAgreement.Designer.cs" />
     </ItemGroup>
+
 
 </Project>

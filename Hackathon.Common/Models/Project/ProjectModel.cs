@@ -1,6 +1,6 @@
-﻿using Hackathon.Common.Models.FileStorage;
-using Hackathon.Common.Models.Team;
+﻿using Hackathon.Common.Models.Team;
 using System;
+using Hackathon.FileStorage.Abstraction.Models;
 
 namespace Hackathon.Common.Models.Project;
 

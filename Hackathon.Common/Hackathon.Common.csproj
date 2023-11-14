@@ -5,16 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="Templates\EmailConfirmationRequestTemplate.html">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
       <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
       <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.Configuration\Hackathon.Configuration.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
     </ItemGroup>
 </Project>

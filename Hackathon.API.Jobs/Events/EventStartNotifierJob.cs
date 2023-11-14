@@ -1,18 +1,17 @@
-using Hackathon.Common.Models.Notification;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.Events;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using Quartz;
 
 namespace Hackathon.Jobs.Events;
 
 /// <summary>
 /// Уведомляет организатора о начале предстоящего события
 /// </summary>
-public sealed class EventStartNotifierJob: BaseJob<EventStartNotifierJob>
+public sealed class EventStartNotifierJob: BaseBackgroundJob<EventStartNotifierJob>
 {
     private readonly IEventService _eventService;
     private readonly INotificationService _notificationService;
@@ -26,7 +25,7 @@ public sealed class EventStartNotifierJob: BaseJob<EventStartNotifierJob>
         _notificationService = notificationService;
     }
 
-    protected override async Task DoWork(IJobExecutionContext context)
+    public override async Task DoWork()
     {
         var eventsResult = await _eventService.GetUpcomingEventsAsync(TimeSpan.FromMinutes(5));
 

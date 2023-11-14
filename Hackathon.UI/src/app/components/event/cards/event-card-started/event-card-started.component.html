@@ -47,7 +47,7 @@
             </div>
             <div class="event-started__chat-wrapper" [ngSwitch]="selectedChatIndex">
               <chat-team [teamId]="currentChatId" [showMembers]="true" *ngSwitchCase="chatContextEnum.Team"></chat-team>
-              <chat-event [eventId]="currentChatId" [showMembers]="true" *ngSwitchCase="chatContextEnum.Event"></chat-event>
+              <chat-event [event]="event" [eventId]="currentChatId" [showMembers]="true" *ngSwitchCase="chatContextEnum.Event"></chat-event>
             </div>
           </div>
         </mat-tab>

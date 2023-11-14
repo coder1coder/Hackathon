@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.IntegrationEvents;
-using Hackathon.Common.Abstraction.Notifications;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
-using Hackathon.Common.Models.Notification;
 using Hackathon.Common.Models.User;
+using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Services;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 

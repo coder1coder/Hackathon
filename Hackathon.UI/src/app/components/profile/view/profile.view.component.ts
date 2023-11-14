@@ -145,7 +145,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
       })
   }
 
-  public createEmailConfirmationRequest() {
+  public createEmailConfirmationRequest(): void {
     this.userService.createEmailConfirmationRequest()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -169,9 +169,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
           }
           return this.teamService.getMyTeam();
         }),
-        catchError(() => {
-          return of(null);
-        }),
+        catchError(() => of(null)),
         takeUntil(this.destroy$),
       ).subscribe((res) => {
         this.isLoading = false;

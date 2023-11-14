@@ -41,6 +41,9 @@
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
       <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />
       <ProjectReference Include="..\Hackathon.API.Jobs\Hackathon.API.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Jobs\Hackathon.FileStorage.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Informing.Module\Hackathon.Informing.Module.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />
     </ItemGroup>
 

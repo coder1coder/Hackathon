@@ -200,37 +200,6 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("EventLog", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.FileStorageEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BucketName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long?>("Length")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("MimeType")
-                        .HasColumnType("text");
-
-                    b.Property<long?>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StorageFiles");
-                });
-
             modelBuilder.Entity("Hackathon.DAL.Entities.FriendshipEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -314,73 +283,6 @@ namespace Hackathon.DAL.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("MembersTeams", (string)null);
-                });
-
-            modelBuilder.Entity("Hackathon.DAL.Entities.NotificationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("jsonb");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notifications", (string)null);
-                });
-
-            modelBuilder.Entity("Hackathon.DAL.Entities.ProjectEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<long>("EventId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid[]>("FileIds")
-                        .HasColumnType("uuid[]");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("TeamId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.TeamEntity", b =>

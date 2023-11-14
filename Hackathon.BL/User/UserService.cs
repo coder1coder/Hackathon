@@ -3,9 +3,7 @@ using FluentValidation;
 using Hackathon.BL.Email;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common;
-using Hackathon.Common.Abstraction.FileStorage;
 using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
@@ -16,9 +14,12 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Models.FileStorage;
 using Hackathon.BL.Validation.Extensions;
-using Hackathon.BL.Validation.ImageFile;
+using Hackathon.Configuration;
+using Hackathon.FileStorage.Abstraction.Models;
+using Hackathon.FileStorage.Abstraction.Repositories;
+using Hackathon.FileStorage.Abstraction.Services;
+using Hackathon.FileStorage.BL.Validators;
 
 namespace Hackathon.BL.User;
 

@@ -1,11 +1,12 @@
 ﻿using Hackathon.Chats.DAL.Configurations;
 using Hackathon.Chats.DAL.Entities;
+using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.Chats.DAL;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-public class ChatsDbContext: DbContext
+public class ChatsDbContext: BaseDbContext
 {
     /// <summary>
     /// Сообщения

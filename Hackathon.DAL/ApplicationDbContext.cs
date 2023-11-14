@@ -1,19 +1,12 @@
-﻿using Hackathon.Common.Abstraction;
-using Hackathon.DAL.Entities;
-using Hackathon.DAL.Entities.Event;
-using Hackathon.DAL.Entities.Interfaces;
-using Hackathon.DAL.Entities.User;
-using Hackathon.DAL.Extensions;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Hackathon.DAL.Entities;
 using Hackathon.DAL.Entities.ApprovalApplications;
+using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Entities.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.DAL;
 
-public class ApplicationDbContext: DbContext
+public class ApplicationDbContext: BaseDbContext
 {
     /// <summary>
     /// Пользователи
@@ -51,8 +44,7 @@ public class ApplicationDbContext: DbContext
     public DbSet<TeamJoinRequestEntity> TeamJoinRequests { get; set; }
 
     public DbSet<ProjectEntity> Projects { get; set; }
-    public DbSet<NotificationEntity> Notifications { get; set; }
-    public DbSet<FileStorageEntity> StorageFiles { get; set; }
+    
     public DbSet<EventLogEntity> EventLog { get; set; }
     public DbSet<FriendshipEntity> Friendships { get; set; }
 
@@ -80,35 +72,5 @@ public class ApplicationDbContext: DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-            modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
-    }
-
-    public override int SaveChanges()
-    {
-        SetDates();
-        return base.SaveChanges();
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-    {
-        SetDates();
-        return base.SaveChangesAsync(cancellationToken);
-    }
-
-    private void SetDates()
-    {
-        var entries = ChangeTracker
-            .Entries()
-            .Where(e =>
-                (e.Entity is IHasCreatedAt or IHasModifyAt) && (e.State is EntityState.Added or EntityState.Modified));
-
-        foreach (var entityEntry in entries)
-        {
-            if (entityEntry.State == EntityState.Added && entityEntry.Entity is IHasCreatedAt createdEntity)
-                createdEntity.CreatedAt = DateTime.UtcNow;
-
-            if (entityEntry.State == EntityState.Modified && entityEntry.Entity is IHasModifyAt modifiedEntity)
-                modifiedEntity.ModifyAt = DateTime.UtcNow;
-        }
     }
 }

@@ -7,6 +7,7 @@ import { Notification } from "../../../models/Notification/Notification";
 import { BaseTableListComponent } from "../../../common/base-components/base-table-list.component";
 import { AuthService } from "../../../services/auth.service";
 import { takeUntil } from "rxjs";
+import {SignalRService} from "../../../services/signalr.service";
 
 @Component({
   selector: 'notification-list',
@@ -18,6 +19,7 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
 
   constructor(
     private notificationService: NotificationService,
+    private signalRService: SignalRService,
     private authService: AuthService
   ) {
     super(NotificationListComponent.name);
@@ -26,7 +28,7 @@ export class NotificationListComponent extends BaseTableListComponent<Notificati
   override ngOnInit(): void {
     super.ngOnInit();
 
-    this.notificationService.onChanged = () => {
+    this.signalRService.onNotificationChanged = () => {
       if (this.authService.isLoggedIn()) {
         this.fetch();
       }
