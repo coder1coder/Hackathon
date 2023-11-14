@@ -1,4 +1,4 @@
-namespace Hackathon.Informing.Abstractions.Models;
+namespace Hackathon.Informing.Abstractions.Models.Notifications;
 
 /// <summary>
 /// Тип уведомления
@@ -18,5 +18,10 @@ public enum NotificationType
     /// <summary>
     /// Приглашение на мероприятие
     /// </summary>
-    EventInvite = 2
+    EventInvite = 2,
+    
+    /// <summary>
+    /// Решение по запросу вступления в команду
+    /// </summary>
+    TeamJoinRequestDecision = 30
 }

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace Hackathon.Informing.Abstractions.Models;
+namespace Hackathon.Informing.Abstractions.Models.Notifications;
 
-public interface INotification
+public class NotificationModel: INotification
 {
     /// <summary>
     /// Идентификатор
@@ -33,4 +33,9 @@ public interface INotification
     /// Идентификатор автора уведомления, 0 - уведомление отправлено системой
     /// </summary>
     public long? OwnerId { get; set; }
+
+    /// <summary>
+    /// Сериализованное представление содержимого уведомления
+    /// </summary>
+    public string Data { get; set; }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications;
 
 namespace Hackathon.Informing.Abstractions.Services;
 
@@ -16,7 +16,7 @@ public interface INotificationService
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
     Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> listParameters, long userId);
-
+    
     /// <summary>
     /// Отметить уведомления прочитанными
     /// </summary>

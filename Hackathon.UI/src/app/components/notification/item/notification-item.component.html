@@ -10,6 +10,11 @@
           <notification-info-view *ngSwitchCase="0"
                                   [notify]="notification"
                                   [hideDate]="true"></notification-info-view>
+
+          <notification-teamJoinRequestDecision-view *ngSwitchCase="30"
+                                  [notify]="notification"
+                                                     [hideDate]="true">>
+          </notification-teamJoinRequestDecision-view>
         </ng-container>
       </div>
 

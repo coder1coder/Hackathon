@@ -25,8 +25,9 @@ using Hackathon.FileStorage.Abstraction.Models;
 using Hackathon.FileStorage.Abstraction.Repositories;
 using Hackathon.FileStorage.Abstraction.Services;
 using Hackathon.FileStorage.BL.Validators;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 
@@ -486,9 +487,8 @@ public class EventService : IEventService
             return;
 
         var notifications = administratorIds.Select(administratorId =>
-                CreateNotificationModel.Information(administratorId,
-                $"Заявка на согласование мероприятия <{eventModel.Name}>",
-                    eventModel.OwnerId));
+            NotificationCreator.System(new SystemNotificationData($"Заявка на согласование мероприятия <{eventModel.Name}>"),
+                eventModel.OwnerId, administratorId));
 
         await _notificationService.PushManyAsync(notifications);
     }
@@ -506,8 +506,8 @@ public class EventService : IEventService
         if (!usersIds.Any())
             return;
 
-        var notificationModels = usersIds.Select(x =>
-            NotificationFactory.InfoNotification(eventStatusChangingMessage, x));
+        var notificationModels = usersIds.Select(userId =>
+            NotificationCreator.System(new SystemNotificationData(eventStatusChangingMessage), userId));
 
         await _notificationService.PushManyAsync(notificationModels);
     }

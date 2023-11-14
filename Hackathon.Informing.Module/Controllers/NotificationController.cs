@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Hackathon.API.Module;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -68,16 +70,8 @@ public class NotificationController: BaseController
     /// <param name="recipientId">Идентификатор получателя (пользователя)</param>
     [HttpPost("push/info")]
     public Task PushInformationNotification([FromBody] string message, [Required] long recipientId)
-        => _notificationService.PushAsync(new CreateNotificationModel<InfoNotificationData>
-        {
-            UserId = recipientId,
-            OwnerId = AuthorizedUserId,
-            Type = NotificationType.System,
-            Data = new InfoNotificationData
-            {
-                Message = message
-            }
-        });
+        => _notificationService.PushAsync(NotificationCreator.System(new SystemNotificationData(message), 
+            recipientId, AuthorizedUserId));
 
     /// <summary>
     /// Получить количество непрочитанных уведомлений

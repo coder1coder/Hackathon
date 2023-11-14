@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.Events;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 using Microsoft.Extensions.Logging;
 
 namespace Hackathon.Jobs.Events;
@@ -32,6 +33,7 @@ public sealed class EventStartNotifierJob: BaseBackgroundJob<EventStartNotifierJ
         if (eventsResult.IsSuccess && eventsResult.Data.Items is {Count: > 0})
             await _notificationService.PushManyAsync(
                 eventsResult.Data.Items.Select(x =>
-                    NotificationFactory.InfoNotification($"Событие '{x.Name}' скоро начнется", x.OwnerId)));
+                    NotificationCreator.System(new SystemNotificationData($"Событие '{x.Name}' скоро начнется"),
+                        x.OwnerId)));
     }
 }

@@ -12,14 +12,17 @@ export class Notification {
     return JSON.parse(data);
   }
 
-  public static getTypeName(type?:NotificationType): string {
-    switch (type) {
+  public static getTypeName(type?:NotificationType): string
+  {
+    switch (type){
       case NotificationType.Information:
         return 'Системное уведомление';
       case NotificationType.TeamInvite:
         return 'Приглашение в команду';
       case NotificationType.EventInvite:
         return 'Приглашение в событие';
+      case NotificationType.TeamJoinRequestDecision:
+        return 'Ответ на запрос вступления в команду';
       default:
         return ``;
     }
@@ -34,7 +37,7 @@ export class Notification {
       case NotificationType.EventInvite:
         return 'calendar_add_on';
       default:
-        return ``;
+        return 'info_outline';
     }
   }
 }

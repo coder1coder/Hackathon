@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications;
 
 namespace Hackathon.Informing.Abstractions.Repositories;
 
