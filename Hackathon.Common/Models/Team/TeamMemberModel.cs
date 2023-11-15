@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Common.Models.Team;
+namespace Hackathon.Common.Models.Team;
 
 public class TeamMemberModel
 {
@@ -11,4 +11,9 @@ public class TeamMemberModel
     /// Идентификатор участника
     /// </summary>
     public long MemberId { get; set; }
+
+    /// <summary>
+    /// Роль участника
+    /// </summary>
+    public TeamRole Role { get; set; }
 }

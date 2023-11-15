@@ -288,7 +288,8 @@ public class EventService : IEventService
         var addMemberResult = await _teamService.AddMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
-            MemberId = userId
+            MemberId = userId,
+            Role = TeamRole.Participant
         });
 
         return !addMemberResult.IsSuccess

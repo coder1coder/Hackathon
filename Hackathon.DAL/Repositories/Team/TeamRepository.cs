@@ -6,6 +6,7 @@ using Hackathon.DAL.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ public class TeamRepository : ITeamRepository
     {
         var createTeamEntity = _mapper.Map<TeamEntity>(createTeamModel);
 
-        if (createTeamModel.EventId.HasValue)
+        if (createTeamModel.EventId.HasValue) //Случай, когда команда создается автоматически
         {
             var eventEntity = await _dbContext.Events
                 .FirstOrDefaultAsync(x =>
@@ -141,7 +142,8 @@ public class TeamRepository : ITeamRepository
             var memberTeamEntity = new MemberTeamEntity
             {
                 TeamId = teamMemberModel.TeamId,
-                MemberId = teamMemberModel.MemberId
+                MemberId = teamMemberModel.MemberId,
+                Role = teamMemberModel.Role
             };
 
             _dbContext.Entry(memberTeamEntity).State = EntityState.Added;
@@ -167,25 +169,47 @@ public class TeamRepository : ITeamRepository
 
     public async Task SetOwnerAsync(long teamId, long ownerId)
     {
-        var teamEntity = await _dbContext.Teams.FirstOrDefaultAsync(x => x.Id == teamId);
+        var teamEntity = await _dbContext.Teams
+            .Include(x => x.Members)
+            .FirstOrDefaultAsync(x => x.Id == teamId);
 
         if (teamEntity is not null)
         {
-            teamEntity.OwnerId = ownerId;
+            MemberTeamEntity teamMemberNewOwner = null, teamMemberOldOwner = null;
 
-            _dbContext.Teams.Update(teamEntity);
-            await _dbContext.SaveChangesAsync();
+            foreach (var member in teamEntity.Members)
+            {
+                if (member.MemberId == ownerId)
+                    teamMemberNewOwner = member; //Поиск нового владельца
+
+                if (member.Role == TeamRole.Owner)
+                    teamMemberOldOwner = member; //Поиск старого владельца
+            }
+
+            if (teamMemberNewOwner is not null && teamMemberOldOwner is not null
+                && teamMemberNewOwner != teamMemberOldOwner)
+            {
+                _dbContext.TeamMembers.Remove(teamMemberOldOwner);
+
+                teamMemberNewOwner.Role = TeamRole.Owner;
+                teamEntity.OwnerId = ownerId;
+
+                _dbContext.Teams.Update(teamEntity);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 
     public async Task DeleteTeamAsync(DeleteTeamModel deleteTeamModel)
     {
         var teamEntity = await _dbContext.Teams
+            .Include(x => x.Members)
             .SingleOrDefaultAsync(x => x.Id == deleteTeamModel.TeamId);
 
         if (teamEntity is not null)
         {
             teamEntity.IsDeleted = true;
+            teamEntity.Members.Clear();
             await _dbContext.SaveChangesAsync();
         }
     }

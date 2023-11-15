@@ -86,6 +86,17 @@ public class TeamService : ITeamService
 
         var newTeamId = await _teamRepository.CreateAsync(createTeamModel);
 
+        //Если команду создал пользователь, добавляем его в команду, как владельца
+        if (createTeamModel.OwnerId.HasValue)
+        {
+            await _teamRepository.AddMemberAsync(new TeamMemberModel
+            {
+                TeamId = newTeamId,
+                MemberId = createTeamModel.OwnerId.Value,
+                Role = TeamRole.Owner
+            });
+        }
+
         return Result<long>.FromValue(newTeamId);
     }
 
@@ -163,13 +174,9 @@ public class TeamService : ITeamService
             return Result.NotValid(TeamMessages.UserIsNotOnTeam);
 
         if (team.HasOwnerWithId(teamMemberModel.MemberId))
-        {
             await RemoveOwnerAsync(team);
-        }
         else
-        {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
-        }
 
         return Result.Success;
     }
@@ -250,7 +257,6 @@ public class TeamService : ITeamService
             .OrderByDescending(u => u.DateTimeAdd)
             .First();
 
-        team.OwnerId = newOwner.Id;
         await _teamRepository.SetOwnerAsync(team.Id, newOwner.Id);
     }
 }
