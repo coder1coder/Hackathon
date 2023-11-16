@@ -77,7 +77,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
 
   public fetchMessages(): void {
     if (this.canView && this.teamId > 0) {
-      this.teamChatClient.getListAsync(this.teamId)
+      this.teamChatClient.getListAsync(this.teamId, this.params.Offset, this.params.Limit)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (r: BaseCollection<TeamChatMessage>) => {
