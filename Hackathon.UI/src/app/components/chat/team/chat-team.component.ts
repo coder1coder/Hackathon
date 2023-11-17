@@ -72,7 +72,6 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         this.team = team;
         this.loadChatUsers();
       });
-
   }
 
   public fetchMessages(): void {

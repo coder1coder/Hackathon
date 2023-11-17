@@ -4,7 +4,7 @@
 >
 
   <div actions *ngIf="user">
-    <button *ngIf="!isEditMode" mat-button color="primary" (click)="userEdit()">Редактировать</button>
+    <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="userEdit()">Редактировать</button>
     <button *ngIf="isEditMode" mat-button (click)="userEditCancel()">Отменить</button>
     <button *ngIf="isEditMode" mat-button color="primary" (click)="saveUserEdit()" [disabled]="!form.valid">Сохранить</button>
   </div>

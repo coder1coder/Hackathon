@@ -14,8 +14,8 @@ import { DATE_FORMAT_DD_MM_YYYY } from "../../../common/consts/date-formats";
 import { Subject, takeUntil } from "rxjs";
 import { EventClient } from "../../../services/event/event.client";
 import { EventService } from "../../../services/event/event.service";
-import {EventErrorMessages} from "../../../common/error-messages/event-error-messages";
-import {SnackService} from "../../../services/snack.service";
+import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
+import { SnackService } from "../../../services/snack.service";
 
 @Component({
   selector: 'event-list',

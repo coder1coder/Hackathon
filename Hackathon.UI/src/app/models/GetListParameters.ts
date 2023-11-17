@@ -1,4 +1,4 @@
-import {PageSettingsDefaults} from "./PageSettings";
+import { PageSettingsDefaults } from "./PageSettings";
 
 export class GetListParameters<T> implements PaginationSorting {
   Filter: T;
