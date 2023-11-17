@@ -19,6 +19,8 @@ import { IKeyValue } from "../../../common/interfaces/key-value.interface";
 import { emailRegex } from "../../../common/patterns/email-regex";
 import { checkValue } from "../../../common/functions/check-value";
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
+import {fromMobx} from "../../../common/functions/from-mobx.function";
+import {CurrentUserStore} from "../../../shared/stores/current-user.store";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -33,6 +35,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
   public UserRoleTranslator = UserRoleTranslator;
   public userId: number;
   public user: IUser;
+  public currentUser: IUser;
   public userTeam: Team;
   public authUserId: number;
   public isEditMode: boolean = false;
@@ -55,6 +58,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
     private snackService: SnackService,
     private fb: FormBuilder,
     private profileUserStore: ProfileUserStore,
+    private currentUserStore: CurrentUserStore,
   ) {
     super();
     this.userService = userService;
@@ -74,6 +78,10 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
         this.friendshipTabs?.realignInkBar()
       }, 0);
     }
+  }
+
+  public get isOwner(): boolean {
+    return this.user?.id === this.currentUser?.id;
   }
 
   public userEdit(): void {
@@ -176,6 +184,10 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
         this.userTeam = res;
       }
     )
+
+    fromMobx(() => this.currentUserStore.currentUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user: IUser) => this.currentUser = user)
   }
 
   private fetchReactions(): void {
