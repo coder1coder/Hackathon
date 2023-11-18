@@ -44,7 +44,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     private authService:AuthService,
     private projectApiClient: ProjectClient,
     private dialogService: MatDialog,
-    signalRService: SignalRService
+    private signalRService: SignalRService
   ) {
     super();
 

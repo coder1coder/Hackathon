@@ -48,7 +48,7 @@ export class Event {
     return event.teams?.flatMap(x=>x.members);
   }
 
-  public static getStageName(event:Event, eventStageId: number): string {
-    return  event.stages.find(x=>x.id === eventStageId).name;
+  public static getStageName(event:Event, eventStageId: number): string | null {
+    return  event?.stages?.find(x=>x.id === eventStageId)?.name;
   }
 }
