@@ -53,6 +53,7 @@ $card-width: 32.7%;
     box-sizing: border-box;
     cursor: pointer;
     transition: all 0.2s ease-out;
+    box-shadow: 0 0 5px #a1a1a1;
 
     &:hover {
       box-shadow: 0 0 5px 3px #9e9e9e;
@@ -83,4 +84,3 @@ $card-width: 32.7%;
     }
   }
 }
-

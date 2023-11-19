@@ -47,7 +47,7 @@ export class ThemeChangeService {
 
   private getMode(): IThemeModeInterface {
     const mode = this.storage.getItem(AuthConstants.STORAGE_MODE_KEY);
-    return mode !== undefined ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
+    return mode ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
   }
 
   private setThemeMode(theme: IThemeModeInterface): void {
