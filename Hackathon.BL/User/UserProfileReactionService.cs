@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.BL.Validation.User;
@@ -52,6 +53,16 @@ public class UserProfileReactionService: IUserProfileReactionService
         return await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
     }
 
+    public async Task<List<UserProfileReactionModel>> GetReactionsByTypeAsync(long targetUserId)
+    {
+        if (!await _userRepository.ExistsAsync(targetUserId))
+            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+
+        var reactions = await _userProfileReactionRepository.GetReactionsAsync(targetUserId);
+
+        return BuildListReactions(reactions);
+    }
+
     private async Task ValidateOrThrow(long userId, long targetUserId)
     {
         if (userId == targetUserId)
@@ -62,5 +73,26 @@ public class UserProfileReactionService: IUserProfileReactionService
 
         if (! await _userRepository.ExistsAsync(targetUserId))
             throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+    }
+
+    private List<UserProfileReactionModel> BuildListReactions(List<UserProfileReaction> reactionsList)
+    {
+        var reactionLike = new UserProfileReactionModel() { Type = UserProfileReaction.Like };
+        var reactionHeart = new UserProfileReactionModel() { Type = UserProfileReaction.Heart };
+        var reactionFire = new UserProfileReactionModel() { Type = UserProfileReaction.Fire };
+
+        foreach (var reactions in reactionsList)
+        {
+            if ((UserProfileReaction.Like & reactions) == UserProfileReaction.Like)
+                reactionLike.Count++;
+
+            if ((UserProfileReaction.Heart & reactions) == UserProfileReaction.Heart)
+                reactionHeart.Count++;
+
+            if ((UserProfileReaction.Fire & reactions) == UserProfileReaction.Fire)
+                reactionFire.Count++;
+        }
+
+        return new List<UserProfileReactionModel> { reactionLike, reactionHeart, reactionFire };
     }
 }

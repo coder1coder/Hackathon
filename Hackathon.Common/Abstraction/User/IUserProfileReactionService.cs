@@ -1,4 +1,5 @@
 using Hackathon.Common.Models.User;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hackathon.Common.Abstraction.User;
@@ -30,4 +31,11 @@ public interface IUserProfileReactionService
     /// <param name="targetUserId">Идентификатор пользователя получившего реакцию</param>
     /// <returns></returns>
     Task<UserProfileReaction?> GetReactionsAsync(long userId, long targetUserId);
+
+    /// <summary>
+    /// Получить реакции на профиль пользователя по типу с количеством
+    /// </summary>
+    /// <param name="targetUserId">Идентификатор пользователя получившего реакции</param>
+    /// <returns></returns>
+    Task<List<UserProfileReactionModel>> GetReactionsByTypeAsync(long targetUserId);
 }
