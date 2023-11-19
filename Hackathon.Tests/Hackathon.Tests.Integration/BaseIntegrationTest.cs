@@ -39,7 +39,7 @@ public abstract class BaseIntegrationTest
     protected readonly IEventChatApiClient EventChatApiClient;
     protected readonly IApprovalApplicationApiClient ApprovalApplicationApiClient;
 
-    protected readonly IEventLogService EventLogService;
+    protected readonly IEventLogRepository EventLogRepository;
     protected readonly IUserRepository UserRepository;
     protected readonly ITeamRepository TeamRepository;
     protected readonly IFriendshipRepository FriendshipRepository;
@@ -63,7 +63,7 @@ public abstract class BaseIntegrationTest
         EmailSettings = factory.Services.GetRequiredService<IOptions<EmailSettings>>().Value;
         _authOptions = factory.Services.GetRequiredService<IOptions<AuthOptions>>().Value;
 
-        EventLogService = factory.Services.GetRequiredService<IEventLogService>();
+        EventLogRepository = factory.Services.GetRequiredService<IEventLogRepository>();
         UserRepository = factory.Services.GetRequiredService<IUserRepository>();
         TeamRepository = factory.Services.GetRequiredService<ITeamRepository>();
         FriendshipRepository = factory.Services.GetRequiredService<IFriendshipRepository>();

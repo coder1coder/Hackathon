@@ -8,27 +8,28 @@ namespace Hackathon.BL.EventLog;
 
 public class EventLogHandler: IEventLogHandler
 {
-    private readonly IEventLogService _service;
+    private readonly IEventLogRepository _repository;
     private readonly ILogger<EventLogHandler> _logger;
 
     public EventLogHandler(
-        IEventLogService service,
-        ILogger<EventLogHandler> logger)
+        ILogger<EventLogHandler> logger, 
+        IEventLogRepository repository)
     {
-        _service = service;
         _logger = logger;
+        _repository = repository;
     }
 
-    public async Task Handle(EventLogModel logModel)
+    public async Task Handle(EventLogModel eventLogModel)
     {
         try
         {
-            await _service.AddAsync(logModel);
+            await _repository.AddAsync(eventLogModel);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "{Initiator}. Ошибка во время обработки сообщения журнала событий",
                 nameof(EventLogHandler));
+            throw;
         }
     }
 }

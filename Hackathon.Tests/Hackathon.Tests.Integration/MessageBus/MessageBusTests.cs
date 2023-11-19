@@ -22,7 +22,7 @@ public class MessageBusTests : BaseIntegrationTest
     public async Task EventLogConsumer_Consume_Success()
     {
         await using var provider = new ServiceCollection()
-            .AddScoped<IEventLogHandler>(_ => new EventLogHandler(EventLogService, NullLogger<EventLogHandler>.Instance))
+            .AddScoped<IEventLogHandler>(_ => new EventLogHandler(NullLogger<EventLogHandler>.Instance, EventLogRepository))
             .AddScoped<ILogger<EventLogConsumer>>(_ => NullLogger<EventLogConsumer>.Instance)
             .AddMassTransitTestHarness(cfg =>
             {

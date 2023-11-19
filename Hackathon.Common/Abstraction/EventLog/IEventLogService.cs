@@ -13,7 +13,7 @@ public interface IEventLogService
     /// <param name="eventLogModel"></param>
     /// <returns></returns>
     Task AddAsync(EventLogModel eventLogModel);
-
+    
     /// <summary>
     /// Получить список записей журнала событий
     /// </summary>

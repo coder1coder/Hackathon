@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.ApprovalApplications;
+using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.User;
@@ -38,37 +38,38 @@ namespace Hackathon.BL.Event;
 /// </summary>
 public class EventService : IEventService
 {
-    private readonly FluentValidation.IValidator<EventCreateParameters> _createEventModelValidator;
-    private readonly FluentValidation.IValidator<EventUpdateParameters> _updateEventModelValidator;
-    private readonly FluentValidation.IValidator<IFileImage> _eventImageValidator;
+    private readonly IValidator<EventCreateParameters> _createEventModelValidator;
+    private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
+    private readonly IValidator<IFileImage> _eventImageValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
     private readonly IUserRepository _userRepository;
-    private readonly FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
+    private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
-    private readonly IMessageBusService _messageBusService;
     private readonly IIntegrationEventsHub<EventStatusChangedIntegrationEvent> _integrationEventHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
     private readonly IApprovalApplicationRepository _approvalApplicationRepository;
+    private readonly IEventLogService _eventLogService;
 
     public EventService(
-        FluentValidation.IValidator<EventCreateParameters> createEventModelValidator,
-        FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator,
-        FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
-        FluentValidation.IValidator<IFileImage> eventImageValidator,
+        IValidator<EventCreateParameters> createEventModelValidator,
+        IValidator<EventUpdateParameters> updateEventModelValidator,
+        IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator,
+        IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IMessageBusService messageBusService,
         IIntegrationEventsHub<EventStatusChangedIntegrationEvent> integrationEventHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
         IEventAgreementRepository eventAgreementRepository,
-        ILogger<EventService> logger, IApprovalApplicationRepository approvalApplicationRepository)
+        ILogger<EventService> logger, 
+        IApprovalApplicationRepository approvalApplicationRepository, 
+        IEventLogService eventLogService)
     {
         _createEventModelValidator = createEventModelValidator;
         _updateEventModelValidator = updateEventModelValidator;
@@ -78,13 +79,13 @@ public class EventService : IEventService
         _teamService = teamService;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _messageBusService = messageBusService;
         _integrationEventHub = integrationEventHub;
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
         _eventAgreementRepository = eventAgreementRepository;
         _logger = logger;
         _approvalApplicationRepository = approvalApplicationRepository;
+        _eventLogService = eventLogService;
     }
 
     public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
@@ -95,9 +96,9 @@ public class EventService : IEventService
 
         var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
 
-        await _messageBusService.TryPublish(new EventLogModel(
+        await _eventLogService.AddAsync(new EventLogModel(
             EventLogType.Created,
-            $"Создано новое событие с идентификатором '{eventId}'",
+            $"Добавлено новое событие с идентификатором '{eventId}'",
             eventCreateParameters.OwnerId
         ));
 
