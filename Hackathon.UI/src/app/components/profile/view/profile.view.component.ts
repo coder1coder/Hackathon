@@ -4,7 +4,7 @@ import { AuthService } from "../../../services/auth.service";
 import { TeamClient } from "../../../services/team-client.service";
 import { catchError, of, switchMap, takeUntil } from "rxjs";
 import { IUpdateUser, IUser } from "../../../models/User/IUser";
-import { UserProfileReaction } from "src/app/models/User/UserProfileReaction";
+import { UserProfileReaction, UserProfileReactionModel } from "src/app/models/User/UserProfileReaction";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../../services/user.service";
 import { UserProfileReactionService } from "../../../services/user-profile-reaction.service";
@@ -21,6 +21,7 @@ import { checkValue } from "../../../common/functions/check-value";
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
 import {fromMobx} from "../../../common/functions/from-mobx.function";
 import {CurrentUserStore} from "../../../shared/stores/current-user.store";
+import { reaction } from "mobx";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -45,6 +46,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
   public userProfileReaction = UserProfileReaction;
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
+  public userProfileReactionsList: UserProfileReactionModel[] = [];
 
   private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   private emailRegexp: RegExp = emailRegex;
@@ -129,6 +131,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
       .pipe(takeUntil(this.destroy$))
       .subscribe(()=>{
         this.fetchReactions();
+        this.fetchReactionsCount();
       });
   }
 
@@ -175,6 +178,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
           if (this.userId !== this.authUserId) {
             this.fetchReactions();
           }
+          this.fetchReactionsCount();
           return this.teamService.getMyTeam();
         }),
         catchError(() => of(null)),
@@ -198,6 +202,16 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
           this.userProfileReactions = reaction;
         },
       });
+  }
+
+  private fetchReactionsCount(): void {
+    this.userProfileReactionService.getCount(this.isOwner ? this.authUserId : this.userId)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (reactionModelList: UserProfileReactionModel[]) => {
+        this.userProfileReactionsList = reactionModelList;
+      },
+    });
   }
 
   private initForm(): void {

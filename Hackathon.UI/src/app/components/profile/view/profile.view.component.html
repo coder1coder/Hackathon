@@ -98,9 +98,42 @@
              *ngFor="let reaction of getAvailableUserProfileReactions()">
 
           <div [ngSwitch]="reaction">
-            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Like">thumb_up</mat-icon>
-            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Heart">favorite</mat-icon>
-            <mat-icon class="reaction-icon" *ngSwitchCase="userProfileReaction.Fire">local_fire_department</mat-icon>
+            <div *ngSwitchCase="userProfileReaction.Like">
+              <mat-icon class="reaction-icon">thumb_up</mat-icon>
+              <span [innerText]="userProfileReactionsList[0]?.count"></span>
+            </div>
+            <div *ngSwitchCase="userProfileReaction.Heart">
+              <mat-icon class="reaction-icon">favorite</mat-icon>
+              <span [innerText]="userProfileReactionsList[1]?.count"></span>
+            </div>
+            <div *ngSwitchCase="userProfileReaction.Fire">
+              <mat-icon class="reaction-icon">local_fire_department</mat-icon>
+              <span [innerText]="userProfileReactionsList[2]?.count"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="reaction__list" *ngIf="userId == authUserId">
+
+        <div class="reaction reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
+             [class.active]="true"
+             *ngFor="let reaction of getAvailableUserProfileReactions()">
+
+          <div [ngSwitch]="reaction">
+            <div *ngSwitchCase="userProfileReaction.Like">
+              <mat-icon class="reaction-icon">thumb_up</mat-icon>
+              <span [innerText]="userProfileReactionsList[0]?.count"></span>
+            </div>
+            <div *ngSwitchCase="userProfileReaction.Heart">
+              <mat-icon class="reaction-icon">favorite</mat-icon>
+              <span [innerText]="userProfileReactionsList[1]?.count"></span>
+            </div>
+            <div *ngSwitchCase="userProfileReaction.Fire">
+              <mat-icon class="reaction-icon">local_fire_department</mat-icon>
+              <span [innerText]="userProfileReactionsList[2]?.count"></span>
+            </div>
           </div>
 
         </div>
