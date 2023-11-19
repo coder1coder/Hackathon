@@ -39,18 +39,18 @@ public class NotificationService: INotificationService
 
     public async Task PushAsync<T>(CreateNotificationModel<T> model) where T: class
     {
-        var notificationIds = await _notificationRepository.PushManyAsync(new []{ model });
+        var notificationIds = await _notificationRepository.AddManyAsync(new []{ model });
         await _informingIntegrationEventsHub.PublishAll(new NotificationChangedIntegrationEvent(
             NotificationChangedOperation.Created, notificationIds));
     }
 
     public async Task PushManyAsync<T>(IEnumerable<CreateNotificationModel<T>> models) where T : class
     {
-        var notificationIds = await _notificationRepository.PushManyAsync(models.ToArray());
+        var notificationIds = await _notificationRepository.AddManyAsync(models.ToArray());
         await _informingIntegrationEventsHub.PublishAll(new NotificationChangedIntegrationEvent(
             NotificationChangedOperation.Created, notificationIds));
     }
 
-    public Task<long> GetUnreadNotificationsCountAsync(long userId)
+    public Task<int> GetUnreadNotificationsCountAsync(long userId)
         => _notificationRepository.GetUnreadNotificationsCount(userId);
 }

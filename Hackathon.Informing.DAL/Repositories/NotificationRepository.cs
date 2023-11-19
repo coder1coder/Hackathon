@@ -26,7 +26,7 @@ public class NotificationRepository: INotificationRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid[]> PushManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class
+    public async Task<Guid[]> AddManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class
     {
         var notificationEntities = _mapper.Map<NotificationEntity[]>(notifications);
         await _dbContext.Notifications.AddRangeAsync(notificationEntities);
@@ -66,10 +66,11 @@ public class NotificationRepository: INotificationRepository
         };
     }
 
-    public Task<long> GetUnreadNotificationsCount(long userId)
+    public Task<int> GetUnreadNotificationsCount(long userId)
         => _dbContext.Notifications
-            .AsNoTracking()
-            .LongCountAsync(x => x.UserId == userId && x.IsRead == false);
+            .CountAsync(x => 
+                x.UserId == userId 
+                && x.IsRead == false);
 
     public async Task MarkAsRead(long userId, Guid[] ids)
     {

@@ -13,7 +13,7 @@ public interface INotificationRepository
     /// </summary>
     /// <param name="notifications">Уведомления</param>
     /// <returns></returns>
-    Task<Guid[]> PushManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class;
+    Task<Guid[]> AddManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class;
 
     /// <summary>
     /// Получить список уведомлений пользователя по заданным параметрам фильтрации и пагинации
@@ -39,5 +39,10 @@ public interface INotificationRepository
     /// <returns></returns>
     Task Delete(long userId, Guid[] ids = null);
 
-    Task<long> GetUnreadNotificationsCount(long userId);
+    /// <summary>
+    /// Получить количество непрочитанных уведомлений пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <returns></returns>
+    Task<int> GetUnreadNotificationsCount(long userId);
 }

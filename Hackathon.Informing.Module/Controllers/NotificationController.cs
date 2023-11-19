@@ -84,6 +84,6 @@ public class NotificationController: BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("unread/count")]
-    public Task<long> GetUnreadNotificationsCount()
+    public Task<int> GetUnreadNotificationsCount()
         => _notificationService.GetUnreadNotificationsCountAsync(AuthorizedUserId);
 }

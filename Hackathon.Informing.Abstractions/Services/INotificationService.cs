@@ -52,7 +52,7 @@ public interface INotificationService
     /// <summary>
     /// Получить количество непрочитанных уведомлений
     /// </summary>
-    /// <param name="userId"></param>
+    /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<long> GetUnreadNotificationsCountAsync(long userId);
+    Task<int> GetUnreadNotificationsCountAsync(long userId);
 }
