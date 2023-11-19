@@ -10,8 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="10.3.6" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="FluentValidation"  />
+      <PackageReference Include="Microsoft.Extensions.Options"  />
     </ItemGroup>
 
 

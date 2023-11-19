@@ -9,28 +9,28 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Mapster" Version="7.3.0" />
-        <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
-        <PackageReference Include="MassTransit" Version="8.0.2" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
+        <PackageReference Include="Mapster"  />
+        <PackageReference Include="Mapster.DependencyInjection"  />
+        <PackageReference Include="MassTransit"  />
+        <PackageReference Include="MassTransit.RabbitMQ"  />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"  />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR"  />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-        <PackageReference Include="prometheus-net.AspNetCore" Version="8.0.0" />
-        <PackageReference Include="Serilog" Version="2.12.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-        <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
-        <PackageReference Include="System.Text.Json" Version="7.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"  />
+        <PackageReference Include="prometheus-net.AspNetCore"  />
+        <PackageReference Include="Serilog"  />
+        <PackageReference Include="Serilog.AspNetCore"  />
+        <PackageReference Include="Serilog.Enrichers.Thread"  />
+        <PackageReference Include="Serilog.Exceptions"  />
+        <PackageReference Include="Serilog.Sinks.Console"  />
+        <PackageReference Include="Serilog.Sinks.Grafana.Loki"  />
+        <PackageReference Include="Swashbuckle.AspNetCore"  />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations"  />
+        <PackageReference Include="System.Configuration.ConfigurationManager"  />
+        <PackageReference Include="System.Text.Json"  />
     </ItemGroup>
 
     <ItemGroup>

@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
-      <PackageReference Include="Mapster" Version="7.3.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
-      <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+      <PackageReference Include="Backend.Tools.Common"  />
+      <PackageReference Include="Mapster"  />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features"  />
+      <PackageReference Include="SixLabors.ImageSharp"  />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt"  />
     </ItemGroup>
 
     <ItemGroup>

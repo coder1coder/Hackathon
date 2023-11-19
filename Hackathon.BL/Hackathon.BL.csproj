@@ -14,12 +14,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="3.7.7.25" />
-      <PackageReference Include="Backend.Tools.Common" Version="1.0.12" />
-      <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
-      <PackageReference Include="Mapster" Version="7.3.0" />
-      <PackageReference Include="MassTransit" Version="8.0.2" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="AWSSDK.S3"  />
+      <PackageReference Include="Backend.Tools.Common"  />
+      <PackageReference Include="BCrypt.Net-Next"  />
+      <PackageReference Include="Mapster"  />
+      <PackageReference Include="MassTransit"  />
+      <PackageReference Include="Microsoft.Extensions.Options"  />
     </ItemGroup>
 
 
