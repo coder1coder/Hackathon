@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Hackathon.Common.Models.User;
 
 public class UserModel: UserShortModel

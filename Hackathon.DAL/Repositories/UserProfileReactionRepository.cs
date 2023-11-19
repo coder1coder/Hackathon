@@ -28,17 +28,13 @@ public class UserProfileReactionRepository: IUserProfileReactionRepository
         return userReactions?.Reaction ?? default(UserProfileReaction);
     }
 
-    public async Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId)
-    {
-        var userReactions = await _dbContext.UserReactions
+    public async Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId) =>
+        await _dbContext.UserReactions
             .AsNoTracking()
             .Where(x => x.TargetUserId == targetUserId)
+            .Select(x => x.Reaction)
             .ToListAsync();
 
-        return userReactions
-            .Select(x => x.Reaction)
-            .ToList();
-    }
 
     public async Task UpsertReactionsAsync(long userId, long targetUserId, UserProfileReaction reactions)
     {
