@@ -132,7 +132,7 @@ public class EmailConfirmationService: IEmailConfirmationService
 
     private async Task<Result> SendConfirmationEmail(UserModel userModel, string confirmationCode)
     {
-        var generateTemplateResult = await _templateService.Generate(Templates.EmailConfirmationRequest, new Dictionary<string, string>
+        var generateTemplateResult = await _templateService.GenerateAsync(Templates.EmailConfirmationRequest, new Dictionary<string, string>
         {
             {"username", userModel.GetAnyName()},
             {"confirmationCode", confirmationCode}

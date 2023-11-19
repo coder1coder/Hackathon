@@ -21,7 +21,7 @@ public interface INotificationRepository
     /// <param name="getListParameters">Модель фильтра и пагинации</param>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> getListParameters, long userId);
+    Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> getListParameters, long userId);
 
     /// <summary>
     /// Отметить уведомления пользователя как прочтенные
@@ -29,7 +29,7 @@ public interface INotificationRepository
     /// <param name="userId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    Task MarkAsRead(long userId, Guid[] ids);
+    Task MarkAsReadAsync(long userId, Guid[] ids);
 
     /// <summary>
     /// Отметить уведомления пользователя как удаленные
@@ -37,12 +37,12 @@ public interface INotificationRepository
     /// <param name="userId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    Task Delete(long userId, Guid[] ids = null);
+    Task DeleteAsync(long userId, Guid[] ids = null);
 
     /// <summary>
     /// Получить количество непрочитанных уведомлений пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <returns></returns>
-    Task<int> GetUnreadNotificationsCount(long userId);
+    Task<int> GetUnreadNotificationsCountAsync(long userId);
 }

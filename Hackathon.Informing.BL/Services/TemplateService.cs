@@ -22,7 +22,7 @@ public class TemplateService: ITemplateService
         _templateRepository = templateRepository;
     }
 
-    public async Task<Result<string>> Generate(string templateId, Dictionary<string, string> templateParameters)
+    public async Task<Result<string>> GenerateAsync(string templateId, Dictionary<string, string> templateParameters)
     {
         var template = await _templateRepository.GetAsync(templateId);
 

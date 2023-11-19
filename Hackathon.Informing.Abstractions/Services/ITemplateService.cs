@@ -15,5 +15,5 @@ public interface ITemplateService
     /// <param name="templateId">Наименование шаблона</param>
     /// <param name="templateParameters">Параметры шаблона</param>
     /// <returns></returns>
-    Task<Result<string>> Generate(string templateId, Dictionary<string, string> templateParameters);
+    Task<Result<string>> GenerateAsync(string templateId, Dictionary<string, string> templateParameters);
 }

@@ -36,13 +36,13 @@ public class NotificationRepository: INotificationRepository
             .ToArray();
     }
 
-    public async Task<BaseCollection<NotificationModel>> GetList(GetListParameters<NotificationFilterModel> parameters, long userId)
+    public async Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> parameters, long userId)
     {
         var query = _dbContext.Notifications
             .AsNoTracking()
             .Where(x => x.UserId == userId);
 
-        var total = query.Count();
+        var total = await query.CountAsync();
 
         if (parameters.Filter?.IsRead != null)
             query = query.Where(x => x.IsRead == parameters.Filter.IsRead.Value);
@@ -66,13 +66,13 @@ public class NotificationRepository: INotificationRepository
         };
     }
 
-    public Task<int> GetUnreadNotificationsCount(long userId)
+    public Task<int> GetUnreadNotificationsCountAsync(long userId)
         => _dbContext.Notifications
             .CountAsync(x => 
                 x.UserId == userId 
                 && x.IsRead == false);
 
-    public async Task MarkAsRead(long userId, Guid[] ids)
+    public async Task MarkAsReadAsync(long userId, Guid[] ids)
     {
         var query = _dbContext.Notifications.Where(x => x.UserId == userId);
 
@@ -84,7 +84,7 @@ public class NotificationRepository: INotificationRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(long userId, Guid[] ids = null)
+    public async Task DeleteAsync(long userId, Guid[] ids = null)
     {
         var notifications = _dbContext
                 .Notifications
