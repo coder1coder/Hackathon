@@ -55,7 +55,8 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
         .subscribe({
           next: (res: EventChatMessage) => {
             this.messages.push(res);
-            this.scrollChatToLastMessage();
+            this.isNearBottom = this.isUserNearBottom();
+            this.onElementsChanged(res.ownerId === this.currentUserId);
           },
           error: () => {},
         });
@@ -83,7 +84,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
         .subscribe({
           next: (r: BaseCollection<EventChatMessage>) => {
             this.messages.unshift(...r.items);
-            this.params.Offset += PageSettingsDefaults.Limit
+            this.params.Offset += PageSettingsDefaults.Limit;
           },
           error: () => {},
         });

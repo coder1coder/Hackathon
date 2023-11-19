@@ -54,7 +54,8 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         .subscribe({
           next: (res: TeamChatMessage) =>  {
             this.messages.push(res);
-            this.scrollChatToLastMessage();
+            this.isNearBottom = this.isUserNearBottom();
+            this.onElementsChanged(res.ownerId === this.currentUserId);
           },
           error: () => {},
         });
@@ -71,6 +72,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
       .subscribe((team: Team) => {
         this.team = team;
         this.loadChatUsers();
+        this.scrollChatToLastMessage();
       });
   }
 
@@ -81,7 +83,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         .subscribe({
           next: (r: BaseCollection<TeamChatMessage>) => {
             this.messages.unshift(...r.items);
-            this.params.Offset += PageSettingsDefaults.Limit
+            this.params.Offset += PageSettingsDefaults.Limit;
           },
           error: () => {},
         });

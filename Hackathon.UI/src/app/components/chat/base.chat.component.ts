@@ -17,6 +17,7 @@ export abstract class BaseChatComponent<TChatMessage>
   public currentUserId: number;
   public isOpened: boolean = false
   public isFloatMode: boolean = false;
+  public isNearBottom: boolean = true;
   public form: FormGroup = this.fb.group({});
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
@@ -76,8 +77,8 @@ export abstract class BaseChatComponent<TChatMessage>
       ).subscribe({
         next: (user: IUser) => this.chatMembers.set(user.id, user),
         complete: () => {
-          this.isLoaded = true;
           this.scrollChatToLastMessage();
+          this.isLoaded = true;
         },
       });
   }
@@ -112,8 +113,22 @@ export abstract class BaseChatComponent<TChatMessage>
     }, 100);
   }
 
+  public onElementsChanged(forceScroll: boolean = false): void {
+    if (forceScroll || this.isNearBottom) {
+      this.scrollChatToLastMessage();
+    }
+  }
+
   public getMember(id: number): IUser {
     return this.chatMembers.get(id);
+  }
+
+  public isUserNearBottom(): boolean {
+    if (!this.chatBody?.nativeElement) return false;
+    const threshold = 150;
+    const position = this.chatBody.nativeElement.scrollTop + this.chatBody.nativeElement.offsetHeight;
+    const height = this.chatBody.nativeElement.scrollHeight;
+    return position > height - threshold;
   }
 
   private initSubscriptions(): void {

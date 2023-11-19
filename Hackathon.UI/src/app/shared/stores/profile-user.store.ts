@@ -141,7 +141,7 @@ export class ProfileUserStore {
     const baseRed = (baseRGB >> 16) & 255;
     const baseGreen = (baseRGB >> 8) & 255;
     const baseBlue = baseRGB & 255;
-    const brightnessOffset = (hash % 30) - 15;
+    const brightnessOffset = (hash % 35) - 15;
     const tonedRed = Math.max(0, Math.min(255, baseRed + brightnessOffset));
     const tonedGreen = Math.max(0, Math.min(255, baseGreen + brightnessOffset));
     const tonedBlue = Math.max(0, Math.min(255, baseBlue + brightnessOffset));
