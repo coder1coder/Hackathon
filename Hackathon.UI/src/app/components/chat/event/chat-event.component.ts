@@ -39,7 +39,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
     protected authService: AuthService,
     protected fb: FormBuilder,
     protected profileUserStore: ProfileUserStore,
-    private signalRService: SignalRService,
+    protected signalRService: SignalRService,
     private eventClient: EventClient,
     private eventChatClient: EventChatClient,
     private errorProcessor: ErrorProcessorService,

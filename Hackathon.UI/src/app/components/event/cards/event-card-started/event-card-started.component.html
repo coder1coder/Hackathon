@@ -1,11 +1,12 @@
 <layout-default
   [title]="'Событие: ' + event.name"
+  [subTitle]="currentStageName"
   [containerCssClasses]="'relative'"
 >
 
   <div class="event-started-wrapper">
     <aside class="event-started-sidebar theme-background">
-      <button mat-button (click)="selectedPageIndex = pagesEnum.EventTasks" *ngIf="eventService.hasTasks(event)">
+      <button mat-button (click)="selectedPageIndex = pagesEnum.EventTasks" *ngIf="Event.hasTasks(event)">
         <mat-icon>task</mat-icon>
         Задачи
       </button>
@@ -24,7 +25,7 @@
                      class="without-header team-chat-theme"
                      animationDuration="0ms"
                      >
-        <mat-tab [hidden]="!eventService.hasTasks(event)">
+        <mat-tab [hidden]="!Event.hasTasks(event)">
           <div class="padding-1em">
             <h2>Задачи мероприятия</h2>
             <ol>

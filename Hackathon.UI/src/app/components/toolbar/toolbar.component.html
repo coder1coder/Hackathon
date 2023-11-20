@@ -30,8 +30,6 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="{{secondToolbarCssClasses}}" *ngIf="secondToolbar">
-    <ng-container
-      [ngTemplateOutlet]="secondToolbar"
-    ></ng-container>
+    <ng-container [ngTemplateOutlet]="secondToolbar"></ng-container>
   </mat-toolbar-row>
 </mat-toolbar>

@@ -7,7 +7,6 @@ import { Event } from "../../../../models/Event/Event";
 import { MatDialog } from "@angular/material/dialog";
 import { ProjectClient } from "../../../../clients/project/project.client";
 import { ProjectDialog } from "../../../custom/project-dialog/project-dialog.component";
-import { SnackService } from "../../../../services/snack.service";
 import { ErrorProcessorService } from "../../../../services/error-processor.service";
 import { ProjectGitDialog } from "../../../custom/project-git-dialog/project-git-dialog.component";
 import { IProjectUpdateFromGitBranch } from "../../../../models/Project/IProjectUpdateFromGitBranch";
@@ -15,6 +14,7 @@ import { PagesEnum } from "../../../../models/Event/pages.enum";
 import { ChatContextEnum } from "../../../../models/Event/chat-context.enum";
 import { Team } from "../../../../models/Team/Team";
 import { IUser } from "../../../../models/User/IUser";
+import { SignalRService } from "src/app/services/signalr.service";
 
 @Component({
   selector: `event-card-started`,
@@ -29,27 +29,37 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   public get selectedChatIndex() { return this._selectedChatIndex.getValue(); };
 
   public pagesEnum = PagesEnum;
-  public eventService = Event;
+  public Event = Event;
   public chatContextEnum = ChatContextEnum;
   public selectedPageIndex: number = PagesEnum.Communication;
   public project: IProject;
   public currentChatId: number = -1;
+  public currentStageName: string | undefined;
 
   private _selectedChatIndex = new BehaviorSubject<number>(0);
   private currentUserId: number;
 
   constructor(
-    private snackService: SnackService,
     private errorProcessor: ErrorProcessorService,
     private authService:AuthService,
     private projectApiClient: ProjectClient,
     private dialogService: MatDialog,
+    private signalRService: SignalRService
   ) {
     super();
+
+    signalRService.onEventStageChanged = (integrationEvent)=> {
+      if (integrationEvent.eventId === this.event.id)
+      {
+        this.setEventStageName(integrationEvent.eventStageId);
+      }
+    };
   }
 
   public ngOnInit(): void {
     this.currentUserId = this.authService.getUserId();
+    this.setEventStageName();
+
     this.fetchProject();
     this._selectedChatIndex
       .pipe(takeUntil(this.destroy$))
@@ -69,6 +79,10 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     });
   }
 
+  private setEventStageName(eventStageId: number | null = null): void{
+    this.currentStageName = Event.getStageName(this.event, eventStageId ?? this.event.currentStageId);
+  }
+
   public showProjectDialog(): void {
     this.dialogService.open(ProjectDialog, {
       data: {
@@ -81,7 +95,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
           if (project?.name) {
             if (project.eventId === 0 || project.teamId === 0) {
               project.eventId = this.event?.id ?? 0;
-              project.teamId = this.eventService.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
+              project.teamId = this.Event.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
               return this.projectApiClient.createAsync(project);
             } else {
               return this.projectApiClient.updateAsync(project);
@@ -129,7 +143,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     this.project = null;
     if (!this.currentUserId || !this.event) return;
 
-    const team = this.eventService.getMemberTeam(this.event, this.currentUserId);
+    const team = this.Event.getMemberTeam(this.event, this.currentUserId);
     if (!team) return;
 
     this.projectApiClient.getAsync(this.event.id, team.id)

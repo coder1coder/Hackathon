@@ -18,15 +18,16 @@ export class Event {
   changeEventStatusMessages: ChangeEventStatusMessage[];
   status: EventStatus;
   ownerId?: number;
-  owner: IUser
-  teams: Team[] = []
-  stages: EventStage[] = []
+  owner: IUser;
+  teams: Team[] = [];
+  currentStageId: number;
+  stages: EventStage[] = [];
   award: string;
   imageId: string;
   imageUrl?: string;
   agreement?: IEventAgreement;
   approvalApplicationId?: number;
-  approvalApplication?: IApprovalApplication
+  approvalApplication?: IApprovalApplication;
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];
@@ -45,5 +46,9 @@ export class Event {
 
   public static getMembers(event:Event): IUser[]{
     return event.teams?.flatMap(x=>x.members);
+  }
+
+  public static getStageName(event:Event, eventStageId: number): string | null {
+    return  event?.stages?.find(x=>x.id === eventStageId)?.name;
   }
 }

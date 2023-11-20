@@ -16,6 +16,7 @@ using Hackathon.Configuration;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
+using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationServices;
 using Mapster;
@@ -198,7 +199,7 @@ public class Startup
             endpointRouteBuilder.MapControllers();
 
             endpointRouteBuilder.MapHub<IntegrationEventsHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
-            endpointRouteBuilder.MapHub<IntegrationEventsHub<EventStatusChangedIntegrationEvent>>(appConfig.Hubs.Events);
+            endpointRouteBuilder.MapHub<EventChangesIntegrationEventsHub>(appConfig.Hubs.Events);
 
             foreach (var apiModule in _modules)
                 apiModule.ConfigureEndpoints(endpointRouteBuilder, appConfig);

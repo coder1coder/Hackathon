@@ -12,6 +12,7 @@ using Hackathon.Informing.Abstractions.Models;
 using Hackathon.Informing.Abstractions.Services;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
+using Hackathon.IntegrationEvents.Topics;
 
 namespace Hackathon.BL.Friend;
 
