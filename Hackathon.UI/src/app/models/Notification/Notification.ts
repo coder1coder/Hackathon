@@ -2,18 +2,18 @@ import { NotificationType } from "./NotificationType";
 
 export class Notification {
   id?: string;
-  data: any;
+  data: string;
   type?: NotificationType;
   isRead?: boolean;
   ownerId: number = 0;
   createdAt?: Date;
 
-  public static getParsedData(data:any): any {
+  public static getParsedData(data: string): Record<keyof { Message: string }, string> {
     return JSON.parse(data);
   }
 
-  public static getTypeName(type?:NotificationType): "Системное уведомление" | "Приглашение в команду" | "Приглашение в событие" | "" {
-    switch (type){
+  public static getTypeName(type?:NotificationType): string {
+    switch (type) {
       case NotificationType.Information:
         return 'Системное уведомление';
       case NotificationType.TeamInvite:
@@ -26,7 +26,7 @@ export class Notification {
   }
 
   public static getTypeIcon(type?:NotificationType): string {
-    switch (type){
+    switch (type) {
       case NotificationType.Information:
         return 'info_outline';
       case NotificationType.TeamInvite:

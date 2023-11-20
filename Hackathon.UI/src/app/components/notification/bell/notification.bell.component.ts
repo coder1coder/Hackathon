@@ -1,35 +1,37 @@
-import {AfterViewInit, Component} from "@angular/core";
-import {BaseCollection} from "../../../models/BaseCollection";
-import {NotificationService} from "../../../services/notification.service";
-import {NotificationFilter} from "../../../models/Notification/NotificationFilter";
-import {GetListParameters, SortOrder} from "../../../models/GetListParameters";
-import {Notification} from "../../../models/Notification/Notification";
-import {RouterService} from "../../../services/router.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { BaseCollection } from "../../../models/BaseCollection";
+import { NotificationService } from "../../../services/notification.service";
+import { NotificationFilter } from "../../../models/Notification/NotificationFilter";
+import { GetListParameters, SortOrder } from "../../../models/GetListParameters";
+import { Notification } from "../../../models/Notification/Notification";
+import { RouterService } from "../../../services/router.service";
 import { AuthService } from "src/app/services/auth.service";
-import {SignalRService} from "../../../services/signalr.service";
+import { SignalRService } from "../../../services/signalr.service";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: 'notification-bell',
   templateUrl: './notification.bell.component.html',
   styleUrls: ['./notification.bell.component.scss'],
 })
+export class NotificationBellComponent implements OnInit, OnDestroy {
 
-export class NotificationBellComponent implements AfterViewInit {
+  public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();
+  public unreadNotificationsCount: number = 0;
+  public notificationLimit: number = 3;
 
-  notifications:BaseCollection<Notification> = new BaseCollection<Notification>();
-  unreadNotificationsCount:number = 0;
+  private destroy$ = new Subject();
 
   constructor(
     private notificationService: NotificationService,
     private signalRService: SignalRService,
     private router: RouterService,
     private authService: AuthService
-    ) {}
+  ) {}
 
-  ngAfterViewInit(): void {
-
+  ngOnInit(): void {
     this.signalRService.onNotificationChanged = () => {
-      if(this.authService.isLoggedIn()) {
+      if (this.authService.isLoggedIn()) {
         this.updateUnreadNotificationsCount();
         this.fetch();
       }
@@ -39,40 +41,50 @@ export class NotificationBellComponent implements AfterViewInit {
     this.fetch();
   }
 
-  markAllAsRead(){
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
+  public viewAll = (): Promise<boolean> => this.router.Notifications.List();
+
+  public menuOpened(): void {
+    if (this.unreadNotificationsCount > 0) this.markAllAsRead();
+  }
+
+  private markAllAsRead(): void {
     this.notificationService
       .markAsRead([])
-      .subscribe(_=> this.updateUnreadNotificationsCount());
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateUnreadNotificationsCount());
   }
 
-  updateUnreadNotificationsCount(){
+  private updateUnreadNotificationsCount(): void {
     this.notificationService
       .getUnreadNotificationsCount()
-      .subscribe(x=>this.unreadNotificationsCount = x);
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: number) => this.unreadNotificationsCount = res);
   }
 
-  fetch(){
+  private fetch(): void {
     let filter = new GetListParameters<NotificationFilter>();
     filter.SortOrder = SortOrder.Desc;
     filter.SortBy = "createdAt";
+    filter.Limit = this.notificationLimit;
 
     this.notificationService
       .getNotifications(filter)
-      .subscribe(x=> this.notifications = x);
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: BaseCollection<Notification>) => this.notifications = res);
   }
 
-  viewAll = () => this.router.Notifications.List();
-
-  menuOpened(){
-    if (this.unreadNotificationsCount > 0)
-      this.markAllAsRead();
-  }
-
-  remove(event:MouseEvent, ids:string[]){
+  private remove(event: MouseEvent, ids: string[]): void {
       event.stopPropagation();
-      this.notificationService.remove(ids).subscribe(_=>{
-        this.notifications.items = this.notifications.items.filter(x=> x.id !== undefined && !ids.includes(x.id));
-        this.notifications.totalCount = this.notifications.totalCount - ids.length;
-      });
+      this.notificationService.remove(ids)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.notifications.items = this.notifications.items.filter((notification: Notification) => !ids.includes(notification?.id));
+          this.notifications.totalCount = this.notifications.totalCount - ids.length;
+        });
   }
 }
