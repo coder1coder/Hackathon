@@ -1,26 +1,28 @@
 <button mat-icon-button [matMenuTriggerFor]="notificationBellMenu" (menuOpened)="menuOpened()">
   <mat-icon
-    matBadge="{{ this.unreadNotificationsCount }}"
+    matBadge="{{ unreadNotificationsCount }}"
     matBadgeColor="warn"
-    matBadgeHidden="{{ this.unreadNotificationsCount == 0 }}">
+    matBadgeHidden="{{ unreadNotificationsCount === 0 }}">
     notifications_none
   </mat-icon>
 </button>
 
 <mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu theme-color">
-  <ng-template [ngIf]="notifications.items != undefined && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
-    <notification-item *ngFor="let item of notifications?.items"
+  <ng-template [ngIf]="notifications?.items && notifications.items.length > 0" [ngIfElse]="notificationsEmpty">
+    <notification-item *ngFor="let item of notifications.items"
                        [notification]="item"
                        [shortView]="true"
                        (click)="$event.stopPropagation();"
-
     ></notification-item>
+    <div class="d-flex flex-align-items-center flex-justify-content-center">
+      <button
+        *ngIf="notifications?.totalCount > notificationLimit"
+        (click)="viewAll()" style="margin-top: 1em"
+        mat-button class="primary mat-primary">
+        Все уведомления
+      </button>
+    </div>
   </ng-template>
-  <button
-    *ngIf="notifications.items.length > 0"
-    class="mat-button mat-primary" (click)="viewAll()" style="margin-top: 1em;">
-    Все уведомления
-  </button>
 </mat-menu>
 
 <ng-template #notificationsEmpty>
@@ -29,7 +31,9 @@
       Нет уведомлений
     </mat-list-item>
     <mat-list-item>
-      <button mat-button color="primary" (click)="viewAll()">Центр уведомлений</button>
+      <div class="d-flex flex-align-items-center flex-justify-content-center w-100">
+        <button mat-button color="primary" (click)="viewAll()">Центр уведомлений</button>
+      </div>
     </mat-list-item>
   </mat-list>
 </ng-template>
