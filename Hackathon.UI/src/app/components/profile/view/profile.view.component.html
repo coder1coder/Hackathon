@@ -92,7 +92,7 @@
 
       <div class="reaction__list" *ngIf="userId != authUserId">
 
-        <div class="reaction reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
+        <div class="reaction-pointer reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
              (click)="toggleReaction($event, reaction)"
              [class.active]="isReactionActive(reaction)"
              *ngFor="let reaction of getAvailableUserProfileReactions()">

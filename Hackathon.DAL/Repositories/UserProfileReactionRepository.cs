@@ -28,10 +28,10 @@ public class UserProfileReactionRepository: IUserProfileReactionRepository
         return userReactions?.Reaction ?? default(UserProfileReaction);
     }
 
-    public async Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId) =>
-        await _dbContext.UserReactions
+    public Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId) => 
+        _dbContext.UserReactions
             .AsNoTracking()
-            .Where(x => x.TargetUserId == targetUserId)
+            .Where(x => x.TargetUserId == targetUserId && x.Reaction != 0)
             .Select(x => x.Reaction)
             .ToListAsync();
 

@@ -28,11 +28,10 @@
   padding-top: 1em;
   border-top: 1px solid #f5f5f5;
 
-  .reaction  {
+  .reaction, .reaction-pointer  {
     display: block;
     height: 40px;
     width: 40px;
-    cursor: pointer;
 
     color: #b8b8b8;
 
@@ -50,6 +49,10 @@
       &:hover { color: #f1522c; }
       &.active { color: #f1522c; }
     }
+  }
+
+  .reaction-pointer  {
+    cursor: pointer;
   }
 }
 
