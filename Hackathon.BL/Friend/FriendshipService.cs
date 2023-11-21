@@ -10,7 +10,6 @@ using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.User;
 using Hackathon.Informing.Abstractions.Models;
 using Hackathon.Informing.Abstractions.Services;
-using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationEvents.Topics;
 

@@ -47,7 +47,6 @@ public class EventService : IEventService
     private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
-    private readonly IMessageBusService _messageBusService;
     private readonly IEventChangesIntegrationEventsHub _eventChangesIntegrationEventsHub;
     private readonly IEventAgreementRepository _eventAgreementRepository;
     private readonly ILogger<EventService> _logger;
@@ -63,7 +62,6 @@ public class EventService : IEventService
         ITeamService teamService,
         IUserRepository userRepository,
         INotificationService notificationService,
-        IMessageBusService messageBusService,
         IEventChangesIntegrationEventsHub eventChangesIntegrationEventsHub,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
@@ -80,7 +78,6 @@ public class EventService : IEventService
         _teamService = teamService;
         _userRepository = userRepository;
         _notificationService = notificationService;
-        _messageBusService = messageBusService;
         _eventChangesIntegrationEventsHub = eventChangesIntegrationEventsHub;
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
