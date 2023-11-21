@@ -19,7 +19,7 @@
         *ngIf="notifications?.totalCount > notificationLimit"
         (click)="viewAll()" style="margin-top: 1em"
         mat-button class="primary mat-primary">
-        Все уведомления
+        Все уведомления ({{notifications?.totalCount}})
       </button>
     </div>
   </ng-template>
