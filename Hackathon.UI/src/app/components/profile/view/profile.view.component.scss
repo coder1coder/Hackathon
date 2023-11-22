@@ -52,7 +52,9 @@
   }
 
   .reaction-pointer  {
-    cursor: pointer;
+    &:hover  {
+      cursor: pointer;
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BackendTools.Common.Models;
 using FluentValidation;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.User;
@@ -53,14 +54,16 @@ public class UserProfileReactionService: IUserProfileReactionService
         return await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
     }
 
-    public async Task<List<UserProfileReactionModel>> GetReactionsByTypeAsync(long targetUserId)
+    public async Task<Result<List<UserProfileReactionModel>>> GetReactionsByTypeAsync(long targetUserId)
     {
         if (!await _userRepository.ExistsAsync(targetUserId))
-            throw new ValidationException(UserErrorMessages.UserDoesNotExists);
+            return Result<List<UserProfileReactionModel>>.NotFound(UserErrorMessages.UserDoesNotExists);
 
         var reactions = await _userProfileReactionRepository.GetReactionsAsync(targetUserId);
 
-        return BuildListReactions(reactions);
+        var listReactions = BuildListReactions(reactions);
+
+        return Result<List<UserProfileReactionModel>>.FromValue(listReactions); 
     }
 
     private async Task ValidateOrThrow(long userId, long targetUserId)
@@ -75,8 +78,9 @@ public class UserProfileReactionService: IUserProfileReactionService
             throw new ValidationException(UserErrorMessages.UserDoesNotExists);
     }
 
+    //TODO: Переписать метод на более универсальное построение списка реакций пользователя
     private List<UserProfileReactionModel> BuildListReactions(List<UserProfileReaction> reactionsList)
-    {
+    { 
         var reactionLike = new UserProfileReactionModel() { Type = UserProfileReaction.Like };
         var reactionHeart = new UserProfileReactionModel() { Type = UserProfileReaction.Heart };
         var reactionFire = new UserProfileReactionModel() { Type = UserProfileReaction.Fire };

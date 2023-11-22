@@ -4,7 +4,7 @@ import { AuthService } from "../../../services/auth.service";
 import { TeamClient } from "../../../services/team-client.service";
 import { catchError, of, switchMap, takeUntil } from "rxjs";
 import { IUpdateUser, IUser } from "../../../models/User/IUser";
-import { UserProfileReaction, UserProfileReactionModel } from "src/app/models/User/UserProfileReaction";
+import { UserProfileReaction, IUserProfileReaction } from "src/app/models/User/UserProfileReaction";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../../services/user.service";
 import { UserProfileReactionService } from "../../../services/user-profile-reaction.service";
@@ -46,7 +46,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
   public userProfileReaction = UserProfileReaction;
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
-  public userProfileReactionsList: UserProfileReactionModel[] = [];
+  public userProfileReactionsList: IUserProfileReaction[] = [];
 
   private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   private emailRegexp: RegExp = emailRegex;
@@ -208,7 +208,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
     this.userProfileReactionService.getCount(this.isOwner ? this.authUserId : this.userId)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (reactionModelList: UserProfileReactionModel[]) => {
+      next: (reactionModelList: IUserProfileReaction[]) => {
         this.userProfileReactionsList = reactionModelList;
       },
     });

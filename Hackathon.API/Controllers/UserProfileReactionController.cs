@@ -34,8 +34,8 @@ public class UserProfileReactionController: BaseController
     /// <param name="userId">Идентификатор пользователя получившего реакции</param>
     /// <returns></returns>
     [HttpGet("count")]
-    public Task<List<UserProfileReactionModel>> GetReactionsByType(long userId)
-        => _userProfileReactionService.GetReactionsByTypeAsync(userId);
+    public Task<IActionResult> GetReactionsByType(long userId)
+        => GetResult(() => _userProfileReactionService.GetReactionsByTypeAsync(userId));
 
     /// <summary>
     /// Добавить реакцию на профиль пользователя

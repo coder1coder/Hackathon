@@ -1,3 +1,4 @@
+using BackendTools.Common.Models;
 using Hackathon.Common.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,5 +38,5 @@ public interface IUserProfileReactionService
     /// </summary>
     /// <param name="targetUserId">Идентификатор пользователя получившего реакции</param>
     /// <returns></returns>
-    Task<List<UserProfileReactionModel>> GetReactionsByTypeAsync(long targetUserId);
+    Task<Result<List<UserProfileReactionModel>>> GetReactionsByTypeAsync(long targetUserId);
 }

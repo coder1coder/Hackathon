@@ -6,7 +6,7 @@ export enum UserProfileReaction
   Fire = 4
 }
 
-export class UserProfileReactionModel {
-    type: UserProfileReaction | undefined;
-    count: number | undefined;
+export interface IUserProfileReaction {
+    type: UserProfileReaction;
+    count: number;
 }

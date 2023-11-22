@@ -31,7 +31,7 @@ public class UserProfileReactionRepository: IUserProfileReactionRepository
     public Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId) => 
         _dbContext.UserReactions
             .AsNoTracking()
-            .Where(x => x.TargetUserId == targetUserId && x.Reaction != 0)
+            .Where(x => x.TargetUserId == targetUserId && x.Reaction != UserProfileReaction.None)
             .Select(x => x.Reaction)
             .ToListAsync();
 

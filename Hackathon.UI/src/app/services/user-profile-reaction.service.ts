@@ -2,7 +2,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {Observable, switchMap} from "rxjs";
-import {UserProfileReaction, UserProfileReactionModel} from "../models/User/UserProfileReaction";
+import {UserProfileReaction, IUserProfileReaction} from "../models/User/UserProfileReaction";
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +25,8 @@ export class UserProfileReactionService {
     return this.http.get<UserProfileReaction>(`${this.api}/User/${targetUserId}/reactions`);
   }
 
-  public getCount(targetUserId:number):Observable<UserProfileReactionModel[]>{
-    return this.http.get<UserProfileReactionModel[]>(`${this.api}/User/${targetUserId}/reactions/count`);
+  public getCount(targetUserId:number):Observable<IUserProfileReaction[]>{
+    return this.http.get<IUserProfileReaction[]>(`${this.api}/User/${targetUserId}/reactions/count`);
   }
 
   public toggleReaction(targetUserId:number, reaction: UserProfileReaction):Observable<void>{
