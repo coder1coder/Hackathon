@@ -4,6 +4,7 @@ using Hackathon.API.Module;
 using Hackathon.Common.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 
 namespace Hackathon.API.Controllers;
 
@@ -26,6 +27,15 @@ public class UserProfileReactionController: BaseController
     [HttpGet]
     public Task<UserProfileReaction?> GetReactions(long userId)
         => _userProfileReactionService.GetReactionsAsync(AuthorizedUserId, userId);
+
+    /// <summary>
+    /// Получить реакции на профиль пользователя по типу с количеством, поставленные другими пользователями
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя получившего реакции</param>
+    /// <returns></returns>
+    [HttpGet("count")]
+    public Task<IActionResult> GetReactionsByType(long userId)
+        => GetResult(() => _userProfileReactionService.GetReactionsByTypeAsync(userId));
 
     /// <summary>
     /// Добавить реакцию на профиль пользователя

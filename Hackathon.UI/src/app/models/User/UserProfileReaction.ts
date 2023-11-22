@@ -5,3 +5,8 @@ export enum UserProfileReaction
   Heart = 2,
   Fire = 4
 }
+
+export interface IUserProfileReaction {
+    type: UserProfileReaction;
+    count: number;
+}

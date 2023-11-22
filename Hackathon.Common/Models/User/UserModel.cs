@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Common.Models.User;
+namespace Hackathon.Common.Models.User;
 
 public class UserModel: UserShortModel
 {

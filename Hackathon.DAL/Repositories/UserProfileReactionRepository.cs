@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.User;
@@ -25,6 +27,14 @@ public class UserProfileReactionRepository: IUserProfileReactionRepository
 
         return userReactions?.Reaction ?? default(UserProfileReaction);
     }
+
+    public Task<List<UserProfileReaction>> GetReactionsAsync(long targetUserId) => 
+        _dbContext.UserReactions
+            .AsNoTracking()
+            .Where(x => x.TargetUserId == targetUserId && x.Reaction != UserProfileReaction.None)
+            .Select(x => x.Reaction)
+            .ToListAsync();
+
 
     public async Task UpsertReactionsAsync(long userId, long targetUserId, UserProfileReaction reactions)
     {
