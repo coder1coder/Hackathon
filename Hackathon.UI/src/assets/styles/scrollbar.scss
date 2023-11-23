@@ -8,6 +8,14 @@
   border-radius: 5px;
 }
 
+::-webkit-scrollbar {
+  height: 8px;
+  overflow-x: scroll;
+  background: $grey-color-50;
+  box-shadow: inset 0 0 4px #707070;
+  border-radius: 5px;
+}
+
 ::-webkit-scrollbar-thumb {
   background: $chat-color-content;
   border-radius: 10px;

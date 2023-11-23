@@ -47,10 +47,8 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     private signalRService: SignalRService
   ) {
     super();
-
     signalRService.onEventStageChanged = (integrationEvent)=> {
-      if (integrationEvent.eventId === this.event.id)
-      {
+      if (integrationEvent.eventId === this.event.id) {
         this.setEventStageName(integrationEvent.eventStageId);
       }
     };

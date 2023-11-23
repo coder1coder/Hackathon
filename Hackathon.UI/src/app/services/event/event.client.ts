@@ -31,7 +31,7 @@ export class EventClient {
   }
 
   public getById(eventId: number): Observable<Event> {
-    return this.http.get<Event>(this.api+'/Event/'+eventId);
+    return this.http.get<Event>(`${this.api}/Event/${eventId}`);
   }
 
   public create(createEvent: ICreateEvent): Observable<IBaseCreateResponse>{
