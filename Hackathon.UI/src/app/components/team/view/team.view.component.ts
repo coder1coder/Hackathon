@@ -1,28 +1,30 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Team, TeamType} from "../../../models/Team/Team";
-import {TeamClient} from "../../../services/team-client.service";
-import {finalize} from "rxjs/operators";
-import {RouterService} from "../../../services/router.service";
-import {AuthService} from "../../../services/auth.service";
-import {SnackService} from "../../../services/snack.service";
-import {IProblemDetails} from "../../../models/IProblemDetails";
-import {ITeamJoinRequest} from "../../../models/Team/ITeamJoinRequest";
+import { OnInit, Component, Input, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { Team, TeamType } from "../../../models/Team/Team";
+import { TeamClient } from "../../../services/team-client.service";
+import { finalize } from "rxjs/operators";
+import { RouterService } from "../../../services/router.service";
+import { AuthService } from "../../../services/auth.service";
+import { SnackService } from "../../../services/snack.service";
+import { IProblemDetails } from "../../../models/IProblemDetails";
+import { ITeamJoinRequest } from "../../../models/Team/ITeamJoinRequest";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: 'team-view',
   templateUrl: './team.view.component.html',
-  styleUrls: ['./team.view.component.scss']
+  styleUrls: ['./team.view.component.scss'],
 })
-export class TeamViewComponent implements AfterViewInit {
+export class TeamViewComponent implements OnInit, OnDestroy {
 
-  @Input() teamId?:number;
+  @Input() teamId?: number;
 
   public team: Team;
   public userId: number;
-  public existsSentJoinRequest: ITeamJoinRequest | undefined;
+  public existsSentJoinRequest: ITeamJoinRequest;
 
-  isLoading: boolean = true;
+  private isLoading: boolean = true;
+  private destroy$ = new Subject();
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -30,63 +32,49 @@ export class TeamViewComponent implements AfterViewInit {
     private teamClient: TeamClient,
     private authService: AuthService,
     private snackService: SnackService) {
-
-    this.userId = authService.getUserId() ?? 0;
-
-    if (this.teamId == null)
-      this.teamId = activateRoute.snapshot.params['teamId'];
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    this.userId = this.authService.getUserId() ?? 0;
+    if (this.teamId == null) {
+      this.teamId = this.activateRoute.snapshot.params['teamId'];
+    }
+
     this.fetch();
   }
 
-  fetch(){
-    this.fetchTeam();
-    this.fetchSentJoinRequest();
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
-  fetchTeam(){
-    this.isLoading = true;
-    this.teamClient.getById(this.teamId!)
-      .pipe(finalize(()=>this.isLoading = false))
-      .subscribe({
-        next: (r: Team) =>  {
-          this.team = r;
-        },
-        error: () => {}
-      });
-  }
-
-  fetchSentJoinRequest(){
-    this.isLoading = true;
-    this.teamClient.getSentJoinRequest(this.teamId!)
-      .pipe(finalize(()=>this.isLoading = false))
-      .subscribe({
-        next: (r: ITeamJoinRequest) =>  {
-          this.existsSentJoinRequest = r;
-        },
-        error: () => {
-          this.existsSentJoinRequest = undefined
-        }
-      });
-  }
-
-  get canJoinToTeam() {
+  public get canJoinToTeam(): boolean {
     return this.team
       && this.team.type == TeamType.Public
       && !this.teamContainsMember(this.team, this.userId);
   }
 
-  get canLeaveTeam(){
+  public get canLeaveTeam(): boolean {
     return this.team && this.teamContainsMember(this.team, this.userId);
   }
 
-  get canSendRequestJoinToTeam(){
+  public get canSendRequestJoinToTeam(): boolean {
     return this.team
       && this.team.type == TeamType.Private
       && !this.teamContainsMember(this.team, this.userId)
       && !this.hasSentJoinRequest;
+  }
+
+  public leaveTeam(): void {
+    this.teamClient.leaveTeam(this.teamId ?? 0)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => this.router.Teams.MyTeam(),
+        error: (err) => {
+          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
+          this.snackService.open(problemDetails.detail);
+        }
+      });
   }
 
   public joinToTeam(): void {
@@ -103,8 +91,7 @@ export class TeamViewComponent implements AfterViewInit {
   }
 
   public sendRequestJoinToTeam():void {
-    if (this.teamId === undefined)
-    {
+    if (!this.teamId) {
       this.snackService.open("Не удалось определить идентификатор команды");
       return;
     }
@@ -113,9 +100,9 @@ export class TeamViewComponent implements AfterViewInit {
       .subscribe({
         next: () => {
           this.snackService.open("Запрос на вступление в команду отправлен")
-          this.ngAfterViewInit();
+          this.fetch();
         },
-        error: err => {
+        error: (err) => {
           let problemDetails: IProblemDetails = <IProblemDetails>err.error;
           this.snackService.open(problemDetails.detail);
         }
@@ -123,8 +110,7 @@ export class TeamViewComponent implements AfterViewInit {
   }
 
   public cancelSentJoinRequest():void{
-    if (this.existsSentJoinRequest === undefined)
-    {
+    if (!this.existsSentJoinRequest) {
       this.snackService.open("Запрос на вступление в команду не найден");
       return;
     }
@@ -136,7 +122,7 @@ export class TeamViewComponent implements AfterViewInit {
       .subscribe({
         next: () => {
           this.snackService.open("Запрос на вступление в команду отменен")
-          this.ngAfterViewInit();
+          this.fetch();
         },
         error: err => {
           let problemDetails: IProblemDetails = <IProblemDetails>err.error;
@@ -146,25 +132,43 @@ export class TeamViewComponent implements AfterViewInit {
   }
 
   public get hasSentJoinRequest(): boolean {
-    return this.existsSentJoinRequest !== undefined;
+    return this.existsSentJoinRequest !== null;
   }
 
-  public leaveTeam(): void
-  {
-    this.teamClient.leaveTeam(this.teamId ?? 0)
+  private fetch(): void {
+    this.fetchTeam();
+    this.fetchSentJoinRequest();
+  }
+
+  private fetchTeam(): void {
+    this.isLoading = true;
+    this.teamClient.getById(this.teamId)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false))
       .subscribe({
-        next: () => {
-          this.router.Teams.MyTeam();
-        },
-        error: err => {
-          let problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snackService.open(problemDetails.detail);
+        next: (res: Team) => this.team = res,
+        error: () => {}
+      });
+  }
+
+  private fetchSentJoinRequest(): void {
+    this.isLoading = true;
+    this.teamClient.getSentJoinRequest(this.teamId!)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (res: ITeamJoinRequest) => this.existsSentJoinRequest = res,
+        error: () => {
+          this.existsSentJoinRequest = null
         }
       });
   }
 
-  private teamContainsMember(team: Team, memberId: number):boolean
-  {
-    return (team.owner && team.owner.id == memberId) || (team.members && team.members.length > 0 && team.members.filter(x=>x.id == memberId).length > 0);
+  private teamContainsMember(team: Team, memberId: number): boolean {
+    return (team.owner && team.owner.id == memberId) ||
+           (team.members && team.members.length > 0 &&
+           team.members.filter(x=>x.id == memberId).length > 0);
   }
 }

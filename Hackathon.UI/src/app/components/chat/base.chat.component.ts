@@ -1,7 +1,15 @@
 import { AuthService } from "../../services/auth.service";
 import { ElementRef, HostListener, Injectable, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
-import { BehaviorSubject, from, mergeMap, Subject, takeUntil } from "rxjs";
+import {
+  BehaviorSubject,
+  bufferTime,
+  filter,
+  from,
+  mergeMap,
+  Subject,
+  takeUntil,
+} from "rxjs";
 import { TABLE_DATE_FORMAT } from "../../common/consts/date-formats";
 import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
 import { ProfileUserStore } from "../../shared/stores/profile-user.store";
@@ -22,8 +30,10 @@ export abstract class BaseChatComponent<TChatMessage>
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
   public isNeedReloadData: boolean = true;
+  public isFullListDisplayed: boolean = false;
   public chatMembers: Map<number, IUser> = new Map<number, IUser>();
   public params = new PaginationSorting();
+  public selectedPageIndex: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
 
   protected abstract messages: TChatMessage[];
   protected abstract chatBody: ElementRef;
@@ -31,6 +41,8 @@ export abstract class BaseChatComponent<TChatMessage>
 
   private minLength: number = 2;
   private maxLength: number = 200;
+  private noExistedMembersChanges = new Subject<number>();
+  private noExistedMemberIds: number[] = [];
 
   protected constructor(
     protected authService: AuthService,
@@ -105,11 +117,13 @@ export abstract class BaseChatComponent<TChatMessage>
     }
   }
 
-  public scrollChatToLastMessage(): void {
+  public scrollChatToLastMessage(preventLoading: boolean = false): void {
+    this.isFullListDisplayed = preventLoading;
     setTimeout(() => {
       if (this.chatBody?.nativeElement) {
         this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
       }
+      this.isFullListDisplayed = false;
     }, 100);
   }
 
@@ -120,6 +134,15 @@ export abstract class BaseChatComponent<TChatMessage>
   }
 
   public getMember(id: number): IUser {
+    if (
+      !this.chatMembers.get(id) &&
+      id !== this.currentUserId &&
+      !this.noExistedMemberIds.includes(id)
+    ) {
+      this.noExistedMemberIds.push(id);
+      this.noExistedMembersChanges.next(id);
+    }
+
     return this.chatMembers.get(id);
   }
 
@@ -147,5 +170,23 @@ export abstract class BaseChatComponent<TChatMessage>
         this.fetchEntity(this.isNeedReloadData);
         this.fetchMessages();
       });
+
+    this.noExistedMembersChanges
+      .pipe(
+        bufferTime(300),
+        filter(values => values.length > 0),
+        mergeMap(from),
+        mergeMap((id: number) => this.profileUserStore.getUser(id)),
+        takeUntil(this.destroy$),
+      ).subscribe({
+        next: (user: IUser) => this.chatMembers.set(user.id, user),
+      });
+
+    this.selectedPageIndex
+      .pipe(
+        filter((v) => v !== -1),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => this.scrollChatToLastMessage(true));
   }
 }

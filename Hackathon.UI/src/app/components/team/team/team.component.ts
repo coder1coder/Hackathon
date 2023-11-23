@@ -28,6 +28,7 @@ export class TeamComponent implements OnDestroy {
   public teamEvents: IEventListItem[] = [];
   public authorizedUserId = this.authService.getUserId();
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> = new MatTableDataSource<ITeamJoinRequest>([]);
+  public tabIndex: number = 0;
 
   private destroy$ = new Subject();
 
@@ -66,7 +67,7 @@ export class TeamComponent implements OnDestroy {
 
   public tabChanged(event: MatTabChangeEvent): void {
     if (!this.team) return;
-
+    this.tabIndex = event.index;
     if (event.index === 2) {
       const getList = new GetListParameters<EventFilter>();
       getList.Filter = new EventFilter();

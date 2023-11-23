@@ -27,6 +27,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
 
   @Input() team: Team;
   @Input() showMembers: boolean = false;
+  @Input() set pageIndex(value: number) { this.selectedPageIndex.next(value) };
   @Input("teamId")
   public set teamId(value) { this.entityId.next(value); };
   public get teamId() { return this.entityId.getValue(); }

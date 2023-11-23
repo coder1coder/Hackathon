@@ -28,6 +28,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
 
   @Input() event: Event;
   @Input() showMembers: boolean = false;
+  @Input() set pageIndex(value: number) { this.selectedPageIndex.next(value) };
   @Input("eventId")
   public set eventId(value) { this.entityId.next(value); };
   public get eventId() { return this.entityId.getValue(); };

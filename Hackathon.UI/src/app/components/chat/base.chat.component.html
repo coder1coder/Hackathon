@@ -8,6 +8,7 @@
            [infiniteScrollDistance]="2"
            [infiniteScrollUpDistance]="1.5"
            [infiniteScrollThrottle]="350"
+           [infiniteScrollDisabled]="isFullListDisplayed"
            (scrolledUp)="fetchMessages();"
       >
         <div class="chat__message"
