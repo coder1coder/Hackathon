@@ -14,7 +14,6 @@ import { EventClient } from "../../../services/event/event.client";
 import { IEventChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent';
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
-import { PageSettingsDefaults } from "../../../models/PageSettings";
 
 @Component({
   selector: 'chat-event',
@@ -55,9 +54,8 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res: EventChatMessage) => {
-            this.messages.push(res);
-            this.isNearBottom = this.isUserNearBottom();
-            this.onElementsChanged(res.ownerId === this.currentUserId);
+            this.messages.unshift(res);
+            this.onElementsChanged(this.isUserNearBottom(), res.ownerId === this.currentUserId);
           },
           error: () => {},
         });
@@ -84,8 +82,8 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (r: BaseCollection<EventChatMessage>) => {
-            this.messages.unshift(...r.items);
-            this.params.Offset += PageSettingsDefaults.Limit;
+            this.messages.push(...r.items);
+            this.changeParamsAfterLoading(r.totalCount);
           },
           error: () => {},
         });

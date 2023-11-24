@@ -35,21 +35,24 @@ public class ChatRepository<TChatMessage>: IChatRepository<TChatMessage> where T
 
     public async Task<BaseCollection<TChatMessage>> GetMessagesAsync(long chatId, int offset = 0, int limit = 300)
     {
-        var entities = await _dbContext
-            .ChatMessages.Where(x=>
+        var query = _dbContext
+            .ChatMessages.Where(x =>
                 x.ChatType == _chatType
                 && x.ChatId == chatId)
-            .OrderByDescending(x=>x.Timestamp)
+            .AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+        
+        var entities = await query
+            .OrderByDescending(x => x.Timestamp)
             .Skip(offset)
             .Take(limit)
-            .Reverse()
-            .AsNoTracking()
             .ToArrayAsync();
-
+        
         return new BaseCollection<TChatMessage>
         {
             Items = _mapper.Map<ChatMessageEntity[], TChatMessage[]>(entities),
-            TotalCount = entities.Length
+            TotalCount = totalCount
         };
     }
 

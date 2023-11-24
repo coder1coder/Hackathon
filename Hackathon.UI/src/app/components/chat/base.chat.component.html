@@ -1,15 +1,12 @@
 <ng-container *ngIf="isLoaded">
-  <div class="chat theme-background" *ngIf="!isFloatMode else floatModeTemplate">
+  <div class="chat theme-background">
     <main class="main">
-      <div class="chat__body" #scrollMe *ngIf="!isFloatMode || (isFloatMode && isOpened)"
-           infiniteScroll
-           [scrollWindow]="false"
-           [fromRoot]="true"
-           [infiniteScrollDistance]="2"
-           [infiniteScrollUpDistance]="1.5"
-           [infiniteScrollThrottle]="350"
-           [infiniteScrollDisabled]="isFullListDisplayed"
-           (scrolledUp)="fetchMessages();"
+      <div
+        #scrollMe
+        class="chat__body"
+        infiniteScroll
+        [scrollWindow]="false"
+        (scroll)="onScroll()"
       >
         <div class="chat__message"
              *ngFor="let message of messages"
@@ -54,10 +51,6 @@
     </aside>
   </div>
 </ng-container>
-
-<ng-template #floatModeTemplate>
-  <div>floatmode...</div>
-</ng-template>
 
 <div class="chat flex-justify-content-center flex-align-items-center" *ngIf="!isLoaded">
   <div class="loader">

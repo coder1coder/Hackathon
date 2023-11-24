@@ -15,6 +15,7 @@ import { WithFormBaseComponent } from "../../common/base-components/with-form-ba
 import { ProfileUserStore } from "../../shared/stores/profile-user.store";
 import { IUser } from "../../models/User/IUser";
 import { PaginationSorting } from "../../models/GetListParameters";
+import { PageSettingsDefaults } from "../../models/PageSettings";
 
 @Injectable()
 export abstract class BaseChatComponent<TChatMessage>
@@ -23,26 +24,29 @@ export abstract class BaseChatComponent<TChatMessage>
   @ViewChild('formComponent') formComponent: NgForm;
 
   public currentUserId: number;
-  public isOpened: boolean = false
   public isFloatMode: boolean = false;
-  public isNearBottom: boolean = true;
   public form: FormGroup = this.fb.group({});
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
   public isNeedReloadData: boolean = true;
-  public isFullListDisplayed: boolean = false;
   public chatMembers: Map<number, IUser> = new Map<number, IUser>();
   public params = new PaginationSorting();
   public selectedPageIndex: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  public isScrollLoad: boolean = true;
 
   protected abstract messages: TChatMessage[];
   protected abstract chatBody: ElementRef;
   protected destroy$ = new Subject();
 
+  private totalMessages: number = 0;
   private minLength: number = 2;
   private maxLength: number = 200;
   private noExistedMembersChanges = new Subject<number>();
   private noExistedMemberIds: number[] = [];
+  private scrollPositionBeforeLoad: number = 0;
+  private scrollPositionInPercent: number = 0;
+  private readonly maxScrollPercentageChatContainer: number = 80;
+  private readonly distanceFromBottomChatContainerInPercent: number = 20;
 
   protected constructor(
     protected authService: AuthService,
@@ -57,6 +61,22 @@ export abstract class BaseChatComponent<TChatMessage>
     this.scrollChatToLastMessage();
   }
 
+  public onScroll(): void {
+    const element = this.chatBody?.nativeElement;
+    if (element) {
+      const scrollPosition = element.scrollTop;
+      const scrollHeight = element.scrollHeight;
+      const clientHeight = element.clientHeight;
+      const scrollPercentage = (scrollPosition / (scrollHeight - clientHeight)) * 100;
+      this.scrollPositionBeforeLoad = scrollPosition;
+      this.scrollPositionInPercent = Math.round(Math.abs(scrollPercentage));
+      if (this.scrollPositionInPercent >= this.maxScrollPercentageChatContainer && !this.isScrollLoad && this.isCanLoad) {
+        this.isScrollLoad = true;
+        this.fetchMessages();
+      }
+    }
+  }
+
   public ngOnInit(): void {
     this.initForm();
     this.initSubscriptions();
@@ -67,11 +87,26 @@ export abstract class BaseChatComponent<TChatMessage>
     this.destroy$.complete();
     this.chatMembers.clear();
     this.isLoaded = false;
+    this.isScrollLoad = false;
+  }
+
+  public changeParamsAfterLoading(totalMessages: number): void {
+    this.params.Offset += PageSettingsDefaults.Limit;
+    this.isScrollLoad = false;
+    this.totalMessages = totalMessages ?? 0;
+    if (this.chatBody?.nativeElement) {
+      this.chatBody.nativeElement.scrollTop = this.scrollPositionBeforeLoad;
+    }
+  }
+
+  public get isCanLoad(): boolean {
+    return this.messages?.length !== this.totalMessages;
   }
 
   public get canView(): boolean {
     return this.authService.isLoggedIn() && this.entityId.getValue() > 0;
   }
+
   public abstract get members(): IUser[];
   public abstract get canSendMessageWithNotify(): boolean;
   public abstract entityId: BehaviorSubject<number>;
@@ -89,7 +124,6 @@ export abstract class BaseChatComponent<TChatMessage>
       ).subscribe({
         next: (user: IUser) => this.chatMembers.set(user.id, user),
         complete: () => {
-          this.scrollChatToLastMessage();
           this.isLoaded = true;
         },
       });
@@ -117,18 +151,16 @@ export abstract class BaseChatComponent<TChatMessage>
     }
   }
 
-  public scrollChatToLastMessage(preventLoading: boolean = false): void {
-    this.isFullListDisplayed = preventLoading;
+  public scrollChatToLastMessage(): void {
     setTimeout(() => {
       if (this.chatBody?.nativeElement) {
         this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
       }
-      this.isFullListDisplayed = false;
     }, 100);
   }
 
-  public onElementsChanged(forceScroll: boolean = false): void {
-    if (forceScroll || this.isNearBottom) {
+  public onElementsChanged(isNearBottom: boolean, forceScroll: boolean = false): void {
+    if (forceScroll || isNearBottom) {
       this.scrollChatToLastMessage();
     }
   }
@@ -147,11 +179,7 @@ export abstract class BaseChatComponent<TChatMessage>
   }
 
   public isUserNearBottom(): boolean {
-    if (!this.chatBody?.nativeElement) return false;
-    const threshold = 150;
-    const position = this.chatBody.nativeElement.scrollTop + this.chatBody.nativeElement.offsetHeight;
-    const height = this.chatBody.nativeElement.scrollHeight;
-    return position > height - threshold;
+    return  this.distanceFromBottomChatContainerInPercent >= this.scrollPositionInPercent;
   }
 
   private initSubscriptions(): void {
@@ -187,6 +215,6 @@ export abstract class BaseChatComponent<TChatMessage>
         filter((v) => v !== -1),
         takeUntil(this.destroy$),
       )
-      .subscribe(() => this.scrollChatToLastMessage(true));
+      .subscribe(() => this.scrollChatToLastMessage());
   }
 }

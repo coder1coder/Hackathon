@@ -13,7 +13,6 @@ import { IUser } from "../../../models/User/IUser";
 import { ITeamChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent';
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
 import { ErrorProcessorService } from "../../../services/error-processor.service";
-import { PageSettingsDefaults } from "../../../models/PageSettings";
 
 @Component({
   selector: 'chat-team',
@@ -54,9 +53,8 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res: TeamChatMessage) =>  {
-            this.messages.push(res);
-            this.isNearBottom = this.isUserNearBottom();
-            this.onElementsChanged(res.ownerId === this.currentUserId);
+            this.messages.unshift(res);
+            this.onElementsChanged(this.isUserNearBottom(), res.ownerId === this.currentUserId);
           },
           error: () => {},
         });
@@ -83,8 +81,8 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (r: BaseCollection<TeamChatMessage>) => {
-            this.messages.unshift(...r.items);
-            this.params.Offset += PageSettingsDefaults.Limit;
+            this.messages.push(...r.items);
+            this.changeParamsAfterLoading(r.totalCount);
           },
           error: () => {},
         });
