@@ -107,6 +107,10 @@ export abstract class BaseChatComponent<TChatMessage>
     return this.authService.isLoggedIn() && this.entityId.getValue() > 0;
   }
 
+  public get isUserNearBottom(): boolean {
+    return this.distanceFromBottomChatContainerInPercent >= this.scrollPositionInPercent;
+  }
+
   public abstract get members(): IUser[];
   public abstract get canSendMessageWithNotify(): boolean;
   public abstract entityId: BehaviorSubject<number>;
@@ -176,10 +180,6 @@ export abstract class BaseChatComponent<TChatMessage>
     }
 
     return this.chatMembers.get(id);
-  }
-
-  public isUserNearBottom(): boolean {
-    return  this.distanceFromBottomChatContainerInPercent >= this.scrollPositionInPercent;
   }
 
   private initSubscriptions(): void {

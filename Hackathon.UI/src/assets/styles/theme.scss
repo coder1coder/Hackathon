@@ -154,3 +154,12 @@ $theme-dark: mat.define-dark-theme((
     background: rgba(255, 255, 255, 0.75);
   }
 }
+
+.chat-footer-theme {
+  .theme-dark-mode & {
+    box-shadow: 0px -5px 6px 0px #2424244a;
+  }
+  .theme-light-mode & {
+    box-shadow: 0px -2px 13px #9999994a;
+  }
+}

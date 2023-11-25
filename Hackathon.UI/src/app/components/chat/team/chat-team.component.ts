@@ -54,7 +54,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> {
         .subscribe({
           next: (res: TeamChatMessage) =>  {
             this.messages.unshift(res);
-            this.onElementsChanged(this.isUserNearBottom(), res.ownerId === this.currentUserId);
+            this.onElementsChanged(this.isUserNearBottom, res.ownerId === this.currentUserId);
           },
           error: () => {},
         });

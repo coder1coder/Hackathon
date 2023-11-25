@@ -23,20 +23,26 @@
           </div>
         </div>
       </div>
-      <div class="chat__footer">
-        <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
-          <mat-checkbox formControlName="notify" color="primary" *ngIf="canSendMessageWithNotify">
-            Уведомлять пользователей о сообщении
-          </mat-checkbox>
+      <div class="footer-container">
+        <div class="footer-scroll-down"
+             [class.transform-40]="!isUserNearBottom"
+        ><span class="theme-background chat-footer-theme" (click)="scrollChatToLastMessage()">Прокрутить вниз</span></div>
+        <div class="chat__footer chat-footer-theme footer-form theme-background">
+          <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
+            <mat-checkbox formControlName="notify" color="primary" *ngIf="canSendMessageWithNotify">
+              Уведомлять пользователей о сообщении
+            </mat-checkbox>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Сообщение</mat-label>
-            <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
-            <mat-error *ngIf="!getFormControl('message').valid">{{getErrorLengthMessage(getFormControl('message'))}}</mat-error>
-            <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
-          </mat-form-field>
-        </form>
+            <mat-form-field appearance="outline">
+              <mat-label>Сообщение</mat-label>
+              <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
+              <mat-error *ngIf="!getFormControl('message').valid">{{getErrorLengthMessage(getFormControl('message'))}}</mat-error>
+              <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
+            </mat-form-field>
+          </form>
+        </div>
       </div>
+
     </main>
 
     <aside class="chat__members" *ngIf="showMembers && members">

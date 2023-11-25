@@ -55,7 +55,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> {
         .subscribe({
           next: (res: EventChatMessage) => {
             this.messages.unshift(res);
-            this.onElementsChanged(this.isUserNearBottom(), res.ownerId === this.currentUserId);
+            this.onElementsChanged(this.isUserNearBottom, res.ownerId === this.currentUserId);
           },
           error: () => {},
         });
