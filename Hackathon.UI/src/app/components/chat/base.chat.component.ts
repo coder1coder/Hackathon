@@ -46,7 +46,7 @@ export abstract class BaseChatComponent<TChatMessage>
   private scrollPositionBeforeLoad: number = 0;
   private scrollPositionInPercent: number = 0;
   private readonly maxScrollPercentageChatContainer: number = 80;
-  private readonly distanceFromBottomChatContainerInPercent: number = 20;
+  private readonly distanceFromBottomChatContainerInPercent: number = 10;
 
   protected constructor(
     protected authService: AuthService,
