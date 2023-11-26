@@ -1,16 +1,16 @@
-<ng-template [ngIf]="notify" [ngIfElse]="bad">
+<ng-template [ngIf]="notify" [ngIfElse]="notValidContentTemplate">
   <div>
     <div class="notify__info-message">
-      <div mat-line>{{notification.getParsedData(notify.data)?.Message}}</div>
+      <div mat-line>{{ getMessage() }}</div>
     </div>
     <div mat-line *ngIf="!hideDate">
       <div class="notify-createdAt">
-        {{notify.createdAt?.toLocaleString() | date:'EEEE dd.MM.y'}}
+        {{notify.createdAt?.toLocaleString() | date: NOTIFICATION_DATETIME_FORMAT}}
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #bad>
+<ng-template #notValidContentTemplate>
   Невозможно отобразить содержимое
 </ng-template>

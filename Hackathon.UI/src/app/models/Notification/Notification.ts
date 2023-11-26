@@ -8,7 +8,7 @@ export class Notification {
   ownerId: number = 0;
   createdAt?: Date;
 
-  public static getParsedData(data: string): Record<keyof { Message: string }, string> {
+  public static getParsedData<T>(data: string): T | null {
     return JSON.parse(data);
   }
 
