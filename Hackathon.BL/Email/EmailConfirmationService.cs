@@ -134,8 +134,8 @@ public class EmailConfirmationService: IEmailConfirmationService
     {
         var generateTemplateResult = await _templateService.GenerateAsync(Templates.EmailConfirmationRequest, new Dictionary<string, string>
         {
-            {"username", userModel.GetAnyName()},
-            {"confirmationCode", confirmationCode}
+            { Variables.UserName, userModel.GetAnyName()},
+            { Variables.ConfirmationCode, confirmationCode}
         });
 
         if (!generateTemplateResult.IsSuccess)

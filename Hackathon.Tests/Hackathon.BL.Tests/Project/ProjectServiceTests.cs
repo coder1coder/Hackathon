@@ -1,7 +1,6 @@
 using BackendTools.Common.Models;
 using System.Threading.Tasks;
 using FluentValidation;
-using FluentValidation.Results;
 using Hackathon.BL.Project;
 using Hackathon.BL.Validation.Project;
 using Hackathon.Common.Abstraction.Project;

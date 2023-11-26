@@ -84,6 +84,7 @@ import { ApprovalApplicationStatusComponent } from './components/approval-applic
 import { ApprovalApplicationFilterComponent } from './components/approval-application/approval-application-filter/approval-application-filter.component';
 import { ApprovalApplicationRejectModalComponent } from './components/approval-application/approval-application-reject-modal/approval-application-reject-modal.component';
 import { ApprovalApplicationInfoModalComponent } from './components/approval-application/approval-application-info-modal/approval-application-info-modal.component';
+import { NotificationTeamJoinRequestDecisionViewComponent } from './components/notification/templates/teams/teamJoinRequestDecision/notification.teamJoinRequestDecision.view.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +134,7 @@ import { ApprovalApplicationInfoModalComponent } from './components/approval-app
     NotificationListComponent,
     NotificationItemComponent,
     NotificationInfoViewComponent,
+    NotificationTeamJoinRequestDecisionViewComponent,
 
     FriendshipOfferButtonComponent,
     FriendsListComponent,

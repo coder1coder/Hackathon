@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications;
 using Hackathon.Informing.Abstractions.Repositories;
 using Hackathon.Informing.DAL.Entities;
 using Mapster;

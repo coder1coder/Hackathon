@@ -1,4 +1,4 @@
-namespace Hackathon.Informing.Abstractions.Models;
+namespace Hackathon.Informing.Abstractions.Models.Notifications;
 
 public class NotificationFilterModel
 {

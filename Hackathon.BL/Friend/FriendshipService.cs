@@ -8,8 +8,10 @@ using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Friend;
 using Hackathon.Common.Models.User;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
+using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationEvents.Topics;
 
@@ -56,8 +58,9 @@ public class FriendshipService: IFriendshipService
         if (offer is null)
         {
             await _friendshipRepository.CreateOfferAsync(proposerId, userId);
-            await _notificationService.PushAsync(CreateNotificationModel
-                .Information(userId, $"Запрос дружбы от {getUserResult.Data}", proposerId));
+            await _notificationService.PushAsync(
+                NotificationCreator.System(new SystemNotificationData($"Запрос дружбы от {getUserResult.Data}"),
+                    userId, proposerId));
 
             await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                 new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
@@ -76,8 +79,9 @@ public class FriendshipService: IFriendshipService
                 //Предложение было отклонено ранее, обновим статус
                 case FriendshipStatus.Rejected:
                     await _friendshipRepository.UpdateStatusAsync(proposerId, userId, FriendshipStatus.Pending);
-                    await _notificationService.PushAsync(CreateNotificationModel
-                        .Information(userId, $"Запрос дружбы от {getUserResult.Data}", proposerId));
+                    await _notificationService.PushAsync(
+                        NotificationCreator.System(new SystemNotificationData($"Запрос дружбы от {getUserResult.Data}"), 
+                            userId, proposerId));
 
                     await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                         new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
@@ -97,8 +101,9 @@ public class FriendshipService: IFriendshipService
             if (offer.Status == FriendshipStatus.Pending)
             {
                 await _friendshipRepository.UpdateStatusAsync(userId, proposerId, FriendshipStatus.Confirmed);
-                await _notificationService.PushAsync(CreateNotificationModel
-                    .Information(userId, $"{getUserResult.Data} принял предложение дружбы", proposerId));
+                await _notificationService.PushAsync(NotificationCreator
+                    .System(new SystemNotificationData($"{getUserResult.Data} принял предложение дружбы"),
+                    userId, proposerId));
 
                 await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
                     new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
@@ -121,8 +126,8 @@ public class FriendshipService: IFriendshipService
 
         //TODO: отправлять событие в шину, и вынести логику уведомления в хендлер
         var user = await _userService.GetAsync(userId);
-        await _notificationService.PushAsync(CreateNotificationModel
-            .Information(userId, $"{user} отклонил предложение дружбы"));
+        await _notificationService.PushAsync(NotificationCreator
+            .System(new SystemNotificationData($"{user} отклонил предложение дружбы"), userId));
 
         await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
             new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));

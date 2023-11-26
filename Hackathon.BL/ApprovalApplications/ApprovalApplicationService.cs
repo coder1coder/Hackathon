@@ -8,8 +8,9 @@ using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 
 namespace Hackathon.BL.ApprovalApplications;
 
@@ -80,9 +81,9 @@ public class ApprovalApplicationService: IApprovalApplicationService
         await _approvalApplicationRepository.UpdateStatusAsync(authorizedUserId, approvalApplicationId,
             ApprovalApplicationStatus.Approved);
 
-        await _notificationService.PushAsync(
-            CreateNotificationModel.Information(approvalApplication.AuthorId, "Заявка на согласование одобрена",
-                authorizedUserId));
+        await _notificationService.PushAsync(NotificationCreator.System(new SystemNotificationData("Заявка на согласование одобрена"),
+            approvalApplication.AuthorId, 
+            authorizedUserId));
 
         return Result.Success;
     }
@@ -105,9 +106,10 @@ public class ApprovalApplicationService: IApprovalApplicationService
         await _approvalApplicationRepository.UpdateStatusAsync(authorizedUserId, approvalApplicationId,
             ApprovalApplicationStatus.Rejected, parameters.Comment);
 
-        await _notificationService.PushAsync(
-            CreateNotificationModel.Information(approvalApplication.AuthorId,
-                $"Заявка на согласование отклонена:\n{parameters.Comment}",  authorizedUserId));
+        await _notificationService.PushAsync(NotificationCreator
+            .System(new SystemNotificationData($"Заявка на согласование отклонена:\n{parameters.Comment}"),
+            approvalApplication.AuthorId,
+            authorizedUserId));
 
         return Result.Success;
     }

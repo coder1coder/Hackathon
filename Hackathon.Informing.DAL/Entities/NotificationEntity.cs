@@ -1,5 +1,5 @@
 using System;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications;
 
 namespace Hackathon.Informing.DAL.Entities;
 

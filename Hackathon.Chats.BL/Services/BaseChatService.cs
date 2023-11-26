@@ -8,8 +8,9 @@ using Hackathon.Chats.Abstractions.Repositories;
 using Hackathon.Chats.Abstractions.Services;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.Base;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 using MapsterMapper;
 
 namespace Hackathon.Chats.BL.Services;
@@ -98,8 +99,8 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>: IChatServi
         if (userIdsToNotify is {Length: > 0})
         {
             var notificationModels = userIdsToNotify
-                .Select(x =>
-                    NotificationFactory.InfoNotification(newChatMessage.Message, x, ownerId));
+                .Select(userId => NotificationCreator.System(new SystemNotificationData(newChatMessage.Message), 
+                    userId, ownerId));
 
             await _notificationService.PushManyAsync(notificationModels);
         }

@@ -8,7 +8,4 @@
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
     </ItemGroup>
 
-
-
-
 </Project>

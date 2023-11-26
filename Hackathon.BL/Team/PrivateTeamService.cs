@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.BL.Validation.User;
 using Hackathon.Common.Abstraction.Team;
@@ -5,10 +7,9 @@ using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Team;
-using System.Linq;
-using System.Threading.Tasks;
-using Hackathon.Informing.Abstractions.Models;
+using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
+using Hackathon.Informing.BL;
 
 namespace Hackathon.BL.Team;
 
@@ -168,8 +169,13 @@ public class PrivateTeamService: IPrivateTeamService
             Role = TeamRole.Participant
         });
 
-        await _notificationService.PushAsync(CreateNotificationModel
-                .Information(request.UserId, $"Вы были приняты в команду '{request.TeamName}'"));
+        await _notificationService.PushAsync(NotificationCreator.TeamJoinRequestDecision(new TeamJoinRequestDecisionData
+            {
+                TeamId = team.Id,
+                TeamName = team.Name,
+                Comment = null,
+                IsApproved = true
+            }, request.UserId, authorizedUserId));
 
         return Result.Success;
     }
@@ -187,16 +193,27 @@ public class PrivateTeamService: IPrivateTeamService
         if (!isRequestAuthor && !isTeamOwner)
             return Result.Forbidden("Отменить запрос на вступление в команду может только автор запроса или уполномоченный участник команды");
 
-        if (request.Status != TeamJoinRequestStatus.Sent)
+        if (request.Status is not TeamJoinRequestStatus.Sent)
             return Result.NotValid("Запрос уже принят или отклонен");
+        
+        var team = await _teamRepository.GetAsync(request.TeamId);
+        if (team is null)
+            return Result.NotFound(TeamMessages.TeamDoesNotExists);
 
         var newStatus = isTeamOwner ? TeamJoinRequestStatus.Refused : TeamJoinRequestStatus.Cancelled;
 
         await _teamJoinRequestsRepository.SetStatusWithCommentAsync(parameters.RequestId, newStatus, parameters.Comment);
 
         if (isTeamOwner)
-            await _notificationService.PushAsync(CreateNotificationModel
-                .Information(request.UserId, $"Запрос на вступление в команду '{request.TeamName}' отклонен"));
+        {
+            await _notificationService.PushAsync(NotificationCreator.TeamJoinRequestDecision(new TeamJoinRequestDecisionData
+                {
+                    TeamId = team.Id,
+                    TeamName = team.Name,
+                    Comment = parameters.Comment,
+                    IsApproved = false
+                }, request.UserId, authorizedUserId));
+        }
 
         return Result.Success;
     }
