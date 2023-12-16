@@ -1,6 +1,6 @@
 using System;
 
-namespace Hackathon.Common.Models.EventLog;
+namespace Hackathon.Logbook.Abstraction.Models;
 
 public class EventLogModel
 {
@@ -24,13 +24,18 @@ public class EventLogModel
     /// null если система
     /// </summary>
     public long? UserId { get; }
+    
+    /// <summary>
+    /// Имя пользователя
+    /// </summary>
+    public string Username { get; set; }
 
     /// <summary>
     /// Время события (UTC)
     /// </summary>
     public DateTime Timestamp { get; }
 
-    public EventLogModel(EventLogType logType, string description = null, long? userId = null)
+    public EventLogModel(EventLogType logType, string description = null, long? userId = null, string username = null)
     {
         Id = Guid.NewGuid();
 
@@ -46,5 +51,6 @@ public class EventLogModel
 
         Timestamp = DateTime.UtcNow;
         UserId = userId;
+        Username = username;
     }
 }

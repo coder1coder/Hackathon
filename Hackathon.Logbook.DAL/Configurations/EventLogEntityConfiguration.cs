@@ -1,8 +1,8 @@
-using Hackathon.DAL.Entities;
+using Hackathon.Logbook.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hackathon.DAL.Configurations;
+namespace Hackathon.Logbook.DAL.Configurations;
 
 public class EventLogEntityConfiguration: IEntityTypeConfiguration<EventLogEntity>
 {

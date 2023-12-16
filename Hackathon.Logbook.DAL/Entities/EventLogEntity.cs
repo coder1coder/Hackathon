@@ -1,7 +1,7 @@
-using Hackathon.Common.Models.EventLog;
 using System;
+using Hackathon.Logbook.Abstraction.Models;
 
-namespace Hackathon.DAL.Entities;
+namespace Hackathon.Logbook.DAL.Entities;
 
 /// <summary>
 /// Событие аудита

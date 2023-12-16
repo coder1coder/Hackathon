@@ -1,4 +1,4 @@
-namespace Hackathon.Common.Models.EventLog;
+namespace Hackathon.Logbook.Abstraction.Models;
 
 /// <summary>
 /// Тип произошедшего события

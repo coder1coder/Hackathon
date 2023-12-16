@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.EventLog;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.Abstraction.Repositories;
+using Hackathon.Logbook.Abstraction.Services;
 
-namespace Hackathon.BL.EventLog;
+namespace Hackathon.Logbook.BL.Services;
 
 public sealed class EventLogService: IEventLogService
 {

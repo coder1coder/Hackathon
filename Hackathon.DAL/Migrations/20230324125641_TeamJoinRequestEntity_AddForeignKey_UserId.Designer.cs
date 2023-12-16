@@ -168,37 +168,6 @@ namespace Hackathon.DAL.Migrations
 
                     b.ToTable("EventStages", (string)null);
                 });
-
-            modelBuilder.Entity("Hackathon.DAL.Entities.EventLogEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Timestamp");
-
-                    b.HasIndex("Type");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EventLog", (string)null);
-                });
             
             modelBuilder.Entity("Hackathon.DAL.Entities.FriendshipEntity", b =>
                 {

@@ -13,9 +13,10 @@ public interface IEventService
     /// <summary>
     /// Создание события
     /// </summary>
+    /// <param name="authorizedUserId"></param>
     /// <param name="eventCreateParameters">Модель создаваемого события</param>
     /// <returns></returns>
-    Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters);
+    Task<Result<long>> CreateAsync(long authorizedUserId, EventCreateParameters eventCreateParameters);
 
     /// <summary>
     /// Редактирование события

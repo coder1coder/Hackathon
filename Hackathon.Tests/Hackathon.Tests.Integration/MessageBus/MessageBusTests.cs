@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Hackathon.API.Consumers;
-using Hackathon.BL.EventLog;
-using Hackathon.Common.Abstraction.EventLog;
-using Hackathon.Common.Models.EventLog;
+using Hackathon.Logbook.Abstraction.Handlers;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.BL.Consumers;
+using Hackathon.Logbook.BL.Handlers;
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +22,7 @@ public class MessageBusTests : BaseIntegrationTest
     public async Task EventLogConsumer_Consume_Success()
     {
         await using var provider = new ServiceCollection()
-            .AddScoped<IEventLogHandler>(_ => new EventLogHandler(NullLogger<EventLogHandler>.Instance, EventLogRepository))
+            .AddScoped<IEventLogHandler>(_ => new EventLogHandler(NullLogger<EventLogHandler>.Instance, EventLogRepository, UserRepository))
             .AddScoped<ILogger<EventLogConsumer>>(_ => NullLogger<EventLogConsumer>.Instance)
             .AddMassTransitTestHarness(cfg =>
             {

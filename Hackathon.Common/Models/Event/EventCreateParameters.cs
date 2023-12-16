@@ -11,7 +11,7 @@ public class EventCreateParameters: BaseEventParameters
     /// Кто создал событие
     /// </summary>
     public long OwnerId { get; set; }
-
+    
     /// <summary>
     /// Соглашение об участии в мероприятии
     /// </summary>

@@ -8,7 +8,6 @@ using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Extensions;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.Team;
 using System;
 using System.Linq;
@@ -17,7 +16,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Hackathon.BL.Validation.Extensions;
 using Hackathon.Common.Abstraction.ApprovalApplications;
-using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.User;
@@ -30,6 +28,8 @@ using Hackathon.Informing.Abstractions.Services;
 using Hackathon.Informing.BL;
 using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.Abstraction.Services;
 
 namespace Hackathon.BL.Event;
 
@@ -88,8 +88,9 @@ public class EventService : IEventService
         _eventLogService = eventLogService;
     }
 
-    public async Task<Result<long>> CreateAsync(EventCreateParameters eventCreateParameters)
+    public async Task<Result<long>> CreateAsync(long authorizedUserId, EventCreateParameters eventCreateParameters)
     {
+        eventCreateParameters.OwnerId = authorizedUserId;
         await _createEventModelValidator.ValidateAndThrowAsync(eventCreateParameters);
 
         await AssignImageIdFromTemporaryFile(eventCreateParameters);
@@ -99,7 +100,7 @@ public class EventService : IEventService
         await _eventLogService.AddAsync(new EventLogModel(
             EventLogType.Created,
             $"Добавлено новое событие с идентификатором '{eventId}'",
-            eventCreateParameters.OwnerId
+            authorizedUserId
         ));
 
         return Result<long>.FromValue(eventId);

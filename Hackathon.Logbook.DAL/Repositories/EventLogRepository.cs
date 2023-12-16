@@ -1,22 +1,22 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.EventLog;
-using Hackathon.DAL.Entities;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.Abstraction.Repositories;
+using Hackathon.Logbook.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hackathon.DAL.Repositories;
+namespace Hackathon.Logbook.DAL.Repositories;
 
 public class EventLogRepository: IEventLogRepository
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly LogbookDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public EventLogRepository(ApplicationDbContext dbContext, IMapper mapper)
+    public EventLogRepository(LogbookDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -25,18 +25,6 @@ public class EventLogRepository: IEventLogRepository
     public async Task AddAsync(EventLogModel eventLogModel)
     {
         var entity = _mapper.Map<EventLogModel, EventLogEntity>(eventLogModel);
-
-        if (entity.UserId.HasValue)
-        {
-            var userEntity = await _dbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x =>
-                    x.Id == entity.UserId);
-
-            if (userEntity is not null)
-                entity.UserName = userEntity.GetAnyName();
-        }
-
         _dbContext.EventLog.Add(entity);
         await _dbContext.SaveChangesAsync();
     }

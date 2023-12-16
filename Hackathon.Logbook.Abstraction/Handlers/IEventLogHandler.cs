@@ -1,7 +1,7 @@
-using Hackathon.Common.Models.EventLog;
 using System.Threading.Tasks;
+using Hackathon.Logbook.Abstraction.Models;
 
-namespace Hackathon.Common.Abstraction.EventLog;
+namespace Hackathon.Logbook.Abstraction.Handlers;
 
 public interface IEventLogHandler
 {

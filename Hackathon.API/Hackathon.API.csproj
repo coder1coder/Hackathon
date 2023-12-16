@@ -45,6 +45,7 @@
       <ProjectReference Include="..\Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Informing.Module\Hackathon.Informing.Module.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />
+      <ProjectReference Include="..\Hackathon.Logbook.Module\Hackathon.Logbook.Module.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -52,6 +53,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
+
 
     <PropertyGroup>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

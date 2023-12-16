@@ -4,6 +4,7 @@ using Hackathon.API.Module;
 using Hackathon.Chats.Module;
 using Hackathon.FileStorage.Module;
 using Hackathon.Informing.Module;
+using Hackathon.Logbook.Module;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,7 @@ public class Program
         Modules.Add(new ChatsApiModule());
         Modules.Add(new InformingApiModule());
         Modules.Add(new FileStorageModule());
+        Modules.Add(new LogbookApiModule());
 
         return Host
             .CreateDefaultBuilder(args)

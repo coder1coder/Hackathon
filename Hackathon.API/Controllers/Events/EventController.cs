@@ -40,10 +40,8 @@ public class EventController: BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
-        var createEventModel = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
-        createEventModel.OwnerId = AuthorizedUserId;
-
-        var createResult = await _eventService.CreateAsync(createEventModel);
+        var createEventParameters = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
+        var createResult = await _eventService.CreateAsync(AuthorizedUserId, createEventParameters);
         if (!createResult.IsSuccess)
             return await GetResult(() => Task.FromResult(createResult));
 

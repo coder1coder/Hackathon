@@ -38,8 +38,8 @@ public class FileStorageRepository: IFileStorageRepository
             : null;
     }
 
-    public async Task<Guid[]> GetIsDeletedFilesAsync()
-        => await _dbContext.StorageFiles
+    public Task<Guid[]> GetIsDeletedFilesAsync()
+        => _dbContext.StorageFiles
             .Where(x => x.IsDeleted)
             .Select(x => x.Id)
             .ToArrayAsync();

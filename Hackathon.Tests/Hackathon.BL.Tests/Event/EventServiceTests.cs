@@ -6,13 +6,11 @@ using FluentAssertions;
 using FluentValidation;
 using Hackathon.BL.Event;
 using Hackathon.Common.Abstraction.ApprovalApplications;
-using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Event;
-using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.EventStage;
 using Hackathon.Common.Models.User;
 using Hackathon.FileStorage.Abstraction.Models;
@@ -20,6 +18,8 @@ using Hackathon.FileStorage.Abstraction.Repositories;
 using Hackathon.FileStorage.Abstraction.Services;
 using Hackathon.Informing.Abstractions.Services;
 using Hackathon.IntegrationEvents.Hubs;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.Abstraction.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -74,7 +74,7 @@ public class EventServiceTests: BaseUnitTest
     public async Task Create_Should_Return_Positive_Id()
     {
         //arrange
-        var createdId = new Random().Next(0, 11);
+        var createdId = Random.Shared.Next(1, 10);
 
         _eventRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<EventCreateParameters>()))
             .ReturnsAsync(createdId);
@@ -83,7 +83,7 @@ public class EventServiceTests: BaseUnitTest
             .Returns(Task.CompletedTask);
 
         //act
-        var result = await _service.CreateAsync(new EventCreateParameters
+        var result = await _service.CreateAsync(Random.Shared.Next(1, 10), new EventCreateParameters
         {
             Stages = new List<EventStageModel>()
         });
@@ -119,7 +119,7 @@ public class EventServiceTests: BaseUnitTest
             .Returns(Task.CompletedTask);
 
         //act
-        var result = await _service.CreateAsync(eventCreateParameters);
+        var result = await _service.CreateAsync(Random.Shared.Next(1, 10), eventCreateParameters);
 
         //assert
         Assert.NotNull(result);

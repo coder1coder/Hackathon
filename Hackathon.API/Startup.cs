@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.API.Consumers;
 using Hackathon.API.Extensions;
 using Hackathon.API.Module;
 using Hackathon.BL;
@@ -73,10 +72,11 @@ public class Startup
 
         var config = new TypeAdapterConfig();
 
-        var mappingAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
-        mappingAssemblies.Add(typeof(EventMapping).Assembly);
+        var solutionAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
+        solutionAssemblies.Add(typeof(EventMapping).Assembly);
+        var solutionAssembliesArray = solutionAssemblies.ToArray();
         
-        config.Scan(mappingAssemblies.ToArray());
+        config.Scan(solutionAssembliesArray);
 
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
@@ -95,7 +95,7 @@ public class Startup
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
-            x.AddConsumers(typeof(EventLogConsumer).Assembly);
+            x.AddConsumers(solutionAssembliesArray);
 
             x.UsingRabbitMq((context, cfg) =>
             {

@@ -1,13 +1,11 @@
 using Hackathon.BL.ApprovalApplications;
 using Hackathon.BL.Email;
 using Hackathon.BL.Event;
-using Hackathon.BL.EventLog;
 using Hackathon.BL.Friend;
 using Hackathon.BL.Project;
 using Hackathon.BL.Team;
 using Hackathon.BL.User;
 using Hackathon.Common.Abstraction;
-using Hackathon.Common.Abstraction.EventLog;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Project;
@@ -26,8 +24,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEventService, EventService>()
-            .AddScoped<IEventLogHandler, EventLogHandler>()
-            .AddScoped<IEventLogService, EventLogService>()
             .AddScoped<IFriendshipService, FriendshipService>()
             .AddScoped<IProjectService, ProjectService>()
             .AddScoped<ITeamService, TeamService>()

@@ -1,8 +1,8 @@
-using Hackathon.Common.Models.EventLog;
-using Hackathon.DAL.Entities;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.DAL.Entities;
 using Mapster;
 
-namespace Hackathon.DAL.Mappings;
+namespace Hackathon.Logbook.DAL;
 
 public class EventLogMappings: IRegister
 {

@@ -1,14 +1,14 @@
-using Hackathon.Common.Abstraction.EventLog;
 using System.Threading.Tasks;
 using Hackathon.API.Module;
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.EventLog;
 using Hackathon.Common.Models.User;
+using Hackathon.Logbook.Abstraction.Models;
+using Hackathon.Logbook.Abstraction.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Hackathon.API.Controllers;
+namespace Hackathon.Logbook.Module;
 
 [SwaggerTag("Журнал событий")]
 public sealed class EventLogController: BaseController

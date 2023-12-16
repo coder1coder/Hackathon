@@ -11,7 +11,6 @@ using Hackathon.Common.Models.User;
 using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
 using Hackathon.Informing.BL;
-using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.IntegrationEvents;
 using Hackathon.IntegrationEvents.Topics;
 

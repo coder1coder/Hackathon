@@ -1,6 +1,6 @@
 using System;
 
-namespace Hackathon.Common.Models.EventLog;
+namespace Hackathon.Logbook.Abstraction.Models;
 
 /// <summary>
 /// Модель списочного представления записи журнала событий

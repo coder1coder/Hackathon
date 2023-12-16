@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.Common.Models.EventLog;
-using System.Threading.Tasks;
+using Hackathon.Logbook.Abstraction.Models;
 
-namespace Hackathon.Common.Abstraction.EventLog;
+namespace Hackathon.Logbook.Abstraction.Repositories;
 
 public interface IEventLogRepository
 {

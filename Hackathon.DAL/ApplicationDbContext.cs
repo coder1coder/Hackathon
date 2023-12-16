@@ -45,7 +45,7 @@ public class ApplicationDbContext: BaseDbContext
 
     public DbSet<ProjectEntity> Projects { get; set; }
     
-    public DbSet<EventLogEntity> EventLog { get; set; }
+
     public DbSet<FriendshipEntity> Friendships { get; set; }
 
     /// <summary>
