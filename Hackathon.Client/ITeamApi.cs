@@ -28,7 +28,7 @@ public interface ITeamApi
     /// </summary>
     /// <returns></returns>
     [Post(BaseRoute + "/join/request/{requestId}/approve")]
-    public Task ApproveJoinRequest(long requestId);
+    Task ApproveJoinRequest(long requestId);
 
     /// <summary>
     /// Отменить запрос на вступление в команду

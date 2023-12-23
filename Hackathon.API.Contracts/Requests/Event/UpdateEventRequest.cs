@@ -3,13 +3,14 @@ using Hackathon.Common.Models.EventStage;
 using System;
 using System.Collections.Generic;
 using Hackathon.Common.Models.Event.Agreement;
+using Hackathon.Common.Models.Tags;
 
 namespace Hackathon.Contracts.Requests.Event;
 
 /// <summary>
 /// Контракт создания и обновления нового события
 /// </summary>
-public class UpdateEventRequest
+public class UpdateEventRequest: IHasArrayTags
 {
     /// <summary>
     /// Идентификатор обновляемой записи
@@ -76,4 +77,9 @@ public class UpdateEventRequest
     /// Задачи, которые ставятся перед участниками мероприятия
     /// </summary>
     public EventTaskItem[] Tasks { get; set; }
+
+    /// <summary>
+    /// Теги
+    /// </summary>
+    public string[] Tags { get; set; }
 }

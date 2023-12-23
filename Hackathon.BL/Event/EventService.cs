@@ -10,6 +10,7 @@ using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Team;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -262,7 +263,7 @@ public class EventService : IEventService
         if (eventModel.Status != EventStatus.Published)
             return Result.NotValid(EventMessages.CantAttachToEvent);
 
-        var notFullTeams = eventModel.GetNotFullTeams();
+        var notFullTeams = GetNotFullTeams(eventModel);
 
         if (notFullTeams.Count == 0 && !eventModel.IsCreateTeamsAutomatically)
             return Result.NotValid(EventMessages.CantAttachToEvent);
@@ -569,4 +570,13 @@ public class EventService : IEventService
             parameters.ImageId = fileModel?.Id;
         }
     }
+    
+    /// <summary>
+    /// Получить команды связанные с событием, которые заполнены не полностью
+    /// </summary>
+    /// <returns></returns>
+    private static IReadOnlyCollection<TeamModel> GetNotFullTeams(EventModel eventModel)
+        => eventModel.Teams
+            .Where(x => x.Members?.Length < eventModel.MinTeamMembers)
+            .ToArray();
 }

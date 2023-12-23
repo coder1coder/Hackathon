@@ -73,7 +73,11 @@ public class Startup
         var config = new TypeAdapterConfig();
 
         var solutionAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
-        solutionAssemblies.Add(typeof(EventMapping).Assembly);
+        solutionAssemblies.AddRange(new []
+        {
+            typeof(EventMapping).Assembly,
+            typeof(CommonMappings).Assembly
+        });
         var solutionAssembliesArray = solutionAssemblies.ToArray();
         
         config.Scan(solutionAssembliesArray);
