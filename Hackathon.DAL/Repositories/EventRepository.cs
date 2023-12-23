@@ -98,7 +98,7 @@ public class EventRepository : IEventRepository
                     parameters.Filter.OwnerIds.Contains(x.OwnerId));
         }
 
-        var totalCount = await query.LongCountAsync();
+        var totalCount = await query.CountAsync();
 
         query = parameters.SortOrder == SortOrder.Asc
             ? query.OrderBy(ResolveOrderFieldExpression(parameters))

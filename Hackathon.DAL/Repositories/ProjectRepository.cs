@@ -84,7 +84,7 @@ public class ProjectRepository: IProjectRepository
             ? query.OrderBy(ResolveOrderFieldExpression(parameters))
             : query.OrderByDescending(ResolveOrderFieldExpression(parameters));
 
-        var totalCount = await query.LongCountAsync();
+        var totalCount = await query.CountAsync();
 
         return new BaseCollection<ProjectListItem>
         {

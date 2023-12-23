@@ -34,7 +34,7 @@ public class EventLogRepository: IEventLogRepository
         var query = _dbContext.EventLog
             .AsNoTracking();
 
-        var totalCount = await query.LongCountAsync();
+        var totalCount = await query.CountAsync();
 
         return new BaseCollection<EventLogListItem>
         {

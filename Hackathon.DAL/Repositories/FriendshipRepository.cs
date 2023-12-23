@@ -147,7 +147,7 @@ public class FriendshipRepository: IFriendshipRepository
                 query = query.Where(x => x.Status == parameters.Filter.Status);
         }
 
-        var total = await query.LongCountAsync();
+        var total = await query.CountAsync();
 
         return new BaseCollection<Friendship>
         {

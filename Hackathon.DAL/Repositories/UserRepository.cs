@@ -98,7 +98,7 @@ public class UserRepository: IUserRepository
                 query = query.Where(x => !parameters.Filter.ExcludeIds.Contains(x.Id));
         }
 
-        var totalCount = await query.LongCountAsync();
+        var totalCount = await query.CountAsync();
 
         if (!string.IsNullOrWhiteSpace(parameters.SortBy))
         {

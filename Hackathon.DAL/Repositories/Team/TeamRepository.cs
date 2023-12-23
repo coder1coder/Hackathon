@@ -103,7 +103,7 @@ public class TeamRepository : ITeamRepository
                 query = query.Where(x => x.Type == parameters.Filter.TeamType);
         }
 
-        var totalCount = await query.LongCountAsync();
+        var totalCount = await query.CountAsync();
 
         query = parameters.SortOrder == SortOrder.Asc
             ? query.OrderBy(ResolveOrderFieldExpression(parameters))
