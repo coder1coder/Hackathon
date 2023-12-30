@@ -1,6 +1,6 @@
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Hackathon.BL.Validation.Event;
+using Hackathon.BL.Validation.Events;
 using Hackathon.Common.Models.Event;
 using Xunit;
 

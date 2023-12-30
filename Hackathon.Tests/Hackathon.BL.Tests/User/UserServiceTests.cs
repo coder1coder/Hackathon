@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
 using FluentValidation;
-using Hackathon.BL.User;
+using Hackathon.BL.Users;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;

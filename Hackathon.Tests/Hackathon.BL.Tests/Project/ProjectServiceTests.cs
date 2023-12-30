@@ -1,8 +1,8 @@
 using BackendTools.Common.Models;
 using System.Threading.Tasks;
 using FluentValidation;
-using Hackathon.BL.Project;
-using Hackathon.BL.Validation.Project;
+using Hackathon.BL.Projects;
+using Hackathon.BL.Validation.Projects;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Models.Project;
 using Moq;

@@ -2,6 +2,8 @@
 
 public interface IHasStringTags
 {
+    const string Separator = " ";
+    
     /// <summary>
     /// Теги в строковом представлении разделенные специальным разделителем
     /// </summary>

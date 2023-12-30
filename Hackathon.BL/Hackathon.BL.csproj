@@ -23,7 +23,6 @@
       <PackageReference Include="Microsoft.Extensions.Options"  />
     </ItemGroup>
 
-
     <PropertyGroup>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>

@@ -75,12 +75,12 @@ public class Startup
         var solutionAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
         solutionAssemblies.AddRange(new []
         {
-            typeof(EventMapping).Assembly,
-            typeof(CommonMappings).Assembly
+            typeof(EventMapping).Assembly
         });
         var solutionAssembliesArray = solutionAssemblies.ToArray();
         
         config.Scan(solutionAssembliesArray);
+        config.Apply(new CommonMappings());
 
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();

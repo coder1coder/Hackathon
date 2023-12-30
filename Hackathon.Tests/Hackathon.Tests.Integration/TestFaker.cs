@@ -7,6 +7,7 @@ using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities.Event;
 using MapsterMapper;
 using System.Linq;
+using Hackathon.Common.Models.Tags;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -97,5 +98,7 @@ public class TestFaker
             {
                 Title = x
             }).ToArray())
+            .RuleFor(x=>x.Tags, f => string.Join(IHasStringTags.Separator,
+                    Enumerable.Range(1, 3).Select(_ => f.Random.String2(3, 30))))
             .Generate(count);
 }

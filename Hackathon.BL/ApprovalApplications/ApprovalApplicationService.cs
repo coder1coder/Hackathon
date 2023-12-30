@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using FluentValidation;
-using Hackathon.BL.Validation.User;
+using Hackathon.BL.Validation.Users;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.User;
@@ -53,7 +53,7 @@ public class ApprovalApplicationService: IApprovalApplicationService
     {
         var authorizedUser = await _userRepository.GetAsync(authorizedUserId);
         if (authorizedUser is null)
-            return Result<ApprovalApplicationModel>.NotFound(UserErrorMessages.UserDoesNotExists);
+            return Result<ApprovalApplicationModel>.NotFound(UserValidationErrorMessages.UserDoesNotExists);
 
         var approvalApplication = await _approvalApplicationRepository.GetAsync(approvalApplicationId);
         if (approvalApplication is null)
