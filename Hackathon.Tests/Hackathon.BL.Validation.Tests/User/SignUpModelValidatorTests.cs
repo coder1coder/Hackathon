@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using Hackathon.BL.Validation.User;
+using Hackathon.BL.Validation.Users;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;

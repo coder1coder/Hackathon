@@ -2,8 +2,8 @@ using System;
 
 namespace Hackathon.Common.Extensions;
 
-public static class DateTimeExtensions{
-    
+public static class DateTimeExtensions
+{
     /// <summary>
     /// Преобразовать в UTC и исключить секунды и миллисекунды
     /// </summary>

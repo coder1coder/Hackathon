@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.BL.Validation.Event;
+using Hackathon.BL.Validation.Events;
+using Hackathon.BL.Validation.Teams;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Models.Teams;
 using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Team;
-using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.Event;
 
 namespace Hackathon.Chats.BL.Validators;
@@ -37,14 +37,14 @@ public class NewTeamChatMessageValidator: IValidator<NewTeamChatMessage>
 
         var team = await _teamRepository.GetAsync(model.TeamId);
         if (team is null)
-            return Result.NotValid(TeamMessages.TeamDoesNotExists);
+            return Result.NotValid(TeamValidationErrorMessages.TeamDoesNotExists);
 
         if (team.IsTemporaryTeam())
         {
             var @event = await _eventRepository.GetByTemporaryTeamIdAsync(team.Id);
 
             if (@event is null)
-                return Result.NotValid(EventErrorMessages.EventDoesNotExists);
+                return Result.NotValid(EventsValidationMessages.EventDoesNotExists);
 
             if (@event.Status is not EventStatus.Started)
                 return Result.NotValid(ChatErrorMessages.MessageCanBeSentOnlyForStartedEvent);

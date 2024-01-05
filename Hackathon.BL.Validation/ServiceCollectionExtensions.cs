@@ -1,10 +1,10 @@
 using FluentValidation;
 using Hackathon.BL.Validation.ApprovalApplications;
 using Hackathon.BL.Validation.Common;
-using Hackathon.BL.Validation.Event;
-using Hackathon.BL.Validation.Project;
-using Hackathon.BL.Validation.Team;
-using Hackathon.BL.Validation.User;
+using Hackathon.BL.Validation.Events;
+using Hackathon.BL.Validation.Projects;
+using Hackathon.BL.Validation.Teams;
+using Hackathon.BL.Validation.Users;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Event;
