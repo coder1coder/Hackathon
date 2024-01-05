@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Event.Agreement;
 using Hackathon.Common.Models.EventStage;
-using Hackathon.Common.Models.Tags;
 
 namespace Hackathon.Contracts.Requests.Event;
 
 /// <summary>
 /// Контракт создания нового события
 /// </summary>
-public class CreateEventRequest: IHasArrayTags
+public class CreateEventRequest
 {
     /// <summary>
     /// Наименование события
@@ -72,9 +71,4 @@ public class CreateEventRequest: IHasArrayTags
     /// Соглашение об участии в мероприятии
     /// </summary>
     public EventAgreementCreateParameters Agreement { get; set; }
-
-    /// <summary>
-    /// Теги
-    /// </summary>
-    public string[] Tags { get; set; }
 }

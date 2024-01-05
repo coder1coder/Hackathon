@@ -44,10 +44,5 @@ public class EventEntityConfiguration : IEntityTypeConfiguration<EventEntity>
             .WithOne(x => x.Event)
             .HasForeignKey<EventEntity>(s=>s.ApprovalApplicationId)
             .OnDelete(DeleteBehavior.SetNull);
-
-        builder.Property(x => x.Tags)
-            .HasMaxLength(100);
-        
-        builder.HasIndex(x => x.Tags);
     }
 }

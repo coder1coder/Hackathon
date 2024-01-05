@@ -9,5 +9,5 @@ public interface IAuthApi
     private const string BaseRoute = "/api/Auth";
 
     [Post(BaseRoute + "/SignIn")]
-    Task<AuthTokenModel> SignIn([Body] SignInRequest request);
+    public Task<AuthTokenModel> SignIn([Body] SignInRequest request);
 }

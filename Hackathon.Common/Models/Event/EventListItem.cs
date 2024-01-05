@@ -1,12 +1,11 @@
 using System;
-using Hackathon.Common.Models.Tags;
 
 namespace Hackathon.Common.Models.Event;
 
 /// <summary>
 /// Списочное представление события
 /// </summary>
-public class EventListItem: IHasArrayTags
+public class EventListItem
 {
     /// <summary>
     /// Идентификатор события
@@ -72,9 +71,4 @@ public class EventListItem: IHasArrayTags
     /// Идентификатор изображения
     /// </summary>
     public Guid? ImageId { get; set; }
-    
-    /// <summary>
-    /// Теги
-    /// </summary>
-    public string[] Tags { get; set; }
 }

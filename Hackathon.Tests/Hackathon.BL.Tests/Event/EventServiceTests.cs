@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
 using FluentValidation;
-using Hackathon.BL.Events;
+using Hackathon.BL.Event;
 using Hackathon.Common.Abstraction.ApprovalApplications;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Team;

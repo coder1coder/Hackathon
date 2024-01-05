@@ -188,10 +188,6 @@ namespace Hackathon.DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Tags")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<EventTaskItem[]>("Tasks")
                         .IsRequired()
                         .HasColumnType("jsonb");
@@ -202,8 +198,6 @@ namespace Hackathon.DAL.Migrations
                         .IsUnique();
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("Tags");
 
                     b.ToTable("Events", (string)null);
                 });

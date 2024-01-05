@@ -14,16 +14,16 @@ public interface IUserApi
     Task<BaseCreateResponse> SignUp([Body] SignUpRequest request);
 
     [Get(BaseRoute + "/{userId})")]
-    Task<UserResponse> Get(long userId);
+    public Task<UserResponse> Get(long userId);
 
     [Get(BaseRoute + "/{userId}/reactions")]
-    Task<UserProfileReaction> GetReactions(long userId);
+    public Task<UserProfileReaction> GetReactions(long userId);
 
     [Post(BaseRoute + "/{userId}/reactions/{reaction}")]
-    Task AddReaction(long userId, UserProfileReaction reaction);
+    public Task AddReaction(long userId, UserProfileReaction reaction);
 
     [Delete(BaseRoute + "/{userId}/reactions/{reaction}")]
-    Task RemoveReaction(long userId, UserProfileReaction reaction);
+    public Task RemoveReaction(long userId, UserProfileReaction reaction);
 
     /// <summary>
     /// Загрузить картинку профиля пользователя

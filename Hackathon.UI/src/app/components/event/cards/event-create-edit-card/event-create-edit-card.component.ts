@@ -10,7 +10,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { EventNewStatusDialogComponent } from "../components/status/event-new-status-dialog.component";
 import { SnackService } from "../../../../services/snack.service";
 import { delay, Observable, switchMap, takeUntil } from "rxjs";
-import moment from "moment/moment";
+import * as moment from "moment/moment";
+import { AuthService } from "../../../../services/auth.service";
 import { RouterService } from "../../../../services/router.service";
 import { FileStorageService } from "../../../../services/file-storage.service";
 import { SafeUrl } from "@angular/platform-browser";
@@ -32,7 +33,6 @@ import { checkValue } from "../../../../common/functions/check-value";
 import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
 import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
 import { ApprovalApplicationStatusEnum } from "../../../../models/approval-application/approval-application-status.enum";
-import {MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'event-create-edit-card',
@@ -65,13 +65,13 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private activateRoute: ActivatedRoute,
     private fileStorageService: FileStorageService,
     private eventHttpService: EventClient,
+    public eventService: EventService,
+    private authService: AuthService,
     private snackService: SnackService,
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private errorProcessor: ErrorProcessorService,
-
-    public eventService: EventService,
     ) {
     super();
   }
@@ -297,7 +297,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       agreementRules: checkValue(this.event?.agreement?.rules),
       agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation,
       imageId: this.event.imageId,
-      tags: this.event.tags
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
@@ -346,7 +345,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       fileImage: [null],
       agreementRules: [null],
       agreementRequiresConfirmation: [false],
-      tags: [null]
     });
   }
 
@@ -378,31 +376,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     const previousIndex = this.eventTasksDataSource.data.findIndex(row => row === event.item.data);
     moveItemInArray(this.eventTasksDataSource.data, previousIndex, event.currentIndex);
     this.eventTasksTable.renderRows();
-  }
-
-
-  get tags(): string[]{
-    return this.form.get('tags')?.value;
-  }
-
-  public canAddTag(): boolean
-  {
-    return this.tags?.length < 3;
-  }
-
-  public addEventTag(event: MatChipInputEvent): void{
-    if (event.value) {
-      var index = this.tags.indexOf(event.value);
-      if (index == -1) {
-        this.tags.push(event.value);
-      }
-
-      event.chipInput!.clear();
-    }
-  }
-
-  public removeEventTag(value: string):void{
-    this.tags.splice(this.tags.indexOf(value), 1)
   }
 
   public addEventTaskFromInput(): void {
@@ -442,7 +415,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       imageId: checkValue(this.form.get('imageId')?.value),
       stages: eventStages,
       tasks: eventTaskItems,
-      tags: checkValue(this.tags)
     };
   }
 
@@ -462,7 +434,6 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       description: checkValue(this.form.get('description')?.value),
       imageId: checkValue(this.form.get('imageId')?.value),
       agreement: checkValue(this.event?.agreement),
-      tags: checkValue(this.tags)
     };
   }
 
@@ -484,6 +455,4 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
       return null;
     }
   }
-
-  protected readonly Boolean = Boolean;
 }

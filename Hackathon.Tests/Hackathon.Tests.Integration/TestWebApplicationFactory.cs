@@ -30,6 +30,8 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>
 
         builder.UseEnvironment("Tests");
 
+        var s = builder.GetSetting("S3Options");
+
         var s3ClientMock = new Mock<IAmazonS3>();
         builder.ConfigureTestServices(x =>
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hackathon.Common.Models.Team;
 using Hackathon.Common.Models.User;
+using System.Linq;
 
 namespace Hackathon.Common.Models.Event;
 
@@ -40,4 +41,13 @@ public class EventModel : EventUpdateParameters
     /// Заявление на согласование
     /// </summary>
     public ApprovalApplicationModel ApprovalApplication { get; set; }
+
+    /// <summary>
+    /// Получить команды связанные с событием, которые заполнены не полностью
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyCollection<TeamModel> GetNotFullTeams()
+        => Teams
+            .Where(x => x.Members?.Length < MinTeamMembers)
+            .ToArray();
 }

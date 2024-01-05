@@ -3,7 +3,6 @@ using Hackathon.DAL.Entities.Interfaces;
 using Hackathon.DAL.Entities.User;
 using System;
 using System.Collections.Generic;
-using Hackathon.Common.Models.Tags;
 using Hackathon.DAL.Entities.ApprovalApplications;
 
 namespace Hackathon.DAL.Entities.Event;
@@ -11,7 +10,7 @@ namespace Hackathon.DAL.Entities.Event;
 /// <summary>
 /// Событие
 /// </summary>
-public class EventEntity : BaseEntity, ISoftDeletable, IHasStringTags
+public class EventEntity : BaseEntity, ISoftDeletable
 {
     /// <summary>
     /// Кто создал событие
@@ -110,9 +109,4 @@ public class EventEntity : BaseEntity, ISoftDeletable, IHasStringTags
     /// Заявка на согласование
     /// </summary>
     public ApprovalApplicationEntity ApprovalApplication { get; set; }
-    
-    /// <summary>
-    /// Теги
-    /// </summary>
-    public string Tags { get; set; }
 }

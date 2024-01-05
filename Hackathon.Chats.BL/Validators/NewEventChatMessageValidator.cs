@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.BL.Validation.Events;
+using Hackathon.BL.Validation.Event;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Models.Events;
 using Hackathon.Common.Abstraction;
@@ -30,7 +30,7 @@ public class NewEventChatMessageValidator: IValidator<NewEventChatMessage>
 
         var @event = await _eventRepository.GetAsync(message.EventId);
         if (@event is null)
-            return Result.NotValid(EventsValidationMessages.EventDoesNotExists);
+            return Result.NotValid(EventErrorMessages.EventDoesNotExists);
 
         return @event.Status is not EventStatus.Started
             ? Result.NotValid(ChatErrorMessages.MessageCanBeSentOnlyForStartedEvent)

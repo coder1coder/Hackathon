@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Hackathon.Common.Models.EventStage;
-using Hackathon.Common.Models.Tags;
 
 namespace Hackathon.Common.Models.Event;
 
-public abstract class BaseEventParameters: IHasArrayTags
+public abstract class BaseEventParameters
 {
     /// <summary>
     /// Наименование события
@@ -33,7 +32,7 @@ public abstract class BaseEventParameters: IHasArrayTags
     public int MinTeamMembers { get; set; }
 
     /// <summary>
-    /// Создавать команды автоматически
+    /// создавать команды автоматически
     /// </summary>
     public bool IsCreateTeamsAutomatically { get; set; }
 
@@ -62,9 +61,4 @@ public abstract class BaseEventParameters: IHasArrayTags
     /// Задачи, которые ставятся перед участниками мероприятия
     /// </summary>
     public EventTaskItem[] Tasks { get; set; } = Array.Empty<EventTaskItem>();
-    
-    /// <summary>
-    /// Теги
-    /// </summary>
-    public string[] Tags { get; set; }
 }

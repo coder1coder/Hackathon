@@ -24,5 +24,4 @@ export interface ICreateEvent {
   agreement?: IEventAgreement;
   /** задачи, которые ставятся перед участниками мероприятия */
   tasks: IEventTaskItem[];
-  tags: string[];
 }

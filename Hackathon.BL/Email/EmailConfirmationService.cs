@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.ErrorMessages;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
 using Hackathon.Informing.Abstractions.Constants;
@@ -49,18 +50,18 @@ public class EmailConfirmationService: IEmailConfirmationService
         var userModel = await _userRepository.GetAsync(userId);
 
         if (userModel is null)
-            return Result.NotValid(string.Format(EmailConfirmationErrorMessages.UserWithIdNotFound, userId));
+            return Result.NotValid(string.Format(EmailConfirmationMessages.UserWithIdNotFound, userId));
 
         var request = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
         if (request is null || userModel.Email.Address != request.Email)
-            return Result.NotValid(EmailConfirmationErrorMessages.EmailConfirmationRequestWasNotFound);
+            return Result.NotValid(EmailConfirmationMessages.EmailConfirmationRequestWasNotFound);
 
         if (request.IsConfirmed)
-            return Result.NotValid(EmailConfirmationErrorMessages.EmailAlreadyConfirmed);
+            return Result.NotValid(EmailConfirmationMessages.EmailAlreadyConfirmed);
 
         if (request.Code != code)
-            return Result.NotValid(EmailConfirmationErrorMessages.ConfirmationCodeIsWrong);
+            return Result.NotValid(EmailConfirmationMessages.ConfirmationCodeIsWrong);
 
         request.IsConfirmed = true;
 
@@ -82,10 +83,10 @@ public class EmailConfirmationService: IEmailConfirmationService
         var userModel = await _userRepository.GetAsync(userId);
 
         if (userModel is null)
-            return Result.NotValid(string.Format(EmailConfirmationErrorMessages.UserWithIdNotFound, userId));
+            return Result.NotValid(string.Format(EmailConfirmationMessages.UserWithIdNotFound, userId));
 
         if (userModel.Email is null)
-            return Result.NotValid(EmailConfirmationErrorMessages.UsersEmailIsNotListed);
+            return Result.NotValid(EmailConfirmationMessages.UsersEmailIsNotListed);
 
         var requestModel = await _emailConfirmationRepository.GetByUserIdAsync(userId);
 
@@ -143,7 +144,7 @@ public class EmailConfirmationService: IEmailConfirmationService
         var emailParameters = new EmailParameters
         {
             Email = userModel.Email.Address,
-            Subject = EmailConfirmationErrorMessages.EmailConfirmationTitle,
+            Subject = EmailConfirmationMessages.EmailConfirmationTitle,
             Body = generateTemplateResult.Data
         };
 
