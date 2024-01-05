@@ -106,7 +106,8 @@
                 cdkAutosizeMaxRows="10"
                 cdkAutosizeMinRows="10"
               ></textarea>
-            </mat-form-field>
+
+              <br/><br/>
             <mat-checkbox
               id="agreementRequiresConfirmation"
               formControlName="agreementRequiresConfirmation"
@@ -114,6 +115,27 @@
             >
               Требуется подтверждение ознакомления с правилами
             </mat-checkbox>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Теги</mat-label>
+              <mat-chip-list #tagList multiple formControlName="tags">
+                <mat-chip
+                  *ngFor="let eventTag of tags"
+                  [selected]="eventTag !== undefined"
+                  [value]="eventTag"
+                  (removed)="removeEventTag(eventTag)">
+                  {{ eventTag }}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+                <input placeholder="Добавить тег"
+                       *ngIf="canAddTag()"
+                       [matChipInputFor]="tagList"
+                       (matChipInputTokenEnd)="addEventTag($event)">
+              </mat-chip-list>
+            </mat-form-field>
 
           </div>
           <div class="image-upload">
@@ -353,9 +375,7 @@
           <button
             [disabled]="isCanAddStatus()"
             mat-button
-            (click)="addStatus()"
-          >Добавить новый статус
-          </button>
+            (click)="addStatus()">Добавить новый статус</button>
         </div>
       </mat-tab>
     </mat-tab-group>

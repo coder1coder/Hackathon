@@ -85,6 +85,8 @@ import { ApprovalApplicationFilterComponent } from './components/approval-applic
 import { ApprovalApplicationRejectModalComponent } from './components/approval-application/approval-application-reject-modal/approval-application-reject-modal.component';
 import { ApprovalApplicationInfoModalComponent } from './components/approval-application/approval-application-info-modal/approval-application-info-modal.component';
 import { NotificationTeamJoinRequestDecisionViewComponent } from './components/notification/templates/teams/teamJoinRequestDecision/notification.teamJoinRequestDecision.view.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -184,6 +186,8 @@ import { NotificationTeamJoinRequestDecisionViewComponent } from './components/n
         MatSlideToggleModule,
         InfiniteScrollModule,
         MatButtonToggleModule,
+        MatFormFieldModule,
+        MatChipsModule,
     ],
   providers: [
     errorHandler,
