@@ -1,15 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {EventStatusTranslator, } from "../../../../models/Event/EventStatus";
-import {AuthService} from "../../../../services/auth.service";
-import {Team} from "../../../../models/Team/Team";
-import {MatTableDataSource} from "@angular/material/table";
-import {ChangeEventStatusMessage} from 'src/app/models/Event/ChangeEventStatusMessage';
-import {Event} from 'src/app/models/Event/Event';
-import {RouterService} from "../../../../services/router.service";
-import {KeyValue} from "@angular/common";
-import {EventService} from "../../../../services/event/event.service";
-import {EventCardBaseComponent} from "../components/event-card-base.component";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { EventStatusTranslator } from "../../../../models/Event/EventStatus";
+import { AuthService } from "../../../../services/auth.service";
+import { Team } from "../../../../models/Team/Team";
+import { MatTableDataSource } from "@angular/material/table";
+import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
+import { Event } from 'src/app/models/Event/Event';
+import { RouterService } from "../../../../services/router.service";
+import { KeyValue } from "@angular/common";
+import { EventService } from "../../../../services/event/event.service";
+import { EventCardBaseComponent } from "../components/event-card-base.component";
+import { AppStateService } from "../../../../services/app-state.service";
 
 @Component({
   selector: 'event-event-main-view-card',
@@ -20,7 +21,7 @@ export class EventMainViewCardComponent extends EventCardBaseComponent implement
 
   public eventStatusesDataSource: MatTableDataSource<ChangeEventStatusMessage> = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public eventTeamsDataSource: MatTableDataSource<Team> = new MatTableDataSource<Team>([]);
-  public eventDetails: KeyValue<string,any>[] = [];
+  public eventDetails: KeyValue<string, any>[] = [];
   public eventStatusTranslator = EventStatusTranslator;
   public userId: number;
 
@@ -28,9 +29,10 @@ export class EventMainViewCardComponent extends EventCardBaseComponent implement
     private activateRoute: ActivatedRoute,
     public eventService: EventService,
     private authService: AuthService,
-    public router: RouterService
+    public router: RouterService,
+    protected appStateService: AppStateService
   ) {
-    super();
+    super(appStateService);
     this.eventId = activateRoute.snapshot.params['eventId'];
     this.userId = authService.getUserId() ?? 0;
   }

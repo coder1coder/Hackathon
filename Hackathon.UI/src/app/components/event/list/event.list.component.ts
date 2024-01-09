@@ -11,11 +11,14 @@ import { IEventListItem } from "../../../models/Event/IEventListItem";
 import { AuthService } from "../../../services/auth.service";
 import { PageSettingsDefaults } from "../../../models/PageSettings";
 import { DATE_FORMAT_DD_MM_YYYY } from "../../../common/consts/date-formats";
-import { Subject, takeUntil } from "rxjs";
+import { Observable, Subject, takeUntil } from "rxjs";
 import { EventClient } from "../../../services/event/event.client";
 import { EventService } from "../../../services/event/event.service";
 import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
 import { SnackService } from "../../../services/snack.service";
+import { fromMobx } from "../../../common/functions/from-mobx.function";
+import { AppStateService } from "../../../services/app-state.service";
+import { finalize } from "rxjs/operators";
 
 @Component({
   selector: 'event-list',
@@ -28,10 +31,10 @@ export class EventListComponent implements OnInit {
   public filterForm = this.fb.group({});
   public eventList: BaseCollection<IEventListItem> = {
     items: [],
-    totalCount: 0
+    totalCount: 0,
   };
   public eventStatusTranslator = EventStatusTranslator;
-  public isLoading: boolean = true;
+  public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   public isFullListDisplayed: boolean = false;
   public isFilterEnabled: boolean = false;
 
@@ -46,6 +49,7 @@ export class EventListComponent implements OnInit {
     private snackService: SnackService,
     private authService: AuthService,
     private fb: FormBuilder,
+    private appStateService: AppStateService,
   ) {
   }
 
@@ -151,9 +155,12 @@ export class EventListComponent implements OnInit {
   }
 
   private loadData(params?: GetListParameters<EventFilter>): void {
-    this.isLoading = true;
+    this.appStateService.setIsLoadingState(true);
     this.eventHttpService.getList(params)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        finalize(() => this.appStateService.setIsLoadingState(false)),
+        takeUntil(this.destroy$),
+      )
       .subscribe({
         next: (res: BaseCollection<IEventListItem>) =>  {
           this.eventList = res;
@@ -161,7 +168,6 @@ export class EventListComponent implements OnInit {
             this.isFullListDisplayed = true;
           }
         },
-        complete: () => this.isLoading = false
       });
   }
 }

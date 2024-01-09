@@ -1,7 +1,7 @@
 <layout-default
   [title]="'События'"
   [containerCssClasses]="layoutCssClasses"
-  [isLoading]="isLoading"
+  [isLoading]="isLoading$ | async"
   [hideContentWhileLoading]="false"
 >
 

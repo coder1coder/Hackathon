@@ -9,6 +9,7 @@ import { SnackService } from "../../../services/snack.service";
 import { IProblemDetails } from "../../../models/IProblemDetails";
 import { ITeamJoinRequest } from "../../../models/Team/ITeamJoinRequest";
 import { Subject, takeUntil } from "rxjs";
+import {AppStateService} from "../../../services/app-state.service";
 
 @Component({
   selector: 'team-view',
@@ -23,7 +24,6 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   public userId: number;
   public existsSentJoinRequest: ITeamJoinRequest;
 
-  private isLoading: boolean = true;
   private destroy$ = new Subject();
 
   constructor(
@@ -31,7 +31,9 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     public router: RouterService,
     private teamClient: TeamClient,
     private authService: AuthService,
-    private snackService: SnackService) {
+    private snackService: SnackService,
+    private appStateService: AppStateService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -39,7 +41,6 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     if (this.teamId == null) {
       this.teamId = this.activateRoute.snapshot.params['teamId'];
     }
-
     this.fetch();
   }
 
@@ -141,11 +142,12 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   }
 
   private fetchTeam(): void {
-    this.isLoading = true;
+    this.appStateService.setIsLoadingState(true);
     this.teamClient.getById(this.teamId)
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false))
+        finalize(() => this.appStateService.setIsLoadingState(false))
+      )
       .subscribe({
         next: (res: Team) => this.team = res,
         error: () => {}
@@ -153,16 +155,15 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   }
 
   private fetchSentJoinRequest(): void {
-    this.isLoading = true;
+    this.appStateService.setIsLoadingState(true);
     this.teamClient.getSentJoinRequest(this.teamId!)
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false))
+        finalize(() => this.appStateService.setIsLoadingState(false))
+      )
       .subscribe({
         next: (res: ITeamJoinRequest) => this.existsSentJoinRequest = res,
-        error: () => {
-          this.existsSentJoinRequest = null
-        }
+        error: () => this.existsSentJoinRequest = null,
       });
   }
 

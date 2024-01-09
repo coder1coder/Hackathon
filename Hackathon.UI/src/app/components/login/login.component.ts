@@ -9,8 +9,10 @@ import { FormBuilder } from '@angular/forms';
 import { RouterService } from "../../services/router.service";
 import { SnackService } from "../../services/snack.service";
 import { ErrorProcessorService } from "../../services/error-processor.service";
-import { Subject, takeUntil } from "rxjs";
+import { Observable, Subject, takeUntil } from "rxjs";
 import { IProblemDetails } from "../../models/IProblemDetails";
+import { fromMobx} from "../../common/functions/from-mobx.function";
+import { AppStateService } from "../../services/app-state.service";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +24,7 @@ export class LoginComponent implements AfterViewInit  {
   @ViewChild('login', { static: true }) inputLogin: ElementRef;
 
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
-  public isLoading: boolean = false;
+  public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   public isPassFieldHide: boolean = true;
   public siteKey: string;
   public captchaEnabled: boolean = environment.captchaEnabled;
@@ -42,6 +44,7 @@ export class LoginComponent implements AfterViewInit  {
     private snackService: SnackService,
     private authService: AuthService,
     private fb: FormBuilder,
+    private appStateService: AppStateService
   ) {
     if (router.url === '/logout') {
       this.signOut();
@@ -66,13 +69,13 @@ export class LoginComponent implements AfterViewInit  {
       return;
     }
 
-    this.setLoading(true);
+    this.appStateService.setIsLoadingState(true);
     const login = this.profileForm.controls['login'].value;
     const password = this.profileForm.controls['password'].value;
 
     this.authService.login(login, password)
       .pipe(
-        finalize(() => this.setLoading(false)),
+        finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -95,20 +98,18 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   public signInByGoogle(): void {
-    this.setLoading(true);
+    this.appStateService.setIsLoadingState(true);
     this.authService.signInByGoogle()
       .then((user: gapi.auth2.GoogleUser) => {
         const googleUser = this.initGoogleUser(user);
         if (googleUser.isLoggedIn) {
           this.authService.loginByGoogle(googleUser)
             .pipe(
-              finalize(() => this.setLoading(false)),
+              finalize(() => this.appStateService.setIsLoadingState(false)),
               takeUntil(this.destroy$)
             )
             .subscribe({
-              next: () => {
-                this.routerService.Profile.View();
-              },
+              next: () => this.routerService.Profile.View(),
               error: (err) => this.errorProcessor.Process(err, `Неизвестная ошибка при авторизация через Google сервис`),
             });
         }
@@ -127,14 +128,8 @@ export class LoginComponent implements AfterViewInit  {
     this.routerService.Profile.Login();
   }
 
-  private setLoading(isLoading: boolean): void {
-    setTimeout(() => {
-      this.isLoading = isLoading;
-    })
-  }
-
   private initGoogleUser(user: gapi.auth2.GoogleUser): GoogleUser {
-    let googleUser = new GoogleUser();
+    const googleUser = new GoogleUser();
     if (user !== undefined) {
 
       const profile = user.getBasicProfile();
@@ -160,9 +155,7 @@ export class LoginComponent implements AfterViewInit  {
   private initSubscribe(): void {
     this.authService.isGoogleClientEnabled()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: boolean) => {
-        this.googleClientEnabled = res;
-      })
+      .subscribe((res: boolean) =>this.googleClientEnabled = res);
   }
 }
 

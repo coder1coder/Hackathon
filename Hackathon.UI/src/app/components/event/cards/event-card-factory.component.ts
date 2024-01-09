@@ -23,9 +23,9 @@ import { EventCardPublishedComponent } from "./event-card-published/event-card-p
 import { EventCardFinishedComponent } from "./event-card-finished/event-card-finished.component";
 import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
 import { EventClient } from "../../../services/event/event.client";
-import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
 import { AuthService } from "../../../services/auth.service";
 import { GlobalErrorHandler } from "../../../common/handlers/error.handler";
+import { AppStateService } from "../../../services/app-state.service";
 
 @Component({
   selector: 'app-event-card-factory',
@@ -35,7 +35,6 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
 
   @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;
 
-  private isLoading: boolean = true;
   private event: Event = new Event();
   private eventId: number;
   private destroy$: Subject<boolean> = new Subject<boolean>();
@@ -50,6 +49,7 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
     private snackService: SnackService,
     private globalErrorHandler: GlobalErrorHandler,
     private cdr: ChangeDetectorRef,
+    private appStateService: AppStateService,
   ) {
   }
 
@@ -65,17 +65,17 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
   }
 
   private loadData(): void {
-    this.isLoading = true;
+    this.appStateService.setIsLoadingState(true);
     this.eventHttpService.getById(this.eventId)
       .pipe(
         switchMap((event: Event) =>
           forkJoin([this.eventService.checkAccessViewEventByModel(event), of(event)])),
-        finalize(() => this.isLoading = false),
+        finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
       )
       .subscribe({
         next: ([isCanView, event]) => {
-          this.isLoading = false;
+          this.appStateService.setIsLoadingState(false)
           if (isCanView) {
             this.event = event;
             this.renderEventCard();
@@ -96,7 +96,6 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
       .resolveComponentFactory<any>(this.getComponentByEventType());
     const eventRef = viewContainerRef.createComponent(eventFactory);
     eventRef.instance.event = this.event;
-    eventRef.instance.isLoading = this.isLoading;
     this.cdr.detectChanges();
   }
 

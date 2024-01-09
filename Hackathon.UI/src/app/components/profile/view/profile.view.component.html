@@ -1,6 +1,6 @@
 <layout-default
   [title]="'Профиль'"
-  [isLoading]="isLoading"
+  [isLoading]="isLoading$ | async"
 >
 
   <div actions *ngIf="user">

@@ -1,5 +1,5 @@
 <layout-default
-  [isLoading]="isLoading"
+  [isLoading]="isLoading$ | async"
   [hideTitleBar]="false" class="hackathon-background"
   [containerCssClasses]="'theme-color'"
 >
@@ -57,7 +57,7 @@
                 Участники
               </div>
               <div class="event-content__info-desc">
-                {{ getUsersCount(event)}}/{{ event?.maxEventMembers }}
+                {{ getUsersCount()}}/{{ event?.maxEventMembers }}
               </div>
             </div>
 

@@ -11,6 +11,7 @@ import { EventErrorMessages } from "../../common/error-messages/event-error-mess
 import { SnackService } from "../snack.service";
 import { GlobalErrorHandler } from "../../common/handlers/error.handler";
 import { EventClient } from "./event.client";
+import moment from "moment";
 
 @Injectable({
   providedIn: 'root'
@@ -117,7 +118,8 @@ export class EventService {
       && Boolean(event?.approvalApplicationId)
       && this.isEventOwner(event)
       && event?.status === EventStatus.OnModeration
-      && event?.approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved;
+      && event?.approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved
+      && moment(event?.start).isSameOrAfter(new Date());
   }
 
   public isCanOnModeration(event: Event): boolean {

@@ -3,8 +3,9 @@ import { MenuItem } from "../../common/interfaces/menu-item";
 import { UserRole } from 'src/app/models/User/UserRole';
 import { CurrentUserStore } from "../../shared/stores/current-user.store";
 import { fromMobx } from "../../common/functions/from-mobx.function";
-import { Subject, takeUntil } from "rxjs";
+import { Observable, Subject, takeUntil } from "rxjs";
 import { IUser } from "../../models/User/IUser";
+import { AppStateService } from "../../services/app-state.service";
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,10 +15,12 @@ import { IUser } from "../../models/User/IUser";
 export class NavMenuComponent {
 
   public items: MenuItem[] =[];
+  public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   private destroy$ = new Subject();
 
   constructor(
-    private currentUserStore: CurrentUserStore
+    private currentUserStore: CurrentUserStore,
+    private appStateService: AppStateService
   ) {
     this.currentUserStore.loadCurrentUser();
     fromMobx(() => currentUserStore.currentUser)
