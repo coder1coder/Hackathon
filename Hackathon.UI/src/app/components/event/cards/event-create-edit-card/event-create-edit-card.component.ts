@@ -33,6 +33,7 @@ import { checkValue } from "../../../../common/functions/check-value";
 import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
 import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
 import { ApprovalApplicationStatusEnum } from "../../../../models/approval-application/approval-application-status.enum";
+import { AppStateService } from "../../../../services/app-state.service";
 
 @Component({
   selector: 'event-create-edit-card',
@@ -72,8 +73,9 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private dialog: MatDialog,
     private fb: FormBuilder,
     private errorProcessor: ErrorProcessorService,
-    ) {
-    super();
+    protected appStateService: AppStateService
+  ) {
+    super(appStateService);
   }
 
   ngOnInit(): void {

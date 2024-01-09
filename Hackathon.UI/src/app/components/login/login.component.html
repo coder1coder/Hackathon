@@ -46,7 +46,7 @@
   </div>
 </form>
 
-<div class="loader" *ngIf="isLoading">
+<div class="loader" *ngIf="isLoading$ | async">
   <mat-progress-spinner color="primary" mode="indeterminate">
   </mat-progress-spinner>
 </div>

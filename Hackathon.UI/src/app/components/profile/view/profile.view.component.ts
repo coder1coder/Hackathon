@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from "@ang
 import { UserRoleTranslator } from "src/app/models/User/UserRole";
 import { AuthService } from "../../../services/auth.service";
 import { TeamClient } from "../../../services/team-client.service";
-import { catchError, of, switchMap, takeUntil } from "rxjs";
+import { catchError, Observable, of, switchMap, takeUntil } from "rxjs";
 import { IUpdateUser, IUser } from "../../../models/User/IUser";
 import { UserProfileReaction, IUserProfileReaction } from "src/app/models/User/UserProfileReaction";
 import { ActivatedRoute } from "@angular/router";
@@ -19,9 +19,10 @@ import { IKeyValue } from "../../../common/interfaces/key-value.interface";
 import { emailRegex } from "../../../common/patterns/email-regex";
 import { checkValue } from "../../../common/functions/check-value";
 import { ProfileUserStore } from "../../../shared/stores/profile-user.store";
-import {fromMobx} from "../../../common/functions/from-mobx.function";
-import {CurrentUserStore} from "../../../shared/stores/current-user.store";
-import { reaction } from "mobx";
+import { fromMobx } from "../../../common/functions/from-mobx.function";
+import { CurrentUserStore } from "../../../shared/stores/current-user.store";
+import { AppStateService } from "../../../services/app-state.service";
+import { finalize } from "rxjs/operators";
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -40,9 +41,9 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
   public userTeam: Team;
   public authUserId: number;
   public isEditMode: boolean = false;
-  public isLoading: boolean = true;
   public canUploadImage: boolean = false;
   public canViewEmail: boolean = false;
+  public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   public userProfileReaction = UserProfileReaction;
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
@@ -61,6 +62,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
     private fb: FormBuilder,
     private profileUserStore: ProfileUserStore,
     private currentUserStore: CurrentUserStore,
+    private appStateService: AppStateService,
   ) {
     super();
     this.userService = userService;
@@ -166,7 +168,7 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
   }
 
   private fetchData(needReload: boolean = false): void {
-    this.isLoading = true;
+    this.appStateService.setIsLoadingState(true);
     this.profileUserStore.getUser(this.userId, needReload)
       .pipe(
         switchMap((user: IUser)=> {
@@ -182,12 +184,9 @@ export class ProfileViewComponent extends WithFormBaseComponent implements OnIni
           return this.teamService.getMyTeam();
         }),
         catchError(() => of(null)),
+        finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
-      ).subscribe((res) => {
-        this.isLoading = false;
-        this.userTeam = res;
-      }
-    )
+      ).subscribe((res: Team) => this.userTeam = res);
 
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))

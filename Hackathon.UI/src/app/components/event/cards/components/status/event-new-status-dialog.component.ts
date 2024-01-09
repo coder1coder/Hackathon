@@ -21,8 +21,8 @@ export class EventNewStatusDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EventNewStatusDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private dialogData: any
-    ) {
+    @Inject(MAT_DIALOG_DATA) private dialogData: any,
+  ) {
   }
 
   ngOnInit(): void {

@@ -4,12 +4,15 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from "../../services/auth.service";
 import { Location } from "@angular/common";
-import { IProblemDetails } from "../../models/IProblemDetails";
 import { SnackService } from "../../services/snack.service";
-import { takeUntil } from 'rxjs';
+import { Observable, takeUntil } from 'rxjs';
 import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
 import { RouterService } from "../../services/router.service";
 import { emailRegex } from "../../common/patterns/email-regex";
+import { fromMobx } from "../../common/functions/from-mobx.function";
+import { AppStateService } from "../../services/app-state.service";
+import { ErrorProcessorService } from "../../services/error-processor.service";
+import { finalize } from "rxjs/operators";
 
 @Component({
   selector: 'app-register',
@@ -23,8 +26,8 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
 
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';
-  public isLoading: boolean = false;
   public isPassFieldHide: boolean = true;
+  public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
 
   private emailRegexp: RegExp = emailRegex;
 
@@ -33,7 +36,9 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
     private location: Location,
     private authService: AuthService,
     private snackbar: SnackService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appStateService: AppStateService,
+    private errorProcessor: ErrorProcessorService,
   ) {
     super();
   }
@@ -49,22 +54,20 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
       email: this.getFormControl('email').value,
       fullName: this.getFormControl('fullName').value
     };
-
+    this.appStateService.setIsLoadingState(true);
     this.authService.register(createUser)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        finalize(() => this.appStateService.setIsLoadingState(false)),
+        takeUntil(this.destroy$),
+      )
       .subscribe({
         next: (res) => {
           this.snackbar.open(`Пользователь успешно зарегистрирован с ID: ${res.id}`);
-        },
-        error: (err) => {
-          const problemDetails: IProblemDetails = <IProblemDetails>err.error;
-          this.snackbar.open(problemDetails.detail);
-        },
-        complete: () => {
           setTimeout(() => {
             this.routerService.Profile.Login();
           }, 1000);
         },
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 
@@ -86,8 +89,6 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
 
     this.form.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.isValid();
-      })
+      .subscribe(() => this.isValid());
   }
 }
