@@ -1,5 +1,6 @@
 <layout-default
   [title]="editMode ? 'Событие' : 'Новое событие'"
+  [isLoading]="isLoading$ | async"
 >
   <div actions>
     <event-button-actions
@@ -380,9 +381,4 @@
       </mat-tab>
     </mat-tab-group>
   </form>
-
-  <div class="loader" *ngIf="isLoading">
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
-  </div>
 </layout-default>

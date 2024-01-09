@@ -1,5 +1,5 @@
-import {Component, Input} from "@angular/core";
-import {KeyValue} from "@angular/common";
+import { Component, Input } from "@angular/core";
+import { KeyValue } from "@angular/common";
 
 @Component({
   selector: 'list-details',
@@ -7,11 +7,6 @@ import {KeyValue} from "@angular/common";
   styleUrls: ['./list-details.component.scss']
 })
 
-export class ListDetailsComponent
-{
-  @Input()
-  public items: KeyValue<string, any>[] = [];
-
-  constructor() {
-  }
+export class ListDetailsComponent {
+  @Input() items: KeyValue<string, any>[] = [];
 }

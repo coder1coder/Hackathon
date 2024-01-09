@@ -4,13 +4,13 @@ import { TeamClient } from "../../../services/team-client.service";
 import { Team } from "../../../models/Team/Team";
 import { AuthService } from "../../../services/auth.service";
 import { Router } from "@angular/router";
-import { finalize } from "rxjs/operators";
 import { Subject, takeUntil } from "rxjs";
 import { ITeamJoinRequest, TeamJoinRequestStatus, TeamJoinRequestStatusTranslator } from "../../../models/Team/ITeamJoinRequest";
 import { GetListParameters, SortOrder } from "../../../models/GetListParameters";
 import { ITeamJoinRequestFilter } from "../../../models/Team/ITeamJoinRequestFilter";
 import { MatTableDataSource } from "@angular/material/table";
 import { BaseCollection } from "../../../models/BaseCollection";
+import { ErrorProcessorService } from "../../../services/error-processor.service";
 
 @Component({
   selector: 'userTeam',
@@ -19,16 +19,17 @@ import { BaseCollection } from "../../../models/BaseCollection";
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
   public team: Team;
-  public isLoading: boolean = true;
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> = new MatTableDataSource<ITeamJoinRequest>([]);
   public TeamJoinRequestStatusTranslator = TeamJoinRequestStatusTranslator;
 
   private destroy$ = new Subject();
+
   constructor(
     public routerService: RouterService,
     private teamClient: TeamClient,
     private authService: AuthService,
     private router: Router,
+    private errorProcessor: ErrorProcessorService,
   ) {}
 
   ngOnInit(): void {
@@ -61,26 +62,20 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => this.fetchSentJoinRequests(),
-        error: () => {},
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 
   private fetchTeam(): void {
-    this.isLoading = true;
     this.teamClient.getMyTeam()
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false),
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => this.team = res,
-        error: () => this.isLoading = false,
+        next: (res: Team) => this.team = res,
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 
   private fetchSentJoinRequests(): void {
-    this.isLoading = true;
-
     const parameters: GetListParameters<ITeamJoinRequestFilter> = {
       Filter: {
         status: TeamJoinRequestStatus.Sent
@@ -92,13 +87,10 @@ export class UserTeamComponent implements OnInit, OnDestroy {
     };
 
     this.teamClient.getJoinRequests(parameters)
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => this.isLoading = false),
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: BaseCollection<ITeamJoinRequest>) => this.sentTeamJoinRequestsDataSource.data = res?.items,
-        error: () =>  this.isLoading = false,
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 }

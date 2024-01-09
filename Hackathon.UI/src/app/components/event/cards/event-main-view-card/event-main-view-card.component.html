@@ -1,6 +1,6 @@
 <layout-default
   [title]="'Событие: ' + event.name"
-  [isLoading]="isLoading"
+  [isLoading]="isLoading$ | async"
 >
 
   <div actions>

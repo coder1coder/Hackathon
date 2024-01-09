@@ -32,6 +32,7 @@ import { checkValue } from "../../../../common/functions/check-value";
 import { IEventAgreement } from "../../../../models/Event/IEventAgreement";
 import { IBaseCreateResponse } from "../../../../models/IBaseCreateResponse";
 import { ApprovalApplicationStatusEnum } from "../../../../models/approval-application/approval-application-status.enum";
+import { AppStateService } from "../../../../services/app-state.service";
 import {MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
@@ -65,15 +66,15 @@ export class EventCreateEditCardComponent extends EventCardBaseComponent impleme
     private activateRoute: ActivatedRoute,
     private fileStorageService: FileStorageService,
     private eventHttpService: EventClient,
+    public eventService: EventService,
     private snackService: SnackService,
     private router: RouterService,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private errorProcessor: ErrorProcessorService,
-
-    public eventService: EventService,
-    ) {
-    super();
+    protected appStateService: AppStateService
+  ) {
+    super(appStateService);
   }
 
   ngOnInit(): void {

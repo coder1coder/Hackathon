@@ -15,6 +15,7 @@ import { ChatContextEnum } from "../../../../models/Event/chat-context.enum";
 import { Team } from "../../../../models/Team/Team";
 import { IUser } from "../../../../models/User/IUser";
 import { SignalRService } from "src/app/services/signalr.service";
+import { AppStateService } from "../../../../services/app-state.service";
 
 @Component({
   selector: `event-card-started`,
@@ -44,9 +45,10 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     private authService:AuthService,
     private projectApiClient: ProjectClient,
     private dialogService: MatDialog,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    protected appStateService: AppStateService
   ) {
-    super();
+    super(appStateService);
     signalRService.onEventStageChanged = (integrationEvent)=> {
       if (integrationEvent.eventId === this.event.id) {
         this.setEventStageName(integrationEvent.eventStageId);
