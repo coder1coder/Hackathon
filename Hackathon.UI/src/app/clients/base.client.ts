@@ -1,17 +1,14 @@
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {environment} from "../../environments/environment";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
-export abstract class BaseApiClient
-{
-  protected api = environment.api;
+export abstract class BaseApiClient {
+  protected api: string = environment.api;
 
-  protected constructor(protected http:HttpClient) {
-
-    const headers = new HttpHeaders()
-      .set('content-type', 'application/json');
+  protected constructor(protected http: HttpClient) {
+    const headers: HttpHeaders = new HttpHeaders().set('content-type', 'application/json');
 
     http.options(this.api, {
-      'headers': headers
+      headers: headers,
     });
   }
 }

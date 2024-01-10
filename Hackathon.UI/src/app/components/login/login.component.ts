@@ -1,26 +1,25 @@
 import '@angular/compiler';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from "../../services/auth.service";
-import { finalize } from "rxjs/operators";
-import { environment } from "../../../environments/environment";
+import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { GoogleUser } from 'src/app/models/User/GoogleUser';
 import { FormBuilder } from '@angular/forms';
-import { RouterService } from "../../services/router.service";
-import { SnackService } from "../../services/snack.service";
-import { ErrorProcessorService } from "../../services/error-processor.service";
-import { Observable, Subject, takeUntil } from "rxjs";
-import { IProblemDetails } from "../../models/IProblemDetails";
-import { fromMobx} from "../../common/functions/from-mobx.function";
-import { AppStateService } from "../../services/app-state.service";
+import { RouterService } from '../../services/router.service';
+import { SnackService } from '../../services/snack.service';
+import { ErrorProcessorService } from '../../services/error-processor.service';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { IProblemDetails } from '../../models/IProblemDetails';
+import { fromMobx } from '../../common/functions/from-mobx.function';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements AfterViewInit  {
-
+export class LoginComponent implements AfterViewInit {
   @ViewChild('login', { static: true }) inputLogin: ElementRef;
 
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
@@ -34,17 +33,17 @@ export class LoginComponent implements AfterViewInit  {
     password: [null],
   });
 
-  private captcha: string = "";
+  private captcha: string = '';
   private destroy$ = new Subject();
 
-  constructor (
+  constructor(
     private router: Router,
     private routerService: RouterService,
     private errorProcessor: ErrorProcessorService,
     private snackService: SnackService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
   ) {
     if (router.url === '/logout') {
       this.signOut();
@@ -55,8 +54,8 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   ngAfterViewInit(): void {
-    this.profileForm.controls['login'].setErrors({ 'incorrect': false });
-    this.profileForm.controls['password'].setErrors({ 'incorrect': false });
+    this.profileForm.controls['login'].setErrors({ incorrect: false });
+    this.profileForm.controls['password'].setErrors({ incorrect: false });
     setTimeout(() => this.inputLogin?.nativeElement.focus());
     this.initSubscribe();
   }
@@ -64,16 +63,17 @@ export class LoginComponent implements AfterViewInit  {
   public signIn(): void {
     if (!this.profileForm.valid) return;
 
-    if (this.captchaEnabled && (this.captcha === "" || this.captcha.length === 0)) {
+    if (this.captchaEnabled && (this.captcha === '' || this.captcha.length === 0)) {
       this.snackService.open(`Докажите, что вы не робот!`);
       return;
     }
 
     this.appStateService.setIsLoadingState(true);
-    const login = this.profileForm.controls['login'].value;
-    const password = this.profileForm.controls['password'].value;
+    const login: string = this.profileForm.controls['login'].value;
+    const password: string = this.profileForm.controls['password'].value;
 
-    this.authService.login(login, password)
+    this.authService
+      .login(login, password)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
@@ -83,9 +83,9 @@ export class LoginComponent implements AfterViewInit  {
           this.routerService.Profile.View();
         },
         error: (errorContext) => {
-          this.profileForm.setValue({login: this.profileForm.get('login')?.value, password:''});
+          this.profileForm.setValue({ login: this.profileForm.get('login')?.value, password: '' });
           this.errorProcessor.Process(errorContext);
-        }
+        },
       });
   }
 
@@ -99,28 +99,35 @@ export class LoginComponent implements AfterViewInit  {
 
   public signInByGoogle(): void {
     this.appStateService.setIsLoadingState(true);
-    this.authService.signInByGoogle()
-      .then((user: gapi.auth2.GoogleUser) => {
-        const googleUser = this.initGoogleUser(user);
+    this.authService
+      .signInByGoogle()
+      .then((user: any) => {
+        const googleUser: GoogleUser = this.initGoogleUser(user);
         if (googleUser.isLoggedIn) {
-          this.authService.loginByGoogle(googleUser)
+          this.authService
+            .loginByGoogle(googleUser)
             .pipe(
               finalize(() => this.appStateService.setIsLoadingState(false)),
-              takeUntil(this.destroy$)
+              takeUntil(this.destroy$),
             )
             .subscribe({
               next: () => this.routerService.Profile.View(),
-              error: (err) => this.errorProcessor.Process(err, `Неизвестная ошибка при авторизация через Google сервис`),
+              error: (err) =>
+                this.errorProcessor.Process(
+                  err,
+                  `Неизвестная ошибка при авторизация через Google сервис`,
+                ),
             });
         }
-      }).catch((error) => {
-      if (error?.error?.detail) {
-        const details: IProblemDetails = <IProblemDetails>error.error;
-        this.snackService.open(details.detail);
-      } else {
-        this.snackService.open('Неизвестная ошибка при авторизация через Google сервис');
-      }
-    });
+      })
+      .catch((error) => {
+        if (error?.error?.detail) {
+          const details: IProblemDetails = <IProblemDetails>error.error;
+          this.snackService.open(details.detail);
+        } else {
+          this.snackService.open('Неизвестная ошибка при авторизация через Google сервис');
+        }
+      });
   }
 
   private signOut(): void {
@@ -128,18 +135,17 @@ export class LoginComponent implements AfterViewInit  {
     this.routerService.Profile.Login();
   }
 
-  private initGoogleUser(user: gapi.auth2.GoogleUser): GoogleUser {
-    const googleUser = new GoogleUser();
+  private initGoogleUser(user: any): GoogleUser {
+    const googleUser: GoogleUser = new GoogleUser();
     if (user !== undefined) {
-
-      const profile = user.getBasicProfile();
+      const profile: any = user.getBasicProfile();
       googleUser.id = profile.getId();
       googleUser.fullName = profile.getName();
       googleUser.givenName = profile.getGivenName();
       googleUser.imageUrl = profile.getImageUrl();
       googleUser.email = profile.getEmail();
 
-      const authResponse = user.getAuthResponse();
+      const authResponse: any = user.getAuthResponse();
       googleUser.accessToken = authResponse.access_token;
       googleUser.expiresAt = authResponse.expires_at;
       googleUser.expiresIn = authResponse.expires_in;
@@ -153,9 +159,9 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   private initSubscribe(): void {
-    this.authService.isGoogleClientEnabled()
+    this.authService
+      .isGoogleClientEnabled()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: boolean) =>this.googleClientEnabled = res);
+      .subscribe((res: boolean) => (this.googleClientEnabled = res));
   }
 }
-

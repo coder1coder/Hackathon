@@ -7,20 +7,19 @@
   font-size: 16px;
 
   &-content {
-
     &__section {
       @include flex-column;
       justify-content: center;
       padding-top: 1em;
       padding-bottom: 3em;
 
-      &-title{
+      &-title {
         text-align: center;
         font-size: 36px;
         padding-top: 1.5em;
         padding-bottom: 3em;
       }
-      &-content{
+      &-content {
         max-width: $event-finished-content-max-width;
         margin: 0 auto;
       }

@@ -100,7 +100,14 @@
         "@typescript-eslint/member-delimiter-style": ["error"],
         "rxjs/no-unsafe-takeuntil": ["error"],
         "linebreak-style": "off",
-        "@angular-eslint/no-conflicting-lifecycle": "off"
+        "@angular-eslint/no-conflicting-lifecycle": "off",
+        "@typescript-eslint/typedef": [
+          "error",
+          {
+            "variableDeclaration": true
+          }
+        ],
+        "prefer-const": ["error"]
       }
     }
   ]

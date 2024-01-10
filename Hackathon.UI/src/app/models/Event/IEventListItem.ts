@@ -1,5 +1,5 @@
-import { EventStatus } from "./EventStatus";
-import { SafeUrl } from "@angular/platform-browser";
+import { EventStatus } from './EventStatus';
+import { SafeUrl } from '@angular/platform-browser';
 
 export interface IEventListItem {
   id: number;

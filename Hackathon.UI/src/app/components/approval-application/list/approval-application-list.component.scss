@@ -1,4 +1,4 @@
-@import "../../../../assets/styles/mixins";
+@import '../../../../assets/styles/mixins';
 
 .mat-cell {
   &.mat-column-actions {
@@ -17,7 +17,7 @@
 }
 
 .mat-column-event,
-.mat-column-comment{
+.mat-column-comment {
   overflow-wrap: break-word;
   word-break: break-word;
 }

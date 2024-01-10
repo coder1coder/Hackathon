@@ -1,3 +1,3 @@
 export enum ActionsEnum {
-  OK = "OK",
+  OK = 'OK',
 }

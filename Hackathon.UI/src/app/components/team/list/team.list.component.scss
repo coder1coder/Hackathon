@@ -1,4 +1,4 @@
-@import "../../../../assets/styles/mixins";
+@import '../../../../assets/styles/mixins';
 
 .mat-column-status {
   mat-icon {
@@ -10,7 +10,6 @@
     color: lightgray;
 
     &.mat-icon {
-
       &-published {
         color: #eb832b;
       }
@@ -32,7 +31,7 @@
   display: flex;
   column-gap: 10px;
 
-  &__fields{
+  &__fields {
     @include flex-row;
     flex-wrap: wrap;
   }

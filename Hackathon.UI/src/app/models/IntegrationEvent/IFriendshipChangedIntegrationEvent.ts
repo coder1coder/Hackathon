@@ -1,4 +1,3 @@
-export class FriendshipChangedIntegrationEvent
-{
-  userIds: number[] = []
+export class FriendshipChangedIntegrationEvent {
+  userIds: number[] = [];
 }

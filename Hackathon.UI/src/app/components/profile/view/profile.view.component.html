@@ -1,102 +1,137 @@
-<layout-default
-  [title]="'Профиль'"
-  [isLoading]="isLoading$ | async"
->
-
+<layout-default [title]="'Профиль'" [isLoading]="isLoading$ | async">
   <div actions *ngIf="user">
-    <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="userEdit()">Редактировать</button>
+    <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="userEdit()">
+      Редактировать
+    </button>
     <button *ngIf="isEditMode" mat-button (click)="userEditCancel()">Отменить</button>
-    <button *ngIf="isEditMode" mat-button color="primary" (click)="saveUserEdit()" [disabled]="!form.valid">Сохранить</button>
+    <button
+      *ngIf="isEditMode"
+      mat-button
+      color="primary"
+      (click)="saveUserEdit()"
+      [disabled]="!form.valid"
+    >
+      Сохранить
+    </button>
   </div>
 
   <div class="profile" *ngIf="user">
-
     <div class="profile__left">
       <profile-image [userId]="user.id" [canUpload]="canUploadImage"></profile-image>
     </div>
 
     <div class="profile__right">
       <form [formGroup]="form" class="profile__edit-form">
-       <table>
-         <tr>
-           <td>Имя пользователя</td>
-           <td [innerText]="user?.userName"></td>
-         </tr>
-         <ng-container *ngIf="!isEditMode">
+        <table>
           <tr>
-            <td>Полное имя</td>
-            <td [innerText]="user?.fullName"></td>
+            <td>Имя пользователя</td>
+            <td [innerText]="user?.userName"></td>
           </tr>
-          <tr *ngIf="canViewEmail">
-            <td class="email">E-mail</td>
-            <td>
-              <div>{{ user?.email?.address }}</div>
-              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.NotConfirmed">
-                <alert warn>Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br> системы необходимо <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()">подтвердить</span> Email.</alert>
-              </div>
+          <ng-container *ngIf="!isEditMode">
+            <tr>
+              <td>Полное имя</td>
+              <td [innerText]="user?.fullName"></td>
+            </tr>
+            <tr *ngIf="canViewEmail">
+              <td class="email">E-mail</td>
+              <td>
+                <div>{{ user?.email?.address }}</div>
+                <div
+                  *ngIf="
+                    (user?.email?.status ?? userEmailStatus.NotConfirmed) ===
+                    userEmailStatus.NotConfirmed
+                  "
+                >
+                  <alert warn
+                    >Email не подтвержден. Для того, чтобы пользоваться всеми возможностями<br />
+                    системы необходимо
+                    <span class="email-confirmation-link" (click)="createEmailConfirmationRequest()"
+                      >подтвердить</span
+                    >
+                    Email.</alert
+                  >
+                </div>
 
-              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.Pending">
-                <alert>
-                  Код подтверждения отправлен на указанный Email. <br>
-                  <input #confirmationCodeInput>
-                  <br>
-                  <span class="email-confirmation-link" (click)="confirmEmail()">Подтвердить</span>
-                  <br><br>
-                  Если код не приходит, повторите попытку  через 5 минут или обратитесь в службу поддержки.
-                </alert>
-              </div>
+                <div
+                  *ngIf="
+                    (user?.email?.status ?? userEmailStatus.NotConfirmed) ===
+                    userEmailStatus.Pending
+                  "
+                >
+                  <alert>
+                    Код подтверждения отправлен на указанный Email. <br />
+                    <input #confirmationCodeInput />
+                    <br />
+                    <span class="email-confirmation-link" (click)="confirmEmail()"
+                      >Подтвердить</span
+                    >
+                    <br /><br />
+                    Если код не приходит, повторите попытку через 5 минут или обратитесь в службу
+                    поддержки.
+                  </alert>
+                </div>
 
-              <div *ngIf="(user?.email?.status ?? userEmailStatus.NotConfirmed) == userEmailStatus.Confirmed">
-                <alert>Email подтвержден</alert>
-              </div>
-
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="isEditMode">
+                <div
+                  *ngIf="
+                    (user?.email?.status ?? userEmailStatus.NotConfirmed) ===
+                    userEmailStatus.Confirmed
+                  "
+                >
+                  <alert>Email подтвержден</alert>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="isEditMode">
+            <tr>
+              <td>Полное имя</td>
+              <td>
+                <mat-form-field floatLabel="never" appearance="outline">
+                  <input
+                    matInput
+                    autocomplete="off"
+                    id="fullName"
+                    #fullName
+                    formControlName="fullName"
+                    required
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>E-mail</td>
+              <td>
+                <mat-form-field floatLabel="never" appearance="outline">
+                  <input
+                    matInput
+                    autocomplete="off"
+                    id="email"
+                    #email
+                    formControlName="email"
+                    required
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+          </ng-container>
           <tr>
-            <td>Полное имя</td>
-            <td>
-              <mat-form-field floatLabel='never' appearance="outline">
-                <input matInput autocomplete="off"
-                       id="fullName"
-                       #fullName
-                       formControlName="fullName"
-                       required>
-              </mat-form-field>
-            </td>
+            <td>Роль</td>
+            <td>{{ UserRoleTranslator.Translate(user.role) }}</td>
           </tr>
           <tr>
-            <td>E-mail</td>
-            <td>
-              <mat-form-field floatLabel='never' appearance="outline">
-                <input matInput autocomplete="off"
-                       id="email"
-                       #email
-                       formControlName="email"
-                       required>
-              </mat-form-field>
-            </td>
+            <td>Команда</td>
+            <td>{{ userTeam?.name ?? 'Не состоит в команде' }}</td>
           </tr>
-        </ng-container>
-        <tr>
-          <td>Роль</td>
-          <td>{{ UserRoleTranslator.Translate(user.role) }}</td>
-        </tr>
-        <tr>
-          <td>Команда</td>
-          <td>{{ userTeam?.name ?? "Не состоит в команде" }}</td>
-        </tr>
-      </table>
+        </table>
       </form>
 
-      <div class="reaction__list" *ngIf="userId != authUserId">
-
-        <div class="reaction-pointer reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
-             (click)="toggleReaction($event, reaction)"
-             [class.active]="isReactionActive(reaction)"
-             *ngFor="let reaction of getAvailableUserProfileReactions()">
-
+      <div class="reaction__list" *ngIf="userId !== authUserId">
+        <div
+          class="reaction-pointer reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
+          (click)="toggleReaction($event, reaction)"
+          [class.active]="isReactionActive(reaction)"
+          *ngFor="let reaction of getAvailableUserProfileReactions()"
+        >
           <div [ngSwitch]="reaction">
             <div *ngSwitchCase="userProfileReaction.Like">
               <mat-icon class="reaction-icon">thumb_up</mat-icon>
@@ -111,16 +146,15 @@
               <span [innerText]="userProfileReactionsList[2]?.count"></span>
             </div>
           </div>
-
         </div>
       </div>
 
-      <div class="reaction__list" *ngIf="userId == authUserId">
-
-        <div class="reaction reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
-             [class.active]="true"
-             *ngFor="let reaction of getAvailableUserProfileReactions()">
-
+      <div class="reaction__list" *ngIf="userId === authUserId">
+        <div
+          class="reaction reaction-{{ userProfileReaction[reaction].toLowerCase() }}"
+          [class.active]="true"
+          *ngFor="let reaction of getAvailableUserProfileReactions()"
+        >
           <div [ngSwitch]="reaction">
             <div *ngSwitchCase="userProfileReaction.Like">
               <mat-icon class="reaction-icon">thumb_up</mat-icon>
@@ -135,16 +169,21 @@
               <span [innerText]="userProfileReactionsList[2]?.count"></span>
             </div>
           </div>
-
         </div>
       </div>
 
-      <friendship-offer-button *ngIf="userId != authUserId" [friendId]="userId"></friendship-offer-button>
+      <friendship-offer-button
+        *ngIf="userId !== authUserId"
+        [friendId]="userId"
+      ></friendship-offer-button>
 
-      <mat-tab-group *ngIf="userId == authUserId" [selectedIndex]="0" animationDuration="0">
+      <mat-tab-group *ngIf="userId === authUserId" [selectedIndex]="0" animationDuration="0">
         <mat-tab label="Друзья">
           <ng-template matTabContent>
-            <friends-list [userId]="authUserId" [status]="friendshipStatus.Confirmed"></friends-list>
+            <friends-list
+              [userId]="authUserId"
+              [status]="friendshipStatus.Confirmed"
+            ></friends-list>
           </ng-template>
         </mat-tab>
         <mat-tab label="Заявки в друзья">
@@ -153,9 +192,6 @@
           </ng-template>
         </mat-tab>
       </mat-tab-group>
-
     </div>
-
   </div>
-
 </layout-default>

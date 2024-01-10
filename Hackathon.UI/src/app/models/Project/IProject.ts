@@ -1,7 +1,6 @@
-import {IStorageFile} from "../FileStorage/IStorageFile";
+import { IStorageFile } from '../FileStorage/IStorageFile';
 
-export interface IProject
-{
+export interface IProject {
   imageId?: string;
 
   /** Наименование */

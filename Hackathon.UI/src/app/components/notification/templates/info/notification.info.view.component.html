@@ -5,12 +5,10 @@
     </div>
     <div mat-line *ngIf="!hideDate">
       <div class="notify-createdAt">
-        {{notify.createdAt?.toLocaleString() | date: NOTIFICATION_DATETIME_FORMAT}}
+        {{ notify.createdAt?.toLocaleString() | date : NOTIFICATION_DATETIME_FORMAT }}
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #notValidContentTemplate>
-  Невозможно отобразить содержимое
-</ng-template>
+<ng-template #notValidContentTemplate> Невозможно отобразить содержимое </ng-template>

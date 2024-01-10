@@ -1,5 +1,4 @@
-export interface IProblemDetails
-{
+export interface IProblemDetails {
   detail: string;
   status: number | undefined;
   title: string | undefined;

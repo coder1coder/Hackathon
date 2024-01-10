@@ -3,10 +3,13 @@
   [subTitle]="currentStageName"
   [containerCssClasses]="'relative'"
 >
-
   <div class="event-started-wrapper">
     <aside class="event-started-sidebar theme-background">
-      <button mat-button (click)="selectedPageIndex = pagesEnum.EventTasks" *ngIf="Event.hasTasks(event)">
+      <button
+        mat-button
+        (click)="selectedPageIndex = pagesEnum.EventTasks"
+        *ngIf="Event.hasTasks(event)"
+      >
         <mat-icon>task</mat-icon>
         Задачи
       </button>
@@ -21,10 +24,11 @@
     </aside>
 
     <main class="event-started__content">
-      <mat-tab-group [selectedIndex]="selectedPageIndex"
-                     class="without-header team-chat-theme"
-                     animationDuration="0ms"
-                     >
+      <mat-tab-group
+        [selectedIndex]="selectedPageIndex"
+        class="without-header team-chat-theme"
+        animationDuration="0ms"
+      >
         <mat-tab [hidden]="!Event.hasTasks(event)">
           <div class="padding-1em">
             <h2>Задачи мероприятия</h2>
@@ -68,16 +72,12 @@
           <div class="padding-1em">
             <h2>Проект</h2>
             <div *ngIf="project; else hasNoProject">
-              <div *ngIf="project.name">
-                Наименование: {{ project.name }}
-              </div>
-              <div *ngIf="project.description">
-                Описание: {{ project.description }}
-              </div>
+              <div *ngIf="project.name">Наименование: {{ project.name }}</div>
+              <div *ngIf="project.description">Описание: {{ project.description }}</div>
               <div *ngIf="project.linkToGitBranch">
                 Git-репозиторий: {{ project.linkToGitBranch }}
               </div>
-              <div *ngIf="project.files != null && project.files.length > 0; else noFiles;">
+              <div *ngIf="project.files !== null && project.files.length > 0; else noFiles">
                 <ul>
                   <li *ngFor="let file of project.files">
                     {{ file.fileName }}
@@ -86,11 +86,15 @@
               </div>
 
               <ng-template #noFiles>
-                <br/>
-                <button mat-button color="primary" (click)="showProjectDialog()">Обновить информацию о проекте</button>
-                <br/>
-                <button mat-button color="primary" (click)="showUpdateProjectFromBitBranchDialog()">Обновить файлы проекта из Git-репозитория</button>
-                <br/>
+                <br />
+                <button mat-button color="primary" (click)="showProjectDialog()">
+                  Обновить информацию о проекте
+                </button>
+                <br />
+                <button mat-button color="primary" (click)="showUpdateProjectFromBitBranchDialog()">
+                  Обновить файлы проекта из Git-репозитория
+                </button>
+                <br />
                 <button mat-button color="primary" (click)="removeProject()">Удалить проект</button>
               </ng-template>
             </div>

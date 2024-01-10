@@ -1,5 +1,4 @@
-export interface ITeamJoinRequestDecisionData
-{
+export interface ITeamJoinRequestDecisionData {
   IsApproved: boolean;
   Comment: string;
   TeamId: number;

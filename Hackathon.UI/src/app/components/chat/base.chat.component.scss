@@ -1,5 +1,5 @@
-@import "../../../assets/styles/mixins";
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/mixins';
+@import '../../../assets/styles/variables';
 
 :host {
   display: block;
@@ -96,7 +96,7 @@
 
     &-meta {
       padding-top: 3px;
-      font-size: .8em;
+      font-size: 0.8em;
       color: $white-color !important;
     }
   }

@@ -1,28 +1,35 @@
-import { Component, Input } from "@angular/core";
-import { Notification } from "src/app/models/Notification/Notification";
-import { NotificationService } from "src/app/services/notification.service";
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Notification } from 'src/app/models/Notification/Notification';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector: `notification-item`,
-    templateUrl: `notification-item.component.html`,
-    styleUrls: [`notification-item.component.scss`]
+  selector: `notification-item`,
+  templateUrl: `notification-item.component.html`,
+  styleUrls: [`notification-item.component.scss`],
 })
-export class NotificationItemComponent
-{
-    Notification = Notification;
+export class NotificationItemComponent implements OnDestroy {
+  Notification = Notification;
 
-    @Input() notification: Notification | undefined;
-    @Input() hideActions: boolean = true;
-    @Input() shortView: boolean = false;
+  @Input() notification: Notification | undefined;
+  @Input() hideActions: boolean = true;
+  @Input() shortView: boolean = false;
 
-    constructor(
-        private notificationService: NotificationService
-        ) {}
+  private destroy$ = new Subject();
 
-    public remove(event:MouseEvent, ids:string[]) {
-        this.notificationService.remove(ids).subscribe(_=>
-        {
-            // this.items = this.items.filter(x => x.id !== undefined && !ids.includes(x.id));
-        });
-    }
+  constructor(private notificationService: NotificationService) {}
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
+  public remove(event: MouseEvent, ids: string[]): void {
+    this.notificationService
+      .remove(ids)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        // this.items = this.items.filter(x => x.id !== undefined && !ids.includes(x.id));
+      });
+  }
 }

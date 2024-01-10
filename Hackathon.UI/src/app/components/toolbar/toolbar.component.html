@@ -5,7 +5,8 @@
     <span class="spacer"></span>
     <notification-bell class="bell"></notification-bell>
     <button mat-icon-button [matMenuTriggerFor]="profileMenu">
-      <profile-image *ngIf="user"
+      <profile-image
+        *ngIf="user"
         [canUpload]="false"
         [userId]="user.id"
         [style.width]="'40px'"
@@ -16,7 +17,7 @@
     <mat-menu #profileMenu="matMenu" yPosition="below">
       <button mat-menu-item routerLink="/profile">
         <mat-icon>account_circle</mat-icon>
-        {{userName}}
+        {{ userName }}
       </button>
       <button mat-menu-item (click)="toggleApplicationTheme()">
         <mat-icon>{{ this.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
@@ -29,7 +30,7 @@
     </mat-menu>
   </mat-toolbar-row>
 
-  <mat-toolbar-row class="{{secondToolbarCssClasses}}" *ngIf="secondToolbar">
+  <mat-toolbar-row class="{{ secondToolbarCssClasses }}" *ngIf="secondToolbar">
     <ng-container [ngTemplateOutlet]="secondToolbar"></ng-container>
   </mat-toolbar-row>
 </mat-toolbar>

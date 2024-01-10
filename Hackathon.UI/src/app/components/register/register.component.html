@@ -4,64 +4,50 @@
     <div class="registerForm__fields">
       <mat-form-field appearance="fill">
         <mat-label>Имя пользователя</mat-label>
-        <input matInput autocomplete="off"
-               id="login"
-               #login
-               formControlName="login"
-               required
-        >
+        <input matInput autocomplete="off" id="login" #login formControlName="login" required />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Пароль</mat-label>
-        <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
-               autocomplete="off"
-               id="password"
-               formControlName="password"
-               required
+        <input
+          matInput
+          [type]="isPassFieldHide ? 'password' : 'text'"
+          autocomplete="off"
+          id="password"
+          formControlName="password"
+          required
+        />
+        <mat-icon
+          class="password__icon"
+          (click)="isPassFieldHide = !isPassFieldHide"
+          matSuffix
+          [attr.aria-pressed]="isPassFieldHide"
         >
-        <mat-icon class="password__icon"
-                  (click)="isPassFieldHide = !isPassFieldHide"
-                  matSuffix
-                  [attr.aria-pressed]="isPassFieldHide"
-        >
-          {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
+          {{ isPassFieldHide ? 'visibility_off' : 'visibility' }}
         </mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>E-mail</mat-label>
-        <input matInput
-               autocomplete="off"
-               id="email"
-               formControlName="email"
-               required
-        >
+        <input matInput autocomplete="off" id="email" formControlName="email" required />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Полное имя</mat-label>
-        <input matInput
-               autocomplete="off"
-               id="fullName"
-               formControlName="fullName"
-               required
-        >
+        <input matInput autocomplete="off" id="fullName" formControlName="fullName" required />
       </mat-form-field>
     </div>
     <div class="registerForm__bottom">
       <div class="registerForm__buttons">
-        <button mat-raised-button color="primary"
-                disabled="{{!isValid()}}"
-                (click)="signUp()">Регистрация</button>
-        <button mat-button
-                (click)="goBack()">Отмена</button>
+        <button mat-raised-button color="primary" disabled="{{ !isValid() }}" (click)="signUp()">
+          Регистрация
+        </button>
+        <button mat-button (click)="goBack()">Отмена</button>
       </div>
     </div>
   </div>
 </form>
 
 <div class="loader" *ngIf="isLoading$ | async">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
 </div>

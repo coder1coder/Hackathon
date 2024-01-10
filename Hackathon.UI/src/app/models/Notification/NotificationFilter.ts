@@ -1,3 +1,3 @@
 export class NotificationFilter {
-  isRead?:boolean
+  isRead?: boolean;
 }

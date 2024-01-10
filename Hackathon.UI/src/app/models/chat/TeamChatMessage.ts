@@ -1,20 +1,15 @@
-import { BaseChatMessage } from "./BaseChatMessage";
+import { BaseChatMessage } from './BaseChatMessage';
 
 export class TeamChatMessage extends BaseChatMessage {
   public teamId: number;
 
   constructor(
     teamId: number,
-    ownerId:number,
-    message:string,
+    ownerId: number,
+    message: string,
     options: ChatMessageOption = ChatMessageOption.Default,
   ) {
-    super(
-      ChatMessageContext.TeamChat,
-      ownerId,
-      message,
-      options
-    );
+    super(ChatMessageContext.TeamChat, ownerId, message, options);
     this.teamId = teamId;
   }
 }

@@ -1,23 +1,46 @@
 <mat-list>
   <mat-list-item *ngFor="let user of users">
     <div class="friends-list__item-actions">
-      <button mat-button mat-icon-button color="accent"
-              *ngIf="this.status == FriendshipStatus.Confirmed"
-              (click)="removeFromFriends(Number(user.id))"><mat-icon>delete_forever</mat-icon></button>
-      <button mat-button mat-icon-button color="primary"
-              *ngIf="this.status == FriendshipStatus.Pending"
-              (click)="acceptOffer(Number(user.id))"><mat-icon>done</mat-icon></button>
-      <button mat-button mat-icon-button color="accent"
-              *ngIf="this.status == FriendshipStatus.Pending"
-              (click)="rejectOffer(Number(user.id))"><mat-icon>delete_forever</mat-icon></button>
+      <button
+        mat-button
+        mat-icon-button
+        color="accent"
+        *ngIf="status === FriendshipStatus.Confirmed"
+        (click)="removeFromFriends(Number(user.id))"
+      >
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+      <button
+        mat-button
+        mat-icon-button
+        color="primary"
+        *ngIf="status === FriendshipStatus.Pending"
+        (click)="acceptOffer(Number(user.id))"
+      >
+        <mat-icon>done</mat-icon>
+      </button>
+      <button
+        mat-button
+        mat-icon-button
+        color="accent"
+        *ngIf="status === FriendshipStatus.Pending"
+        (click)="rejectOffer(Number(user.id))"
+      >
+        <mat-icon>delete_forever</mat-icon>
+      </button>
     </div>
 
     <span class="friends-list__item-user" (click)="openUserProfile(Number(user.id))">
-          <profile-image [userId]="user.id"
-                         *ngIf="user.id"
-                         [canUpload]="false" class="size35"></profile-image>
+      <profile-image
+        [userId]="user.id"
+        *ngIf="user.id"
+        [canUpload]="false"
+        class="size35"
+      ></profile-image>
       {{ user.fullName ?? user.userName }}
     </span>
   </mat-list-item>
 </mat-list>
-<div class="no-data-text" *ngIf="users != undefined && users.length == 0">{{ getNoDataText() }}</div>
+<div class="no-data-text" *ngIf="users !== undefined && users.length === 0">
+  {{ getNoDataText() }}
+</div>

@@ -1,19 +1,18 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { GetListParameters } from "../../models/GetListParameters";
-import { BaseCollection } from "../../models/BaseCollection";
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { GetListParameters } from '../../models/GetListParameters';
+import { BaseCollection } from '../../models/BaseCollection';
 import {
   IApprovalApplication,
-  IApprovalApplicationFilter
-} from "../../models/approval-application/approval-application.interface";
+  IApprovalApplicationFilter,
+} from '../../models/approval-application/approval-application.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApprovalApplicationsService {
-
   private api: string = `${environment.api}`;
 
   constructor(private http: HttpClient) {}
@@ -22,8 +21,13 @@ export class ApprovalApplicationsService {
    * @param params Параметры фильтрации и пагинации
    * @returns Параметры фильтрации и пагинации
    */
-  public getApprovalApplicationList(params?: GetListParameters<IApprovalApplicationFilter>): Observable<BaseCollection<IApprovalApplication>> {
-    return this.http.post<BaseCollection<IApprovalApplication>>(`${this.api}/approvalapplications/list`, params);
+  public getApprovalApplicationList(
+    params?: GetListParameters<IApprovalApplicationFilter>,
+  ): Observable<BaseCollection<IApprovalApplication>> {
+    return this.http.post<BaseCollection<IApprovalApplication>>(
+      `${this.api}/approvalapplications/list`,
+      params,
+    );
   }
 
   /** Получить заявку на согласование по идентификатору заявки
@@ -48,6 +52,6 @@ export class ApprovalApplicationsService {
    * @returns пустой ответ
    */
   public rejectApprovalApplication(id: number, comment: string): Observable<void> {
-    return this.http.post<void>(`${this.api}/approvalapplications/${id}/reject`, {comment});
+    return this.http.post<void>(`${this.api}/approvalapplications/${id}/reject`, { comment });
   }
 }

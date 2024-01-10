@@ -1,30 +1,22 @@
-import { AuthService } from "../../services/auth.service";
-import { ElementRef, HostListener, Injectable, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
-import {
-  BehaviorSubject,
-  bufferTime,
-  filter,
-  from,
-  mergeMap,
-  Subject,
-  takeUntil,
-} from "rxjs";
-import { TABLE_DATE_FORMAT } from "../../common/consts/date-formats";
-import { WithFormBaseComponent } from "../../common/base-components/with-form-base.component";
-import { ProfileUserStore } from "../../shared/stores/profile-user.store";
-import { IUser } from "../../models/User/IUser";
-import { PaginationSorting } from "../../models/GetListParameters";
-import { PageSettingsDefaults } from "../../models/PageSettings";
+import { AuthService } from '../../services/auth.service';
+import { ElementRef, HostListener, Injectable, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { BehaviorSubject, bufferTime, filter, from, mergeMap, Subject, takeUntil } from 'rxjs';
+import { TABLE_DATE_FORMAT } from '../../common/consts/date-formats';
+import { WithFormBaseComponent } from '../../common/base-components/with-form-base.component';
+import { ProfileUserStore } from '../../shared/stores/profile-user.store';
+import { IUser } from '../../models/User/IUser';
+import { PaginationSorting } from '../../models/GetListParameters';
+import { PageSettingsDefaults } from '../../models/PageSettings';
 
 @Injectable()
 export abstract class BaseChatComponent<TChatMessage>
-  extends WithFormBaseComponent implements OnInit, OnDestroy {
-
+  extends WithFormBaseComponent
+  implements OnDestroy
+{
   @ViewChild('formComponent') formComponent: NgForm;
 
   public currentUserId: number;
-  public isFloatMode: boolean = false;
   public form: FormGroup = this.fb.group({});
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
@@ -62,22 +54,26 @@ export abstract class BaseChatComponent<TChatMessage>
   }
 
   public onScroll(): void {
-    const element = this.chatBody?.nativeElement;
+    const element: HTMLElement = this.chatBody?.nativeElement;
     if (element) {
-      const scrollPosition = element.scrollTop;
-      const scrollHeight = element.scrollHeight;
-      const clientHeight = element.clientHeight;
-      const scrollPercentage = (scrollPosition / (scrollHeight - clientHeight)) * 100;
+      const scrollPosition: number = element.scrollTop;
+      const scrollHeight: number = element.scrollHeight;
+      const clientHeight: number = element.clientHeight;
+      const scrollPercentage: number = (scrollPosition / (scrollHeight - clientHeight)) * 100;
       this.scrollPositionBeforeLoad = scrollPosition;
       this.scrollPositionInPercent = Math.round(Math.abs(scrollPercentage));
-      if (this.scrollPositionInPercent >= this.maxScrollPercentageChatContainer && !this.isScrollLoad && this.isCanLoad) {
+      if (
+        this.scrollPositionInPercent >= this.maxScrollPercentageChatContainer &&
+        !this.isScrollLoad &&
+        this.isCanLoad
+      ) {
         this.isScrollLoad = true;
         this.fetchMessages();
       }
     }
   }
 
-  public ngOnInit(): void {
+  public initChat(): void {
     this.initForm();
     this.initSubscriptions();
   }
@@ -125,7 +121,8 @@ export abstract class BaseChatComponent<TChatMessage>
       .pipe(
         mergeMap((user: IUser) => this.profileUserStore.getUser(user.id)),
         takeUntil(this.destroy$),
-      ).subscribe({
+      )
+      .subscribe({
         next: (user: IUser) => this.chatMembers.set(user.id, user),
         complete: () => {
           this.isLoaded = true;
@@ -133,15 +130,13 @@ export abstract class BaseChatComponent<TChatMessage>
       });
   }
 
-  public initForm(): void{
+  public initForm(): void {
     this.form = this.fb.group({
-      message: new FormControl('',[
+      message: new FormControl('', [
         Validators.minLength(this.minLength),
         Validators.maxLength(this.maxLength),
       ]),
-      notify: new FormControl(false, [
-        Validators.required,
-      ]),
+      notify: new FormControl(false, [Validators.required]),
     });
   }
 
@@ -183,30 +178,27 @@ export abstract class BaseChatComponent<TChatMessage>
   }
 
   private initSubscriptions(): void {
-    this.entityId
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => {
-        if (value < 1) return;
-        this.fetchEntity(this.isNeedReloadData);
-        this.fetchMessages();
-      });
+    this.entityId.pipe(takeUntil(this.destroy$)).subscribe((value: number) => {
+      if (value < 1) return;
+      this.fetchEntity(this.isNeedReloadData);
+      this.fetchMessages();
+    });
 
     this.currentUserId = this.authService.getUserId() ?? -1;
-    this.authService.authChange
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.fetchEntity(this.isNeedReloadData);
-        this.fetchMessages();
-      });
+    this.authService.authChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.fetchEntity(this.isNeedReloadData);
+      this.fetchMessages();
+    });
 
     this.noExistedMembersChanges
       .pipe(
         bufferTime(300),
-        filter(values => values.length > 0),
+        filter((values) => values.length > 0),
         mergeMap(from),
         mergeMap((id: number) => this.profileUserStore.getUser(id)),
         takeUntil(this.destroy$),
-      ).subscribe({
+      )
+      .subscribe({
         next: (user: IUser) => this.chatMembers.set(user.id, user),
       });
 

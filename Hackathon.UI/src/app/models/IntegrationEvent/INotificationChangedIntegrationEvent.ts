@@ -1,10 +1,10 @@
-export interface INotificationChangedIntegrationEvent
-{
-  notificationIds: string[],
-  operation:NotificationChangedOperation
+export interface INotificationChangedIntegrationEvent {
+  notificationIds: string[];
+  operation: NotificationChangedOperation;
 }
 
-export enum NotificationChangedOperation
-{
-  Created, Updated, Deleted
+export enum NotificationChangedOperation {
+  Created = 0,
+  Updated = 1,
+  Deleted = 2,
 }

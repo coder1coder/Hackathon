@@ -1,7 +1,6 @@
-import {UserRole} from "./User/UserRole";
+import { UserRole } from './User/UserRole';
 
-export interface IGetTokenResponse
-{
+export interface IGetTokenResponse {
   userId: number;
   token: string;
   expires: number;

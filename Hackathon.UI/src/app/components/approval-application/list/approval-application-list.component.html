@@ -2,7 +2,6 @@
   [title]="'Заявки на согласование событий'"
   [containerCssClasses]="'container container-full container-padding theme-color'"
 >
-
   <app-approval-application-filter
     [approvalApplications]="items"
     (changeFilterEmit)="filterChanged($event)"
@@ -16,38 +15,54 @@
         <th mat-header-cell *matHeaderCellDef>Автор</th>
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
           <div class="member">
-            <profile-image [canUpload]="false" [userId]="element.authorId" class="size35"></profile-image>
-            <div>{{element?.author?.userName ?? '-'}}</div>
+            <profile-image
+              [canUpload]="false"
+              [userId]="element.authorId"
+              class="size35"
+            ></profile-image>
+            <div>{{ element?.author?.userName ?? '-' }}</div>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="event">
         <th mat-header-cell *matHeaderCellDef>Событие</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{element.event?.name ?? '-'}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+          {{ element.event?.name ?? '-' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="requestedAt">
         <th mat-header-cell *matHeaderCellDef>Дата создания заявки</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{(element.requestedAt | date: tableDateFormat) ?? '-'}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+          {{ (element.requestedAt | date : tableDateFormat) ?? '-' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="decisionAt">
         <th mat-header-cell *matHeaderCellDef>Дата решения по заявке</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{(element.decisionAt | date: tableDateFormat) ?? '-'}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+          {{ (element.decisionAt | date : tableDateFormat) ?? '-' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="applicationStatus">
         <th mat-header-cell *matHeaderCellDef>Статус модерации</th>
         <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          <app-approval-application-status [status]="element.applicationStatus" ></app-approval-application-status>
+          <app-approval-application-status
+            [status]="element.applicationStatus"
+          ></app-approval-application-status>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="!approvalApplicationHasActiveStatus(element)">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            *ngIf="!approvalApplicationHasActiveStatus(element)"
+          >
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -64,19 +79,18 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
+      <tr mat-row *matRowDef="let row; columns: getDisplayColumns()"></tr>
     </table>
 
-    <mat-paginator [length]="pageSettings.length"
-                   [pageSize]="pageSettings.pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="setPageSettings($event)"
-                   aria-label="Select page">
+    <mat-paginator
+      [length]="pageSettings.length"
+      [pageSize]="pageSettings.pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="setPageSettings($event)"
+      aria-label="Select page"
+    >
     </mat-paginator>
   </div>
 
-  <div *ngIf="items.length == 0">
-    Нет запросов
-  </div>
-
+  <div *ngIf="items.length === 0">Нет запросов</div>
 </layout-default>

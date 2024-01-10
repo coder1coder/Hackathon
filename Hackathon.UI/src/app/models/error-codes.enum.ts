@@ -5,5 +5,5 @@ export enum ErrorCodesEnum {
   ACCESS_DENIED = 403,
   NOT_FOUND = 404,
   UNSUPPORTED_MEDIA_TYPE = 415,
-  SERVER_ERROR = 500
+  SERVER_ERROR = 500,
 }

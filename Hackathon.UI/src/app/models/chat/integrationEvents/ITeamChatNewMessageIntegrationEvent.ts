@@ -1,5 +1,4 @@
-export interface ITeamChatNewMessageIntegrationEvent
-{
+export interface ITeamChatNewMessageIntegrationEvent {
   teamId: number;
-  messageId:string;
+  messageId: string;
 }

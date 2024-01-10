@@ -1,6 +1,6 @@
 <toolbar
   [logoMinWidth]="logoMinWidth"
-  [secondToolbar]="(!hideTitleBar && !isLoading) ? secondToolbar : null"
+  [secondToolbar]="!hideTitleBar && !isLoading ? secondToolbar : null"
   [secondToolbarCssClasses]="layoutCssClasses"
 >
 </toolbar>
@@ -23,6 +23,5 @@
 </div>
 
 <div class="layout-default__loader loader-theme" *ngIf="showLoadingIndicator && isLoading">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
 </div>

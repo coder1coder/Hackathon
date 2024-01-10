@@ -15,7 +15,7 @@
     }
 
     tr > td:first-child {
-      color: #9FA2B4;
+      color: #9fa2b4;
       width: 1px;
       white-space: nowrap;
       padding-right: 2em;
@@ -28,7 +28,8 @@
   padding-top: 1em;
   border-top: 1px solid #f5f5f5;
 
-  .reaction, .reaction-pointer  {
+  .reaction,
+  .reaction-pointer {
     display: block;
     height: 40px;
     width: 40px;
@@ -36,23 +37,35 @@
     color: #b8b8b8;
 
     &.reaction-like {
-      &:hover { color: #2886c9; }
-      &.active { color: #2886c9; }
+      &:hover {
+        color: #2886c9;
+      }
+      &.active {
+        color: #2886c9;
+      }
     }
 
     &.reaction-heart {
-      &:hover { color: #da2121; }
-      &.active { color: #da2121; }
+      &:hover {
+        color: #da2121;
+      }
+      &.active {
+        color: #da2121;
+      }
     }
 
     &.reaction-fire {
-      &:hover { color: #f1522c; }
-      &.active { color: #f1522c; }
+      &:hover {
+        color: #f1522c;
+      }
+      &.active {
+        color: #f1522c;
+      }
     }
   }
 
-  .reaction-pointer  {
-    &:hover  {
+  .reaction-pointer {
+    &:hover {
       cursor: pointer;
     }
   }
@@ -78,7 +91,7 @@ td.email {
   }
 
   &-description {
-    color: #9FA2B4;
+    color: #9fa2b4;
     padding-top: 3px;
     padding-bottom: 3px;
   }

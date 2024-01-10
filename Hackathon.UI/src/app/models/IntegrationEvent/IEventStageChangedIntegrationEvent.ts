@@ -1,5 +1,4 @@
-export interface IEventStageChangedIntegrationEvent
-{
-  eventId: number,
-  eventStageId: number
+export interface IEventStageChangedIntegrationEvent {
+  eventId: number;
+  eventStageId: number;
 }

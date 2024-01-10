@@ -4,26 +4,32 @@
     <div class="loginForm__fields">
       <mat-form-field appearance="fill">
         <mat-label>Учетная запись</mat-label>
-        <input matInput autocomplete="off"
-               id="login" #login formControlName="login"
-               required>
+        <input matInput autocomplete="off" id="login" #login formControlName="login" required />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Пароль</mat-label>
-        <input matInput [type]="isPassFieldHide ? 'password' : 'text'"
-               autocomplete="off"
-               id="password" formControlName="password"
-               required
-               (keyup.enter)="signIn()"
+        <input
+          matInput
+          [type]="isPassFieldHide ? 'password' : 'text'"
+          autocomplete="off"
+          id="password"
+          formControlName="password"
+          required
+          (keyup.enter)="signIn()"
+        />
+        <mat-icon
+          matSuffix
+          (click)="isPassFieldHide = !isPassFieldHide"
+          [attr.aria-pressed]="isPassFieldHide"
+          style="cursor: pointer"
         >
-        <mat-icon matSuffix (click)="isPassFieldHide = !isPassFieldHide" [attr.aria-pressed]="isPassFieldHide" style="cursor: pointer;">
-          {{isPassFieldHide ? 'visibility_off' : 'visibility'}}
+          {{ isPassFieldHide ? 'visibility_off' : 'visibility' }}
         </mat-icon>
       </mat-form-field>
     </div>
 
     <div class="loginForm__reCaptcha re-captcha" *ngIf="captchaEnabled">
-      <re-captcha (resolved)="getCaptchaResponse($event)" siteKey="{{siteKey}}"></re-captcha>
+      <re-captcha (resolved)="getCaptchaResponse($event)" siteKey="{{ siteKey }}"></re-captcha>
     </div>
 
     <div class="loginForm__bottom">
@@ -38,7 +44,7 @@
 
       <button class="loginForm-google__button" mat-button (click)="signInByGoogle()">
         <div class="loginForm-google__block">
-          <img src="assets/img/google.svg" alt="google">
+          <img src="assets/img/google.svg" alt="google" />
           <div class="loginForm-google__title">Войти через Google</div>
         </div>
       </button>
@@ -47,6 +53,5 @@
 </form>
 
 <div class="loader" *ngIf="isLoading$ | async">
-  <mat-progress-spinner color="primary" mode="indeterminate">
-  </mat-progress-spinner>
+  <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
 </div>

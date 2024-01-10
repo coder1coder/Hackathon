@@ -1,27 +1,26 @@
 import { Component } from '@angular/core';
-import { RouterService } from "../../../services/router.service";
-import { ApprovalApplicationsService } from "../../../services/approval-applications/approval-applications.service";
-import { BaseTableListComponent} from "../../../common/base-components/base-table-list.component";
+import { RouterService } from '../../../services/router.service';
+import { ApprovalApplicationsService } from '../../../services/approval-applications/approval-applications.service';
+import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import {
   IApprovalApplication,
   IApprovalApplicationFilter,
-} from "../../../models/approval-application/approval-application.interface";
-import { filter, mergeMap, takeUntil } from "rxjs";
-import { GetListParameters } from "../../../models/GetListParameters";
-import { BaseCollection } from "../../../models/BaseCollection";
-import { TABLE_DATE_FORMAT } from "../../../common/consts/date-formats";
-import { ErrorProcessorService } from "../../../services/error-processor.service";
-import { CustomDialog, ICustomDialogData } from "../../custom/custom-dialog/custom-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
-import { SnackService } from "../../../services/snack.service";
-import { ApplicationApprovalErrorMessages } from "../../../common/error-messages/application-approval-error-messages";
+} from '../../../models/approval-application/approval-application.interface';
+import { filter, mergeMap, takeUntil } from 'rxjs';
+import { GetListParameters } from '../../../models/GetListParameters';
+import { BaseCollection } from '../../../models/BaseCollection';
+import { TABLE_DATE_FORMAT } from '../../../common/consts/date-formats';
+import { ErrorProcessorService } from '../../../services/error-processor.service';
 import {
-  ApprovalApplicationRejectModalComponent
-} from "../approval-application-reject-modal/approval-application-reject-modal.component";
-import { ApprovalApplicationStatusEnum } from "../../../models/approval-application/approval-application-status.enum";
-import {
-  ApprovalApplicationInfoModalComponent
-} from "../approval-application-info-modal/approval-application-info-modal.component";
+  CustomDialogComponent,
+  ICustomDialogData,
+} from '../../custom/custom-dialog/custom-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SnackService } from '../../../services/snack.service';
+import { ApplicationApprovalErrorMessages } from '../../../common/error-messages/application-approval-error-messages';
+import { ApprovalApplicationRejectModalComponent } from '../approval-application-reject-modal/approval-application-reject-modal.component';
+import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
+import { ApprovalApplicationInfoModalComponent } from '../approval-application-info-modal/approval-application-info-modal.component';
 
 @Component({
   selector: 'app-approval-applications',
@@ -29,7 +28,6 @@ import {
   styleUrls: ['./approval-application-list.component.scss'],
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
-
   public tableDateFormat = TABLE_DATE_FORMAT;
 
   private approvalApplicationFilter: IApprovalApplicationFilter;
@@ -54,12 +52,15 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
   }
 
   public approvalApplicationHasActiveStatus(approvalApplication: IApprovalApplication): boolean {
-    return approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Rejected ||
-      approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved;
+    return (
+      approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Rejected ||
+      approvalApplication?.applicationStatus === ApprovalApplicationStatusEnum.Approved
+    );
   }
 
   private getFilterDate(): GetListParameters<IApprovalApplicationFilter> {
-    let getFilterModel = new GetListParameters<IApprovalApplicationFilter>();
+    const getFilterModel: GetListParameters<IApprovalApplicationFilter> =
+      new GetListParameters<IApprovalApplicationFilter>();
     getFilterModel.Offset = this.pageSettings.pageIndex;
     getFilterModel.Limit = this.pageSettings.pageSize;
     getFilterModel.Filter = {
@@ -68,26 +69,30 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
     return getFilterModel;
   }
 
-  override fetch(): void {/* Не используется, загрузка данных через происходит фильтр */}
+  override fetch(): void {
+    /* Не используется, загрузка данных через происходит фильтр */
+  }
 
   private loadData(): void {
-    this.approvalApplicationsService.getApprovalApplicationList(this.getFilterDate())
+    this.approvalApplicationsService
+      .getApprovalApplicationList(this.getFilterDate())
       .pipe(takeUntil(this.destroy$))
-      .subscribe(({
-        next: (res: BaseCollection<IApprovalApplication>) =>  {
+      .subscribe({
+        next: (res: BaseCollection<IApprovalApplication>) => {
           this.items = res.items;
           this.pageSettings.length = res.totalCount;
         },
-        error: () => {}
-      }))
+        error: () => {},
+      });
   }
 
   public rowClick(approvalApplication: IApprovalApplication): void {
-    this.dialog.open(ApprovalApplicationInfoModalComponent, {
-      data: approvalApplication,
-      minWidth: 500,
-      maxWidth: 650,
-    })
+    this.dialog
+      .open(ApprovalApplicationInfoModalComponent, {
+        data: approvalApplication,
+        minWidth: 500,
+        maxWidth: 650,
+      })
       .beforeClosed()
       .pipe(
         filter((v) => !!v),
@@ -97,7 +102,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
         next: () => {
           this.loadData();
         },
-        error: (error) => this.errorProcessor.Process(error)
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 
@@ -108,11 +113,14 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
       acceptButtonText: `Да`,
     };
 
-    this.dialog.open(CustomDialog, { data })
+    this.dialog
+      .open(CustomDialogComponent, { data })
       .afterClosed()
       .pipe(
         filter((v) => !!v),
-        mergeMap(() => this.approvalApplicationsService.approveApprovalApplication(approvalApplication.id)),
+        mergeMap(() =>
+          this.approvalApplicationsService.approveApprovalApplication(approvalApplication.id),
+        ),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -120,16 +128,22 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
           this.snackService.open(ApplicationApprovalErrorMessages.RequestApproved);
           this.loadData();
         },
-        error: (error) => this.errorProcessor.Process(error)
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 
   public rejectRequest(approvalApplication: IApprovalApplication): void {
-    this.dialog.open(ApprovalApplicationRejectModalComponent, { data: approvalApplication})
+    this.dialog
+      .open(ApprovalApplicationRejectModalComponent, { data: approvalApplication })
       .afterClosed()
       .pipe(
         filter((v) => !!v),
-        mergeMap((comment: string) => this.approvalApplicationsService.rejectApprovalApplication(approvalApplication.id, comment)),
+        mergeMap((comment: string) =>
+          this.approvalApplicationsService.rejectApprovalApplication(
+            approvalApplication.id,
+            comment,
+          ),
+        ),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -137,7 +151,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
           this.snackService.open(ApplicationApprovalErrorMessages.RequestRejected);
           this.loadData();
         },
-        error: (error) => this.errorProcessor.Process(error)
+        error: (error) => this.errorProcessor.Process(error),
       });
   }
 }

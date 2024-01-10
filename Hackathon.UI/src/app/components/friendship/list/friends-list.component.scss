@@ -1,8 +1,6 @@
 :host {
-
-  .friends-list{
+  .friends-list {
     &__item {
-
       &-actions {
         padding-right: 1em;
       }
@@ -22,12 +20,8 @@
   }
 
   .no-data-text {
-    color: #9FA2B4;
+    color: #9fa2b4;
     padding-top: 1em;
     padding-left: 16px;
   }
-
 }
-
-
-

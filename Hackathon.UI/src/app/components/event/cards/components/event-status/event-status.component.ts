@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EventStatus, EventStatusTranslator } from "../../../../../models/Event/EventStatus";
+import { EventStatus, EventStatusTranslator } from '../../../../../models/Event/EventStatus';
 
 @Component({
   selector: 'app-event-status',

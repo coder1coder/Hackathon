@@ -16,11 +16,11 @@
 
     &-shadow {
       @include absolute0;
-      background-color: rgba(0,0,0, .5);
+      background-color: rgba(0, 0, 0, 0.5);
     }
   }
 
-  &__content{
+  &__content {
     z-index: 2;
     color: #fff;
 
@@ -41,11 +41,11 @@
     font-size: 36px;
     line-height: 1.2em;
     text-align: center;
-    padding-top:1em;
+    padding-top: 1em;
     padding-bottom: 1em;
   }
 
-  &__meta{
+  &__meta {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,8 +60,8 @@
     max-width: 100%;
     word-break: break-all;
     text-align: center;
-    color: rgba(255,255,255,.5);
-    padding-top:1em;
+    color: rgba(255, 255, 255, 0.5);
+    padding-top: 1em;
     padding-bottom: 1em;
   }
 }

@@ -1,49 +1,42 @@
 <layout-default [title]="'Уведомления'">
-
   <div actions>
-
-    <button mat-button color="accent" (click)="removeAll($event)" *ngIf="items != undefined && items.length > 0">
+    <button
+      mat-button
+      color="accent"
+      (click)="removeAll($event)"
+      *ngIf="items !== undefined && items.length > 0"
+    >
       <mat-icon>delete</mat-icon>
       Удалить все уведомления
     </button>
-
   </div>
 
-  <ng-template [ngIf]="items != undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
-
+  <ng-template [ngIf]="items !== undefined && items.length > 0" [ngIfElse]="notificationsEmpty">
     <div class="notification-list">
-
       <div class="notification-list-items">
         <notification-item *ngFor="let item of items" [notification]="item"></notification-item>
       </div>
 
       <div class="notification-list-filter">
         <div class="notification-list-filter-title">Фильтры</div>
-        <mat-card-content>
-
-        </mat-card-content>
-        <mat-card-footer>
-        </mat-card-footer>
+        <mat-card-content> </mat-card-content>
+        <mat-card-footer> </mat-card-footer>
       </div>
-
     </div>
 
-    <mat-paginator [length]="pageSettings.length"
-                   [pageSize]="pageSettings.pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="setPageSettings($event)"
-                   aria-label="Select page">
+    <mat-paginator
+      [length]="pageSettings.length"
+      [pageSize]="pageSettings.pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="setPageSettings($event)"
+      aria-label="Select page"
+    >
     </mat-paginator>
-
   </ng-template>
 
   <ng-template #notificationsEmpty>
     <mat-list role="list">
-      <mat-list-item role="listitem">
-        Нет уведомлений
-      </mat-list-item>
+      <mat-list-item role="listitem"> Нет уведомлений </mat-list-item>
     </mat-list>
   </ng-template>
-
-
 </layout-default>

@@ -1,6 +1,5 @@
-export interface IEventLogModel
-{
-  id:string;
+export interface IEventLogModel {
+  id: string;
   type: EventLogType;
   description: string;
   userId: number;
@@ -8,10 +7,9 @@ export interface IEventLogModel
   timestamp: Date;
 }
 
-export enum EventLogType
-{
+export enum EventLogType {
   Default = 0,
   Created = 1,
   Updated = 2,
-  Deleted = 3
+  Deleted = 3,
 }

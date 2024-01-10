@@ -1,15 +1,14 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from "../../services/auth.service";
-import { RouterService } from "../../services/router.service";
-import { ErrorCodesEnum } from "../../models/error-codes.enum";
-import { ErrorProcessorService } from "../../services/error-processor.service";
+import { AuthService } from '../../services/auth.service';
+import { RouterService } from '../../services/router.service';
+import { ErrorCodesEnum } from '../../models/error-codes.enum';
+import { ErrorProcessorService } from '../../services/error-processor.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalErrorHandler implements ErrorHandler {
-
   constructor(
     private router: RouterService,
     private authService: AuthService,
@@ -36,7 +35,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 }
 
-export const errorHandler = {
+export const errorHandler: { useClass: typeof GlobalErrorHandler; provide: typeof ErrorHandler } = {
   provide: ErrorHandler,
   useClass: GlobalErrorHandler,
 };

@@ -1,17 +1,15 @@
-export interface ITeamJoinRequest
-{
-  id:number;
-  teamId:number;
-  teamName:string;
-  userId:number;
-  createdAt:Date;
-  modifyAt?:Date;
+export interface ITeamJoinRequest {
+  id: number;
+  teamId: number;
+  teamName: string;
+  userId: number;
+  createdAt: Date;
+  modifyAt?: Date;
   status: TeamJoinRequestStatus;
-  comment:string;
+  comment: string;
 }
 
-export enum TeamJoinRequestStatus
-{
+export enum TeamJoinRequestStatus {
   /// <summary>
   /// Запрос отправлен
   /// </summary>
@@ -30,18 +28,23 @@ export enum TeamJoinRequestStatus
   /// <summary>
   /// Запрос отменен автором
   /// </summary>
-  Cancelled = 3
+  Cancelled = 3,
 }
 
 export class TeamJoinRequestStatusTranslator {
-  public static GetName = (e:TeamJoinRequestStatus) : string => TeamJoinRequestStatus[e].toLowerCase();
-  public static Translate = (e: TeamJoinRequestStatus) : string => {
+  public static GetName = (e: TeamJoinRequestStatus): string =>
+    TeamJoinRequestStatus[e].toLowerCase();
+  public static Translate = (e: TeamJoinRequestStatus): string => {
     switch (e) {
-      case TeamJoinRequestStatus.Sent: return 'Запрос отправлен'
-      case TeamJoinRequestStatus.Accepted: return 'Запрос принят'
-      case TeamJoinRequestStatus.Cancelled: return 'Отменено пользователем'
+      case TeamJoinRequestStatus.Sent:
+        return 'Запрос отправлен';
+      case TeamJoinRequestStatus.Accepted:
+        return 'Запрос принят';
+      case TeamJoinRequestStatus.Cancelled:
+        return 'Отменено пользователем';
 
-      default: return TeamJoinRequestStatus[e];
+      default:
+        return TeamJoinRequestStatus[e];
     }
-  }
+  };
 }

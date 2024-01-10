@@ -1,4 +1,4 @@
-import {TeamType} from "./Team";
+import { TeamType } from './Team';
 
 export class TeamFilter {
   ids!: number[];
@@ -10,5 +10,5 @@ export class TeamFilter {
   quantityMembersTo!: number;
   eventId!: number;
   projectId!: number;
-  type!:TeamType;
+  type!: TeamType;
 }

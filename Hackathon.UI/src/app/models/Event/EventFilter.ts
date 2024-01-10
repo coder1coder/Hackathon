@@ -1,4 +1,4 @@
-import {EventStatus} from "./EventStatus";
+import { EventStatus } from './EventStatus';
 
 export class EventFilter {
   ids?: number[];

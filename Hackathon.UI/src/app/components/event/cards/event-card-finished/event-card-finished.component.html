@@ -1,20 +1,17 @@
 <layout-default
   [title]="'Событие: ' + event.name"
   [isLoading]="isLoading$ | async"
-  [hideTitleBar]="true" class="hackathon-background"
+  [hideTitleBar]="true"
+  class="hackathon-background"
   [containerCssClasses]="'theme-color'"
 >
-
   <div class="event event-finished">
-    <app-event-header
-    [event]="event">
-    </app-event-header>
+    <app-event-header [event]="event"> </app-event-header>
 
     <div class="event-content">
       <section class="event-content__section">
         <div class="event-content__section-title">Участники и команды</div>
         <div class="event-content__section-content">
-
           <div class="event-content__members">
             <div class="event-content__member" *ngFor="let member of getEventMembers()">
               <div class="event-content__member-image">
@@ -27,14 +24,12 @@
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
       <section class="event-content__section">
         <div class="event-content__section-title">Проекты и решения</div>
         <div class="event-content__section-content">
-
           <div class="event-content__projects">
             <div class="event-content__project" *ngFor="let project of getEventProjects()">
               <div class="event-content__project-image">
@@ -50,7 +45,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </section>
     </div>
