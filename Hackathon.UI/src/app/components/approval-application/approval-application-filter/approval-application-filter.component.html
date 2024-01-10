@@ -1,28 +1,34 @@
 <div class="event-block">
   <div class="mb-1-5em" *ngIf="isFilterEnabled">
     <form [formGroup]="form" class="applications__filter">
-
       <mat-form-field appearance="outline">
         <mat-label>Статус модерации</mat-label>
         <mat-select formControlName="status">
           <mat-divider></mat-divider>
           <mat-select-trigger>
-            <app-approval-application-status [status]="getFormControl('status').value ?? 0" ></app-approval-application-status>
+            <app-approval-application-status
+              [status]="getFormControl('status').value ?? 0"
+            ></app-approval-application-status>
           </mat-select-trigger>
           <mat-option *ngFor="let status of approvalApplicationStatuses" [value]="status">
-            <app-approval-application-status [status]="status" ></app-approval-application-status>
+            <app-approval-application-status [status]="status"></app-approval-application-status>
           </mat-option>
         </mat-select>
       </mat-form-field>
     </form>
 
-    <div style="display: flex; column-gap: 10px;">
-      <button mat-flat-button color="primary"
-              (click)="submitFilter()"
-              [disabled]="!this.form.dirty">Применить</button>
-      <button mat-flat-button
-              (click)="clearFilter()"
-              [disabled]="!this.form.dirty">Очистить</button>
+    <div style="display: flex; column-gap: 10px">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="submitFilter()"
+        [disabled]="!this.form.dirty"
+      >
+        Применить
+      </button>
+      <button mat-flat-button (click)="clearFilter()" [disabled]="!this.form.dirty">
+        Очистить
+      </button>
     </div>
   </div>
 </div>

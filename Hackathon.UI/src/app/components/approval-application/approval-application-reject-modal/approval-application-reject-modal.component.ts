@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { WithFormBaseComponent } from "../../../common/base-components/with-form-base.component";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { IApprovalApplication } from "../../../models/approval-application/approval-application.interface";
+import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
 
 @Component({
   selector: 'app-approval-application-reject-modal',
@@ -10,7 +10,6 @@ import { IApprovalApplication } from "../../../models/approval-application/appro
   styleUrls: ['./approval-application-reject-modal.component.scss'],
 })
 export class ApprovalApplicationRejectModalComponent extends WithFormBaseComponent {
-
   public form: FormGroup = this.fb.group({
     comment: [null, [Validators.required]],
   });
@@ -18,7 +17,7 @@ export class ApprovalApplicationRejectModalComponent extends WithFormBaseCompone
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ApprovalApplicationRejectModalComponent>,
-    @Inject(MAT_DIALOG_DATA) private dialogData: IApprovalApplication
+    @Inject(MAT_DIALOG_DATA) private dialogData: IApprovalApplication,
   ) {
     super();
   }
@@ -27,8 +26,8 @@ export class ApprovalApplicationRejectModalComponent extends WithFormBaseCompone
     return this.dialogData;
   }
 
-  public confirm():void{
-    const comment = this.getFormControl('comment')?.value ?? null;
+  public confirm(): void {
+    const comment: string = this.getFormControl('comment')?.value ?? null;
     this.dialogRef.close(comment);
   }
 }

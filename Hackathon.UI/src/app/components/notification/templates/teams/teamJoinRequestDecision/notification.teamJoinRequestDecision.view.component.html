@@ -1,25 +1,29 @@
 <ng-template [ngIf]="notify" [ngIfElse]="notValidContentTemplate">
   <div>
     <div class="notify__info-message">
-
       <div mat-line [ngSwitch]="data.IsApproved">
         <div *ngSwitchCase="0">
-          Запрос на вступление в команду <span class="teamName" (click)="this.router.Teams.View(data.TeamId)">{{data.TeamName}}</span> отклонен.
-          <span *ngIf="data && !data.IsApproved">
-            <br/>Комментарий: {{ data.Comment }}
-          </span>
+          Запрос на вступление в команду
+          <span class="teamName" (click)="this.router.Teams.View(data.TeamId)">{{
+            data.TeamName
+          }}</span>
+          отклонен.
+          <span *ngIf="data && !data.IsApproved"> <br />Комментарий: {{ data.Comment }} </span>
         </div>
-        <div *ngSwitchCase="1">Вы были приняты в команду <span class="teamName" (click)="this.router.Teams.View(data.TeamId)">{{data.TeamName}}</span></div>
+        <div *ngSwitchCase="1">
+          Вы были приняты в команду
+          <span class="teamName" (click)="this.router.Teams.View(data.TeamId)">{{
+            data.TeamName
+          }}</span>
+        </div>
       </div>
     </div>
     <div mat-line *ngIf="!hideDate">
       <div class="notify-createdAt">
-        {{notify.createdAt?.toLocaleString() | date:NOTIFICATION_DATETIME_FORMAT}}
+        {{ notify.createdAt?.toLocaleString() | date : NOTIFICATION_DATETIME_FORMAT }}
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #notValidContentTemplate>
-  Невозможно отобразить содержимое
-</ng-template>
+<ng-template #notValidContentTemplate> Невозможно отобразить содержимое </ng-template>

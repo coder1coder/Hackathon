@@ -1,22 +1,17 @@
-<layout-default
-  [title]="'Новая команда'"
->
-  <form [formGroup]="form" class="form-vertical" >
+<layout-default [title]="'Новая команда'">
+  <form [formGroup]="form" class="form-vertical">
     <div class="vertical__fields">
       <mat-form-field appearance="fill">
         <mat-label>Название команды</mat-label>
-        <input matInput autocomplete="off"
-               id="name" formControlName="name"
-               required>
+        <input matInput autocomplete="off" id="name" formControlName="name" required />
       </mat-form-field>
-
     </div>
     <div class="vertical__fields">
       <mat-form-field appearance="fill">
         <mat-label>Тип команды</mat-label>
         <mat-select [(value)]="selectedTeamType">
           <mat-option *ngFor="let type of teamTypes" [value]="type.id">
-            {{type.name}}
+            {{ type.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>

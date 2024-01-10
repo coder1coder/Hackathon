@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import * as moment from "moment/moment";
-import { DATE_FORMAT_DD_MM_YYYY } from "../../../../../common/consts/date-formats";
-import { Event } from "../../../../../models/Event/Event";
+import * as moment from 'moment/moment';
+import { DATE_FORMAT_DD_MM_YYYY } from '../../../../../common/consts/date-formats';
+import { Event } from '../../../../../models/Event/Event';
 
 @Component({
   selector: 'app-event-header',

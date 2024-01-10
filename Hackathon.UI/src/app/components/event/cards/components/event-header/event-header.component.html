@@ -1,20 +1,16 @@
 <div class="event-header" *ngIf="event">
-
   <div class="event-header__cover">
     <image-from-storage [imageId]="event.imageId"></image-from-storage>
     <div class="event-header__cover-shadow"></div>
   </div>
 
   <div class="event-header__content">
-
     <div class="header-container">
       <div class="event-header__title">{{ event.name }}</div>
       <div class="event-header__description">{{ event.description }}</div>
       <div class="event-header__meta">
         <span>событие от {{ startDate }}</span>
-        <app-event-status
-          [status]="event.status">
-        </app-event-status>
+        <app-event-status [status]="event.status"> </app-event-status>
       </div>
     </div>
   </div>

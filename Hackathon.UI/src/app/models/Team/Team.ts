@@ -1,17 +1,16 @@
-import {IUser} from "../User/IUser";
+import { IUser } from '../User/IUser';
 
 export class Team implements ITeam {
-  id!: number;
+  id: number;
   name?: string;
   members: IUser[] = [];
   owner?: IUser;
-  project: any //TODO: add typed
+  project: any; //TODO: add typed
   type: TeamType;
 
-  getMemberStatus = (memberId: number) =>
-  {
-    return this.owner?.id == memberId ? 'Владелец' : 'Участник'
-  }
+  getMemberStatus = (memberId: number): string => {
+    return this.owner?.id == memberId ? 'Владелец' : 'Участник';
+  };
 }
 
 export interface ITeam {
@@ -19,12 +18,11 @@ export interface ITeam {
   name?: string;
   members: IUser[];
   owner?: IUser;
-  project: any //TODO: add typed
+  project: any; //TODO: add typed
   type: TeamType;
 }
 
-export enum TeamType
-{
+export enum TeamType {
   Private = 0,
-  Public = 1
+  Public = 1,
 }

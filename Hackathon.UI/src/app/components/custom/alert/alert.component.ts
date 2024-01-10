@@ -1,13 +1,11 @@
-import { Attribute, Component, HostBinding, Input } from "@angular/core";
+import { Attribute, Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],
 })
-
 export class AlertComponent {
-
   @Input() showIcon: boolean = true;
   @Input() closeable: boolean = false;
   @Input() icon = 'info_outline';
@@ -16,13 +14,10 @@ export class AlertComponent {
 
   constructor(
     @Attribute('warn') public isWarn?: boolean,
-    @Attribute('danger') public isDanger?: boolean) {
+    @Attribute('danger') public isDanger?: boolean,
+  ) {
+    if (this.isWarn !== null) this.icon = 'warning_amber';
 
-    if (this.isWarn !== null)
-      this.icon = 'warning_amber';
-
-    if (this.isDanger !== null)
-      this.icon = 'error_outline';
-
+    if (this.isDanger !== null) this.icon = 'error_outline';
   }
 }

@@ -1,10 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Subject } from 'rxjs';
 
 @Injectable()
 export abstract class WithFormBaseComponent implements OnDestroy {
-
   public abstract form: FormGroup;
   public validators = Validators;
 
@@ -33,9 +39,9 @@ export abstract class WithFormBaseComponent implements OnDestroy {
     return control as FormControl;
   }
 
-  resetControls(...names: Array<string>) {
+  resetControls(...names: Array<string>): void {
     names.forEach((controlName) => {
-      this.getFormControl(controlName).reset()
-    })
+      this.getFormControl(controlName).reset();
+    });
   }
 }

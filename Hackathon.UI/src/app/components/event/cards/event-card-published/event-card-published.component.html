@@ -1,34 +1,28 @@
 <layout-default
   [isLoading]="isLoading$ | async"
-  [hideTitleBar]="false" class="hackathon-background"
+  [hideTitleBar]="false"
+  class="hackathon-background"
   [containerCssClasses]="'theme-color'"
 >
   <div class="event-alert" alert *ngIf="eventService.isEventOwner(event)">
     <alert>Вы являетесь организатором события</alert>
   </div>
   <div actions>
-    <event-button-actions
-      [event]="event">
-    </event-button-actions>
+    <event-button-actions [event]="event"> </event-button-actions>
   </div>
 
   <div class="event event-published">
-    <app-event-header
-      [event]="event">
-    </app-event-header>
+    <app-event-header [event]="event"> </app-event-header>
 
     <div class="event-content">
-
       <section class="event-content__section">
         <div class="event-content__section-title">Призовой фонд</div>
         <div class="event-content__section-content">
           <div class="event-content__award">
             <div class="event-content__award-image">
-              <img src="assets/img/award.svg" alt="award">
+              <img src="assets/img/award.svg" alt="award" />
             </div>
-            <div class="event-content__award-title">
-              {{event?.award ?? 0}}₽
-            </div>
+            <div class="event-content__award-title">{{ event?.award ?? 0 }}₽</div>
           </div>
         </div>
       </section>
@@ -36,7 +30,6 @@
       <section class="event-content__section">
         <div class="event-content__section-title">Организатор</div>
         <div class="event-content__section-content">
-
           <div class="event-content__owner">
             <div class="event-content__owner-image">
               <image-from-storage [imageId]="event.owner?.profileImageId"></image-from-storage>
@@ -53,14 +46,11 @@
         <div class="event-content__section-content">
           <div class="event-content__info">
             <div class="event-content__info-content">
-              <div class="event-content__info-title">
-                Участники
-              </div>
+              <div class="event-content__info-title">Участники</div>
               <div class="event-content__info-desc">
-                {{ getUsersCount()}}/{{ event?.maxEventMembers }}
+                {{ getUsersCount() }}/{{ event?.maxEventMembers }}
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -74,9 +64,7 @@
                 <div class="event-content__stage-name">
                   {{ stage.name }}
                 </div>
-                <div class="event-content__stage-duration">
-                  {{ stage.duration }}мин
-                </div>
+                <div class="event-content__stage-duration">{{ stage.duration }}мин</div>
               </div>
             </div>
           </div>
@@ -102,7 +90,7 @@
         <div class="event-content__section-title">Правила</div>
         <div class="event-content__section-content">
           <div class="event-content__rules" *ngIf="event.agreement?.rules; else empty">
-           {{event.agreement?.rules}}
+            {{ event.agreement?.rules }}
           </div>
         </div>
       </section>
@@ -110,16 +98,18 @@
       <section class="event-content__section" *ngIf="userId === event.owner.id">
         <div class="event-content__section-title">Уведомления</div>
         <div class="event-content__section-content">
-          <div class="event-content__statuses" *ngIf="event.changeEventStatusMessages?.length; else empty">
+          <div
+            class="event-content__statuses"
+            *ngIf="event.changeEventStatusMessages?.length; else empty"
+          >
             <div class="event-content__status-content status-header">
-              <div class="event-content__status-name">
-                Статус
-              </div>
-              <div class="event-content__status-message">
-                Сообщение
-              </div>
+              <div class="event-content__status-name">Статус</div>
+              <div class="event-content__status-message">Сообщение</div>
             </div>
-            <div class="event-content__status" *ngFor="let eventStatus of event.changeEventStatusMessages">
+            <div
+              class="event-content__status"
+              *ngFor="let eventStatus of event.changeEventStatusMessages"
+            >
               <div class="event-content__status-content">
                 <div class="event-content__status-name">
                   {{ eventStatusTranslator.Translate(eventStatus.status) }}
@@ -132,10 +122,8 @@
           </div>
         </div>
       </section>
-
     </div>
   </div>
-
 </layout-default>
 
 <ng-template #empty>

@@ -1,5 +1,5 @@
-@import "../../../../../assets/styles/mixins";
-@import "../../../../../assets/styles/variables";
+@import '../../../../../assets/styles/mixins';
+@import '../../../../../assets/styles/variables';
 
 :host {
   & .mat-tab-header {
@@ -20,7 +20,7 @@
     width: 200px;
 
     mat-icon {
-      color: #2A6BCB;
+      color: #2a6bcb;
       font-size: 1.2em;
       line-height: 1.2em;
     }
@@ -30,10 +30,9 @@
     }
   }
   &__content {
-
     flex-grow: 1;
 
-    &-top{
+    &-top {
       padding: 1em;
     }
   }
@@ -59,5 +58,3 @@
   border: 1px dashed #ddd;
   font-weight: 300;
 }
-
-

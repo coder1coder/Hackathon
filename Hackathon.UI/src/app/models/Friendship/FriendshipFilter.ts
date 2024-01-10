@@ -1,8 +1,6 @@
-import {FriendshipStatus, GetOfferOption} from "./FriendshipStatus";
+import { FriendshipStatus, GetOfferOption } from './FriendshipStatus';
 
-export class FriendshipFilter
-{
+export class FriendshipFilter {
   option?: GetOfferOption;
   status?: FriendshipStatus;
 }
-

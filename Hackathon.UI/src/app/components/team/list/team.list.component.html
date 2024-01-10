@@ -1,7 +1,4 @@
-<layout-default
-  [title]="'Команды'"
->
-
+<layout-default [title]="'Команды'">
   <div actions>
     <button mat-button color="primary" (click)="createNewItem()">
       <mat-icon>add</mat-icon>
@@ -11,112 +8,113 @@
 
   <div class="mb-1-5em">
     <form [formGroup]="form" class="filter-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Наименование команды</mat-label>
-          <input matInput autocomplete="off"
-                 id="teamName"
-                 formControlName="teamName">
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Наименование команды</mat-label>
+        <input matInput autocomplete="off" id="teamName" formControlName="teamName" />
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Владелец</mat-label>
-          <input matInput autocomplete="off"
-                 id="owner"
-                 formControlName="owner">
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Владелец</mat-label>
+        <input matInput autocomplete="off" id="owner" formControlName="owner" />
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Кол-во участников от:</mat-label>
-          <input matInput
-                 autocomplete="off"
-                 type="number"
-                 min="0"
-                 id="QuantityFrom"
-                 formControlName="QuantityUsersFrom">
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Кол-во участников от:</mat-label>
+        <input
+          matInput
+          autocomplete="off"
+          type="number"
+          min="0"
+          id="QuantityFrom"
+          formControlName="QuantityUsersFrom"
+        />
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Кол-во участников до:</mat-label>
-          <input matInput
-                 autocomplete="off"
-                 type="number"
-                 min="1"
-                 id="QuantityTo"
-                 formControlName="QuantityUsersTo">
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Кол-во участников до:</mat-label>
+        <input
+          matInput
+          autocomplete="off"
+          type="number"
+          min="1"
+          id="QuantityTo"
+          formControlName="QuantityUsersTo"
+        />
+      </mat-form-field>
     </form>
 
-    <div style="display: flex; column-gap: 10px;">
-      <button mat-flat-button color="primary"
-              (click)="fetch()"
-              [disabled]="!this.form.dirty">Применить</button>
-      <button mat-flat-button
-              (click)="clearFilter()"
-              [disabled]="!this.form.dirty">Очистить</button>
+    <div style="display: flex; column-gap: 10px">
+      <button mat-flat-button color="primary" (click)="fetch()" [disabled]="!this.form.dirty">
+        Применить
+      </button>
+      <button mat-flat-button (click)="clearFilter()" [disabled]="!this.form.dirty">
+        Очистить
+      </button>
     </div>
   </div>
 
-    <table mat-table [dataSource]="items" [class.empty]="items.length == 0">
-      <caption></caption>
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.id}} </td>
-      </ng-container>
+  <table mat-table [dataSource]="items" [class.empty]="items.length === 0">
+    <caption></caption>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.id }}</td>
+    </ng-container>
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Название</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)"> {{element.name}} </td>
-      </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Название</th>
+      <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{ element.name }}</td>
+    </ng-container>
 
-      <ng-container matColumnDef="owner">
-        <th mat-header-cell *matHeaderCellDef>Владелец</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          {{ element.owner?.fullName }}
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="owner">
+      <th mat-header-cell *matHeaderCellDef>Владелец</th>
+      <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+        {{ element.owner?.fullName }}
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="users">
-        <th mat-header-cell *matHeaderCellDef>Кол-во участников</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          {{ element.members.length }}
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="users">
+      <th mat-header-cell *matHeaderCellDef>Кол-во участников</th>
+      <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+        {{ element.members.length }}
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Тип</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
-          {{ getTeamTypeName(element.type) }}
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Тип</th>
+      <td mat-cell *matCellDef="let element" (click)="rowClick(element)">
+        {{ getTeamTypeName(element.type) }}
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
-            <mat-icon>more_vert</mat-icon>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="false">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>Редактировать</span>
           </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-              <mat-icon>edit</mat-icon>
-              <span>Редактировать</span>
-            </button>
-            <button mat-menu-item>
-              <mat-icon color="accent">delete_outline</mat-icon>
-              <span>Удалить</span>
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
+          <button mat-menu-item>
+            <mat-icon color="accent">delete_outline</mat-icon>
+            <span>Удалить</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
-    </table>
+    <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: getDisplayColumns()"></tr>
+  </table>
 
-    <mat-paginator [length]="pageSettings.length"
-                   [pageSize]="pageSettings.pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="setPageSettings($event)"
-                   aria-label="Select page">
-    </mat-paginator>
-
+  <mat-paginator
+    [length]="pageSettings.length"
+    [pageSize]="pageSettings.pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="setPageSettings($event)"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 </layout-default>

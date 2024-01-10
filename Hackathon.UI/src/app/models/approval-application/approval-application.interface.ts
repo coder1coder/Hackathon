@@ -1,6 +1,6 @@
-import { ApprovalApplicationStatusEnum } from "./approval-application-status.enum";
-import { IUser } from "../User/IUser";
-import { IEventListItem } from "../Event/IEventListItem";
+import { ApprovalApplicationStatusEnum } from './approval-application-status.enum';
+import { IUser } from '../User/IUser';
+import { IEventListItem } from '../Event/IEventListItem';
 
 export interface IApprovalApplication {
   id: number;

@@ -1,5 +1,5 @@
-import { Router } from "@angular/router";
-import { Injectable } from "@angular/core";
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class RouterService {
@@ -11,58 +11,58 @@ export class RouterService {
     public Notifications: NotificationsRouter,
     public Error: ErrorRouter,
     private router: Router,
-  ) {
-  }
-  Homepage = () => this.router.navigate([``]);
+  ) {}
+  Homepage = (): Promise<boolean> => this.router.navigate([``]);
 }
 
 @Injectable({ providedIn: 'root' })
 export class EventsRouter {
   constructor(private router: Router) {}
-  List = () => this.router.navigate([`events`]);
-  View = (eventId:number) => this.router.navigate([`events/${eventId}`]);
-  New = () => this.router.navigate([`events/new`]);
-  Edit = (eventId:number) => this.router.navigate([`events/edit/${eventId}`]);
+  List = (): Promise<boolean> => this.router.navigate([`events`]);
+  View = (eventId: number): Promise<boolean> => this.router.navigate([`events/${eventId}`]);
+  New = (): Promise<boolean> => this.router.navigate([`events/new`]);
+  Edit = (eventId: number): Promise<boolean> => this.router.navigate([`events/edit/${eventId}`]);
 }
 
 @Injectable({ providedIn: 'root' })
 export class TeamsRouter {
   constructor(private router: Router) {}
-  New = (eventId?:number) => this.router.navigate(["/teams/new"], { queryParams: { eventId: eventId } });
-  View = (teamId:number) => this.router.navigateByUrl(`team/${teamId}`);
-  List = () => this.router.navigate([`teams`]);
-  MyTeam = () => this.router.navigate(['team']);
+  New = (eventId?: number): Promise<boolean> =>
+    this.router.navigate(['/teams/new'], { queryParams: { eventId: eventId } });
+  View = (teamId: number): Promise<boolean> => this.router.navigateByUrl(`team/${teamId}`);
+  List = (): Promise<boolean> => this.router.navigate([`teams`]);
+  MyTeam = (): Promise<boolean> => this.router.navigate(['team']);
 }
 
 @Injectable({ providedIn: 'root' })
 export class UsersRouter {
   constructor(private router: Router) {}
-  View = (userId:number) => this.router.navigateByUrl(`users/${userId}`);
+  View = (userId: number): Promise<boolean> => this.router.navigateByUrl(`users/${userId}`);
 }
 
 @Injectable({ providedIn: 'root' })
 export class ProfileRouter {
   constructor(private router: Router) {}
-  View = () => this.router.navigate(['profile']);
-  Login = () => this.router.navigate(['login']);
-  Logout = () => this.router.navigate(['logout']);
-  Register = () => this.router.navigate(['/register']);
+  View = (): Promise<boolean> => this.router.navigate(['profile']);
+  Login = (): Promise<boolean> => this.router.navigate(['login']);
+  Logout = (): Promise<boolean> => this.router.navigate(['logout']);
+  Register = (): Promise<boolean> => this.router.navigate(['/register']);
 }
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsRouter {
   constructor(private router: Router) {}
-  List = () => this.router.navigate(['notifications']);
+  List = (): Promise<boolean> => this.router.navigate(['notifications']);
 }
 
 @Injectable({ providedIn: 'root' })
 export class ApprovalApplicationsRouter {
   constructor(private router: Router) {}
-  List = () => this.router.navigate(['approval-applications']);
+  List = (): Promise<boolean> => this.router.navigate(['approval-applications']);
 }
 
 @Injectable({ providedIn: 'root' })
 export class ErrorRouter {
   constructor(private router: Router) {}
-  NotFound = () => this.router.navigate(['not-found']);
+  NotFound = (): Promise<boolean> => this.router.navigate(['not-found']);
 }

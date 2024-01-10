@@ -1,6 +1,6 @@
-import { UserRole } from "./UserRole";
-import { IUserEmail } from "./IUserEmail";
-import { SafeUrl } from "@angular/platform-browser";
+import { UserRole } from './UserRole';
+import { IUserEmail } from './IUserEmail';
+import { SafeUrl } from '@angular/platform-browser';
 
 export interface IUser extends IAdditionalInfo {
   id?: number;

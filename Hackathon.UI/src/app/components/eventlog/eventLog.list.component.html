@@ -1,45 +1,45 @@
-<layout-default
-  [title]="'Журнал событий'"
->
-
+<layout-default [title]="'Журнал событий'">
   <div *ngIf="items.length > 0">
     <table mat-table [dataSource]="items">
-
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{element.description}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick()">
+          {{ element.description }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="userName">
         <th mat-header-cell *matHeaderCellDef>Пользователь</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{element.userName}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick()">
+          {{ element.userName }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="timestamp">
         <th mat-header-cell *matHeaderCellDef>Дата и время</th>
-        <td mat-cell *matCellDef="let element" (click)="rowClick(element)">{{formatDateTime(element.timestamp)}}</td>
+        <td mat-cell *matCellDef="let element" (click)="rowClick()">
+          {{ formatDateTime(element.timestamp) }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-        </td>
+        <td mat-cell *matCellDef="let element"></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
-      <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
+      <tr mat-row *matRowDef="let row; columns: getDisplayColumns()"></tr>
     </table>
 
-    <mat-paginator [length]="pageSettings.length"
-                   [pageSize]="pageSettings.pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="setPageSettings($event)"
-                   aria-label="Select page">
+    <mat-paginator
+      [length]="pageSettings.length"
+      [pageSize]="pageSettings.pageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="setPageSettings($event)"
+      aria-label="Select page"
+    >
     </mat-paginator>
   </div>
 
-  <div *ngIf="items.length == 0">
-    Нет записей
-  </div>
-
+  <div *ngIf="items.length === 0">Нет записей</div>
 </layout-default>

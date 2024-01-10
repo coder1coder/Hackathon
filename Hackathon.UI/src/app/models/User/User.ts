@@ -1,20 +1,19 @@
-import {IUserEmail} from "./IUserEmail";
+import { IUserEmail } from './IUserEmail';
 
-export class User
-{
-    id: number | undefined;
-    login: string | undefined;
-    password: string | undefined;
-    fullname: string | undefined;
-    token: any | undefined;
-    image: any | undefined;
+export class User {
+  id: number | undefined;
+  login: string | undefined;
+  password: string | undefined;
+  fullname: string | undefined;
+  token: any | undefined;
+  image: any | undefined;
 
-    email: IUserEmail
+  email: IUserEmail;
 
-    constructor(login?:string, token?:string) {
-        this.id = 0;
-        this.image = '';
-        this.login = login;
-        this.token = token;
-    }
+  constructor(login?: string, token?: string) {
+    this.id = 0;
+    this.image = '';
+    this.login = login;
+    this.token = token;
+  }
 }

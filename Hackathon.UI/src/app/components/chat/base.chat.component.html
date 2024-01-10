@@ -1,32 +1,37 @@
 <ng-container *ngIf="isLoaded">
   <div class="chat theme-background">
     <main class="main">
-      <div
-        #scrollMe
-        class="chat__body"
-        infiniteScroll
-        [scrollWindow]="false"
-        (scroll)="onScroll()"
-      >
-        <div class="chat__message"
-             *ngFor="let message of messages"
-             [class.your]="message.ownerId == currentUserId"
+      <div #scrollMe class="chat__body" infiniteScroll [scrollWindow]="false" (scroll)="onScroll()">
+        <div
+          class="chat__message"
+          *ngFor="let message of messages"
+          [class.your]="message.ownerId === currentUserId"
         >
-          <profile-image [user]="getMember(message.ownerId)" [canUpload]="false" class="chat__message-image size35" *ngIf="message.ownerId !== currentUserId"></profile-image>
-          <div class="chat__message-main"
-               [style.background]="getMember(message.ownerId)?.bgColor"
-               [class.your]="message.ownerId == currentUserId"
+          <profile-image
+            [user]="getMember(message.ownerId)"
+            [canUpload]="false"
+            class="chat__message-image size35"
+            *ngIf="message.ownerId !== currentUserId"
+          ></profile-image>
+          <div
+            class="chat__message-main"
+            [style.background]="getMember(message.ownerId)?.bgColor"
+            [class.your]="message.ownerId === currentUserId"
           >
-            <div class="chat__message-owner">{{ message.ownerFullName}}</div>
-            <div class="chat__message-text">{{ message.message }} </div>
-            <div class="chat__message-meta" [class.your]="message.ownerId == currentUserId">{{ message.timestamp | date: tableDateFormat }}</div>
+            <div class="chat__message-owner">{{ message.ownerFullName }}</div>
+            <div class="chat__message-text">{{ message.message }}</div>
+            <div class="chat__message-meta" [class.your]="message.ownerId === currentUserId">
+              {{ message.timestamp | date : tableDateFormat }}
+            </div>
           </div>
         </div>
       </div>
       <div class="footer-container">
-        <div class="footer-scroll-down"
-             [class.transform-40]="!isUserNearBottom"
-        ><span class="theme-background chat-footer-theme" (click)="scrollChatToLastMessage()">Прокрутить вниз</span></div>
+        <div class="footer-scroll-down" [class.transform-40]="!isUserNearBottom">
+          <span class="theme-background chat-footer-theme" (click)="scrollChatToLastMessage()"
+            >Прокрутить вниз</span
+          >
+        </div>
         <div class="chat__footer chat-footer-theme footer-form theme-background">
           <form [formGroup]="form" class="chat__send-message-box" #formComponent="ngForm">
             <mat-checkbox formControlName="notify" color="primary" *ngIf="canSendMessageWithNotify">
@@ -35,21 +40,31 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Сообщение</mat-label>
-              <input matInput autocomplete="off" formControlName="message" (keydown.control.enter)="sendMessage()">
-              <mat-error *ngIf="!getFormControl('message').valid">{{getErrorLengthMessage(getFormControl('message'))}}</mat-error>
+              <input
+                matInput
+                autocomplete="off"
+                formControlName="message"
+                (keydown.control.enter)="sendMessage()"
+              />
+              <mat-error *ngIf="!getFormControl('message').valid">{{
+                getErrorLengthMessage(getFormControl('message'))
+              }}</mat-error>
               <mat-hint>Для отправки нажмите Ctrl + Enter</mat-hint>
             </mat-form-field>
           </form>
         </div>
       </div>
-
     </main>
 
     <aside class="chat__members" *ngIf="showMembers && members">
       <mat-list>
         <mat-list-item *ngFor="let member of members">
           <div class="member">
-            <profile-image [canUpload]="false" [user]="getMember(member.id)" class="size35"></profile-image>
+            <profile-image
+              [canUpload]="false"
+              [user]="getMember(member.id)"
+              class="size35"
+            ></profile-image>
             <div>{{ member.fullName ?? member.userName }}</div>
           </div>
         </mat-list-item>
@@ -60,7 +75,6 @@
 
 <div class="chat flex-justify-content-center flex-align-items-center" *ngIf="!isLoaded">
   <div class="loader">
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
+    <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
   </div>
 </div>

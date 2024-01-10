@@ -1,11 +1,10 @@
-@import "../../../assets/styles/mixins";
+@import '../../../assets/styles/mixins';
 
 :host {
   margin: 0 auto;
 }
 
 .registerForm {
-
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -46,7 +45,7 @@
   }
 
   &__messages {
-    font-size: .9em;
+    font-size: 0.9em;
     padding-top: 20px;
     display: flex;
     justify-content: center;
@@ -56,10 +55,15 @@
   }
 
   &__message {
-
-    &.info { color: blue; }
-    &.warn { color: orange; }
-    &.error { color: red; }
+    &.info {
+      color: blue;
+    }
+    &.warn {
+      color: orange;
+    }
+    &.error {
+      color: red;
+    }
   }
 }
 

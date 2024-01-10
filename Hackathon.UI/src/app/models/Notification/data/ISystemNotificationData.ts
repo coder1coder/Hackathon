@@ -1,4 +1,3 @@
-export interface ISystemNotificationData
-{
-  Message:string;
+export interface ISystemNotificationData {
+  Message: string;
 }

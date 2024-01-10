@@ -2,12 +2,16 @@
 <div mat-dialog-content [innerHTML]="data.content"></div>
 
 <mat-dialog-actions>
-  <button mat-button
-          [color]="data.acceptButtonColor ?? 'primary'"
-          [mat-dialog-close]="true"
-          [innerText]="data.acceptButtonText ?? 'OK' "></button>
-  <button mat-button
-          [mat-dialog-close]="false"
-          cdkFocusInitial
-          [innerText]="data.cancelButtonText ?? 'Отмена'"></button>
+  <button
+    mat-button
+    [color]="data.acceptButtonColor ?? 'primary'"
+    [mat-dialog-close]="true"
+    [innerText]="data.acceptButtonText ?? 'OK'"
+  ></button>
+  <button
+    mat-button
+    [mat-dialog-close]="false"
+    cdkFocusInitial
+    [innerText]="data.cancelButtonText ?? 'Отмена'"
+  ></button>
 </mat-dialog-actions>

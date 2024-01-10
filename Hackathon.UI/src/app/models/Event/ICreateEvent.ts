@@ -1,7 +1,7 @@
-import { ChangeEventStatusMessage } from "./ChangeEventStatusMessage";
-import { EventStage } from "./EventStage";
-import { IEventTaskItem } from "./IEventTaskItem";
-import { IEventAgreement } from "./IEventAgreement";
+import { ChangeEventStatusMessage } from './ChangeEventStatusMessage';
+import { EventStage } from './EventStage';
+import { IEventTaskItem } from './IEventTaskItem';
+import { IEventAgreement } from './IEventAgreement';
 
 export interface ICreateEvent {
   /** наименование */

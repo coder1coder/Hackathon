@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular
   selector: 'app-line-info',
   templateUrl: './line-info.component.html',
   styleUrls: ['./line-info.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineInfoComponent {
   @Input() label: string;

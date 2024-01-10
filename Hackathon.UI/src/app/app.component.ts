@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ThemeChangeService } from "./services/theme-change.service";
-import { SignalRService } from "./services/signalr.service";
-import { environment } from "../environments/environment";
+import { ThemeChangeService } from './services/theme-change.service';
+import { SignalRService } from './services/signalr.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   public title = 'Hackathon.UI';

@@ -1,6 +1,11 @@
 <div class="image-from-storage">
-  <img class="image-from-storage__image" [src]="imageUrl" *ngIf="imageUrl; else noImage"
-       loading="lazy" alt="image">
+  <img
+    class="image-from-storage__image"
+    [src]="imageUrl"
+    *ngIf="imageUrl; else noImage"
+    loading="lazy"
+    alt="image"
+  />
   <ng-template #noImage>
     <mat-icon class="no-image">image</mat-icon>
   </ng-template>

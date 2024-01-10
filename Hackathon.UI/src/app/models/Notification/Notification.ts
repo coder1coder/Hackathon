@@ -1,4 +1,4 @@
-import { NotificationType } from "./NotificationType";
+import { NotificationType } from './NotificationType';
 
 export class Notification {
   id?: string;
@@ -12,9 +12,8 @@ export class Notification {
     return JSON.parse(data);
   }
 
-  public static getTypeName(type?:NotificationType): string
-  {
-    switch (type){
+  public static getTypeName(type?: NotificationType): string {
+    switch (type) {
       case NotificationType.Information:
         return 'Системное уведомление';
       case NotificationType.TeamInvite:
@@ -28,7 +27,7 @@ export class Notification {
     }
   }
 
-  public static getTypeIcon(type?:NotificationType): string {
+  public static getTypeIcon(type?: NotificationType): string {
     switch (type) {
       case NotificationType.Information:
         return 'info_outline';

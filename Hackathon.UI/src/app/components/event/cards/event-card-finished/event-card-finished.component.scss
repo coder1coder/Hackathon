@@ -7,15 +7,14 @@
 
   font-size: 16px;
 
-  &-content{
-
+  &-content {
     &__members {
       padding-top: 2em;
       padding-bottom: 2em;
     }
 
-    &__member{
-      &-image{
+    &__member {
+      &-image {
         width: 160px;
         height: 160px;
         border-radius: 50%;
@@ -31,7 +30,6 @@
           font-size: 24px;
         }
       }
-
     }
 
     &__projects {
@@ -63,22 +61,20 @@
       }
     }
 
-    &__section{
-
+    &__section {
       @include flex-column;
       justify-content: center;
       padding-top: 1em;
       padding-bottom: 3em;
 
-      &-title{
+      &-title {
         text-align: center;
         font-size: 36px;
 
         padding-top: 1.5em;
         padding-bottom: 3em;
-
       }
-      &-content{
+      &-content {
         max-width: $event-finished-content-max-width;
         margin: 0 auto;
       }

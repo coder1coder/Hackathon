@@ -1,38 +1,40 @@
 import {
   ChangeDetectorRef,
   Component,
+  ComponentFactory,
   ComponentFactoryResolver,
+  ComponentRef,
   OnDestroy,
   OnInit,
   Type,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
-import { EventDirective } from "../event.directive";
-import { EventStatus } from "../../../models/Event/EventStatus";
-import { ActivatedRoute } from "@angular/router";
-import { RouterService } from "../../../services/router.service";
-import { SnackService } from "../../../services/snack.service";
-import { forkJoin, of, Subject, switchMap, takeUntil } from "rxjs";
-import { Event } from "../../../models/Event/Event";
-import { EventCreateEditCardComponent } from "./event-create-edit-card/event-create-edit-card.component";
-import { finalize } from "rxjs/operators";
-import { EventService } from "../../../services/event/event.service";
-import { EventMainViewCardComponent } from "./event-main-view-card/event-main-view-card.component";
-import { EventCardStartedComponent } from "./event-card-started/event-card-started.component";
-import { EventCardPublishedComponent } from "./event-card-published/event-card-published.component";
-import { EventCardFinishedComponent } from "./event-card-finished/event-card-finished.component";
-import { EventErrorMessages } from "../../../common/error-messages/event-error-messages";
-import { EventClient } from "../../../services/event/event.client";
-import { AuthService } from "../../../services/auth.service";
-import { GlobalErrorHandler } from "../../../common/handlers/error.handler";
-import { AppStateService } from "../../../services/app-state.service";
+import { EventDirective } from '../event.directive';
+import { EventStatus } from '../../../models/Event/EventStatus';
+import { ActivatedRoute } from '@angular/router';
+import { RouterService } from '../../../services/router.service';
+import { SnackService } from '../../../services/snack.service';
+import { forkJoin, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { Event } from '../../../models/Event/Event';
+import { EventCreateEditCardComponent } from './event-create-edit-card/event-create-edit-card.component';
+import { finalize } from 'rxjs/operators';
+import { EventService } from '../../../services/event/event.service';
+import { EventMainViewCardComponent } from './event-main-view-card/event-main-view-card.component';
+import { EventCardStartedComponent } from './event-card-started/event-card-started.component';
+import { EventCardPublishedComponent } from './event-card-published/event-card-published.component';
+import { EventCardFinishedComponent } from './event-card-finished/event-card-finished.component';
+import { EventErrorMessages } from '../../../common/error-messages/event-error-messages';
+import { EventClient } from '../../../services/event/event.client';
+import { AuthService } from '../../../services/auth.service';
+import { GlobalErrorHandler } from '../../../common/handlers/error.handler';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-event-card-factory',
   template: `<ng-template event-item></ng-template>`,
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
-
   @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;
 
   private event: Event = new Event();
@@ -50,8 +52,7 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
     private globalErrorHandler: GlobalErrorHandler,
     private cdr: ChangeDetectorRef,
     private appStateService: AppStateService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.initEventId();
@@ -66,22 +67,25 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.appStateService.setIsLoadingState(true);
-    this.eventHttpService.getById(this.eventId)
+    this.eventHttpService
+      .getById(this.eventId)
       .pipe(
         switchMap((event: Event) =>
-          forkJoin([this.eventService.checkAccessViewEventByModel(event), of(event)])),
+          forkJoin([this.eventService.checkAccessViewEventByModel(event), of(event)]),
+        ),
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
       )
       .subscribe({
         next: ([isCanView, event]) => {
-          this.appStateService.setIsLoadingState(false)
+          this.appStateService.setIsLoadingState(false);
           if (isCanView) {
             this.event = event;
             this.renderEventCard();
           } else {
             this.routerService.Events.List().then(() =>
-              this.snackService.open(EventErrorMessages.EventNoAccess));
+              this.snackService.open(EventErrorMessages.EventNoAccess),
+            );
           }
         },
         error: (err) => this.globalErrorHandler.handleError(err),
@@ -89,25 +93,23 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
   }
 
   private renderEventCard(): void {
-    const viewContainerRef = this.eventDirective?.viewContainerRef;
+    const viewContainerRef: ViewContainerRef = this.eventDirective?.viewContainerRef;
     if (!viewContainerRef) return;
     viewContainerRef.clear();
-    const eventFactory = this.componentFactoryResolver
-      .resolveComponentFactory<any>(this.getComponentByEventType());
-    const eventRef = viewContainerRef.createComponent(eventFactory);
+    const eventFactory: ComponentFactory<any> =
+      this.componentFactoryResolver.resolveComponentFactory<any>(this.getComponentByEventType());
+    const eventRef: ComponentRef<any> = viewContainerRef.createComponent(eventFactory);
     eventRef.instance.event = this.event;
     this.cdr.detectChanges();
   }
 
-  private getComponentByEventType():
-    Type<
-      EventCreateEditCardComponent |
-      EventCardPublishedComponent |
-      EventCardStartedComponent |
-      EventCardFinishedComponent |
-      EventMainViewCardComponent
-      >
-  {
+  private getComponentByEventType(): Type<
+    | EventCreateEditCardComponent
+    | EventCardPublishedComponent
+    | EventCardStartedComponent
+    | EventCardFinishedComponent
+    | EventMainViewCardComponent
+  > {
     if (!Object.values(EventStatus).includes(Number(this.event?.status))) {
       this.goBack();
     }
@@ -116,10 +118,14 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
       case EventStatus.Draft:
       case EventStatus.OnModeration:
         return EventCreateEditCardComponent;
-      case EventStatus.Published: return EventCardPublishedComponent;
-      case EventStatus.Started: return EventCardStartedComponent;
-      case EventStatus.Finished: return EventCardFinishedComponent;
-      default: return EventMainViewCardComponent;
+      case EventStatus.Published:
+        return EventCardPublishedComponent;
+      case EventStatus.Started:
+        return EventCardStartedComponent;
+      case EventStatus.Finished:
+        return EventCardFinishedComponent;
+      default:
+        return EventMainViewCardComponent;
     }
   }
 
@@ -136,17 +142,16 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
   }
 
   private initSubscription(): void {
-    this.eventService.reloadEvent
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isReload: boolean) => {
-        if (isReload) {
-          this.loadData();
-        }
-      });
+    this.eventService.reloadEvent.pipe(takeUntil(this.destroy$)).subscribe((isReload: boolean) => {
+      if (isReload) {
+        this.loadData();
+      }
+    });
   }
 
   private goBack(): void {
     this.routerService.Events.List().then(() =>
-      this.snackService.open(EventErrorMessages.EventNotFound));
+      this.snackService.open(EventErrorMessages.EventNotFound),
+    );
   }
 }

@@ -6,29 +6,26 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EventStage } from "../../../../../models/Event/EventStage";
-import { CustomErrorStateMatcher } from "../../../../../common/functions/custom-error-state-matcher";
+import { EventStage } from '../../../../../models/Event/EventStage';
+import { CustomErrorStateMatcher } from '../../../../../common/functions/custom-error-state-matcher';
 
 @Component({
   selector: 'event-stage-dialog',
   templateUrl: './event-stage-dialog.component.html',
-  styleUrls: ['./event-stage-dialog.component.scss']
+  styleUrls: ['./event-stage-dialog.component.scss'],
 })
-
 export class EventStageDialogComponent implements OnInit {
-
   public form = new FormGroup({});
   matcher = new CustomErrorStateMatcher();
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EventStageDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private dialogData: EventStageDialogData
-  ) {
-  }
+    @Inject(MAT_DIALOG_DATA) private dialogData: EventStageDialogData,
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -38,17 +35,17 @@ export class EventStageDialogComponent implements OnInit {
     this.form = this.fb.group({
       name: new FormControl(this.dialogData?.eventStage?.name, [
         Validators.required,
-        this.nameShouldBeUnique()
+        this.nameShouldBeUnique(),
       ]),
       duration: new FormControl(this.dialogData?.eventStage?.duration, [
         Validators.required,
-        Validators.min(1)
-      ])
-    })
+        Validators.min(1),
+      ]),
+    });
   }
 
-  public confirm():void{
-    let eventStage = new EventStage();
+  public confirm(): void {
+    const eventStage: EventStage = new EventStage();
     eventStage.name = this.form.get('name')?.value;
     eventStage.duration = this.form.get('duration')?.value;
 
@@ -57,20 +54,19 @@ export class EventStageDialogComponent implements OnInit {
 
   nameShouldBeUnique(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-
-      let filtered = this.dialogData?.eventStages?.filter(x=>
-        x !== this.dialogData.eventStage
-        && x.name.toLowerCase() == control.value?.toLowerCase());
+      const filtered: EventStage[] = this.dialogData?.eventStages?.filter(
+        (x) =>
+          x !== this.dialogData.eventStage && x.name.toLowerCase() == control.value?.toLowerCase(),
+      );
 
       return filtered?.length > 0
-      ? {  'nameShouldBeUnique': ['Этап с таким наименованием уже существует'] }
-      : null;
+        ? { nameShouldBeUnique: ['Этап с таким наименованием уже существует'] }
+        : null;
     };
   }
 }
 
-export class EventStageDialogData
-{
+export class EventStageDialogData {
   eventStages: EventStage[];
   eventStage: EventStage | undefined;
 }

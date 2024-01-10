@@ -1,24 +1,22 @@
-import { Component } from "@angular/core";
-import { BaseTableListComponent } from "../../common/base-components/base-table-list.component";
-import { RouterService } from "../../services/router.service";
-import { GetListParameters } from "../../models/GetListParameters";
-import { IEventLogModel } from "../../models/EventLog/IEventLogModel";
-import { BaseCollection } from "../../models/BaseCollection";
-import { EventLogService } from "../../services/eventLog/eventLog.service";
-import * as moment from "moment/moment";
-import { DATE_FORMAT_DD_MM_YYYY } from "src/app/common/consts/date-formats";
-import { mergeMap, takeUntil } from "rxjs";
-import { fromMobx } from "../../common/functions/from-mobx.function";
-import { CurrentUserStore } from "../../shared/stores/current-user.store";
+import { Component } from '@angular/core';
+import { BaseTableListComponent } from '../../common/base-components/base-table-list.component';
+import { RouterService } from '../../services/router.service';
+import { GetListParameters } from '../../models/GetListParameters';
+import { IEventLogModel } from '../../models/EventLog/IEventLogModel';
+import { BaseCollection } from '../../models/BaseCollection';
+import { EventLogService } from '../../services/eventLog/eventLog.service';
+import * as moment from 'moment/moment';
+import { DATE_FORMAT_DD_MM_YYYY } from 'src/app/common/consts/date-formats';
+import { mergeMap, takeUntil } from 'rxjs';
+import { fromMobx } from '../../common/functions/from-mobx.function';
+import { CurrentUserStore } from '../../shared/stores/current-user.store';
 
 @Component({
   selector: 'eventLog-list',
   templateUrl: './eventLog.list.component.html',
   styleUrls: ['./eventLog.list.component.scss'],
 })
-
 export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
-
   constructor(
     private eventLogService: EventLogService,
     private routerService: RouterService,
@@ -28,11 +26,12 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
     this.currentUserStore.loadCurrentUser();
   }
 
-  fetch(getFilterModel: GetListParameters<IEventLogModel>): void {
+  public fetch(): void {
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(
         mergeMap(() => {
-          let getFilterModel = new GetListParameters<IEventLogModel>();
+          const getFilterModel: GetListParameters<IEventLogModel> =
+            new GetListParameters<IEventLogModel>();
           getFilterModel.Offset = this.pageSettings.pageIndex;
           getFilterModel.Limit = this.pageSettings.pageSize;
 
@@ -41,7 +40,7 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (res: BaseCollection<IEventLogModel>) =>  {
+        next: (res: BaseCollection<IEventLogModel>) => {
           this.items = res.items;
           this.pageSettings.length = res.totalCount;
         },
@@ -57,5 +56,7 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
     return ['description', 'userName', 'timestamp'];
   }
 
-  rowClick(item: IEventLogModel): void { /* unused */}
+  rowClick(): void {
+    /* unused */
+  }
 }

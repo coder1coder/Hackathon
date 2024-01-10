@@ -1,5 +1,4 @@
-export interface IEventTaskItem
-{
-  title:string;
-  order:number;
+export interface IEventTaskItem {
+  title: string;
+  order: number;
 }

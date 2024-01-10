@@ -1,6 +1,5 @@
-import {TeamJoinRequestStatus} from "./ITeamJoinRequest";
+import { TeamJoinRequestStatus } from './ITeamJoinRequest';
 
-export interface ITeamJoinRequestFilter
-{
-  status: TeamJoinRequestStatus
+export interface ITeamJoinRequestFilter {
+  status: TeamJoinRequestStatus;
 }

@@ -1,23 +1,21 @@
 import { Component } from '@angular/core';
-import { UserService } from "../../../services/user.service";
-import { BaseCollection } from "../../../models/BaseCollection";
-import { BaseTableListComponent } from "../../../common/base-components/base-table-list.component";
-import { GetListParameters } from "../../../models/GetListParameters";
-import { UserFilter } from "../../../models/User/UserFilter";
-import { IUser } from "../../../models/User/IUser";
-import { RouterService } from "../../../services/router.service";
-import { CurrentUserStore } from "../../../shared/stores/current-user.store";
-import { fromMobx } from "../../../common/functions/from-mobx.function";
-import { mergeMap, takeUntil } from "rxjs";
+import { UserService } from '../../../services/user.service';
+import { BaseCollection } from '../../../models/BaseCollection';
+import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
+import { GetListParameters } from '../../../models/GetListParameters';
+import { UserFilter } from '../../../models/User/UserFilter';
+import { IUser } from '../../../models/User/IUser';
+import { RouterService } from '../../../services/router.service';
+import { CurrentUserStore } from '../../../shared/stores/current-user.store';
+import { fromMobx } from '../../../common/functions/from-mobx.function';
+import { mergeMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'user-list',
   templateUrl: './user.list.component.html',
   styleUrls: ['./user.list.component.scss'],
 })
-
 export class UserListComponent extends BaseTableListComponent<IUser> {
-
   constructor(
     private usersService: UserService,
     private routerService: RouterService,
@@ -32,7 +30,7 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
   }
 
   override fetch(): void {
-    const userFilter = new UserFilter();
+    const userFilter: UserFilter = new UserFilter();
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(
         mergeMap((user: IUser) => {
@@ -40,7 +38,7 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
             userFilter.excludeIds = [user.id];
           }
 
-          let getFilterModel = new GetListParameters<UserFilter>();
+          const getFilterModel: GetListParameters<UserFilter> = new GetListParameters<UserFilter>();
           getFilterModel.Offset = this.pageSettings.pageIndex;
           getFilterModel.Limit = this.pageSettings.pageSize;
           getFilterModel.Filter = userFilter;
@@ -49,13 +47,13 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
         }),
         takeUntil(this.destroy$),
       )
-      .subscribe(({
-        next: (res: BaseCollection<IUser>) =>  {
+      .subscribe({
+        next: (res: BaseCollection<IUser>) => {
           this.items = res.items;
           this.pageSettings.length = res.totalCount;
         },
-        error: () => {}
-      }))
+        error: () => {},
+      });
   }
 
   public rowClick(user: IUser): void {

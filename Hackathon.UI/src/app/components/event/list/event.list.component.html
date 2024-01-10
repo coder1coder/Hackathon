@@ -4,7 +4,6 @@
   [isLoading]="isLoading$ | async"
   [hideContentWhileLoading]="false"
 >
-
   <div actions>
     <button mat-button color="primary" (click)="this.router.Events.New()">
       <mat-icon>add</mat-icon>
@@ -17,80 +16,88 @@
       <form [formGroup]="filterForm" class="events__filter">
         <mat-form-field appearance="outline">
           <mat-label>Наименование события</mat-label>
-          <input matInput
-                 autocomplete="off"
-                 id="name"
-                 formControlName="name">
+          <input matInput autocomplete="off" id="name" formControlName="name" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Начало от</mat-label>
-          <input matInput
-                 type="date"
-                 autocomplete="off"
-                 id="startFrom"
-                 formControlName="startFrom">
+          <input
+            matInput
+            type="date"
+            autocomplete="off"
+            id="startFrom"
+            formControlName="startFrom"
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Начало до</mat-label>
-          <input matInput
-                 type="date"
-                 autocomplete="off"
-                 id="startTo"
-                 formControlName="startTo">
+          <input matInput type="date" autocomplete="off" id="startTo" formControlName="startTo" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Статус</mat-label>
           <mat-select #statuses formControlName="statuses" multiple>
-            <button mat-button (click)="statusesToggleAll($event)" style="width: 100%;">Выбрать все</button>
+            <button mat-button (click)="statusesToggleAll($event)" style="width: 100%">
+              Выбрать все
+            </button>
             <mat-divider></mat-divider>
-            <mat-option *ngFor="let status of getAllEventStatuses()" [value]="status"> {{ eventStatusTranslator.Translate(status) }}</mat-option>
+            <mat-option *ngFor="let status of getAllEventStatuses()" [value]="status">
+              {{ eventStatusTranslator.Translate(status) }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
 
-        <mat-checkbox id="iAmOwner" formControlName="iAmOwner">Отображать только созданные мной события</mat-checkbox>
+        <mat-checkbox id="iAmOwner" formControlName="iAmOwner"
+          >Отображать только созданные мной события</mat-checkbox
+        >
       </form>
 
-      <div style="display: flex; column-gap: 10px;">
-        <button mat-flat-button color="primary"
-                (click)="fetch(true)"
-                [disabled]="!this.filterForm.dirty">Применить</button>
-        <button mat-flat-button
-                (click)="clearFilter()"
-                [disabled]="!this.filterForm.dirty">Отменить</button>
+      <div style="display: flex; column-gap: 10px">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="fetch(true)"
+          [disabled]="!this.filterForm.dirty"
+        >
+          Применить
+        </button>
+        <button mat-flat-button (click)="clearFilter()" [disabled]="!this.filterForm.dirty">
+          Отменить
+        </button>
       </div>
     </div>
 
-    <div class="event-cards"
-         [class.empty]="eventList.totalCount === 0"
-         infinite-scroll
-         [infiniteScrollDistance]="2"
-         [infiniteScrollThrottle]="700"
-         [infiniteScrollDisabled]="isFullListDisplayed"
-         (scrolled)="fetch()">
-
+    <div
+      class="event-cards"
+      [class.empty]="eventList.totalCount === 0"
+      infinite-scroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="700"
+      [infiniteScrollDisabled]="isFullListDisplayed"
+      (scrolled)="fetch()"
+    >
       <ng-container class="d-flex" *ngFor="let item of eventList.items; let i = index">
         <div class="card theme-event-card-background" (click)="rowClick(item)">
-
           <div class="card__image">
             <image-from-storage [imageId]="item.imageId"></image-from-storage>
           </div>
 
           <div class="card-info">
-            <div class="title">{{item.name}}</div>
+            <div class="title">{{ item.name }}</div>
             <div class="meta">
               <div class="start">
-                {{getDateTimeFormat(item.start)}}
+                {{ getDateTimeFormat(item.start) }}
               </div>
               <app-event-status [status]="item.status"></app-event-status>
               /
-              <div class="owner">Организатор: {{item?.ownerName }}</div>
+              <div class="owner">Организатор: {{ item?.ownerName }}</div>
             </div>
             <div class="details">
-              <div class="teams-count">Команды: {{item.teamsCount}}</div>
-              <div class="members-count">Участники: {{item.membersCount}} / {{item.maxEventMembers}}</div>
+              <div class="teams-count">Команды: {{ item.teamsCount }}</div>
+              <div class="members-count">
+                Участники: {{ item.membersCount }} / {{ item.maxEventMembers }}
+              </div>
             </div>
           </div>
         </div>

@@ -1,12 +1,11 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
-import { Injectable } from "@angular/core";
+import { action, makeObservable, observable, runInAction } from 'mobx';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppStateService {
-
   @observable isLoading: boolean = false;
 
   constructor() {
@@ -21,9 +20,10 @@ export class AppStateService {
    * @param state Булевое состояние загрузки запроса
    */
   @action
-  public setIsLoadingStateWithDebounce: _.DebouncedFunc<
-    (state: boolean) => void
-    > = _.debounce(this.setIsLoadingState, 50);
+  public setIsLoadingStateWithDebounce: _.DebouncedFunc<(state: boolean) => void> = _.debounce(
+    this.setIsLoadingState,
+    50,
+  );
 
   /**
    * Установить состояние свойства из isLoading
@@ -33,6 +33,6 @@ export class AppStateService {
   public setIsLoadingState(state: boolean): void {
     runInAction(() => {
       this.isLoading = state;
-    })
+    });
   }
 }

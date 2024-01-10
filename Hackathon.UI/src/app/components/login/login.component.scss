@@ -1,5 +1,5 @@
-@import "../../../assets/styles/mixins";
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/mixins';
+@import '../../../assets/styles/variables';
 
 :host {
   margin: 0 auto;
@@ -23,8 +23,8 @@
     justify-content: center;
   }
 
-  &__messages{
-    font-size: .9em;
+  &__messages {
+    font-size: 0.9em;
     padding-top: 20px;
     display: flex;
     justify-content: center;
@@ -34,9 +34,15 @@
   }
 
   &__message {
-    &.info { color: blue; }
-    &.warn { color: orange; }
-    &.error { color: red; }
+    &.info {
+      color: blue;
+    }
+    &.warn {
+      color: orange;
+    }
+    &.error {
+      color: red;
+    }
   }
 
   &__title {
@@ -87,7 +93,7 @@
     font-weight: lighter;
 
     span::after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 45%;
       left: 36px;
@@ -98,7 +104,7 @@
     }
 
     span::before {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 45%;
       right: 36px;

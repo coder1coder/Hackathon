@@ -1,3 +1,3 @@
 export interface IBaseCreateResponse {
-  id: number
+  id: number;
 }

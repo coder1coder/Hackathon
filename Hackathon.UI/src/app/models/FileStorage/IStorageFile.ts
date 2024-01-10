@@ -1,5 +1,4 @@
-export interface IStorageFile
-{
+export interface IStorageFile {
   /// <summary>
   /// Уникальный идентификатор
   /// </summary>

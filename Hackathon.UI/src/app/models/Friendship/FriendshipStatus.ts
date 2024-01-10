@@ -1,19 +1,13 @@
-import {EventStatus} from "../Event/EventStatus";
-
-export enum FriendshipStatus
-{
+export enum FriendshipStatus {
   /**  Предлоджение дружбы отправлено */
   Pending = 1,
-
   /**  Предложение дружбы принято */
   Confirmed = 2,
-
   /**  Предложение дружбы отклонено */
-  Rejected = 3
+  Rejected = 3,
 }
 
-export interface IFriendship
-{
+export interface IFriendship {
   //Инициатор предложения дружбы
   proposerId: number;
 
@@ -22,9 +16,8 @@ export interface IFriendship
   status: FriendshipStatus;
 }
 
-export enum GetOfferOption
-{
+export enum GetOfferOption {
   Any = 0,
   Outgoing = 1,
-  Incoming = 2
+  Incoming = 2,
 }

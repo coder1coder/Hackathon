@@ -1,33 +1,36 @@
 <h2 mat-dialog-title>Отклонить заявку</h2>
 <div mat-dialog-content>
-  <div class="sub-title">Вы уверены, что хотите отклонить событие:<br>«{{approvalApplication?.event?.name ?? '-'}}»?</div>
-  <form [formGroup]="form" class="form-vertical">
-  <div class="d-flex flex-column">
-    <mat-form-field appearance="fill">
-      <mat-label>Комментарий</mat-label>
-      <textarea
-        matInput
-        id="comment"
-        formControlName="comment"
-        autocomplete="off"
-        cdkTextareaAutosize
-        cdkAutosizeMinRows="3"
-        cdkAutosizeMaxRows="3"
-        required
-      ></textarea>
-
-      <mat-error *ngIf="getFormControl('comment')?.errors && getFormControl('comment')?.hasError('required')">
-        Поле обязательно для заполнения
-      </mat-error>
-
-    </mat-form-field>
+  <div class="sub-title">
+    Вы уверены, что хотите отклонить событие:<br />«{{ approvalApplication?.event?.name ?? '-' }}»?
   </div>
-</form>
+  <form [formGroup]="form" class="form-vertical">
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill">
+        <mat-label>Комментарий</mat-label>
+        <textarea
+          matInput
+          id="comment"
+          formControlName="comment"
+          autocomplete="off"
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="3"
+          required
+        ></textarea>
+
+        <mat-error
+          *ngIf="
+            getFormControl('comment')?.errors && getFormControl('comment')?.hasError('required')
+          "
+        >
+          Поле обязательно для заполнения
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
 </div>
 
 <div mat-dialog-actions>
   <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">Да</button>
   <button mat-button mat-dialog-close="">Отмена</button>
 </div>
-
-

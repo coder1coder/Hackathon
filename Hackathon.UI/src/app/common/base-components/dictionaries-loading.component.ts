@@ -8,8 +8,8 @@ export abstract class DictionariesLoading {
     return this.dictionariesLoading.has(name);
   }
 
-  public changeLoadingStatus(name: string) {
-    if(!this.isDictLoading(name)) {
+  public changeLoadingStatus(name: string): void {
+    if (!this.isDictLoading(name)) {
       this.dictionariesLoading.set(name, true);
     } else {
       this.dictionariesLoading.delete(name);

@@ -1,5 +1,5 @@
-@import "../../../../../assets/styles/mixins";
-@import "../../../../../assets/styles/variables";
+@import '../../../../../assets/styles/mixins';
+@import '../../../../../assets/styles/variables';
 
 .eventsNewForm {
   @include flex-column;
@@ -47,10 +47,10 @@
   &__image:hover {
     cursor: pointer;
     border: 2px solid rgb(255, 255, 255);
-    transition: all 0.1s ease-out
+    transition: all 0.1s ease-out;
   }
 
-  &__selector{
+  &__selector {
     @include flex-column-center;
   }
 }
@@ -60,7 +60,7 @@
   border: 2px solid $error-color;
 }
 
-input[type="file"]{
+input[type='file'] {
   display: none;
 }
 
@@ -68,5 +68,3 @@ input[type="file"]{
   width: 50px;
   color: #ddd;
 }
-
-

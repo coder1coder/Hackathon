@@ -1,4 +1,4 @@
-import { PageSettingsDefaults } from "./PageSettings";
+import { PageSettingsDefaults } from './PageSettings';
 
 export class GetListParameters<T> implements PaginationSorting {
   Filter: T;
@@ -17,6 +17,5 @@ export class PaginationSorting {
 
 export enum SortOrder {
   Asc = 0,
-  Desc = 1
+  Desc = 1,
 }
-

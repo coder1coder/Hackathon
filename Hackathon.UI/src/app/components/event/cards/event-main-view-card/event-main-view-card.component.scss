@@ -1,10 +1,10 @@
-.mat-column-members{
+.mat-column-members {
   cursor: default;
 
-  & > .member{
+  & > .member {
     display: inline-block;
 
-    &:hover{
+    &:hover {
       color: #3f51b5;
       cursor: pointer;
     }

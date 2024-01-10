@@ -1,3 +1,3 @@
 export interface IKeyValue {
-  [key: string]: any
+  [key: string]: any;
 }
