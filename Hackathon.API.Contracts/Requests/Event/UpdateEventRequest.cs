@@ -10,7 +10,7 @@ namespace Hackathon.Contracts.Requests.Event;
 /// <summary>
 /// Контракт создания и обновления нового события
 /// </summary>
-public class UpdateEventRequest: IHasArrayTags
+public class UpdateEventRequest
 {
     /// <summary>
     /// Идентификатор обновляемой записи
@@ -81,5 +81,5 @@ public class UpdateEventRequest: IHasArrayTags
     /// <summary>
     /// Теги
     /// </summary>
-    public string[] Tags { get; set; }
+    public TagCollection Tags { get; set; }
 }

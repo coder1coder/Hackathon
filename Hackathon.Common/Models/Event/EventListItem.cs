@@ -6,7 +6,7 @@ namespace Hackathon.Common.Models.Event;
 /// <summary>
 /// Списочное представление события
 /// </summary>
-public class EventListItem: IHasArrayTags
+public class EventListItem
 {
     /// <summary>
     /// Идентификатор события
@@ -76,5 +76,5 @@ public class EventListItem: IHasArrayTags
     /// <summary>
     /// Теги
     /// </summary>
-    public string[] Tags { get; set; }
+    public TagCollection Tags { get; set; }
 }

@@ -51,7 +51,7 @@ public class EventRepository : IEventRepository
             .Include(x=>x.Agreement).ThenInclude(x=>x.Users)
             .FirstOrDefaultAsync(x => x.Id == eventId);
 
-        return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
+        return eventEntity == null ? null : _mapper.Map<EventEntity, EventModel>(eventEntity);
     }
 
     public async Task<BaseCollection<EventListItem>> GetListAsync(long userId, GetListParameters<EventFilter> parameters)

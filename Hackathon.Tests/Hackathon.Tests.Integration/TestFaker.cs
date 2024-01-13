@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Bogus;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Mappings;
 using MapsterMapper;
-using System.Linq;
-using Hackathon.Common.Models.Tags;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -98,7 +98,7 @@ public class TestFaker
             {
                 Title = x
             }).ToArray())
-            .RuleFor(x=>x.Tags, f => string.Join(IHasStringTags.Separator,
-                    Enumerable.Range(1, 3).Select(_ => f.Random.String2(3, 30))))
+            .RuleFor(x=>x.Tags, f =>
+                string.Join(TagsMappings.TagsSeparator, f.Make(3, () => f.Random.String2(3, 30))))
             .Generate(count);
 }

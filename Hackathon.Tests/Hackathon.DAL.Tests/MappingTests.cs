@@ -26,6 +26,9 @@ public class MappingTests
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+        _fixture.Register(() =>
+            new TagCollection(_fixture.CreateMany<string>().ToArray()));
     }
 
     [Fact]
@@ -40,7 +43,7 @@ public class MappingTests
         var destination = _mapper.Map<EventEntity, EventModel>(source);
         
         //assert
-        var sourceTagsAsArray = source.Tags.Split(IHasStringTags.Separator);
+        var sourceTagsAsArray = source.Tags.Split(TagsMappings.TagsSeparator);
         destination.Tags.Should().BeEquivalentTo(sourceTagsAsArray);
     }
     
@@ -56,7 +59,7 @@ public class MappingTests
         var destination = _mapper.Map<EventCreateParameters, EventEntity>(source);
         
         //assert
-        var sourceTagsAsString = string.Join(IHasStringTags.Separator, source.Tags);
+        var sourceTagsAsString = string.Join(TagsMappings.TagsSeparator, source.Tags);
         destination.Tags.Should().BeEquivalentTo(sourceTagsAsString);
     }
 }

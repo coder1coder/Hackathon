@@ -84,10 +84,10 @@ public class BaseEventParametersValidator: AbstractValidator<BaseEventParameters
             .NotEmpty()
             .WithMessage("Необходимо указать награду");
 
-        When(x => x.Tags is { Length: > 0 }, () =>
+        When(x => x.Tags is { Count: > 0 }, () =>
         {
             RuleFor(x => x.Tags)
-                .Must(x=>x.Length <= MaxTagsCount)
+                .Must(x=>x.Count <= MaxTagsCount)
                 .WithMessage("Превышен допустимый лимит тегов");
                 
             RuleForEach(x=>x.Tags)

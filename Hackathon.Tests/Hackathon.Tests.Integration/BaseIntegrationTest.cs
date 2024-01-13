@@ -130,7 +130,6 @@ public abstract class BaseIntegrationTest
         return (response.Id, authTokenModel.Token);
     }
 
-
     protected async Task<Guid> GetEventImageId()
     {
         await using var memoryStream = new MemoryStream();

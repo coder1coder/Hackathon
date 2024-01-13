@@ -10,7 +10,7 @@ namespace Hackathon.Contracts.Requests.Event;
 /// <summary>
 /// Контракт создания нового события
 /// </summary>
-public class CreateEventRequest: IHasArrayTags
+public class CreateEventRequest
 {
     /// <summary>
     /// Наименование события
@@ -76,5 +76,5 @@ public class CreateEventRequest: IHasArrayTags
     /// <summary>
     /// Теги
     /// </summary>
-    public string[] Tags { get; set; }
+    public TagCollection Tags { get; set; }
 }

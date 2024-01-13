@@ -80,7 +80,6 @@ public class Startup
         var solutionAssembliesArray = solutionAssemblies.ToArray();
         
         config.Scan(solutionAssembliesArray);
-        config.Apply(new CommonMappings());
 
         services.AddSingleton(config);
         services.AddSingleton<IMapper, ServiceMapper>();
