@@ -2,12 +2,12 @@ import { IEnvironment } from '../app/models/environment.interface';
 
 export const environment: IEnvironment = {
   production: true,
-  api: 'http://31.129.103.69/api',
+  api: 'http://hackathon.cleannetcode.ru/api',
   hubs: {
-    notification: 'http://31.129.103.69/api/hubs/notifications',
-    chat: 'http://31.129.103.69/api/hubs/chat',
-    friendship: 'http://31.129.103.69/api/hubs/friendship',
-    event: 'http://31.129.103.69/api/hubs/events',
+    notification: 'http://hackathon.cleannetcode.ru/api/hubs/notifications',
+    chat: 'http://hackathon.cleannetcode.ru/api/hubs/chat',
+    friendship: 'http://hackathon.cleannetcode.ru/api/hubs/friendship',
+    event: 'http://hackathon.cleannetcode.ru/api/hubs/events',
   },
   reCaptchaKey: '6LdE8XceAAAAACk0qwTv6xMD0Ecml2pb8AQyEEF-',
   captchaEnabled: false,
