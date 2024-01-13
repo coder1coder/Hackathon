@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
-      <ProjectReference Include="..\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
     </ItemGroup>
 

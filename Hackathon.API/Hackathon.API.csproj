@@ -36,7 +36,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
       <ProjectReference Include="..\Hackathon.BL\Hackathon.BL.csproj" />
-      <ProjectReference Include="..\Hackathon.Chats.Module\Hackathon.Chats.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats\Hackathon.Chats.Module\Hackathon.Chats.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
       <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />

@@ -37,13 +37,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.IntegrationServic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chats", "Chats", "{3A2349EE-30E8-40E8-AB16-5D6BC4DD0664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.BL", "Hackathon.Chats.BL\Hackathon.Chats.BL.csproj", "{FB2D36BF-9FE9-4FA3-BF99-AF05995BA912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.BL", "Hackathon.Chats\Hackathon.Chats.BL\Hackathon.Chats.BL.csproj", "{FB2D36BF-9FE9-4FA3-BF99-AF05995BA912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.DAL", "Hackathon.Chats.DAL\Hackathon.Chats.DAL.csproj", "{5EE93BEB-38E0-4489-B8CE-0580C812A0EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.DAL", "Hackathon.Chats\Hackathon.Chats.DAL\Hackathon.Chats.DAL.csproj", "{5EE93BEB-38E0-4489-B8CE-0580C812A0EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Abstractions", "Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj", "{672BA841-BB62-4DEE-823A-1823E29403F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Abstractions", "Hackathon.Chats\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj", "{672BA841-BB62-4DEE-823A-1823E29403F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Module", "Hackathon.Chats.Module\Hackathon.Chats.Module.csproj", "{F4B3F992-932D-41CA-9B97-76CB741731F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Module", "Hackathon.Chats\Hackathon.Chats.Module\Hackathon.Chats.Module.csproj", "{F4B3F992-932D-41CA-9B97-76CB741731F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API.Module", "Hackathon.API.Module\Hackathon.API.Module.csproj", "{4F996F51-EB3B-4022-B41A-8B3B36505334}"
 EndProject

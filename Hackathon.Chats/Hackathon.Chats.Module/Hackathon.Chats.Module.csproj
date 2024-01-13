@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj" />
       <ProjectReference Include="..\Hackathon.Chats.BL\Hackathon.Chats.BL.csproj" />
       <ProjectReference Include="..\Hackathon.Chats.DAL\Hackathon.Chats.DAL.csproj" />
