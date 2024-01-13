@@ -11,14 +11,14 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook.BL\Hackathon.Logbook.BL.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook.DAL\Hackathon.Logbook.DAL.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
     </ItemGroup>
 

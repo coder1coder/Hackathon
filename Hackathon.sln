@@ -75,13 +75,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Confi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logbook", "Logbook", "{5E3511CE-5696-46E9-890D-DDFF46D36C5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.Module", "Hackathon.Logbook.Module\Hackathon.Logbook.Module.csproj", "{33EEED3F-4738-42B3-BA1F-D80B4A9507B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.Module", "Hackathon.Logbook\Hackathon.Logbook.Module\Hackathon.Logbook.Module.csproj", "{33EEED3F-4738-42B3-BA1F-D80B4A9507B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.Abstraction", "Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj", "{FC931D6C-A350-471D-9217-06C368FA58F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.Abstraction", "Hackathon.Logbook\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj", "{FC931D6C-A350-471D-9217-06C368FA58F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.DAL", "Hackathon.Logbook.DAL\Hackathon.Logbook.DAL.csproj", "{D22EDB51-6C98-46A7-8696-89B62D916490}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.DAL", "Hackathon.Logbook\Hackathon.Logbook.DAL\Hackathon.Logbook.DAL.csproj", "{D22EDB51-6C98-46A7-8696-89B62D916490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.BL", "Hackathon.Logbook.BL\Hackathon.Logbook.BL.csproj", "{47FA244C-3C09-463E-ADD4-E9EB1BA81B1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Logbook.BL", "Hackathon.Logbook\Hackathon.Logbook.BL\Hackathon.Logbook.BL.csproj", "{47FA244C-3C09-463E-ADD4-E9EB1BA81B1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.DAL.Tests", "Hackathon.Tests\Hackathon.DAL.Tests\Hackathon.DAL.Tests.csproj", "{F71348AB-D44E-4A64-BECA-27101B35C4CA}"
 EndProject
