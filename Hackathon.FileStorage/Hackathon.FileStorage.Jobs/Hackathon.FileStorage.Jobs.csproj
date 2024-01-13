@@ -6,7 +6,11 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.Configuration\Hackathon.Configuration.csproj" />
+      <ProjectReference Include="..\..\Hackathon.API.Jobs\Hackathon.API.Jobs.csproj" />
     </ItemGroup>
+
+
+
+
 
 </Project>

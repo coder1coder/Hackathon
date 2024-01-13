@@ -14,6 +14,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.Configuration\Hackathon.Configuration.csproj" />
-      <ProjectReference Include="..\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj" />
     </ItemGroup>
 </Project>

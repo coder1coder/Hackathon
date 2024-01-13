@@ -59,19 +59,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.Module"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileStorage", "FileStorage", "{B160DE3F-ABE1-4EA7-96AA-9733918872F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Module", "Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj", "{DDA3C002-37BA-4A15-8A24-A7452F650CF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Module", "Hackathon.FileStorage\Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj", "{DDA3C002-37BA-4A15-8A24-A7452F650CF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Abstraction", "Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj", "{03635FA1-E1C1-4484-8491-5AD45D2A7673}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Abstraction", "Hackathon.FileStorage\Hackathon.FileStorage.Abstraction\Hackathon.FileStorage.Abstraction.csproj", "{03635FA1-E1C1-4484-8491-5AD45D2A7673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.BL", "Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj", "{EF3EDC8D-8C11-4136-8521-DEA2B51FEF47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.BL", "Hackathon.FileStorage\Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj", "{EF3EDC8D-8C11-4136-8521-DEA2B51FEF47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.DAL", "Hackathon.FileStorage.DAL\Hackathon.FileStorage.DAL.csproj", "{ED71C4A0-89A9-4BEB-972F-111E3579974E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.DAL", "Hackathon.FileStorage\Hackathon.FileStorage.DAL\Hackathon.FileStorage.DAL.csproj", "{ED71C4A0-89A9-4BEB-972F-111E3579974E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Jobs", "Hackathon.FileStorage.Jobs\Hackathon.FileStorage.Jobs.csproj", "{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Jobs", "Hackathon.FileStorage\Hackathon.FileStorage.Jobs\Hackathon.FileStorage.Jobs.csproj", "{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Configuration", "Hackathon.Configuration\Hackathon.Configuration.csproj", "{77CEA7C6-054F-4E27-8E7E-D8ED09F7D8C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Configuration", "Hackathon.FileStorage.Configuration\Hackathon.FileStorage.Configuration.csproj", "{4C66C493-D559-47A2-AE73-2DB3AF98A67F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Configuration", "Hackathon.FileStorage\Hackathon.FileStorage.Configuration\Hackathon.FileStorage.Configuration.csproj", "{4C66C493-D559-47A2-AE73-2DB3AF98A67F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logbook", "Logbook", "{5E3511CE-5696-46E9-890D-DDFF46D36C5D}"
 EndProject

@@ -7,7 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
       <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
-      <ProjectReference Include="..\Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj" />
       <ProjectReference Include="..\Hackathon.Informing.BL\Hackathon.Informing.BL.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
