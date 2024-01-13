@@ -376,7 +376,7 @@ export class EventCreateEditCardComponent
       fileImage: [null],
       agreementRules: [null],
       agreementRequiresConfirmation: [false],
-      tags: [null]
+      tags: [[]]
     });
   }
 
