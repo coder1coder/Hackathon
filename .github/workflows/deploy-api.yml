@@ -17,14 +17,11 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
 
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-
-    - name: Publish Hackathon.Api
-      run: dotnet publish -c Release -o hackathon_api
+    - name: Restore dependencies, Build, Publish
+      run: |
+        dotnet restore
+        dotnet build --no-restore --configuration Release
+        dotnet publish -c Release -o hackathon_api
 
     - name: Configure SSH
       run: |
@@ -32,9 +29,27 @@ jobs:
         echo "${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
+        
     - name: Install rsync
       run: sudo apt-get install -y rsync
-
+        
+    - name: Stop Hackathon.Api
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+        script: |
+          sudo systemctl stop ${{ secrets.DEPLOY_SERVICE_NAME }}
+        
     - name: Deploy Hackathon.Api
       run: rsync -avz -e 'ssh' hackathon_api/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/hackathon.api/
+          
+    - name: Start Hackathon.Api
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+        script: |
+          sudo systemctl start ${{ secrets.DEPLOY_SERVICE_NAME }}
