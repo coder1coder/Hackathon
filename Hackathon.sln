@@ -49,13 +49,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.API.Module", "Hac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Informing", "Informing", "{A0D890EF-654D-4D6E-AD43-AC5D6A802074}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.DAL", "Hackathon.Informing.DAL\Hackathon.Informing.DAL.csproj", "{9B45D7F7-27AC-4456-915F-299BE65C832A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.DAL", "Hackathon.Informing\Hackathon.Informing.DAL\Hackathon.Informing.DAL.csproj", "{9B45D7F7-27AC-4456-915F-299BE65C832A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.Abstractions", "Hackathon.Informing.Abstractions\Hackathon.Informing.Abstractions.csproj", "{15682F6B-B1D0-407A-AB17-01A4467BC197}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.Abstractions", "Hackathon.Informing\Hackathon.Informing.Abstractions\Hackathon.Informing.Abstractions.csproj", "{15682F6B-B1D0-407A-AB17-01A4467BC197}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.BL", "Hackathon.Informing.BL\Hackathon.Informing.BL.csproj", "{BBBD0558-E3EC-4A78-BF2A-54DB002C39F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.BL", "Hackathon.Informing\Hackathon.Informing.BL\Hackathon.Informing.BL.csproj", "{BBBD0558-E3EC-4A78-BF2A-54DB002C39F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.Module", "Hackathon.Informing.Module\Hackathon.Informing.Module.csproj", "{667CAAFB-BCA7-4CBD-A78C-754F84D27DC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Informing.Module", "Hackathon.Informing\Hackathon.Informing.Module\Hackathon.Informing.Module.csproj", "{667CAAFB-BCA7-4CBD-A78C-754F84D27DC4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileStorage", "FileStorage", "{B160DE3F-ABE1-4EA7-96AA-9733918872F3}"
 EndProject

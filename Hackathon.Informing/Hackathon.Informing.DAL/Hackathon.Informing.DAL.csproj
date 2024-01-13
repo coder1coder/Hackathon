@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />
+      <ProjectReference Include="..\..\Hackathon.DAL\Hackathon.DAL.csproj" />
       <ProjectReference Include="..\Hackathon.Informing.Abstractions\Hackathon.Informing.Abstractions.csproj" />
     </ItemGroup>
 
