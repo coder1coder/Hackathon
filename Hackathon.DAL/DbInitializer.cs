@@ -29,7 +29,7 @@ public static class DbInitializer
         }
         catch (DbUpdateException e)
         {
-            logger.LogError(e, "{Initiator}. Невозможно выполнить первоначальную инициализацию данных", nameof(DbInitializer));
+            logger.LogError(e, "{Source}. Невозможно выполнить первоначальную инициализацию данных", nameof(DbInitializer));
             throw;
         }
     }

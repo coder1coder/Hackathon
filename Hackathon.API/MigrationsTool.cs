@@ -41,13 +41,23 @@ public class MigrationsTool
             }
 
             foreach (var dbContext in dbContexts)
+            {
+                logger.LogInformation("{Source} start applying migrations for {DbContext}",
+                    nameof(MigrationsTool),
+                    dbContext.GetType().Name);
+
                 dbContext.Database.Migrate();
+            }
+                
 
             DbInitializer.Seed(applicationDbContext, logger, dataSettings.Value.AdministratorDefaults);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error while applying migrations");
+            logger.LogError(e, "{Source} Error while applying migrations. {ErrorMessage}",
+                nameof(MigrationsTool),
+                e.Message);
+            throw;
         }
     }
 }

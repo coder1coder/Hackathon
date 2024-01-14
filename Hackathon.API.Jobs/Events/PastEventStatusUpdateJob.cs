@@ -51,8 +51,7 @@ public sealed class PastEventStatusUpdateJob: BaseBackgroundJob<PastEventStatusU
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e,
-                        "{Source}: ошибка во время обновления статуса мероприятия",
+                    _logger.LogError(e, "{Source}: ошибка во время обновления статуса мероприятия",
                         nameof(PastEventStatusUpdateJob));
                 }
             }

@@ -560,8 +560,7 @@ public class EventService : IEventService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,
-                        "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
+            _logger.LogError(ex, "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
                         nameof(EventService), fileModel?.Id);
         }
         finally

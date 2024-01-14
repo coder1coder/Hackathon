@@ -75,7 +75,7 @@ public class FileStorageService : IFileStorageService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "{Initiator}. Ошибка во время записи файла в файловое хранилище",
+            _logger.LogError(e, "{Source}. Ошибка во время записи файла в файловое хранилище",
                 nameof(FileStorageService));
             throw;
         }
@@ -87,7 +87,7 @@ public class FileStorageService : IFileStorageService
 
         if (fileInfo is null)
         {
-            _logger.LogError("{Initiator}: Файл с индентификатором {storageFileId} не найден",
+            _logger.LogError("{Source}: Файл с индентификатором {storageFileId} не найден",
                 nameof(FileStorageService),
                 storageFileId);
 
@@ -111,7 +111,7 @@ public class FileStorageService : IFileStorageService
 
         if (fileInfo is null)
         {
-            _logger.LogError("{Initiator}: Файл с индентификатором {storageFileId} не найден",
+            _logger.LogError("{Source}: Файл с индентификатором {storageFileId} не найден",
                 nameof(FileStorageService),
                 storageFileId);
 

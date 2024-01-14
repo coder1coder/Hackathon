@@ -28,7 +28,7 @@ public class GitHubIntegrationService: GitIntegrationService, IGitHubIntegration
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "{Initiator}. Ошибка во время получения содержимого репозитория: {error}",
+            _logger.LogError(e, "{Source}. Ошибка во время получения содержимого репозитория: {error}",
                 nameof(GitHubIntegrationService),
                 e.Message);
 

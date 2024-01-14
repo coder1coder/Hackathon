@@ -30,7 +30,9 @@ public class MessageBusService: IMessageBusService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Ошибка при попытке опубликовать сообщение в шину");
+            _logger.LogError(e, "{Source} Ошибка при попытке опубликовать сообщение в шину. {ErrorMessage}",
+                nameof(MessageBusService),
+                e.Message);
             return false;
         }
     }

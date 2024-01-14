@@ -28,7 +28,7 @@ public class TemplateService: ITemplateService
 
         if (template is null)
         {
-            _logger.LogError("{Initiator}. Не удалось найти шаблон '{TemplateName}'",
+            _logger.LogError("{Source}. Не удалось найти шаблон '{TemplateName}'",
                 nameof(TemplateService), templateId);
             return Result<string>.NotFound($"Не удалось найти шаблон '{templateId}'");
         }
