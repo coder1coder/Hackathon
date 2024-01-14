@@ -48,9 +48,9 @@ public class MigrationsTool
 
                 dbContext.Database.Migrate();
             }
-                
 
             DbInitializer.Seed(applicationDbContext, logger, dataSettings.Value.AdministratorDefaults);
+            logger.LogInformation("{Source} applying migrations finished", nameof(MigrationsTool));
         }
         catch (Exception e)
         {
