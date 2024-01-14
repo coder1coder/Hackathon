@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -140,10 +139,9 @@ public class Startup
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod());
-            }).AddControllers(options =>
-            {
-                options.Filters.Add(new ExceptionActionFilter());
-            }).AddJsonOptions(opt =>
+            })
+            .AddControllers()
+            .AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -173,7 +171,7 @@ public class Startup
         IOptions<AppSettings> appSettings)
     {
         //глобальный обработчик исключений должен быть первым
-        app.UseExceptionHandler(p => p.Run(HandleError));
+        app.UseExceptionHandler(x=>x.Run(HandleError));
 
         app
             .UseMetricServer()
@@ -224,22 +222,33 @@ public class Startup
 
     private static ProblemDetails MapException(Exception exception)
     {
-        if (exception is ValidationException)
+        var problemDetails = new ProblemDetails
         {
-            return new ProblemDetails
-            {
-                Status = (int) HttpStatusCode.BadRequest,
-                Type = exception.GetType().Name,
-                Title = exception.Message,
-                Detail = exception.InnerException?.Message
-            };
+            Type = "https://example.com/unhandled",
+            Detail = exception.Message,
+            Title = "Неизвестная ошибка",
+            Status = 500
+        };
+
+        switch (exception)
+        {
+            case ValidationException:
+
+                problemDetails = new ProblemDetails
+                {
+                    Type = "https://example.com/validation",
+                    Detail = exception.Message,
+                    Title = "Ошибка валидации",
+                    Status = 400
+                };
+
+                if (exception is ValidationException fluentValidationException
+                    && fluentValidationException.Errors.Any())
+                    problemDetails.Detail = string.Join('\n', fluentValidationException.Errors);
+
+                break;
         }
 
-        return new ProblemDetails
-        {
-            Title = exception.Message,
-            Detail = HttpStatusCode.InternalServerError.ToString(),
-            Status = (int) HttpStatusCode.InternalServerError
-        };
+        return problemDetails;
     }
 }
