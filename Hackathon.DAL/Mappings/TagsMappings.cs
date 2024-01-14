@@ -11,10 +11,13 @@ public class TagsMappings: IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.ForType<TagCollection, string>()
-            .MapWith(x=> string.Join(TagsSeparator, x));
+            .MapWith(x=> x != null
+                ? string.Join(TagsSeparator, x)
+                : null);
 
         config.ForType<string, TagCollection>()
-            .MapWith(x => 
-                new TagCollection(x.Split(TagsSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)));
+            .MapWith(x => x != null
+                ? new TagCollection(x.Split(TagsSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                : null);
     }
 }
