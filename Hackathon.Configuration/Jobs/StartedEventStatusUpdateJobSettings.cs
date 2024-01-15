@@ -2,6 +2,9 @@
 
 namespace Hackathon.Configuration.Jobs;
 
+/// <summary>
+/// Джоба автоматического выставления статуса начала мероприятия
+/// </summary>
 public class StartedEventStatusUpdateJobSettings: IJobSettings
 {
     public string CronExpression { get; set; }

@@ -2,6 +2,9 @@
 
 namespace Hackathon.Configuration.Jobs;
 
+/// <summary>
+/// Джоба выставления статуса завершенного мероприятия по истечении времени
+/// </summary>
 public class PastEventStatusUpdateJobSettings: IJobSettings
 {
     public string CronExpression { get; set; }

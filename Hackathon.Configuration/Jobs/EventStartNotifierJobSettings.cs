@@ -2,6 +2,9 @@
 
 namespace Hackathon.Configuration.Jobs;
 
+/// <summary>
+/// Настройки джобы уведомлений о начале мероприятия
+/// </summary>
 public class EventStartNotifierJobSettings: IJobSettings
 {
     public string CronExpression { get; set; }

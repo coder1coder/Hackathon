@@ -1,5 +1,8 @@
 namespace Hackathon.Configuration;
 
+/// <summary>
+/// Настройки отправителя Email
+/// </summary>
 public sealed class EmailSenderSettings
 {
     /// <summary>
