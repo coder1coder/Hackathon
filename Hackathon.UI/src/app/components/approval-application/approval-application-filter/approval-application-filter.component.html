@@ -1,5 +1,4 @@
-<div class="event-block">
-  <div class="mb-1-5em" *ngIf="isFilterEnabled">
+<div *ngIf="isFilterEnabled">
     <form [formGroup]="form" class="applications__filter">
       <mat-form-field appearance="outline">
         <mat-label>Статус модерации</mat-label>
@@ -16,12 +15,11 @@
         </mat-select>
       </mat-form-field>
     </form>
-
-    <div style="display: flex; column-gap: 10px">
+    <div style="display: flex; column-gap: 10px; margin-top: 1.5em" *ngIf="!applyOnChange">
       <button
         mat-flat-button
         color="primary"
-        (click)="submitFilter()"
+        (click)="applyFilter()"
         [disabled]="!this.form.dirty"
       >
         Применить
@@ -30,5 +28,4 @@
         Очистить
       </button>
     </div>
-  </div>
 </div>

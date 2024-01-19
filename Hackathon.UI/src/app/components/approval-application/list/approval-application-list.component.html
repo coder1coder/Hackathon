@@ -4,7 +4,8 @@
 >
   <app-approval-application-filter
     [approvalApplications]="items"
-    (changeFilterEmit)="filterChanged($event)"
+    [applyOnChange]="true"
+    (onChanged)="filterChanged($event)"
   >
   </app-approval-application-filter>
 

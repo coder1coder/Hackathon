@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterService } from '../../../services/router.service';
 import { ApprovalApplicationsService } from '../../../services/approval-applications/approval-applications.service';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import {
@@ -34,7 +33,6 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
 
   constructor(
     private approvalApplicationsService: ApprovalApplicationsService,
-    private routerService: RouterService,
     private errorProcessor: ErrorProcessorService,
     private dialog: MatDialog,
     private snackService: SnackService,
@@ -58,7 +56,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
     );
   }
 
-  private getFilterDate(): GetListParameters<IApprovalApplicationFilter> {
+  private getFilter(): GetListParameters<IApprovalApplicationFilter> {
     const getFilterModel: GetListParameters<IApprovalApplicationFilter> =
       new GetListParameters<IApprovalApplicationFilter>();
     getFilterModel.Offset = this.pageSettings.pageIndex;
@@ -70,12 +68,12 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
   }
 
   override fetch(): void {
-    /* Не используется, загрузка данных через происходит фильтр */
+    /* Не используется, загрузка данных происходит через фильтр */
   }
 
   private loadData(): void {
     this.approvalApplicationsService
-      .getApprovalApplicationList(this.getFilterDate())
+      .getApprovalApplicationList(this.getFilter())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: BaseCollection<IApprovalApplication>) => {
