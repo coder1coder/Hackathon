@@ -161,6 +161,8 @@ public class Startup
             .AddSwagger()
             .AddSignalR(x=>
                 x.EnableDetailedErrors = _environment.IsDevelopment());
+
+        services.AddHealthChecks();
     }
 
     public void Configure(
@@ -201,6 +203,8 @@ public class Startup
 
             endpointRouteBuilder.MapHub<IntegrationEventsHub<FriendshipChangedIntegrationEvent>>(appConfig.Hubs.Friendship);
             endpointRouteBuilder.MapHub<EventChangesIntegrationEventsHub>(appConfig.Hubs.Events);
+
+            endpointRouteBuilder.MapHealthChecks("hc");
 
             foreach (var apiModule in _modules)
                 apiModule.ConfigureEndpoints(endpointRouteBuilder, appConfig);
