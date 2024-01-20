@@ -120,11 +120,11 @@ public class UserService: IUserService
 
     public async Task<Result<UserModel>> GetAsync(long userId)
     {
-        if (!await _userRepository.ExistsAsync(userId))
-            Result.NotFound(UserValidationErrorMessages.UserDoesNotExists);
-
         var model = await _userRepository.GetAsync(userId);
-
+        
+        if (model is null)
+            Result.NotFound(UserValidationErrorMessages.UserDoesNotExists);
+        
         EnrichModel(model);
 
         return Result<UserModel>.FromValue(model);

@@ -72,12 +72,11 @@ public sealed class UserProfileReactionControllerTests: BaseIntegrationTest
         //assert
         await FluentActions.Invoking(async () => await UsersApi.RemoveReaction(targetUserId, reaction))
             .Should()
-            .ThrowAsync<ValidationApiException>()
+            .ThrowAsync<ApiException>()
             .Where(x =>
-                x.Content != null
-                && x.Content.Status == (int)HttpStatusCode.BadRequest
-                && x.Content.Detail == UserErrorMessages.ReactionNotExistMessage
-                );
+                x.StatusCode == HttpStatusCode.BadRequest
+                && x.HasContent
+                && x.Content.Contains(UserErrorMessages.ReactionNotExistMessage));
     }
 
 }
