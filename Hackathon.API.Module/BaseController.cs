@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace Hackathon.API.Module;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = "Blocking")]
 public abstract class BaseController: ControllerBase
 {
     protected long AuthorizedUserId

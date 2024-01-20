@@ -12,4 +12,11 @@ public interface IBlockService
     /// <param name="blockCreateParameters">Модель создаваемой блокировки</param>
     /// <returns></returns>
     Task<Result<long>> CreateAsync(BlockCreateParameters blockCreateParameters);
+
+    /// <summary>
+    /// Проверка заблокирован ли пользователь
+    /// </summary>
+    /// <param name="userId">Id пользователя</param>
+    /// <returns></returns>
+    Task<bool> CheckBlocking(long userId);
 }

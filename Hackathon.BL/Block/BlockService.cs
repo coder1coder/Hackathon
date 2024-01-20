@@ -65,4 +65,14 @@ public class BlockService : IBlockService
 
         return Result<long>.FromValue(newBlockId);
     }
+
+    public async Task<bool> CheckBlocking(long userId)
+    {
+        var user = await _userRepository.GetAsync(userId);
+
+        if (user.IsBlocking(currentDateTime: DateTime.UtcNow))
+            return false;
+
+        return true;
+    }
 }
