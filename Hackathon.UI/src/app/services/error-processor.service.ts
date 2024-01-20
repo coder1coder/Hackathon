@@ -17,6 +17,7 @@ export class ErrorProcessorService {
       errorMessage = problemDetails?.errors
         ? Object.values(problemDetails.errors)[0]
         : problemDetails?.detail ||
+          problemDetails['not-found'] ||
           problemDetails['validation-error'] ||
           problemDetails.title ||
           this.UNKNOWN_ERROR;

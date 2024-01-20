@@ -75,7 +75,10 @@ public class UserService: IUserService
 
     public async Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel)
     {
-        await _signInModelValidator.ValidateAndThrowAsync(signInModel);
+        var modelValidationResult = await _signInModelValidator.ValidateAsync(signInModel);
+        if (!modelValidationResult.IsValid)
+            //Нет необходимости указывать причины некорректного ввода
+            return Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword);
 
         var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(signInModel.UserName);
 
