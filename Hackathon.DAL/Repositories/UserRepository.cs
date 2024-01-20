@@ -40,6 +40,7 @@ public class UserRepository: IUserRepository
         var entity = await _dbContext.Users
             .Include(x=>x.EmailConfirmationRequest)
             .Include(x=>x.GoogleAccount)
+            .Include(x=>x.Blocks)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == userId);
 

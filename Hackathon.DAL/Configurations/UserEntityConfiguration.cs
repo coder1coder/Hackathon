@@ -33,6 +33,12 @@ public class UserEntityConfiguration: IEntityTypeConfiguration<UserEntity>
             .HasForeignKey<EmailConfirmationRequestEntity>(b => b.UserId);
 
         builder
+            .HasMany(x => x.Blocks)
+            .WithOne(x => x.User)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .Property(x => x.IsDeleted)
             .HasDefaultValue(false);
     }

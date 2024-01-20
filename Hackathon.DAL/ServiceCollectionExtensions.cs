@@ -1,4 +1,5 @@
 using Hackathon.Common.Abstraction.ApprovalApplications;
+using Hackathon.Common.Abstraction.Block;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Project;
@@ -6,6 +7,7 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.DAL.Repositories;
 using Hackathon.DAL.Repositories.ApprovalApplications;
+using Hackathon.DAL.Repositories.Block;
 using Hackathon.DAL.Repositories.Events;
 using Hackathon.DAL.Repositories.Team;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IEventAgreementRepository, EventAgreementRepository>()
             .AddScoped<IApprovalApplicationRepository, ApprovalApplicationRepository>()
-            ;
+            .AddScoped<IBlockRepository, BlockRepository>();
     }
 }

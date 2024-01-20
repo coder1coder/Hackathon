@@ -1,8 +1,9 @@
-﻿using Hackathon.Common.Models.User;
+using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities.Interfaces;
 using System;
 using System.Collections.Generic;
 using Hackathon.DAL.Entities.Event;
+using Hackathon.DAL.Entities.Block;
 
 namespace Hackathon.DAL.Entities.User;
 
@@ -65,6 +66,11 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// Принятые соглашения участия в мероприятии
     /// </summary>
     public ICollection<EventAgreementEntity> EventAgreements { get; set; } = new List<EventAgreementEntity>();
+
+    /// <summary>
+    /// Блокировки пользователя
+    /// </summary>
+    public ICollection<BlockEntity> Blocks { get; set; } = new List<BlockEntity>();
 
     /// <summary>
     /// Идентификатор аватара профиля в файловом хранилище
