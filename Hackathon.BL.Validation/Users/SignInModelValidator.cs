@@ -1,31 +1,16 @@
 ﻿using FluentValidation;
-using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 
 namespace Hackathon.BL.Validation.Users;
 
 public class SignInModelValidator: AbstractValidator<SignInModel>
 {
-    public SignInModelValidator(IUserRepository userRepository)
+    public SignInModelValidator()
     {
         RuleFor(x => x.UserName)
             .NotEmpty()
             .MinimumLength(3)
-            .MaximumLength(100)
-            .CustomAsync(async (userName, context, _) =>
-            {
-                var users = await userRepository.GetAsync(new GetListParameters<UserFilter>
-                {
-                    Filter = new UserFilter
-                    {
-                        Username = userName
-                    }
-                });
-
-                if (users.TotalCount == 0)
-                    context.AddFailure("Пользователя с такими данными не существует");
-            });
+            .MaximumLength(100);
 
         RuleFor(x => x.Password)
             .NotEmpty()
