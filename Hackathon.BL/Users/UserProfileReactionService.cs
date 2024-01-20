@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using FluentValidation;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.User;
 
@@ -18,38 +17,50 @@ public class UserProfileReactionService: IUserProfileReactionService
         _userRepository = userRepository;
     }
 
-    public async Task UpsertReactionAsync(long userId, long targetUserId, UserProfileReaction reactions)
+    public async Task<Result> UpsertReactionAsync(long userId, long targetUserId, UserProfileReaction reactions)
     {
-        await ValidateOrThrow(userId, targetUserId);
+        var baseValidationResult = await BaseValidation(userId, targetUserId);
+        if (!baseValidationResult.IsSuccess)
+            return baseValidationResult;
 
         var existsReactions = await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
 
         if ((existsReactions & reactions) == reactions)
-            throw new ValidationException(UserErrorMessages.ReactionAlreadyExistMessage);
+            return Result.NotValid(UserErrorMessages.ReactionAlreadyExistMessage);
 
         var newReactions = existsReactions | reactions;
 
         await _userProfileReactionRepository.UpsertReactionsAsync(userId, targetUserId, newReactions);
+        
+        return Result.Success;
     }
 
-    public async Task RemoveReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
+    public async Task<Result> RemoveReactionAsync(long userId, long targetUserId, UserProfileReaction reaction)
     {
-        await ValidateOrThrow(userId, targetUserId);
+        var baseValidationResult = await BaseValidation(userId, targetUserId);
+        if (!baseValidationResult.IsSuccess)
+            return baseValidationResult;
 
         var reactions = await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
 
         if ((reactions & reaction) != reaction)
-            throw new ValidationException(UserErrorMessages.ReactionNotExistMessage);
+            return Result.NotValid(UserErrorMessages.ReactionNotExistMessage);
 
         reactions &= ~reaction;
 
         await _userProfileReactionRepository.UpsertReactionsAsync(userId, targetUserId, reactions);
+        
+        return Result.Success;
     }
 
-    public async Task<UserProfileReaction?> GetReactionsAsync(long userId, long targetUserId)
+    public async Task<Result<UserProfileReaction?>> GetReactionsAsync(long userId, long targetUserId)
     {
-        await ValidateOrThrow(userId, targetUserId);
-        return await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
+        var baseValidationResult = await BaseValidation(userId, targetUserId);
+        if (!baseValidationResult.IsSuccess)
+            return Result<UserProfileReaction?>.FromErrors(baseValidationResult.Errors);
+        
+        var reactions = await _userProfileReactionRepository.GetReactionsAsync(userId, targetUserId);
+        return Result<UserProfileReaction?>.FromValue(reactions);
     }
 
     public async Task<Result<List<UserProfileReactionModel>>> GetReactionsByTypeAsync(long targetUserId)
@@ -64,24 +75,26 @@ public class UserProfileReactionService: IUserProfileReactionService
         return Result<List<UserProfileReactionModel>>.FromValue(listReactions); 
     }
 
-    private async Task ValidateOrThrow(long userId, long targetUserId)
+    private async Task<Result> BaseValidation(long userId, long targetUserId)
     {
         if (userId == targetUserId)
-            throw new ValidationException(UserErrorMessages.ReactionsAreNotAvailableOnYourOwnProfile);
+            return Result.NotValid(UserErrorMessages.ReactionsAreNotAvailableOnYourOwnProfile);
 
         if (! await _userRepository.ExistsAsync(userId))
-            throw new ValidationException(Validation.Users.UserValidationErrorMessages.UserDoesNotExists);
+            return Result.NotValid(Validation.Users.UserValidationErrorMessages.UserDoesNotExists);
 
         if (! await _userRepository.ExistsAsync(targetUserId))
-            throw new ValidationException(Validation.Users.UserValidationErrorMessages.UserDoesNotExists);
+            return Result.NotValid(Validation.Users.UserValidationErrorMessages.UserDoesNotExists);
+        
+        return Result.Success;
     }
 
     //TODO: Переписать метод на более универсальное построение списка реакций пользователя
-    private List<UserProfileReactionModel> BuildListReactions(List<UserProfileReaction> reactionsList)
+    private static List<UserProfileReactionModel> BuildListReactions(List<UserProfileReaction> reactionsList)
     { 
-        var reactionLike = new UserProfileReactionModel() { Type = UserProfileReaction.Like };
-        var reactionHeart = new UserProfileReactionModel() { Type = UserProfileReaction.Heart };
-        var reactionFire = new UserProfileReactionModel() { Type = UserProfileReaction.Fire };
+        var reactionLike = new UserProfileReactionModel { Type = UserProfileReaction.Like };
+        var reactionHeart = new UserProfileReactionModel { Type = UserProfileReaction.Heart };
+        var reactionFire = new UserProfileReactionModel { Type = UserProfileReaction.Fire };
 
         foreach (var reactions in reactionsList)
         {
