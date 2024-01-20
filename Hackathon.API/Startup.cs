@@ -97,8 +97,14 @@ public class Startup
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
-            x.AddConsumers(solutionAssembliesArray);
 
+            var consumerAssemblies = _modules
+                ?.Select(module => module.ConsumersAssembly)
+                .Where(assembly => assembly is not null)
+                .ToArray();
+            
+            x.AddConsumers(consumerAssemblies);
+            
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.ConfigureEndpoints(context);

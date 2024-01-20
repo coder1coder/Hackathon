@@ -1,7 +1,9 @@
-﻿using Hackathon.API.Module;
+﻿using System.Reflection;
+using Hackathon.API.Module;
 using Hackathon.Logbook.Abstraction.Handlers;
 using Hackathon.Logbook.Abstraction.Repositories;
 using Hackathon.Logbook.Abstraction.Services;
+using Hackathon.Logbook.BL.Consumers;
 using Hackathon.Logbook.BL.Handlers;
 using Hackathon.Logbook.BL.Services;
 using Hackathon.Logbook.DAL;
@@ -13,6 +15,8 @@ namespace Hackathon.Logbook.Module;
 
 public class LogbookApiModule: ApiModule
 {
+    public override Assembly ConsumersAssembly => typeof(EventLogConsumer).Assembly;
+
     public override void ConfigureServices(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection

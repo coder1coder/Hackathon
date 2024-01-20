@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Hackathon.Configuration;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ namespace Hackathon.API.Module;
 public abstract class ApiModule: IApiModule
 {
     public IList<Func<IServiceProvider, DbContext>> RegisteredDbContextFactories { get; } = new List<Func<IServiceProvider, DbContext>>();
+
+    public virtual Assembly ConsumersAssembly => null;
 
     public abstract void ConfigureServices(IServiceCollection serviceCollection, IConfiguration configuration);
 
