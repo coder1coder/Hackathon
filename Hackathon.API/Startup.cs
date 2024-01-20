@@ -175,10 +175,6 @@ public class Startup
         //глобальный обработчик исключений должен быть первым
         app.UseExceptionHandler(x=>x.Run(HandleError));
 
-        app
-            .UseMetricServer()
-            .UseHttpMetrics();
-
         var appConfig = appSettings.Value;
 
         if (_environment.IsDevelopment())
@@ -194,6 +190,9 @@ public class Startup
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         })
         .UseRouting()
+        //UseHttpMetrics and UseMetricServer should be called after UseRouting
+        .UseMetricServer()
+        .UseHttpMetrics()
         .UseCors(CorsPolicy)
         .UseAuthentication()
         .UseAuthorization()
@@ -205,6 +204,7 @@ public class Startup
             endpointRouteBuilder.MapHub<EventChangesIntegrationEventsHub>(appConfig.Hubs.Events);
 
             endpointRouteBuilder.MapHealthChecks("hc");
+            endpointRouteBuilder.MapMetrics();
 
             foreach (var apiModule in _modules)
                 apiModule.ConfigureEndpoints(endpointRouteBuilder, appConfig);
