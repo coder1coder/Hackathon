@@ -1,12 +1,12 @@
 using Hackathon.Common.Models;
-using Hackathon.Common.Models.User;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Hackathon.Configuration;
+using Hackathon.Common.Models.Auth;
+using Hackathon.Configuration.Auth;
 
 namespace Hackathon.Common;
 
@@ -15,32 +15,32 @@ public static class AuthTokenGenerator
     /// <summary>
     /// Сгенерировать токен
     /// </summary>
-    /// <param name="userSignInDetails">Пользователь</param>
-    /// <param name="authOptions">Параметры для генерации токена</param>
+    /// <param name="payload">Данные для генерации токена авторизации</param>
+    /// <param name="authenticateSettings">Настройки генерации токена</param>
     /// <returns></returns>
-    public static AuthTokenModel GenerateToken(UserSignInDetails userSignInDetails, AuthOptions authOptions)
+    public static AuthTokenModel GenerateToken(GenerateTokenPayload payload, InternalAuthenticateSettings authenticateSettings)
     {
-        var expires = DateTimeOffset.UtcNow.AddMinutes(authOptions.LifeTime);
+        var expires = DateTimeOffset.UtcNow.AddMinutes(authenticateSettings.LifeTime);
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, userSignInDetails.UserId.ToString()),
-            new(ClaimTypes.Role, ((int) userSignInDetails.UserRole).ToString())
+            new(ClaimTypes.NameIdentifier, payload.UserId.ToString()),
+            new(ClaimTypes.Role, ((int) payload.UserRole).ToString())
         };
 
-        if (userSignInDetails.GoogleAccountId is not null)
-            claims.Add(new Claim(AppClaimTypes.GoogleId, userSignInDetails.GoogleAccountId));
+        if (payload.GoogleAccountId is not null)
+            claims.Add(new Claim(AppClaimTypes.GoogleId, payload.GoogleAccountId));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = expires.UtcDateTime,
-            Issuer = authOptions.Issuer,
-            Audience = authOptions.Audience,
+            Issuer = authenticateSettings.Issuer,
+            Audience = authenticateSettings.Audience,
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.Secret)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticateSettings.Secret)),
                 SecurityAlgorithms.HmacSha256Signature)
         };
 
@@ -49,11 +49,11 @@ public static class AuthTokenGenerator
 
         return new AuthTokenModel
         {
-            UserId = userSignInDetails.UserId,
+            UserId = payload.UserId,
             Expires = expires.ToUnixTimeMilliseconds(),
             Token = tokenString,
-            Role = userSignInDetails.UserRole,
-            GoogleId = userSignInDetails.GoogleAccountId
+            Role = payload.UserRole,
+            GoogleId = payload.GoogleAccountId
         };
     }
 }

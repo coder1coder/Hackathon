@@ -1,9 +1,6 @@
-﻿namespace Hackathon.Configuration;
+﻿namespace Hackathon.Configuration.Auth;
 
-/// <summary>
-/// Настройки аутентификации и авторизации
-/// </summary>
-public class AuthOptions
+public class InternalAuthenticateSettings
 {
     /// <summary>
     /// Издатель

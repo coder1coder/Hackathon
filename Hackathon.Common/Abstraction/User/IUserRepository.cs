@@ -11,9 +11,9 @@ public interface IUserRepository
     /// <summary>
     /// Создание пользователя
     /// </summary>
-    /// <param name="signUpModel"></param>
+    /// <param name="createNewUserModel"></param>
     /// <returns></returns>
-    Task<long> CreateAsync(SignUpModel signUpModel);
+    Task<long> CreateAsync(CreateNewUserModel createNewUserModel);
 
     /// <summary>
     /// Получить информацию о пользователе по идентификатору

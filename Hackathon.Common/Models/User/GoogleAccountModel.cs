@@ -2,15 +2,29 @@ namespace Hackathon.Common.Models.User;
 
 public class GoogleAccountModel
 {
+    /// <summary>
+    /// Идентификатор учетной записи Google
+    /// </summary>
     public string Id { get; set; }
+    
+    /// <summary>
+    /// Полное имя учетной записи
+    /// </summary>
     public string FullName { get; set; }
-    public string GivenName { get; set; }
-    public string ImageUrl { get; set; }
+    
+    /// <summary>
+    /// Email пользователя
+    /// </summary>
     public string Email { get; set; }
-    public string AccessToken { get; set; }
-    public long ExpiresAt { get; set; }
-    public long ExpiresIn { get; set; }
-    public long FirstIssuedAt { get; set; }
-    public string TokenId { get; set; }
-    public string LoginHint { get; set; }
+    
+    /// <summary>
+    /// Ссылка на изображение учетной записи Google
+    /// </summary>
+    public string ImageUrl { get; set; }
+
+    public bool Equals(GoogleAccountModel other)
+        => Id == other.Id 
+           && FullName == other.FullName 
+           && Email == other.Email 
+           && ImageUrl == other.ImageUrl;
 }

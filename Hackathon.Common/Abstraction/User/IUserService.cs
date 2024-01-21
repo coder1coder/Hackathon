@@ -1,5 +1,4 @@
 using BackendTools.Common.Models;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using System;
@@ -13,23 +12,9 @@ public interface IUserService
     /// <summary>
     /// Создание пользователя
     /// </summary>
-    /// <param name="signUpModel"></param>
+    /// <param name="createNewUserModel"></param>
     /// <returns></returns>
-    Task<long> CreateAsync(SignUpModel signUpModel);
-
-    /// <summary>
-    /// Авторизация пользователя
-    /// </summary>
-    /// <param name="signInModel"></param>
-    /// <returns></returns>
-    Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel);
-
-    /// <summary>
-    /// Авторизация пользователя через Google
-    /// </summary>
-    /// <param name="signInByGoogleModel"></param>
-    /// <returns></returns>
-    Task<Result<AuthTokenModel>> SignInByGoogle(SignInByGoogleModel signInByGoogleModel);
+    Task<long> CreateAsync(CreateNewUserModel createNewUserModel);
 
     /// <summary>
     /// Получить информацию о пользователе по идентификатору

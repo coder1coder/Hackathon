@@ -18,10 +18,12 @@
       <PackageReference Include="AWSSDK.S3"  />
       <PackageReference Include="Backend.Tools.Common"  />
       <PackageReference Include="BCrypt.Net-Next"  />
+      <PackageReference Include="Google.Apis.Auth" />
       <PackageReference Include="Mapster"  />
       <PackageReference Include="MassTransit"  />
       <PackageReference Include="Microsoft.Extensions.Options"  />
     </ItemGroup>
+
 
     <PropertyGroup>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>

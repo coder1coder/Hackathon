@@ -1,7 +1,7 @@
-using Hackathon.Common.Abstraction.User;
 using System.Net;
 using System.Threading.Tasks;
 using Hackathon.API.Module;
+using Hackathon.Common.Abstraction.Auth;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.User;
 using Hackathon.Contracts.Requests.User;
@@ -19,12 +19,12 @@ namespace Hackathon.API.Controllers;
 public class AuthController: BaseController
 {
     private readonly IMapper _mapper;
-    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
 
-    public AuthController(IMapper mapper, IUserService userService)
+    public AuthController(IMapper mapper, IAuthService authService)
     {
         _mapper = mapper;
-        _userService = userService;
+        _authService = authService;
     }
 
     /// <summary>
@@ -36,19 +36,16 @@ public class AuthController: BaseController
     [HttpPost(nameof(SignIn))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
     public Task<IActionResult> SignIn([FromBody] SignInRequest request)
-        => GetResult(() =>_userService.SignInAsync(_mapper.Map<SignInRequest, SignInModel>(request)));
+        => GetResult(() =>_authService.SignInAsync(_mapper.Map<SignInRequest, SignInModel>(request)));
 
     /// <summary>
     /// Авторизация пользователя через Google
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="parameters"></param>
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(nameof(SignInByGoogle))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
-    public async Task<IActionResult> SignInByGoogle([FromBody] SignInGoogleRequest request)
-    {
-        var signInByGoogleModel = _mapper.Map<SignInGoogleRequest, SignInByGoogleModel>(request);
-        return await GetResult(() => _userService.SignInByGoogle(signInByGoogleModel));
-    }
+    public Task<IActionResult> SignInByGoogle([FromBody] SignInByGoogleModel parameters)
+        => GetResult(() => _authService.SignInByGoogleAsync(parameters));
 }

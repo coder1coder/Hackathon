@@ -25,9 +25,9 @@ public class UserRepository: IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<long> CreateAsync(SignUpModel signUpModel)
+    public async Task<long> CreateAsync(CreateNewUserModel createNewUserModel)
     {
-        var entity = _mapper.Map<UserEntity>(signUpModel);
+        var entity = _mapper.Map<UserEntity>(createNewUserModel);
 
         await _dbContext.Users.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
@@ -49,7 +49,6 @@ public class UserRepository: IUserRepository
     public async Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email)
     {
         var entity = await _dbContext.Users
-            .Include(x=>x.EmailConfirmationRequest)
             .Include(x=>x.GoogleAccount)
             .AsNoTracking()
             .FirstOrDefaultAsync(x =>

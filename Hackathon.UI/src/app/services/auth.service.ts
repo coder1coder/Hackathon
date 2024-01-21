@@ -71,18 +71,7 @@ export class AuthService {
   public loginByGoogle(googleUserModel: GoogleUser): Observable<IGetTokenResponse> {
     return this.http
       .post<IGetTokenResponse>(this.api + '/Auth/SignInByGoogle', {
-        id: googleUserModel.id,
-        fullName: googleUserModel.fullName,
-        givenName: googleUserModel.givenName,
-        imageUrl: googleUserModel.imageUrl,
-        email: googleUserModel.email,
-        accessToken: googleUserModel.accessToken,
-        expiresAt: googleUserModel.expiresAt,
-        expiresIn: googleUserModel.expiresIn,
-        firstIssuedAt: googleUserModel.firstIssuedAt,
-        TokenId: googleUserModel.TokenId,
-        loginHint: googleUserModel.loginHint,
-        isLoggedIn: googleUserModel.isLoggedIn,
+        AccessToken: googleUserModel.TokenId
       })
       .pipe(
         map((res) => {

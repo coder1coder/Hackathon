@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore"  />
     <PackageReference Include="Microsoft.AspNetCore.SignalR"  />
   </ItemGroup>
 

@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Text;
-using Hackathon.Configuration;
+using Hackathon.Configuration.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Hackathon.API.Extensions;
 
-public static class AddAuthenticationExtension
+internal static class AddAuthenticationExtension
 {
-    public static IServiceCollection AddAuthentication(this IServiceCollection services, AuthOptions authOptions)
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, AuthenticateSettings authenticateSettings)
     {
-        if (authOptions is null)
-            throw new ArgumentNullException(nameof(authOptions), "Необходимо указать параметры аутентификации/авторизации");
+        if (authenticateSettings is null)
+            throw new ArgumentNullException(nameof(authenticateSettings), "Необходимо указать параметры аутентификации/авторизации");
 
         services
             .AddAuthentication(x =>
@@ -26,13 +26,9 @@ public static class AddAuthenticationExtension
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.Secret)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = authOptions.Issuer,
-                    ValidAudience = authOptions.Audience,
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticateSettings.Internal.Secret)),
+                    ValidIssuer = authenticateSettings.Internal.Issuer,
+                    ValidAudience = authenticateSettings.Internal.Audience
                 };
             });
 

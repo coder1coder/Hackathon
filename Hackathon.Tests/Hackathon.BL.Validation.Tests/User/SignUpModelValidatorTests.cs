@@ -32,7 +32,7 @@ public class SignUpModelValidatorTests
     public void Should_Fail_When_Specify_UserName_From_ListOfRestrictions()
     {
         //arrange
-        var signUpModel = new SignUpModel
+        var signUpModel = new CreateNewUserModel
         {
             Email = "test@test.ru",
             UserName = _restrictedNames.Users.First()
