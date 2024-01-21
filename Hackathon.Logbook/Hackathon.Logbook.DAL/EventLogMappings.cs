@@ -10,6 +10,7 @@ public class EventLogMappings: IRegister
     {
         config.ForType<EventLogModel, EventLogEntity>()
             .IgnoreNullValues(true)
+            .Map(x=>x.UserName, s=>s.Username)
             .Map(x => x.Type, s => s.LogType);
 
         config.ForType<EventLogEntity, EventLogListItem>()
