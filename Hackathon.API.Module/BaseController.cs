@@ -11,7 +11,7 @@ namespace Hackathon.API.Module;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = "Blocking")]
+[Authorize]
 public abstract class BaseController: ControllerBase
 {
     protected long AuthorizedUserId

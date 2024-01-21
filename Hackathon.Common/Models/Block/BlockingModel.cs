@@ -28,6 +28,11 @@ namespace Hackathon.Common.Models.Block
                 : null;
         }
 
+        public BlockingModel()
+        {
+            
+        }
+
         /// <summary>
         /// Id
         /// </summary>

@@ -159,8 +159,9 @@ public class Startup
                         .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
                 );
 
-                x.AddPolicy("Blocking",
-                    policy => policy.Requirements.Add(new BlockingRequirement()));
+                x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddRequirements(new BlockingRequirement())
+                    .Build();
             })
             .AddSwagger()
             .AddSignalR(x=>

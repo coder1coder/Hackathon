@@ -75,7 +75,7 @@ namespace Hackathon.DAL.Migrations
                     b.ToTable("ApprovalApplications", (string)null);
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.Block.BlockEntity", b =>
+            modelBuilder.Entity("Hackathon.DAL.Entities.Block.BlockingEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,31 +86,26 @@ namespace Hackathon.DAL.Migrations
                     b.Property<DateTime?>("ActionDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ActionHours")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("AdministratorId")
+                    b.Property<long>("AssignmentUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsRemove")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("TargetUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TargetUserId")
+                        .IsUnique();
 
                     b.ToTable("Blocks", (string)null);
                 });
@@ -560,15 +555,15 @@ namespace Hackathon.DAL.Migrations
                     b.Navigation("Signer");
                 });
 
-            modelBuilder.Entity("Hackathon.DAL.Entities.Block.BlockEntity", b =>
+            modelBuilder.Entity("Hackathon.DAL.Entities.Block.BlockingEntity", b =>
                 {
-                    b.HasOne("Hackathon.DAL.Entities.User.UserEntity", "User")
-                        .WithMany("Blocks")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Hackathon.DAL.Entities.User.UserEntity", "TargetUser")
+                        .WithOne("Block")
+                        .HasForeignKey("Hackathon.DAL.Entities.Block.BlockingEntity", "TargetUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("TargetUser");
                 });
 
             modelBuilder.Entity("Hackathon.DAL.Entities.EmailConfirmationRequestEntity", b =>
@@ -742,7 +737,7 @@ namespace Hackathon.DAL.Migrations
 
             modelBuilder.Entity("Hackathon.DAL.Entities.User.UserEntity", b =>
                 {
-                    b.Navigation("Blocks");
+                    b.Navigation("Block");
 
                     b.Navigation("EmailConfirmationRequest");
 

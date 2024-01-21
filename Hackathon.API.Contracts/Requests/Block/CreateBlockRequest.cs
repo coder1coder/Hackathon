@@ -27,9 +27,4 @@ public class CreateBlockRequest
     /// Часы, сколько действует
     /// </summary>
     public int? ActionHours { get; set; }
-
-    /// <summary>
-    /// Id пользователя, на которого назначена блокировка
-    /// </summary>
-    public long TargetUserId { get; private set; }
 }

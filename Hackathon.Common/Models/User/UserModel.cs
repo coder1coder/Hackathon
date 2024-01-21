@@ -17,7 +17,7 @@ public class UserModel: UserShortModel
     /// <summary>
     /// Блокирвока пользователя
     /// </summary>
-    public BlockingModel? Block { get; set; }
+    public BlockingModel Block { get; set; }
 
     /// <summary>
     /// Проверяет, заблокирован ли пользователь

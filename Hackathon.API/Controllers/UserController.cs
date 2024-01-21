@@ -34,6 +34,7 @@ public class UserController: BaseController
     /// <param name="mapper"></param>
     /// <param name="userService"></param>
     /// <param name="emailConfirmationService"></param>
+    /// <param name="blockingService"></param>
     public UserController(
         IMapper mapper,
         IUserService userService,
@@ -134,14 +135,15 @@ public class UserController: BaseController
     /// <summary>
     /// Создание новой блокировки
     /// </summary>
+    /// <param name="targetUserId">Id пользователя, на которого назначена блокировка</param>
     /// <param name="createBlockRequest"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost("blocking/{targetUserId}")]
     [ProducesResponseType(typeof(BaseCreateResponse), (int)HttpStatusCode.OK)]
-    public Task<IActionResult> CreateBlockingAsync([FromBody] CreateBlockRequest createBlockRequest)
+    public Task<IActionResult> CreateBlockingAsync(long targetUserId, [FromBody] CreateBlockRequest createBlockRequest)
         => GetResult(() => _blockingService.CreateAsync(new BlockingCreateParameters
         {
-            TargetUserId = createBlockRequest.TargetUserId,
+            TargetUserId = targetUserId,
             ActionDate = createBlockRequest.ActionDate,
             ActionHours = createBlockRequest.ActionHours,
             Reason = createBlockRequest.Reason,
