@@ -14,6 +14,14 @@ public interface IBlockingService
     Task<Result<long>> CreateAsync(BlockingCreateParameters blockCreateParameters);
 
     /// <summary>
+    /// Удаление блокировки
+    /// </summary>
+    /// <param name="removeUserId">Id пользователя, который снимает блокировку</param>
+    /// <param name="targetUserId">Id пользователя, с которого снимается блокировка</param>
+    /// <returns></returns>
+    Task<Result<bool>> DeleteAsync(long removeUserId, long targetUserId);
+
+    /// <summary>
     /// Проверка заблокирован ли пользователь
     /// </summary>
     /// <param name="userId">Id пользователя</param>

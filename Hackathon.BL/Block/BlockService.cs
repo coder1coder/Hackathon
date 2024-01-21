@@ -72,4 +72,24 @@ public class BlockService : IBlockingService
 
         return true;
     }
+
+    public async Task<Result<bool>> DeleteAsync(long removeUserId, long targetUserId)
+    {
+        var administrator = await _userRepository.GetAsync(removeUserId);
+
+        if (administrator?.Role != UserRole.Administrator)
+            return Result<bool>.NotValid(string.Format("Пользователь с Id: {0} не сущуствует или не обладает нужными правами", removeUserId));
+
+        var user = await _userRepository.GetAsync(targetUserId);
+
+        if (user is null)
+            return Result<bool>.NotValid("Пользователь, на которого назначается блокировка не существует");
+
+        if (!user.IsBlocking)
+            return Result<bool>.NotValid("Пользователь не заблокирован");
+
+        await _blockRepository.RemoveAsync(user.Block);
+
+        return Result<bool>.FromValue(true);
+    }
 }

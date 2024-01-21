@@ -133,12 +133,12 @@ public class UserController: BaseController
         => GetResult(() => _userService.UpdateUserAsync(_mapper.Map<UpdateUserParameters>(request)));
 
     /// <summary>
-    /// Создание новой блокировки
+    /// Создать новую блокировку
     /// </summary>
     /// <param name="targetUserId">Id пользователя, на которого назначена блокировка</param>
     /// <param name="createBlockRequest"></param>
     /// <returns></returns>
-    [HttpPost("blocking/{targetUserId}")]
+    [HttpPost("blocking/{targetUserId:long}")]
     [ProducesResponseType(typeof(BaseCreateResponse), (int)HttpStatusCode.OK)]
     public Task<IActionResult> CreateBlockingAsync(long targetUserId, [FromBody] CreateBlockRequest createBlockRequest)
         => GetResult(() => _blockingService.CreateAsync(new BlockingCreateParameters
@@ -150,4 +150,13 @@ public class UserController: BaseController
             Type = createBlockRequest.Type,
             AssignmentUserId = AuthorizedUserId
         }));
+
+    /// <summary>
+    /// Удалить блокировку
+    /// </summary>
+    /// <param name="targetUserId">Id пользователя, с которого снимается блокировка</param>
+    /// <returns></returns>
+    [HttpDelete("blocking/{targetUserId:long}")]
+    public Task<IActionResult> DeleteBlockingAsync(long targetUserId)
+        => GetResult(() => _blockingService.DeleteAsync(AuthorizedUserId, targetUserId));
 }

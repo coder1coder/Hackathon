@@ -9,7 +9,14 @@ public interface IBlockingRepository
     /// <summary>
     /// Создание блокировки
     /// </summary>
-    /// <param name="blockCreateParameters">Модель создаваемой блокировки</param>
+    /// <param name="blocking">Модель создаваемой блокировки</param>
     /// <returns></returns>
-    Task<long> CreateAsync(BlockingModel block);
+    Task<long> CreateAsync(BlockingModel blocking);
+
+    /// <summary>
+    /// Удаление блокировки
+    /// </summary>
+    /// <param name="blocking">Модель удаляемой блокировки</param>
+    /// <returns></returns>
+    Task RemoveAsync(BlockingModel blocking);
 }
