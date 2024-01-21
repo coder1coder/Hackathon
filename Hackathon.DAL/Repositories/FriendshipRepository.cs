@@ -34,15 +34,21 @@ public class FriendshipRepository: IFriendshipRepository
         var friendships = await _dbContext.Friendships
             .AsNoTracking()
             .Where(x =>
-                (x.ProposerId == userId
-                || x.UserId == userId)
-            && x.Status == status
-            ).ToArrayAsync();
+                (x.ProposerId == userId || x.UserId == userId)
+                && x.Status == status
+            )
+            .Select(x=>new
+            {
+                x.ProposerId,
+                x.UserId
+            })
+            .ToArrayAsync();
 
         var friendsIds = friendships
             .SelectMany(x=> new []{ x.ProposerId, x.UserId })
             .Where(x=> x != userId)
-            .Distinct().ToArray();
+            .Distinct()
+            .ToArray();
 
         var friendsEntities = await _dbContext.Users
             .AsNoTracking()

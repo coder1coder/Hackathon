@@ -21,6 +21,12 @@ public class UserProfileReactionRepository: IUserProfileReactionRepository
     {
         var userReactions = await _dbContext.UserReactions
             .AsNoTracking()
+            .Select(x=>new
+            {
+                x.UserId,
+                x.TargetUserId,
+                x.Reaction
+            })
             .FirstOrDefaultAsync(x=>
                 x.UserId == userId
                 && x.TargetUserId == targetUserId);

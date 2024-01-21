@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.Chats.DAL.Repositories;
 
-public class ChatRepository<TChatMessage>: IChatRepository<TChatMessage> where TChatMessage: class
+public abstract class BaseChatRepository<TChatMessage>: IChatRepository<TChatMessage> where TChatMessage: class
 {
     private readonly ChatsDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly ChatType _chatType;
 
-    protected ChatRepository(ChatsDbContext dbContext, IMapper mapper, ChatType chatType)
+    protected BaseChatRepository(ChatsDbContext dbContext, IMapper mapper, ChatType chatType)
     {
         _dbContext = dbContext;
         _mapper = mapper;

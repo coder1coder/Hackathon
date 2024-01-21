@@ -5,7 +5,7 @@ using MapsterMapper;
 
 namespace Hackathon.Chats.DAL.Repositories;
 
-public class TeamChatRepository: ChatRepository<TeamChatMessage>, ITeamChatRepository
+public class TeamChatRepository: BaseChatRepository<TeamChatMessage>, ITeamChatRepository
 {
     public TeamChatRepository(ChatsDbContext dbContext, IMapper mapper) : base(dbContext, mapper, ChatType.TeamChat)
     {

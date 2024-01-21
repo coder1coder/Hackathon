@@ -138,6 +138,14 @@ public class UserRepository: IUserRepository
     {
         var user = await _dbContext.Users
                 .AsNoTracking()
+                .Select(x=>new
+                {
+                    x.Id,
+                    x.UserName,
+                    x.PasswordHash,
+                    x.Role,
+                    x.GoogleAccountId
+                })
                 .FirstOrDefaultAsync(s=>s.UserName == userName);
 
         return user is null
