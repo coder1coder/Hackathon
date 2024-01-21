@@ -197,7 +197,17 @@ public class UserRepository: IUserRepository
     }
 
     public async Task<UserRole?> GetRoleAsync(long userId)
-        => (await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id == userId))?.Role;
+    {
+        var user = await _dbContext.Users
+            .Select(x => new
+            {
+                x.Id,
+                x.Role    
+            }).FirstOrDefaultAsync(x=>x.Id == userId);
+
+        return user?.Role;
+    }
+        
 
     public Task<long[]> GetAdministratorIdsAsync()
         => _dbContext.Users
