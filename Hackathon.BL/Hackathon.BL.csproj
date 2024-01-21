@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -15,12 +15,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AWSSDK.S3"  />
-      <PackageReference Include="Backend.Tools.Common"  />
-      <PackageReference Include="BCrypt.Net-Next"  />
-      <PackageReference Include="Mapster"  />
-      <PackageReference Include="MassTransit"  />
-      <PackageReference Include="Microsoft.Extensions.Options"  />
+      <PackageReference Include="AWSSDK.S3" />
+      <PackageReference Include="Backend.Tools.Common" />
+      <PackageReference Include="BCrypt.Net-Next" />
+      <PackageReference Include="Mapster" />
+      <PackageReference Include="MassTransit" />
+      <PackageReference Include="Microsoft.Extensions.Options" />
     </ItemGroup>
 
     <PropertyGroup>

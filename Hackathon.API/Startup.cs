@@ -20,6 +20,7 @@ using Hackathon.IntegrationServices;
 using Mapster;
 using MapsterMapper;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -163,10 +164,16 @@ public class Startup
                         .RequireAuthenticatedUser()
                         .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
                 );
+
+                x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddRequirements(new BlockingRequirement())
+                    .Build();
             })
             .AddSwagger()
             .AddSignalR(x=>
                 x.EnableDetailedErrors = _environment.IsDevelopment());
+
+        services.AddScoped<IAuthorizationHandler, BlockingHandler>();
 
         services.AddHealthChecks();
     }

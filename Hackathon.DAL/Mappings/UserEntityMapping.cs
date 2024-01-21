@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using Hackathon.Common.Models.Block;
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities.Block;
 using Hackathon.DAL.Entities.User;
 using Mapster;
 
@@ -20,11 +22,11 @@ public class UserEntityMapping: IRegister
 
         config.ForType<UserEntity, UserModel>()
             .BeforeMapping(x => x.Email = new UserEmailModel())
-            .IgnoreMember((member,side)=>
+            .IgnoreMember((member, side) =>
                 side == MemberSide.Source
                 && member.Name == nameof(UserEntity.Email))
-            .Map(x=>x.Email.Address, s=>s.Email)
-            .Map(x=>x.Email.ConfirmationRequest, s=>s.EmailConfirmationRequest);
+            .Map(x => x.Email.Address, s => s.Email)
+            .Map(x => x.Email.ConfirmationRequest, s => s.EmailConfirmationRequest);
 
         config.ForType<GoogleAccountEntity, GoogleAccountModel>();
 

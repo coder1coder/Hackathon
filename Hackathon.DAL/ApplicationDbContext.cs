@@ -1,5 +1,6 @@
-﻿using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities;
 using Hackathon.DAL.Entities.ApprovalApplications;
+using Hackathon.DAL.Entities.Block;
 using Hackathon.DAL.Entities.Event;
 using Hackathon.DAL.Entities.User;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,11 @@ public class ApplicationDbContext: BaseDbContext
     /// Заявки на согласование
     /// </summary>
     public DbSet<ApprovalApplicationEntity> ApprovalApplications { get; set; }
+
+    /// <summary>
+    /// Блокировки
+    /// </summary>
+    public DbSet<BlockingEntity> Blockings { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

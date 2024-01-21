@@ -1,4 +1,5 @@
 using Hackathon.BL.ApprovalApplications;
+using Hackathon.BL.Block;
 using Hackathon.BL.Email;
 using Hackathon.BL.Events;
 using Hackathon.BL.Friendship;
@@ -6,6 +7,7 @@ using Hackathon.BL.Projects;
 using Hackathon.BL.Teams;
 using Hackathon.BL.Users;
 using Hackathon.Common.Abstraction;
+using Hackathon.Common.Abstraction.Block;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Project;
@@ -29,5 +31,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IPrivateTeamService, PrivateTeamService>()
             .AddScoped<IPublicTeamService, PublicTeamService>()
             .AddScoped<IUserProfileReactionService, UserProfileReactionService>()
-            .AddScoped<IUserService, UserService>();
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IBlockingService, BlockService>();
 }

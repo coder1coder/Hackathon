@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Hackathon.Common.Models.Block;
+using Hackathon.Contracts.Requests.Block;
+using System.Net;
+using Hackathon.Common.Abstraction.Block;
 
 namespace Hackathon.API.Controllers;
 
@@ -22,6 +26,7 @@ public class UserController: BaseController
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
     private readonly IEmailConfirmationService _emailConfirmationService;
+    private readonly IBlockingService _blockingService;
 
     /// <summary>
     /// Пользователи
@@ -29,14 +34,17 @@ public class UserController: BaseController
     /// <param name="mapper"></param>
     /// <param name="userService"></param>
     /// <param name="emailConfirmationService"></param>
+    /// <param name="blockingService"></param>
     public UserController(
         IMapper mapper,
         IUserService userService,
-        IEmailConfirmationService emailConfirmationService)
+        IEmailConfirmationService emailConfirmationService,
+        IBlockingService blockingService)
     {
         _mapper = mapper;
         _userService = userService;
         _emailConfirmationService = emailConfirmationService;
+        _blockingService = blockingService;
     }
 
     /// <summary>
@@ -117,4 +125,32 @@ public class UserController: BaseController
     [HttpPut("profile/update")]
     public Task<IActionResult> UpdateUserProfile(UpdateUserRequest request)
         => GetResult(() => _userService.UpdateUserAsync(_mapper.Map<UpdateUserParameters>(request)));
+
+    /// <summary>
+    /// Создать новую блокировку
+    /// </summary>
+    /// <param name="targetUserId">Id пользователя, на которого назначена блокировка</param>
+    /// <param name="createBlockRequest"></param>
+    /// <returns></returns>
+    [HttpPost("blocking/{targetUserId:long}")]
+    [ProducesResponseType(typeof(BaseCreateResponse), (int)HttpStatusCode.OK)]
+    public Task<IActionResult> CreateBlockingAsync(long targetUserId, [FromBody] CreateBlockRequest createBlockRequest)
+        => GetResult(() => _blockingService.CreateAsync(new BlockingCreateParameters
+        {
+            TargetUserId = targetUserId,
+            ActionDate = createBlockRequest.ActionDate,
+            ActionHours = createBlockRequest.ActionHours,
+            Reason = createBlockRequest.Reason,
+            Type = createBlockRequest.Type,
+            AssignmentUserId = AuthorizedUserId
+        }));
+
+    /// <summary>
+    /// Удалить блокировку
+    /// </summary>
+    /// <param name="targetUserId">Id пользователя, с которого снимается блокировка</param>
+    /// <returns></returns>
+    [HttpDelete("blocking/{targetUserId:long}")]
+    public Task<IActionResult> DeleteBlockingAsync(long targetUserId)
+        => GetResult(() => _blockingService.DeleteAsync(AuthorizedUserId, targetUserId));
 }
