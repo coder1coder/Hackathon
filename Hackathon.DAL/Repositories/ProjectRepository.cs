@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -134,10 +135,16 @@ public class ProjectRepository: IProjectRepository
     }
 
     private static Expression<Func<ProjectEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
-        => parameters.SortBy?.ToLowerInvariant() switch
+    {
+        var availableFields = new Dictionary<string, Expression<Func<ProjectEntity, object>>>
         {
-            "eventId" => x => x.EventId,
-            "teamId" => x =>x.TeamId,
-            _ => x => x.Name
+            { nameof(ProjectEntity.EventId).ToLowerInvariant(), x => x.EventId },
+            { nameof(ProjectEntity.TeamId).ToLowerInvariant(), x => x.TeamId }
         };
+
+        return !string.IsNullOrWhiteSpace(parameters.SortBy)
+               && availableFields.TryGetValue(parameters.SortBy.ToLowerInvariant(), out var sortingDelegate)
+            ? sortingDelegate
+            : x => x.Name;
+    }
 }
