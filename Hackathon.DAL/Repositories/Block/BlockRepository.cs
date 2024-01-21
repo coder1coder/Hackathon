@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Hackathon.DAL.Repositories.Block;
 
-public class BlockRepository : IBlockRepository
+public class BlockRepository : IBlockingRepository
 {
     private readonly IMapper _mapper;
     private readonly ApplicationDbContext _dbContext;
@@ -21,9 +21,9 @@ public class BlockRepository : IBlockRepository
         _dbContext = dbContext;
     }
 
-    public async Task<long> CreateAsync(BlockModel block)
+    public async Task<long> CreateAsync(BlockingModel block)
     {
-        var blockEntity = _mapper.Map<BlockEntity>(block);
+        var blockEntity = _mapper.Map<BlockingEntity>(block);
 
         await _dbContext.AddAsync(blockEntity);
         await _dbContext.SaveChangesAsync();

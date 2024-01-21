@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Hackathon.Common.Models.Block;
+using Hackathon.Contracts.Requests.Block;
+using System.Net;
+using Hackathon.Common.Abstraction.Block;
 
 namespace Hackathon.API.Controllers;
 
@@ -22,6 +26,7 @@ public class UserController: BaseController
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
     private readonly IEmailConfirmationService _emailConfirmationService;
+    private readonly IBlockingService _blockingService;
 
     /// <summary>
     /// Пользователи
@@ -32,11 +37,13 @@ public class UserController: BaseController
     public UserController(
         IMapper mapper,
         IUserService userService,
-        IEmailConfirmationService emailConfirmationService)
+        IEmailConfirmationService emailConfirmationService,
+        IBlockingService blockingService)
     {
         _mapper = mapper;
         _userService = userService;
         _emailConfirmationService = emailConfirmationService;
+        _blockingService = blockingService;
     }
 
     /// <summary>
@@ -123,4 +130,22 @@ public class UserController: BaseController
     [HttpPut("profile/update")]
     public Task<IActionResult> UpdateUserProfile(UpdateUserRequest request)
         => GetResult(() => _userService.UpdateUserAsync(_mapper.Map<UpdateUserParameters>(request)));
+
+    /// <summary>
+    /// Создание новой блокировки
+    /// </summary>
+    /// <param name="createBlockRequest"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [ProducesResponseType(typeof(BaseCreateResponse), (int)HttpStatusCode.OK)]
+    public Task<IActionResult> CreateBlockingAsync([FromBody] CreateBlockRequest createBlockRequest)
+        => GetResult(() => _blockingService.CreateAsync(new BlockingCreateParameters
+        {
+            TargetUserId = createBlockRequest.TargetUserId,
+            ActionDate = createBlockRequest.ActionDate,
+            ActionHours = createBlockRequest.ActionHours,
+            Reason = createBlockRequest.Reason,
+            Type = createBlockRequest.Type,
+            AssignmentUserId = AuthorizedUserId
+        }));
 }

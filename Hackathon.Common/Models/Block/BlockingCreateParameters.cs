@@ -5,12 +5,12 @@ namespace Hackathon.Common.Models.Block
     /// <summary>
     /// Модель для создания блокировки
     /// </summary>
-    public class BlockCreateParameters
+    public class BlockingCreateParameters
     {
         /// <summary>
         /// Тип блокировки
         /// </summary>
-        public BlockType Type { get; set; }
+        public BlockingType Type { get; set; }
 
         /// <summary>
         /// Причина блокировки
@@ -28,13 +28,13 @@ namespace Hackathon.Common.Models.Block
         public int? ActionHours { get; set; }
 
         /// <summary>
-        /// Id пользователя, на которого назначена блокировка
+        /// Id пользователя, который назначил блокировку
         /// </summary>
-        public long UserId { get; set; }
+        public long AssignmentUserId { get; set; }
 
         /// <summary>
-        /// Id администратора, который назначает блокировку
+        /// Id пользователя, на которого назначена блокировка
         /// </summary>
-        public long AdministratorId { get; set; }
+        public long TargetUserId { get; set; }
     }
 }

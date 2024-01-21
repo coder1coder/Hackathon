@@ -11,7 +11,7 @@ public class CreateBlockRequest
     /// <summary>
     /// Тип блокировки
     /// </summary>
-    public BlockType Type { get; set; }
+    public BlockingType Type { get; set; }
 
     /// <summary>
     /// Причина блокировки
@@ -31,5 +31,5 @@ public class CreateBlockRequest
     /// <summary>
     /// Id пользователя, на которого назначена блокировка
     /// </summary>
-    public long UserId { get; set; }
+    public long TargetUserId { get; private set; }
 }

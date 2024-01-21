@@ -1,5 +1,6 @@
 using Hackathon.Common.Models.User;
 using Hackathon.DAL.Entities;
+using Hackathon.DAL.Entities.Block;
 using Hackathon.DAL.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,10 +34,9 @@ public class UserEntityConfiguration: IEntityTypeConfiguration<UserEntity>
             .HasForeignKey<EmailConfirmationRequestEntity>(b => b.UserId);
 
         builder
-            .HasMany(x => x.Blocks)
-            .WithOne(x => x.User)
-            .HasForeignKey(b => b.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(x => x.Block)
+            .WithOne(x => x.TargetUser)
+            .HasForeignKey<BlockingEntity>(b => b.TargetUserId);
 
         builder
             .Property(x => x.IsDeleted)

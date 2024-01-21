@@ -12,9 +12,9 @@ public class BlockMappings : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config
-            .ForType<BlockEntity, BlockModel>();
+            .ForType<BlockingEntity, BlockingModel>();
 
         config
-            .ForType<BlockModel, BlockEntity>();
+            .ForType<BlockingModel, BlockingEntity>();
     }
 }

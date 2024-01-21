@@ -68,9 +68,9 @@ public class UserEntity: BaseEntity, ISoftDeletable
     public ICollection<EventAgreementEntity> EventAgreements { get; set; } = new List<EventAgreementEntity>();
 
     /// <summary>
-    /// Блокировки пользователя
+    /// Блокировка пользователя
     /// </summary>
-    public ICollection<BlockEntity> Blocks { get; set; } = new List<BlockEntity>();
+    public BlockingEntity Block { get; set; }
 
     /// <summary>
     /// Идентификатор аватара профиля в файловом хранилище

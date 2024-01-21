@@ -15,15 +15,14 @@ public class UserModel: UserShortModel
     public GoogleAccountModel GoogleAccount { get; set; }
 
     /// <summary>
-    /// Блокировки пользователя
+    /// Блокирвока пользователя
     /// </summary>
-    public List<BlockModel> Blocks { get; set; }
+    public BlockingModel? Block { get; set; }
 
     /// <summary>
-    /// Проверяет, заблокирован ли пользователь на текущий момент времени
+    /// Проверяет, заблокирован ли пользователь
     /// </summary>
-    /// <param name="currentDateTime">Текущий момент времени</param>
     /// <returns></returns>
-    public bool IsBlocking(DateTime currentDateTime)
-        => Blocks.Any(x => x.IsLock(currentDateTime));
+    public bool IsBlocking => 
+        Block != null && Block.IsBlocking;
 }

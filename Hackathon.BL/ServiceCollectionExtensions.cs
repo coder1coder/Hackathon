@@ -32,5 +32,5 @@ public static class ServiceCollectionExtensions
             .AddScoped<IPublicTeamService, PublicTeamService>()
             .AddScoped<IUserProfileReactionService, UserProfileReactionService>()
             .AddScoped<IUserService, UserService>()
-            .AddScoped<IBlockService, BlockService>();
+            .AddScoped<IBlockingService, BlockService>();
 }

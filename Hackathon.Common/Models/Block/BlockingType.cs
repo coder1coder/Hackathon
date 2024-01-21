@@ -3,7 +3,7 @@ namespace Hackathon.Common.Models.Block
     /// <summary>
     /// Тип блокировки
     /// </summary>
-    public enum BlockType
+    public enum BlockingType
     {
         /// <summary>
         /// Постоянная

@@ -7,9 +7,9 @@ namespace Hackathon.API.Module;
 
 public class BlockingHandler : AuthorizationHandler<BlockingRequirement>
 {
-    private readonly IBlockService _blockService;
+    private readonly IBlockingService _blockService;
 
-    public BlockingHandler(IBlockService blockService)
+    public BlockingHandler(IBlockingService blockService)
     {
         _blockService = blockService;
     }

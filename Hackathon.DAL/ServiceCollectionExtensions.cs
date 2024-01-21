@@ -29,6 +29,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IEventAgreementRepository, EventAgreementRepository>()
             .AddScoped<IApprovalApplicationRepository, ApprovalApplicationRepository>()
-            .AddScoped<IBlockRepository, BlockRepository>();
+            .AddScoped<IBlockingRepository, BlockRepository>();
     }
 }
