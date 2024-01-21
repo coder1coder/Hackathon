@@ -19,6 +19,7 @@ public static class DbInitializer
             var user = new UserEntity
             {
                 UserName = administratorDefaults.Login,
+                //TODO: use IPasswordHashService
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
                 FullName = administratorDefaults.Login,
                 Email = "administrator@administrator.ru",

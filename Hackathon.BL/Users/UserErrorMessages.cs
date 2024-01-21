@@ -8,4 +8,5 @@ public static class UserErrorMessages
     public const string UserDoesNotExists = "Пользователь не существует";
     public const string ProfileFileImageIsNotBeEmpty = "Файл не может быть пустым";
     public const string IncorrectUserNameOrPassword = "Неправильное имя пользователя или пароль";
+    public const string CurrentPasswordIncorrect = "Текущий пароль указан неверно";
 }

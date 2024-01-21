@@ -36,7 +36,7 @@ public class AuthController: BaseController
     [HttpPost(nameof(SignIn))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
     public Task<IActionResult> SignIn([FromBody] SignInRequest request)
-        => GetResult(() =>_userService.SignInAsync(_mapper.Map<SignInModel>(request)));
+        => GetResult(() =>_userService.SignInAsync(_mapper.Map<SignInRequest, SignInModel>(request)));
 
     /// <summary>
     /// Авторизация пользователя через Google
@@ -45,9 +45,10 @@ public class AuthController: BaseController
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(nameof(SignInByGoogle))]
-    public async Task<AuthTokenModel> SignInByGoogle([FromBody] SignInGoogleRequest request)
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
+    public async Task<IActionResult> SignInByGoogle([FromBody] SignInGoogleRequest request)
     {
-        var signInByGoogleModel = _mapper.Map<SignInByGoogleModel>(request);
-        return await _userService.SignInByGoogle(signInByGoogleModel);
+        var signInByGoogleModel = _mapper.Map<SignInGoogleRequest, SignInByGoogleModel>(request);
+        return await GetResult(() => _userService.SignInByGoogle(signInByGoogleModel));
     }
 }

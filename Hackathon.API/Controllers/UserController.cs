@@ -57,6 +57,15 @@ public class UserController: BaseController
     }
 
     /// <summary>
+    /// Обновить пароль пользователя
+    /// </summary>
+    /// <param name="parameters">Параметры</param>
+    /// <returns></returns>
+    [HttpPut("password")]
+    public Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordModel parameters)
+        => GetResult(() => _userService.UpdatePasswordAsync(AuthorizedUserId, parameters)); 
+
+    /// <summary>
     /// Получить информацию о пользователе
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>

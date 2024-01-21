@@ -19,30 +19,18 @@ namespace Hackathon.BL.Tests.User;
 
 public class UserServiceTests: BaseUnitTest
 {
-    private readonly Mock<IFileStorageService> _fileStorageMock;
-    private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock;
-    private readonly Mock<IValidator<SignInModel>> _signInValidatorMock;
-    private readonly Mock<IValidator<UpdateUserParameters>> _updateUserParametersValidator;
-    private readonly Mock<IUserRepository> _userRepositoryMock;
-    private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock;
-    private readonly Mock<IOptions<AuthOptions>> _authOptionsMock;
-    private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock;
-    private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock;
-    private readonly Mock<IValidator<IFileImage>> _profileImageValidator;
-
-    public UserServiceTests()
-    {
-        _updateUserParametersValidator = new Mock<IValidator<UpdateUserParameters>>();
-        _fileStorageMock = new Mock<IFileStorageService>();
-        _emailSettingsMock = new Mock<IOptions<EmailSettings>>();
-        _authOptionsMock = new Mock<IOptions<AuthOptions>>();
-        _signUpValidatorMock = new Mock<IValidator<SignUpModel>>();
-        _signInValidatorMock = new Mock<IValidator<SignInModel>>();
-        _userRepositoryMock = new Mock<IUserRepository>();
-        _emailConfirmationRepositoryMock = new Mock<IEmailConfirmationRepository>();
-        _fileStorageRepositoryMock = new Mock<IFileStorageRepository>();
-        _profileImageValidator = new Mock<IValidator<IFileImage>>();
-    }
+    private readonly Mock<IFileStorageService> _fileStorageMock = new();
+    private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock = new();
+    private readonly Mock<IValidator<SignInModel>> _signInValidatorMock = new();
+    private readonly Mock<IValidator<UpdateUserParameters>> _updateUserParametersValidator = new();
+    private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock = new();
+    private readonly Mock<IOptions<AuthOptions>> _authOptionsMock = new();
+    private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock = new();
+    private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock = new();
+    private readonly Mock<IValidator<IFileImage>> _profileImageValidator = new();
+    private readonly Mock<IValidator<UpdatePasswordModel>> _updatePasswordModelValidatorMock = new();
+    private readonly Mock<IPasswordHashService> _passwordHashServiceMock = new();
 
     [Fact]
     public async Task GetAsync_ShouldReturn_UserModelCollection()
@@ -74,8 +62,9 @@ public class UserServiceTests: BaseUnitTest
             _emailConfirmationRepositoryMock.Object,
             _fileStorageMock.Object,
             _fileStorageRepositoryMock.Object,
-            Mapper
-            );
+            Mapper,
+            _updatePasswordModelValidatorMock.Object,
+            _passwordHashServiceMock.Object);
 
         //act
         var result = await sut.GetListAsync(new GetListParameters<UserFilter>

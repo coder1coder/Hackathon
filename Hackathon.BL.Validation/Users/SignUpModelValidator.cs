@@ -40,9 +40,9 @@ public class SignUpModelValidator: AbstractValidator<SignUpModel>
             });
 
         RuleFor(x => x.Password)
-            .NotEmpty()
-            .MinimumLength(6)
-            .MaximumLength(100);
+            .NotNull()
+            .WithMessage(PasswordValidator.IncorrectPasswordError)
+            .SetValidator(new PasswordValidator());
 
         RuleFor(x => x.Email)
             .NotEmpty()

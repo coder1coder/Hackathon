@@ -223,4 +223,22 @@ public class UserRepository: IUserRepository
             .Where(x => x.Role == UserRole.Administrator)
             .Select(x => x.Id)
             .ToArrayAsync();
+
+    public Task<string> GetPasswordHashAsync(long userId)
+        => _dbContext.Users
+            .Where(x=>x.Id == userId)
+            .Select(x => x.PasswordHash)
+            .FirstOrDefaultAsync();
+
+    public async Task UpdatePasswordHashAsync(long userId, string passwordHash)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (user is not null)
+        {
+            user.PasswordHash = passwordHash;
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

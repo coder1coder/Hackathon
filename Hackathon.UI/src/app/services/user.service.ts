@@ -7,6 +7,7 @@ import { GetListParameters } from '../models/GetListParameters';
 import { UserFilter } from '../models/User/UserFilter';
 import { IUpdateUser, IUser } from '../models/User/IUser';
 import { FileUploadService } from './file-upload.service';
+import { IUpdatePasswordParameters } from '../models/User/IUpdatePasswordParameters';
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +48,9 @@ export class UserService {
 
   public updateUser(request: IUpdateUser): Observable<void> {
     return this.http.put<void>(`${this.api}/profile/update`, request);
+  }
+
+  public updatePassword(parameters: IUpdatePasswordParameters): Observable<void> {
+    return this.http.put<void>(`${this.api}/password`, parameters);
   }
 }

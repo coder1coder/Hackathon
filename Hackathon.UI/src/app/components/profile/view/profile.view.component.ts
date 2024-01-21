@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@ang
 import { UserRoleTranslator } from 'src/app/models/User/UserRole';
 import { AuthService } from '../../../services/auth.service';
 import { TeamClient } from '../../../services/team-client.service';
-import { catchError, Observable, of, switchMap, takeUntil } from 'rxjs';
+import {catchError, Observable, of, switchMap, takeUntil} from 'rxjs';
 import { IUpdateUser, IUser } from '../../../models/User/IUser';
 import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/UserProfileReaction';
 import { ActivatedRoute } from '@angular/router';
@@ -22,7 +22,11 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { AppStateService } from '../../../services/app-state.service';
-import { finalize } from 'rxjs/operators';
+import {filter, finalize } from 'rxjs/operators';
+import {MatDialog} from "@angular/material/dialog";
+import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
+import { ErrorProcessorService } from 'src/app/services/error-processor.service';
+import { PasswordChangeDialogComponent } from '../password-change-dialog/password-change-dialog.component';
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -58,16 +62,18 @@ export class ProfileViewComponent
     private authService: AuthService,
     private teamService: TeamClient,
     private activateRoute: ActivatedRoute,
-    private userService: UserService,
+    private usersApiClient: UserService,
     private userProfileReactionService: UserProfileReactionService,
     private snackService: SnackService,
     private fb: FormBuilder,
     private profileUserStore: ProfileUserStore,
     private currentUserStore: CurrentUserStore,
     private appStateService: AppStateService,
+    private dialogService: MatDialog,
+    private errorProcessor: ErrorProcessorService
   ) {
     super();
-    this.userService = userService;
+    this.usersApiClient = usersApiClient;
     this.snackService = snackService;
     this.authUserId = this.authService.getUserId() ?? 0;
     this.userId = this.activateRoute.snapshot.params['userId'] ?? this.authUserId;
@@ -103,7 +109,7 @@ export class ProfileViewComponent
       ...this.form.getRawValue(),
     };
     if (JSON.stringify(request) !== JSON.stringify(this.mapUserValue(this.user))) {
-      this.userService
+      this.usersApiClient
         .updateUser(request)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -154,7 +160,7 @@ export class ProfileViewComponent
 
   public confirmEmail(): void {
     const code: string = this.confirmationCodeInput?.nativeElement?.value ?? '';
-    this.userService
+    this.usersApiClient
       .confirmEmail(code)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -164,12 +170,30 @@ export class ProfileViewComponent
   }
 
   public createEmailConfirmationRequest(): void {
-    this.userService
+    this.usersApiClient
       .createEmailConfirmationRequest()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => this.fetchData(),
         error: () => this.snackService.open('Ошибка отправки запроса на подтверждение Email'),
+      });
+  }
+
+  public openPasswordChangeDialog(): void {
+    this.dialogService
+      .open(PasswordChangeDialogComponent, {
+        data: {},
+      })
+      .afterClosed()
+      .pipe(
+        filter((parameters: IUpdatePasswordParameters) => parameters !== undefined),
+        switchMap((parameters: IUpdatePasswordParameters) =>
+          this.usersApiClient.updatePassword(parameters)),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => this.snackService.open("Пароль успешно изменен"),
+        error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 

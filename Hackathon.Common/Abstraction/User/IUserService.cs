@@ -29,7 +29,7 @@ public interface IUserService
     /// </summary>
     /// <param name="signInByGoogleModel"></param>
     /// <returns></returns>
-    Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel);
+    Task<Result<AuthTokenModel>> SignInByGoogle(SignInByGoogleModel signInByGoogleModel);
 
     /// <summary>
     /// Получить информацию о пользователе по идентификатору
@@ -59,4 +59,12 @@ public interface IUserService
     /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
     /// <returns></returns>
     Task<Result> UpdateUserAsync(UpdateUserParameters updateUserParameters);
+
+    /// <summary>
+    /// Обновить пароль пользователя
+    /// </summary>
+    /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
+    /// <param name="parameters">Параметры</param>
+    /// <returns></returns>
+    Task<Result> UpdatePasswordAsync(long authorizedUserId, UpdatePasswordModel parameters);
 }

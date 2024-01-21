@@ -29,5 +29,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IPrivateTeamService, PrivateTeamService>()
             .AddScoped<IPublicTeamService, PublicTeamService>()
             .AddScoped<IUserProfileReactionService, UserProfileReactionService>()
-            .AddScoped<IUserService, UserService>();
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IPasswordHashService, PasswordHashService>();
 }

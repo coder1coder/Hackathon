@@ -34,5 +34,6 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<EventUpdateParameters>, UpdateEventModelValidator>()
         .AddScoped<IValidator<BaseEventParameters>, BaseEventParametersValidator>()
         .AddScoped<IValidator<UpdateUserParameters>, UpdateUserModelValidator>()
-        .AddScoped<IValidator<ApprovalApplicationRejectParameters>, ApprovalApplicationRejectParametersValidator>();
+        .AddScoped<IValidator<ApprovalApplicationRejectParameters>, ApprovalApplicationRejectParametersValidator>()
+        .AddScoped<IValidator<UpdatePasswordModel>, UpdatePasswordModelValidator>();
 }

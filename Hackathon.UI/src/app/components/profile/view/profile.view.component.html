@@ -13,6 +13,10 @@
     >
       Сохранить
     </button>
+
+    <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="openPasswordChangeDialog()">
+      Изменить пароль
+    </button>
   </div>
 
   <div class="profile" *ngIf="user">

@@ -13,8 +13,8 @@ public class SignInModelValidator: AbstractValidator<SignInModel>
             .MaximumLength(100);
 
         RuleFor(x => x.Password)
-            .NotEmpty()
-            .MinimumLength(6)
-            .MaximumLength(100);
+            .NotNull()
+            .WithMessage(PasswordValidator.IncorrectPasswordError)
+            .SetValidator(new PasswordValidator());
     }
 }

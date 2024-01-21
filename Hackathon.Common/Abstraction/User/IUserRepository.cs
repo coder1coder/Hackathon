@@ -93,4 +93,19 @@ public interface IUserRepository
     /// </summary>
     /// <returns></returns>
     Task<long[]> GetAdministratorIdsAsync();
+
+    /// <summary>
+    /// Получить хеш пароля пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <returns></returns>
+    Task<string> GetPasswordHashAsync(long userId);
+
+    /// <summary>
+    /// Обновить хешированный пароль пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <param name="passwordHash">Хешированный пароль</param>
+    /// <returns></returns>
+    Task UpdatePasswordHashAsync(long userId, string passwordHash);
 }

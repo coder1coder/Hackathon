@@ -36,6 +36,8 @@ public class UserService: IUserService
     private readonly int _requestLifetimeMinutes;
     private readonly IMapper _mapper;
     private readonly AuthOptions _authOptions;
+    private readonly IValidator<UpdatePasswordModel> _updatePasswordModelValidator;
+    private readonly IPasswordHashService _passwordHashService;
 
     public UserService(
         IOptions<EmailSettings> emailSettings,
@@ -48,7 +50,9 @@ public class UserService: IUserService
         IEmailConfirmationRepository emailConfirmationRepository,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
-        IMapper mapper)
+        IMapper mapper, 
+        IValidator<UpdatePasswordModel> updatePasswordModelValidator, 
+        IPasswordHashService passwordHashService)
     {
         _authOptions = authOptions?.Value ?? new AuthOptions();
         _signUpModelValidator = signUpModelValidator;
@@ -60,6 +64,8 @@ public class UserService: IUserService
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
         _mapper = mapper;
+        _updatePasswordModelValidator = updatePasswordModelValidator;
+        _passwordHashService = passwordHashService;
         _requestLifetimeMinutes = emailSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
     }
 
@@ -67,8 +73,7 @@ public class UserService: IUserService
     {
         await _signUpModelValidator.ValidateAndThrowAsync(signUpModel);
 
-        var passwordHash = BCrypt.Net.BCrypt.HashPassword(signUpModel.Password);
-        signUpModel.Password = passwordHash;
+        signUpModel.Password = await _passwordHashService.HashPasswordAsync(signUpModel.Password);
 
         return await _userRepository.CreateAsync(signUpModel);
     }
@@ -85,40 +90,41 @@ public class UserService: IUserService
         if (userSignInDetails is null)
             return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
 
-        var verified = BCrypt.Net.BCrypt.Verify(signInModel.Password, userSignInDetails.PasswordHash);
+        var verified = await _passwordHashService.VerifyAsync(signInModel.Password, userSignInDetails.PasswordHash);
 
         return !verified
             ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
             : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions));
     }
 
-    public async Task<AuthTokenModel> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
+    public async Task<Result<AuthTokenModel>> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
     {
+        //TODO: проверять токен учетной записи Google
         //TODO: расширить модель UserSignInDetails необходимыми данными и использовать GetUserSignInDetailsAsync
         var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(signInByGoogleModel.Id, signInByGoogleModel.Email);
-
-        if (userModel != null)
+        
+        var userName = userModel?.UserName ?? signInByGoogleModel.FullName;
+        
+        if (userModel is not null)
         {
             userModel.GoogleAccount = _mapper.Map<GoogleAccountModel>(signInByGoogleModel);
             await _userRepository.UpdateGoogleAccount(userModel.GoogleAccount);
         }
         else
         {
-            var userId = await _userRepository.CreateAsync(new SignUpModel
+            await _userRepository.CreateAsync(new SignUpModel
             {
                 Email = signInByGoogleModel.Email,
-                UserName = signInByGoogleModel.FullName,
+                UserName = userName,
                 FullName = signInByGoogleModel.FullName,
-                Password = signInByGoogleModel.Id,
+                Password = null,
                 GoogleAccount = signInByGoogleModel
             });
-
-            userModel = await _userRepository.GetAsync(userId);
         }
 
-        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(userModel.UserName);
+        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(userName);
 
-        return AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions);
+        return Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions));
     }
 
     public async Task<Result<UserModel>> GetAsync(long userId)
@@ -188,6 +194,25 @@ public class UserService: IUserService
         }
 
         await _userRepository.UpdateAsync(updateUserParameters);
+        return Result.Success;
+    }
+
+    public async Task<Result> UpdatePasswordAsync(long authorizedUserId, UpdatePasswordModel parameters)
+    {
+        await _updatePasswordModelValidator.ValidateAndThrowAsync(parameters);
+
+        var userPasswordHash = await _userRepository.GetPasswordHashAsync(authorizedUserId);
+        if (userPasswordHash is null)
+            return Result.NotFound(UserErrorMessages.UserDoesNotExists);
+        
+        var isPasswordCorrect = await _passwordHashService.VerifyAsync(parameters.CurrentPassword, userPasswordHash);
+        if (!isPasswordCorrect)
+            return Result.NotValid(UserErrorMessages.CurrentPasswordIncorrect);
+        
+        var newPasswordHash = await _passwordHashService.HashPasswordAsync(parameters.NewPassword);
+
+        await _userRepository.UpdatePasswordHashAsync(authorizedUserId, newPasswordHash);
+
         return Result.Success;
     }
 

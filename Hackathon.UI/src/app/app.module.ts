@@ -83,6 +83,7 @@ import { ApprovalApplicationInfoModalComponent } from './components/approval-app
 import { NotificationTeamJoinRequestDecisionViewComponent } from './components/notification/templates/teams/teamJoinRequestDecision/notification.teamJoinRequestDecision.view.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { PasswordChangeDialogComponent } from './components/profile/password-change-dialog/password-change-dialog.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { MatChipsModule } from '@angular/material/chips';
 
     ProfileViewComponent,
     ProfileImageComponent,
+    PasswordChangeDialogComponent,
 
     EventListComponent,
     EventNewStatusDialogComponent,
