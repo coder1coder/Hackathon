@@ -1,5 +1,4 @@
-﻿using Hackathon.DAL.Entities.Interfaces;
-using Hackathon.DAL.Extensions;
+﻿using Hackathon.DAL;
 using Hackathon.Informing.DAL.Configurations;
 using Hackathon.Informing.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ namespace Hackathon.Informing.DAL;
 /// <summary>
 /// Контекст информирования
 /// </summary>
-public class InformingDbContext: DbContext
+public class InformingDbContext: BaseDbContext
 {
     /// <summary>
     /// Уведомления
@@ -27,9 +26,9 @@ public class InformingDbContext: DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.ApplyConfiguration(new NotificationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new TemplateEntityConfiguration());
-        
-        modelBuilder.ApplyGlobalFilters<ISoftDeletable>(e => !e.IsDeleted);
     }
 }
