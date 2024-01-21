@@ -133,7 +133,7 @@ public class UserService: IUserService
         return Result<UserModel>.FromValue(model);
     }
 
-    public async Task<BaseCollection<UserModel>> GetAsync(Common.Models.GetListParameters<UserFilter> getListParameters)
+    public async Task<BaseCollection<UserModel>> GetListAsync(Common.Models.GetListParameters<UserFilter> getListParameters)
     {
         var models = await _userRepository.GetAsync(getListParameters);
 

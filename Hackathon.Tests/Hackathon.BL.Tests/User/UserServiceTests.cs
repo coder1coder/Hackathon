@@ -78,7 +78,7 @@ public class UserServiceTests: BaseUnitTest
             );
 
         //act
-        var result = await sut.GetAsync(new GetListParameters<UserFilter>
+        var result = await sut.GetListAsync(new GetListParameters<UserFilter>
         {
             Filter = new UserFilter
             {

@@ -43,7 +43,7 @@ public interface IUserService
     /// </summary>
     /// <param name="getListParameters">Фильтр, пагинация</param>
     /// <returns></returns>
-    Task<BaseCollection<UserModel>> GetAsync(Models.GetListParameters<UserFilter> getListParameters);
+    Task<BaseCollection<UserModel>> GetListAsync(Models.GetListParameters<UserFilter> getListParameters);
 
     /// <summary>
     /// Загрузить картинку профиля пользователя

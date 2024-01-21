@@ -81,7 +81,7 @@ public class UserController: BaseController
     [Authorize(Policy = nameof(UserRole.Administrator))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<UserResponse>))]
     public async Task<IActionResult> GetListAsync([FromBody] GetListParameters<UserFilter> request)
-        => Ok(await _userService.GetAsync(request));
+        => Ok(await _userService.GetListAsync(request));
 
     /// <summary>
     /// Загрузить картинку профиля пользователя
@@ -90,15 +90,9 @@ public class UserController: BaseController
     /// <returns></returns>
     [HttpPost("profile/image/upload")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    public async Task<IActionResult> UploadProfileImage(IFormFile file)
-    {
-        var uploadProfileImageResult = await _userService.UploadProfileImageAsync(AuthorizedUserId, file);
-        if (!uploadProfileImageResult.IsSuccess)
-            return await GetResult(() => Task.FromResult(uploadProfileImageResult));
-
-        return Ok(uploadProfileImageResult.Data);
-    }
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public Task<IActionResult> UploadProfileImage(IFormFile file)
+        => GetResult(() => _userService.UploadProfileImageAsync(AuthorizedUserId, file));
 
     /// <summary>
     /// Подтвердить Email
