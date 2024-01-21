@@ -1,5 +1,8 @@
 namespace Hackathon.Chats.Abstractions.Models.Events;
 
+/// <summary>
+/// Сообщение чата мероприятия
+/// </summary>
 public interface IEventChatMessage
 {
     /// <summary>

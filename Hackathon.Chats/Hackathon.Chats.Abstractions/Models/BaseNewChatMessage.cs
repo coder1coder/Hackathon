@@ -1,5 +1,8 @@
 namespace Hackathon.Chats.Abstractions.Models;
 
+/// <summary>
+/// Базовые параметры сообщения чата
+/// </summary>
 public abstract class BaseNewChatMessage: INewChatMessage
 {
     /// <summary>

@@ -1,5 +1,8 @@
 namespace Hackathon.Chats.Abstractions.Models.Teams;
 
+/// <summary>
+/// Сообщение чата команды
+/// </summary>
 public interface ITeamChatMessage
 {
     /// <summary>

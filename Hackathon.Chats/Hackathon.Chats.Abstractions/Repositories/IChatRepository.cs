@@ -5,6 +5,10 @@ using Hackathon.Common.Models.Base;
 
 namespace Hackathon.Chats.Abstractions.Repositories;
 
+/// <summary>
+/// Репозиторий сообщений чата
+/// </summary>
+/// <typeparam name="TChatMessage">Тип сообщений</typeparam>
 public interface IChatRepository<TChatMessage> where TChatMessage: class
 {
     /// <summary>

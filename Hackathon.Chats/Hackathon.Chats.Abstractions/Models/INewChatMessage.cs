@@ -1,5 +1,8 @@
 namespace Hackathon.Chats.Abstractions.Models;
 
+/// <summary>
+/// Новое сообщение чата
+/// </summary>
 public interface INewChatMessage
 {
     /// <summary>

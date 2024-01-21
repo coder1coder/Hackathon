@@ -2,6 +2,9 @@ using System;
 
 namespace Hackathon.Chats.Abstractions.Models;
 
+/// <summary>
+/// Сообщение чата
+/// </summary>
 public interface IChatMessage: INewChatMessage
 {
     /// <summary>
