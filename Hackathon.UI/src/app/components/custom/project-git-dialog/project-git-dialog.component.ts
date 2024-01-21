@@ -25,7 +25,7 @@ export class ProjectGitDialogComponent implements OnInit {
   public confirm(): void {
     let link: string = this.form.get('linkToGitBranch')?.value;
 
-    if (link !== undefined && link.length === 0) {
+    if (link?.length == 0) {
       link = null;
     }
 

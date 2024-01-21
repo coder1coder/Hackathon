@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, EMPTY, switchMap, takeUntil } from 'rxjs';
+import { BehaviorSubject, EMPTY, filter, switchMap, takeUntil } from 'rxjs';
 import { IProject } from '../../../../models/Project/IProject';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { AuthService } from '../../../../services/auth.service';
@@ -128,8 +128,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
       })
       .afterClosed()
       .pipe(
+        filter((data: IProjectUpdateFromGitBranch) => data !== undefined),
         switchMap((data: IProjectUpdateFromGitBranch) =>
-          this.projectApiClient.updateProjectFromGitBranch(data),
+          this.projectApiClient.updateProjectFromGitBranch(data)
         ),
         takeUntil(this.destroy$),
       )

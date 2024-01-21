@@ -12,5 +12,5 @@
 
 <div mat-dialog-actions>
   <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">OK</button>
-  <button mat-button mat-dialog-close="">Отмена</button>
+  <button mat-button [mat-dialog-close]="undefined">Отмена</button>
 </div>
