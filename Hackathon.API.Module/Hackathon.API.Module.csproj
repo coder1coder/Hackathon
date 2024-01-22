@@ -11,7 +11,6 @@
       <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions"  />
       <PackageReference Include="Microsoft.EntityFrameworkCore"  />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"  />
-      <PackageReference Include="Microsoft.AspNetCore"  />
     </ItemGroup>
 
     <ItemGroup>

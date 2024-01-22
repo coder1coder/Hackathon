@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Hackathon.BL.Validation.Users;
 
-public class SignUpModelValidator: AbstractValidator<SignUpModel>
+public class SignUpModelValidator: AbstractValidator<CreateNewUserModel>
 {
     public const string SpecifyUserNameIsRestricted = "Указанное имя пользователя не допустимо";
 
@@ -39,10 +39,13 @@ public class SignUpModelValidator: AbstractValidator<SignUpModel>
                     context.AddFailure("Пользователь с таким логином уже зарегистрирован");
             });
 
-        RuleFor(x => x.Password)
-            .NotNull()
-            .WithMessage(PasswordValidator.IncorrectPasswordError)
-            .SetValidator(new PasswordValidator());
+        When(x => x.GoogleAccount is null, () =>
+        {
+            RuleFor(x => x.Password)
+                .NotNull()
+                .WithMessage(PasswordValidator.IncorrectPasswordError)
+                .SetValidator(new PasswordValidator());
+        });
 
         RuleFor(x => x.Email)
             .NotEmpty()

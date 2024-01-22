@@ -20,12 +20,10 @@ namespace Hackathon.BL.Tests.User;
 public class UserServiceTests: BaseUnitTest
 {
     private readonly Mock<IFileStorageService> _fileStorageMock = new();
-    private readonly Mock<IValidator<SignUpModel>> _signUpValidatorMock = new();
-    private readonly Mock<IValidator<SignInModel>> _signInValidatorMock = new();
+    private readonly Mock<IValidator<CreateNewUserModel>> _signUpValidatorMock = new();
     private readonly Mock<IValidator<UpdateUserParameters>> _updateUserParametersValidator = new();
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly Mock<IOptions<EmailSettings>> _emailSettingsMock = new();
-    private readonly Mock<IOptions<AuthOptions>> _authOptionsMock = new();
     private readonly Mock<IEmailConfirmationRepository> _emailConfirmationRepositoryMock = new();
     private readonly Mock<IFileStorageRepository> _fileStorageRepositoryMock = new();
     private readonly Mock<IValidator<IFileImage>> _profileImageValidator = new();
@@ -53,16 +51,13 @@ public class UserServiceTests: BaseUnitTest
 
         var sut = new UserService(
             _emailSettingsMock.Object,
-            _authOptionsMock.Object,
             _profileImageValidator.Object,
             _signUpValidatorMock.Object,
-            _signInValidatorMock.Object,
             _updateUserParametersValidator.Object,
             _userRepositoryMock.Object,
             _emailConfirmationRepositoryMock.Object,
             _fileStorageMock.Object,
             _fileStorageRepositoryMock.Object,
-            Mapper,
             _updatePasswordModelValidatorMock.Object,
             _passwordHashServiceMock.Object);
 

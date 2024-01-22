@@ -103,6 +103,10 @@ export class ProfileViewComponent
     }
   }
 
+  public canChangePassword():boolean{
+    return !this.isEditMode && this.isOwner && !this.user.googleAccount;
+  }
+
   public saveUserEdit(): void {
     const request: IUpdateUser = {
       id: this.userId,

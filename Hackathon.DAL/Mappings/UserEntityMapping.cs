@@ -11,7 +11,7 @@ public class UserEntityMapping: IRegister
     public void Register(TypeAdapterConfig config)
     {
         config
-            .ForType<SignUpModel, UserEntity>()
+            .ForType<CreateNewUserModel, UserEntity>()
             .PreserveReference(true)
             .Map(x => x.PasswordHash, s => s.Password)
             .MaxDepth(2);

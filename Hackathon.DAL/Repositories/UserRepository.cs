@@ -25,9 +25,9 @@ public class UserRepository: IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<long> CreateAsync(SignUpModel signUpModel)
+    public async Task<long> CreateAsync(CreateNewUserModel createNewUserModel)
     {
-        var entity = _mapper.Map<UserEntity>(signUpModel);
+        var entity = _mapper.Map<UserEntity>(createNewUserModel);
 
         await _dbContext.Users.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
@@ -49,7 +49,6 @@ public class UserRepository: IUserRepository
     public async Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email)
     {
         var entity = await _dbContext.Users
-            .Include(x=>x.EmailConfirmationRequest)
             .Include(x=>x.GoogleAccount)
             .AsNoTracking()
             .FirstOrDefaultAsync(x =>
@@ -134,30 +133,18 @@ public class UserRepository: IUserRepository
         };
     }
 
-    public async Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName)
-    {
-        var user = await _dbContext.Users
+    public Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName)
+        => _dbContext.Users
                 .AsNoTracking()
-                .Select(x=>new
+                .Where(x=>x.UserName == userName)
+                .Select(x=>new UserSignInDetails
                 {
-                    x.Id,
-                    x.UserName,
-                    x.PasswordHash,
-                    x.Role,
-                    x.GoogleAccountId
+                    UserId = x.Id,
+                    PasswordHash = x.PasswordHash,
+                    UserRole = x.Role,
+                    GoogleAccountId = x.GoogleAccountId
                 })
-                .FirstOrDefaultAsync(s=>s.UserName == userName);
-
-        return user is null
-            ? null
-            : new UserSignInDetails
-            {
-                UserId = user.Id,
-                PasswordHash = user.PasswordHash,
-                UserRole = user.Role,
-                GoogleAccountId = user.GoogleAccountId
-            };
-    }
+                .FirstOrDefaultAsync();
 
     public Task<bool> ExistsAsync(long userId)
         => _dbContext.Users

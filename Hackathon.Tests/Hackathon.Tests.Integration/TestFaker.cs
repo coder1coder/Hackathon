@@ -28,9 +28,9 @@ public class TestFaker
 
     #region Models
 
-    public static IEnumerable<SignUpModel> GetSignUpModels(int count)
+    public static IEnumerable<CreateNewUserModel> GetSignUpModels(int count)
     {
-        var faker = new Faker<SignUpModel>();
+        var faker = new Faker<CreateNewUserModel>();
 
         faker
             .RuleFor(x => x.UserName, f => f.Person.UserName)

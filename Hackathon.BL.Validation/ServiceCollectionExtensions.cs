@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
         .AddScoped<IValidator<CreateTeamModel>, CreateTeamModelValidator>()
         .AddScoped<IValidator<TeamMemberModel>, TeamAddMemberModelValidator>()
         .AddScoped<IValidator<GetListParameters<TeamFilter>>, GetListParametersValidator<TeamFilter>>()
-        .AddScoped<IValidator<SignUpModel>, SignUpModelValidator>()
+        .AddScoped<IValidator<CreateNewUserModel>, SignUpModelValidator>()
         .AddScoped<IValidator<SignInModel>, SignInModelValidator>()
         .AddScoped<IValidator<GetListParameters<UserFilter>>, GetListParametersValidator<UserFilter>>()
         .AddScoped<IValidator<GetListParameters<EventFilter>>, GetListParametersValidator<EventFilter>>()

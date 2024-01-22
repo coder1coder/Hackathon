@@ -1,11 +1,14 @@
 ﻿namespace Hackathon.Common.Models.User;
 
-public class SignUpModel
+public class CreateNewUserModel
 {
     public string UserName { get; set; }
     public string Password { get; set; }
     public string Email { get; set; }
     public string FullName { get; set; }
 
-    public SignInByGoogleModel GoogleAccount { get; set; }
+    /// <summary>
+    /// Данные учетной записи Google
+    /// </summary>
+    public GoogleAccountModel GoogleAccount { get; set; }
 }

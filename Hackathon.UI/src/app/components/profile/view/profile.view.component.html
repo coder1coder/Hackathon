@@ -14,7 +14,7 @@
       Сохранить
     </button>
 
-    <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="openPasswordChangeDialog()">
+    <button *ngIf="canChangePassword()" mat-button color="primary" (click)="openPasswordChangeDialog()">
       Изменить пароль
     </button>
   </div>

@@ -6,9 +6,7 @@ using FluentValidation;
 using Hackathon.BL.Email;
 using Hackathon.BL.Validation;
 using Hackathon.BL.Validation.Users;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
@@ -16,7 +14,6 @@ using Hackathon.FileStorage.Abstraction.Models;
 using Hackathon.FileStorage.Abstraction.Repositories;
 using Hackathon.FileStorage.Abstraction.Services;
 using Hackathon.FileStorage.BL.Validators;
-using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -25,8 +22,7 @@ namespace Hackathon.BL.Users;
 public class UserService: IUserService
 {
     /// <see cref="SignUpModelValidator"/>
-    private readonly IValidator<SignUpModel> _signUpModelValidator;
-    private readonly IValidator<SignInModel> _signInModelValidator;
+    private readonly IValidator<CreateNewUserModel> _signUpModelValidator;
     private readonly IValidator<UpdateUserParameters> _updateUserParametersValidator;
     private readonly IValidator<IFileImage> _profileImageValidator;
     private readonly IUserRepository _userRepository;
@@ -34,97 +30,42 @@ public class UserService: IUserService
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
     private readonly int _requestLifetimeMinutes;
-    private readonly IMapper _mapper;
-    private readonly AuthOptions _authOptions;
     private readonly IValidator<UpdatePasswordModel> _updatePasswordModelValidator;
     private readonly IPasswordHashService _passwordHashService;
 
     public UserService(
         IOptions<EmailSettings> emailSettings,
-        IOptions<AuthOptions> authOptions,
         IValidator<IFileImage> profileImageValidator,
-        IValidator<SignUpModel> signUpModelValidator,
-        IValidator<SignInModel> signInModelValidator,
+        IValidator<CreateNewUserModel> signUpModelValidator,
         IValidator<UpdateUserParameters> updateUserParametersValidator,
         IUserRepository userRepository,
         IEmailConfirmationRepository emailConfirmationRepository,
         IFileStorageService fileStorageService,
         IFileStorageRepository fileStorageRepository,
-        IMapper mapper, 
         IValidator<UpdatePasswordModel> updatePasswordModelValidator, 
         IPasswordHashService passwordHashService)
     {
-        _authOptions = authOptions?.Value ?? new AuthOptions();
         _signUpModelValidator = signUpModelValidator;
-        _signInModelValidator = signInModelValidator;
         _updateUserParametersValidator = updateUserParametersValidator;
         _profileImageValidator = profileImageValidator;
         _userRepository = userRepository;
         _emailConfirmationRepository = emailConfirmationRepository;
         _fileStorageService = fileStorageService;
         _fileStorageRepository = fileStorageRepository;
-        _mapper = mapper;
         _updatePasswordModelValidator = updatePasswordModelValidator;
         _passwordHashService = passwordHashService;
         _requestLifetimeMinutes = emailSettings?.Value?.EmailConfirmationRequestLifetime ?? EmailConfirmationService.EmailConfirmationRequestLifetimeDefault;
     }
 
-    public async Task<long> CreateAsync(SignUpModel signUpModel)
+    public async Task<long> CreateAsync(CreateNewUserModel createNewUserModel)
     {
-        await _signUpModelValidator.ValidateAndThrowAsync(signUpModel);
+        await _signUpModelValidator.ValidateAndThrowAsync(createNewUserModel);
 
-        signUpModel.Password = await _passwordHashService.HashPasswordAsync(signUpModel.Password);
+        //В случаях с внешними сервисами аутентификации, например Google, пароль может отсутствовать
+        if (createNewUserModel.Password is not null)
+            createNewUserModel.Password = await _passwordHashService.HashPasswordAsync(createNewUserModel.Password);
 
-        return await _userRepository.CreateAsync(signUpModel);
-    }
-
-    public async Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel)
-    {
-        var modelValidationResult = await _signInModelValidator.ValidateAsync(signInModel);
-        if (!modelValidationResult.IsValid)
-            //Нет необходимости указывать причины некорректного ввода
-            return Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword);
-
-        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(signInModel.UserName);
-
-        if (userSignInDetails is null)
-            return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
-
-        var verified = await _passwordHashService.VerifyAsync(signInModel.Password, userSignInDetails.PasswordHash);
-
-        return !verified
-            ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
-            : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions));
-    }
-
-    public async Task<Result<AuthTokenModel>> SignInByGoogle(SignInByGoogleModel signInByGoogleModel)
-    {
-        //TODO: проверять токен учетной записи Google
-        //TODO: расширить модель UserSignInDetails необходимыми данными и использовать GetUserSignInDetailsAsync
-        var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(signInByGoogleModel.Id, signInByGoogleModel.Email);
-        
-        var userName = userModel?.UserName ?? signInByGoogleModel.FullName;
-        
-        if (userModel is not null)
-        {
-            userModel.GoogleAccount = _mapper.Map<GoogleAccountModel>(signInByGoogleModel);
-            await _userRepository.UpdateGoogleAccount(userModel.GoogleAccount);
-        }
-        else
-        {
-            await _userRepository.CreateAsync(new SignUpModel
-            {
-                Email = signInByGoogleModel.Email,
-                UserName = userName,
-                FullName = signInByGoogleModel.FullName,
-                Password = null,
-                GoogleAccount = signInByGoogleModel
-            });
-        }
-
-        var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(userName);
-
-        return Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(userSignInDetails, _authOptions));
+        return await _userRepository.CreateAsync(createNewUserModel);
     }
 
     public async Task<Result<UserModel>> GetAsync(long userId)

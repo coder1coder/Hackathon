@@ -14,6 +14,7 @@ using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
+using Hackathon.Configuration.Auth;
 using Hackathon.Contracts.Requests.User;
 using Hackathon.FileStorage.BL.Validators;
 using Hackathon.Logbook.Abstraction.Repositories;
@@ -51,7 +52,7 @@ public abstract class BaseIntegrationTest
 
     protected readonly DataSettings DataSettings;
     protected readonly EmailSettings EmailSettings;
-    private readonly AuthOptions _authOptions;
+    private readonly AuthenticateSettings _authenticateSettings;
 
     private readonly HttpClient _httpClient;
 
@@ -61,7 +62,7 @@ public abstract class BaseIntegrationTest
     {
         DataSettings = factory.Services.GetRequiredService<IOptions<DataSettings>>().Value;
         EmailSettings = factory.Services.GetRequiredService<IOptions<EmailSettings>>().Value;
-        _authOptions = factory.Services.GetRequiredService<IOptions<AuthOptions>>().Value;
+        _authenticateSettings = factory.Services.GetRequiredService<IOptions<AuthenticateSettings>>().Value;
 
         EventLogRepository = factory.Services.GetRequiredService<IEventLogRepository>();
         UserRepository = factory.Services.GetRequiredService<IUserRepository>();
@@ -83,7 +84,7 @@ public abstract class BaseIntegrationTest
         {
             UserId = 1,
             UserRole = UserRole.Default
-        }, _authOptions).Token ?? "";
+        }, _authenticateSettings.Internal).Token ?? "";
 
         TestUser = (1, defaultToken);
 
@@ -125,7 +126,7 @@ public abstract class BaseIntegrationTest
         {
             UserId = response.Id,
             UserRole = userRole
-        }, _authOptions);
+        }, _authenticateSettings.Internal);
 
         return (response.Id, authTokenModel.Token);
     }

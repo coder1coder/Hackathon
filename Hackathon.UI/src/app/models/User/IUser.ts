@@ -9,6 +9,7 @@ export interface IUser extends IAdditionalInfo {
   fullName?: string;
   role: UserRole;
   profileImageId?: string;
+  googleAccount: IGoogleAccount;
 }
 
 export interface IUpdateUser {
@@ -22,4 +23,9 @@ interface IAdditionalInfo {
   shortUserName?: string;
   image?: SafeUrl;
   bgColor?: string;
+}
+
+export interface IGoogleAccount {
+  id: string;
+  imageUrl: string;
 }

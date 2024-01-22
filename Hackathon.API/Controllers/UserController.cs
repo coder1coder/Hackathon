@@ -48,7 +48,7 @@ public class UserController: BaseController
     [HttpPost]
     public async Task<BaseCreateResponse> SignUp([FromBody] SignUpRequest request)
     {
-        var signUpModel = _mapper.Map<SignUpModel>(request);
+        var signUpModel = _mapper.Map<CreateNewUserModel>(request);
         var userId = await _userService.CreateAsync(signUpModel);
         return new BaseCreateResponse
         {

@@ -12,6 +12,7 @@ using Hackathon.BL;
 using Hackathon.BL.Validation;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
+using Hackathon.Configuration.Auth;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.IntegrationEvents;
@@ -57,14 +58,13 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var authOptionsSection = Configuration.GetSection(nameof(AuthOptions));
-        var authOptions = authOptionsSection.Get<AuthOptions>();
+        var authSection = Configuration.GetSection("Auth");
 
-        services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
-        services.Configure<DataSettings>(Configuration.GetSection(nameof(DataSettings)));
-        services.Configure<EmailSettings>(Configuration.GetSection(nameof(EmailSettings)));
-        services.Configure<RestrictedNames>(Configuration.GetSection(nameof(RestrictedNames)));
-        services.Configure<AuthOptions>(authOptionsSection);
+        services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+        services.Configure<DataSettings>(Configuration.GetSection("DataSettings"));
+        services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+        services.Configure<RestrictedNames>(Configuration.GetSection("RestrictedNames"));
+        services.Configure<AuthenticateSettings>(authSection);
         services.Configure<RouteOptions>(x =>
         {
             x.LowercaseUrls = true;
@@ -155,9 +155,11 @@ public class Startup
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
 
+        var authSettings = authSection.Get<AuthenticateSettings>();
+        
         services
             .AddMemoryCache()
-            .AddAuthentication(authOptions)
+            .AddAuthentication(authSettings)
             .AddAuthorization(x =>
             {
                 x.AddPolicy(nameof(UserRole.Administrator), p =>
