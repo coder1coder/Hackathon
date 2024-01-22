@@ -133,30 +133,18 @@ public class UserRepository: IUserRepository
         };
     }
 
-    public async Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName)
-    {
-        var user = await _dbContext.Users
+    public Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName)
+        => _dbContext.Users
                 .AsNoTracking()
-                .Select(x=>new
+                .Where(x=>x.UserName == userName)
+                .Select(x=>new UserSignInDetails
                 {
-                    x.Id,
-                    x.UserName,
-                    x.PasswordHash,
-                    x.Role,
-                    x.GoogleAccountId
+                    UserId = x.Id,
+                    PasswordHash = x.PasswordHash,
+                    UserRole = x.Role,
+                    GoogleAccountId = x.GoogleAccountId
                 })
-                .FirstOrDefaultAsync(s=>s.UserName == userName);
-
-        return user is null
-            ? null
-            : new UserSignInDetails
-            {
-                UserId = user.Id,
-                PasswordHash = user.PasswordHash,
-                UserRole = user.Role,
-                GoogleAccountId = user.GoogleAccountId
-            };
-    }
+                .FirstOrDefaultAsync();
 
     public Task<bool> ExistsAsync(long userId)
         => _dbContext.Users
