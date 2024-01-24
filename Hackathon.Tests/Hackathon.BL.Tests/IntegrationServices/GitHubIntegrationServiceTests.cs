@@ -11,13 +11,13 @@ namespace Hackathon.BL.Tests.IntegrationServices;
 public class GitHubIntegrationServiceTests: BaseUnitTest
 {
     private readonly IGitHubIntegrationService _service;
-    private readonly Mock<HttpClient> _httpClientMock = new();
+    private readonly Mock<IHttpClientFactory> _httpClientFactoryMock = new();
 
     private const string ValidLink = "https://github.com/coder1coder/Hackathon/tree/develop";
 
     public GitHubIntegrationServiceTests()
     {
-        _service = new GitHubIntegrationService(NullLogger<GitIntegrationService>.Instance, _httpClientMock.Object);
+        _service = new GitHubIntegrationService(NullLogger<GitIntegrationService>.Instance, _httpClientFactoryMock.Object);
     }
 
     [Fact]

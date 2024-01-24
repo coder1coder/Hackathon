@@ -10,10 +10,10 @@ public class GitHubIntegrationService: GitIntegrationService, IGitHubIntegration
     private readonly ILogger<GitIntegrationService> _logger;
     private readonly HttpClient _httpClient;
 
-    public GitHubIntegrationService(ILogger<GitIntegrationService> logger, HttpClient httpClient)
+    public GitHubIntegrationService(ILogger<GitIntegrationService> logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
-        _httpClient = httpClient;
+        _httpClient = httpClientFactory.CreateClient();
     }
 
     public override async Task<Stream> ReceiveFromRepository(GitParameters parameters)
