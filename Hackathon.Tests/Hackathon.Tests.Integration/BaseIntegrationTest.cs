@@ -12,6 +12,7 @@ using Hackathon.Common;
 using Hackathon.Common.Abstraction.Friend;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.Models.Auth;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
 using Hackathon.Configuration.Auth;
@@ -80,7 +81,7 @@ public abstract class BaseIntegrationTest
             HandleCookies = false
         });
 
-        var defaultToken = AuthTokenGenerator.GenerateToken(new UserSignInDetails
+        var defaultToken = AuthTokenGenerator.GenerateToken(new GenerateTokenPayload
         {
             UserId = 1,
             UserRole = UserRole.Default
@@ -122,7 +123,7 @@ public abstract class BaseIntegrationTest
 
         await UserRepository.SetRole(response.Id, userRole);
 
-        var authTokenModel = AuthTokenGenerator.GenerateToken(new UserSignInDetails
+        var authTokenModel = AuthTokenGenerator.GenerateToken(new GenerateTokenPayload
         {
             UserId = response.Id,
             UserRole = userRole
