@@ -21,9 +21,4 @@ public class AppSettings
     /// Настройки каналов real-time событий
     /// </summary>
     public HubsSettings Hubs { get; set; }
-    
-    /// <summary>
-    /// Настройки брокера сообщений
-    /// </summary>
-    public MessageBrokerSettings MessageBrokerSettings { get; set; }
 }

@@ -95,6 +95,8 @@ public class Startup
         var appConfig = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()
                         ?? throw new AggregateException("Error while reading application configuration");
 
+        var brokerConnectionString = Configuration.GetConnectionString("MessageBroker");
+
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
@@ -105,16 +107,10 @@ public class Startup
                 .ToArray();
             
             x.AddConsumers(consumerAssemblies);
-            
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.ConfigureEndpoints(context);
-
-                cfg.Host(new Uri(appConfig.MessageBrokerSettings.Host), host =>
-                {
-                    host.Username(appConfig.MessageBrokerSettings.UserName);
-                    host.Password(appConfig.MessageBrokerSettings.Password);
-                });
+                cfg.Host(brokerConnectionString);
             });
         });
 

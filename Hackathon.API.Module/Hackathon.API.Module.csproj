@@ -7,8 +7,6 @@
     <ItemGroup>
       <PackageReference Include="Backend.Tools.Common"  />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core"  />
-      <PackageReference Include="Microsoft.AspNetCore.Routing"  />
-      <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions"  />
       <PackageReference Include="Microsoft.EntityFrameworkCore"  />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"  />
     </ItemGroup>
