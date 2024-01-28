@@ -7,7 +7,15 @@ namespace Hackathon.IntegrationEvents;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterIntegrationEvents(this IServiceCollection services) => services
-        .AddScoped<IIntegrationEventsHub<FriendshipChangedIntegrationEvent>, IntegrationEventsHub<FriendshipChangedIntegrationEvent>>()
-        .AddScoped<IEventChangesIntegrationEventsHub, EventChangesIntegrationEventsHub>();
+    public static IServiceCollection RegisterIntegrationEvents(this IServiceCollection services, bool isDevelopmentEnvironment)
+    {
+        services
+            .AddScoped<IIntegrationEventsHub<FriendshipChangedIntegrationEvent>, IntegrationEventsHub<FriendshipChangedIntegrationEvent>>()
+            .AddScoped<IEventChangesIntegrationEventsHub, EventChangesIntegrationEventsHub>();
+
+        services.AddSignalR(x =>
+            x.EnableDetailedErrors = isDevelopmentEnvironment);
+
+        return services;
+    }
 }

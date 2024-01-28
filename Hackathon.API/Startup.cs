@@ -87,7 +87,7 @@ public class Startup
         services
             .RegisterServices()
             .RegisterValidators()
-            .RegisterIntegrationEvents()
+            .RegisterIntegrationEvents(_environment.IsDevelopment())
             .RegisterJobs(Configuration)
             .RegisterIntegrationServices()
             .RegisterRepositories();
@@ -164,9 +164,7 @@ public class Startup
                         .RequireClaim(ClaimTypes.Role, ((int)UserRole.Administrator).ToString())
                 );
             })
-            .AddSwagger()
-            .AddSignalR(x=>
-                x.EnableDetailedErrors = _environment.IsDevelopment());
+            .AddSwagger();
 
         services.AddHealthChecks();
     }
