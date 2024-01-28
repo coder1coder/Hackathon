@@ -1,6 +1,7 @@
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.IntegrationEvents;
@@ -11,7 +12,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddScoped<IIntegrationEventsHub<FriendshipChangedIntegrationEvent>, IntegrationEventsHub<FriendshipChangedIntegrationEvent>>()
-            .AddScoped<IEventChangesIntegrationEventsHub, EventChangesIntegrationEventsHub>();
+            .AddScoped<IEventChangesIntegrationEventsHub, EventChangesIntegrationEventsHub>()
+            .AddSingleton<IUserIdProvider, IntegrationEventsUserIdProvider>();
 
         services.AddSignalR(x =>
             x.EnableDetailedErrors = isDevelopmentEnvironment);
