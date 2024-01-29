@@ -8,6 +8,6 @@ public class PasswordHashService: IPasswordHashService
     public Task<bool> VerifyAsync(string password, string passwordHash)
         => Task.FromResult(BCrypt.Net.BCrypt.Verify(password, passwordHash));
 
-    public Task<string> HashPasswordAsync(string password)
-        => Task.FromResult(BCrypt.Net.BCrypt.HashPassword(password));
+    public string HashPassword(string password)
+        => BCrypt.Net.BCrypt.HashPassword(password);
 }

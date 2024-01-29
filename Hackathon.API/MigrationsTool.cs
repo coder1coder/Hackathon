@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hackathon.API.Module;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Configuration;
 using Hackathon.DAL;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,9 @@ public class MigrationsTool
                 dbContext.Database.Migrate();
             }
 
-            DbInitializer.Seed(applicationDbContext, logger, dataSettings.Value.AdministratorDefaults);
+            var passwordHashService = scope.ServiceProvider.GetRequiredService<IPasswordHashService>();
+            DbInitializer.Seed(applicationDbContext, logger, dataSettings.Value.AdministratorDefaults, passwordHashService);
+            
             logger.LogInformation("{Source} applying migrations finished", nameof(MigrationsTool));
         }
         catch (Exception e)

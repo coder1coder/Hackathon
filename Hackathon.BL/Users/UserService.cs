@@ -63,7 +63,7 @@ public class UserService: IUserService
 
         //В случаях с внешними сервисами аутентификации, например Google, пароль может отсутствовать
         if (createNewUserModel.Password is not null)
-            createNewUserModel.Password = await _passwordHashService.HashPasswordAsync(createNewUserModel.Password);
+            createNewUserModel.Password = _passwordHashService.HashPassword(createNewUserModel.Password);
 
         return await _userRepository.CreateAsync(createNewUserModel);
     }
@@ -150,7 +150,7 @@ public class UserService: IUserService
         if (!isPasswordCorrect)
             return Result.NotValid(UserErrorMessages.CurrentPasswordIncorrect);
         
-        var newPasswordHash = await _passwordHashService.HashPasswordAsync(parameters.NewPassword);
+        var newPasswordHash = _passwordHashService.HashPassword(parameters.NewPassword);
 
         await _userRepository.UpdatePasswordHashAsync(authorizedUserId, newPasswordHash);
 

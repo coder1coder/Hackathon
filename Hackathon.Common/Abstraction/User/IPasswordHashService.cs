@@ -20,5 +20,5 @@ public interface IPasswordHashService
     /// </summary>
     /// <param name="password">Пароль</param>
     /// <returns></returns>
-    Task<string> HashPasswordAsync(string password);
+    string HashPassword(string password);
 }

@@ -1,4 +1,5 @@
 using System.Linq;
+using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models.User;
 using Hackathon.Configuration;
 using Hackathon.DAL.Entities.User;
@@ -9,7 +10,9 @@ namespace Hackathon.DAL;
 
 public static class DbInitializer
 {
-    public static void Seed(ApplicationDbContext context, ILogger logger, AdministratorDefaults administratorDefaults)
+    public static void Seed(ApplicationDbContext context, ILogger logger, 
+        AdministratorDefaults administratorDefaults,
+        IPasswordHashService passwordHashService)
     {
         try
         {
@@ -19,8 +22,7 @@ public static class DbInitializer
             var user = new UserEntity
             {
                 UserName = administratorDefaults.Login,
-                //TODO: use IPasswordHashService
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(administratorDefaults.Password),
+                PasswordHash = passwordHashService.HashPassword(administratorDefaults.Password),
                 FullName = administratorDefaults.Login,
                 Email = "administrator@administrator.ru",
                 Role = UserRole.Administrator
