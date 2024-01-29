@@ -11,7 +11,6 @@
       <ProjectReference Include="..\Hackathon.Informing\Hackathon.Informing.BL\Hackathon.Informing.BL.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
-      <ProjectReference Include="..\Hackathon.Logbook\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
     </ItemGroup>
 
     <ItemGroup>
