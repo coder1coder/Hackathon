@@ -13,22 +13,12 @@ using Hackathon.API.Module;
 
 namespace Hackathon.API.Controllers.Team;
 
+/// <summary>
+/// Команды
+/// </summary>
 [SwaggerTag("Команды")]
-public class TeamController : BaseController
+public class TeamController(ITeamService teamService, IMapper mapper) : BaseController
 {
-    private readonly IMapper _mapper;
-    private readonly ITeamService _teamService;
-
-    /// <summary>
-    /// Команды
-    /// </summary>
-    public TeamController(
-        ITeamService teamService, IMapper mapper)
-    {
-        _teamService = teamService;
-        _mapper = mapper;
-    }
-
     /// <summary>
     /// Создание новой команды
     /// </summary>
@@ -38,9 +28,9 @@ public class TeamController : BaseController
     [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> Create(CreateTeamRequest createTeamRequest)
     {
-        var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
+        var createTeamModel = mapper.Map<CreateTeamModel>(createTeamRequest);
 
-        var createTeamResult = await _teamService.CreateAsync(createTeamModel, AuthorizedUserId);
+        var createTeamResult = await teamService.CreateAsync(createTeamModel, AuthorizedUserId);
 
         if (!createTeamResult.IsSuccess)
             return await GetResult(() => Task.FromResult(createTeamResult));
@@ -58,7 +48,7 @@ public class TeamController : BaseController
     [HttpGet("{teamId:long}")]
     [ProducesResponseType(typeof(TeamModel), (int)HttpStatusCode.OK)]
     public Task<IActionResult> Get([FromRoute] long teamId)
-        => GetResult(() => _teamService.GetAsync(teamId));
+        => GetResult(() => teamService.GetAsync(teamId));
 
     /// <summary>
     /// Получить все команды
@@ -66,7 +56,7 @@ public class TeamController : BaseController
     [HttpPost("getTeams")]
     [ProducesResponseType(typeof(BaseCollection<TeamModel>), (int)HttpStatusCode.OK)]
     public Task<BaseCollection<TeamModel>> GetList([FromBody] GetListParameters<TeamFilter> listRequest)
-        => _teamService.GetListAsync(listRequest);
+        => teamService.GetListAsync(listRequest);
 
     /// <summary>
     /// Получить общую информацию команды в которой состоит авторизованный пользователь
@@ -76,7 +66,7 @@ public class TeamController : BaseController
     [ProducesResponseType((int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetUserTeam()
-        => GetResult(() => _teamService.GetUserTeam(AuthorizedUserId));
+        => GetResult(() => teamService.GetUserTeam(AuthorizedUserId));
 
     /// <summary>
     /// Получить события в которых участвовала команда
@@ -86,7 +76,7 @@ public class TeamController : BaseController
     [ProducesResponseType(typeof(BaseCollection<TeamEventListItem>), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
         [FromBody] PaginationSort paginationSort)
-        => GetResult(() => _teamService.GetTeamEvents(teamId, paginationSort));
+        => GetResult(() => teamService.GetTeamEvents(teamId, paginationSort));
 
     /// <summary>
     /// Покинуть команду
@@ -94,7 +84,7 @@ public class TeamController : BaseController
     /// <returns></returns>
     [HttpGet("{teamId:long}/leave")]
     public Task<IActionResult> LeaveTeamAsync([FromRoute] long teamId)
-        => GetResult(() => _teamService.RemoveMemberAsync(new TeamMemberModel
+        => GetResult(() => teamService.RemoveMemberAsync(new TeamMemberModel
         {
             TeamId = teamId,
             MemberId = AuthorizedUserId

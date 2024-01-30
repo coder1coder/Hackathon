@@ -19,17 +19,8 @@ namespace Hackathon.API.Controllers.Events;
 /// События
 /// </summary>
 [SwaggerTag("События (мероприятия)")]
-public class EventController: BaseController
+public class EventController(IEventService eventService, IMapper mapper) : BaseController
 {
-    private readonly IMapper _mapper;
-    private readonly IEventService _eventService;
-
-    public EventController(IEventService eventService, IMapper mapper)
-    {
-        _eventService = eventService;
-        _mapper = mapper;
-    }
-
     /// <summary>
     /// Создание нового события
     /// </summary>
@@ -40,8 +31,8 @@ public class EventController: BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
-        var createEventParameters = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
-        var createResult = await _eventService.CreateAsync(AuthorizedUserId, createEventParameters);
+        var createEventParameters = mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
+        var createResult = await eventService.CreateAsync(AuthorizedUserId, createEventParameters);
         if (!createResult.IsSuccess)
             return await GetResult(() => Task.FromResult(createResult));
 
@@ -57,7 +48,7 @@ public class EventController: BaseController
     /// <param name="request"></param>
     [HttpPut]
     public Task<IActionResult> Update(UpdateEventRequest request)
-        => GetResult(() => _eventService.UpdateAsync(AuthorizedUserId, _mapper.Map<EventUpdateParameters>(request)));
+        => GetResult(() => eventService.UpdateAsync(AuthorizedUserId, mapper.Map<EventUpdateParameters>(request)));
 
     /// <summary>
     /// Получить все события
@@ -66,7 +57,7 @@ public class EventController: BaseController
     [HttpPost("list")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<EventListItem>))]
     public Task<IActionResult> GetList([FromBody] GetListParameters<EventFilter> listRequest)
-        => GetResult(() => _eventService.GetListAsync(AuthorizedUserId, _mapper.Map<GetListParameters<EventFilter>>(listRequest)));
+        => GetResult(() => eventService.GetListAsync(AuthorizedUserId, mapper.Map<GetListParameters<EventFilter>>(listRequest)));
 
     /// <summary>
     /// Получить событие по идентификатору
@@ -76,7 +67,7 @@ public class EventController: BaseController
     [HttpGet("{eventId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
     public Task<IActionResult> Get([FromRoute] long eventId)
-        => GetResult(() => _eventService.GetAsync(AuthorizedUserId, eventId));
+        => GetResult(() => eventService.GetAsync(AuthorizedUserId, eventId));
 
     /// <summary>
     /// Присоединиться к мероприятию
@@ -85,7 +76,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("{eventId:long}/join")]
     public Task<IActionResult> Join(long eventId)
-        => GetResult(() => _eventService.JoinAsync(eventId, AuthorizedUserId));
+        => GetResult(() => eventService.JoinAsync(eventId, AuthorizedUserId));
 
     /// <summary>
     /// Получить соглашение мероприятия
@@ -95,7 +86,7 @@ public class EventController: BaseController
     [HttpGet("{eventId:long}/agreement")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventAgreementModel))]
     public Task<IActionResult> GetAgreement(long eventId)
-        => GetResult(() => _eventService.GetAgreementAsync(eventId));
+        => GetResult(() => eventService.GetAgreementAsync(eventId));
 
     /// <summary>
     /// Принять соглашение мероприятия
@@ -104,7 +95,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("{eventId:long}/agreement/accept")]
     public Task<IActionResult> AcceptAgreement(long eventId)
-        => GetResult(() => _eventService.AcceptAgreementAsync(AuthorizedUserId, eventId));
+        => GetResult(() => eventService.AcceptAgreementAsync(AuthorizedUserId, eventId));
 
     /// <summary>
     /// Покинуть мероприятие
@@ -113,7 +104,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("{eventId:long}/leave")]
     public Task<IActionResult> Leave(long eventId)
-        => GetResult(() => _eventService.LeaveAsync(eventId, AuthorizedUserId));
+        => GetResult(() => eventService.LeaveAsync(eventId, AuthorizedUserId));
 
     /// <summary>
     /// Задать статус события
@@ -121,7 +112,7 @@ public class EventController: BaseController
     /// <param name="setStatusRequest"></param>
     [HttpPut(nameof(SetStatus))]
     public Task<IActionResult> SetStatus(SetStatusRequest<EventStatus> setStatusRequest)
-        => GetResult(() => _eventService.SetStatusAsync(AuthorizedUserId, setStatusRequest.Id, setStatusRequest.Status));
+        => GetResult(() => eventService.SetStatusAsync(AuthorizedUserId, setStatusRequest.Id, setStatusRequest.Status));
 
     /// <summary>
     /// Переключить событие на следующий этап
@@ -130,7 +121,7 @@ public class EventController: BaseController
     /// <returns></returns>
     [HttpPost("{eventId:long}/stages/next")]
     public Task<IActionResult> GoNextStage([FromRoute] long eventId)
-        => GetResult(() => _eventService.GoNextStage(AuthorizedUserId, eventId));
+        => GetResult(() => eventService.GoNextStage(AuthorizedUserId, eventId));
 
     /// <summary>
     /// Удалить событие
@@ -138,7 +129,7 @@ public class EventController: BaseController
     /// <param name="eventId"></param>
     [HttpDelete("{eventId:long}")]
     public Task<IActionResult> Delete([FromRoute] long eventId)
-        => GetResult(() => _eventService.DeleteAsync(eventId, AuthorizedUserId));
+        => GetResult(() => eventService.DeleteAsync(eventId, AuthorizedUserId));
 
     /// <summary>
     /// Загрузить изображение события
@@ -149,5 +140,5 @@ public class EventController: BaseController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     public Task<IActionResult> UploadEventImage(IFormFile file)
-        => GetResult(() => _eventService.UploadEventImageAsync(file));
+        => GetResult(() => eventService.UploadEventImageAsync(file));
 }

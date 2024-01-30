@@ -16,17 +16,8 @@ namespace Hackathon.API.Controllers;
 /// Авторизация и аутентификация
 /// </summary>
 [SwaggerTag("Авторизация и аутентификация")]
-public class AuthController: BaseController
+public class AuthController(IMapper mapper, IAuthService authService) : BaseController
 {
-    private readonly IMapper _mapper;
-    private readonly IAuthService _authService;
-
-    public AuthController(IMapper mapper, IAuthService authService)
-    {
-        _mapper = mapper;
-        _authService = authService;
-    }
-
     /// <summary>
     /// Авторизация пользователя
     /// </summary>
@@ -36,7 +27,7 @@ public class AuthController: BaseController
     [HttpPost(nameof(SignIn))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
     public Task<IActionResult> SignIn([FromBody] SignInRequest request)
-        => GetResult(() =>_authService.SignInAsync(_mapper.Map<SignInRequest, SignInModel>(request)));
+        => GetResult(() =>authService.SignInAsync(mapper.Map<SignInRequest, SignInModel>(request)));
 
     /// <summary>
     /// Авторизация пользователя через Google
@@ -47,5 +38,5 @@ public class AuthController: BaseController
     [HttpPost(nameof(SignInByGoogle))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
     public Task<IActionResult> SignInByGoogle([FromBody] SignInByGoogleModel parameters)
-        => GetResult(() => _authService.SignInByGoogleAsync(parameters));
+        => GetResult(() => authService.SignInByGoogleAsync(parameters));
 }
