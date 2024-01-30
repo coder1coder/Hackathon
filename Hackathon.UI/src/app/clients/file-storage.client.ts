@@ -1,23 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
+import { BaseApiClient } from './base.client';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FileStorageService {
-  private api: string = `${environment.api}/fileStorage`;
+export class FileStorageClient extends BaseApiClient {
   private cache = new Map<string, SafeUrl>();
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient) {}
+  constructor(private sanitizer: DomSanitizer, http: HttpClient) {
+    super(http, 'fileStorage');
+  }
 
   public getById(id: string): Observable<SafeUrl> {
     const key: string = JSON.stringify(id);
     if (!this.cache.has(key)) {
-      return this.http.get(`${this.api}/get/${id}`, { responseType: 'arraybuffer' }).pipe(
+      return this.http.get(`${this.baseRoute}/${id}`, { responseType: 'arraybuffer' }).pipe(
         map((arrayBuffer: ArrayBuffer) => {
           const safeUrl: SafeUrl = this.getSafeUrlFromByteArray(arrayBuffer);
           this.cache.set(key, safeUrl);

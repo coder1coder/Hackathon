@@ -17,14 +17,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventNewStatusDialogComponent } from '../components/status/event-new-status-dialog.component';
 import { SnackService } from '../../../../services/snack.service';
 import { delay, Observable, switchMap, takeUntil } from 'rxjs';
-import * as moment from 'moment/moment';
-import { AuthService } from '../../../../services/auth.service';
+import moment from 'moment/moment';
 import { RouterService } from '../../../../services/router.service';
-import { FileStorageService } from '../../../../services/file-storage.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { EventErrorMessages } from 'src/app/common/error-messages/event-error-messages';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
-import { EventClient } from '../../../../services/event/event.client';
 import { EventService } from '../../../../services/event/event.service';
 import { EventStage } from 'src/app/models/Event/EventStage';
 import {
@@ -45,6 +42,8 @@ import { IBaseCreateResponse } from '../../../../models/IBaseCreateResponse';
 import { ApprovalApplicationStatusEnum } from '../../../../models/approval-application/approval-application-status.enum';
 import { AppStateService } from '../../../../services/app-state.service';
 import {MatChipInputEvent } from '@angular/material/chips';
+import { FileStorageClient } from 'src/app/clients/file-storage.client';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
   selector: 'event-create-edit-card',
@@ -76,8 +75,8 @@ export class EventCreateEditCardComponent
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private fileStorageService: FileStorageService,
-    private eventHttpService: EventClient,
+    private fileStorageClient: FileStorageClient,
+    private eventsClient: EventsClient,
     public eventService: EventService,
     private snackService: SnackService,
     private router: RouterService,
@@ -135,8 +134,8 @@ export class EventCreateEditCardComponent
         : this.eventDataForCreate(eventStages, eventTasks);
 
       const request: Observable<void> | Observable<IBaseCreateResponse> = this.editMode
-        ? this.eventHttpService.update(eventData as IUpdateEvent)
-        : this.eventHttpService.create(eventData);
+        ? this.eventsClient.update(eventData as IUpdateEvent)
+        : this.eventsClient.create(eventData);
 
       this.applyAgreement(eventData);
 
@@ -295,12 +294,12 @@ export class EventCreateEditCardComponent
     const files: FileList = target.files;
 
     if (files?.length) {
-      this.eventHttpService
+      this.eventsClient
         .setEventImage(files)
         .pipe(
           switchMap((imageId: string) => {
             this.form.controls['imageId'].setValue(imageId);
-            return this.fileStorageService.getById(imageId);
+            return this.fileStorageClient.getById(imageId);
           }),
           takeUntil(this.destroy$),
         )
@@ -332,7 +331,7 @@ export class EventCreateEditCardComponent
     }
 
     if (this.event.imageId) {
-      this.fileStorageService
+      this.fileStorageClient
         .getById(this.event.imageId)
         .pipe(takeUntil(this.destroy$))
         .subscribe({

@@ -10,8 +10,8 @@ import { RouterService } from '../router.service';
 import { EventErrorMessages } from '../../common/error-messages/event-error-messages';
 import { SnackService } from '../snack.service';
 import { GlobalErrorHandler } from '../../common/handlers/error.handler';
-import { EventClient } from './event.client';
 import moment from 'moment';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class EventService {
     private routerService: RouterService,
     private snackService: SnackService,
     private globalErrorHandler: GlobalErrorHandler,
-    private eventClient: EventClient,
+    private eventsClient: EventsClient,
   ) {}
 
   public checkAccessViewEventById(eventId: number): Observable<boolean> {
@@ -40,7 +40,7 @@ export class EventService {
       return of(false);
     }
 
-    return this.eventClient.getById(eventId).pipe(
+    return this.eventsClient.getById(eventId).pipe(
       filter((event: Event) => !!event),
       map((event: Event) => this.canView(event)),
       catchError((err) => {

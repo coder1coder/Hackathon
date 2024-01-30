@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { FriendshipService } from '../../../services/friendship/friendship.service';
+import { FriendshipClient } from '../../../clients/friendship.client';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { IUser } from '../../../models/User/IUser';
@@ -33,7 +33,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
-    private friendshipService: FriendshipService,
+    private friendshipClient: FriendshipClient,
     private routerService: RouterService,
     private authService: AuthService,
     private signalRService: SignalRService,
@@ -62,7 +62,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
 
   private fetchUsersByStatus(userId: number, status?: FriendshipStatus): void {
     if (status != undefined)
-      this.friendshipService
+      this.friendshipClient
         .getUsersByFriendshipStatus(userId, status)
         .pipe(takeUntil(this.destroy$))
         .subscribe((x: BaseCollection<IUser>) => {
@@ -86,7 +86,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   }
 
   public rejectOffer(userId: number): void {
-    this.friendshipService
+    this.friendshipClient
       .rejectOffer(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -95,7 +95,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   }
 
   public acceptOffer(userId: number): void {
-    this.friendshipService
+    this.friendshipClient
       .createOrAcceptOffer(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -104,7 +104,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   }
 
   public removeFromFriends(userId: number): void {
-    this.friendshipService
+    this.friendshipClient
       .endFriendship(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {

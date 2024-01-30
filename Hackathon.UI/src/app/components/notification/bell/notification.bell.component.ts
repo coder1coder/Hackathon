@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
-import { NotificationService } from '../../../services/notification.service';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
 import { Notification } from '../../../models/Notification/Notification';
@@ -8,6 +7,7 @@ import { RouterService } from '../../../services/router.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
   selector: 'notification-bell',
@@ -22,7 +22,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
-    private notificationService: NotificationService,
+    private notificationsClient: NotificationsClient,
     private signalRService: SignalRService,
     private router: RouterService,
     private authService: AuthService,
@@ -52,14 +52,14 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   }
 
   private markAllAsRead(): void {
-    this.notificationService
+    this.notificationsClient
       .markAsRead([])
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.updateUnreadNotificationsCount());
   }
 
   private updateUnreadNotificationsCount(): void {
-    this.notificationService
+    this.notificationsClient
       .getUnreadNotificationsCount()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: number) => (this.unreadNotificationsCount = res));
@@ -72,7 +72,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     filter.SortBy = 'createdAt';
     filter.Limit = this.notificationLimit;
 
-    this.notificationService
+    this.notificationsClient
       .getNotifications(filter)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: BaseCollection<Notification>) => (this.notifications = res));
@@ -80,7 +80,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
 
   private remove(event: MouseEvent, ids: string[]): void {
     event.stopPropagation();
-    this.notificationService
+    this.notificationsClient
       .remove(ids)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {

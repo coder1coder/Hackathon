@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Team } from '../../../models/Team/Team';
 import { RouterService } from '../../../services/router.service';
-import { EventClient } from '../../../services/event/event.client';
 import { EventFilter } from '../../../models/Event/EventFilter';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -9,12 +8,13 @@ import { IEventListItem } from '../../../models/Event/IEventListItem';
 import { AuthService } from '../../../services/auth.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ITeamJoinRequest } from '../../../models/Team/ITeamJoinRequest';
-import { TeamClient } from '../../../services/team-client.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CancelJoinRequestCommentDialogComponent } from '../cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component';
 import { ICancelRequestParameters } from '../../../models/Team/CancelRequestParameters';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { BaseCollection } from '../../../models/BaseCollection';
+import { TeamsClient } from 'src/app/clients/teams.client';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
   selector: 'team',
@@ -35,9 +35,9 @@ export class TeamComponent implements OnDestroy {
   constructor(
     public dialog: MatDialog,
     public router: RouterService,
-    private eventHttpService: EventClient,
+    private eventsClient: EventsClient,
     private authService: AuthService,
-    private teamClient: TeamClient,
+    private teamsClient: TeamsClient,
   ) {}
 
   ngOnDestroy(): void {
@@ -46,7 +46,7 @@ export class TeamComponent implements OnDestroy {
   }
 
   private fetchTeam(): void {
-    this.teamClient
+    this.teamsClient
       .getById(this.team.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: Team) => (this.team = res));
@@ -71,7 +71,7 @@ export class TeamComponent implements OnDestroy {
       getList.Filter = new EventFilter();
       getList.Filter.teamsIds = [this.team.id];
 
-      this.eventHttpService
+      this.eventsClient
         .getList(getList)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: BaseCollection<IEventListItem>) => (this.teamEvents = res.items));
@@ -83,7 +83,7 @@ export class TeamComponent implements OnDestroy {
   }
 
   public approveJoinRequestByOwner(requestId: number): void {
-    this.teamClient
+    this.teamsClient
       .approveJoinRequest(requestId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -111,7 +111,7 @@ export class TeamComponent implements OnDestroy {
       .pipe(
         switchMap((result: string) => {
           parameters.comment = result;
-          return this.teamClient.cancelJoinRequest(parameters);
+          return this.teamsClient.cancelJoinRequest(parameters);
         }),
         takeUntil(this.destroy$),
       )
@@ -119,7 +119,7 @@ export class TeamComponent implements OnDestroy {
   }
 
   private fetchTeamSentJoinRequests(): void {
-    this.teamClient
+    this.teamsClient
       .getTeamSentJoinRequests(this.team.id, {
         Offset: 0,
         Limit: 100,

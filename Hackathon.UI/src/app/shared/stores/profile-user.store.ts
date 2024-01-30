@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { FileStorageService } from '../../services/file-storage.service';
-import { UserService } from '../../services/user.service';
 import { IUser } from '../../models/User/IUser';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { catchError, forkJoin, Observable, of, throwError } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
+import { FileStorageClient } from 'src/app/clients/file-storage.client';
+import { UsersClient } from 'src/app/clients/users.client';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class ProfileUserStore {
   @observable protected users$: Map<number, IUser> = new Map<number, IUser>();
   private fetchObservableMap: Map<number, Observable<IUser>> = new Map<number, Observable<IUser>>();
 
-  constructor(private fileStorageService: FileStorageService, private userService: UserService) {
+  constructor(private fileStorageClient: FileStorageClient, private usersClient: UsersClient) {
     makeObservable(this);
   }
 
@@ -51,7 +51,7 @@ export class ProfileUserStore {
     if (this.fetchObservableMap.has(userId)) {
       return this.fetchObservableMap.get(userId);
     } else {
-      const request: Observable<IUser> = this.userService.getById(userId).pipe(
+      const request: Observable<IUser> = this.usersClient.getById(userId).pipe(
         shareReplay(1),
         switchMap((user: IUser) => {
           user.shortUserName = ProfileUserStore.setUserInitials(user);
@@ -59,7 +59,7 @@ export class ProfileUserStore {
           this.addEntity(user);
           return user?.profileImageId
             ? forkJoin([
-                this.fileStorageService
+                this.fileStorageClient
                   .getById(user.profileImageId)
                   .pipe(catchError(() => of(null))),
                 of(user),
@@ -98,7 +98,7 @@ export class ProfileUserStore {
     }
     user.profileImageId = imageId ?? null;
     return user.profileImageId
-      ? this.fileStorageService
+      ? this.fileStorageClient
           .getById(user.profileImageId)
           .pipe(map((safeUrl) => this.updateUserImage([safeUrl, user])))
       : of(this.updateUserImage([null, user]));

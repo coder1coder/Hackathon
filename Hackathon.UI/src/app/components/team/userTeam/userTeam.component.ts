@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterService } from '../../../services/router.service';
-import { TeamClient } from '../../../services/team-client.service';
 import { Team } from '../../../models/Team/Team';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
@@ -15,6 +14,7 @@ import { ITeamJoinRequestFilter } from '../../../models/Team/ITeamJoinRequestFil
 import { MatTableDataSource } from '@angular/material/table';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
+import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
   selector: 'userTeam',
@@ -31,7 +31,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
 
   constructor(
     public routerService: RouterService,
-    private teamClient: TeamClient,
+    private teamsClient: TeamsClient,
     private authService: AuthService,
     private router: Router,
     private errorProcessor: ErrorProcessorService,
@@ -50,7 +50,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
 
   public leaveTeam(): void {
     if (this.team?.id !== undefined) {
-      this.teamClient
+      this.teamsClient
         .leaveTeam(this.team.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
@@ -61,7 +61,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   }
 
   public cancelJoinRequest(requestId: number): void {
-    this.teamClient
+    this.teamsClient
       .cancelJoinRequest({
         requestId: requestId,
         comment: null,
@@ -74,7 +74,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   }
 
   private fetchTeam(): void {
-    this.teamClient
+    this.teamsClient
       .getMyTeam()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -94,7 +94,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       SortOrder: SortOrder.Desc,
     };
 
-    this.teamClient
+    this.teamsClient
       .getJoinRequests(parameters)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

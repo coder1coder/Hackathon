@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
-import { FriendshipService } from '../../../services/friendship/friendship.service';
 import { GetListParameters } from '../../../models/GetListParameters';
 import { FriendshipFilter } from '../../../models/Friendship/FriendshipFilter';
 import {
@@ -11,6 +10,7 @@ import {
 } from '../../../models/Friendship/FriendshipStatus';
 import { SignalRService } from '../../../services/signalr.service';
 import { BaseCollection } from '../../../models/BaseCollection';
+import { FriendshipClient } from 'src/app/clients/friendship.client';
 
 @Component({
   selector: `friendship-offer-button`,
@@ -35,7 +35,7 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
 
   constructor(
     private authService: AuthService,
-    private friendshipService: FriendshipService,
+    private friendshipClient: FriendshipClient,
     private signalRService: SignalRService,
   ) {}
 
@@ -70,7 +70,7 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
     parameters.Filter = new FriendshipFilter();
     parameters.Filter.option = GetOfferOption.Any;
 
-    this.friendshipService
+    this.friendshipClient
       .getOffers(parameters)
       .pipe(takeUntil(this.destroy$))
       .subscribe((x: BaseCollection<IFriendship>) => {
@@ -105,12 +105,12 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
       switch (this.friendship.status) {
         case FriendshipStatus.Pending:
           if (this.friendship.proposerId == this.authUserId) {
-            this.friendshipService
+            this.friendshipClient
               .unsubscribe(this.friendship.userId)
               .pipe(takeUntil(this.destroy$))
               .subscribe(() => this.resolveStatus());
           } else {
-            this.friendshipService
+            this.friendshipClient
               .createOrAcceptOffer(this.friendship.proposerId)
               .pipe(takeUntil(this.destroy$))
               .subscribe(() => this.resolveStatus());
@@ -119,7 +119,7 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
           break;
 
         case FriendshipStatus.Confirmed:
-          this.friendshipService
+          this.friendshipClient
             .endFriendship(this.friendId)
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.resolveStatus());
@@ -133,7 +133,7 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
   }
 
   private sendFriendshipRequest(): void {
-    this.friendshipService
+    this.friendshipClient
       .createOrAcceptOffer(this.friendId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.resolveStatus());

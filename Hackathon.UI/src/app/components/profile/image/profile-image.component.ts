@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SnackService } from '../../../services/snack.service';
-import { UserService } from '../../../services/user.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { IUser } from '../../../models/User/IUser';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
+import { UsersClient } from 'src/app/clients/users.client';
 
 @Component({
   selector: 'profile-image',
@@ -23,7 +23,7 @@ export class ProfileImageComponent implements OnInit {
   constructor(
     private profileUserStore: ProfileUserStore,
     private snackService: SnackService,
-    private userService: UserService,
+    private usersClient: UsersClient,
     private currentUserStore: CurrentUserStore,
   ) {}
 
@@ -39,7 +39,7 @@ export class ProfileImageComponent implements OnInit {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     const files: FileList = target.files;
 
-    this.userService
+    this.usersClient
       .setImage(files)
       .pipe(
         switchMap((imageId: string) => this.profileUserStore.updateUserUrl(this.user, imageId)),

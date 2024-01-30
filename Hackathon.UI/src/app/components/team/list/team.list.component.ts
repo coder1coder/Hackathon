@@ -2,13 +2,13 @@ import { Component, Injectable } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import { Team, TeamType } from '../../../models/Team/Team';
-import { TeamClient } from '../../../services/team-client.service';
 import { AuthService } from '../../../services/auth.service';
 import { GetListParameters } from 'src/app/models/GetListParameters';
 import { FormBuilder } from '@angular/forms';
 import { TeamFilter } from 'src/app/models/Team/TeamFilter';
 import { RouterService } from '../../../services/router.service';
 import { takeUntil } from 'rxjs';
+import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
   selector: 'team-list',
@@ -26,7 +26,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
   });
 
   constructor(
-    private teamService: TeamClient,
+    private teamsClient: TeamsClient,
     private authService: AuthService,
     private router: RouterService,
     private fb: FormBuilder,
@@ -50,7 +50,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
     getFilterModel.Limit = this.pageSettings.pageSize;
     getFilterModel.Filter = teamFilterModel;
 
-    this.teamService
+    this.teamsClient
       .getByFilter(getFilterModel)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

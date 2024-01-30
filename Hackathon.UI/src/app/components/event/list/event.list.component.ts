@@ -12,13 +12,13 @@ import { AuthService } from '../../../services/auth.service';
 import { PageSettingsDefaults } from '../../../models/PageSettings';
 import { DATE_FORMAT_DD_MM_YYYY } from '../../../common/consts/date-formats';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { EventClient } from '../../../services/event/event.client';
 import { EventService } from '../../../services/event/event.service';
 import { EventErrorMessages } from '../../../common/error-messages/event-error-messages';
 import { SnackService } from '../../../services/snack.service';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { AppStateService } from '../../../services/app-state.service';
 import { finalize } from 'rxjs/operators';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
   selector: 'event-list',
@@ -42,7 +42,7 @@ export class EventListComponent implements OnInit {
   @ViewChild('statuses') statusesSelect: MatSelect;
   constructor(
     public router: RouterService,
-    private eventHttpService: EventClient,
+    private eventsClient: EventsClient,
     private eventService: EventService,
     private snackService: SnackService,
     private authService: AuthService,
@@ -162,7 +162,7 @@ export class EventListComponent implements OnInit {
 
   private loadData(params?: GetListParameters<EventFilter>): void {
     this.appStateService.setIsLoadingState(true);
-    this.eventHttpService
+    this.eventsClient
       .getList(params)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),

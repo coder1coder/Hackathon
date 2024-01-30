@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
-import { NotificationService } from '../../../services/notification.service';
 import { GetListParameters } from '../../../models/GetListParameters';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
 import { Notification } from '../../../models/Notification/Notification';
@@ -8,6 +7,7 @@ import { BaseTableListComponent } from '../../../common/base-components/base-tab
 import { AuthService } from '../../../services/auth.service';
 import { takeUntil } from 'rxjs';
 import { SignalRService } from '../../../services/signalr.service';
+import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
   selector: 'notification-list',
@@ -19,7 +19,7 @@ export class NotificationListComponent
   implements OnInit
 {
   constructor(
-    private notificationService: NotificationService,
+    private notificationsClient: NotificationsClient,
     private signalRService: SignalRService,
     private authService: AuthService,
   ) {
@@ -42,7 +42,7 @@ export class NotificationListComponent
     model.Offset = this.pageSettings.pageIndex;
     model.Limit = this.pageSettings.pageSize;
 
-    this.notificationService
+    this.notificationsClient
       .getNotifications(model)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -59,7 +59,7 @@ export class NotificationListComponent
 
   public remove(event: MouseEvent, ids: string[]): void {
     event.stopPropagation();
-    this.notificationService
+    this.notificationsClient
       .remove(ids)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {

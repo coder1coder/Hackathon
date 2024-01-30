@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UserService } from '../../../services/user.service';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import { GetListParameters } from '../../../models/GetListParameters';
@@ -9,6 +8,7 @@ import { RouterService } from '../../../services/router.service';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { mergeMap, takeUntil } from 'rxjs';
+import { UsersClient } from 'src/app/clients/users.client';
 
 @Component({
   selector: 'user-list',
@@ -17,7 +17,7 @@ import { mergeMap, takeUntil } from 'rxjs';
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
   constructor(
-    private usersService: UserService,
+    private usersClient: UsersClient,
     private routerService: RouterService,
     private currentUserStore: CurrentUserStore,
   ) {
@@ -43,7 +43,7 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
           getFilterModel.Limit = this.pageSettings.pageSize;
           getFilterModel.Filter = userFilter;
 
-          return this.usersService.getList(getFilterModel);
+          return this.usersClient.getList(getFilterModel);
         }),
         takeUntil(this.destroy$),
       )

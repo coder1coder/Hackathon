@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ApprovalApplicationsService } from '../../../services/approval-applications/approval-applications.service';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import {
   IApprovalApplication,
@@ -20,6 +19,7 @@ import { ApplicationApprovalErrorMessages } from '../../../common/error-messages
 import { ApprovalApplicationRejectModalComponent } from '../approval-application-reject-modal/approval-application-reject-modal.component';
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
 import { ApprovalApplicationInfoModalComponent } from '../approval-application-info-modal/approval-application-info-modal.component';
+import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
 
 @Component({
   selector: 'app-approval-applications',
@@ -32,7 +32,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
   private approvalApplicationFilter: IApprovalApplicationFilter;
 
   constructor(
-    private approvalApplicationsService: ApprovalApplicationsService,
+    private approvalApplicationsClient: ApprovalApplicationsClient,
     private errorProcessor: ErrorProcessorService,
     private dialog: MatDialog,
     private snackService: SnackService,
@@ -72,7 +72,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
   }
 
   private loadData(): void {
-    this.approvalApplicationsService
+    this.approvalApplicationsClient
       .getApprovalApplicationList(this.getFilter())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -117,7 +117,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
       .pipe(
         filter((v) => !!v),
         mergeMap(() =>
-          this.approvalApplicationsService.approveApprovalApplication(approvalApplication.id),
+          this.approvalApplicationsClient.approveApprovalApplication(approvalApplication.id),
         ),
         takeUntil(this.destroy$),
       )
@@ -137,7 +137,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
       .pipe(
         filter((v) => !!v),
         mergeMap((comment: string) =>
-          this.approvalApplicationsService.rejectApprovalApplication(
+          this.approvalApplicationsClient.rejectApprovalApplication(
             approvalApplication.id,
             comment,
           ),

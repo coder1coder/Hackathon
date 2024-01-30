@@ -8,12 +8,12 @@ import { SignalRService } from '../../../services/signalr.service';
 import { BehaviorSubject, Observable, of, takeUntil } from 'rxjs';
 import { IUser } from '../../../models/User/IUser';
 import { EventChatMessage } from '../../../models/chat/EventChatMessage';
-import { EventChatClient } from '../../../clients/chat/event-chat.client';
 import { Event } from '../../../models/Event/Event';
-import { EventClient } from '../../../services/event/event.client';
 import { IEventChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent';
 import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
+import { EventsClient } from 'src/app/clients/events.client';
+import { EventChatsClient } from 'src/app/clients/event-chats.client';
 
 @Component({
   selector: 'chat-event',
@@ -44,8 +44,8 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
     protected fb: FormBuilder,
     protected profileUserStore: ProfileUserStore,
     protected signalRService: SignalRService,
-    private eventClient: EventClient,
-    private eventChatClient: EventChatClient,
+    private eventsClient: EventsClient,
+    private eventChatsClient: EventChatsClient,
     private errorProcessor: ErrorProcessorService,
   ) {
     super(authService, fb, profileUserStore);
@@ -58,7 +58,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
 
   public handleNewMessageEvent(eventChatNewMessage: IEventChatNewMessageIntegrationEvent): void {
     if (this.canView && this.eventId > 0 && this.eventId == eventChatNewMessage.eventId) {
-      this.eventChatClient
+      this.eventChatsClient
         .getAsync(eventChatNewMessage.messageId)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -73,7 +73,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
 
   public fetchEntity(needReload: boolean = false): void {
     const request: Observable<Event> =
-      Boolean(this.event) && !needReload ? of(this.event) : this.eventClient.getById(this.eventId);
+      Boolean(this.event) && !needReload ? of(this.event) : this.eventsClient.getById(this.eventId);
 
     request.pipe(takeUntil(this.destroy$)).subscribe((event: Event) => {
       this.event = event;
@@ -84,7 +84,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
 
   public fetchMessages(): void {
     if (this.canView && this.eventId > 0) {
-      this.eventChatClient
+      this.eventChatsClient
         .getListAsync(this.eventId, this.params.Offset, this.params.Limit)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -127,7 +127,7 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
       message,
       option,
     );
-    this.eventChatClient
+    this.eventChatsClient
       .sendAsync(chatMessage)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

@@ -2,17 +2,17 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { BaseCollection } from '../../../models/BaseCollection';
-import { TeamClient } from '../../../services/team-client.service';
 import { ChatMessageOption, TeamChatMessage } from '../../../models/chat/TeamChatMessage';
 import { BaseChatComponent } from '../base.chat.component';
 import { SignalRService } from '../../../services/signalr.service';
-import { TeamChatClient } from '../../../clients/chat/team-chat.client';
 import { BehaviorSubject, Observable, of, takeUntil } from 'rxjs';
 import { Team } from '../../../models/Team/Team';
 import { IUser } from '../../../models/User/IUser';
 import { ITeamChatNewMessageIntegrationEvent } from 'src/app/models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent';
 import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
+import { TeamsClient } from 'src/app/clients/teams.client';
+import { TeamChatsClient } from 'src/app/clients/team-chats.client';
 
 @Component({
   selector: 'chat-team',
@@ -43,8 +43,8 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
     protected fb: FormBuilder,
     protected profileUserStore: ProfileUserStore,
     private signalRService: SignalRService,
-    private teamService: TeamClient,
-    private teamChatClient: TeamChatClient,
+    private teamsClient: TeamsClient,
+    private teamChatsClient: TeamChatsClient,
     private errorProcessor: ErrorProcessorService,
   ) {
     super(authService, fb, profileUserStore);
@@ -57,7 +57,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
   public handleNewMessageEvent(teamChatNewMessage: ITeamChatNewMessageIntegrationEvent): void {
     if (super.canView && this.teamId > 0 && this.teamId == teamChatNewMessage.teamId) {
-      this.teamChatClient
+      this.teamChatsClient
         .getAsync(teamChatNewMessage.messageId)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -72,7 +72,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
   public fetchEntity(needReload: boolean = false): void {
     const request: Observable<Team> =
-      Boolean(this.team) && !needReload ? of(this.team) : this.teamService.getById(this.teamId);
+      Boolean(this.team) && !needReload ? of(this.team) : this.teamsClient.getById(this.teamId);
 
     request.pipe(takeUntil(this.destroy$)).subscribe((team: Team) => {
       this.team = team;
@@ -83,7 +83,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
 
   public fetchMessages(): void {
     if (this.canView && this.teamId > 0) {
-      this.teamChatClient
+      this.teamChatsClient
         .getListAsync(this.teamId, this.params.Offset, this.params.Limit)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -126,7 +126,7 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
       message,
       option,
     );
-    this.teamChatClient
+    this.teamChatsClient
       .sendAsync(chatMessage)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

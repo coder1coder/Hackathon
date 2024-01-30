@@ -1,13 +1,10 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserRoleTranslator } from 'src/app/models/User/UserRole';
 import { AuthService } from '../../../services/auth.service';
-import { TeamClient } from '../../../services/team-client.service';
 import {catchError, Observable, of, switchMap, takeUntil} from 'rxjs';
 import { IUpdateUser, IUser } from '../../../models/User/IUser';
 import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/UserProfileReaction';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../../../services/user.service';
-import { UserProfileReactionService } from '../../../services/user-profile-reaction.service';
 import { SnackService } from '../../../services/snack.service';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -27,6 +24,9 @@ import {MatDialog} from "@angular/material/dialog";
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import { PasswordChangeDialogComponent } from '../password-change-dialog/password-change-dialog.component';
+import { TeamsClient } from 'src/app/clients/teams.client';
+import { UsersClient } from 'src/app/clients/users.client';
+import { UserProfileReactionsClient } from 'src/app/clients/user-profile-reactions.client';
 
 @Component({
   templateUrl: './profile.view.component.html',
@@ -60,10 +60,10 @@ export class ProfileViewComponent
 
   constructor(
     private authService: AuthService,
-    private teamService: TeamClient,
+    private teamsClient: TeamsClient,
     private activateRoute: ActivatedRoute,
-    private usersApiClient: UserService,
-    private userProfileReactionService: UserProfileReactionService,
+    private usersClient: UsersClient,
+    private userProfileReactionsClient: UserProfileReactionsClient,
     private snackService: SnackService,
     private fb: FormBuilder,
     private profileUserStore: ProfileUserStore,
@@ -73,7 +73,7 @@ export class ProfileViewComponent
     private errorProcessor: ErrorProcessorService
   ) {
     super();
-    this.usersApiClient = usersApiClient;
+    this.usersClient = usersClient;
     this.snackService = snackService;
     this.authUserId = this.authService.getUserId() ?? 0;
     this.userId = this.activateRoute.snapshot.params['userId'] ?? this.authUserId;
@@ -113,7 +113,7 @@ export class ProfileViewComponent
       ...this.form.getRawValue(),
     };
     if (JSON.stringify(request) !== JSON.stringify(this.mapUserValue(this.user))) {
-      this.usersApiClient
+      this.usersClient
         .updateUser(request)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -141,8 +141,8 @@ export class ProfileViewComponent
     this.form.reset();
   }
 
-  public toggleReaction(event: Event, reaction: UserProfileReaction): void {
-    this.userProfileReactionService
+  public toggleReaction(_: Event, reaction: UserProfileReaction): void {
+    this.userProfileReactionsClient
       .toggleReaction(this.userId, reaction)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -164,7 +164,7 @@ export class ProfileViewComponent
 
   public confirmEmail(): void {
     const code: string = this.confirmationCodeInput?.nativeElement?.value ?? '';
-    this.usersApiClient
+    this.usersClient
       .confirmEmail(code)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -174,7 +174,7 @@ export class ProfileViewComponent
   }
 
   public createEmailConfirmationRequest(): void {
-    this.usersApiClient
+    this.usersClient
       .createEmailConfirmationRequest()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -192,7 +192,7 @@ export class ProfileViewComponent
       .pipe(
         filter((parameters: IUpdatePasswordParameters) => parameters !== undefined),
         switchMap((parameters: IUpdatePasswordParameters) =>
-          this.usersApiClient.updatePassword(parameters)),
+          this.usersClient.updatePassword(parameters)),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -216,7 +216,7 @@ export class ProfileViewComponent
             this.fetchReactions();
           }
           this.fetchReactionsCount();
-          return this.teamService.getMyTeam();
+          return this.teamsClient.getMyTeam();
         }),
         catchError(() => of(null)),
         finalize(() => this.appStateService.setIsLoadingState(false)),
@@ -230,7 +230,7 @@ export class ProfileViewComponent
   }
 
   private fetchReactions(): void {
-    this.userProfileReactionService
+    this.userProfileReactionsClient
       .get(this.userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -241,7 +241,7 @@ export class ProfileViewComponent
   }
 
   private fetchReactionsCount(): void {
-    this.userProfileReactionService
+    this.userProfileReactionsClient
       .getCount(this.isOwner ? this.authUserId : this.userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

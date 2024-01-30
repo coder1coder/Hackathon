@@ -1,6 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { BaseCollection } from '../models/BaseCollection';
 import { Team } from '../models/Team/Team';
 import { Observable } from 'rxjs';
@@ -11,68 +10,64 @@ import { GetListParameters, PaginationSorting } from '../models/GetListParameter
 import { ITeamJoinRequest } from '../models/Team/ITeamJoinRequest';
 import { ITeamJoinRequestFilter } from '../models/Team/ITeamJoinRequestFilter';
 import { ICancelRequestParameters } from '../models/Team/CancelRequestParameters';
+import { BaseApiClient } from './base.client';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TeamClient {
-  private api: string = `${environment.api}/team`;
+export class TeamsClient extends BaseApiClient {
 
-  constructor(private http: HttpClient) {
-    const headers: HttpHeaders = new HttpHeaders().set('content-type', 'application/json');
-
-    http.options(this.api, {
-      headers: headers,
-    });
+  constructor(protected http: HttpClient) {
+    super(http, 'team');
   }
 
   public create(createTeamModel: CreateTeamModel): Observable<IBaseCreateResponse> {
-    return this.http.post<IBaseCreateResponse>(this.api, createTeamModel);
+    return this.http.post<IBaseCreateResponse>(this.baseRoute, createTeamModel);
   }
 
   public getById(id: number): Observable<Team> {
-    return this.http.get<Team>(`${this.api}/${id}`);
+    return this.http.get<Team>(`${this.baseRoute}/${id}`);
   }
 
   public getMyTeam(): Observable<Team> {
-    return this.http.get<Team>(`${this.api}/My`);
+    return this.http.get<Team>(`${this.baseRoute}/my`);
   }
 
   public getByFilter(
     getFilterModel: GetListParameters<TeamFilter>,
   ): Observable<BaseCollection<Team>> {
-    return this.http.post<BaseCollection<Team>>(`${this.api}/getTeams`, getFilterModel);
+    return this.http.post<BaseCollection<Team>>(`${this.baseRoute}/getTeams`, getFilterModel);
   }
 
   public joinToTeam(teamId: number): Observable<void> {
-    return this.http.post<void>(`${this.api}/${teamId}/join`, null);
+    return this.http.post<void>(`${this.baseRoute}/${teamId}/join`, null);
   }
 
   public leaveTeam(teamId: number): Observable<void> {
-    return this.http.get<void>(`${this.api}/${teamId}/leave`);
+    return this.http.get<void>(`${this.baseRoute}/${teamId}/leave`);
   }
 
   public createJoinRequest(teamId: number): Observable<{ id: number }> {
-    return this.http.post<{ id: number }>(`${this.api}/${teamId}/join/request`, null);
+    return this.http.post<{ id: number }>(`${this.baseRoute}/${teamId}/join/request`, null);
   }
 
   public approveJoinRequest(requestId: number): Observable<void> {
-    return this.http.post<void>(`${this.api}/join/request/${requestId}/approve`, null);
+    return this.http.post<void>(`${this.baseRoute}/join/request/${requestId}/approve`, null);
   }
 
   public cancelJoinRequest(parameters: ICancelRequestParameters): Observable<void> {
-    return this.http.post<void>(`${this.api}/join/request/cancel`, parameters);
+    return this.http.post<void>(`${this.baseRoute}/join/request/cancel`, parameters);
   }
 
   public getSentJoinRequest(teamId: number): Observable<ITeamJoinRequest> {
-    return this.http.get<ITeamJoinRequest>(`${this.api}/${teamId}/join/request/sent`);
+    return this.http.get<ITeamJoinRequest>(`${this.baseRoute}/${teamId}/join/request/sent`);
   }
 
   public getJoinRequests(
     filter: GetListParameters<ITeamJoinRequestFilter>,
   ): Observable<BaseCollection<ITeamJoinRequest>> {
     return this.http.post<BaseCollection<ITeamJoinRequest>>(
-      `${this.api}/join/request/list`,
+      `${this.baseRoute}/join/request/list`,
       filter,
     );
   }
@@ -82,7 +77,7 @@ export class TeamClient {
     paginationSorting: PaginationSorting,
   ): Observable<BaseCollection<ITeamJoinRequest>> {
     return this.http.post<BaseCollection<ITeamJoinRequest>>(
-      `${this.api}/${teamId}/join/request/list`,
+      `${this.baseRoute}/${teamId}/join/request/list`,
       paginationSorting,
     );
   }

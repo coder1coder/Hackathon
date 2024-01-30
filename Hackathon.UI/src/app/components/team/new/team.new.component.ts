@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { CreateTeamModel } from '../../../models/Team/CreateTeamModel';
-import { TeamClient } from '../../../services/team-client.service';
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
 import { TeamType } from 'src/app/models/Team/TeamType.';
 import { takeUntil } from 'rxjs';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
+import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
   selector: 'team-new',
@@ -28,7 +28,7 @@ export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy
   private readonly eventId: number;
 
   constructor(
-    private teamService: TeamClient,
+    private teamsClient: TeamsClient,
     private snackBar: SnackService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -44,7 +44,7 @@ export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy
     createTeamModel.type = this.selectedTeamType;
     if (this.eventId > 0) createTeamModel.eventId = this.eventId ?? null;
 
-    this.teamService
+    this.teamsClient
       .create(createTeamModel)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

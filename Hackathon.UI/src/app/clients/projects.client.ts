@@ -1,18 +1,17 @@
-import { BaseApiClient } from '../base.client';
+import { BaseApiClient } from './base.client';
 import { HttpClient } from '@angular/common/http';
-import { IProject } from '../../models/Project/IProject';
+import { IProject } from '../models/Project/IProject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IProjectUpdateFromGitBranch } from '../../models/Project/IProjectUpdateFromGitBranch';
+import { IProjectUpdateFromGitBranch } from '../models/Project/IProjectUpdateFromGitBranch';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectClient extends BaseApiClient {
-  private baseRoute = `${this.api}/project`;
+export class ProjectsClient extends BaseApiClient {
 
   protected constructor(http: HttpClient) {
-    super(http);
+    super(http, 'project');
   }
 
   public createAsync(project: IProject): Observable<void> {

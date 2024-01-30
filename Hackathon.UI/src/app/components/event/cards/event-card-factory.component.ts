@@ -25,10 +25,10 @@ import { EventCardStartedComponent } from './event-card-started/event-card-start
 import { EventCardPublishedComponent } from './event-card-published/event-card-published.component';
 import { EventCardFinishedComponent } from './event-card-finished/event-card-finished.component';
 import { EventErrorMessages } from '../../../common/error-messages/event-error-messages';
-import { EventClient } from '../../../services/event/event.client';
 import { AuthService } from '../../../services/auth.service';
 import { GlobalErrorHandler } from '../../../common/handlers/error.handler';
 import { AppStateService } from '../../../services/app-state.service';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
   selector: 'app-event-card-factory',
@@ -43,7 +43,7 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private eventHttpService: EventClient,
+    private eventsClient: EventsClient,
     private eventService: EventService,
     private routerService: RouterService,
     private activeRoute: ActivatedRoute,
@@ -67,7 +67,7 @@ export class EventCardFactoryComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.appStateService.setIsLoadingState(true);
-    this.eventHttpService
+    this.eventsClient
       .getById(this.eventId)
       .pipe(
         switchMap((event: Event) =>

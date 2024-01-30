@@ -24,7 +24,7 @@ public class FileStorageController: BaseController
     /// <param name="storageFileId">Идентификатор файла</param>
     /// <returns></returns>
     [HttpGet]
-    [Route("get/{storageFileId:guid}")]
+    [Route("{storageFileId:guid}")]
     public Task<Stream> Get([FromRoute] Guid storageFileId)
         => _fileStorageService.GetAsync(storageFileId);
 }

@@ -4,12 +4,12 @@ import { RouterService } from '../../services/router.service';
 import { GetListParameters } from '../../models/GetListParameters';
 import { IEventLogModel } from '../../models/EventLog/IEventLogModel';
 import { BaseCollection } from '../../models/BaseCollection';
-import { EventLogService } from '../../services/eventLog/eventLog.service';
 import * as moment from 'moment/moment';
 import { DATE_FORMAT_DD_MM_YYYY } from 'src/app/common/consts/date-formats';
 import { mergeMap, takeUntil } from 'rxjs';
 import { fromMobx } from '../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
+import { LogbookClient } from 'src/app/clients/logbook.client';
 
 @Component({
   selector: 'eventLog-list',
@@ -18,7 +18,7 @@ import { CurrentUserStore } from '../../shared/stores/current-user.store';
 })
 export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
   constructor(
-    private eventLogService: EventLogService,
+    private logbookClient: LogbookClient,
     private routerService: RouterService,
     private currentUserStore: CurrentUserStore,
   ) {
@@ -35,7 +35,7 @@ export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
           getFilterModel.Offset = this.pageSettings.pageIndex;
           getFilterModel.Limit = this.pageSettings.pageSize;
 
-          return this.eventLogService.getList(getFilterModel);
+          return this.logbookClient.getList(getFilterModel);
         }),
         takeUntil(this.destroy$),
       )

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Notification } from 'src/app/models/Notification/Notification';
-import { NotificationService } from 'src/app/services/notification.service';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
   selector: `notification-item`,
@@ -17,7 +17,7 @@ export class NotificationItemComponent implements OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationsClient: NotificationsClient) {}
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
@@ -25,7 +25,7 @@ export class NotificationItemComponent implements OnDestroy {
   }
 
   public remove(event: MouseEvent, ids: string[]): void {
-    this.notificationService
+    this.notificationsClient
       .remove(ids)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {

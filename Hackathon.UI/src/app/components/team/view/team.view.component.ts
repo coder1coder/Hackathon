@@ -1,7 +1,6 @@
 import { OnInit, Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Team, TeamType } from '../../../models/Team/Team';
-import { TeamClient } from '../../../services/team-client.service';
 import { finalize } from 'rxjs/operators';
 import { RouterService } from '../../../services/router.service';
 import { AuthService } from '../../../services/auth.service';
@@ -10,6 +9,7 @@ import { IProblemDetails } from '../../../models/IProblemDetails';
 import { ITeamJoinRequest } from '../../../models/Team/ITeamJoinRequest';
 import { Subject, takeUntil } from 'rxjs';
 import { AppStateService } from '../../../services/app-state.service';
+import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
   selector: 'team-view',
@@ -28,7 +28,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   constructor(
     private activateRoute: ActivatedRoute,
     public router: RouterService,
-    private teamClient: TeamClient,
+    private teamsClient: TeamsClient,
     private authService: AuthService,
     private snackService: SnackService,
     private appStateService: AppStateService,
@@ -69,7 +69,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   }
 
   public leaveTeam(): void {
-    this.teamClient
+    this.teamsClient
       .leaveTeam(this.teamId ?? 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -82,7 +82,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
   }
 
   public joinToTeam(): void {
-    this.teamClient
+    this.teamsClient
       .joinToTeam(this.teamId ?? 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -102,7 +102,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.teamClient
+    this.teamsClient
       .createJoinRequest(this.teamId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -123,7 +123,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.teamClient
+    this.teamsClient
       .cancelJoinRequest({
         requestId: this.existsSentJoinRequest.id,
         comment: null,
@@ -152,7 +152,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   private fetchTeam(): void {
     this.appStateService.setIsLoadingState(true);
-    this.teamClient
+    this.teamsClient
       .getById(this.teamId)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),
@@ -166,7 +166,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   private fetchSentJoinRequest(): void {
     this.appStateService.setIsLoadingState(true);
-    this.teamClient
+    this.teamsClient
       .getSentJoinRequest(this.teamId!)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),

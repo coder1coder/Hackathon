@@ -5,7 +5,6 @@ import { EventCardBaseComponent } from '../components/event-card-base.component'
 import { AuthService } from '../../../../services/auth.service';
 import { Event } from '../../../../models/Event/Event';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectClient } from '../../../../clients/project/project.client';
 import { ProjectDialogComponent } from '../../../custom/project-dialog/project-dialog.component';
 import { ErrorProcessorService } from '../../../../services/error-processor.service';
 import { ProjectGitDialogComponent } from '../../../custom/project-git-dialog/project-git-dialog.component';
@@ -16,6 +15,7 @@ import { Team } from '../../../../models/Team/Team';
 import { IUser } from '../../../../models/User/IUser';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { AppStateService } from '../../../../services/app-state.service';
+import { ProjectsClient } from 'src/app/clients/projects.client';
 
 @Component({
   selector: `event-card-started`,
@@ -44,7 +44,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   constructor(
     private errorProcessor: ErrorProcessorService,
     private authService: AuthService,
-    private projectApiClient: ProjectClient,
+    private projectsClient: ProjectsClient,
     private dialogService: MatDialog,
     private signalRService: SignalRService,
     protected appStateService: AppStateService,
@@ -99,9 +99,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
               project.eventId = this.event?.id ?? 0;
               project.teamId =
                 this.Event.getMemberTeam(this.event, this.currentUserId ?? 0)?.id ?? 0;
-              return this.projectApiClient.createAsync(project);
+              return this.projectsClient.createAsync(project);
             } else {
-              return this.projectApiClient.updateAsync(project);
+              return this.projectsClient.updateAsync(project);
             }
           } else {
             return EMPTY;
@@ -130,7 +130,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
       .pipe(
         filter((data: IProjectUpdateFromGitBranch) => data !== undefined),
         switchMap((data: IProjectUpdateFromGitBranch) =>
-          this.projectApiClient.updateProjectFromGitBranch(data)
+          this.projectsClient.updateProjectFromGitBranch(data)
         ),
         takeUntil(this.destroy$),
       )
@@ -141,7 +141,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   }
 
   public removeProject(): void {
-    this.projectApiClient
+    this.projectsClient
       .remove(this.project?.eventId ?? 0, this.project?.teamId ?? 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.fetchProject());
@@ -154,7 +154,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     const team: Team = this.Event.getMemberTeam(this.event, this.currentUserId);
     if (!team) return;
 
-    this.projectApiClient
+    this.projectsClient
       .getAsync(this.event.id, team.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

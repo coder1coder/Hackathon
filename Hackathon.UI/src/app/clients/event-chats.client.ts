@@ -1,18 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { BaseApiClient } from '../base.client';
+import { BaseApiClient } from './base.client';
 import { Observable } from 'rxjs';
-import { BaseCollection } from '../../models/BaseCollection';
+import { BaseCollection } from '../models/BaseCollection';
 import { Injectable } from '@angular/core';
-import { EventChatMessage } from '../../models/chat/EventChatMessage';
+import { EventChatMessage } from '../models/chat/EventChatMessage';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EventChatClient extends BaseApiClient {
-  baseRoute = `${this.api}/chat/event`;
+export class EventChatsClient extends BaseApiClient {
 
-  protected constructor(http: HttpClient) {
-    super(http);
+  constructor(http: HttpClient) {
+    super(http, 'chat/event');
   }
 
   public sendAsync(message: EventChatMessage): Observable<void> {

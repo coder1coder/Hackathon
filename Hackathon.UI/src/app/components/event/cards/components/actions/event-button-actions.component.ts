@@ -4,7 +4,6 @@ import { EventStatus } from '../../../../../models/Event/EventStatus';
 import { SnackService } from '../../../../../services/snack.service';
 import { RouterService } from '../../../../../services/router.service';
 import { EventService } from '../../../../../services/event/event.service';
-import { EventClient } from '../../../../../services/event/event.client';
 import {
   CustomDialogComponent,
   ICustomDialogData,
@@ -12,6 +11,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorProcessorService } from '../../../../../services/error-processor.service';
 import { Subject, takeUntil } from 'rxjs';
+import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
   selector: 'event-button-actions',
@@ -27,7 +27,7 @@ export class EventButtonActionsComponent implements OnDestroy {
 
   constructor(
     public eventService: EventService,
-    private eventHttpService: EventClient,
+    private eventsClient: EventsClient,
     private snack: SnackService,
     private router: RouterService,
     public dialog: MatDialog,
@@ -49,7 +49,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public startEvent(): void {
-    this.eventHttpService
+    this.eventsClient
       .setStatus(this.event.id, EventStatus.Started)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -75,7 +75,7 @@ export class EventButtonActionsComponent implements OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {
-            this.eventHttpService
+            this.eventsClient
               .acceptAgreement(this.event.id)
               .pipe(takeUntil(this.destroy$))
               .subscribe({
@@ -90,7 +90,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   private joinToEvent(): void {
-    this.eventHttpService
+    this.eventsClient
       .join(this.event.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -105,7 +105,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public leaveFromEvent(): void {
-    this.eventHttpService
+    this.eventsClient
       .leave(this.event.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -118,7 +118,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public finishEvent(): void {
-    this.eventHttpService
+    this.eventsClient
       .setStatus(this.event.id, EventStatus.Finished)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -131,7 +131,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public deleteEvent(): void {
-    this.eventHttpService
+    this.eventsClient
       .remove(this.event.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -143,7 +143,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public setPublish(): void {
-    this.eventHttpService
+    this.eventsClient
       .setStatus(this.event.id, EventStatus.Published)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -156,7 +156,7 @@ export class EventButtonActionsComponent implements OnDestroy {
   }
 
   public setOnModeration(): void {
-    this.eventHttpService
+    this.eventsClient
       .setStatus(this.event.id, EventStatus.OnModeration)
       .pipe(takeUntil(this.destroy$))
       .subscribe({

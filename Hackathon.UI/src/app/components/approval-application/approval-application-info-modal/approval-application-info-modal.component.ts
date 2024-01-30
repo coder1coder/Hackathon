@@ -10,10 +10,10 @@ import {
 import { filter, mergeMap, Subject, takeUntil } from 'rxjs';
 import { ApplicationApprovalErrorMessages } from '../../../common/error-messages/application-approval-error-messages';
 import { ApprovalApplicationRejectModalComponent } from '../approval-application-reject-modal/approval-application-reject-modal.component';
-import { ApprovalApplicationsService } from '../../../services/approval-applications/approval-applications.service';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { SnackService } from '../../../services/snack.service';
 import { Router, UrlTree } from '@angular/router';
+import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
 
 @Component({
   selector: 'app-approval-application-info-modal',
@@ -29,7 +29,7 @@ export class ApprovalApplicationInfoModalComponent {
     @Inject(MAT_DIALOG_DATA) public approvalApplication: IApprovalApplication,
     private dialog: MatDialog,
     private router: Router,
-    private approvalApplicationsService: ApprovalApplicationsService,
+    private approvalApplicationsClient: ApprovalApplicationsClient,
     private errorProcessor: ErrorProcessorService,
     private snackService: SnackService,
   ) {}
@@ -64,7 +64,7 @@ export class ApprovalApplicationInfoModalComponent {
       .pipe(
         filter((v) => !!v),
         mergeMap(() =>
-          this.approvalApplicationsService.approveApprovalApplication(this.approvalApplication.id),
+          this.approvalApplicationsClient.approveApprovalApplication(this.approvalApplication.id),
         ),
         takeUntil(this.destroy$),
       )
@@ -84,7 +84,7 @@ export class ApprovalApplicationInfoModalComponent {
       .pipe(
         filter((v) => !!v),
         mergeMap((comment: string) =>
-          this.approvalApplicationsService.rejectApprovalApplication(
+          this.approvalApplicationsClient.rejectApprovalApplication(
             this.approvalApplication.id,
             comment,
           ),
