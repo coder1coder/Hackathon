@@ -33,5 +33,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserProfileReactionService, UserProfileReactionService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IPasswordHashService, PasswordHashService>()
-            .AddScoped<IAuthService, AuthService>();
+            .AddScoped<IAuthService, AuthService>()
+            .AddHttpContextAccessor()
+            .AddSingleton<IAuthorizedUserContext, AuthorizedUserContext>();
 }
