@@ -1,14 +1,15 @@
-using Hackathon.Common.Models;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Hackathon.Common;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Auth;
 using Hackathon.Configuration.Auth;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Hackathon.Common;
+namespace Hackathon.BL.Auth;
 
 public static class AuthTokenGenerator
 {

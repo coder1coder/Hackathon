@@ -21,8 +21,8 @@
       <PackageReference Include="Mapster"  />
       <PackageReference Include="MassTransit"  />
       <PackageReference Include="Microsoft.Extensions.Options"  />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     </ItemGroup>
-
 
     <PropertyGroup>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>

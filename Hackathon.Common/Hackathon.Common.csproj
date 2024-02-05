@@ -9,7 +9,6 @@
       <PackageReference Include="Mapster"  />
       <PackageReference Include="Microsoft.AspNetCore.Http.Features"  />
       <PackageReference Include="SixLabors.ImageSharp"  />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt"  />
     </ItemGroup>
 
     <ItemGroup>
