@@ -20,12 +20,24 @@ namespace Hackathon.API.Controllers;
 /// Пользователи
 /// </summary>
 [SwaggerTag("Пользователи системы")]
-public class UserController(
-    IMapper mapper,
-    IUserService userService,
-    IEmailConfirmationService emailConfirmationService)
-    : BaseController
+public class UserController : BaseController
 {
+    private readonly IMapper _mapper;
+    private readonly IUserService _userService;
+    private readonly IEmailConfirmationService _emailConfirmationService;
+
+    /// <summary>
+    /// Пользователи
+    /// </summary>
+    public UserController(IMapper mapper,
+        IUserService userService,
+        IEmailConfirmationService emailConfirmationService)
+    {
+        _mapper = mapper;
+        _userService = userService;
+        _emailConfirmationService = emailConfirmationService;
+    }
+
     /// <summary>
     /// Создание нового пользователя
     /// </summary>
@@ -35,8 +47,8 @@ public class UserController(
     [HttpPost]
     public async Task<BaseCreateResponse> SignUp([FromBody] SignUpRequest request)
     {
-        var signUpModel = mapper.Map<CreateNewUserModel>(request);
-        var userId = await userService.CreateAsync(signUpModel);
+        var signUpModel = _mapper.Map<CreateNewUserModel>(request);
+        var userId = await _userService.CreateAsync(signUpModel);
         return new BaseCreateResponse
         {
             Id = userId
@@ -50,7 +62,7 @@ public class UserController(
     /// <returns></returns>
     [HttpPut("password")]
     public Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordModel parameters)
-        => GetResult(() => userService.UpdatePasswordAsync(AuthorizedUserId, parameters)); 
+        => GetResult(() => _userService.UpdatePasswordAsync(AuthorizedUserId, parameters)); 
 
     /// <summary>
     /// Получить информацию о пользователе
@@ -61,12 +73,12 @@ public class UserController(
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
     public async Task<IActionResult> GetAsync([FromRoute] long userId)
     {
-        var getUserResult = await userService.GetAsync(userId);
+        var getUserResult = await _userService.GetAsync(userId);
 
         if (!getUserResult.IsSuccess)
             return await GetResult(() => Task.FromResult(getUserResult));
 
-        return Ok(mapper.Map<UserResponse>(getUserResult.Data));
+        return Ok(_mapper.Map<UserResponse>(getUserResult.Data));
     }
 
     /// <summary>
@@ -77,7 +89,7 @@ public class UserController(
     [Authorize(Policy = nameof(UserRole.Administrator))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<UserResponse>))]
     public async Task<IActionResult> GetListAsync([FromBody] GetListParameters<UserFilter> request)
-        => Ok(await userService.GetListAsync(request));
+        => Ok(await _userService.GetListAsync(request));
 
     /// <summary>
     /// Загрузить картинку профиля пользователя
@@ -88,7 +100,7 @@ public class UserController(
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public Task<IActionResult> UploadProfileImage(IFormFile file)
-        => GetResult(() => userService.UploadProfileImageAsync(AuthorizedUserId, file));
+        => GetResult(() => _userService.UploadProfileImageAsync(AuthorizedUserId, file));
 
     /// <summary>
     /// Подтвердить Email
@@ -96,7 +108,7 @@ public class UserController(
     /// <param name="code">Код подтверждения</param>
     [HttpPost("profile/email/confirm")]
     public Task ConfirmEmail([FromQuery] string code)
-        => GetResult(() => emailConfirmationService.Confirm(AuthorizedUserId, code));
+        => GetResult(() => _emailConfirmationService.Confirm(AuthorizedUserId, code));
 
     /// <summary>
     /// Создать запрос на подтвреждение Email пользователя
@@ -104,7 +116,7 @@ public class UserController(
     /// <returns></returns>
     [HttpPost("profile/email/confirm/request")]
     public Task<IActionResult> CreateEmailConfirmationRequest()
-        => GetResult(() => emailConfirmationService.CreateRequest(AuthorizedUserId));
+        => GetResult(() => _emailConfirmationService.CreateRequest(AuthorizedUserId));
 
     /// <summary>
     /// Обновить профиль пользователя
@@ -112,5 +124,5 @@ public class UserController(
     /// <param name="request"></param>
     [HttpPut("profile/update")]
     public Task<IActionResult> UpdateUserProfile(UpdateUserRequest request)
-        => GetResult(() => userService.UpdateUserAsync(mapper.Map<UpdateUserParameters>(request)));
+        => GetResult(() => _userService.UpdateUserAsync(_mapper.Map<UpdateUserParameters>(request)));
 }

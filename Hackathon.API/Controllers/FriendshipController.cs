@@ -13,8 +13,15 @@ using Hackathon.API.Module;
 namespace Hackathon.API.Controllers;
 
 [SwaggerTag("Друзья")]
-public class FriendshipController(IFriendshipService friendshipService) : BaseController
+public class FriendshipController : BaseController
 {
+    private readonly IFriendshipService _friendshipService;
+
+    public FriendshipController(IFriendshipService friendshipService)
+    {
+        _friendshipService = friendshipService;
+    }
+
     /// <summary>
     /// Получить список пользователей по статусу дружбы
     /// </summary>
@@ -26,7 +33,7 @@ public class FriendshipController(IFriendshipService friendshipService) : BaseCo
     public Task<IActionResult> GetUsersByFriendshipStatus(
         [FromQuery, Required] long userId,
         [FromQuery, Required] FriendshipStatus status)
-        => GetResult(() => friendshipService.GetUsersByFriendshipStatus(userId, status));
+        => GetResult(() => _friendshipService.GetUsersByFriendshipStatus(userId, status));
 
     /// <summary>
     /// Получить список предложений дружбы
@@ -35,14 +42,14 @@ public class FriendshipController(IFriendshipService friendshipService) : BaseCo
     /// <returns></returns>
     [HttpPost("offers/list")]
     public Task<BaseCollection<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
-        => friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
+        => _friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
 
     /// <summary>
     /// Создать или принять предложение дружбы
     /// </summary>
     [HttpPost("offer/{userId:long}")]
     public Task<IActionResult> CreateOrAcceptOffer([FromRoute, Required] long userId)
-        => GetResult(() => friendshipService.CreateOrAcceptOfferAsync(AuthorizedUserId, userId));
+        => GetResult(() => _friendshipService.CreateOrAcceptOfferAsync(AuthorizedUserId, userId));
 
     /// <summary>
     /// Отклонить предложение дружбы
@@ -50,7 +57,7 @@ public class FriendshipController(IFriendshipService friendshipService) : BaseCo
     /// <param name="proposerId">Инициатор предложения</param>
     [HttpPost("offer/reject/{proposerId:long}")]
     public Task<IActionResult> RejectOffer([FromRoute, Required] long proposerId)
-        => GetResult(() => friendshipService.RejectOfferAsync(AuthorizedUserId, proposerId));
+        => GetResult(() => _friendshipService.RejectOfferAsync(AuthorizedUserId, proposerId));
 
     /// <summary>
     /// Отписаться от профиля пользователя
@@ -58,7 +65,7 @@ public class FriendshipController(IFriendshipService friendshipService) : BaseCo
     /// <param name="userId">Идентификатор пользователя</param>
     [HttpPost("unsubscribe/{userId:long}")]
     public Task<IActionResult> Unsubscribe([FromRoute] long userId)
-        => GetResult(() => friendshipService.UnsubscribeAsync(AuthorizedUserId, userId));
+        => GetResult(() => _friendshipService.UnsubscribeAsync(AuthorizedUserId, userId));
 
     /// <summary>
     /// Прекратить дружбу
@@ -67,5 +74,5 @@ public class FriendshipController(IFriendshipService friendshipService) : BaseCo
     /// <returns></returns>
     [HttpDelete("{userId:long}")]
     public Task<IActionResult> EndFriendship(long userId)
-        => GetResult(() => friendshipService.EndFriendship(AuthorizedUserId, userId));
+        => GetResult(() => _friendshipService.EndFriendship(AuthorizedUserId, userId));
 }
