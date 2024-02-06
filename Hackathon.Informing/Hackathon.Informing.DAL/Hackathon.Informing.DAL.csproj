@@ -13,6 +13,12 @@
       <None Update="Migrations\Scripts\20231103075510_Informing_Templates_Fill.sql">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Migrations\Scripts\20240206064845_Informing_Update_EmailConfirmationRequestTemplate.sql">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Migrations\Scripts\20240206064845_Informing_Update_EmailConfirmationRequestTemplate__rollback.sql">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
