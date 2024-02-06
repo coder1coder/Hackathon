@@ -42,7 +42,7 @@ public class EmailConfirmationService: IEmailConfirmationService
 
     public async Task<Result> Confirm(long userId, string code)
     {
-        _logger.LogDebug("{Actor}: Call confirm email for user with Id: {UserId}",
+        _logger.LogDebug("{Source}: Call confirm email for user with Id: {UserId}",
             nameof(EmailConfirmationService),
             userId);
 
@@ -66,7 +66,7 @@ public class EmailConfirmationService: IEmailConfirmationService
 
         await _emailConfirmationRepository.UpdateAsync(request);
 
-        _logger.LogDebug("{Actor}: Email was confirmed for user with Id: {UserId}",
+        _logger.LogDebug("{Source}: Email was confirmed for user with Id: {UserId}",
             nameof(EmailConfirmationService),
             userId);
 
@@ -75,7 +75,7 @@ public class EmailConfirmationService: IEmailConfirmationService
 
     public async Task<Result> CreateRequest(long userId)
     {
-        _logger.LogDebug("{Actor}: Call create email confirmation request for user with Id: {UserId}",
+        _logger.LogDebug("{Source}: Call create email confirmation request for user with Id: {UserId}",
             nameof(EmailConfirmationService),
             userId);
 
@@ -114,14 +114,14 @@ public class EmailConfirmationService: IEmailConfirmationService
         if (requestModel is null)
         {
             await _emailConfirmationRepository.AddAsync(parameters);
-            _logger.LogDebug("{Actor}: Email confirmation request was created for user with Id: {UserId}",
+            _logger.LogDebug("{Source}: Email confirmation request was created for user with Id: {UserId}",
                 nameof(EmailConfirmationService),
                 userId);
         }
         else
         {
             await _emailConfirmationRepository.UpdateAsync(parameters);
-            _logger.LogDebug("{Actor}: Email confirmation request was updated for user with Id: {UserId}",
+            _logger.LogDebug("{Source}: Email confirmation request was updated for user with Id: {UserId}",
                 nameof(EmailConfirmationService),
                 userId);
         }
@@ -134,7 +134,10 @@ public class EmailConfirmationService: IEmailConfirmationService
         var generateTemplateResult = await _templateService.GenerateAsync(Templates.EmailConfirmationRequest, new Dictionary<string, string>
         {
             { Variables.UserName, userModel.GetAnyName()},
-            { Variables.ConfirmationCode, confirmationCode}
+            { Variables.ConfirmationCode, confirmationCode},
+            
+            //TODO: добавить в конфигурацию адрес сервиса, реализовать точку входа на UI и указать её в переменной шаблона
+            { Variables.ConfirmationLink, "#"}
         });
 
         if (!generateTemplateResult.IsSuccess)
