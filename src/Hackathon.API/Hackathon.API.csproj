@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <UserSecretsId>f69ee8e7-ca10-46c2-911a-667fb2db1f20</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mapster" />
+        <PackageReference Include="Mapster.DependencyInjection" />
+        <PackageReference Include="MassTransit" />
+        <PackageReference Include="MassTransit.RabbitMQ" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="prometheus-net.AspNetCore" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="Serilog.Enrichers.Thread" />
+        <PackageReference Include="Serilog.Exceptions" />
+        <PackageReference Include="Serilog.Sinks.Console" />
+        <PackageReference Include="Serilog.Sinks.Grafana.Loki" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" />
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.BL\Hackathon.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
+      <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
+      <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />
+      <ProjectReference Include="..\Hackathon.API.Jobs\Hackathon.API.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.Jobs\Hackathon.FileStorage.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Informing\Hackathon.Informing.Module\Hackathon.Informing.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />
+      <ProjectReference Include="..\Hackathon.Logbook\Hackathon.Logbook.Module\Hackathon.Logbook.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Chats\Hackathon.Chats.Module\Hackathon.Chats.Module.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\EmailConfirmationRequestTemplate.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+
+    <PropertyGroup>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+</Project>

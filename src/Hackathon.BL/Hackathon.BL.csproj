@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj" />
+      <ProjectReference Include="..\Hackathon.Common\Hackathon.Common.csproj" />
+      <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.BL\Hackathon.FileStorage.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.Informing\Hackathon.Informing.BL\Hackathon.Informing.BL.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationEvents\Hackathon.IntegrationEvents.csproj" />
+      <ProjectReference Include="..\Hackathon.IntegrationServices.Github\Hackathon.IntegrationServices.Github.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AWSSDK.S3" />
+      <PackageReference Include="Backend.Tools.Common" />
+      <PackageReference Include="BCrypt.Net-Next" />
+      <PackageReference Include="Google.Apis.Auth" />
+      <PackageReference Include="Mapster" />
+      <PackageReference Include="MassTransit" />
+      <PackageReference Include="Microsoft.Extensions.Options" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+</Project>

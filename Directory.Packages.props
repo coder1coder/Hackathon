@@ -46,12 +46,12 @@
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Grafana.Loki" Version="8.1.0" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.0.1" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.2.2" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
-    <PackageVersion Include="System.Text.Json" Version="7.0.3" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="Testcontainers.Minio" Version="3.7.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="3.7.0" />
     <PackageVersion Include="Testcontainers.RabbitMq" Version="3.7.0" />

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
+      <ProjectReference Include="..\Hackathon.Logbook\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Refit" />
+    </ItemGroup>
+
+</Project>
