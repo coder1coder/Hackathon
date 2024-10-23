@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.DAL.Tests", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Clients", "src\Hackathon.Chats\Hackathon.Chats.Clients\Hackathon.Chats.Clients.csproj", "{2968EA66-6EED-4658-B7AF-E2D6C98B4342}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Infrastructure", "src\Hackathon.Infrastructure\Hackathon.Infrastructure.csproj", "{B48FEDAD-3E2E-41E9-8392-07A87496AB55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -237,6 +239,10 @@ Global
 		{2968EA66-6EED-4658-B7AF-E2D6C98B4342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2968EA66-6EED-4658-B7AF-E2D6C98B4342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2968EA66-6EED-4658-B7AF-E2D6C98B4342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

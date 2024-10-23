@@ -15,6 +15,7 @@ using Hackathon.Configuration;
 using Hackathon.Configuration.Auth;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
+using Hackathon.Infrastructure;
 using Hackathon.IntegrationEvents;
 using Hackathon.IntegrationEvents.Hubs;
 using Hackathon.IntegrationEvents.IntegrationEvents;
@@ -85,6 +86,7 @@ public class Startup
         services.AddSingleton<IMapper, ServiceMapper>();
 
         services
+            .RegisterInfrastructure()
             .RegisterServices()
             .RegisterValidators()
             .RegisterIntegrationEvents(_environment.IsDevelopment())

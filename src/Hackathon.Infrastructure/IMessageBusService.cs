@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hackathon.Common.Abstraction;
+namespace Hackathon.Infrastructure;
 
 public interface IMessageBusService
 {

@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Hackathon.Infrastructure\Hackathon.Infrastructure.csproj" />
       <ProjectReference Include="..\Hackathon.Logbook.Abstraction\Hackathon.Logbook.Abstraction.csproj" />
     </ItemGroup>
 

@@ -21,7 +21,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services)
         => services
-            .AddScoped<IMessageBusService, MessageBusService>()
             .AddScoped<IApprovalApplicationService, ApprovalApplicationService>()
             .AddScoped<IEmailConfirmationService, EmailConfirmationService>()
             .AddScoped<IEventService, EventService>()

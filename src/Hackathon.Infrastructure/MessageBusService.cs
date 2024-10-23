@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Hackathon.BL;
+namespace Hackathon.Infrastructure;
 
 public class MessageBusService: IMessageBusService
 {

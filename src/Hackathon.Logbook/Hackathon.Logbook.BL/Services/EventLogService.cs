@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
+using Hackathon.Infrastructure;
 using Hackathon.Logbook.Abstraction.Models;
 using Hackathon.Logbook.Abstraction.Repositories;
 using Hackathon.Logbook.Abstraction.Services;
