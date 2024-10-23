@@ -40,19 +40,14 @@ public class EventController : BaseController
     [HttpPost]
     [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCreateResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    public async Task<IActionResult> Create(CreateEventRequest createEventRequest)
+    public  Task<IActionResult> Create(CreateEventRequest createEventRequest)
     {
         var createEventParameters = _mapper.Map<CreateEventRequest, EventCreateParameters>(createEventRequest);
-        var createResult = await _eventService.CreateAsync(AuthorizedUserId, createEventParameters);
-        if (!createResult.IsSuccess)
-        {
-            return await GetResult(() => Task.FromResult(createResult));
-        }
-
-        return Ok(new BaseCreateResponse
-        {
-            Id = createResult.Data
-        });
+        return GetResult(() => _eventService.CreateAsync(AuthorizedUserId, createEventParameters),
+            result => new BaseCreateResponse
+            {
+                Id = result
+            });
     }
 
     /// <summary>

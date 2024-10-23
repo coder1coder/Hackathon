@@ -4,7 +4,6 @@ using BackendTools.Common.Models;
 using FluentValidation;
 using Google.Apis.Auth;
 using Hackathon.BL.Users;
-using Hackathon.Common;
 using Hackathon.Common.Abstraction.Auth;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
@@ -57,7 +56,7 @@ public class AuthService: IAuthService
             return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
         }
 
-        var verified = await _passwordHashService.VerifyAsync(signInModel.Password, userSignInDetails.PasswordHash);
+        var verified = _passwordHashService.Verify(signInModel.Password, userSignInDetails.PasswordHash);
 
         return !verified
             ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)

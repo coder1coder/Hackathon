@@ -16,6 +16,16 @@ public class GitHubIntegrationService: GitIntegrationService, IGitHubIntegration
         _httpClient = httpClientFactory.CreateClient();
     }
 
+    public override Task<string[]> GetRepositoryNames()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<string[]> GetBranchNames()
+    {
+        throw new NotImplementedException();
+    }
+
     public override async Task<Stream> ReceiveFromRepository(GitParameters parameters)
     {
         _logger.LogInformation("{Initiator}. Начато получение содержимого из репозитория: {@parameters}",

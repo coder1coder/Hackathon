@@ -162,7 +162,7 @@ public class UserService: IUserService
             return Result.NotFound(UserErrorMessages.UserDoesNotExists);
         }
 
-        var isPasswordCorrect = await _passwordHashService.VerifyAsync(parameters.CurrentPassword, userPasswordHash);
+        var isPasswordCorrect = _passwordHashService.Verify(parameters.CurrentPassword, userPasswordHash);
         if (!isPasswordCorrect)
         {
             return Result.NotValid(UserErrorMessages.CurrentPasswordIncorrect);

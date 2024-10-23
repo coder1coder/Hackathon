@@ -4,11 +4,9 @@ namespace Hackathon.IntegrationServices.Github.Services;
 
 public abstract class GitIntegrationService: IGitIntegrationService
 {
-    public virtual Task<string[]> GetRepositoryNames()
-        => Task.FromResult(Array.Empty<string>());
+    public abstract Task<string[]> GetRepositoryNames();
 
-    public virtual Task<string[]> GetBranchNames()
-        => Task.FromResult(Array.Empty<string>());
+    public abstract Task<string[]> GetBranchNames();
 
     public abstract Task<Stream> ReceiveFromRepository(GitParameters parameters);
 

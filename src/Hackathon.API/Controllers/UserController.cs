@@ -67,16 +67,10 @@ public class UserController : BaseController
     /// <param name="userId">Идентификатор пользователя</param>
     [HttpGet("{userId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
-    public async Task<IActionResult> GetAsync([FromRoute] long userId)
+    public Task<IActionResult> GetAsync([FromRoute] long userId)
     {
-        var getUserResult = await _userService.GetAsync(userId);
-
-        if (!getUserResult.IsSuccess)
-        {
-            return await GetResult(() => Task.FromResult(getUserResult));
-        }
-
-        return Ok(_mapper.Map<UserResponse>(getUserResult.Data));
+        return GetResult(() => _userService.GetAsync(userId),
+            result => _mapper.Map<UserResponse>(result));
     }
 
     /// <summary>

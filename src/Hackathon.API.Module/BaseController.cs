@@ -27,11 +27,20 @@ public abstract class BaseController: ControllerBase
             return 0;
         }
     }
+    
+    protected static Task<IActionResult> GetResult<TResult>(Func<Task<Result<TResult>>> action, HttpStatusCode successStatusCode = HttpStatusCode.OK)
+        => GetResult(action, result => result, successStatusCode);
 
-    protected static async Task<IActionResult> GetResult<T>(Func<Task<Result<T>>> action, HttpStatusCode successStatusCode = HttpStatusCode.OK)
+    protected static async Task<IActionResult> GetResult<TResult, TResponse>(
+        Func<Task<Result<TResult>>> action, 
+        Func<TResult, TResponse> responseMapper,
+        HttpStatusCode successStatusCode = HttpStatusCode.OK)
     {
         var result = await action();
-        return new ObjectResult(result.IsSuccess ? result.Data : result.ToProblemDetails())
+        
+        return new ObjectResult(result.IsSuccess 
+            ? responseMapper.Invoke(result.Data)
+            : result.ToProblemDetails())
         {
             StatusCode = result.IsSuccess ? (int) successStatusCode : (int) result.Errors.Type
         };

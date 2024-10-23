@@ -31,23 +31,17 @@ public class PrivateTeamController : BaseController
     /// <param name="teamId"></param>
     [HttpPost("{teamId:long}/join/request")]
     [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> CreateJoinRequest([FromRoute] long teamId)
+    public Task<IActionResult> CreateJoinRequest([FromRoute] long teamId)
     {
-        var createResult = await _privateTeamService.CreateJoinRequestAsync(new TeamJoinRequestCreateParameters
-        {
-            TeamId = teamId,
-            UserId = AuthorizedUserId
-        });
-
-        if (!createResult.IsSuccess)
-        {
-            return await GetResult(() => Task.FromResult(createResult));
-        }
-
-        return Ok(new BaseCreateResponse
-        {
-            Id = createResult.Data
-        });
+        return GetResult(() => _privateTeamService.CreateJoinRequestAsync(new TeamJoinRequestCreateParameters
+            {
+                TeamId = teamId,
+                UserId = AuthorizedUserId
+            }),
+            result => new BaseCreateResponse
+            {
+                Id = result
+            });
     }
 
     /// <summary>

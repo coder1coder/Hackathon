@@ -37,21 +37,16 @@ public class TeamController : BaseController
     /// <param name="createTeamRequest"></param>
     [HttpPost]
     [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> Create(CreateTeamRequest createTeamRequest)
+    public Task<IActionResult> Create(CreateTeamRequest createTeamRequest)
     {
         var createTeamModel = _mapper.Map<CreateTeamModel>(createTeamRequest);
-
-        var createTeamResult = await _teamService.CreateAsync(createTeamModel, AuthorizedUserId);
-
-        if (!createTeamResult.IsSuccess)
-        {
-            return await GetResult(() => Task.FromResult(createTeamResult));
-        }
-
-        return Ok(new BaseCreateResponse
-        {
-            Id = createTeamResult.Data
-        });
+        
+        return GetResult(() => 
+            _teamService.CreateAsync(createTeamModel, AuthorizedUserId),
+            result => new BaseCreateResponse
+            {
+                Id = result
+            });
     }
 
     /// <summary>

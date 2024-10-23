@@ -157,7 +157,7 @@ public class EventServiceTests: BaseUnitTest
             .Generate();
 
         _eventRepositoryMock.Setup(x => x.GetAsync(eventUpdateParameters.Id))
-            .Returns(Task.FromResult(new EventModel()
+            .Returns(Task.FromResult(new EventModel
             {
                 Owner = new UserModel
                 {

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Hackathon.Common.Abstraction.User;
+﻿namespace Hackathon.Common.Abstraction.User;
 
 /// <summary>
 /// Сервис для работы с хешем пароля
@@ -12,7 +10,7 @@ public interface IPasswordHashService
     /// </summary>
     /// <param name="password">Пароль</param>
     /// <param name="passwordHash">Хеш</param>
-    Task<bool> VerifyAsync(string password, string passwordHash);
+    bool Verify(string password, string passwordHash);
     
     /// <summary>
     /// Захешировать пароль
