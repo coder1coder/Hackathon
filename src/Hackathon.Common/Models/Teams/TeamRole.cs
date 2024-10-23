@@ -1,11 +1,17 @@
-namespace Hackathon.Common.Models.Teams
+namespace Hackathon.Common.Models.Teams;
+
+/// <summary>
+/// Роль участника команды
+/// </summary>
+public enum TeamRole : byte
 {
     /// <summary>
-    /// Роль участника команды
+    /// Участник
     /// </summary>
-    public enum TeamRole : byte
-    {
-        Participant = 0,
-        Owner = 1
-    }
+    Participant = 0,
+    
+    /// <summary>
+    /// Владелец
+    /// </summary>
+    Owner = 1
 }

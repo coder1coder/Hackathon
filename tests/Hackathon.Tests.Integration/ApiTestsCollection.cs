@@ -3,6 +3,4 @@
 namespace Hackathon.Tests.Integration;
 
 [CollectionDefinition(nameof(ApiTestsCollection))]
-public class ApiTestsCollection: ICollectionFixture<TestWebApplicationFactory>
-{
-}
+public class ApiTestsCollection: ICollectionFixture<TestWebApplicationFactory>;

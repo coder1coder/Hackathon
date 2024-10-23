@@ -17,9 +17,6 @@ public class MessageBusService: IMessageBusService
         _logger = logger;
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
-        => _bus.Publish(message, cancellationToken);
-
     public async Task<bool> TryPublish<T>(T message, CancellationToken cancellationToken = default) where T : class
     {
         try
@@ -35,4 +32,7 @@ public class MessageBusService: IMessageBusService
             return false;
         }
     }
+    
+    private Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
+        => _bus.Publish(message, cancellationToken);
 }

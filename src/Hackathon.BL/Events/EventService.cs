@@ -39,14 +39,14 @@ namespace Hackathon.BL.Events;
 /// </summary>
 public class EventService : IEventService
 {
-    private readonly FluentValidation.IValidator<EventCreateParameters> _createEventModelValidator;
-    private readonly FluentValidation.IValidator<EventUpdateParameters> _updateEventModelValidator;
-    private readonly FluentValidation.IValidator<IFileImage> _eventImageValidator;
+    private readonly IValidator<EventCreateParameters> _createEventModelValidator;
+    private readonly IValidator<EventUpdateParameters> _updateEventModelValidator;
+    private readonly IValidator<IFileImage> _eventImageValidator;
     private readonly IEventRepository _eventRepository;
     private readonly IFileStorageService _fileStorageService;
     private readonly IFileStorageRepository _fileStorageRepository;
     private readonly IUserRepository _userRepository;
-    private readonly FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
+    private readonly IValidator<Common.Models.GetListParameters<EventFilter>> _getFilterModelValidator;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
     private readonly IEventChangesIntegrationEventsHub _eventChangesIntegrationEventsHub;
@@ -56,10 +56,10 @@ public class EventService : IEventService
     private readonly IMessageBusService _messageBusService;
 
     public EventService(
-        FluentValidation.IValidator<EventCreateParameters> createEventModelValidator, 
-        FluentValidation.IValidator<EventUpdateParameters> updateEventModelValidator, 
-        FluentValidation.IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, 
-        FluentValidation.IValidator<IFileImage> eventImageValidator,
+        IValidator<EventCreateParameters> createEventModelValidator, 
+        IValidator<EventUpdateParameters> updateEventModelValidator, 
+        IValidator<Common.Models.GetListParameters<EventFilter>> getFilterModelValidator, 
+        IValidator<IFileImage> eventImageValidator,
         IEventRepository eventRepository,
         ITeamService teamService,
         IUserRepository userRepository,
@@ -634,7 +634,7 @@ public class EventService : IEventService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {storageFileId}",
+            _logger.LogError(ex, "{Source}: ошибка во время удаления флага - временный файл у StorageFile: {StorageFileId}",
                         nameof(EventService), fileModel?.Id);
         }
         finally

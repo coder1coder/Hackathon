@@ -2,6 +2,4 @@
 
 namespace Hackathon.Informing.Abstractions.IntegrationEvents;
 
-public interface IInformingIntegrationEventsHub: IIntegrationEventsHub
-{
-}
+public interface IInformingIntegrationEventsHub: IIntegrationEventsHub;

@@ -21,3 +21,10 @@ dotnet_naming_rule.private_members_with_underscore.style = prefix_underscore
 dotnet_naming_rule.private_members_with_underscore.severity = error
 
 csharp_prefer_braces = true:error
+
+#disable primary constructor
+csharp_style_prefer_primary_constructors = false
+dotnet_diagnostic.IDE0290.severity = none
+resharper_convert_to_primary_constructor_highlighting = none
+
+resharper_entity_framework_model_validation_unlimited_string_length_highlighting=none

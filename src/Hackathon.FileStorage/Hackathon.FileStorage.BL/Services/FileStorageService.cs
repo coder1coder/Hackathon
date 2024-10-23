@@ -87,7 +87,7 @@ public class FileStorageService : IFileStorageService
 
         if (fileInfo is null)
         {
-            _logger.LogError("{Source}: Файл с индентификатором {storageFileId} не найден",
+            _logger.LogError("{Source}: Файл с индентификатором {StorageFileId} не найден",
                 nameof(FileStorageService),
                 storageFileId);
 
@@ -115,7 +115,7 @@ public class FileStorageService : IFileStorageService
 
         if (fileInfo is null)
         {
-            _logger.LogError("{Source}: Файл с индентификатором {storageFileId} не найден",
+            _logger.LogError("{Source}: Файл с индентификатором {StorageFileId} не найден",
                 nameof(FileStorageService),
                 storageFileId);
 

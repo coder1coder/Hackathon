@@ -1,18 +1,17 @@
-namespace Hackathon.Common.Models.Users
+namespace Hackathon.Common.Models.Users;
+
+/// <summary>
+/// Конкретная реакция на профиль пользователя
+/// </summary>
+public class UserProfileReactionModel
 {
     /// <summary>
-    /// Конкретная реакция на профиль пользователя
+    /// Количество поставленных реакций
     /// </summary>
-    public class UserProfileReactionModel
-    {
-        /// <summary>
-        /// Количество поставленных реакций
-        /// </summary>
-        public int Count { get; set; }
+    public int Count { get; set; }
 
-        /// <summary>
-        /// Тип реакции
-        /// </summary>
-        public UserProfileReaction Type { get; set; }
-    }
+    /// <summary>
+    /// Тип реакции
+    /// </summary>
+    public UserProfileReaction Type { get; set; }
 }

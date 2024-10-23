@@ -3,6 +3,4 @@
 /// <summary>
 /// Параметры создания проекта
 /// </summary>
-public class ProjectCreationParameters: BaseProjectParameters
-{
-}
+public class ProjectCreationParameters: BaseProjectParameters;
