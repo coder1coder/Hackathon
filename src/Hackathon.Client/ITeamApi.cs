@@ -27,14 +27,12 @@ public interface ITeamApi
     /// <summary>
     /// Принять пользователя в закрытую команду
     /// </summary>
-    /// <returns></returns>
     [Post(BaseRoute + "/join/request/{requestId}/approve")]
     Task ApproveJoinRequest(long requestId);
 
     /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
-    /// <returns></returns>
     [Post(BaseRoute + "/join/request/cancel")]
     Task CancelJoinRequestAsync([Body] CancelRequestParameters parameters);
 
@@ -45,7 +43,6 @@ public interface ITeamApi
     /// Получить список запросов пользователя на вступление в команду
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     [Post(BaseRoute + "/join/request/list")]
     Task<IApiResponse<BaseCollection<TeamJoinRequestModel>>> GetJoinRequests([Body] GetListParameters<TeamJoinRequestFilter> parameters);
 
@@ -55,7 +52,6 @@ public interface ITeamApi
     /// <summary>
     /// Вступить в открытую команду
     /// </summary>
-    /// <returns></returns>
     [Post(BaseRoute + "/{teamId}/join")]
     Task JoinToTeam(long teamId);
 }

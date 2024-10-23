@@ -26,7 +26,6 @@ public class ProjectController : BaseController
     /// <summary>
     /// Получить проект
     /// </summary>
-    /// <returns></returns>
     [HttpGet("{eventId:long}/{teamId:long}")]
     [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(ProjectModel))]
     public Task<IActionResult> Get([FromRoute] long eventId, [FromRoute] long teamId)
@@ -36,7 +35,6 @@ public class ProjectController : BaseController
     /// Создать новый проект
     /// </summary>
     /// <param name="projectCreateRequest">Параметры проекта</param>
-    /// <returns></returns>
     [HttpPost]
     public Task<IActionResult> Create([FromBody] ProjectCreateRequest projectCreateRequest)
     {
@@ -48,7 +46,6 @@ public class ProjectController : BaseController
     /// Обновить проект
     /// </summary>
     /// <param name="parameters">Параметры</param>
-    /// <returns></returns>
     [HttpPut]
     public Task<IActionResult> Update([FromBody] ProjectUpdateParameters parameters)
         => GetResult(() => _projectService.UpdateAsync(AuthorizedUserId, parameters));
@@ -57,7 +54,6 @@ public class ProjectController : BaseController
     /// Обновить проект из ветки Git-репозитория
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns>
     [HttpPut("branch")]
     public Task<IActionResult> UpdateProjectFromGitBranch([FromBody] UpdateProjectFromGitBranchRequest request)
     {
@@ -70,7 +66,6 @@ public class ProjectController : BaseController
     /// </summary>
     /// <param name="eventId"></param>
     /// <param name="teamId"></param>
-    /// <returns></returns>
     [HttpDelete("{eventId:long}/{teamId:long}")]
     public Task<IActionResult> Delete(long eventId, long teamId)
         => GetResult(() => _projectService.DeleteAsync(AuthorizedUserId, eventId, teamId));

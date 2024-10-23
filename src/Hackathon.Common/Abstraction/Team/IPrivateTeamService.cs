@@ -11,7 +11,6 @@ public interface IPrivateTeamService
     /// Создать запрос на вступление в команду
     /// </summary>
     /// <param name="parameters">Параметры запроса</param>
-    /// <returns></returns>
     Task<Result<long>> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters);
 
     /// <summary>
@@ -19,7 +18,6 @@ public interface IPrivateTeamService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="parameters">Параметры отмены</param>
-    /// <returns></returns>
     Task<Result> CancelJoinRequestAsync(long authorizedUserId, CancelRequestParameters parameters);
 
     /// <summary>
@@ -27,14 +25,12 @@ public interface IPrivateTeamService
     /// </summary>
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<Result<TeamJoinRequestModel>> GetSingleSentJoinRequestAsync(long teamId, long userId);
 
     /// <summary>
     /// Получить список запросов на вступление в команду
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     Task<BaseCollection<TeamJoinRequestModel>> GetJoinRequestsAsync(Models.GetListParameters<TeamJoinRequestExtendedFilter> parameters);
 
     /// <summary>
@@ -43,7 +39,6 @@ public interface IPrivateTeamService
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="authorizedUserId">Идентификатор пользователя осуществляющего запрос</param>
     /// <param name="paginationSort">Параметры пагинации и сортировки</param>
-    /// <returns></returns>
     Task<Result<BaseCollection<TeamJoinRequestModel>>> GetTeamSentJoinRequests(long teamId, long authorizedUserId, PaginationSort paginationSort);
 
     /// <summary>
@@ -51,6 +46,5 @@ public interface IPrivateTeamService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="requestId">Идентификатор запроса на вступление</param>
-    /// <returns></returns>
     Task<Result> ApproveJoinRequest(long authorizedUserId, long requestId);
 }

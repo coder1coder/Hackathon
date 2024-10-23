@@ -8,7 +8,6 @@ public static class DateTimeExtensions
     /// Преобразовать в UTC и исключить секунды и миллисекунды
     /// </summary>
     /// <param name="dateTime">Дата и время</param>
-    /// <returns></returns>
     public static DateTime ToUtcWithoutSeconds(this DateTime dateTime)
     {
         var utc = dateTime.ToUniversalTime();

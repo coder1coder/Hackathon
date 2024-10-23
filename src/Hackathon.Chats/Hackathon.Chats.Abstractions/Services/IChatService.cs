@@ -12,7 +12,6 @@ public interface IChatService<in TNewChatMessage, TChatMessage> where TChatMessa
     /// </summary>
     /// <param name="ownerId">Идентификатор автора сообщения</param>
     /// <param name="newMessage">Сообщение</param>
-    /// <returns></returns>
     Task<Result> SendAsync(long ownerId, TNewChatMessage newMessage);
 
     /// <summary>
@@ -20,7 +19,6 @@ public interface IChatService<in TNewChatMessage, TChatMessage> where TChatMessa
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор пользователя</param>
     /// <param name="messageId">Идентификатор сообщения</param>
-    /// <returns></returns>
     Task<Result<TChatMessage>> GetAsync(long authorizedUserId, Guid messageId);
 
     /// <summary>
@@ -29,6 +27,5 @@ public interface IChatService<in TNewChatMessage, TChatMessage> where TChatMessa
     /// <param name="chatId">Идентификатор чата</param>
     /// <param name="offset">Смещение</param>
     /// <param name="limit">Лимит</param>
-    /// <returns></returns>
     Task<Result<BaseCollection<TChatMessage>>> GetListAsync(long chatId, int offset = 0, int limit = 300);
 }

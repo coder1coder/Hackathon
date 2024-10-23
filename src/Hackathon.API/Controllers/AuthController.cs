@@ -34,7 +34,6 @@ public class AuthController : BaseController
     /// Авторизация пользователя
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(nameof(SignIn))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]
@@ -45,7 +44,6 @@ public class AuthController : BaseController
     /// Авторизация пользователя через Google
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost(nameof(SignInByGoogle))]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AuthTokenModel))]

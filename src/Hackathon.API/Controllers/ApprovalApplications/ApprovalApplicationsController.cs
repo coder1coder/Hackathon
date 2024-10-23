@@ -22,7 +22,6 @@ public class ApprovalApplicationsController : BaseController
     /// Получить список заявок на согласование
     /// </summary>
     /// <param name="parameters">Параметры фильтрации и пагинации</param>
-    /// <returns></returns>
     [HttpPost("list")]
     public Task<IActionResult> GetList([FromBody] GetListParameters<ApprovalApplicationFilter> parameters)
         => GetResult(() => _approvalApplicationService.GetListAsync(AuthorizedUserId, parameters));
@@ -31,7 +30,6 @@ public class ApprovalApplicationsController : BaseController
     /// Получить заявку на согласование по идентификатору заявки
     /// </summary>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
-    /// <returns></returns>
     [HttpGet("{approvalApplicationId:long}")]
     public Task<IActionResult> Get(long approvalApplicationId)
         => GetResult(() => _approvalApplicationService.GetAsync(AuthorizedUserId, approvalApplicationId));
@@ -40,7 +38,6 @@ public class ApprovalApplicationsController : BaseController
     /// Согласовать заявку на согласование
     /// </summary>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
-    /// <returns></returns>
     [HttpPost("{approvalApplicationId:long}/approve")]
     public Task<IActionResult> Approve(long approvalApplicationId)
         => GetResult(() => _approvalApplicationService.ApproveAsync(AuthorizedUserId, approvalApplicationId));
@@ -50,7 +47,6 @@ public class ApprovalApplicationsController : BaseController
     /// </summary>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
     /// <param name="parameters">Параметры решения</param>
-    /// <returns></returns>
     [HttpPost("{approvalApplicationId:long}/reject")]
     public Task<IActionResult> Reject(long approvalApplicationId, [FromBody] ApprovalApplicationRejectParameters parameters)
         => GetResult(() => _approvalApplicationService.RejectAsync(AuthorizedUserId, approvalApplicationId, parameters));

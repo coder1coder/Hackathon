@@ -35,7 +35,6 @@ public class TeamController : BaseController
     /// Создание новой команды
     /// </summary>
     /// <param name="createTeamRequest"></param>
-    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> Create(CreateTeamRequest createTeamRequest)
@@ -75,7 +74,6 @@ public class TeamController : BaseController
     /// <summary>
     /// Получить общую информацию команды в которой состоит авторизованный пользователь
     /// </summary>
-    /// <returns></returns>
     [HttpGet("my")]
     [ProducesResponseType((int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(TeamGeneral), (int) HttpStatusCode.OK)]
@@ -85,7 +83,6 @@ public class TeamController : BaseController
     /// <summary>
     /// Получить события в которых участвовала команда
     /// </summary>
-    /// <returns></returns>
     [HttpPost("{teamId:long}/events")]
     [ProducesResponseType(typeof(BaseCollection<TeamEventListItem>), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetTeamEvents([FromRoute] long teamId,
@@ -95,7 +92,6 @@ public class TeamController : BaseController
     /// <summary>
     /// Покинуть команду
     /// </summary>
-    /// <returns></returns>
     [HttpGet("{teamId:long}/leave")]
     public Task<IActionResult> LeaveTeamAsync([FromRoute] long teamId)
         => GetResult(() => _teamService.RemoveMemberAsync(new TeamMemberModel

@@ -30,7 +30,6 @@ public interface IFriendshipApi
     /// Прекратить дружбу
     /// </summary>
     /// <param name="userId"></param>
-    /// <returns></returns>
     [Delete(BaseRoute + "/{userId}")]
     Task EndFriendship(long userId);
 }

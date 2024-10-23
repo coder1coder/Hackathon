@@ -32,7 +32,6 @@ public class TeamChatController: BaseController
     /// <summary>
     /// Получить сообщение чата команды по идентификатору
     /// </summary>
-    /// <returns></returns>
     [HttpGet("messages/{messageId:guid}")]
     public Task<IActionResult> GetTeamChatMessage(Guid messageId)
         => GetResult(() => _teamChatService.GetAsync(AuthorizedUserId, messageId));
@@ -43,7 +42,6 @@ public class TeamChatController: BaseController
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="offset"></param>
     /// <param name="limit"></param>
-    /// <returns></returns>
     [HttpPost("{teamId:long}/list")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BaseCollection<TeamChatMessage>))]
     public Task<IActionResult> GetList(

@@ -31,7 +31,6 @@ public class NotificationController: BaseController
     /// Получить уведомления пользователя по заданным фильтрам и параметрам
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns>
     [HttpPost("list")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(BaseCollection<NotificationModel>), StatusCodes.Status200OK)]
@@ -45,7 +44,6 @@ public class NotificationController: BaseController
     /// Отметить уведомления пользователя как прочтенные
     /// </summary>
     /// <param name="notificationIds">Идентификаторы уведомлений</param>
-    /// <returns></returns>
     [HttpPost("read")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
@@ -56,7 +54,6 @@ public class NotificationController: BaseController
     /// Удалить уведомления пользователя
     /// </summary>
     /// <param name="notificationIds">Идентификаторы уведомлений</param>
-    /// <returns></returns>
     [HttpDelete("remove")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
@@ -76,7 +73,6 @@ public class NotificationController: BaseController
     /// <summary>
     /// Получить количество непрочитанных уведомлений
     /// </summary>
-    /// <returns></returns>
     [HttpGet("unread/count")]
     public Task<int> GetUnreadNotificationsCount()
         => _notificationService.GetUnreadNotificationsCountAsync(AuthorizedUserId);

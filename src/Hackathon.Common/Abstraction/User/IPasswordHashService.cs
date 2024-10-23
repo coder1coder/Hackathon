@@ -12,13 +12,11 @@ public interface IPasswordHashService
     /// </summary>
     /// <param name="password">Пароль</param>
     /// <param name="passwordHash">Хеш</param>
-    /// <returns></returns>
     Task<bool> VerifyAsync(string password, string passwordHash);
     
     /// <summary>
     /// Захешировать пароль
     /// </summary>
     /// <param name="password">Пароль</param>
-    /// <returns></returns>
     string HashPassword(string password);
 }

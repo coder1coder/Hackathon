@@ -13,7 +13,6 @@ public interface IFriendshipService
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     Task<BaseCollection<Friendship>> GetOffersAsync(long userId, Common.Models.GetListParameters<FriendshipGetOffersFilter> parameters);
 
     /// <summary>
@@ -31,7 +30,6 @@ public interface IFriendshipService
     /// </summary>
     /// <param name="proposerId">Инициатор отписки</param>
     /// <param name="userId">Идентификатор пользователя от которого надо отписаться</param>
-    /// <returns></returns>
     Task<Result> UnsubscribeAsync(long proposerId, long userId);
 
     /// <summary>
@@ -39,7 +37,6 @@ public interface IFriendshipService
     /// </summary>
     /// <param name="firstUserId"></param>
     /// <param name="secondUserId"></param>
-    /// <returns></returns>
     Task<Result> EndFriendship(long firstUserId, long secondUserId);
 
     /// <summary>
@@ -47,6 +44,5 @@ public interface IFriendshipService
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="status"></param>
-    /// <returns></returns>
     Task<Result<BaseCollection<UserModel>>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status);
 }

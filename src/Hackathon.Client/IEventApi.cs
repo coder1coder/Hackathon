@@ -27,7 +27,6 @@ public interface IEventApi
     /// Переключить событие на следующий этап
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
     [Post(BaseRoute + "/{eventId}/stages/next")]
     Task GoNextStage(long eventId);
 
@@ -35,7 +34,6 @@ public interface IEventApi
     /// Загрузить изображение события
     /// </summary>
     /// <param name="stream">Файл изображения</param>
-    /// <returns></returns>
     [Post(BaseRoute + "/image/upload")]
     [Multipart]
     Task<Guid> UploadEventImage([AliasAs("file")] StreamPart stream);

@@ -13,7 +13,6 @@ public interface IFriendshipRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="status"></param>
-    /// <returns></returns>
     Task<BaseCollection<UserModel>> GetUsersByFriendshipStatus(long userId, FriendshipStatus status);
 
     /// <summary>
@@ -27,7 +26,6 @@ public interface IFriendshipRepository
     /// <param name="proposerId">Инициатор предложения</param>
     /// <param name="userId">Пользователь</param>
     /// <param name="status">Статус</param>
-    /// <returns></returns>
     Task UpdateStatusAsync(long proposerId, long userId, FriendshipStatus status);
 
     /// <summary>
@@ -36,7 +34,6 @@ public interface IFriendshipRepository
     /// <param name="proposerId">Идентификатор инициатора предложения</param>
     /// <param name="userId">Идентификатор целевого пользователя</param>
     /// <param name="parameters">Параметры</param>
-    /// <returns></returns>
     Task UpdateFriendship(long proposerId, long userId, Friendship parameters);
 
     /// <summary>
@@ -45,7 +42,6 @@ public interface IFriendshipRepository
     /// <param name="proposerId">Инициатор предложения</param>
     /// <param name="userId">Пользователь</param>
     /// <param name="option"></param>
-    /// <returns></returns>
     Task<Friendship> GetOfferAsync(long proposerId, long userId, GetOfferOption option = GetOfferOption.Any);
 
     /// <summary>
@@ -53,7 +49,6 @@ public interface IFriendshipRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     Task<BaseCollection<Friendship>> GetOffersAsync(long userId,
         GetListParameters<FriendshipGetOffersFilter> parameters);
 

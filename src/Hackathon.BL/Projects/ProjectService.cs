@@ -143,7 +143,6 @@ public class ProjectService: IProjectService
     /// Получить наименование файла проекта на основе параметров
     /// </summary>
     /// <param name="gitParameters">Параметры</param>
-    /// <returns></returns>
     private static string GetProjectFileName(GitParameters gitParameters)
         => $"{gitParameters.UserName}_{gitParameters.Repository}_{gitParameters.Branch}.zip";
 
@@ -152,7 +151,6 @@ public class ProjectService: IProjectService
     /// </summary>
     /// <param name="linkToGitBranch"></param>
     /// <param name="userId"></param>
-    /// <returns></returns>
     private async Task<Result<Guid>> UploadGitRepositoryAsArchiveAsync(string linkToGitBranch, long userId)
     {
         var gitParameters = _gitHubIntegrationService.ParseFromLink(linkToGitBranch);

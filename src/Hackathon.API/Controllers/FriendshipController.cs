@@ -27,7 +27,6 @@ public class FriendshipController : BaseController
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="status"></param>
-    /// <returns></returns>
     [HttpGet("users")]
     [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCollection<UserModel>))]
     public Task<IActionResult> GetUsersByFriendshipStatus(
@@ -39,7 +38,6 @@ public class FriendshipController : BaseController
     /// Получить список предложений дружбы
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     [HttpPost("offers/list")]
     public Task<BaseCollection<Friendship>> GetOffers([FromBody] GetListParameters<FriendshipGetOffersFilter> parameters)
         => _friendshipService.GetOffersAsync(AuthorizedUserId, parameters);
@@ -71,7 +69,6 @@ public class FriendshipController : BaseController
     /// Прекратить дружбу
     /// </summary>
     /// <param name="userId"></param>
-    /// <returns></returns>
     [HttpDelete("{userId:long}")]
     public Task<IActionResult> EndFriendship(long userId)
         => GetResult(() => _friendshipService.EndFriendship(AuthorizedUserId, userId));

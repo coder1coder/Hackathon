@@ -12,6 +12,5 @@ public interface ITemplateRepository
     /// Получить шаблон
     /// </summary>
     /// <param name="templateId">Идентификатор шаблона</param>
-    /// <returns></returns>
     Task<TemplateModel> GetAsync(string templateId);
 }

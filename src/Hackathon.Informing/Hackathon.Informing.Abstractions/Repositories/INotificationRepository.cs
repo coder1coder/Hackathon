@@ -12,7 +12,6 @@ public interface INotificationRepository
     /// Сохранить уведомления
     /// </summary>
     /// <param name="notifications">Уведомления</param>
-    /// <returns></returns>
     Task<Guid[]> AddManyAsync<T>(CreateNotificationModel<T>[] notifications) where T : class;
 
     /// <summary>
@@ -20,7 +19,6 @@ public interface INotificationRepository
     /// </summary>
     /// <param name="getListParameters">Модель фильтра и пагинации</param>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<BaseCollection<NotificationModel>> GetListAsync(GetListParameters<NotificationFilterModel> getListParameters, long userId);
 
     /// <summary>
@@ -28,7 +26,6 @@ public interface INotificationRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="ids"></param>
-    /// <returns></returns>
     Task MarkAsReadAsync(long userId, Guid[] ids);
 
     /// <summary>
@@ -36,13 +33,11 @@ public interface INotificationRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="ids"></param>
-    /// <returns></returns>
     Task DeleteAsync(long userId, Guid[] ids = null);
 
     /// <summary>
     /// Получить количество непрочитанных уведомлений пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<int> GetUnreadNotificationsCountAsync(long userId);
 }

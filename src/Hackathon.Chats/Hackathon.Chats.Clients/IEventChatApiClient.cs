@@ -21,7 +21,6 @@ public interface IEventChatApiClient
     /// <param name="eventId">Идентификатор мероприятия</param>
     /// <param name="offset"></param>
     /// <param name="limit"></param>
-    /// <returns></returns>
     [Post(BaseRoute + "/{eventId}/list")]
     Task GetListAsync(long eventId, [Query] int offset = 0, [Query] int limit = 300);
 }

@@ -14,13 +14,11 @@ public interface IAuthService
     /// Авторизация пользователя
     /// </summary>
     /// <param name="signInModel"></param>
-    /// <returns></returns>
     Task<Result<AuthTokenModel>> SignInAsync(SignInModel signInModel);
 
     /// <summary>
     /// Авторизация пользователя через Google
     /// </summary>
     /// <param name="signInByGoogleModel"></param>
-    /// <returns></returns>
     Task<Result<AuthTokenModel>> SignInByGoogleAsync(SignInByGoogleModel signInByGoogleModel);
 }

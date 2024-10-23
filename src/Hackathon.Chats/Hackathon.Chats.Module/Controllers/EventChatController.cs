@@ -26,7 +26,6 @@ public class EventChatController: BaseController
     /// Отправить сообщение в чат мероприятия
     /// </summary>
     /// <param name="newEventChatMessage">Сообщение</param>
-    /// <returns></returns>
     [HttpPost("send")]
     public Task<IActionResult> SendEventChatMessage([FromBody] NewEventChatMessage newEventChatMessage)
         => GetResult(() => _eventChatService.SendAsync(AuthorizedUserId, newEventChatMessage));
@@ -34,7 +33,6 @@ public class EventChatController: BaseController
     /// <summary>
     /// Получить сообщение чата мероприятия по идентификатору
     /// </summary>
-    /// <returns></returns>
     [HttpGet("messages/{messageId:guid}")]
     public Task<IActionResult> GetEventChatMessage(Guid messageId)
         => GetResult(() => _eventChatService.GetAsync(AuthorizedUserId, messageId));
@@ -45,7 +43,6 @@ public class EventChatController: BaseController
     /// <param name="eventId">Идентификатор мероприятия</param>
     /// <param name="offset"></param>
     /// <param name="limit"></param>
-    /// <returns></returns>
     [HttpPost("{eventId:long}/list")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BaseCollection<TeamChatMessage>))]
     public Task<IActionResult> GetList(

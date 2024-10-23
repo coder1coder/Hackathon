@@ -15,7 +15,6 @@ public interface IApprovalApplicationService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="parameters">Параметры фильтрации и пагинации</param>
-    /// <returns></returns>
     Task<Result<Page<ApprovalApplicationModel>>> GetListAsync(long authorizedUserId, GetListParameters<ApprovalApplicationFilter> parameters);
 
     /// <summary>
@@ -23,7 +22,6 @@ public interface IApprovalApplicationService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
-    /// <returns></returns>
     Task<Result<ApprovalApplicationModel>> GetAsync(long authorizedUserId, long approvalApplicationId);
 
     /// <summary>
@@ -31,7 +29,6 @@ public interface IApprovalApplicationService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
-    /// <returns></returns>
     Task<Result> ApproveAsync(long authorizedUserId, long approvalApplicationId);
 
     /// <summary>
@@ -40,6 +37,5 @@ public interface IApprovalApplicationService
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
     /// <param name="parameters">Параметры решения</param>
-    /// <returns></returns>
     Task<Result> RejectAsync(long authorizedUserId, long approvalApplicationId, ApprovalApplicationRejectParameters parameters);
 }

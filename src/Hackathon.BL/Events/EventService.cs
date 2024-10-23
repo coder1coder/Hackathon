@@ -461,7 +461,6 @@ public class EventService : IEventService
     /// Загрузить изображение события
     /// </summary>
     /// <param name="file">Файл http запроса</param>
-    /// <returns></returns>
     public async Task<Result<Guid>> UploadEventImageAsync(IFormFile file)
     {
         if (file is null)
@@ -610,7 +609,6 @@ public class EventService : IEventService
     /// Сформировать наименование для команды создаваемой автоматически
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
     private static string GenerateAutoCreatedTeamName(long eventId)
         => $"Team-{eventId}-{Guid.NewGuid().ToString()[..4]}";
 
@@ -648,7 +646,6 @@ public class EventService : IEventService
     /// <summary>
     /// Получить команды связанные с событием, которые заполнены не полностью
     /// </summary>
-    /// <returns></returns>
     private static IReadOnlyCollection<TeamModel> GetNotFullTeams(EventModel eventModel)
         => eventModel.Teams
             .Where(x => x.Members?.Length < eventModel.MinTeamMembers)

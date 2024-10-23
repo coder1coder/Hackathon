@@ -13,21 +13,18 @@ public interface IUserService
     /// Создание пользователя
     /// </summary>
     /// <param name="createNewUserModel"></param>
-    /// <returns></returns>
     Task<long> CreateAsync(CreateNewUserModel createNewUserModel);
 
     /// <summary>
     /// Получить информацию о пользователе по идентификатору
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<Result<UserModel>> GetAsync(long userId);
 
     /// <summary>
     /// Получить информацию о пользователях
     /// </summary>
     /// <param name="getListParameters">Фильтр, пагинация</param>
-    /// <returns></returns>
     Task<BaseCollection<UserModel>> GetListAsync(Models.GetListParameters<UserFilter> getListParameters);
 
     /// <summary>
@@ -35,14 +32,12 @@ public interface IUserService
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="file">Файл изображения</param>
-    /// <returns></returns>
     Task<Result<Guid>> UploadProfileImageAsync(long userId, IFormFile file);
 
     /// <summary>
     /// Редактирование профиля пользователя
     /// </summary>
     /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
-    /// <returns></returns>
     Task<Result> UpdateUserAsync(UpdateUserParameters updateUserParameters);
 
     /// <summary>
@@ -50,6 +45,5 @@ public interface IUserService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="parameters">Параметры</param>
-    /// <returns></returns>
     Task<Result> UpdatePasswordAsync(long authorizedUserId, UpdatePasswordModel parameters);
 }

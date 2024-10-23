@@ -13,6 +13,5 @@ public interface IEmailService
     /// Отправить Email сообщение
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     Task<Result> SendAsync(EmailParameters parameters);
 }

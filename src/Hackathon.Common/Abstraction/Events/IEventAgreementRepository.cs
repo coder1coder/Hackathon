@@ -12,7 +12,6 @@ public interface IEventAgreementRepository
     /// Получить <see cref="EventAgreementModel">соглашение об участии в мероприятии</see> по идентификатору мероприятия
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     Task<EventAgreementModel> GetByEventId(long eventId);
 
     /// <summary>
@@ -20,6 +19,5 @@ public interface IEventAgreementRepository
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task UpsertUserRelationAsync(long eventId, long userId);
 }

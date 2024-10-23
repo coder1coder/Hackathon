@@ -21,7 +21,6 @@ public interface ITeamChatApiClient
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="offset"></param>
     /// <param name="limit"></param>
-    /// <returns></returns>
     [Post(BaseRoute + "/{teamId}/list")]
     Task GetListAsync(long teamId, [Query] int offset = 0, [Query] int limit = 300);
 }

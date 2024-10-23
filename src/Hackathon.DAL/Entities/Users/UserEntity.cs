@@ -80,7 +80,6 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// <summary>
     /// Получить одно из имеющихся имен
     /// </summary>
-    /// <returns></returns>
     public string GetAnyName()
         => FullName ?? UserName;
 }

@@ -30,7 +30,6 @@ public interface IUserApi
     /// Загрузить картинку профиля пользователя
     /// </summary>
     /// <param name="stream">Файл изображения</param>
-    /// <returns></returns>
     [Post(BaseRoute + "/profile/image/upload")]
     [Multipart]
     Task<Guid> UploadProfileImage([AliasAs("file")] StreamPart stream);
@@ -39,7 +38,6 @@ public interface IUserApi
     /// Обновить пароль пользователя
     /// </summary>
     /// <param name="parameters">Параметры</param>
-    /// <returns></returns>
     [Put(BaseRoute + "/password")]
     Task UpdatePassword([Body] UpdatePasswordModel parameters);
 }

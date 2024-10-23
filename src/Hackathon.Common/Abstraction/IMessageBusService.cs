@@ -11,7 +11,6 @@ public interface IMessageBusService
     /// <param name="message">Сообщение</param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T">тип сообщения</typeparam>
-    /// <returns></returns>
     Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class;
 
     /// <summary>
@@ -20,6 +19,5 @@ public interface IMessageBusService
     /// <param name="message">Сообщение</param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T">тип сообщения</typeparam>
-    /// <returns></returns>
     Task<bool> TryPublish<T>(T message, CancellationToken cancellationToken = default) where T : class;
 }

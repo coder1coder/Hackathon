@@ -22,7 +22,6 @@ public class TeamModel
     /// Проверить, является ли пользователь участником команды
     /// </summary>
     /// <param name="userId"></param>
-    /// <returns></returns>
     public bool HasMemberWithId(long userId)
         => Members.FirstOrDefault(x => x.Id == userId) is not null || HasOwnerWithId(userId);
 
@@ -30,21 +29,18 @@ public class TeamModel
     /// Проверить, является ли пользователь владельцем команды
     /// </summary>
     /// <param name="userId"></param>
-    /// <returns></returns>
     public bool HasOwnerWithId(long userId)
         => OwnerId == userId;
 
     /// <summary>
     /// Проверить, является ли команда заполненной
     /// </summary>
-    /// <returns></returns>
     public bool IsFull()
         => Members.Length + 1 >= MembersLimit;
 
     /// <summary>
     /// Проверить, является ли команда временной (создана автоматически в рамках мероприятия)
     /// </summary>
-    /// <returns></returns>
     public bool IsTemporaryTeam()
         => !OwnerId.HasValue;
 }

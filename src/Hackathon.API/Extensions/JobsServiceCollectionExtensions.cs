@@ -18,7 +18,6 @@ public static class JobsServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
-    /// <returns></returns>
     public static IServiceCollection RegisterJobs(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddQuartz(quartz =>
@@ -84,6 +83,5 @@ public static class JobsServiceCollectionExtensions
     /// Получить наименование триггера
     /// </summary>
     /// <param name="jobName">Наименование джобы</param>
-    /// <returns></returns>
     private static string GetTriggerName(string jobName) => $"{jobName}-trigger";
 }

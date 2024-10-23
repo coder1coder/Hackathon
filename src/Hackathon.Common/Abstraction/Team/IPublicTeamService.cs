@@ -13,6 +13,5 @@ public interface IPublicTeamService
     /// </summary>
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
-    /// <returns></returns>
     Task<Result> JoinToTeamAsync(long teamId, long authorizedUserId);
 }

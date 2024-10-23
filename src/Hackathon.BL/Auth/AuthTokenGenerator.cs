@@ -18,7 +18,6 @@ public static class AuthTokenGenerator
     /// </summary>
     /// <param name="payload">Данные для генерации токена авторизации</param>
     /// <param name="authenticateSettings">Настройки генерации токена</param>
-    /// <returns></returns>
     public static AuthTokenModel GenerateToken(GenerateTokenPayload payload, InternalAuthenticateSettings authenticateSettings)
     {
         var expires = DateTimeOffset.UtcNow.AddMinutes(authenticateSettings.LifeTime);

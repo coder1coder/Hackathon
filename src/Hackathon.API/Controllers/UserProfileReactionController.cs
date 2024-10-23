@@ -22,7 +22,6 @@ public class UserProfileReactionController : BaseController
     /// Получить все реакции на профиль пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя получившего реакцию</param>
-    /// <returns></returns>
     [HttpGet]
     public Task<IActionResult> GetReactions(long userId)
         => GetResult(() => _userProfileReactionService.GetReactionsAsync(AuthorizedUserId, userId));
@@ -31,7 +30,6 @@ public class UserProfileReactionController : BaseController
     /// Получить реакции на профиль пользователя по типу с количеством, поставленные другими пользователями
     /// </summary>
     /// <param name="userId">Идентификатор пользователя получившего реакции</param>
-    /// <returns></returns>
     [HttpGet("count")]
     public Task<IActionResult> GetReactionsByType(long userId)
         => GetResult(() => _userProfileReactionService.GetReactionsByTypeAsync(userId));

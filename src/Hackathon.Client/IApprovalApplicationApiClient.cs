@@ -11,7 +11,6 @@ public interface IApprovalApplicationApiClient
     /// Согласовать заявку на согласование
     /// </summary>
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
-    /// <returns></returns>
     [Post(BaseRoute + "/{approvalApplicationId}/approve")]
     Task Approve(long approvalApplicationId);
 }

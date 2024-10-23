@@ -18,7 +18,6 @@ public interface IEventService
     /// </summary>
     /// <param name="authorizedUserId"></param>
     /// <param name="eventCreateParameters">Модель создаваемого события</param>
-    /// <returns></returns>
     Task<Result<long>> CreateAsync(long authorizedUserId, EventCreateParameters eventCreateParameters);
 
     /// <summary>
@@ -26,7 +25,6 @@ public interface IEventService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="eventUpdateParameters"></param>
-    /// <returns></returns>
     Task<Result> UpdateAsync(long authorizedUserId, EventUpdateParameters eventUpdateParameters);
 
     /// <summary>
@@ -34,7 +32,6 @@ public interface IEventService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
     Task<Result<EventModel>> GetAsync(long? authorizedUserId, long eventId);
 
     /// <summary>
@@ -42,7 +39,6 @@ public interface IEventService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
     /// <param name="parameters">Фильтр, пагинация</param>
-    /// <returns></returns>
     Task<Result<BaseCollection<EventListItem>>> GetListAsync(long authorizedUserId, Common.Models.GetListParameters<EventFilter> parameters);
 
     /// <summary>
@@ -54,7 +50,6 @@ public interface IEventService
     /// <param name="skipValidation">Пропустить валидацию (Использовать только в служебных целях)</param>
     /// <param name="skipUserValidation">Пропустить валидацию пользователя (Использовать только в служебных целях)</param>
     /// <param name="skipUserValidationRole">Роль пользователя которая будет использоваться без валидации пользователя</param>
-    /// <returns></returns>
     Task<Result> SetStatusAsync(long authorizedUserId, long eventId, EventStatus eventStatus,
         bool skipValidation = false, bool skipUserValidation = false,
         UserRole skipUserValidationRole = UserRole.Default);
@@ -64,7 +59,6 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<Result> JoinAsync(long eventId, long userId);
 
     /// <summary>
@@ -72,7 +66,6 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">Идентификатор обытия</param>
     /// <param name="authorizedUserId">Идентификатор авторизованного пользователя</param>
-    /// <returns></returns>
     Task<Result> LeaveAsync(long eventId, long authorizedUserId);
 
     /// <summary>
@@ -80,13 +73,11 @@ public interface IEventService
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<Result> DeleteAsync(long eventId, long userId);
 
     /// <summary>
     /// Получить предстоящие события
     /// </summary>
-    /// <returns></returns>
     Task<Result<BaseCollection<EventListItem>>> GetUpcomingEventsAsync(TimeSpan timeBeforeStart);
 
     /// <summary>
@@ -94,21 +85,18 @@ public interface IEventService
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
     Task<Result> GoNextStage(long userId, long eventId);
 
     /// <summary>
     /// Загрузить изображение события
     /// </summary>
     /// <param name="file">Файл http запроса</param>
-    /// <returns></returns>
     Task<Result<Guid>> UploadEventImageAsync(IFormFile file);
 
     /// <summary>
     /// Получить соглашение мероприятия
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     Task<Result<EventAgreementModel>> GetAgreementAsync(long eventId);
 
     /// <summary>
@@ -116,6 +104,5 @@ public interface IEventService
     /// </summary>
     /// <param name="authorizedUserId">Идентификатор пользователя</param>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     Task<Result> AcceptAgreementAsync(long authorizedUserId, long eventId);
 }

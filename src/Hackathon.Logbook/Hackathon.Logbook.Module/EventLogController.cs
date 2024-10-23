@@ -24,7 +24,6 @@ public sealed class EventLogController: BaseController
     /// Получить записи журнала событий
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     [HttpPost("list")]
     [Authorize(Policy = nameof(UserRole.Administrator))]
     public async Task<IActionResult> GetListAsync(GetListParameters<EventLogModel> parameters)

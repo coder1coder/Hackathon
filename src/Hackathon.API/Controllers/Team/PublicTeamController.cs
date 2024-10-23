@@ -20,7 +20,6 @@ public class PublicTeamController : BaseController
     /// <summary>
     /// Вступить в открытую команду
     /// </summary>
-    /// <returns></returns>
     [HttpPost("{teamId:long}/join")]
     public Task<IActionResult> JoinToTeam([FromRoute] long teamId)
         => GetResult(() => _publicTeamService.JoinToTeamAsync(teamId, AuthorizedUserId));

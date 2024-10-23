@@ -77,7 +77,6 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>: IChatServi
     /// <summary>
     /// Получить список пользователей для которых необходимо отправить уведомление о новом сообщении
     /// </summary>
-    /// <returns></returns>
     protected virtual Task<long[]> GetUserIdsToNotify(long ownerId, TNewChatMessage newChatMessage) => null;
 
     /// <summary>

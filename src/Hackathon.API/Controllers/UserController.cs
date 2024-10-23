@@ -41,7 +41,6 @@ public class UserController : BaseController
     /// Создание нового пользователя
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost]
     public async Task<BaseCreateResponse> SignUp([FromBody] SignUpRequest request)
@@ -58,7 +57,6 @@ public class UserController : BaseController
     /// Обновить пароль пользователя
     /// </summary>
     /// <param name="parameters">Параметры</param>
-    /// <returns></returns>
     [HttpPut("password")]
     public Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordModel parameters)
         => GetResult(() => _userService.UpdatePasswordAsync(AuthorizedUserId, parameters)); 
@@ -67,7 +65,6 @@ public class UserController : BaseController
     /// Получить информацию о пользователе
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     [HttpGet("{userId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
     public async Task<IActionResult> GetAsync([FromRoute] long userId)
@@ -85,7 +82,6 @@ public class UserController : BaseController
     /// <summary>
     /// Получить информацию о пользователях
     /// </summary>
-    /// <returns></returns>
     [HttpPost("list")]
     [Authorize(Policy = nameof(UserRole.Administrator))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<UserResponse>))]
@@ -96,7 +92,6 @@ public class UserController : BaseController
     /// Загрузить картинку профиля пользователя
     /// </summary>
     /// <param name="file">Файл изображения</param>
-    /// <returns></returns>
     [HttpPost("profile/image/upload")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -114,7 +109,6 @@ public class UserController : BaseController
     /// <summary>
     /// Создать запрос на подтвреждение Email пользователя
     /// </summary>
-    /// <returns></returns>
     [HttpPost("profile/email/confirm/request")]
     public Task<IActionResult> CreateEmailConfirmationRequest()
         => GetResult(() => _emailConfirmationService.CreateRequest(AuthorizedUserId));

@@ -37,7 +37,6 @@ public class EventController : BaseController
     /// Создание нового события
     /// </summary>
     /// <param name="createEventRequest"></param>
-    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(BaseCreateResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -67,7 +66,6 @@ public class EventController : BaseController
     /// <summary>
     /// Получить все события
     /// </summary>
-    /// <returns></returns>
     [HttpPost("list")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseCollection<EventListItem>))]
     public Task<IActionResult> GetList([FromBody] GetListParameters<EventFilter> listRequest)
@@ -77,7 +75,6 @@ public class EventController : BaseController
     /// Получить событие по идентификатору
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     [HttpGet("{eventId:long}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventModel))]
     public Task<IActionResult> Get([FromRoute] long eventId)
@@ -87,7 +84,6 @@ public class EventController : BaseController
     /// Присоединиться к мероприятию
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     [HttpPost("{eventId:long}/join")]
     public Task<IActionResult> Join(long eventId)
         => GetResult(() => _eventService.JoinAsync(eventId, AuthorizedUserId));
@@ -96,7 +92,6 @@ public class EventController : BaseController
     /// Получить соглашение мероприятия
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     [HttpGet("{eventId:long}/agreement")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventAgreementModel))]
     public Task<IActionResult> GetAgreement(long eventId)
@@ -106,7 +101,6 @@ public class EventController : BaseController
     /// Принять соглашение мероприятия
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     [HttpPost("{eventId:long}/agreement/accept")]
     public Task<IActionResult> AcceptAgreement(long eventId)
         => GetResult(() => _eventService.AcceptAgreementAsync(AuthorizedUserId, eventId));
@@ -115,7 +109,6 @@ public class EventController : BaseController
     /// Покинуть мероприятие
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <returns></returns>
     [HttpPost("{eventId:long}/leave")]
     public Task<IActionResult> Leave(long eventId)
         => GetResult(() => _eventService.LeaveAsync(eventId, AuthorizedUserId));
@@ -132,7 +125,6 @@ public class EventController : BaseController
     /// Переключить событие на следующий этап
     /// </summary>
     /// <param name="eventId">Идентификатор события</param>
-    /// <returns></returns>
     [HttpPost("{eventId:long}/stages/next")]
     public Task<IActionResult> GoNextStage([FromRoute] long eventId)
         => GetResult(() => _eventService.GoNextStage(AuthorizedUserId, eventId));
@@ -149,7 +141,6 @@ public class EventController : BaseController
     /// Загрузить изображение события
     /// </summary>
     /// <param name="file">Файл изображения</param>
-    /// <returns></returns>
     [HttpPost("image/upload")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]

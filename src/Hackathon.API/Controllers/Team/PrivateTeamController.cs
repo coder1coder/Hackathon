@@ -29,7 +29,6 @@ public class PrivateTeamController : BaseController
     /// Создать запрос на вступление в команду
     /// </summary>
     /// <param name="teamId"></param>
-    /// <returns></returns>
     [HttpPost("{teamId:long}/join/request")]
     [ProducesResponseType(typeof(BaseCreateResponse), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> CreateJoinRequest([FromRoute] long teamId)
@@ -54,7 +53,6 @@ public class PrivateTeamController : BaseController
     /// <summary>
     /// Принять пользователя в закрытую команду
     /// </summary>
-    /// <returns></returns>
     [HttpPost("join/request/{requestId:long}/approve")]
     public Task<IActionResult> ApproveJoinRequest([FromRoute] long requestId)
         => GetResult(() => _privateTeamService.ApproveJoinRequest(AuthorizedUserId, requestId));
@@ -62,7 +60,6 @@ public class PrivateTeamController : BaseController
     /// <summary>
     /// Отменить запрос на вступление в команду
     /// </summary>
-    /// <returns></returns>
     [HttpPost("join/request/cancel")]
     public Task<IActionResult> CancelJoinRequest([FromBody] CancelRequestParameters parameters)
         => GetResult(() => _privateTeamService.CancelJoinRequestAsync(AuthorizedUserId, parameters));
@@ -71,7 +68,6 @@ public class PrivateTeamController : BaseController
     /// Получить отправленный запрос на вступление в команду
     /// </summary>
     /// <param name="teamId"></param>
-    /// <returns></returns>
     [HttpGet("{teamId:long}/join/request/sent")]
     [ProducesResponseType(typeof(TeamJoinRequestModel), (int)HttpStatusCode.OK)]
     public Task<IActionResult> GetSingleSentJoinRequest([FromRoute] long teamId)
@@ -81,7 +77,6 @@ public class PrivateTeamController : BaseController
     /// Получить список запросов пользователя на вступление в команду
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
     [HttpPost("join/request/list")]
     [ProducesResponseType(typeof(BaseCollection<TeamJoinRequestFilter>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetJoinRequests([FromBody] GetListParameters<TeamJoinRequestFilter> parameters)
@@ -96,7 +91,6 @@ public class PrivateTeamController : BaseController
     /// <summary>
     /// Получить список отправленных запросов на вступление в команду
     /// </summary>
-    /// <returns></returns>
     [HttpPost("{teamId:long}/join/request/list")]
     [ProducesResponseType(typeof(BaseCollection<TeamJoinRequestFilter>), (int) HttpStatusCode.OK)]
     public Task<IActionResult> GetTeamSentJoinRequests([FromRoute] long teamId, [FromBody] PaginationSort paginationSort)

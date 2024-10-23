@@ -12,28 +12,24 @@ public interface IUserRepository
     /// Создание пользователя
     /// </summary>
     /// <param name="createNewUserModel"></param>
-    /// <returns></returns>
     Task<long> CreateAsync(CreateNewUserModel createNewUserModel);
 
     /// <summary>
     /// Получить информацию о пользователе по идентификатору
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<UserModel> GetAsync(long userId);
 
     /// <summary>
     /// Получить информацию о пользователях
     /// </summary>
     /// <param name="parameters">Фильтр, пагинация</param>
-    /// <returns></returns>
     Task<BaseCollection<UserModel>> GetAsync(GetListParameters<UserFilter> parameters);
 
     /// <summary>
     /// Получить данные пользователя для авторизации в системе
     /// </summary>
     /// <param name="userName">Логин пользователя</param>
-    /// <returns></returns>
     Task<UserSignInDetails> GetUserSignInDetailsAsync(string userName);
 
     /// <summary>
@@ -48,14 +44,12 @@ public interface IUserRepository
     /// </summary>
     /// <param name="googleId">GoogleId</param>
     /// <param name="email">Email</param>
-    /// <returns></returns>
     Task<UserModel> GetByGoogleIdOrEmailAsync(string googleId, string email);
 
     /// <summary>
     /// Обновить информацию о Google аккаунте
     /// </summary>
     /// <param name="googleAccountModel"></param>
-    /// <returns></returns>
     Task UpdateGoogleAccount(GoogleAccountModel googleAccountModel);
 
     /// <summary>
@@ -63,14 +57,12 @@ public interface IUserRepository
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="profileImageId">Идентификатор картинки в хранилище</param>
-    /// <returns></returns>
     Task UpdateProfileImageAsync(long userId, Guid profileImageId);
 
     /// <summary>
     /// Обновление профиля пользователя
     /// </summary>
     /// <param name="updateUserParameters">Данные для обновления профиля пользователя</param>
-    /// <returns></returns>
     Task UpdateAsync(UpdateUserParameters updateUserParameters);
 
     /// <summary>
@@ -78,27 +70,23 @@ public interface IUserRepository
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="userRole">Роль</param>
-    /// <returns></returns>
     Task SetRole(long userId, UserRole userRole);
 
     /// <summary>
     /// Получить роль пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<UserRole?> GetRoleAsync(long userId);
 
     /// <summary>
     /// Получить идентификаторы администраторов
     /// </summary>
-    /// <returns></returns>
     Task<long[]> GetAdministratorIdsAsync();
 
     /// <summary>
     /// Получить хеш пароля пользователя
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
-    /// <returns></returns>
     Task<string> GetPasswordHashAsync(long userId);
 
     /// <summary>
@@ -106,6 +94,5 @@ public interface IUserRepository
     /// </summary>
     /// <param name="userId">Идентификатор пользователя</param>
     /// <param name="passwordHash">Хешированный пароль</param>
-    /// <returns></returns>
     Task UpdatePasswordHashAsync(long userId, string passwordHash);
 }

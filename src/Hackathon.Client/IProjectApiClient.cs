@@ -22,7 +22,6 @@ public interface IProjectApiClient
     /// Обновить проект из ветки Git-репозитория
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns>
     [Put(BaseRoute + "/branch")]
     Task UpdateProjectFromGitBranch([Body] UpdateProjectFromGitBranchRequest request);
 }
