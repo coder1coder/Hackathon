@@ -5,7 +5,10 @@ export const environment: IEnvironment = {
   api: 'http://localhost:5000/api',
   hubs: {
     notification: 'http://localhost:5000/hubs/notifications',
-    chat: 'http://localhost:5000/hubs/chat',
+    chats: {
+      events: 'http://localhost:5000/hubs/chats/event',
+      teams: 'http://localhost:5000/hubs/chats/team'
+    },
     friendship: 'http://localhost:5000/hubs/friendship',
     event: 'http://localhost:5000/hubs/events',
   },

@@ -22,7 +22,7 @@ public sealed class EventLogService: IEventLogService
     }
 
     public Task AddAsync(EventLogModel eventLogModel)
-        => _messageBusService.TryPublish(eventLogModel);
+        => _messageBusService.TryPublishAsync(eventLogModel);
 
     public Task<BaseCollection<EventLogListItem>> GetListAsync(GetListParameters<EventLogModel> parameters)
         => _repository.GetListAsync(parameters);

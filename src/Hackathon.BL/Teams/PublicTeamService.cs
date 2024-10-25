@@ -3,7 +3,10 @@ using BackendTools.Common.Models;
 using Hackathon.BL.Validation.Users;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.Messages;
+using Hackathon.Common.Messages.Teams;
 using Hackathon.Common.Models.Teams;
+using Hackathon.Infrastructure;
 
 namespace Hackathon.BL.Teams;
 
@@ -11,11 +14,16 @@ public class PublicTeamService: IPublicTeamService
 {
     private readonly ITeamRepository _teamRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IMessageBusService _messageBusService;
 
-    public PublicTeamService(ITeamRepository teamRepository, IUserRepository userRepository)
+    public PublicTeamService(
+        ITeamRepository teamRepository, 
+        IUserRepository userRepository, 
+        IMessageBusService messageBusService)
     {
         _teamRepository = teamRepository;
         _userRepository = userRepository;
+        _messageBusService = messageBusService;
     }
 
     public async Task<Result> JoinToTeamAsync(long teamId, long authorizedUserId)
@@ -50,6 +58,8 @@ public class PublicTeamService: IPublicTeamService
             MemberId = authorizedUserId,
             Role = TeamRole.Participant
         });
+
+        await _messageBusService.TryPublishAsync(new NewTeamMemberMessage(teamId, authorizedUserId));
 
         return Result.Success;
     }

@@ -3,11 +3,14 @@ using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.Messages;
+using Hackathon.Common.Messages.Teams;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Teams;
 using Hackathon.Informing.Abstractions.Models.Notifications.Data;
 using Hackathon.Informing.Abstractions.Services;
 using Hackathon.Informing.BL;
+using Hackathon.Infrastructure;
 using UserErrorMessages = Hackathon.BL.Users.UserErrorMessages;
 
 namespace Hackathon.BL.Teams;
@@ -25,16 +28,20 @@ public class PrivateTeamService: IPrivateTeamService
     private const string TeamJoinRequestNotFound = "Запрос на вступление в команду не найден";
     private const int SentJoinRequestsLimit = 5;
 
+    private readonly IMessageBusService _messageBusService;
+
     public PrivateTeamService(
         ITeamRepository teamRepository,
         IUserRepository userRepository,
         ITeamJoinRequestsRepository teamJoinRequestsRepository,
-        INotificationService notificationService)
+        INotificationService notificationService, 
+        IMessageBusService messageBusService)
     {
         _teamRepository = teamRepository;
         _userRepository = userRepository;
         _teamJoinRequestsRepository = teamJoinRequestsRepository;
         _notificationService = notificationService;
+        _messageBusService = messageBusService;
     }
 
     public async Task<Result<long>> CreateJoinRequestAsync(TeamJoinRequestCreateParameters parameters)
@@ -197,6 +204,8 @@ public class PrivateTeamService: IPrivateTeamService
             MemberId = request.UserId,
             Role = TeamRole.Participant
         });
+
+        await _messageBusService.TryPublishAsync(new NewTeamMemberMessage(request.TeamId, request.UserId));
 
         await _notificationService.PushAsync(NotificationCreator.TeamJoinRequestDecision(new TeamJoinRequestDecisionData
             {

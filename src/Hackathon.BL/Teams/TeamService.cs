@@ -9,10 +9,12 @@ using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
+using Hackathon.Common.Messages.Teams;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
 using Hackathon.Common.Models.Projects;
 using Hackathon.Common.Models.Teams;
+using Hackathon.Infrastructure;
 
 namespace Hackathon.BL.Teams;
 
@@ -28,6 +30,8 @@ public class TeamService : ITeamService
     private readonly IValidator<TeamMemberModel> _teamAddMemberModelValidator;
     private readonly IValidator<Common.Models.GetListParameters<TeamFilter>> _getFilterModelValidator;
 
+    private readonly IMessageBusService _messageBusService;
+
     public TeamService(
         IValidator<CreateTeamModel> createTeamModelValidator,
         IValidator<TeamMemberModel> teamAddMemberModelValidator,
@@ -35,7 +39,8 @@ public class TeamService : ITeamService
         ITeamRepository teamRepository,
         IEventRepository eventRepository,
         IProjectRepository projectRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository, 
+        IMessageBusService messageBusService)
     {
         _createTeamModelValidator = createTeamModelValidator;
         _teamAddMemberModelValidator = teamAddMemberModelValidator;
@@ -45,6 +50,7 @@ public class TeamService : ITeamService
         _eventRepository = eventRepository;
         _projectRepository = projectRepository;
         _userRepository = userRepository;
+        _messageBusService = messageBusService;
     }
 
     public async Task<Result<long>> CreateAsync(CreateTeamModel createTeamModel, long? userId = null)
@@ -101,6 +107,8 @@ public class TeamService : ITeamService
                 MemberId = createTeamModel.OwnerId.Value,
                 Role = TeamRole.Owner
             });
+            
+            await _messageBusService.TryPublishAsync(new NewTeamMemberMessage(newTeamId, createTeamModel.OwnerId.Value));
         }
 
         return Result<long>.FromValue(newTeamId);
@@ -125,6 +133,8 @@ public class TeamService : ITeamService
         }
 
         await _teamRepository.AddMemberAsync(teamMemberModel);
+
+        await _messageBusService.TryPublishAsync(new NewTeamMemberMessage(teamMemberModel.TeamId, teamMemberModel.MemberId));
 
         return Result.Success;
     }
@@ -197,6 +207,8 @@ public class TeamService : ITeamService
         {
             await _teamRepository.RemoveMemberAsync(teamMemberModel);
         }
+
+        await _messageBusService.TryPublishAsync(new TeamMemberRemovedMessage(teamMemberModel.TeamId, teamMemberModel.MemberId));
 
         return Result.Success;
     }

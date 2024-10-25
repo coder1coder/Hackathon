@@ -27,8 +27,8 @@ public class EventChatController: BaseController
     /// </summary>
     /// <param name="newEventChatMessage">Сообщение</param>
     [HttpPost("send")]
-    public Task<IActionResult> SendEventChatMessage([FromBody] NewEventChatMessage newEventChatMessage)
-        => GetResult(() => _eventChatService.SendAsync(AuthorizedUserId, newEventChatMessage));
+    public Task<IActionResult> SendEventChatMessage([FromBody] NewEventChatMessageModel newEventChatMessage)
+        => GetResult(() => _eventChatService.SendMessageAsync(AuthorizedUserId, newEventChatMessage));
 
     /// <summary>
     /// Получить сообщение чата мероприятия по идентификатору

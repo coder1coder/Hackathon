@@ -10,6 +10,7 @@ using Hackathon.API.Extensions;
 using Hackathon.API.Module;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
+using Hackathon.Cache;
 using Hackathon.Common.Models.Users;
 using Hackathon.Configuration;
 using Hackathon.Configuration.Auth;

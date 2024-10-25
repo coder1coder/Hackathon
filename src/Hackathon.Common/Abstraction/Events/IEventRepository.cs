@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -60,4 +61,6 @@ public interface IEventRepository
     /// </summary>
     /// <param name="temporaryTeamId">Идентификатор временной команды</param>
     Task<EventModel> GetByTemporaryTeamIdAsync(long temporaryTeamId);
+    
+    Task<long[]> GetUserActiveEventIds(long userId);
 }

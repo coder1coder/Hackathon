@@ -3,7 +3,7 @@ namespace Hackathon.Chats.Abstractions.Models.Events;
 /// <summary>
 /// Новое собщение чата мероприятия
 /// </summary>
-public class NewEventChatMessage: BaseNewChatMessage, IEventChatMessage
+public class NewEventChatMessageModel: BaseNewChatMessage, IEventChatMessage
 {
     /// <summary>
     /// Идентификатор события

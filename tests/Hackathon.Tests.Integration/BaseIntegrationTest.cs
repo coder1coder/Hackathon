@@ -29,6 +29,7 @@ using Xunit;
 namespace Hackathon.Tests.Integration;
 
 [Collection(nameof(ApiTestsCollection))]
+[Trait("Category","Integration")]
 public abstract class BaseIntegrationTest
 {
     protected readonly IAuthApi AuthApi;

@@ -11,7 +11,7 @@ using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Extensions;
-using Hackathon.Common.Messages;
+using Hackathon.Common.Messages.Events;
 using Hackathon.Common.Models.ApprovalApplications;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Event;
@@ -98,7 +98,7 @@ public class EventService : IEventService
 
         var eventId = await _eventRepository.CreateAsync(eventCreateParameters);
 
-        await _messageBusService.TryPublish(new EventCreatedMessage(eventId, authorizedUserId));
+        await _messageBusService.TryPublishAsync(new EventCreatedMessage(eventId, authorizedUserId));
 
         return Result<long>.FromValue(eventId);
     }
@@ -251,6 +251,9 @@ public class EventService : IEventService
             case EventStatus.Started:
             {
                 var initialStageId = eventModel.Stages.MinBy(x => x.Order)?.Id ?? default;
+                
+                //TODO: далее по логике идёт запрос в БД для записи нового статуса мероприятия
+                //возможно имеет смысл параметризировать метод чтобы делать 1 запрос вместо двух
                 await _eventRepository.SetCurrentStageId(eventId, initialStageId);
                 break;
             }
@@ -319,6 +322,8 @@ public class EventService : IEventService
             Role = TeamRole.Participant
         });
 
+        await _messageBusService.TryPublishAsync(new EventNewParticipantsMessage(eventId, [userId]));
+
         return !addMemberResult.IsSuccess
             ? addMemberResult
             : Result.Success;
@@ -366,6 +371,8 @@ public class EventService : IEventService
             TeamId = userTeam.Id,
             MemberId = authorizedUserId
         });
+        
+        await _messageBusService.TryPublishAsync(new EventParticipantsLeaveMessage(eventId, [authorizedUserId]));
 
         return Result.Success;
     }
@@ -391,6 +398,9 @@ public class EventService : IEventService
 
         await _approvalApplicationRepository.RemoveAsync(eventModel.ApprovalApplicationId.GetValueOrDefault());
         await _eventRepository.DeleteAsync(eventId);
+
+        await _messageBusService.TryPublishAsync(new EventParticipantsLeaveMessage(eventId, GetEventParticipantIds(eventModel)));
+        
         return Result.Success;
     }
 
@@ -538,6 +548,18 @@ public class EventService : IEventService
     {
         await _eventRepository.SetStatusAsync(eventModel.Id, eventStatus);
 
+        if (eventStatus == EventStatus.Started)
+        {
+            var eventParticipantIds = GetEventParticipantIds(eventModel);
+            await _messageBusService.TryPublishAsync(new EventNewParticipantsMessage(eventModel.Id, eventParticipantIds));
+        }
+        
+        if (eventStatus == EventStatus.Finished)
+        {
+            var eventParticipantIds = GetEventParticipantIds(eventModel);
+            await _messageBusService.TryPublishAsync(new EventParticipantsLeaveMessage(eventModel.Id, eventParticipantIds));
+        }
+        
         await _eventChangesIntegrationEventsHub.PublishAll(new EventStatusChangedIntegrationEvent(eventModel.Id, eventStatus));
 
         if (eventStatus == EventStatus.OnModeration)
@@ -571,19 +593,24 @@ public class EventService : IEventService
             return;
         }
 
-        var usersIds = eventModel.Teams
-            .SelectMany(x => x.Members?.Select(z => z.Id))
-            .ToArray();
+        var eventParticipantIds = GetEventParticipantIds(eventModel);
 
-        if (!usersIds.Any())
+        if (!eventParticipantIds.Any())
         {
             return;
         }
 
-        var notificationModels = usersIds.Select(userId =>
+        var notificationModels = eventParticipantIds.Select(userId =>
             NotificationCreator.System(new SystemNotificationData(eventStatusChangingMessage), userId));
 
         await _notificationService.PushManyAsync(notificationModels);
+    }
+
+    private static long[] GetEventParticipantIds(EventModel eventModel)
+    {
+        return eventModel.Teams
+            .SelectMany(x => x.Members?.Select(z => z.Id))
+            .ToArray();
     }
 
     private static string ResolveEventStatusChangingMessage(BaseEventParameters eventModel, EventStatus eventStatus)

@@ -12,7 +12,7 @@ public interface IChatService<in TNewChatMessage, TChatMessage> where TChatMessa
     /// </summary>
     /// <param name="ownerId">Идентификатор автора сообщения</param>
     /// <param name="newMessage">Сообщение</param>
-    Task<Result> SendAsync(long ownerId, TNewChatMessage newMessage);
+    Task<Result> SendMessageAsync(long ownerId, TNewChatMessage newMessage);
 
     /// <summary>
     /// Получить сообщение чата

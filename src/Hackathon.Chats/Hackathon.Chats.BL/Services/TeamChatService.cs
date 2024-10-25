@@ -18,32 +18,34 @@ public class TeamChatService: BaseChatService<NewTeamChatMessage, TeamChatMessag
 {
     private readonly ITeamRepository _teamRepository;
     private readonly IValidator<NewTeamChatMessage> _chatMessageValidator;
+    private readonly ITeamChatHub _hub;
 
     public TeamChatService(
         ITeamChatRepository teamChatRepository,
         ITeamRepository teamRepository,
-        IChatsIntegrationEventsHub integrationEventsHub,
         IUserRepository userRepository,
         INotificationService notificationService,
         IValidator<NewTeamChatMessage> chatMessageValidator,
-        IMapper mapper):base(teamChatRepository, integrationEventsHub, userRepository, notificationService, mapper)
+        IMapper mapper, 
+        ITeamChatHub hub) : base(teamChatRepository, userRepository, notificationService, mapper)
     {
         _teamRepository = teamRepository;
         _chatMessageValidator = chatMessageValidator;
+        _hub = hub;
     }
 
-    protected override Task<Result> ValidateAsync(NewTeamChatMessage message)
+    protected override Task<Result> ValidateNewMessageAsync(NewTeamChatMessage message)
         => _chatMessageValidator.ValidateAsync(message);
 
-    public new Task<Result> SendAsync(long ownerId, NewTeamChatMessage newTeamChatMessage)
-        => base.SendAsync(ownerId, newTeamChatMessage);
+    public new Task<Result> SendMessageAsync(long ownerId, NewTeamChatMessage newTeamChatMessage)
+    {
+        return base.SendMessageAsync(ownerId, newTeamChatMessage);
+    }
 
     protected override Task PublicIntegrationEvent(Guid messageId, NewTeamChatMessage newMessage)
-        => IntegrationEventsHub.PublishAll(new TeamChatNewMessageIntegrationEvent
-        {
-            TeamId = newMessage.TeamId,
-            MessageId = messageId
-        });
+    {
+        return _hub.SendEventAsync(new TeamChatNewMessageIntegrationEvent(newMessage.TeamId, messageId));
+    }
 
     protected override Task EnrichMessageBeforeSaving<TChatMessageModel>(INewChatMessage newChatMessage, TChatMessageModel chatMessage)
     {
@@ -56,5 +58,7 @@ public class TeamChatService: BaseChatService<NewTeamChatMessage, TeamChatMessag
     }
 
     protected override Task<long[]> GetUserIdsToNotify(long ownerId, NewTeamChatMessage newChatMessage)
-        => _teamRepository.GetTeamMemberIdsAsync(newChatMessage.TeamId, ownerId);
+    {
+        return _teamRepository.GetTeamMemberIdsAsync(newChatMessage.TeamId, ownerId);
+    }
 }

@@ -5,6 +5,8 @@ import { ITeamChatNewMessageIntegrationEvent } from '../models/chat/integrationE
 import { INotificationChangedIntegrationEvent } from '../models/IntegrationEvent/INotificationChangedIntegrationEvent';
 import { FriendshipChangedIntegrationEvent } from '../models/IntegrationEvent/IFriendshipChangedIntegrationEvent';
 import { IEventStageChangedIntegrationEvent } from '../models/IntegrationEvent/IEventStageChangedIntegrationEvent';
+import {HttpClient, IHttpConnectionOptions } from '@microsoft/signalr';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +23,27 @@ export class SignalRService {
   ) => void;
   public onEventStageChanged: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
 
+  constructor(private authService: AuthService) {
+  }
+
   public initSignalR(hubUrl: string): void {
-    this._connection = new signalR.HubConnectionBuilder().withUrl(hubUrl).build();
+
+    let options : IHttpConnectionOptions = {
+      headers:{
+        ["Authorization"]: `Bearer ${this.authService.getTokenInfo()?.token}`
+      },
+      accessTokenFactory: async (): Promise<string> => {
+        return this.authService.getTokenInfo()?.token;
+      }
+    };
+
+    this._connection = new signalR.HubConnectionBuilder()
+      .withUrl(hubUrl, options)
+      .build();
 
     this._connection.onclose(() => this.startConnection());
+
+    //TODO: вынести подписки на сообщения в зависимости от регистрируемого хаба
 
     this._connection.on(
       'EventStageChanged',
@@ -77,13 +96,14 @@ export class SignalRService {
 
   private startConnection(): void {
     try {
+
       this._connection.start().then(() => {
-        console.log('SignalR Connected');
+        console.log(`SignalR Connected to ${this._connection.baseUrl}`);
         this.clearConnectionTimeout();
       });
     } catch (err) {
       console.log(err);
-      this.connectionTimeout = setTimeout(this.startConnection, 5000);
+      this.connectionTimeout = 5000
     }
   }
 

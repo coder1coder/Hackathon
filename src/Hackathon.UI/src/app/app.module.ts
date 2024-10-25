@@ -184,8 +184,8 @@ import { PasswordChangeDialogComponent } from './components/profile/password-cha
     MatSlideToggleModule,
     InfiniteScrollModule,
     MatButtonToggleModule,
-        MatFormFieldModule,
-        MatChipsModule,
+    MatFormFieldModule,
+    MatChipsModule,
   ],
   providers: [
     errorHandler,

@@ -17,7 +17,7 @@ public class MessageBusService: IMessageBusService
         _logger = logger;
     }
 
-    public async Task<bool> TryPublish<T>(T message, CancellationToken cancellationToken = default) where T : class
+    public async Task<bool> TryPublishAsync<T>(T message, CancellationToken cancellationToken = default) where T : class
     {
         try
         {

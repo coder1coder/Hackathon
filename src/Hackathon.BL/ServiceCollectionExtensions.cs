@@ -6,7 +6,6 @@ using Hackathon.BL.Friendship;
 using Hackathon.BL.Projects;
 using Hackathon.BL.Teams;
 using Hackathon.BL.Users;
-using Hackathon.Common.Abstraction;
 using Hackathon.Common.Abstraction.Auth;
 using Hackathon.Common.Abstraction.Events;
 using Hackathon.Common.Abstraction.Friend;
@@ -32,7 +31,5 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserProfileReactionService, UserProfileReactionService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IPasswordHashService, PasswordHashService>()
-            .AddScoped<IAuthService, AuthService>()
-            .AddHttpContextAccessor()
-            .AddSingleton<IAuthorizedUserContext, AuthorizedUserContext>();
+            .AddScoped<IAuthService, AuthService>();
 }

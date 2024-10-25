@@ -16,8 +16,10 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IUserIdProvider, IntegrationEventsUserIdProvider>();
 
         services.AddSignalR(x =>
-            x.EnableDetailedErrors = isDevelopmentEnvironment);
-
+        {
+            x.EnableDetailedErrors = isDevelopmentEnvironment;
+        });
+        
         return services;
     }
 }

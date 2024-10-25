@@ -211,6 +211,16 @@ public class EventRepository : IEventRepository
         return eventEntity == null ? null : _mapper.Map<EventModel>(eventEntity);
     }
 
+    public Task<long[]> GetUserActiveEventIds(long userId)
+    {
+        return _dbContext.Events.AsNoTracking()
+            .Where(x =>
+                !x.IsDeleted
+                && x.Status == EventStatus.Started)
+            .Select(x => x.Id)
+            .ToArrayAsync();
+    }
+
     private static Expression<Func<EventEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy switch
         {

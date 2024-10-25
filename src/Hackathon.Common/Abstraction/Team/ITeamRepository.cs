@@ -1,6 +1,6 @@
-﻿using Hackathon.Common.Models;
+﻿using System.Threading.Tasks;
+using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using System.Threading.Tasks;
 using Hackathon.Common.Models.Teams;
 
 namespace Hackathon.Common.Abstraction.Team;
@@ -77,4 +77,10 @@ public interface ITeamRepository
     /// <param name="teamId">Идентификатор команды</param>
     /// <param name="excludeMemberId">Идентификатор который нужно исключить</param>
     Task<long[]> GetTeamMemberIdsAsync(long teamId, long? excludeMemberId = null);
+
+    /// <summary>
+    /// Получить идентификаторы команд пользователя
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    Task<long[]> GetUserTeamIdsAsync(long userId);
 }

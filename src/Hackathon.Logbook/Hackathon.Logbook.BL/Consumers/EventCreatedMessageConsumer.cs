@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Hackathon.Common.Messages;
+using Hackathon.Common.Messages.Events;
 using Hackathon.Logbook.Abstraction.Models;
 using Hackathon.Logbook.Abstraction.Services;
 using MassTransit;
@@ -20,7 +21,7 @@ public class EventCreatedMessageConsumer: IConsumer<EventCreatedMessage>
         await _eventLogService.AddAsync(new EventLogModel(
             EventLogType.Created,
             $"Добавлено новое событие с идентификатором '{context.Message.EventId}'",
-            context.Message.UserId
+            context.Message.OwnerId
         ));
     }
 }

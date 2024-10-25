@@ -1,17 +1,25 @@
 using System;
-using Hackathon.Common.Abstraction.IntegrationEvents;
 
 namespace Hackathon.Chats.Abstractions.IntegrationEvents;
 
-public sealed class TeamChatNewMessageIntegrationEvent: IIntegrationEvent
+/// <summary>
+/// Новое сообщение чата команды
+/// </summary>
+public sealed record TeamChatNewMessageIntegrationEvent: ITeamChatIntegrationEvent
 {
     /// <summary>
     /// Идентификатор команды
     /// </summary>
-    public long TeamId { get; set; }
+    public long TeamId { get; }
 
     /// <summary>
     /// Идентификатор сообщения
     /// </summary>
-    public Guid MessageId { get; set; }
+    public Guid MessageId { get; }
+
+    public TeamChatNewMessageIntegrationEvent(long teamId, Guid messageId)
+    {
+        TeamId = teamId;
+        MessageId = messageId;
+    }
 }

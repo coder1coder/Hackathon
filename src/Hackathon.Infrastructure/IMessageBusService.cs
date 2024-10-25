@@ -11,5 +11,5 @@ public interface IMessageBusService
     /// <param name="message">Сообщение</param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T">тип сообщения</typeparam>
-    Task<bool> TryPublish<T>(T message, CancellationToken cancellationToken = default) where T : class;
+    Task<bool> TryPublishAsync<T>(T message, CancellationToken cancellationToken = default) where T : class;
 }

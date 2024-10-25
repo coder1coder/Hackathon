@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.API.Module.Extensions;
+using Hackathon.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,20 +14,8 @@ namespace Hackathon.API.Module;
 [Authorize]
 public abstract class BaseController: ControllerBase
 {
-    protected long AuthorizedUserId
-    {
-        get {
-            var nameIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    protected long AuthorizedUserId => User.GetUserId() ?? default;
 
-            if (!string.IsNullOrWhiteSpace(nameIdentifier) && long.TryParse(nameIdentifier, out var userId))
-            {
-                return userId;
-            }
-
-            return 0;
-        }
-    }
-    
     protected static Task<IActionResult> GetResult<TResult>(Func<Task<Result<TResult>>> action, HttpStatusCode successStatusCode = HttpStatusCode.OK)
         => GetResult(action, result => result, successStatusCode);
 

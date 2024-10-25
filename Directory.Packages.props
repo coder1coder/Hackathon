@@ -26,11 +26,12 @@
     <PackageVersion Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="Moq" Version="4.16.1" />
@@ -47,14 +48,18 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Grafana.Loki" Version="8.1.0" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.5" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.8.16" />
+    <PackageVersion Include="StackExchange.Redis.Extensions.AspNetCore" Version="10.2.0" />
+    <PackageVersion Include="StackExchange.Redis.Extensions.System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.2.2" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
-    <PackageVersion Include="Testcontainers.Minio" Version="3.7.0" />
-    <PackageVersion Include="Testcontainers.PostgreSql" Version="3.7.0" />
-    <PackageVersion Include="Testcontainers.RabbitMq" Version="3.7.0" />
+    <PackageVersion Include="Testcontainers.Minio" Version="4.0.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.0.0" />
+    <PackageVersion Include="Testcontainers.RabbitMq" Version="4.0.0" />
+    <PackageVersion Include="Testcontainers.Redis" Version="4.0.0" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
   </ItemGroup>

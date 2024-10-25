@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
+using Testcontainers.Redis;
 using Xunit;
 
 namespace Hackathon.Tests.Integration;
@@ -26,6 +27,10 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>, IAsyncL
 
     private readonly MinioContainer _minioContainer = new MinioBuilder()
         .WithName(ResolveContainerName("minio"))
+        .Build();
+    
+    private readonly RedisContainer _redisContainer = new RedisBuilder()
+        .WithName(ResolveContainerName("redis"))
         .Build();
 
     protected override IHost CreateHost(IHostBuilder builder)
@@ -49,6 +54,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>, IAsyncL
             {
                 { "ConnectionStrings:DefaultConnectionString", _databaseContainer.GetConnectionString()},
                 { "ConnectionStrings:MessageBroker", _rabbitmqContainer.GetConnectionString()},
+                { "ConnectionStrings:Redis", _redisContainer.GetConnectionString()},
                 { "S3Options:ServiceUrl", _minioContainer.GetConnectionString() },
                 { "S3Options:AccessKey", _minioContainer.GetAccessKey() },
                 { "S3Options:SecretKey", _minioContainer.GetSecretKey() }
@@ -60,6 +66,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>, IAsyncL
     {
         await _databaseContainer.StartAsync();
         await _rabbitmqContainer.StartAsync();
+        await _redisContainer.StartAsync();
         await _minioContainer.StartAsync();
     }
 
@@ -67,6 +74,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Startup>, IAsyncL
     {
         await _databaseContainer.DisposeAsync();
         await _rabbitmqContainer.DisposeAsync();
+        // await _redisContainer.DisposeAsync();
         await _minioContainer.DisposeAsync();
     }
 

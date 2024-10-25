@@ -1,5 +1,7 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
 using Hackathon.API.Module;
+using Hackathon.Cache;
 using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Models.Events;
@@ -10,6 +12,8 @@ using Hackathon.Chats.BL.Services;
 using Hackathon.Chats.BL.Validators;
 using Hackathon.Chats.DAL;
 using Hackathon.Chats.DAL.Repositories;
+using Hackathon.Chats.Infrastructure.Consumers.Teams;
+using Hackathon.Chats.Infrastructure.IntegrationEvents;
 using Hackathon.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -18,8 +22,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.Chats.Module;
 
-public class ChatsApiModule: ApiModule
+public sealed class ChatsApiModule: ApiModule
 {
+    public override Assembly ConsumersAssembly => typeof(NewTeamMemberConsumer).Assembly;
+
     public override void ConfigureServices(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection
@@ -28,22 +34,27 @@ public class ChatsApiModule: ApiModule
 
         serviceCollection
             .AddScoped<IValidator<INewChatMessage>, NewChatMessageValidator>()
-            .AddScoped<Hackathon.Common.Abstraction.IValidator<NewEventChatMessage>, NewEventChatMessageValidator>()
+            .AddScoped<Hackathon.Common.Abstraction.IValidator<NewEventChatMessageModel>, NewEventChatMessageValidator>()
             .AddScoped<Hackathon.Common.Abstraction.IValidator<NewTeamChatMessage>, NewTeamChatMessageValidator>();
 
         serviceCollection
             .AddScoped<ITeamChatRepository, TeamChatRepository>()
             .AddScoped<IEventChatRepository, EventChatRepository>();
 
-        serviceCollection.AddSingleton<IChatsIntegrationEventsHub, ChatsIntegrationEventsHub>();
+        serviceCollection.AddScoped<IEventChatHub, EventChatHub>();
+        serviceCollection.AddScoped<ITeamChatHub, TeamChatHub>();
+
+        serviceCollection.AddRedisDistributedCache(configuration.GetConnectionString("Redis"));
+        serviceCollection.AddSingleton<IChatConnectionsProvider, ChatConnectionsProvider>();
 
         ConfigureDbContext<ChatsDbContext>(serviceCollection,
-            configuration.GetConnectionString("DefaultConnectionString"),
-            true);
+            connectionString: configuration.GetConnectionString("DefaultConnectionString"),
+            enableSensitiveDataLogging: true);
     }
 
     public override void ConfigureEndpoints(IEndpointRouteBuilder endpointRouteBuilder, AppSettings appSettings)
     {
-        endpointRouteBuilder.MapHub<ChatsIntegrationEventsHub>(appSettings.Hubs.Chat);
+        endpointRouteBuilder.MapHub<EventChatHub>(appSettings.Hubs.Chats.EventChats);
+        endpointRouteBuilder.MapHub<TeamChatHub>(appSettings.Hubs.Chats.TeamChats);
     }
 }

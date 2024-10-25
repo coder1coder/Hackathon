@@ -90,9 +90,11 @@ export class AuthService {
     return this.googleSignInService.getGoogleServiceEnabled$;
   }
 
-  private getTokenInfo(): IGetTokenResponse {
+  public getTokenInfo(): IGetTokenResponse {
     const authInfo: string = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
-    if (!authInfo) return null;
+    if (!authInfo) {
+      return null;
+    }
     return JSON.parse(authInfo);
   }
 }

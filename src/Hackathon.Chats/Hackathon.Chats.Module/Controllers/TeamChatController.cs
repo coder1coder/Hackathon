@@ -27,7 +27,7 @@ public class TeamChatController: BaseController
     /// <param name="newTeamChatMessage"></param>
     [HttpPost("send")]
     public Task Send([FromBody] NewTeamChatMessage newTeamChatMessage)
-        => GetResult(() =>_teamChatService.SendAsync(AuthorizedUserId, newTeamChatMessage));
+        => GetResult(() =>_teamChatService.SendMessageAsync(AuthorizedUserId, newTeamChatMessage));
 
     /// <summary>
     /// Получить сообщение чата команды по идентификатору

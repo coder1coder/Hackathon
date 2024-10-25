@@ -67,7 +67,7 @@ public class EventChatApiTests: BaseIntegrationTest
             Status = EventStatus.Started
         });
 
-        var newMessage = new NewEventChatMessage
+        var newMessage = new NewEventChatMessageModel
         {
             Message = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id,

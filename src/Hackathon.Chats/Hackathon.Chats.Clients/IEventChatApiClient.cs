@@ -13,7 +13,7 @@ public interface IEventChatApiClient
     /// </summary>
     /// <param name="newEventChatMessage"></param>
     [Post(BaseRoute + "/send")]
-    Task SendAsync([Body] NewEventChatMessage newEventChatMessage);
+    Task SendAsync([Body] NewEventChatMessageModel newEventChatMessage);
 
     /// <summary>
     /// Получить список сообщений чата команды

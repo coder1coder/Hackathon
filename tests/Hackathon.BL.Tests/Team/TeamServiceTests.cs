@@ -13,6 +13,7 @@ using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Teams;
+using Hackathon.Infrastructure;
 using Moq;
 using Xunit;
 
@@ -27,6 +28,7 @@ public class TeamServiceTests : BaseUnitTest
     private readonly Mock<IEventRepository> _eventRepositoryMock;
     private readonly Mock<IProjectRepository> _projectRepositoryMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IMessageBusService> _messageBusServiceMock;
 
     public TeamServiceTests()
     {
@@ -37,6 +39,7 @@ public class TeamServiceTests : BaseUnitTest
         _teamAddMemberValidatorMock = new Mock<IValidator<TeamMemberModel>>();
         _getFilterModelValidatorMock = new Mock<IValidator<GetListParameters<TeamFilter>>>();
         _userRepositoryMock = new Mock<IUserRepository>();
+        _messageBusServiceMock = new Mock<IMessageBusService>();
     }
 
     [Fact]
@@ -55,7 +58,8 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            _userRepositoryMock.Object);
+            _userRepositoryMock.Object,
+            _messageBusServiceMock.Object);
 
         //act
         var teamCreateResult = await service.CreateAsync(new CreateTeamModel());
@@ -95,7 +99,8 @@ public class TeamServiceTests : BaseUnitTest
             _teamRepositoryMock.Object,
             _eventRepositoryMock.Object,
             _projectRepositoryMock.Object,
-            _userRepositoryMock.Object);
+            _userRepositoryMock.Object,
+            _messageBusServiceMock.Object);
 
         //act
         var result = await service.GetListAsync(new GetListParameters<TeamFilter>

@@ -1,7 +1,6 @@
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.DAL.Entities;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -115,7 +114,7 @@ public class TeamRepository : ITeamRepository
             if (parameters.Filter.MemberId.HasValue)
             {
                 query = query.Where(x=>
-                    x.OwnerId != null && (x.OwnerId == parameters.Filter.MemberId || x.Members.Any(s => s.MemberId == parameters.Filter.MemberId)));
+                    x.OwnerId == parameters.Filter.MemberId || x.Members.Any(s => s.MemberId == parameters.Filter.MemberId));
             }
 
             if (parameters.Filter.TeamType.HasValue)
@@ -272,6 +271,14 @@ public class TeamRepository : ITeamRepository
                 && (!excludeMemberId.HasValue || x.MemberId == excludeMemberId))
             .Select(x=>x.MemberId)
             .ToArrayAsync();
+
+    public Task<long[]> GetUserTeamIdsAsync(long userId)
+    {
+        return _dbContext.TeamMembers
+            .Where(x => x.MemberId == userId && !x.Team.IsDeleted)
+            .Select(x => x.TeamId)
+            .ToArrayAsync();
+    }
 
     private static Expression<Func<TeamEntity, object>> ResolveOrderFieldExpression(PaginationSort parameters)
         => parameters.SortBy switch

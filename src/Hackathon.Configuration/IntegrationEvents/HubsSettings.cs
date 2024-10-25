@@ -13,7 +13,7 @@ public class HubsSettings
     /// <summary>
     /// Чаты
     /// </summary>
-    public string Chat { get; set; }
+    public HubsChatSettings Chats { get; set; }
     
     /// <summary>
     /// Дружба

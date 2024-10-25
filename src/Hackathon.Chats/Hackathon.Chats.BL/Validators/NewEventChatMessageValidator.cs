@@ -10,7 +10,7 @@ using Hackathon.Common.Models.Event;
 
 namespace Hackathon.Chats.BL.Validators;
 
-public class NewEventChatMessageValidator: IValidator<NewEventChatMessage>
+public class NewEventChatMessageValidator: IValidator<NewEventChatMessageModel>
 {
     private readonly FluentValidation.IValidator<INewChatMessage> _modelValidator;
     private readonly IEventRepository _eventRepository;
@@ -21,7 +21,7 @@ public class NewEventChatMessageValidator: IValidator<NewEventChatMessage>
         _eventRepository = eventRepository;
     }
 
-    public async Task<Result> ValidateAsync(NewEventChatMessage message, long? authorizedUserId = null)
+    public async Task<Result> ValidateAsync(NewEventChatMessageModel message, long? authorizedUserId = null)
     {
         var validationResult = await _modelValidator.ValidateAsync(message);
 

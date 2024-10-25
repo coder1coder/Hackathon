@@ -1,9 +1,11 @@
 using Hackathon.DAL.Mappings;
 using Mapster;
 using MapsterMapper;
+using Xunit;
 
 namespace Hackathon.BL.Tests;
 
+[Trait("Category","Unit")]
 public abstract class BaseUnitTest
 {
     protected readonly Mapper Mapper;

@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  public title = 'Hackathon.UI';
+  public title : string = 'Hackathon.UI';
 
   constructor(
     private signalRService: SignalRService,
@@ -17,7 +17,8 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.signalRService.initSignalR(environment.hubs.chat);
+    this.signalRService.initSignalR(environment.hubs.chats.events);
+    this.signalRService.initSignalR(environment.hubs.chats.teams);
     this.signalRService.initSignalR(environment.hubs.notification);
     this.signalRService.initSignalR(environment.hubs.friendship);
     this.signalRService.initSignalR(environment.hubs.event);

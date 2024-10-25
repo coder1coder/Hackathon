@@ -21,6 +21,13 @@ services:
     ports:
       - "5676:5672"
       - "15676:15672"
+        
+  caching-service:
+    container_name: hackathon_redis
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "9379:6379"
 
   minio:
     container_name: hackathon_minio

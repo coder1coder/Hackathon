@@ -10,6 +10,11 @@ export interface IEnvironment {
 interface IHubs {
   notification: string;
   friendship: string;
-  chat: string;
+  chats: IChatHubs;
   event: string;
+}
+
+interface IChatHubs {
+  events: string;
+  teams: string;
 }

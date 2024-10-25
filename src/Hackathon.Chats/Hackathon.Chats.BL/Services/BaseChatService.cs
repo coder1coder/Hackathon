@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
-using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Repositories;
 using Hackathon.Chats.Abstractions.Services;
@@ -22,19 +21,16 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>: IChatServi
     private readonly IChatRepository<TChatMessage> _repository;
 
     private readonly IUserRepository _userRepository;
-    protected readonly IChatsIntegrationEventsHub IntegrationEventsHub;
     private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
 
     protected BaseChatService(
         IChatRepository<TChatMessage> repository,
-        IChatsIntegrationEventsHub integrationEventsHub,
         IUserRepository userRepository,
         INotificationService notificationService,
         IMapper mapper)
     {
         _repository = repository;
-        IntegrationEventsHub = integrationEventsHub;
         _userRepository = userRepository;
         _notificationService = notificationService;
         _mapper = mapper;
@@ -49,11 +45,11 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>: IChatServi
         return Result<BaseCollection<TChatMessage>>.FromValue(messages);
     }
 
-    protected abstract Task<Result> ValidateAsync(TNewChatMessage message);
+    protected abstract Task<Result> ValidateNewMessageAsync(TNewChatMessage message);
 
-    protected async Task<Result> SendAsync(long ownerId, TNewChatMessage newChatMessage)
+    protected async Task<Result> SendMessageAsync(long ownerId, TNewChatMessage newChatMessage)
     {
-        var validationResult = await ValidateAsync(newChatMessage);
+        var validationResult = await ValidateNewMessageAsync(newChatMessage);
         if (!validationResult.IsSuccess)
         {
             return validationResult;
@@ -135,6 +131,8 @@ public abstract class BaseChatService<TNewChatMessage, TChatMessage>: IChatServi
         return chatMessage;
     }
 
-    Task<Result> IChatService<TNewChatMessage, TChatMessage>.SendAsync(long ownerId, TNewChatMessage newMessage)
-        => SendAsync(ownerId, newMessage);
+    Task<Result> IChatService<TNewChatMessage, TChatMessage>.SendMessageAsync(long ownerId, TNewChatMessage newMessage)
+    {
+        return SendMessageAsync(ownerId, newMessage);
+    }
 }

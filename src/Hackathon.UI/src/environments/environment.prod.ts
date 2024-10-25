@@ -5,7 +5,10 @@ export const environment: IEnvironment = {
   api: 'http://hackathon.cleannetcode.ru/api',
   hubs: {
     notification: 'http://hackathon.cleannetcode.ru/api/hubs/notifications',
-    chat: 'http://hackathon.cleannetcode.ru/api/hubs/chat',
+    chats: {
+      events: 'http://hackathon.cleannetcode.ru/api/hubs/chats/event',
+      teams: 'http://hackathon.cleannetcode.ru/api/hubs/chats/teams'
+    },
     friendship: 'http://hackathon.cleannetcode.ru/api/hubs/friendship',
     event: 'http://hackathon.cleannetcode.ru/api/hubs/events',
   },

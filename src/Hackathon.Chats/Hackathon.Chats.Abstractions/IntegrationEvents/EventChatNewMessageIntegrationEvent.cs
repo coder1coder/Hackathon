@@ -1,9 +1,8 @@
 ﻿using System;
-using Hackathon.Common.Abstraction.IntegrationEvents;
 
 namespace Hackathon.Chats.Abstractions.IntegrationEvents;
 
-public class EventChatNewMessageIntegrationEvent: IIntegrationEvent
+public class EventChatNewMessageIntegrationEvent: IEventChatIntegrationEvent
 {
     /// <summary>
     /// Идентификатор мероприятия
