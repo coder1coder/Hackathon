@@ -17,18 +17,15 @@ public class TeamChatHub: Hub, ITeamChatHub
 {
     private readonly Func<long, string> _teamGroupNameResolver = teamId => $"team-{teamId}-chat";
     
-    private readonly IHubContext<TeamChatHub> _hubContext;
     private readonly ILogger<TeamChatHub> _logger;
     private readonly ITeamRepository _teamRepository;
     private readonly IChatConnectionsProvider _connectionsProvider;
     
     public TeamChatHub(
-        IHubContext<TeamChatHub> hubContext, 
         ILogger<TeamChatHub> logger, 
         ITeamRepository teamRepository, 
         IChatConnectionsProvider connectionsProvider)
     {
-        _hubContext = hubContext;
         _logger = logger;
         _teamRepository = teamRepository;
         _connectionsProvider = connectionsProvider;
@@ -52,7 +49,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var userTeamId in userTeamIds)
         {
-            await _hubContext.Groups.AddToGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
+            await Groups.AddToGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
         }
 
         await base.OnConnectedAsync();
@@ -76,7 +73,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var userTeamId in userTeamIds)
         {
-            await _hubContext.Groups.RemoveFromGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -91,7 +88,7 @@ public class TeamChatHub: Hub, ITeamChatHub
             return;
         }
 
-        await _hubContext.Clients
+        await Clients
             .Group(_teamGroupNameResolver.Invoke(integrationEvent.TeamId))
             .SendCoreAsync(topicName, [ integrationEvent ], cancellationToken);
     }
@@ -110,7 +107,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var connectionId in connections)
         {
-            await _hubContext.Groups.AddToGroupAsync(connectionId, teamGroupName, cancellationToken);
+            await Groups.AddToGroupAsync(connectionId, teamGroupName, cancellationToken);
         }
     }
 
@@ -128,7 +125,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var connectionId in connections)
         {
-            await _hubContext.Groups.RemoveFromGroupAsync(connectionId, teamGroupName, cancellationToken);
+            await Groups.RemoveFromGroupAsync(connectionId, teamGroupName, cancellationToken);
         }
     }
 

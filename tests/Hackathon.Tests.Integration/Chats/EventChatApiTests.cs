@@ -87,4 +87,6 @@ public class EventChatApiTests: BaseIntegrationTest
         Assert.Equal(TestUser.Id, messageFromRepository.OwnerId);
         Assert.Equal(eventOwnerId, messageFromRepository.UserId);
     }
+    
+    
 }
