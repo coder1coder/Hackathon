@@ -1,5 +1,6 @@
 using Hackathon.Common.Abstraction.IntegrationEvents;
 using Hackathon.Common.Models.Event;
+using Hackathon.IntegrationEvents.Topics;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvents;
 
@@ -20,4 +21,6 @@ public sealed class EventStatusChangedIntegrationEvent: IIntegrationEvent
         EventId = eventId;
         Status = status;
     }
+
+    public string GetTopicName() => EventsTopicNames.EventStatusChanged;
 }

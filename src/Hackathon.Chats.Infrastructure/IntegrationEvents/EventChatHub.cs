@@ -79,7 +79,7 @@ public class EventChatHub: Hub, IEventChatHub
 
     public async Task SendEventAsync(IEventChatIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
     {
-        var topicName = ResolveTopicName(integrationEvent);
+        var topicName = integrationEvent.GetTopicName();
 
         if (topicName is null)
         {
@@ -125,15 +125,6 @@ public class EventChatHub: Hub, IEventChatHub
         {
             await Groups.RemoveFromGroupAsync(connectionId, groupName, cancellationToken);
         }
-    }
-    
-    private static string? ResolveTopicName(IEventChatIntegrationEvent integrationEvent)
-    {
-        return integrationEvent switch
-        {
-            EventChatNewMessageIntegrationEvent => ChatsTopicNames.EventChatNewMessage,
-            _ => null
-        };
     }
     
     public Task PublishAll(IIntegrationEvent integrationEvent)

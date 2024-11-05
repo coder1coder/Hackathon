@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Hackathon.Common.Abstraction.IntegrationEvents;
-using Hackathon.IntegrationEvents.IntegrationEvents;
-using Hackathon.IntegrationEvents.Topics;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Hackathon.IntegrationEvents.Hubs;
@@ -17,24 +15,13 @@ public class EventChangesIntegrationEventsHub: Hub, IEventChangesIntegrationEven
 
     public async Task PublishAll(IIntegrationEvent integrationEvent)
     {
-        var topicName = ResolveTopicName(integrationEvent);
+        var topicName = integrationEvent.GetTopicName();
 
         if (topicName is null)
         {
             return;
         }
 
-        await _contextHub.Clients.All.SendCoreAsync(topicName, new object[]
-        {
-            integrationEvent
-        });
+        await _contextHub.Clients.All.SendCoreAsync(topicName, [ integrationEvent ]);
     }
-    
-    private static string ResolveTopicName<T>(T integrationEvent) where T : IIntegrationEvent
-        => integrationEvent switch
-        {
-            EventStageChangedIntegrationEvent => EventsTopicNames.EventStageChanged,
-            EventStatusChangedIntegrationEvent => EventsTopicNames.EventStatusChanged,
-            _ => null
-        };
 }

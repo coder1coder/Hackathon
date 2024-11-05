@@ -1,4 +1,5 @@
 ﻿using Hackathon.Common.Abstraction.IntegrationEvents;
+using Hackathon.IntegrationEvents.Topics;
 
 namespace Hackathon.IntegrationEvents.IntegrationEvents;
 
@@ -19,4 +20,6 @@ public sealed class EventStageChangedIntegrationEvent: IIntegrationEvent
         EventId = eventId;
         EventStageId = eventStageId;
     }
+
+    public string GetTopicName() => EventsTopicNames.EventStageChanged;
 }

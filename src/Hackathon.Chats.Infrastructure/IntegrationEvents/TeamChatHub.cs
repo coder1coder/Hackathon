@@ -81,7 +81,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
     public async Task SendEventAsync(ITeamChatIntegrationEvent integrationEvent, CancellationToken cancellationToken = default)
     {
-        var topicName = ResolveTopicName(integrationEvent);
+        var topicName = integrationEvent.GetTopicName();
 
         if (topicName is null)
         {
@@ -127,15 +127,6 @@ public class TeamChatHub: Hub, ITeamChatHub
         {
             await Groups.RemoveFromGroupAsync(connectionId, teamGroupName, cancellationToken);
         }
-    }
-
-    private static string? ResolveTopicName(ITeamChatIntegrationEvent integrationEvent)
-    {
-        return integrationEvent switch
-        {
-            TeamChatNewMessageIntegrationEvent => ChatsTopicNames.TeamChatNewMessage,
-            _ => null
-        };
     }
     
     public Task PublishAll(IIntegrationEvent integrationEvent)

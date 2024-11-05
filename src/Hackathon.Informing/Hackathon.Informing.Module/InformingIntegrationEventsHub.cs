@@ -16,7 +16,7 @@ public class InformingIntegrationEventsHub: Hub, IInformingIntegrationEventsHub
 
     public async Task PublishAll(IIntegrationEvent integrationEvent)
     {
-        var topicName = ResolveTopicName(integrationEvent);
+        var topicName = integrationEvent.GetTopicName();
 
         if (topicName is null)
         {
@@ -28,11 +28,4 @@ public class InformingIntegrationEventsHub: Hub, IInformingIntegrationEventsHub
             integrationEvent
         });
     }
-
-    private static string ResolveTopicName<T>(T integrationEvent) where T : IIntegrationEvent
-        => integrationEvent switch
-        {
-            NotificationChangedIntegrationEvent => InformingTopicNames.NotificationChanged,
-            _ => null
-        };
 }

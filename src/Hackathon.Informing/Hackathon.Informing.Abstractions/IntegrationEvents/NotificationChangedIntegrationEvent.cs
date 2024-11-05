@@ -13,6 +13,8 @@ public sealed class NotificationChangedIntegrationEvent: IIntegrationEvent
         NotificationIds = notificationIds;
         Operation = operation;
     }
+
+    public string GetTopicName() => InformingTopicNames.NotificationChanged;
 }
 
 public enum NotificationChangedOperation

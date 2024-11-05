@@ -13,4 +13,6 @@ public class EventChatNewMessageIntegrationEvent: IEventChatIntegrationEvent
     /// Идентификатор сообщения
     /// </summary>
     public Guid MessageId { get; set; }
+
+    public string GetTopicName() => ChatsTopicNames.EventChatNewMessage;
 }

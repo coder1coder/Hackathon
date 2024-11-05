@@ -22,4 +22,6 @@ public sealed record TeamChatNewMessageIntegrationEvent: ITeamChatIntegrationEve
         TeamId = teamId;
         MessageId = messageId;
     }
+
+    public string GetTopicName() => ChatsTopicNames.TeamChatNewMessage;
 }
