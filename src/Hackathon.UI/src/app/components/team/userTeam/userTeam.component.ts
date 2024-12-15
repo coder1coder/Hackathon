@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'userTeam',
@@ -79,7 +80,12 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: Team) => (this.team = res),
-        error: (error) => this.errorProcessor.Process(error),
+        error: (error : HttpErrorResponse) => {
+          if (error.status !== 404) {
+            /* нет необходимости отображать пользователю сообщение об ошибке если у пользователя нет команды */
+            this.errorProcessor.Process(error)
+          }
+        },
       });
   }
 
