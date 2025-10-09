@@ -1,4 +1,4 @@
-<layout-default [title]="'Профиль'" [isLoading]="isLoading$ | async">
+<layout-default [title]="getProfileTitle()" [isLoading]="isLoading$ | async">
   <div actions *ngIf="user">
     <button *ngIf="!isEditMode && isOwner" mat-button color="primary" (click)="userEdit()">
       Редактировать

@@ -201,6 +201,13 @@ export class ProfileViewComponent
       });
   }
 
+  public getProfileTitle(): string {
+    const currentUserId: number = this.authService.getUserId();
+    return currentUserId === this.userId
+      ? 'Мой профиль'
+      : 'Профиль';
+  }
+
   private fetchData(needReload: boolean = false): void {
     this.appStateService.setIsLoadingState(true);
     this.profileUserStore
