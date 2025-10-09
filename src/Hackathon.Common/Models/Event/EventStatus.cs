@@ -8,7 +8,7 @@ public enum EventStatus
     /// <summary>
     /// Черновик
     /// </summary>
-    Draft = default,
+    Draft = 0,
 
     /// <summary>
     /// На модерации

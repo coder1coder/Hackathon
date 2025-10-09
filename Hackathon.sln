@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.IntegrationEvents
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.BL.Tests", "tests\Hackathon.BL.Tests\Hackathon.BL.Tests.csproj", "{EC21951E-D09D-48FD-9736-B9D032335C92}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.API.Jobs", "src\Hackathon.API.Jobs\Hackathon.API.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackathon.Jobs", "src\Hackathon.Jobs\Hackathon.Jobs.csproj", "{D4A8BE0A-2F85-4525-A157-911F27003BC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.BL.Validation", "src\Hackathon.BL.Validation\Hackathon.BL.Validation.csproj", "{BC5596A8-41DD-4C25-BC00-93B23853CFAE}"
 EndProject
@@ -67,8 +67,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.BL", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.DAL", "src\Hackathon.FileStorage\Hackathon.FileStorage.DAL\Hackathon.FileStorage.DAL.csproj", "{ED71C4A0-89A9-4BEB-972F-111E3579974E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Jobs", "src\Hackathon.FileStorage\Hackathon.FileStorage.Jobs\Hackathon.FileStorage.Jobs.csproj", "{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Configuration", "src\Hackathon.Configuration\Hackathon.Configuration.csproj", "{77CEA7C6-054F-4E27-8E7E-D8ED09F7D8C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.FileStorage.Configuration", "src\Hackathon.FileStorage\Hackathon.FileStorage.Configuration\Hackathon.FileStorage.Configuration.csproj", "{4C66C493-D559-47A2-AE73-2DB3AF98A67F}"
@@ -89,7 +87,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Clients", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Infrastructure", "src\Hackathon.Infrastructure\Hackathon.Infrastructure.csproj", "{B48FEDAD-3E2E-41E9-8392-07A87496AB55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Cache", "src\Hackathon.Cache\Hackathon.Cache.csproj", "{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Caching", "src\Hackathon.Caching\Hackathon.Caching.csproj", "{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Infrastructure", "src\Hackathon.Chats.Infrastructure\Hackathon.Chats.Infrastructure.csproj", "{ABC279AF-69BB-419A-9F2F-262168780719}"
 EndProject
@@ -207,10 +205,6 @@ Global
 		{ED71C4A0-89A9-4BEB-972F-111E3579974E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED71C4A0-89A9-4BEB-972F-111E3579974E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED71C4A0-89A9-4BEB-972F-111E3579974E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A63910D1-13A2-4DE4-8201-BE4632DD7A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77CEA7C6-054F-4E27-8E7E-D8ED09F7D8C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77CEA7C6-054F-4E27-8E7E-D8ED09F7D8C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CEA7C6-054F-4E27-8E7E-D8ED09F7D8C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -277,7 +271,6 @@ Global
 		{03635FA1-E1C1-4484-8491-5AD45D2A7673} = {B160DE3F-ABE1-4EA7-96AA-9733918872F3}
 		{EF3EDC8D-8C11-4136-8521-DEA2B51FEF47} = {B160DE3F-ABE1-4EA7-96AA-9733918872F3}
 		{ED71C4A0-89A9-4BEB-972F-111E3579974E} = {B160DE3F-ABE1-4EA7-96AA-9733918872F3}
-		{A63910D1-13A2-4DE4-8201-BE4632DD7A0B} = {B160DE3F-ABE1-4EA7-96AA-9733918872F3}
 		{4C66C493-D559-47A2-AE73-2DB3AF98A67F} = {B160DE3F-ABE1-4EA7-96AA-9733918872F3}
 		{33EEED3F-4738-42B3-BA1F-D80B4A9507B8} = {5E3511CE-5696-46E9-890D-DDFF46D36C5D}
 		{FC931D6C-A350-471D-9217-06C368FA58F6} = {5E3511CE-5696-46E9-890D-DDFF46D36C5D}

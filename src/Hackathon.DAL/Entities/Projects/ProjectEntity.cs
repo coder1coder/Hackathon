@@ -42,7 +42,7 @@ public class ProjectEntity
     /// <summary>
     /// Идентификаторы файлов проекта
     /// </summary>
-    public Guid[] FileIds { get; set; } = Array.Empty<Guid>();
+    public Guid[] FileIds { get; set; } = [];
 
     /// <summary>
     /// Ссылка на ветку Git-репозитория

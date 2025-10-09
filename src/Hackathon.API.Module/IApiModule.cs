@@ -9,14 +9,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.API.Module;
 
+/// <summary>
+/// Модуль API.
+/// </summary>
 public interface IApiModule
 {
     IList<Func<IServiceProvider, DbContext>> RegisteredDbContextFactories { get; }
 
     /// <summary>
-    /// Сборка с консьюмерами
+    /// Сборка с подписчиками.
     /// </summary>
-    /// <returns>NULL в случае, если модуль не содержит консьюмеров</returns>
+    /// <returns>NULL в случае, если модуль не содержит подписчиков.</returns>
     Assembly ConsumersAssembly { get; }
 
     void ConfigureServices(IServiceCollection serviceCollection, IConfiguration configuration);

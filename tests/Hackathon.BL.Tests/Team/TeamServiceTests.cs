@@ -88,7 +88,7 @@ public class TeamServiceTests : BaseUnitTest
                     && s.Filter.Ids.Length == 1 )))
             .ReturnsAsync(new BaseCollection<TeamModel>
             {
-                Items = new []{fakeTeams.First()},
+                Items = [fakeTeams.First()],
                 TotalCount = fakeTeams.Length
             });
 
@@ -107,7 +107,7 @@ public class TeamServiceTests : BaseUnitTest
         {
             Filter = new TeamFilter
             {
-                Ids = new [] {fakeTeams.First().Id}
+                Ids = [fakeTeams.First().Id]
             }
         });
 

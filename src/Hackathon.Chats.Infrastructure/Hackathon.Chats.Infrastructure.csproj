@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Hackathon.Chats\Hackathon.Chats.Abstractions\Hackathon.Chats.Abstractions.csproj" />
-      <ProjectReference Include="..\Hackathon.Cache\Hackathon.Cache.csproj" />
+      <ProjectReference Include="..\Hackathon.Caching\Hackathon.Caching.csproj" />
     </ItemGroup>
 
 </Project>

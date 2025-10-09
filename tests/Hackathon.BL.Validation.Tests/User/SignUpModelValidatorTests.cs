@@ -22,7 +22,7 @@ public class SignUpModelValidatorTests
     {
         _restrictedNames = new RestrictedNames
         {
-            Users = new[] {"administrator", "admin"}
+            Users = ["administrator", "admin"]
         };
 
         _validator = new SignUpModelValidator(_userRepositoryMock.Object, new OptionsWrapper<RestrictedNames>(_restrictedNames));

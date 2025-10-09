@@ -8,5 +8,5 @@ public sealed class RestrictedNames
     /// <summary>
     /// Запрещенные наименования пользователей
     /// </summary>
-    public string[] Users { get; set; } = System.Array.Empty<string>();
+    public string[] Users { get; set; } = [];
 }

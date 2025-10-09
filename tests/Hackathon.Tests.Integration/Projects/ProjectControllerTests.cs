@@ -73,14 +73,14 @@ public class ProjectControllerTests : BaseIntegrationTest
         //act
         await ProjectsApiClient.CreateAsync(new ProjectCreateRequest
         {
-            TeamId = temporaryTeamByUserId?.Id ?? default,
+            TeamId = temporaryTeamByUserId?.Id ?? 0,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
         });
 
         //assert
-        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? default);
+        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? 0);
         Assert.NotNull(project);
     }
 
@@ -138,7 +138,7 @@ public class ProjectControllerTests : BaseIntegrationTest
 
         var createParameters = new ProjectCreateRequest
         {
-            TeamId = temporaryTeamByUserId?.Id ?? default,
+            TeamId = temporaryTeamByUserId?.Id ?? 0,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
@@ -150,7 +150,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         var updateParameters = new ProjectUpdateParameters
         {
             EventId = createEventResponse.Id,
-            TeamId = temporaryTeamByUserId?.Id ?? default,
+            TeamId = temporaryTeamByUserId?.Id ?? 0,
             Description = Guid.NewGuid().ToString(),
             Name = Guid.NewGuid().ToString()
         };
@@ -158,7 +158,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         await ProjectsApiClient.UpdateAsync(updateParameters);
 
         //assert
-        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? default);
+        var project = await ProjectsApiClient.GetAsync(createEventResponse.Id, temporaryTeamByUserId?.Id ?? 0);
 
         project.Name.Should().Be(updateParameters.Name);
         project.Description.Should().Be(updateParameters.Description);
@@ -218,7 +218,7 @@ public class ProjectControllerTests : BaseIntegrationTest
 
         var createParameters = new ProjectCreateRequest
         {
-            TeamId = temporaryTeamByUserId?.Id ?? default,
+            TeamId = temporaryTeamByUserId?.Id ?? 0,
             Name = Guid.NewGuid().ToString()[..8],
             Description = Guid.NewGuid().ToString(),
             EventId = createEventResponse.Id
@@ -230,7 +230,7 @@ public class ProjectControllerTests : BaseIntegrationTest
         var updateProjectRequest = new UpdateProjectFromGitBranchRequest
         {
             EventId = createEventResponse.Id,
-            TeamId = temporaryTeamByUserId?.Id ?? default,
+            TeamId = temporaryTeamByUserId?.Id ?? 0,
             LinkToGitBranch = "https://github.com/coder1coder/Backend.Tools/tree/develop"
         };
 

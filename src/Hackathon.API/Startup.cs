@@ -10,7 +10,6 @@ using Hackathon.API.Extensions;
 using Hackathon.API.Module;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
-using Hackathon.Cache;
 using Hackathon.Common.Models.Users;
 using Hackathon.Configuration;
 using Hackathon.Configuration.Auth;
@@ -75,10 +74,9 @@ public class Startup
         var config = new TypeAdapterConfig();
 
         var solutionAssemblies = _modules.Select(x => x.GetType().Assembly).ToList();
-        solutionAssemblies.AddRange(new []
-        {
+        solutionAssemblies.AddRange([
             typeof(EventMapping).Assembly
-        });
+        ]);
         var solutionAssembliesArray = solutionAssemblies.ToArray();
         
         config.Scan(solutionAssembliesArray);

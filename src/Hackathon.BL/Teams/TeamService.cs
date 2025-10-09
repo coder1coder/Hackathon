@@ -226,7 +226,7 @@ public class TeamService : ITeamService
         {
             Filter = new EventFilter
             {
-                TeamsIds = new[] { teamId }
+                TeamsIds = [teamId]
             },
             Limit = paginationSort.Limit
         });
@@ -247,7 +247,7 @@ public class TeamService : ITeamService
             Filter = new ProjectFilter
             {
                 EventsIds = eventsIds,
-                TeamsIds = new []{ teamId }
+                TeamsIds = [teamId]
             },
             Limit = eventsIds.Length,
             Offset = 0,

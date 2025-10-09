@@ -3,7 +3,6 @@ using BackendTools.Common.Models;
 using Hackathon.BL.Validation.Users;
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Abstraction.User;
-using Hackathon.Common.Messages;
 using Hackathon.Common.Messages.Teams;
 using Hackathon.Common.Models.Teams;
 using Hackathon.Infrastructure;

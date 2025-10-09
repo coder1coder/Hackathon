@@ -1,5 +1,4 @@
 using System.Linq;
-using Hackathon.DAL.Entities;
 using Mapster;
 using System.Collections.Generic;
 using Hackathon.Common.Models.Teams;

@@ -79,7 +79,7 @@ public class EventServiceTests: BaseUnitTest
         //act
         var result = await _service.CreateAsync(Random.Shared.Next(1, 10), new EventCreateParameters
         {
-            Stages = new List<EventStageModel>()
+            Stages = []
         });
 
         //assert
@@ -97,7 +97,7 @@ public class EventServiceTests: BaseUnitTest
         var eventCreateParameters = new EventCreateParameters
         {
             ImageId = imageId,
-            Stages = new List<EventStageModel>()
+            Stages = []
         };
 
         _eventRepositoryMock.Setup(x => x.CreateAsync(eventCreateParameters))

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using Hackathon.API.Module;
-using Hackathon.Cache;
+using Hackathon.Caching;
 using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Models.Events;

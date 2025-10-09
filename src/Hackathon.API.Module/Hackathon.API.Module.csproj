@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
-
     <ItemGroup>
       <PackageReference Include="Backend.Tools.Common" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     </ItemGroup>
 
     <ItemGroup>

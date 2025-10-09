@@ -9,7 +9,7 @@ namespace Hackathon.FileStorage.BL.Validators;
 
 public class FileImageValidator : AbstractValidator<IFileImage>
 {
-    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png" };
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png"];
 
     public const int MinWidthProfileImage = 150;
     public const int MinHeightProfileImage = 150;

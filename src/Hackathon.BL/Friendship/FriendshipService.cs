@@ -68,7 +68,7 @@ public class FriendshipService: IFriendshipService
                     userId, proposerId));
 
             await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-                new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                new FriendshipChangedIntegrationEvent([proposerId, userId]));
 
             return Result.Success;
         }
@@ -89,7 +89,7 @@ public class FriendshipService: IFriendshipService
                             userId, proposerId));
 
                     await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-                        new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                        new FriendshipChangedIntegrationEvent([proposerId, userId]));
 
                     break;
                 case FriendshipStatus.Confirmed:
@@ -111,7 +111,7 @@ public class FriendshipService: IFriendshipService
                     userId, proposerId));
 
                 await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-                    new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+                    new FriendshipChangedIntegrationEvent([proposerId, userId]));
             }
         }
 
@@ -139,7 +139,7 @@ public class FriendshipService: IFriendshipService
             .System(new SystemNotificationData($"{user} отклонил предложение дружбы"), userId));
 
         await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-            new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+            new FriendshipChangedIntegrationEvent([proposerId, userId]));
 
         return Result.Success;
     }
@@ -155,7 +155,7 @@ public class FriendshipService: IFriendshipService
         await _friendshipRepository.RemoveOfferAsync(proposerId, userId);
 
         await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-            new FriendshipChangedIntegrationEvent(new []{ proposerId, userId }));
+            new FriendshipChangedIntegrationEvent([proposerId, userId]));
 
         return Result.Success;
     }
@@ -177,7 +177,7 @@ public class FriendshipService: IFriendshipService
         });
 
         await _integrationEventsHub.PublishAll(TopicNames.FriendshipChanged,
-            new FriendshipChangedIntegrationEvent(new []{ firstUserId, secondUserId }));
+            new FriendshipChangedIntegrationEvent([firstUserId, secondUserId]));
 
         return Result.Success;
     }

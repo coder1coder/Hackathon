@@ -24,8 +24,8 @@ public class InformingApiModule: ApiModule
         serviceCollection.AddSingleton(new SmtpClient
         {
             Host = emailSettings.EmailSender?.Server,
-            Port = emailSettings.EmailSender?.Port ?? default,
-            EnableSsl = emailSettings.EmailSender?.EnableSsl ?? default,
+            Port = emailSettings.EmailSender?.Port ?? 0,
+            EnableSsl = emailSettings.EmailSender?.EnableSsl ?? false,
             UseDefaultCredentials = false,
             DeliveryMethod = SmtpDeliveryMethod.Network,
             Credentials = new NetworkCredential(

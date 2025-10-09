@@ -21,7 +21,7 @@ public class MigrationsTool
 
         var dataSettings = scope.ServiceProvider.GetRequiredService<IOptions<DataSettings>>();
 
-        if (dataSettings?.Value?.ApplyMigrationsAtStart != true)
+        if (dataSettings?.Value.ApplyMigrationsAtStart != true)
         {
             return;
         }
@@ -30,9 +30,10 @@ public class MigrationsTool
 
         try
         {
-            var dbContexts = new List<DbContext>();
+            
             var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            dbContexts.Add(applicationDbContext);
+            
+            var dbContexts = new List<DbContext>{ applicationDbContext };
 
             if (apiModules is { Count: > 0 })
             {

@@ -45,7 +45,7 @@ public class UserServiceTests: BaseUnitTest
         _userRepositoryMock.Setup(x => x.GetAsync(It.IsAny<GetListParameters<UserFilter>>()))
             .ReturnsAsync(new BaseCollection<UserModel>
             {
-                Items = new[] {fakeUser},
+                Items = [fakeUser],
                 TotalCount = 1
             });
 

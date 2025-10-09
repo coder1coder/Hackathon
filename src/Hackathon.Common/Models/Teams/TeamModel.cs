@@ -12,7 +12,7 @@ public class TeamModel
 
     public long Id { get; set; }
     public string Name { get; set; }
-    public TeamMember[] Members { get; set; } = Array.Empty<TeamMember>();
+    public TeamMember[] Members { get; set; } = [];
     public TeamMember Owner { get; set; }
     public long? OwnerId { get; set; }
 

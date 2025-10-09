@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Hackathon.Common.Messages;
 using Hackathon.Common.Messages.Events;
 using Hackathon.Logbook.Abstraction.Models;
 using Hackathon.Logbook.Abstraction.Services;

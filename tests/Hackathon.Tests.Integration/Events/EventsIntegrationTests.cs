@@ -224,7 +224,7 @@ public class EventsIntegrationTests : BaseIntegrationTest
                 options.Excluding(x=>x.EventId)
                     .Excluding(x=>x.Event));
 
-        Assert.True(eventCreationResponse.Content.Agreement.EventId > default(long));
+        Assert.True(eventCreationResponse.Content.Agreement.EventId > 0);
     }
 
     [Fact(DisplayName = "Обновление карточки мероприятия не владельцем")]

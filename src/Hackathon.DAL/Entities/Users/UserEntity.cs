@@ -55,7 +55,7 @@ public class UserEntity: BaseEntity, ISoftDeletable
     /// <summary>
     /// Команды в которых участвует пользователь
     /// </summary>
-    public List<MemberTeamEntity> Teams { get; set; } = new ();
+    public List<MemberTeamEntity> Teams { get; set; } = [];
 
     /// <summary>
     /// Запросы на вступление в команду

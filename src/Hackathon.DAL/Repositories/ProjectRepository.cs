@@ -7,7 +7,6 @@ using Hackathon.Common.Abstraction.Project;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
 using Hackathon.Common.Models.Projects;
-using Hackathon.DAL.Entities;
 using Hackathon.DAL.Entities.Projects;
 using Hackathon.DAL.Extensions;
 using MapsterMapper;

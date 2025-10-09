@@ -14,7 +14,7 @@ namespace Hackathon.API.Module;
 [Authorize]
 public abstract class BaseController: ControllerBase
 {
-    protected long AuthorizedUserId => User.GetUserId() ?? default;
+    protected long AuthorizedUserId => User.GetUserId() ?? 0;
 
     protected static Task<IActionResult> GetResult<TResult>(Func<Task<Result<TResult>>> action, HttpStatusCode successStatusCode = HttpStatusCode.OK)
         => GetResult(action, result => result, successStatusCode);

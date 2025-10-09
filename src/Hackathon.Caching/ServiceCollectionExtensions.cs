@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace Hackathon.Cache;
+namespace Hackathon.Caching;
 
 public static class ServiceCollectionExtensions
 {

@@ -251,7 +251,7 @@ public class TeamRepository : ITeamRepository
 
         if (teamEntity is null)
         {
-            return default;
+            return 0;
         }
 
         var teamMembers = teamEntity.Members.Count;

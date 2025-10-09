@@ -49,7 +49,7 @@ public class ProjectServiceTests: BaseUnitTest
             .ReturnsAsync(Result.Success);
 
         //act
-        var result = await service.CreateAsync(default, new ProjectCreationParameters());
+        var result = await service.CreateAsync(0, new ProjectCreationParameters());
 
         //assert
         Assert.NotNull(result);

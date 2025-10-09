@@ -8,11 +8,11 @@ public class ProjectIdentityParametersValidator: AbstractValidator<IHasProjectId
     public ProjectIdentityParametersValidator()
     {
         RuleFor(x => x.TeamId)
-            .GreaterThan(default(long))
+            .GreaterThan(0)
             .WithMessage("Идентификатор команды должен быть больше 0");
 
         RuleFor(x => x.EventId)
-            .GreaterThan(default(long))
+            .GreaterThan(0)
             .WithMessage("Идентификатор события должен быть больше 0");
     }
 }

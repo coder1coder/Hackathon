@@ -45,7 +45,7 @@ public abstract class BaseEventParameters
     /// <summary>
     /// Этапы события
     /// </summary>
-    public List<EventStageModel> Stages { get; set; } = new();
+    public List<EventStageModel> Stages { get; set; } = [];
 
     /// <summary>
     /// Награда, призовой фонд
@@ -61,7 +61,7 @@ public abstract class BaseEventParameters
     /// <summary>
     /// Задачи, которые ставятся перед участниками мероприятия
     /// </summary>
-    public EventTaskItem[] Tasks { get; set; } = Array.Empty<EventTaskItem>();
+    public EventTaskItem[] Tasks { get; set; } = [];
 
     /// <summary>
     /// Теги

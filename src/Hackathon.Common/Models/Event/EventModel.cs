@@ -19,7 +19,7 @@ public class EventModel : EventUpdateParameters
     /// <summary>
     /// Список команд связанных с событием
     /// </summary>
-    public List<TeamModel> Teams { get; set; } = new();
+    public List<TeamModel> Teams { get; set; } = [];
 
     /// <summary>
     /// Идентификатор текущего этапа события

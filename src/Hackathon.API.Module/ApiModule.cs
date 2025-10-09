@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hackathon.API.Module;
 
+
 public abstract class ApiModule: IApiModule
 {
     public IList<Func<IServiceProvider, DbContext>> RegisteredDbContextFactories { get; } = new List<Func<IServiceProvider, DbContext>>();

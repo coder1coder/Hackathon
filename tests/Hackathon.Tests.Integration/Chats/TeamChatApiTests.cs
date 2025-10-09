@@ -27,7 +27,7 @@ public class TeamChatApiTests: BaseIntegrationTest
             Type = TeamType.Public
         });
 
-        var teamId = createTeamResponse.Content?.Id ?? default;
+        var teamId = createTeamResponse.Content?.Id ?? 0;
 
         var newMessage = new NewTeamChatMessage
         {

@@ -132,6 +132,6 @@ public class UserProfileReactionService: IUserProfileReactionService
             }
         }
 
-        return new List<UserProfileReactionModel> { reactionLike, reactionHeart, reactionFire };
+        return [reactionLike, reactionHeart, reactionFire];
     }
 }

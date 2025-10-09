@@ -16,7 +16,7 @@ namespace Hackathon.API;
 
 public class Program
 {
-    public static readonly List<IApiModule> Modules = new();
+    public static readonly List<IApiModule> Modules = [];
 
     public static void Main(string[] args)
     {

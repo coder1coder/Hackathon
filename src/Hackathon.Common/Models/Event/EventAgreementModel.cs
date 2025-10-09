@@ -31,5 +31,5 @@ public class EventAgreementModel
     /// <summary>
     /// Пользователи принявшие соглашение об участии в мероприятии
     /// </summary>
-    public List<UserShortModel> Users { get; set; } = new();
+    public List<UserShortModel> Users { get; set; } = [];
 }

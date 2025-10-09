@@ -15,7 +15,7 @@ public class SignUpModelValidator: AbstractValidator<CreateNewUserModel>
 
     public SignUpModelValidator(IUserRepository userRepository, IOptions<RestrictedNames> restrictedNamesOptions)
     {
-        var restrictedNames = restrictedNamesOptions?.Value?.Users ?? Array.Empty<string>();
+        var restrictedNames = restrictedNamesOptions?.Value?.Users ?? [];
 
         RuleFor(x => x.UserName)
             .NotEmpty()

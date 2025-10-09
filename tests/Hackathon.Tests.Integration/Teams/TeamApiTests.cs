@@ -182,7 +182,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var user = await RegisterUser();
         SetToken(user.Token);
@@ -211,7 +211,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var user = await RegisterUser();
         SetToken(user.Token);
@@ -244,7 +244,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         const int joinRequestCount = 5;
 
@@ -285,7 +285,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var createdUser = await RegisterUser();
         SetToken(createdUser.Token);
@@ -316,7 +316,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var (userId, userToken) = await RegisterUser();
         SetToken(userToken);
@@ -346,7 +346,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Private
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var (userId, userToken) = await RegisterUser();
         SetToken(userToken);
@@ -390,7 +390,7 @@ public class TeamApiTests: BaseIntegrationTest
             Type = TeamType.Public
         });
 
-        var teamId = teamCreateResponse.Content?.Id ?? default;
+        var teamId = teamCreateResponse.Content?.Id ?? 0;
 
         var (userId, userToken) = await RegisterUser();
         SetToken(userToken);

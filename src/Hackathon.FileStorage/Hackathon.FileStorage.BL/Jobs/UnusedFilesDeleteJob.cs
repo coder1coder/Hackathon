@@ -5,7 +5,7 @@ using Hackathon.FileStorage.Abstraction.Services;
 using Hackathon.Jobs;
 using Microsoft.Extensions.Logging;
 
-namespace Hackathon.FileStorage.Jobs.Jobs;
+namespace Hackathon.FileStorage.BL.Jobs;
 
 public sealed class UnusedFilesDeleteJob : BaseBackgroundJob<UnusedFilesDeleteJob>
 {

@@ -12,7 +12,7 @@ public class EventMapping : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.ForType<IEnumerable<EventStageModel>, ICollection<EventStageEntity>>()
-            .MapCollections((s, d) => s.Id != default && s.Id == d.Id);
+            .MapCollections((s, d) => s.Id != 0 && s.Id == d.Id);
 
         config.ForType<EventCreateParameters, EventEntity>()
             .Map(x => x.Start, s => s.Start.ToUniversalTime());

@@ -25,12 +25,12 @@ public sealed class PastEventStatusUpdateJob: BaseBackgroundJob<PastEventStatusU
 
     public override async Task DoWork()
     {
-        var result = await _eventService.GetListAsync(default, new GetListParameters<EventFilter>
+        var result = await _eventService.GetListAsync(0, new GetListParameters<EventFilter>
         {
             Filter = new EventFilter
             {
                 StartTo = DateTime.UtcNow,
-                Statuses = new[] { EventStatus.Published, EventStatus.Started }
+                Statuses = [EventStatus.Published, EventStatus.Started]
             },
             Offset = 0,
             Limit = 2_000
@@ -48,7 +48,7 @@ public sealed class PastEventStatusUpdateJob: BaseBackgroundJob<PastEventStatusU
             {
                 try
                 {
-                    await _eventService.SetStatusAsync(default, eventListItem.Id, EventStatus.Finished, skipValidation: true, skipUserValidation: true);
+                    await _eventService.SetStatusAsync(0, eventListItem.Id, EventStatus.Finished, skipValidation: true, skipUserValidation: true);
                     processed++;
                 }
                 catch (Exception e)

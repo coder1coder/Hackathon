@@ -1,7 +1,7 @@
 using System;
 using Hackathon.Configuration.Jobs;
+using Hackathon.FileStorage.BL.Jobs;
 using Hackathon.FileStorage.Configuration.Jobs;
-using Hackathon.FileStorage.Jobs.Jobs;
 using Hackathon.Jobs;
 using Hackathon.Jobs.Events;
 using Microsoft.Extensions.Configuration;

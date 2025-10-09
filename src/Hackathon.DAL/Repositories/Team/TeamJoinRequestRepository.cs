@@ -1,7 +1,6 @@
 using Hackathon.Common.Abstraction.Team;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Base;
-using Hackathon.DAL.Entities;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

@@ -16,5 +16,5 @@ where TIntegrationEvent: IIntegrationEvent
     }
 
     public Task PublishAll(string topic, TIntegrationEvent message)
-        => _contextHub.Clients.All.SendCoreAsync(topic, new object[]{ message });
+        => _contextHub.Clients.All.SendCoreAsync(topic, [message]);
 }

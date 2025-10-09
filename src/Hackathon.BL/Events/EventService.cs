@@ -181,11 +181,11 @@ public class EventService : IEventService
         }
 
         parameters.Filter ??= new EventFilter();
-        parameters.Filter.ExcludeOtherUsersEventsByStatuses = new[]
-        {
+        parameters.Filter.ExcludeOtherUsersEventsByStatuses =
+        [
             EventStatus.Draft,
             EventStatus.OnModeration
-        };
+        ];
 
         var events = await _eventRepository.GetListAsync(authorizedUserId, parameters);
 
@@ -250,7 +250,7 @@ public class EventService : IEventService
 
             case EventStatus.Started:
             {
-                var initialStageId = eventModel.Stages.MinBy(x => x.Order)?.Id ?? default;
+                var initialStageId = eventModel.Stages.MinBy(x => x.Order)?.Id ?? 0;
                 
                 //TODO: далее по логике идёт запрос в БД для записи нового статуса мероприятия
                 //возможно имеет смысл параметризировать метод чтобы делать 1 запрос вместо двух
@@ -408,13 +408,13 @@ public class EventService : IEventService
     {
         var now = DateTime.UtcNow.AddTicks(-timeBeforeStart.Ticks).ToUtcWithoutSeconds();
 
-        var result = await _eventRepository.GetListAsync(default, new Common.Models.GetListParameters<EventFilter>
+        var result = await _eventRepository.GetListAsync(0, new Common.Models.GetListParameters<EventFilter>
         {
             Filter = new EventFilter
             {
                 StartFrom = now,
                 StartTo = now.AddMinutes(1),
-                Statuses = new [] {EventStatus.Published }
+                Statuses = [EventStatus.Published]
             }
         });
 

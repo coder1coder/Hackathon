@@ -26,7 +26,7 @@ public class UpdateUserModelValidator: AbstractValidator<UpdateUserParameters>
                    Filter = new UserFilter
                    {
                        Email = updateUserParameters.Email,
-                       ExcludeIds = new [] { updateUserParameters.Id }
+                       ExcludeIds = [updateUserParameters.Id]
                    },
                    Limit = 1
                });

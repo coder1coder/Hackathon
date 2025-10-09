@@ -90,7 +90,7 @@ public class ProjectService: IProjectService
                 return Result.FromErrors(uploadResult.Errors);
             }
 
-            projectUploadingFromGitInfoDto.FileIds = new[] { uploadResult.Data };
+            projectUploadingFromGitInfoDto.FileIds = [uploadResult.Data];
         }
 
         await _projectRepository.UpdateUploadingFromGitInfo(projectUploadingFromGitInfoDto);
@@ -130,7 +130,7 @@ public class ProjectService: IProjectService
         }
 
         //TODO: Ограничить права на удаление, когда будет капитан команды
-        if (authorizedUserId == default)
+        if (authorizedUserId == 0)
         {
             return Result.Forbidden("Нет прав на удаление проекта");
         }

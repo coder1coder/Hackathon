@@ -23,12 +23,12 @@ public class StartedEventStatusUpdateJob: BaseBackgroundJob<StartedEventStatusUp
 
     public override async Task DoWork()
     {
-        var result = await _eventService.GetListAsync(default, new GetListParameters<EventFilter>
+        var result = await _eventService.GetListAsync(0, new GetListParameters<EventFilter>
         {
             Filter = new EventFilter
             {
                 StartFrom = DateTime.UtcNow,
-                Statuses = new[] { EventStatus.Published }
+                Statuses = [EventStatus.Published]
             },
             Offset = 0,
             Limit = 2_000
@@ -51,7 +51,7 @@ public class StartedEventStatusUpdateJob: BaseBackgroundJob<StartedEventStatusUp
         {
             try
             {
-                var setStatusResult = await _eventService.SetStatusAsync(default, eventListItem.Id,
+                var setStatusResult = await _eventService.SetStatusAsync(0, eventListItem.Id,
                     EventStatus.Started,
                     skipUserValidation: true,
                     skipUserValidationRole: UserRole.Administrator,

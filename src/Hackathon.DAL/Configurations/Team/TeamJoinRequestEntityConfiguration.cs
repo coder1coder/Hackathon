@@ -1,4 +1,3 @@
-using Hackathon.DAL.Entities;
 using Hackathon.DAL.Entities.Teams;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

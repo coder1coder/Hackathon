@@ -23,9 +23,8 @@ public class InformingIntegrationEventsHub: Hub, IInformingIntegrationEventsHub
             return;
         }
 
-        await _contextHub.Clients.All.SendCoreAsync(topicName, new object[]
-        {
+        await _contextHub.Clients.All.SendCoreAsync(topicName, [
             integrationEvent
-        });
+        ]);
     }
 }
