@@ -3,7 +3,7 @@
   [title]="team ? 'Моя команда: ' + team?.name : 'Моя команда'"
 >
   <div actions *ngIf="team">
-    <button mat-button color="primary" (click)="routerService.Teams.List()">Найти команду</button>
+    <button mat-button color="primary" (click)="routerService.Teams.List()">Другие команды</button>
     <button mat-button color="accent" (click)="leaveTeam()">Покинуть команду</button>
   </div>
 
