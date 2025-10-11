@@ -1,8 +1,12 @@
 <layout-default [title]="'Команды'">
   <div actions>
-    <button mat-button color="primary" (click)="createNewItem()">
+    <button
+      mat-button
+      color="primary"
+      *ngIf="canCreateNewTeam"
+      (click)="createNewItem()">
       <mat-icon>add</mat-icon>
-      Добавить новую команду
+      Создать команду
     </button>
   </div>
 

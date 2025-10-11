@@ -9,6 +9,7 @@ import { TeamFilter } from 'src/app/models/Team/TeamFilter';
 import { RouterService } from '../../../services/router.service';
 import { takeUntil } from 'rxjs';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'team-list',
@@ -25,6 +26,8 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
     QuantityUsersTo: [null],
   });
 
+  public canCreateNewTeam: boolean | undefined;
+
   constructor(
     private teamsClient: TeamsClient,
     private authService: AuthService,
@@ -36,6 +39,19 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
 
   public createNewItem = (): Promise<boolean> => this.router.Teams.New();
   public getDisplayColumns = (): string[] => ['name', 'owner', 'users', 'type', 'actions'];
+
+  protected override onInit(): void {
+    this.teamsClient
+      .getMyTeam()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 404) {
+            this.canCreateNewTeam = true;
+          }
+        }
+      })
+  }
 
   public override fetch(): void {
     const teamFilterModel: TeamFilter = new TeamFilter();
