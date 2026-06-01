@@ -16,7 +16,7 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
   @Input() isFilterEnabled: boolean = true;
   @Input() applyOnChange: boolean = false;
   @Input() approvalApplications: IApprovalApplication[] = [];
-  @Output() onChanged: EventEmitter<IApprovalApplicationFilter> =
+  @Output() Changed: EventEmitter<IApprovalApplicationFilter> =
     new EventEmitter<IApprovalApplicationFilter>();
 
   public approvalApplicationStatuses = Object.keys(ApprovalApplicationStatusEnum)
@@ -32,10 +32,8 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
   }
 
   public ngOnInit(): void {
-
-    this.form.get('status').valueChanges.subscribe(value => {
-      if (this.applyOnChange)
-        this.applyFilter()
+    this.form.get('status').valueChanges.subscribe(() => {
+      if (this.applyOnChange) this.applyFilter();
     });
 
     this.applyFilter();
@@ -49,13 +47,13 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
           ? this.getFormControl('status').value
           : null,
     };
-    this.onChanged.emit(filterData);
+    this.Changed.emit(filterData);
     this.form.markAsDirty();
   }
 
   public clearFilter(): void {
     this.form.reset();
-    this.onChanged.emit({
+    this.Changed.emit({
       status: null,
     });
   }

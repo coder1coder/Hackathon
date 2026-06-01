@@ -16,8 +16,7 @@ import { BaseApiClient } from './base.client';
 @Injectable({
   providedIn: 'root',
 })
-export class EventsClient extends BaseApiClient{
-
+export class EventsClient extends BaseApiClient {
   constructor(protected http: HttpClient, private fileUploadService: FileUploadService) {
     super(http, 'event');
   }

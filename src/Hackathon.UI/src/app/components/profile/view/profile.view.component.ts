@@ -1,7 +1,7 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserRoleTranslator } from 'src/app/models/User/UserRole';
 import { AuthService } from '../../../services/auth.service';
-import {catchError, Observable, of, switchMap, takeUntil} from 'rxjs';
+import { catchError, Observable, of, switchMap, takeUntil } from 'rxjs';
 import { IUpdateUser, IUser } from '../../../models/User/IUser';
 import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/UserProfileReaction';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Team } from '../../../models/Team/Team';
 import { UserEmailStatus } from 'src/app/models/User/UserEmailStatus';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IKeyValue } from '../../../common/interfaces/key-value.interface';
 import { emailRegex } from '../../../common/patterns/email-regex';
 import { checkValue } from '../../../common/functions/check-value';
@@ -19,8 +19,8 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { AppStateService } from '../../../services/app-state.service';
-import {filter, finalize } from 'rxjs/operators';
-import {MatDialog} from "@angular/material/dialog";
+import { filter, finalize } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import { PasswordChangeDialogComponent } from '../password-change-dialog/password-change-dialog.component';
@@ -39,7 +39,9 @@ export class ProfileViewComponent
   @ViewChild(MatTabGroup) public friendshipTabs: MatTabGroup;
   @ViewChild('confirmationCodeInput') confirmationCodeInput: ElementRef;
 
-  public form = new FormGroup({});
+  private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
+  private emailRegexp: RegExp = emailRegex;
+
   public UserRoleTranslator = UserRoleTranslator;
   public userId: number;
   public user: IUser;
@@ -54,9 +56,14 @@ export class ProfileViewComponent
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
   public userProfileReactionsList: IUserProfileReaction[] = [];
-
-  private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
-  private emailRegexp: RegExp = emailRegex;
+  public form = new FormGroup({
+    fullName: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100),
+    ]),
+    email: new FormControl(null, [Validators.required, Validators.pattern(this.emailRegexp)]),
+  });
 
   constructor(
     private authService: AuthService,
@@ -70,7 +77,7 @@ export class ProfileViewComponent
     private currentUserStore: CurrentUserStore,
     private appStateService: AppStateService,
     private dialogService: MatDialog,
-    private errorProcessor: ErrorProcessorService
+    private errorProcessor: ErrorProcessorService,
   ) {
     super();
     this.usersClient = usersClient;
@@ -99,15 +106,17 @@ export class ProfileViewComponent
   public userEdit(): void {
     this.isEditMode = true;
     if (this.user) {
+      // @ts-ignore
       this.form.setValue(this.mapUserValue(this.user));
     }
   }
 
-  public canChangePassword():boolean{
+  public canChangePassword(): boolean {
     return !this.isEditMode && this.isOwner && !this.user.googleAccount;
   }
 
   public saveUserEdit(): void {
+    // @ts-ignore
     const request: IUpdateUser = {
       id: this.userId,
       ...this.form.getRawValue(),
@@ -192,20 +201,19 @@ export class ProfileViewComponent
       .pipe(
         filter((parameters: IUpdatePasswordParameters) => parameters !== undefined),
         switchMap((parameters: IUpdatePasswordParameters) =>
-          this.usersClient.updatePassword(parameters)),
+          this.usersClient.updatePassword(parameters),
+        ),
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: () => this.snackService.open("Пароль успешно изменен"),
+        next: () => this.snackService.open('Пароль успешно изменен'),
         error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 
   public getProfileTitle(): string {
     const currentUserId: number = this.authService.getUserId();
-    return currentUserId === this.userId
-      ? 'Мой профиль'
-      : 'Профиль';
+    return currentUserId === this.userId ? 'Мой профиль' : 'Профиль';
   }
 
   private fetchData(needReload: boolean = false): void {

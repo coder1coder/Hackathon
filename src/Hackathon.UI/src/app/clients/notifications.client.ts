@@ -11,7 +11,6 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class NotificationsClient extends BaseApiClient {
-
   constructor(protected http: HttpClient) {
     super(http, 'notification');
   }

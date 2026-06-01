@@ -12,7 +12,6 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class FriendshipClient extends BaseApiClient {
-
   constructor(protected http: HttpClient) {
     super(http, 'friendship');
   }

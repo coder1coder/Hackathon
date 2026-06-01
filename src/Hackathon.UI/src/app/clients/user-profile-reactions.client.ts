@@ -8,7 +8,6 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class UserProfileReactionsClient extends BaseApiClient {
-
   constructor(protected http: HttpClient) {
     super(http, null);
   }
@@ -28,7 +27,10 @@ export class UserProfileReactionsClient extends BaseApiClient {
       switchMap((r: UserProfileReaction) => {
         return (r & reaction) === reaction
           ? this.http.delete<void>(`${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`)
-          : this.http.post<void>(`${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`, null);
+          : this.http.post<void>(
+              `${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`,
+              null,
+            );
       }),
     );
   }

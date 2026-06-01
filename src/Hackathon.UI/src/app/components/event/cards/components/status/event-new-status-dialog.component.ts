@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { EventStatusTranslator, EventStatus } from '../../../../../models/Event/EventStatus';
@@ -13,7 +13,10 @@ export class EventNewStatusDialogComponent implements OnInit {
   public statuses: EventStatus[] = [];
   public selectedStatusValue!: number;
   public EventStatusTranslator = EventStatusTranslator;
-  public form = new FormGroup({});
+  public form = new FormGroup({
+    status: new FormControl(undefined),
+    message: new FormControl(undefined),
+  });
 
   private editStatus?: ChangeEventStatusMessage;
 

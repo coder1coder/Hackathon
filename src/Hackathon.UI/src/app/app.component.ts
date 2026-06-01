@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  public title : string = 'Hackathon.UI';
+  public title: string = 'Hackathon.UI';
 
   constructor(
     private signalRService: SignalRService,

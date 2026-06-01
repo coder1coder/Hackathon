@@ -80,10 +80,10 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: Team) => (this.team = res),
-        error: (error : HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           if (error.status !== 404) {
             /* нет необходимости отображать пользователю сообщение об ошибке если у пользователя нет команды */
-            this.errorProcessor.Process(error)
+            this.errorProcessor.Process(error);
           }
         },
       });

@@ -12,7 +12,7 @@ export abstract class BaseTableListComponent<T> implements OnInit, OnDestroy {
   public abstract getDisplayColumns(): string[];
   public abstract rowClick(item: T): any;
   public abstract fetch(getFilterModel?: GetListParameters<T>): any;
-  protected onInit(): void {};
+  protected onInit(): void {}
 
   protected destroy$ = new Subject();
   private readonly componentName: string | undefined;

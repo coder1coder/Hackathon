@@ -72,9 +72,11 @@ export class EventListComponent implements OnInit {
   public statusesToggleAll(event: any): void {
     if (event.target.tag == 0 || event.target.tag == undefined) {
       const all: string[] | number[] = this.statusesSelect?.options.map((x) => x.value);
+      // @ts-ignore
       this.filterForm.controls['statuses'].patchValue(all);
       event.target.tag = 1;
     } else {
+      // @ts-ignore
       this.filterForm.controls['statuses'].patchValue([]);
       event.target.tag = 0;
     }
@@ -82,6 +84,7 @@ export class EventListComponent implements OnInit {
 
   public clearFilter(): void {
     this.filterForm.reset();
+    // @ts-ignore
     this.filterForm.controls['statuses'].patchValue([]);
     this.eventList = {
       items: [],
@@ -123,6 +126,7 @@ export class EventListComponent implements OnInit {
   }
 
   private initFormFilter(): void {
+    // @ts-ignore
     this.filterForm = this.fb.group({
       name: [null],
       startFrom: [null],
@@ -140,20 +144,29 @@ export class EventListComponent implements OnInit {
     }
     this.params.SortBy = 'name';
     this.params.Filter = new EventFilter();
+    // @ts-ignore
     this.params.Filter.name = this.filterForm.controls['name'].value
-      ? this.filterForm.controls['name'].value
+      ? // @ts-ignore
+        this.filterForm.controls['name'].value
       : null;
+    // @ts-ignore
     this.params.Filter.startFrom = this.filterForm.controls['startFrom'].value
-      ? this.filterForm.controls['startFrom'].value
+      ? // @ts-ignore
+        this.filterForm.controls['startFrom'].value
       : null;
+    // @ts-ignore
     this.params.Filter.startTo = this.filterForm.controls['startTo'].value
-      ? this.filterForm.controls['startTo'].value
+      ? // @ts-ignore
+        this.filterForm.controls['startTo'].value
       : null;
+    // @ts-ignore
     this.params.Filter.statuses = this.filterForm.controls['statuses'].value?.length
-      ? this.filterForm.controls['statuses'].value
+      ? // @ts-ignore
+        this.filterForm.controls['statuses'].value
       : null;
     this.params.Filter.excludeOtherUsersDraftedEvents = true;
 
+    // @ts-ignore
     if (this.filterForm.value.iAmOwner) {
       const userId: number = this.authService.getUserId();
       if (userId) this.params.Filter.ownerIds = [userId];

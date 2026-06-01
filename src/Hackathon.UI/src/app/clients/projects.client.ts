@@ -9,7 +9,6 @@ import { IProjectUpdateFromGitBranch } from '../models/Project/IProjectUpdateFro
   providedIn: 'root',
 })
 export class ProjectsClient extends BaseApiClient {
-
   protected constructor(http: HttpClient) {
     super(http, 'project');
   }

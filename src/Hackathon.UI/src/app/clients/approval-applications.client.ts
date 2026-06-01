@@ -12,8 +12,7 @@ import { BaseApiClient } from './base.client';
 @Injectable({
   providedIn: 'root',
 })
-export class ApprovalApplicationsClient extends BaseApiClient{
-
+export class ApprovalApplicationsClient extends BaseApiClient {
   constructor(http: HttpClient) {
     super(http, 'approvalapplications');
   }
@@ -25,10 +24,7 @@ export class ApprovalApplicationsClient extends BaseApiClient{
   public getApprovalApplicationList(
     params?: GetListParameters<IApprovalApplicationFilter>,
   ): Observable<BaseCollection<IApprovalApplication>> {
-    return this.http.post<BaseCollection<IApprovalApplication>>(
-      `${this.baseRoute}/list`,
-      params,
-    );
+    return this.http.post<BaseCollection<IApprovalApplication>>(`${this.baseRoute}/list`, params);
   }
 
   /** Получить заявку на согласование по идентификатору заявки

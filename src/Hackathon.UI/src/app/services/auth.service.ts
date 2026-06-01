@@ -71,7 +71,7 @@ export class AuthService {
   public loginByGoogle(googleUserModel: GoogleUser): Observable<IGetTokenResponse> {
     return this.http
       .post<IGetTokenResponse>(this.api + '/Auth/SignInByGoogle', {
-        AccessToken: googleUserModel.TokenId
+        AccessToken: googleUserModel.TokenId,
       })
       .pipe(
         map((res) => {

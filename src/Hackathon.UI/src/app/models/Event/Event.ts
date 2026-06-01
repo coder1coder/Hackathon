@@ -28,7 +28,7 @@ export class Event {
   agreement?: IEventAgreement;
   approvalApplicationId?: number;
   approvalApplication?: IApprovalApplication;
-  tags: string[] = []
+  tags: string[] = [];
 
   //Задачи, которые ставятся перед участниками мероприятия
   tasks: IEventTaskItem[];

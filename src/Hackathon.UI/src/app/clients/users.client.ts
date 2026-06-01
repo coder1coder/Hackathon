@@ -13,7 +13,6 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class UsersClient extends BaseApiClient {
-
   constructor(protected http: HttpClient, private fileUploadService: FileUploadService) {
     super(http, 'user');
   }

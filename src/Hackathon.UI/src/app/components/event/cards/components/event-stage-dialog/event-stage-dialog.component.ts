@@ -18,7 +18,10 @@ import { CustomErrorStateMatcher } from '../../../../../common/functions/custom-
   styleUrls: ['./event-stage-dialog.component.scss'],
 })
 export class EventStageDialogComponent implements OnInit {
-  public form = new FormGroup({});
+  public form = new FormGroup({
+    name: new FormControl(''),
+    duration: new FormControl(0),
+  });
   matcher = new CustomErrorStateMatcher();
 
   constructor(

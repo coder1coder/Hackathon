@@ -10,7 +10,6 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class LogbookClient extends BaseApiClient {
-
   constructor(protected http: HttpClient) {
     super(http, 'eventLog');
   }

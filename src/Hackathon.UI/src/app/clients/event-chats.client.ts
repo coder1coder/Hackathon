@@ -9,7 +9,6 @@ import { EventChatMessage } from '../models/chat/EventChatMessage';
   providedIn: 'root',
 })
 export class EventChatsClient extends BaseApiClient {
-
   constructor(http: HttpClient) {
     super(http, 'chat/event');
   }

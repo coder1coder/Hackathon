@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ThemePalette } from '@angular/material/core/common-behaviors/color';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'save-delete-modal',

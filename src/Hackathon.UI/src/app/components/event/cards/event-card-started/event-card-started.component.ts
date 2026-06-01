@@ -130,7 +130,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
       .pipe(
         filter((data: IProjectUpdateFromGitBranch) => data !== undefined),
         switchMap((data: IProjectUpdateFromGitBranch) =>
-          this.projectsClient.updateProjectFromGitBranch(data)
+          this.projectsClient.updateProjectFromGitBranch(data),
         ),
         takeUntil(this.destroy$),
       )

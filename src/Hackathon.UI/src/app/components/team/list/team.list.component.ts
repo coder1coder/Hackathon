@@ -49,8 +49,8 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
           if (err.status === 404) {
             this.canCreateNewTeam = true;
           }
-        }
-      })
+        },
+      });
   }
 
   public override fetch(): void {

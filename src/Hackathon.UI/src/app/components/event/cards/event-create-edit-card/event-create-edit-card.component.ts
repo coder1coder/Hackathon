@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    ValidationErrors,
-    ValidatorFn,
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ICreateEvent } from '../../../../models/Event/ICreateEvent';
@@ -25,23 +26,23 @@ import { EventCardBaseComponent } from '../components/event-card-base.component'
 import { EventService } from '../../../../services/event/event.service';
 import { EventStage } from 'src/app/models/Event/EventStage';
 import {
-    EventStageDialogComponent,
-    EventStageDialogData,
+  EventStageDialogComponent,
+  EventStageDialogData,
 } from '../components/event-stage-dialog/event-stage-dialog.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { IEventTaskItem } from '../../../../models/Event/IEventTaskItem';
 import { UploadFileErrorMessages } from '../../../../common/error-messages/upload-file-error-messages';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import {
-    DATE_FORMAT_DD_MM_YYYY,
-    DATE_FORMAT_YYYY_MM_DD,
+  DATE_FORMAT_DD_MM_YYYY,
+  DATE_FORMAT_YYYY_MM_DD,
 } from '../../../../common/consts/date-formats';
 import { checkValue } from '../../../../common/functions/check-value';
 import { IEventAgreement } from '../../../../models/Event/IEventAgreement';
 import { IBaseCreateResponse } from '../../../../models/IBaseCreateResponse';
 import { ApprovalApplicationStatusEnum } from '../../../../models/approval-application/approval-application-status.enum';
 import { AppStateService } from '../../../../services/app-state.service';
-import {MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
 
@@ -66,7 +67,9 @@ export class EventCreateEditCardComponent
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public eventTasksDataSource = new MatTableDataSource<IEventTaskItem>([]);
   public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
-  public form = new FormGroup({});
+  public form = new FormGroup({
+    agreementRules: new FormArray([]),
+  });
   public eventImage: SafeUrl;
   public minDate: string;
   public approvalApplicationStatusEnum = ApprovalApplicationStatusEnum;
@@ -284,7 +287,9 @@ export class EventCreateEditCardComponent
   }
 
   public clearEventImage(): void {
+    // @ts-ignore
     this.form.controls['fileImage'].reset();
+    // @ts-ignore
     this.form.controls['imageId'].reset();
     this.eventImage = null;
   }
@@ -298,6 +303,7 @@ export class EventCreateEditCardComponent
         .setEventImage(files)
         .pipe(
           switchMap((imageId: string) => {
+            // @ts-ignore
             this.form.controls['imageId'].setValue(imageId);
             return this.fileStorageClient.getById(imageId);
           }),
@@ -314,13 +320,15 @@ export class EventCreateEditCardComponent
   private fetch(): void {
     if (!this.eventId) return;
 
+    // @ts-ignore
     this.form.patchValue({
       ...this.event,
+      // @ts-ignore
       start: moment(this.event.start).local().format(DATE_FORMAT_YYYY_MM_DD),
       agreementRules: checkValue(this.event?.agreement?.rules),
       agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation,
       imageId: this.event.imageId,
-      tags: this.event.tags
+      tags: this.event.tags,
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
@@ -342,10 +350,12 @@ export class EventCreateEditCardComponent
     }
 
     this.form.updateValueAndValidity();
+    // @ts-ignore
     this.form.controls['start'].markAsTouched();
   }
 
   private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
+    // @ts-ignore
     const agreementRules: string = this.form.get('agreementRules')?.value;
     event.agreement =
       agreementRules?.length > 0
@@ -358,7 +368,9 @@ export class EventCreateEditCardComponent
   }
 
   private initForm(): void {
+    // @ts-ignore
     this.form = this.fb.group({
+      // @ts-ignore
       name: [null],
       description: [null],
       start: [
@@ -375,7 +387,7 @@ export class EventCreateEditCardComponent
       fileImage: [null],
       agreementRules: [null],
       agreementRequiresConfirmation: [false],
-      tags: [[]]
+      tags: [[]],
     });
   }
 
@@ -417,19 +429,17 @@ export class EventCreateEditCardComponent
     this.eventTasksTable.renderRows();
   }
 
-
-  get tags(): string[]{
+  get tags(): string[] {
     return this.form.get('tags')?.value;
   }
 
-  public canAddTag(): boolean
-  {
+  public canAddTag(): boolean {
     return this.tags?.length < 3;
   }
 
-  public addEventTag(event: MatChipInputEvent): void{
+  public addEventTag(event: MatChipInputEvent): void {
     if (event.value) {
-      var index = this.tags.indexOf(event.value);
+      const index: number = this.tags.indexOf(event.value);
       if (index == -1) {
         this.tags.push(event.value);
       }
@@ -438,8 +448,8 @@ export class EventCreateEditCardComponent
     }
   }
 
-  public removeEventTag(value: string):void{
-    this.tags.splice(this.tags.indexOf(value), 1)
+  public removeEventTag(value: string): void {
+    this.tags.splice(this.tags.indexOf(value), 1);
   }
 
   public addEventTaskFromInput(): void {
@@ -482,7 +492,7 @@ export class EventCreateEditCardComponent
       imageId: checkValue(this.form.get('imageId')?.value),
       stages: eventStages,
       tasks: eventTaskItems,
-      tags: checkValue(this.tags)
+      tags: checkValue(this.tags),
     };
   }
 
@@ -505,7 +515,7 @@ export class EventCreateEditCardComponent
       description: checkValue(this.form.get('description')?.value),
       imageId: checkValue(this.form.get('imageId')?.value),
       agreement: checkValue(this.event?.agreement),
-      tags: checkValue(this.tags)
+      tags: checkValue(this.tags),
     };
   }
 

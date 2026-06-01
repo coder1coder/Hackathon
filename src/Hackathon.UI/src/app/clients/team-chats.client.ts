@@ -9,7 +9,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class TeamChatsClient extends BaseApiClient {
-  
   protected constructor(http: HttpClient) {
     super(http, 'chat/team');
   }

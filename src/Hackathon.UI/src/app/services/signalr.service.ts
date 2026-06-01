@@ -5,7 +5,7 @@ import { ITeamChatNewMessageIntegrationEvent } from '../models/chat/integrationE
 import { INotificationChangedIntegrationEvent } from '../models/IntegrationEvent/INotificationChangedIntegrationEvent';
 import { FriendshipChangedIntegrationEvent } from '../models/IntegrationEvent/IFriendshipChangedIntegrationEvent';
 import { IEventStageChangedIntegrationEvent } from '../models/IntegrationEvent/IEventStageChangedIntegrationEvent';
-import {HttpClient, IHttpConnectionOptions } from '@microsoft/signalr';
+import { IHttpConnectionOptions } from '@microsoft/signalr';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -23,23 +23,19 @@ export class SignalRService {
   ) => void;
   public onEventStageChanged: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
 
-  constructor(private authService: AuthService) {
-  }
+  constructor(private authService: AuthService) {}
 
   public initSignalR(hubUrl: string): void {
-
-    let options : IHttpConnectionOptions = {
-      headers:{
-        ["Authorization"]: `Bearer ${this.authService.getTokenInfo()?.token}`
+    const options: IHttpConnectionOptions = {
+      headers: {
+        ['Authorization']: `Bearer ${this.authService.getTokenInfo()?.token}`,
       },
       accessTokenFactory: async (): Promise<string> => {
         return this.authService.getTokenInfo()?.token;
-      }
+      },
     };
 
-    this._connection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl, options)
-      .build();
+    this._connection = new signalR.HubConnectionBuilder().withUrl(hubUrl, options).build();
 
     this._connection.onclose(() => this.startConnection());
 
@@ -96,14 +92,13 @@ export class SignalRService {
 
   private startConnection(): void {
     try {
-
       this._connection.start().then(() => {
         console.log(`SignalR Connected to ${this._connection.baseUrl}`);
         this.clearConnectionTimeout();
       });
     } catch (err) {
       console.log(err);
-      this.connectionTimeout = 5000
+      this.connectionTimeout = 5000;
     }
   }
 
