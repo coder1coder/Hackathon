@@ -1,7 +1,7 @@
 ﻿import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'password-change-dialog',

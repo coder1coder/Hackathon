@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
 
 @Component({

@@ -8,7 +8,7 @@ import {
   CustomDialogComponent,
   ICustomDialogData,
 } from '../../../../custom/custom-dialog/custom-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ErrorProcessorService } from '../../../../../services/error-processor.service';
 import { Subject, takeUntil } from 'rxjs';
 import { EventsClient } from 'src/app/clients/events.client';

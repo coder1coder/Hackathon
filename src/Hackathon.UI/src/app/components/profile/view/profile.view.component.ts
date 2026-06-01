@@ -7,7 +7,7 @@ import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/U
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { Team } from '../../../models/Team/Team';
 import { UserEmailStatus } from 'src/app/models/User/UserEmailStatus';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
@@ -20,7 +20,7 @@ import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { AppStateService } from '../../../services/app-state.service';
 import { filter, finalize } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import { PasswordChangeDialogComponent } from '../password-change-dialog/password-change-dialog.component';

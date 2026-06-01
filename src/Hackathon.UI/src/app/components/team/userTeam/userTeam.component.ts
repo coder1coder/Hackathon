@@ -11,7 +11,7 @@ import {
 } from '../../../models/Team/ITeamJoinRequest';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
 import { ITeamJoinRequestFilter } from '../../../models/Team/ITeamJoinRequestFilter';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
