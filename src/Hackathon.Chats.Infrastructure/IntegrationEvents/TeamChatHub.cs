@@ -55,7 +55,7 @@ public class TeamChatHub: Hub, ITeamChatHub
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("User {UserId} disconnected with connection id {ConnectionId}",
             Context.UserIdentifier,
