@@ -13,8 +13,9 @@ import { BaseCollection } from '../../../models/BaseCollection';
 import { FriendshipClient } from 'src/app/clients/friendship.client';
 
 @Component({
-  selector: `friendship-offer-button`,
-  templateUrl: `./friendship-offer-button.component.html`,
+    selector: `friendship-offer-button`,
+    templateUrl: `./friendship-offer-button.component.html`,
+    standalone: false
 })
 export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()

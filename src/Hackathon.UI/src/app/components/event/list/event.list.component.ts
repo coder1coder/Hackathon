@@ -21,9 +21,10 @@ import { finalize } from 'rxjs/operators';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'event-list',
-  templateUrl: './event.list.component.html',
-  styleUrls: ['./event.list.component.scss'],
+    selector: 'event-list',
+    templateUrl: './event.list.component.html',
+    styleUrls: ['./event.list.component.scss'],
+    standalone: false
 })
 export class EventListComponent implements OnInit {
   public filterForm = this.fb.group({});

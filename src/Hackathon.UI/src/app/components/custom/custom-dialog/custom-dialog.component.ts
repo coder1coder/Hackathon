@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ThemePalette } from '@angular/material/core';
 
 @Component({
-  selector: 'save-delete-modal',
-  templateUrl: './custom-dialog.component.html',
-  styleUrls: ['./custom-dialog.component.scss'],
+    selector: 'save-delete-modal',
+    templateUrl: './custom-dialog.component.html',
+    styleUrls: ['./custom-dialog.component.scss'],
+    standalone: false
 })
 export class CustomDialogComponent {
   constructor(

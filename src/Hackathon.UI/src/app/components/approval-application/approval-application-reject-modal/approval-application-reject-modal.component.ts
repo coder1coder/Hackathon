@@ -5,9 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
 
 @Component({
-  selector: 'app-approval-application-reject-modal',
-  templateUrl: './approval-application-reject-modal.component.html',
-  styleUrls: ['./approval-application-reject-modal.component.scss'],
+    selector: 'app-approval-application-reject-modal',
+    templateUrl: './approval-application-reject-modal.component.html',
+    styleUrls: ['./approval-application-reject-modal.component.scss'],
+    standalone: false
 })
 export class ApprovalApplicationRejectModalComponent extends WithFormBaseComponent {
   public form: FormGroup = this.fb.group({

@@ -5,9 +5,10 @@ import { RouterService } from 'src/app/services/router.service';
 import { Notification } from '../../../../../models/Notification/Notification';
 
 @Component({
-  selector: 'notification-team-join-request-decision-view',
-  templateUrl: './notification.teamJoinRequestDecision.view.component.html',
-  styleUrls: ['./notification.teamJoinRequestDecision.view.component.scss'],
+    selector: 'notification-team-join-request-decision-view',
+    templateUrl: './notification.teamJoinRequestDecision.view.component.html',
+    styleUrls: ['./notification.teamJoinRequestDecision.view.component.scss'],
+    standalone: false
 })
 export class NotificationTeamJoinRequestDecisionViewComponent {
   NOTIFICATION_DATETIME_FORMAT = NOTIFICATION_DATETIME_FORMAT;

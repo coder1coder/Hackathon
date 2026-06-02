@@ -11,9 +11,10 @@ import { mergeMap, takeUntil } from 'rxjs';
 import { UsersClient } from 'src/app/clients/users.client';
 
 @Component({
-  selector: 'user-list',
-  templateUrl: './user.list.component.html',
-  styleUrls: ['./user.list.component.scss'],
+    selector: 'user-list',
+    templateUrl: './user.list.component.html',
+    styleUrls: ['./user.list.component.scss'],
+    standalone: false
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
   constructor(

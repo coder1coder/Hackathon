@@ -14,9 +14,10 @@ import { CurrentUserStore } from '../../shared/stores/current-user.store';
 import { ProfileUserStore } from '../../shared/stores/profile-user.store';
 
 @Component({
-  selector: 'toolbar',
-  templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss'],
+    selector: 'toolbar',
+    templateUrl: './toolbar.component.html',
+    styleUrls: ['./toolbar.component.scss'],
+    standalone: false
 })
 export class ToolbarComponent implements OnInit {
   public isDarkMode: boolean = false;

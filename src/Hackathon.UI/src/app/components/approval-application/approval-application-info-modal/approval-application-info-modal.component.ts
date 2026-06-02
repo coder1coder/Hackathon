@@ -16,9 +16,10 @@ import { Router, UrlTree } from '@angular/router';
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
 
 @Component({
-  selector: 'app-approval-application-info-modal',
-  templateUrl: './approval-application-info-modal.component.html',
-  styleUrls: ['./approval-application-info-modal.component.scss'],
+    selector: 'app-approval-application-info-modal',
+    templateUrl: './approval-application-info-modal.component.html',
+    styleUrls: ['./approval-application-info-modal.component.scss'],
+    standalone: false
 })
 export class ApprovalApplicationInfoModalComponent {
   public tableDateFormat = TABLE_DATE_FORMAT;

@@ -3,9 +3,10 @@ import { ApprovalApplicationStatusEnum } from '../../../models/approval-applicat
 import { ApprovalApplicationTranslator } from '../../../models/approval-application/approval-application-translator';
 
 @Component({
-  selector: 'app-approval-application-status',
-  templateUrl: './approval-application-status.component.html',
-  styleUrls: ['./approval-application-status.component.scss'],
+    selector: 'app-approval-application-status',
+    templateUrl: './approval-application-status.component.html',
+    styleUrls: ['./approval-application-status.component.scss'],
+    standalone: false
 })
 export class ApprovalApplicationStatusComponent {
   @Input() status: ApprovalApplicationStatusEnum;

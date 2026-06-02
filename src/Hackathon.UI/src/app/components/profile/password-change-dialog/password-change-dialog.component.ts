@@ -4,8 +4,9 @@ import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordPa
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'password-change-dialog',
-  templateUrl: './password-change-dialog.component.html',
+    selector: 'password-change-dialog',
+    templateUrl: './password-change-dialog.component.html',
+    standalone: false
 })
 export class PasswordChangeDialogComponent implements OnInit {
   public form: FormGroup;

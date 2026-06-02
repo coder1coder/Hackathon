@@ -4,9 +4,10 @@ import { ISystemNotificationData } from 'src/app/models/Notification/data/ISyste
 import { Notification } from '../../../../models/Notification/Notification';
 
 @Component({
-  selector: 'notification-info-view',
-  templateUrl: './notification.info.view.component.html',
-  styleUrls: ['./notification.info.view.component.scss'],
+    selector: 'notification-info-view',
+    templateUrl: './notification.info.view.component.html',
+    styleUrls: ['./notification.info.view.component.scss'],
+    standalone: false
 })
 export class NotificationInfoViewComponent {
   notification = Notification;

@@ -12,9 +12,10 @@ import { AppStateService } from '../../../services/app-state.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
-  selector: 'team-view',
-  templateUrl: './team.view.component.html',
-  styleUrls: ['./team.view.component.scss'],
+    selector: 'team-view',
+    templateUrl: './team.view.component.html',
+    styleUrls: ['./team.view.component.scss'],
+    standalone: false
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
   @Input() teamId?: number;

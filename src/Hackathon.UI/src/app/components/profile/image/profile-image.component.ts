@@ -7,9 +7,10 @@ import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { UsersClient } from 'src/app/clients/users.client';
 
 @Component({
-  selector: 'profile-image',
-  templateUrl: './profile-image.component.html',
-  styleUrls: ['./profile-image.component.scss'],
+    selector: 'profile-image',
+    templateUrl: './profile-image.component.html',
+    styleUrls: ['./profile-image.component.scss'],
+    standalone: false
 })
 export class ProfileImageComponent implements OnInit {
   @ViewChild('selectedFile') selectedFile: HTMLInputElement;

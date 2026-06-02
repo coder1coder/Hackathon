@@ -15,9 +15,10 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { TeamChatsClient } from 'src/app/clients/team-chats.client';
 
 @Component({
-  selector: 'chat-team',
-  templateUrl: '../base.chat.component.html',
-  styleUrls: ['../base.chat.component.scss'],
+    selector: 'chat-team',
+    templateUrl: '../base.chat.component.html',
+    styleUrls: ['../base.chat.component.scss'],
+    standalone: false
 })
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit {
   @ViewChild('scrollMe') chatBody: ElementRef;

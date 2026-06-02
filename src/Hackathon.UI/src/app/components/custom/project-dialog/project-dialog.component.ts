@@ -6,8 +6,9 @@ import { IProject } from '../../../models/Project/IProject';
 import { IProjectDialogData } from '../../../models/Project/project-dialog.interface';
 
 @Component({
-  selector: 'project-dialog',
-  templateUrl: './project-dialog.component.html',
+    selector: 'project-dialog',
+    templateUrl: './project-dialog.component.html',
+    standalone: false
 })
 export class ProjectDialogComponent implements OnInit {
   public form: FormGroup;

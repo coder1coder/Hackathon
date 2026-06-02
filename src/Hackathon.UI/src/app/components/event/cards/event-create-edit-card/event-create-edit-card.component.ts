@@ -47,9 +47,10 @@ import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'event-create-edit-card',
-  templateUrl: './event-create-edit-card.component.html',
-  styleUrls: ['./event-create-edit-card.component.scss'],
+    selector: 'event-create-edit-card',
+    templateUrl: './event-create-edit-card.component.html',
+    styleUrls: ['./event-create-edit-card.component.scss'],
+    standalone: false
 })
 export class EventCreateEditCardComponent
   extends EventCardBaseComponent

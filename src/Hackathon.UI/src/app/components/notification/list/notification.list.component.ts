@@ -10,9 +10,10 @@ import { SignalRService } from '../../../services/signalr.service';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
-  selector: 'notification-list',
-  templateUrl: './notification.list.component.html',
-  styleUrls: ['./notification.list.component.scss'],
+    selector: 'notification-list',
+    templateUrl: './notification.list.component.html',
+    styleUrls: ['./notification.list.component.scss'],
+    standalone: false
 })
 export class NotificationListComponent
   extends BaseTableListComponent<Notification>

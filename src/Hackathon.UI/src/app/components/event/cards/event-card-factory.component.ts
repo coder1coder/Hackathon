@@ -31,8 +31,9 @@ import { AppStateService } from '../../../services/app-state.service';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'app-event-card-factory',
-  template: `<ng-template event-item></ng-template>`,
+    selector: 'app-event-card-factory',
+    template: `<ng-template event-item></ng-template>`,
+    standalone: false
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
   @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;

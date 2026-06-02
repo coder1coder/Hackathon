@@ -1,7 +1,8 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[event-item]',
+    selector: '[event-item]',
+    standalone: false
 })
 export class EventDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}

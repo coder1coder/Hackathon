@@ -15,16 +15,16 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~18.2.14",
-    "@angular/cdk": "~18.2.14",
-    "@angular/common": "~18.2.14",
-    "@angular/compiler": "~18.2.14",
-    "@angular/core": "~18.2.14",
-    "@angular/forms": "~18.2.14",
-    "@angular/material": "^18.2.14",
-    "@angular/platform-browser": "~18.2.14",
-    "@angular/platform-browser-dynamic": "~18.2.14",
-    "@angular/router": "~18.2.14",
+    "@angular/animations": "~19.2.24",
+    "@angular/cdk": "~19.2.19",
+    "@angular/common": "~19.2.24",
+    "@angular/compiler": "~19.2.24",
+    "@angular/core": "~19.2.24",
+    "@angular/forms": "~19.2.24",
+    "@angular/material": "^19.2.19",
+    "@angular/platform-browser": "~19.2.24",
+    "@angular/platform-browser-dynamic": "~19.2.24",
+    "@angular/router": "~19.2.24",
     "@microsoft/signalr": "^7.0.5",
     "@types/gapi": "0.0.47",
     "@types/gapi.auth2": "0.0.56",
@@ -37,17 +37,17 @@
     "ngx-infinite-scroll": "^16.0.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~18.2.21",
+    "@angular-devkit/build-angular": "~19.2.26",
     "@angular-eslint/builder": "^13.3.11",
     "@angular-eslint/eslint-plugin": "^13.4.0",
     "@angular-eslint/eslint-plugin-template": "^13.4.0",
     "@angular-eslint/schematics": "^13.4.0",
     "@angular-eslint/template-parser": "^13.4.0",
-    "@angular/cli": "~18.2.21",
-    "@angular/compiler-cli": "~18.2.14",
+    "@angular/cli": "~19.2.26",
+    "@angular/compiler-cli": "~19.2.24",
     "@html-eslint/eslint-plugin": "^0.20.0",
     "@html-eslint/parser": "^0.22.0",
     "@types/jasmine": "~3.10.0",
@@ -67,6 +67,6 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "lint-staged": "^15.0.2",
     "prettier": "^2.8.8",
-    "typescript": "~5.4.5"
+    "typescript": "~5.8.3"
   }
 }

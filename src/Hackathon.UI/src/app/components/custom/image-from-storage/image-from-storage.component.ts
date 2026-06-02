@@ -4,9 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { FileStorageClient } from 'src/app/clients/file-storage.client';
 
 @Component({
-  selector: 'image-from-storage',
-  templateUrl: './image-from-storage.component.html',
-  styleUrls: ['./image-from-storage.component.scss'],
+    selector: 'image-from-storage',
+    templateUrl: './image-from-storage.component.html',
+    styleUrls: ['./image-from-storage.component.scss'],
+    standalone: false
 })
 export class ImageFromStorageComponent implements OnInit {
   @Input() imageId: string;

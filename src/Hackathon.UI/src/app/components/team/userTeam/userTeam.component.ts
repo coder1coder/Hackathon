@@ -18,9 +18,10 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'userTeam',
-  templateUrl: 'userTeam.component.html',
-  styleUrls: ['userTeam.component.scss'],
+    selector: 'userTeam',
+    templateUrl: 'userTeam.component.html',
+    styleUrls: ['userTeam.component.scss'],
+    standalone: false
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
   public team: Team;

@@ -18,9 +18,10 @@ import { AppStateService } from '../../../../services/app-state.service';
 import { ProjectsClient } from 'src/app/clients/projects.client';
 
 @Component({
-  selector: `event-card-started`,
-  styleUrls: [`event-card-started.component.scss`],
-  templateUrl: `event-card-started.component.html`,
+    selector: `event-card-started`,
+    styleUrls: [`event-card-started.component.scss`],
+    templateUrl: `event-card-started.component.html`,
+    standalone: false
 })
 export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
   public set selectedChatIndex(value) {

@@ -22,9 +22,10 @@ import { ApprovalApplicationInfoModalComponent } from '../approval-application-i
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
 
 @Component({
-  selector: 'app-approval-applications',
-  templateUrl: './approval-application-list.component.html',
-  styleUrls: ['./approval-application-list.component.scss'],
+    selector: 'app-approval-applications',
+    templateUrl: './approval-application-list.component.html',
+    styleUrls: ['./approval-application-list.component.scss'],
+    standalone: false
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
   public tableDateFormat = TABLE_DATE_FORMAT;

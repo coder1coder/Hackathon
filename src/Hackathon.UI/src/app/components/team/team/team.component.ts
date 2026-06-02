@@ -17,9 +17,10 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'team',
-  templateUrl: './team.component.html',
-  styleUrls: ['./team.component.scss'],
+    selector: 'team',
+    templateUrl: './team.component.html',
+    styleUrls: ['./team.component.scss'],
+    standalone: false
 })
 export class TeamComponent implements OnDestroy {
   @Input() team: Team;

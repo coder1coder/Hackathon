@@ -10,9 +10,10 @@ import { WithFormBaseComponent } from '../../../common/base-components/with-form
 import { TeamsClient } from 'src/app/clients/teams.client';
 
 @Component({
-  selector: 'team-new',
-  templateUrl: 'team.new.component.html',
-  styleUrls: ['team.new.component.scss'],
+    selector: 'team-new',
+    templateUrl: 'team.new.component.html',
+    styleUrls: ['team.new.component.scss'],
+    standalone: false
 })
 export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy {
   public selectedTeamType: number = 0;

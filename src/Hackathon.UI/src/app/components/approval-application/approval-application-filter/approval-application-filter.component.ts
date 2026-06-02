@@ -8,9 +8,10 @@ import {
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
 
 @Component({
-  selector: 'app-approval-application-filter',
-  templateUrl: './approval-application-filter.component.html',
-  styleUrls: ['./approval-application-filter.component.scss'],
+    selector: 'app-approval-application-filter',
+    templateUrl: './approval-application-filter.component.html',
+    styleUrls: ['./approval-application-filter.component.scss'],
+    standalone: false
 })
 export class ApprovalApplicationFilterComponent extends WithFormBaseComponent implements OnInit {
   @Input() isFilterEnabled: boolean = true;

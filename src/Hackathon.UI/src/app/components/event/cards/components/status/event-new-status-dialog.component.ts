@@ -5,9 +5,10 @@ import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatus
 import { EventStatusTranslator, EventStatus } from '../../../../../models/Event/EventStatus';
 
 @Component({
-  selector: 'app-event-new-status-dialog',
-  templateUrl: './event-new-status-dialog.component.html',
-  styleUrls: ['./event-new-status-dialog.component.scss'],
+    selector: 'app-event-new-status-dialog',
+    templateUrl: './event-new-status-dialog.component.html',
+    styleUrls: ['./event-new-status-dialog.component.scss'],
+    standalone: false
 })
 export class EventNewStatusDialogComponent implements OnInit {
   public statuses: EventStatus[] = [];

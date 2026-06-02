@@ -9,9 +9,10 @@ import { AuthService } from '../../../services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
 
 @Component({
-  selector: `friends-list`,
-  styleUrls: ['./friends-list.component.scss'],
-  templateUrl: `./friends-list.component.html`,
+    selector: `friends-list`,
+    styleUrls: ['./friends-list.component.scss'],
+    templateUrl: `./friends-list.component.html`,
+    standalone: false
 })
 export class FriendsListComponent implements OnInit, OnDestroy {
   @Input()

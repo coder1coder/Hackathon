@@ -12,9 +12,10 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'team-list',
-  templateUrl: './team.list.component.html',
-  styleUrls: ['./team.list.component.scss'],
+    selector: 'team-list',
+    templateUrl: './team.list.component.html',
+    styleUrls: ['./team.list.component.scss'],
+    standalone: false
 })
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {

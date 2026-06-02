@@ -4,9 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
-  selector: `notification-item`,
-  templateUrl: `notification-item.component.html`,
-  styleUrls: [`notification-item.component.scss`],
+    selector: `notification-item`,
+    templateUrl: `notification-item.component.html`,
+    styleUrls: [`notification-item.component.scss`],
+    standalone: false
 })
 export class NotificationItemComponent implements OnDestroy {
   Notification = Notification;

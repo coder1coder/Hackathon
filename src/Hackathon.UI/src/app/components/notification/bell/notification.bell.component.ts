@@ -10,9 +10,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
-  selector: 'notification-bell',
-  templateUrl: './notification.bell.component.html',
-  styleUrls: ['./notification.bell.component.scss'],
+    selector: 'notification-bell',
+    templateUrl: './notification.bell.component.html',
+    styleUrls: ['./notification.bell.component.scss'],
+    standalone: false
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
   public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();

@@ -5,8 +5,9 @@ import { CustomErrorStateMatcher } from '../../../common/functions/custom-error-
 import { IProjectUpdateFromGitBranch } from '../../../models/Project/IProjectUpdateFromGitBranch';
 
 @Component({
-  selector: 'project-git-dialog',
-  templateUrl: './project-git-dialog.component.html',
+    selector: 'project-git-dialog',
+    templateUrl: './project-git-dialog.component.html',
+    standalone: false
 })
 export class ProjectGitDialogComponent implements OnInit {
   public form: FormGroup;

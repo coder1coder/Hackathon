@@ -8,9 +8,10 @@ import { IUser } from '../../models/User/IUser';
 import { AppStateService } from '../../services/app-state.service';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss'],
+    selector: 'app-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    standalone: false
 })
 export class NavMenuComponent {
   public items: MenuItem[] = [];

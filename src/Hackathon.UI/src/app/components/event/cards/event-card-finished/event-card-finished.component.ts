@@ -9,9 +9,10 @@ import { IProject } from '../../../../models/Project/IProject';
 import { AppStateService } from '../../../../services/app-state.service';
 
 @Component({
-  selector: 'app-event-finished-view-card',
-  templateUrl: './event-card-finished.component.html',
-  styleUrls: ['./event-card-finished.component.scss'],
+    selector: 'app-event-finished-view-card',
+    templateUrl: './event-card-finished.component.html',
+    styleUrls: ['./event-card-finished.component.scss'],
+    standalone: false
 })
 export class EventCardFinishedComponent extends EventCardBaseComponent {
   private readonly userId: number;

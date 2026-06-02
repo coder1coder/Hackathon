@@ -13,9 +13,10 @@ import { EventCardBaseComponent } from '../components/event-card-base.component'
 import { AppStateService } from '../../../../services/app-state.service';
 
 @Component({
-  selector: 'event-event-main-view-card',
-  templateUrl: './event-main-view-card.component.html',
-  styleUrls: ['./event-main-view-card.component.scss'],
+    selector: 'event-event-main-view-card',
+    templateUrl: './event-main-view-card.component.html',
+    styleUrls: ['./event-main-view-card.component.scss'],
+    standalone: false
 })
 export class EventMainViewCardComponent extends EventCardBaseComponent implements OnInit {
   public eventStatusesDataSource: MatTableDataSource<ChangeEventStatusMessage> =

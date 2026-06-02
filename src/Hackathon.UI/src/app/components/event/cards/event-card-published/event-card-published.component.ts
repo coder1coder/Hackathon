@@ -7,9 +7,10 @@ import { AuthService } from '../../../../services/auth.service';
 import { AppStateService } from '../../../../services/app-state.service';
 
 @Component({
-  selector: 'app-event-card-published',
-  templateUrl: './event-card-published.component.html',
-  styleUrls: ['./event-card-published.component.scss'],
+    selector: 'app-event-card-published',
+    templateUrl: './event-card-published.component.html',
+    styleUrls: ['./event-card-published.component.scss'],
+    standalone: false
 })
 export class EventCardPublishedComponent extends EventCardBaseComponent {
   public eventStatusTranslator = EventStatusTranslator;

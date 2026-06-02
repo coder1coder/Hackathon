@@ -4,9 +4,10 @@ import { DATE_FORMAT_DD_MM_YYYY } from '../../../../../common/consts/date-format
 import { Event } from '../../../../../models/Event/Event';
 
 @Component({
-  selector: 'app-event-header',
-  templateUrl: './event-header.component.html',
-  styleUrls: ['./event-header.component.scss'],
+    selector: 'app-event-header',
+    templateUrl: './event-header.component.html',
+    styleUrls: ['./event-header.component.scss'],
+    standalone: false
 })
 export class EventHeaderComponent {
   @Input() event: Event;

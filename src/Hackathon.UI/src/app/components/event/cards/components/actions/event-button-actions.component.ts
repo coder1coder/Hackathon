@@ -14,9 +14,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'event-button-actions',
-  templateUrl: './event-button-actions.component.html',
-  styleUrls: ['./event-button-actions.component.scss'],
+    selector: 'event-button-actions',
+    templateUrl: './event-button-actions.component.html',
+    styleUrls: ['./event-button-actions.component.scss'],
+    standalone: false
 })
 export class EventButtonActionsComponent implements OnDestroy {
   @Input() event: Event;

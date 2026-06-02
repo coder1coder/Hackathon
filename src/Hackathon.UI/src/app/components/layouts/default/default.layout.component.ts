@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'layout-default',
-  templateUrl: './default.layout.component.html',
-  styleUrls: ['./default.layout.component.scss'],
+    selector: 'layout-default',
+    templateUrl: './default.layout.component.html',
+    styleUrls: ['./default.layout.component.scss'],
+    standalone: false
 })
 export class DefaultLayoutComponent {
   @Input() title: string;

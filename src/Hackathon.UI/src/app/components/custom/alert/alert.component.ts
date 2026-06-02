@@ -1,9 +1,10 @@
 import { Attribute, Component, HostBinding, Input } from '@angular/core';
 
 @Component({
-  selector: 'alert',
-  templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss'],
+    selector: 'alert',
+    templateUrl: './alert.component.html',
+    styleUrls: ['./alert.component.scss'],
+    standalone: false
 })
 export class AlertComponent {
   @Input() showIcon: boolean = true;

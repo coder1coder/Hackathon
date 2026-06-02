@@ -13,9 +13,10 @@ import { EventStage } from '../../../../../models/Event/EventStage';
 import { CustomErrorStateMatcher } from '../../../../../common/functions/custom-error-state-matcher';
 
 @Component({
-  selector: 'event-stage-dialog',
-  templateUrl: './event-stage-dialog.component.html',
-  styleUrls: ['./event-stage-dialog.component.scss'],
+    selector: 'event-stage-dialog',
+    templateUrl: './event-stage-dialog.component.html',
+    styleUrls: ['./event-stage-dialog.component.scss'],
+    standalone: false
 })
 export class EventStageDialogComponent implements OnInit {
   public form = new FormGroup({

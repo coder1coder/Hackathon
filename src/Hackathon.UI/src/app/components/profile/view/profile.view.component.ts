@@ -29,8 +29,9 @@ import { UsersClient } from 'src/app/clients/users.client';
 import { UserProfileReactionsClient } from 'src/app/clients/user-profile-reactions.client';
 
 @Component({
-  templateUrl: './profile.view.component.html',
-  styleUrls: ['./profile.view.component.scss'],
+    templateUrl: './profile.view.component.html',
+    styleUrls: ['./profile.view.component.scss'],
+    standalone: false
 })
 export class ProfileViewComponent
   extends WithFormBaseComponent

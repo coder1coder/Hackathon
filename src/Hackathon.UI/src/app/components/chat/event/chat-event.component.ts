@@ -16,9 +16,10 @@ import { EventsClient } from 'src/app/clients/events.client';
 import { EventChatsClient } from 'src/app/clients/event-chats.client';
 
 @Component({
-  selector: 'chat-event',
-  templateUrl: '../base.chat.component.html',
-  styleUrls: ['../base.chat.component.scss'],
+    selector: 'chat-event',
+    templateUrl: '../base.chat.component.html',
+    styleUrls: ['../base.chat.component.scss'],
+    standalone: false
 })
 export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit {
   @ViewChild('scrollMe') chatBody: ElementRef;
