@@ -8,9 +8,9 @@
 //  If you specify typography styles for the components you use elsewhere, you should delete this line.
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
-@include mat.all-legacy-component-typographies();
-@include mat.legacy-core();
+//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
+@include mat.all-component-typographies();
+@include mat.core();
 
 $theme-mat-primary: mat.define-palette(mat.$indigo-palette);
 $theme-mat-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -37,7 +37,7 @@ $theme-dark: mat.define-dark-theme((
 ));
 
 .theme-dark-mode {
-  @include mat.all-legacy-component-themes($theme-dark);
+  @include mat.all-component-themes($theme-dark);
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
@@ -48,7 +48,7 @@ $theme-dark: mat.define-dark-theme((
 }
 
 .theme-light-mode {
-  @include mat.all-legacy-component-themes($theme-light);
+  @include mat.all-component-themes($theme-light);
 }
 
 
@@ -87,6 +87,7 @@ $theme-dark: mat.define-dark-theme((
 
 .team-chat-theme {
   .theme-dark-mode & {
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-body-wrapper {
       background: $black-color-80;
       box-shadow: -8px 0 18px 0 #00000021;
@@ -103,6 +104,7 @@ $theme-dark: mat.define-dark-theme((
     }
   }
   .theme-light-mode & {
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-body-wrapper {
       box-shadow: -20px 0 20px 0 rgb(248 248 248);
       .chat__message-meta {
@@ -120,6 +122,7 @@ $theme-dark: mat.define-dark-theme((
 
 .event-theme {
   .theme-dark-mode & {
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-body-content {
       .event-image {
         &__image {
@@ -137,6 +140,7 @@ $theme-dark: mat.define-dark-theme((
     }
   }
   .theme-light-mode & {
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-body-content {
       .event-image {
         &__image {

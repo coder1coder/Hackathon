@@ -6,7 +6,7 @@ import { EventFilter } from '../../../models/Event/EventFilter';
 import { GetListParameters } from '../../../models/GetListParameters';
 import * as moment from 'moment/moment';
 import { RouterService } from '../../../services/router.service';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { MatSelect } from '@angular/material/select';
 import { IEventListItem } from '../../../models/Event/IEventListItem';
 import { AuthService } from '../../../services/auth.service';
 import { PageSettingsDefaults } from '../../../models/PageSettings';

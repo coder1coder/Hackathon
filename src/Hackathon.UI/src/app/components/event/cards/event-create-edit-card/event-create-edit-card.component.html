@@ -120,8 +120,8 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Теги</mat-label>
-              <mat-chip-list #tagList multiple formControlName="tags">
-                <mat-chip
+              <mat-chip-grid #tagList multiple formControlName="tags">
+                <mat-chip-option
                   *ngFor="let eventTag of tags"
                   [selected]="eventTag !== undefined"
                   [value]="eventTag"
@@ -130,12 +130,12 @@
                   <button matChipRemove>
                     <mat-icon>cancel</mat-icon>
                   </button>
-                </mat-chip>
+                </mat-chip-option>
                 <input placeholder="Добавить тег"
                        *ngIf="canAddTag()"
                        [matChipInputFor]="tagList"
                        (matChipInputTokenEnd)="addEventTag($event)">
-              </mat-chip-list>
+              </mat-chip-grid>
             </mat-form-field>
 
           </div>

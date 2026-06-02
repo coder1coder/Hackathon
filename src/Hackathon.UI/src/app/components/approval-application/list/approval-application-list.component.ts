@@ -13,7 +13,7 @@ import {
   CustomDialogComponent,
   ICustomDialogData,
 } from '../../custom/custom-dialog/custom-dialog.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SnackService } from '../../../services/snack.service';
 import { ApplicationApprovalErrorMessages } from '../../../common/error-messages/application-approval-error-messages';
 import { ApprovalApplicationRejectModalComponent } from '../approval-application-reject-modal/approval-application-reject-modal.component';

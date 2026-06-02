@@ -1,4 +1,4 @@
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 
 export class PageSettings {
   offset: number = PageSettingsDefaults.Offset;

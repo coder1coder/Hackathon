@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventStatusTranslator } from '../../../../models/Event/EventStatus';
 import { AuthService } from '../../../../services/auth.service';
 import { Team } from '../../../../models/Team/Team';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { Event } from 'src/app/models/Event/Event';
 import { RouterService } from '../../../../services/router.service';

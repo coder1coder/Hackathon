@@ -1,4 +1,4 @@
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { PageSettingsDefaults } from '../../models/PageSettings';
 import { GetListParameters } from '../../models/GetListParameters';

@@ -4,7 +4,7 @@ import { IProject } from '../../../../models/Project/IProject';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { AuthService } from '../../../../services/auth.service';
 import { Event } from '../../../../models/Event/Event';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ProjectDialogComponent } from '../../../custom/project-dialog/project-dialog.component';
 import { ErrorProcessorService } from '../../../../services/error-processor.service';
 import { ProjectGitDialogComponent } from '../../../custom/project-git-dialog/project-git-dialog.component';

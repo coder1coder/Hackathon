@@ -92,10 +92,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Hackathon.UI:build:production"
+              "buildTarget": "Hackathon.UI:build:production"
             },
             "development": {
-              "browserTarget": "Hackathon.UI:build:development"
+              "buildTarget": "Hackathon.UI:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,7 +103,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Hackathon.UI:build"
+            "buildTarget": "Hackathon.UI:build"
           }
         },
         "test": {

@@ -99,12 +99,15 @@ td.email {
 
 ::ng-deep {
   .profile__edit-form {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-appearance-outline .mat-form-field-infix {
       padding: 0.45em 0 0.75em 0 !important;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-wrapper {
       padding-bottom: 0;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-underline {
       bottom: 0.05em;
     }

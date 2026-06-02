@@ -102,7 +102,8 @@
   }
 }
 
-.mat-tab-body.mat-tab-body-active :host {
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+.mat-mdc-tab-body.mat-tab-body-active :host {
   /* fix team chat screen */
   @include absolute0;
 }
