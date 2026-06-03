@@ -37,17 +37,17 @@ export class ProfileViewComponent
   extends WithFormBaseComponent
   implements OnInit, AfterViewChecked
 {
-  @ViewChild(MatTabGroup) public friendshipTabs: MatTabGroup;
-  @ViewChild('confirmationCodeInput') confirmationCodeInput: ElementRef;
+  @ViewChild(MatTabGroup) public friendshipTabs!: MatTabGroup;
+  @ViewChild('confirmationCodeInput') confirmationCodeInput!: ElementRef;
 
   private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
   private emailRegexp: RegExp = emailRegex;
 
   public UserRoleTranslator = UserRoleTranslator;
   public userId: number;
-  public user: IUser;
-  public currentUser: IUser;
-  public userTeam: Team;
+  public user!: IUser;
+  public currentUser!: IUser;
+  public userTeam!: Team;
   public authUserId: number;
   public isEditMode: boolean = false;
   public canUploadImage: boolean = false;
@@ -213,7 +213,7 @@ export class ProfileViewComponent
   }
 
   public getProfileTitle(): string {
-    const currentUserId: number = this.authService.getUserId();
+    const currentUserId: number = this.authService.getUserId() as number;
     return currentUserId === this.userId ? 'Мой профиль' : 'Профиль';
   }
 
@@ -222,11 +222,13 @@ export class ProfileViewComponent
     this.profileUserStore
       .getUser(this.userId, needReload)
       .pipe(
-        switchMap((user: IUser) => {
-          const currentUserId: number = this.authService.getUserId();
+        switchMap((user) => {
+          const currentUserId: number = this.authService.getUserId() as number;
           this.canUploadImage = currentUserId === this.userId;
           this.canViewEmail = currentUserId === this.userId;
-          this.user = user;
+          if(user) {
+            this.user = user;
+          }
 
           if (this.userId !== this.authUserId) {
             this.fetchReactions();
@@ -238,11 +240,11 @@ export class ProfileViewComponent
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
       )
-      .subscribe((res: Team) => (this.userTeam = res));
+      .subscribe((res) => (this.userTeam = res as Team));
 
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user: IUser) => (this.currentUser = user));
+      .subscribe((user) => (this.currentUser = user as IUser));
   }
 
   private fetchReactions(): void {

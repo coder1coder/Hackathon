@@ -37,11 +37,11 @@ export class EventStageDialogComponent implements OnInit {
 
   private initForm(): void {
     this.form = this.fb.group({
-      name: new FormControl(this.dialogData?.eventStage?.name, [
+      name: new FormControl(this.dialogData?.eventStage?.name!, [
         Validators.required,
         this.nameShouldBeUnique(),
       ]),
-      duration: new FormControl(this.dialogData?.eventStage?.duration, [
+      duration: new FormControl(this.dialogData?.eventStage?.duration!, [
         Validators.required,
         Validators.min(1),
       ]),
@@ -50,8 +50,9 @@ export class EventStageDialogComponent implements OnInit {
 
   public confirm(): void {
     const eventStage: EventStage = new EventStage();
-    eventStage.name = this.form.get('name')?.value;
-    eventStage.duration = this.form.get('duration')?.value;
+    //TODO: remove type assertion
+    eventStage.name = this.form.get('name')?.value as string;
+    eventStage.duration = this.form.get('duration')?.value as number;
 
     this.dialogRef.close(eventStage);
   }
@@ -60,7 +61,7 @@ export class EventStageDialogComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors | null => {
       const filtered: EventStage[] = this.dialogData?.eventStages?.filter(
         (x) =>
-          x !== this.dialogData.eventStage && x.name.toLowerCase() == control.value?.toLowerCase(),
+          x !== this.dialogData.eventStage && x.name?.toLowerCase() == control.value?.toLowerCase(),
       );
 
       return filtered?.length > 0
@@ -71,6 +72,6 @@ export class EventStageDialogComponent implements OnInit {
 }
 
 export class EventStageDialogData {
-  eventStages: EventStage[];
+  eventStages!: EventStage[];
   eventStage: EventStage | undefined;
 }

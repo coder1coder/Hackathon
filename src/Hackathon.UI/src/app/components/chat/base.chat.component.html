@@ -62,7 +62,7 @@
           <div class="member">
             <profile-image
               [canUpload]="false"
-              [user]="getMember(member.id)"
+              [user]="getMember(member.id!)"
               class="size35"
             ></profile-image>
             <div>{{ member.fullName ?? member.userName }}</div>

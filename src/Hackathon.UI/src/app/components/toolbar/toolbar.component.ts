@@ -21,12 +21,12 @@ import { ProfileUserStore } from '../../shared/stores/profile-user.store';
 })
 export class ToolbarComponent implements OnInit {
   public isDarkMode: boolean = false;
-  public userName: string;
-  public user: IUser;
+  public userName: string = '';
+  public user: IUser | null = null;
 
   @Input() logoMinWidth: string = 'initial';
-  @Input() secondToolbar: TemplateRef<any> | null;
-  @Input() secondToolbarCssClasses: string;
+  @Input() secondToolbar!: TemplateRef<any> | null;
+  @Input() secondToolbarCssClasses!: string;
 
   private destroy$ = new Subject();
 
@@ -65,11 +65,13 @@ export class ToolbarComponent implements OnInit {
 
   private initSubscribe(): void {
     fromMobx(() => this.currentUserStore.currentUser)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((curUser: IUser) => {
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((curUser) => {
         if (curUser) {
           this.user = curUser;
-          this.userName = curUser.fullName ?? curUser.userName;
+          this.userName = curUser.fullName ?? curUser.userName as string;
         }
       });
 

@@ -18,10 +18,10 @@ import { AppStateService } from '../../../../services/app-state.service';
 import { ProjectsClient } from 'src/app/clients/projects.client';
 
 @Component({
-    selector: `event-card-started`,
-    styleUrls: [`event-card-started.component.scss`],
-    templateUrl: `event-card-started.component.html`,
-    standalone: false
+  selector: `event-card-started`,
+  styleUrls: [`event-card-started.component.scss`],
+  templateUrl: `event-card-started.component.html`,
+  standalone: false,
 })
 export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
   public set selectedChatIndex(value) {
@@ -35,12 +35,12 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   public Event = Event;
   public chatContextEnum = ChatContextEnum;
   public selectedPageIndex: number = PagesEnum.Communication;
-  public project: IProject;
+  public project: IProject | null = null;
   public currentChatId: number = -1;
-  public currentStageName: string | undefined;
+  public currentStageName: string | null = null;
 
   private _selectedChatIndex = new BehaviorSubject<number>(0);
-  private currentUserId: number;
+  private currentUserId!: number;
 
   constructor(
     private errorProcessor: ErrorProcessorService,
@@ -59,7 +59,8 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   }
 
   public ngOnInit(): void {
-    this.currentUserId = this.authService.getUserId();
+    //TODO: remove type assertion
+    this.currentUserId = this.authService.getUserId() as number;
     this.setEventStageName();
 
     this.fetchProject();
@@ -69,7 +70,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
           this.currentChatId = this.event.id;
           break;
         case ChatContextEnum.Team:
-          const team: Team = this.event.teams.find((team: Team) =>
+          const team = this.event.teams.find((team: Team) =>
             team.members.find((member: IUser) => member.id === this.currentUserId),
           );
           if (team) this.currentChatId = team.id;
@@ -118,8 +119,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
 
   public showUpdateProjectFromBitBranchDialog(): void {
     const dialogData: IProjectUpdateFromGitBranch = {
-      eventId: this.project?.eventId,
-      teamId: this.project?.teamId,
+      //TODO: remove type assertion
+      eventId: this.project?.eventId as number,
+      teamId: this.project?.teamId as number,
       linkToGitBranch: this.project?.linkToGitBranch,
     };
 
@@ -152,7 +154,7 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
     this.project = null;
     if (!this.currentUserId || !this.event) return;
 
-    const team: Team = this.Event.getMemberTeam(this.event, this.currentUserId);
+    const team = this.Event.getMemberTeam(this.event, this.currentUserId);
     if (!team) return;
 
     this.projectsClient

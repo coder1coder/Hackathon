@@ -10,7 +10,7 @@ import { IProjectUpdateFromGitBranch } from '../../../models/Project/IProjectUpd
     standalone: false
 })
 export class ProjectGitDialogComponent implements OnInit {
-  public form: FormGroup;
+  public form!: FormGroup;
   matcher = new CustomErrorStateMatcher();
 
   constructor(
@@ -27,7 +27,7 @@ export class ProjectGitDialogComponent implements OnInit {
     let link: string = this.form.get('linkToGitBranch')?.value;
 
     if (link?.length == 0) {
-      link = null;
+      link = '';
     }
 
     const parameters: IProjectUpdateFromGitBranch = {

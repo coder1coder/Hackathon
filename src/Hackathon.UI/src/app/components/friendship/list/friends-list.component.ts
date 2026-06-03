@@ -23,12 +23,12 @@ export class FriendsListComponent implements OnInit, OnDestroy {
     return this._userId.getValue();
   }
 
-  @Input() status: FriendshipStatus;
+  @Input() status!: FriendshipStatus;
   public FriendshipStatus = FriendshipStatus;
   public Number = Number;
   public users: IUser[] = [];
 
-  public authUserId: number;
+  public authUserId: number = 0;
 
   private _userId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
@@ -45,7 +45,8 @@ export class FriendsListComponent implements OnInit, OnDestroy {
       this.fetchUsersByStatus(x, this.status);
     });
 
-    this.authUserId = this.authService.getUserId();
+    //TODO: remove type assertioon
+    this.authUserId = this.authService.getUserId() as number;
 
     this.signalRService.onFriendshipChangedIntegration = (x): void => {
       if (

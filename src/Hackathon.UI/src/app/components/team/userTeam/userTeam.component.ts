@@ -24,7 +24,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     standalone: false
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
-  public team: Team;
+  public team!: Team;
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> =
     new MatTableDataSource<ITeamJoinRequest>([]);
   public TeamJoinRequestStatusTranslator = TeamJoinRequestStatusTranslator;
@@ -66,7 +66,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
     this.teamsClient
       .cancelJoinRequest({
         requestId: requestId,
-        comment: null,
+        comment: '',
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({

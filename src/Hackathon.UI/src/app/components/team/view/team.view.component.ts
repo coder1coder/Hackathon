@@ -20,9 +20,9 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 export class TeamViewComponent implements OnInit, OnDestroy {
   @Input() teamId?: number;
 
-  public team: Team;
-  public userId: number;
-  public existsSentJoinRequest: ITeamJoinRequest;
+  public team!: Team;
+  public userId: number =- 0;
+  public existsSentJoinRequest: ITeamJoinRequest | null = null;
 
   private destroy$ = new Subject();
 
@@ -127,7 +127,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     this.teamsClient
       .cancelJoinRequest({
         requestId: this.existsSentJoinRequest.id,
-        comment: null,
+        comment: '',
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -153,8 +153,9 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   private fetchTeam(): void {
     this.appStateService.setIsLoadingState(true);
+    //TODO: remove type assertion
     this.teamsClient
-      .getById(this.teamId)
+      .getById(this.teamId as number)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),

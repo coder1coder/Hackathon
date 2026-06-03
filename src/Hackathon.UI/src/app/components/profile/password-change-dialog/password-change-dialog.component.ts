@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     standalone: false
 })
 export class PasswordChangeDialogComponent implements OnInit {
-  public form: FormGroup;
+  public form!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,

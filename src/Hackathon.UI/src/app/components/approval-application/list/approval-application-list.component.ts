@@ -30,7 +30,7 @@ import { ApprovalApplicationsClient } from 'src/app/clients/approval-application
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
   public tableDateFormat = TABLE_DATE_FORMAT;
 
-  private approvalApplicationFilter: IApprovalApplicationFilter;
+  private approvalApplicationFilter!: IApprovalApplicationFilter;
 
   constructor(
     private approvalApplicationsClient: ApprovalApplicationsClient,
@@ -63,7 +63,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
     getFilterModel.Offset = this.pageSettings.pageIndex;
     getFilterModel.Limit = this.pageSettings.pageSize;
     getFilterModel.Filter = {
-      status: this.approvalApplicationFilter?.status ?? null,
+      status: this.approvalApplicationFilter?.status ?? undefined,
     };
     return getFilterModel;
   }

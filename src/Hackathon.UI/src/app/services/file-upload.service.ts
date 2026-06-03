@@ -22,8 +22,8 @@ export class FileUploadService {
   public uploadFile(files: FileList, uploadApiUrl: string): Observable<string> {
     return of(files).pipe(
       map((fileList: FileList) => {
-        const file: File = fileList[0];
-        let errorMsg: string;
+        const file: File | undefined = fileList?.[0];
+        let errorMsg: string = '';
         if (fileList?.length <= 0) {
           errorMsg = UploadFileErrorMessages.FileUploadError;
         }
@@ -34,7 +34,7 @@ export class FileUploadService {
           errorMsg = UploadFileErrorMessages.FileSizeOutOfRange;
         }
         if (errorMsg) {
-          files = null;
+          // files = null;
           this.errorProcessor.Process(null, errorMsg);
         }
         return errorMsg ? null : file;

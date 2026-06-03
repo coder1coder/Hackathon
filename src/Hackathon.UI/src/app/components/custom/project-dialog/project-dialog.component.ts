@@ -11,7 +11,7 @@ import { IProjectDialogData } from '../../../models/Project/project-dialog.inter
     standalone: false
 })
 export class ProjectDialogComponent implements OnInit {
-  public form: FormGroup;
+  public form!: FormGroup;
   matcher = new CustomErrorStateMatcher();
 
   constructor(

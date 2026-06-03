@@ -20,8 +20,8 @@ import { EventsClient } from 'src/app/clients/events.client';
     standalone: false
 })
 export class EventButtonActionsComponent implements OnDestroy {
-  @Input() event: Event;
-  @Input() submit: () => void;
+  @Input() event!: Event;
+  @Input() submit!: () => void;
   @Input() formValidity: boolean = true;
 
   private destroy$ = new Subject();

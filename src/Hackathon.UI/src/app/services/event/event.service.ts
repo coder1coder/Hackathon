@@ -67,9 +67,9 @@ export class EventService {
   }
 
   public isCanJoinToEvent(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return (
-      userId !== undefined &&
+      userId !== null &&
       !this.isAlreadyInEvent(event, userId) &&
       event.status === EventStatus.Published
     );
@@ -94,10 +94,10 @@ export class EventService {
   }
 
   public isCanLeave(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return (
       event.status !== EventStatus.Finished &&
-      userId !== undefined &&
+      userId !== null &&
       this.isAlreadyInEvent(event, userId)
     );
   }
@@ -137,7 +137,7 @@ export class EventService {
   }
 
   public isCanDeleteEvent(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return event?.id !== undefined && userId !== null && event?.owner?.id === userId;
   }
 
@@ -150,7 +150,7 @@ export class EventService {
   }
 
   public canView(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     if (isNull(userId) || isUndefined(userId) || isNull(event) || isUndefined(event)) {
       return false;
     }

@@ -10,7 +10,7 @@ import { Event } from '../../../../../models/Event/Event';
     standalone: false
 })
 export class EventHeaderComponent {
-  @Input() event: Event;
+  @Input() event!: Event;
 
   public get startDate(): string {
     return moment(this.event?.start).local().format(DATE_FORMAT_DD_MM_YYYY);

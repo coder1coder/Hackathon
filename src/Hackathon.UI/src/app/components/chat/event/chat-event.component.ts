@@ -22,9 +22,9 @@ import { EventChatsClient } from 'src/app/clients/event-chats.client';
     standalone: false
 })
 export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit {
-  @ViewChild('scrollMe') chatBody: ElementRef;
+  @ViewChild('scrollMe') chatBody!: ElementRef;
 
-  @Input() event: Event;
+  @Input() event!: Event;
   @Input() showMembers: boolean = false;
   @Input() set pageIndex(value: number) {
     this.selectedPageIndex.next(value);

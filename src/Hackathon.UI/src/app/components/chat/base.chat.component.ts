@@ -14,9 +14,9 @@ export abstract class BaseChatComponent<TChatMessage>
   extends WithFormBaseComponent
   implements OnDestroy
 {
-  @ViewChild('formComponent') formComponent: NgForm;
+  @ViewChild('formComponent') formComponent!: NgForm;
 
-  public currentUserId: number;
+  public currentUserId!: number;
   public form: FormGroup = this.fb.group({});
   public tableDateFormat = TABLE_DATE_FORMAT;
   public isLoaded: boolean = false;
@@ -119,11 +119,12 @@ export abstract class BaseChatComponent<TChatMessage>
     this.chatMembers.clear();
     from(this.members)
       .pipe(
-        mergeMap((user: IUser) => this.profileUserStore.getUser(user.id)),
+        mergeMap((user) => this.profileUserStore.getUser(user.id!)),
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (user: IUser) => this.chatMembers.set(user.id, user),
+        //TODO: remove type assertion
+        next: (user) => this.chatMembers.set(user?.id as number, user as IUser),
         complete: () => {
           this.isLoaded = true;
         },
@@ -173,8 +174,8 @@ export abstract class BaseChatComponent<TChatMessage>
       this.noExistedMemberIds.push(id);
       this.noExistedMembersChanges.next(id);
     }
-
-    return this.chatMembers.get(id);
+    //TODO: remove type assertion
+    return this.chatMembers.get(id) as IUser;
   }
 
   private initSubscriptions(): void {
@@ -199,7 +200,8 @@ export abstract class BaseChatComponent<TChatMessage>
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (user: IUser) => this.chatMembers.set(user.id, user),
+        //TODO: remove type assertion
+        next: (user) => this.chatMembers.set(user?.id as number, user as IUser),
       });
 
     this.selectedPageIndex

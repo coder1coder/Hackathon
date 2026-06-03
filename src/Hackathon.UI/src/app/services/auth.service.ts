@@ -24,7 +24,7 @@ export class AuthService {
   constructor(private http: HttpClient, private googleSignInService: GoogleSignInService) {}
 
   public isLoggedIn(): boolean {
-    const tokenInfo: IGetTokenResponse = this.getTokenInfo();
+    const tokenInfo: IGetTokenResponse | null = this.getTokenInfo();
     if (!tokenInfo) return false;
 
     return tokenInfo.expires >= Date.now();
@@ -52,13 +52,13 @@ export class AuthService {
     this.authChange.emit(false);
   }
 
-  public getUserId(): number {
-    const tokenInfo: IGetTokenResponse = this.getTokenInfo();
+  public getUserId(): number | null {
+    const tokenInfo: IGetTokenResponse | null = this.getTokenInfo();
     return tokenInfo?.userId ?? null;
   }
 
-  public getCurrentUser(): Observable<IUser> {
-    const tokenInfo: IGetTokenResponse = this.getTokenInfo();
+  public getCurrentUser(): Observable<IUser | null> {
+    const tokenInfo: IGetTokenResponse | null = this.getTokenInfo();
     if (!this.isLoggedIn() || !tokenInfo) {
       return of(null);
     }
@@ -90,8 +90,8 @@ export class AuthService {
     return this.googleSignInService.getGoogleServiceEnabled$;
   }
 
-  public getTokenInfo(): IGetTokenResponse {
-    const authInfo: string = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
+  public getTokenInfo(): IGetTokenResponse | null {
+    const authInfo: string | null = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
     if (!authInfo) {
       return null;
     }

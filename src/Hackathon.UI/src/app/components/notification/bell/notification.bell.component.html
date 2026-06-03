@@ -21,7 +21,7 @@
     ></notification-item>
     <div class="d-flex flex-align-items-center flex-justify-content-center">
       <button
-        *ngIf="notifications?.totalCount > notificationLimit"
+        *ngIf="notifications.totalCount > notificationLimit"
         (click)="viewAll()"
         style="margin-top: 1em"
         mat-button

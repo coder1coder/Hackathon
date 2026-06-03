@@ -4,21 +4,21 @@
     <app-line-info label="Автор заявки" [customTemplate]="authorTemplate"></app-line-info>
     <app-line-info
       label="Дата и время заявки"
-      [value]="approvalApplication?.requestedAt | date : tableDateFormat"
+      [value]="(approvalApplication?.requestedAt | date : tableDateFormat) ?? '-'"
     ></app-line-info>
     <app-line-info
       label="Статус модерации заявки"
       [customTemplate]="statusTemplate"
     ></app-line-info>
     <app-line-info label="Cобытие" [customTemplate]="eventTemplate"></app-line-info>
-    <app-line-info label="Подписант" [value]="approvalApplication.signer?.userName"></app-line-info>
+    <app-line-info label="Подписант" [value]="approvalApplication.signer?.userName!"></app-line-info>
     <app-line-info
       label="Дата и время решения по заявке"
-      [value]="approvalApplication?.decisionAt | date : tableDateFormat"
+      [value]="(approvalApplication?.decisionAt! | date : tableDateFormat) ?? '-'"
     ></app-line-info>
     <app-line-info
       label="Комментрия к решению"
-      [value]="approvalApplication?.comment"
+      [value]="approvalApplication?.comment!"
     ></app-line-info>
   </div>
 

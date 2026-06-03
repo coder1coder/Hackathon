@@ -10,10 +10,10 @@ import { SignalRService } from '../../../services/signalr.service';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
 
 @Component({
-    selector: 'notification-list',
-    templateUrl: './notification.list.component.html',
-    styleUrls: ['./notification.list.component.scss'],
-    standalone: false
+  selector: 'notification-list',
+  templateUrl: './notification.list.component.html',
+  styleUrls: ['./notification.list.component.scss'],
+  standalone: false,
 })
 export class NotificationListComponent
   extends BaseTableListComponent<Notification>
@@ -69,7 +69,10 @@ export class NotificationListComponent
   }
 
   public removeAll(event: MouseEvent): void {
-    const ids: string[] = this.items.map((notification: Notification) => notification.id);
+    //TODO: remove type assertioon
+    const ids: string[] = this.items.map(
+      (notification: Notification) => notification.id,
+    ) as string[];
     this.remove(event, ids);
   }
 

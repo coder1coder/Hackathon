@@ -77,7 +77,7 @@
               <div *ngIf="project.linkToGitBranch">
                 Git-репозиторий: {{ project.linkToGitBranch }}
               </div>
-              <div *ngIf="project.files !== null && project.files.length > 0; else noFiles">
+              <div *ngIf="project.files !== null && project.files!.length > 0; else noFiles">
                 <ul>
                   <li *ngFor="let file of project.files">
                     {{ file.fileName }}

@@ -14,7 +14,7 @@
   >
     <div>
       Событие находится на модерации<br />
-      Дата запроса: {{ event?.approvalApplication.requestedAt | date : 'dd.MM.y, HH:mm' }}
+      Дата запроса: {{ event?.approvalApplication?.requestedAt | date : 'dd.MM.y, HH:mm' }}
     </div>
   </alert>
   <alert
@@ -23,7 +23,7 @@
   >
     <div>
       Событие прошло модерацию (теперь вы можете его опубликовать)<br />
-      Дата решения: {{ event?.approvalApplication.decisionAt | date : 'dd.MM.y, HH:mm' }}
+      Дата решения: {{ event?.approvalApplication?.decisionAt | date : 'dd.MM.y, HH:mm' }}
     </div>
   </alert>
   <alert
@@ -32,8 +32,8 @@
   >
     <div>
       Событие не прошло модерацию (необходимо обновить данные и сохранить событие)<br />
-      Дата решения: {{ event?.approvalApplication.decisionAt | date : 'dd.MM.y, HH:mm' }}<br />
-      Комментарий: {{ event?.approvalApplication.comment }}
+      Дата решения: {{ event?.approvalApplication?.decisionAt | date : 'dd.MM.y, HH:mm' }}<br />
+      Комментарий: {{ event?.approvalApplication?.comment }}
     </div>
   </alert>
 

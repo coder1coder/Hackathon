@@ -12,16 +12,16 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class SignalRService {
-  private _connection: signalR.HubConnection;
-  private connectionTimeout: number;
+  private _connection!: signalR.HubConnection;
+  private connectionTimeout: number = 0;
 
-  public onEventChatNewMessage: (eventChatNewMessage: IEventChatNewMessageIntegrationEvent) => void;
-  public onTeamChatNewMessage: (teamChatNewMessage: ITeamChatNewMessageIntegrationEvent) => void;
-  public onNotificationChanged: (notificationChanged: INotificationChangedIntegrationEvent) => void;
-  public onFriendshipChangedIntegration: (
+  public onEventChatNewMessage!: (eventChatNewMessage: IEventChatNewMessageIntegrationEvent) => void;
+  public onTeamChatNewMessage!: (teamChatNewMessage: ITeamChatNewMessageIntegrationEvent) => void;
+  public onNotificationChanged!: (notificationChanged: INotificationChangedIntegrationEvent) => void;
+  public onFriendshipChangedIntegration!: (
     friendshipChangedIntegration: FriendshipChangedIntegrationEvent,
   ) => void;
-  public onEventStageChanged: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
+  public onEventStageChanged!: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
 
   constructor(private authService: AuthService) {}
 
@@ -31,7 +31,7 @@ export class SignalRService {
         ['Authorization']: `Bearer ${this.authService.getTokenInfo()?.token}`,
       },
       accessTokenFactory: async (): Promise<string> => {
-        return this.authService.getTokenInfo()?.token;
+        return this.authService.getTokenInfo()?.token as string;
       },
     };
 
@@ -105,7 +105,7 @@ export class SignalRService {
   private clearConnectionTimeout(): void {
     if (this.connectionTimeout) {
       clearTimeout(this.connectionTimeout);
-      this.connectionTimeout = null;
+      this.connectionTimeout = 0;
     }
   }
 }

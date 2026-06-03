@@ -6,10 +6,10 @@ import { AppStateService } from '../../../../services/app-state.service';
 
 @Injectable()
 export abstract class EventCardBaseComponent implements OnDestroy {
-  @Input() event: Event;
+  @Input() event!: Event;
   public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
 
-  protected eventId: number;
+  protected eventId!: number;
   protected destroy$ = new Subject();
 
   protected constructor(protected appStateService: AppStateService) {}

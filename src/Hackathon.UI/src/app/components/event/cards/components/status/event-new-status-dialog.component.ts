@@ -15,8 +15,8 @@ export class EventNewStatusDialogComponent implements OnInit {
   public selectedStatusValue!: number;
   public EventStatusTranslator = EventStatusTranslator;
   public form = new FormGroup({
-    status: new FormControl(undefined),
-    message: new FormControl(undefined),
+    status: new FormControl(''),
+    message: new FormControl(''),
   });
 
   private editStatus?: ChangeEventStatusMessage;
@@ -48,14 +48,15 @@ export class EventNewStatusDialogComponent implements OnInit {
 
   public createStatus(): void {
     this.dialogRef.close(
-      new ChangeEventStatusMessage(this.selectedStatusValue, this.form.get('message')?.value),
+      //TODO: remove type assertion
+      new ChangeEventStatusMessage(this.selectedStatusValue, this.form.get('message')?.value as string),
     );
   }
 
   private initForm(): void {
-    this.form = this.fb.group({
-      status: [null],
-      message: [null],
+    this.form = new FormGroup({
+      status: new FormControl(''),
+      message: new FormControl(''),
     });
   }
 }

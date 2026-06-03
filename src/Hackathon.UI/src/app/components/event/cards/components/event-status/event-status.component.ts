@@ -8,6 +8,6 @@ import { EventStatus, EventStatusTranslator } from '../../../../../models/Event/
     standalone: false
 })
 export class EventStatusComponent {
-  @Input() status: EventStatus;
+  @Input() status!: EventStatus;
   public eventStatusTranslator = EventStatusTranslator;
 }

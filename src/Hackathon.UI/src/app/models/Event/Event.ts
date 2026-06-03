@@ -7,23 +7,24 @@ import { IEventTaskItem } from './IEventTaskItem';
 import { IEventAgreement } from './IEventAgreement';
 import { IApprovalApplication } from '../approval-application/approval-application.interface';
 
+//TODO: Make interface
 export class Event {
-  id: number;
-  name: string;
-  description: string;
-  start: Date;
-  maxEventMembers: number;
-  minTeamMembers: number;
-  isCreateTeamsAutomatically: boolean;
-  changeEventStatusMessages: ChangeEventStatusMessage[];
-  status: EventStatus;
+  id: number = 0;
+  name: string = '';
+  description: string = '';
+  start: Date = new Date();
+  maxEventMembers: number = 0;
+  minTeamMembers: number = 0;
+  isCreateTeamsAutomatically: boolean = false;
+  changeEventStatusMessages: ChangeEventStatusMessage[] = [];
+  status: EventStatus = 0;
   ownerId?: number;
-  owner: IUser;
+  owner: IUser | null = null;
   teams: Team[] = [];
-  currentStageId: number;
+  currentStageId: number = 0;
   stages: EventStage[] = [];
-  award: string;
-  imageId: string;
+  award: string = '';
+  imageId: string = '';
   imageUrl?: string;
   agreement?: IEventAgreement;
   approvalApplicationId?: number;
@@ -31,7 +32,7 @@ export class Event {
   tags: string[] = [];
 
   //Задачи, которые ставятся перед участниками мероприятия
-  tasks: IEventTaskItem[];
+  tasks: IEventTaskItem[] = [];
 
   public static getMemberTeam(event: Event, memberId: number): Team | undefined {
     return event?.teams.find((x) => x.members.findIndex((s) => s.id == memberId) >= 0);
@@ -49,7 +50,8 @@ export class Event {
     return event.teams?.flatMap((x) => x.members);
   }
 
+  //TODO: Remove type assertion
   public static getStageName(event: Event, eventStageId: number): string | null {
-    return event?.stages?.find((x) => x.id === eventStageId)?.name;
+    return event?.stages?.find((x) => x.id === eventStageId)?.name as string;
   }
 }

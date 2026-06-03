@@ -10,8 +10,8 @@ import { FileStorageClient } from 'src/app/clients/file-storage.client';
     standalone: false
 })
 export class ImageFromStorageComponent implements OnInit {
-  @Input() imageId: string;
-  public imageUrl: SafeUrl;
+  @Input() imageId!: string | undefined;
+  public imageUrl!: SafeUrl;
 
   private destroy$ = new Subject();
 

@@ -13,9 +13,9 @@ import { BaseCollection } from '../../../models/BaseCollection';
 import { FriendshipClient } from 'src/app/clients/friendship.client';
 
 @Component({
-    selector: `friendship-offer-button`,
-    templateUrl: `./friendship-offer-button.component.html`,
-    standalone: false
+  selector: `friendship-offer-button`,
+  templateUrl: `./friendship-offer-button.component.html`,
+  standalone: false,
 })
 export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()
@@ -26,10 +26,10 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
     return this._friendId.getValue();
   }
 
-  public authUserId: number;
+  public authUserId: number = 0;
   public isEnabled: boolean = false;
   public statusText: string = 'Нельзя определить статус';
-  public friendship: IFriendship;
+  public friendship!: IFriendship;
 
   private _friendId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
@@ -41,7 +41,8 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
   ) {}
 
   ngOnInit(): void {
-    this.authUserId = this.authService.getUserId();
+    //TODO: remove type assertioon
+    this.authUserId = this.authService.getUserId() as number;
 
     this._friendId.pipe(takeUntil(this.destroy$)).subscribe((friendId) => {
       if (friendId !== this.authUserId) this.isEnabled = true;

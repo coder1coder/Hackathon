@@ -18,7 +18,10 @@ export class NotificationTeamJoinRequestDecisionViewComponent {
 
   constructor(public router: RouterService) {}
 
+  //TODO: remove type assertioon
   get data(): ITeamJoinRequestDecisionData {
-    return Notification.getParsedData<ITeamJoinRequestDecisionData>(this.notify.data);
+    return Notification.getParsedData<ITeamJoinRequestDecisionData>(
+      this.notify?.data as string,
+    ) as ITeamJoinRequestDecisionData;
   }
 }

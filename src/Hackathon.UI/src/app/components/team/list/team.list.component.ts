@@ -19,12 +19,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {
-  public userId: number | undefined = this.authService.getUserId();
+  public userId: number | null = this.authService.getUserId();
   public form = this.fb.group({
-    teamName: [null],
-    owner: [null],
-    QuantityUsersFrom: [null],
-    QuantityUsersTo: [null],
+    teamName: [''],
+    owner: [''],
+    QuantityUsersFrom: [0],
+    QuantityUsersTo: [0],
   });
 
   public canCreateNewTeam: boolean | undefined;
@@ -55,12 +55,13 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
   }
 
   public override fetch(): void {
+    //TODO: remove type assertion
     const teamFilterModel: TeamFilter = new TeamFilter();
-    teamFilterModel.name = this.form.get('teamName')?.value;
-    teamFilterModel.owner = this.form.get('owner')?.value;
+    teamFilterModel.name = this.form.get('teamName')?.value as string;
+    teamFilterModel.owner = this.form.get('owner')?.value as string;
     teamFilterModel.hasOwner = true;
-    teamFilterModel.quantityMembersFrom = this.form.get('QuantityUsersFrom')?.value;
-    teamFilterModel.quantityMembersTo = this.form.get('QuantityUsersTo')?.value;
+    teamFilterModel.quantityMembersFrom = this.form.get('QuantityUsersFrom')?.value as number;
+    teamFilterModel.quantityMembersTo = this.form.get('QuantityUsersTo')?.value as number;
 
     const getFilterModel: GetListParameters<TeamFilter> = new GetListParameters<TeamFilter>();
     getFilterModel.Offset = this.pageSettings.pageIndex;

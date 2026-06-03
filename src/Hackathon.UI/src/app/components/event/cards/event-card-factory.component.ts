@@ -36,10 +36,10 @@ import { EventsClient } from 'src/app/clients/events.client';
     standalone: false
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
-  @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;
+  @ViewChild(EventDirective, { static: true }) eventDirective!: EventDirective;
 
   private event: Event = new Event();
-  private eventId: number;
+  private eventId!: number;
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(

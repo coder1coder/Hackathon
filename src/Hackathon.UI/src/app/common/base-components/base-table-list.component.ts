@@ -19,7 +19,7 @@ export abstract class BaseTableListComponent<T> implements OnInit, OnDestroy {
 
   protected constructor(private name: string) {
     this.componentName = name;
-    const pageSettingsJson: string = sessionStorage.getItem(
+    const pageSettingsJson = sessionStorage.getItem(
       `${this.componentName}${PageEvent.name}`,
     );
 

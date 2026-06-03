@@ -21,17 +21,17 @@ import { AppStateService } from '../../services/app-state.service';
     standalone: false
 })
 export class LoginComponent implements AfterViewInit {
-  @ViewChild('login', { static: true }) inputLogin: ElementRef;
+  @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
   public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   public isPassFieldHide: boolean = true;
-  public siteKey: string;
+  public siteKey: string = '';
   public captchaEnabled: boolean = environment.captchaEnabled;
   public googleClientEnabled: boolean = true;
   public profileForm = this.fb.group({
-    login: [null],
-    password: [null],
+    login: [''],
+    password: [''],
   });
 
   private captcha: string = '';
@@ -70,8 +70,9 @@ export class LoginComponent implements AfterViewInit {
     }
 
     this.appStateService.setIsLoadingState(true);
-    const login: string = this.profileForm.controls['login'].value;
-    const password: string = this.profileForm.controls['password'].value;
+    //TODO: remove type assertioon
+    const login: string = this.profileForm.controls['login'].value as string;
+    const password: string = this.profileForm.controls['password'].value as string;
 
     this.authService
       .login(login, password)
@@ -84,7 +85,8 @@ export class LoginComponent implements AfterViewInit {
           this.routerService.Profile.View();
         },
         error: (errorContext) => {
-          this.profileForm.setValue({ login: this.profileForm.get('login')?.value, password: '' });
+          //TODO: remove type assertioon
+          this.profileForm.setValue({ login: this.profileForm.get('login')?.value as string, password: '' });
           this.errorProcessor.Process(errorContext);
         },
       });
@@ -94,8 +96,8 @@ export class LoginComponent implements AfterViewInit {
     this.routerService.Profile.Register();
   }
 
-  public getCaptchaResponse(captchaResponse: string): void {
-    this.captcha = captchaResponse;
+  public getCaptchaResponse(captchaResponse: string | null): void {
+    if(captchaResponse) this.captcha = captchaResponse;
   }
 
   public signInByGoogle(): void {

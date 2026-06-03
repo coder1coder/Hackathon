@@ -8,7 +8,7 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
   providedIn: 'root',
 })
 export class CurrentUserStore extends DictionariesLoading {
-  @observable currentUser: IUser;
+  @observable currentUser: IUser | null = null;
 
   constructor(private authService: AuthService) {
     super();

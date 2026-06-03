@@ -25,7 +25,7 @@ export class NavMenuComponent {
     this.currentUserStore.loadCurrentUser();
     fromMobx(() => currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user: IUser) => {
+      .subscribe((user) => {
         if (user) {
           this.items = [
             new MenuItem('/events', 'События'),

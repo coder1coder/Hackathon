@@ -35,7 +35,7 @@
               <image-from-storage [imageId]="event.owner?.profileImageId"></image-from-storage>
             </div>
             <div class="event-content__owner-name">
-              {{ event.owner?.fullName ?? event.owner.userName }}
+              {{ event.owner?.fullName ?? event.owner?.userName }}
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
         </div>
       </section>
 
-      <section class="event-content__section" *ngIf="userId === event.owner.id">
+      <section class="event-content__section" *ngIf="userId === event.owner?.id">
         <div class="event-content__section-title">Уведомления</div>
         <div class="event-content__section-content">
           <div

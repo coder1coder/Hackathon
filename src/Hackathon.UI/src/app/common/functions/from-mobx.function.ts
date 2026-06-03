@@ -1,16 +1,20 @@
-import { Observable, of } from 'rxjs';
-import { computed, IComputedValue, Lambda, toJS } from 'mobx';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { autorun, toJS } from 'mobx';
 
 export function fromMobx<T>(expression: () => T): Observable<T> {
-  return new Observable((observer) => {
-    const computedValue: IComputedValue<T> = computed(expression);
-    const disposer: Lambda = computedValue.observe_((changes) => {
-      observer.next(changes.newValue);
-    }, true);
+  return new Observable<T>((observer) => {
+    // autorun сразу выполнит expression и будет следить за изменениями
+    const disposer = autorun(() => {
+      try {
+        const rawValue = expression();
+        // Преобразуем в чистый JS (toJS) и отправляем в поток RxJS
+        observer.next(toJS(rawValue));
+      } catch (error) {
+        observer.error(error);
+      }
+    });
 
-    return () => {
-      disposer && disposer();
-    };
-  }).pipe(switchMap((value) => of(toJS(value as any))));
+    // Возвращаем функцию отписки
+    return () => disposer();
+  });
 }

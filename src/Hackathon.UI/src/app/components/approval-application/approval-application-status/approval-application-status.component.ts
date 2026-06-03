@@ -9,6 +9,6 @@ import { ApprovalApplicationTranslator } from '../../../models/approval-applicat
     standalone: false
 })
 export class ApprovalApplicationStatusComponent {
-  @Input() status: ApprovalApplicationStatusEnum;
+  @Input() status!: ApprovalApplicationStatusEnum;
   public approvalApplicationTranslator = ApprovalApplicationTranslator;
 }

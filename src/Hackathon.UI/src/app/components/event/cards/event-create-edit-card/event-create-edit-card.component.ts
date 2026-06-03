@@ -7,6 +7,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ICreateEvent } from '../../../../models/Event/ICreateEvent';
@@ -46,6 +47,23 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
 
+interface IEventForm {
+  name: FormControl<string | null>;
+  description: FormControl<string | null>;
+  start: FormControl<string | null>;
+  memberRegistrationMinutes: FormControl<number | null>;
+  teamPresentationMinutes: FormControl<number | null>;
+  maxEventMembers: FormControl<number | null>;
+  minTeamMembers: FormControl<number | null>;
+  isCreateTeamsAutomatically: FormControl<boolean | null>;
+  award: FormControl<string | null>;
+  imageId: FormControl<string | null>;
+  fileImage: FormControl<any | null>;
+  agreementRules: FormControl<string | null>;
+  agreementRequiresConfirmation: FormControl<boolean | null>;
+  tags: FormControl<string[] | null>;
+}
+
 @Component({
     selector: 'event-create-edit-card',
     templateUrl: './event-create-edit-card.component.html',
@@ -56,10 +74,10 @@ export class EventCreateEditCardComponent
   extends EventCardBaseComponent
   implements OnInit, AfterViewInit
 {
-  @ViewChild('eventStagesTable') eventStagesTable: MatTable<EventStage>;
-  @ViewChild('eventTasksTable') eventTasksTable: MatTable<IEventTaskItem>;
-  @ViewChild('eventStatusTable') eventStatusTable: MatTable<ChangeEventStatusMessage>;
-  @ViewChild('newTaskInput') newTaskInput: ElementRef;
+  @ViewChild('eventStagesTable') eventStagesTable!: MatTable<EventStage>;
+  @ViewChild('eventTasksTable') eventTasksTable!: MatTable<IEventTaskItem>;
+  @ViewChild('eventStatusTable') eventStatusTable!: MatTable<ChangeEventStatusMessage>;
+  @ViewChild('newTaskInput') newTaskInput!: ElementRef;
 
   public editMode: boolean = false;
   public submit: () => void = this.saveForm();
@@ -68,14 +86,12 @@ export class EventCreateEditCardComponent
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public eventTasksDataSource = new MatTableDataSource<IEventTaskItem>([]);
   public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
-  public form = new FormGroup({
-    agreementRules: new FormArray([]),
-  });
-  public eventImage: SafeUrl;
-  public minDate: string;
+  public form!: FormGroup;
+  public eventImage!: SafeUrl | null;
+  public minDate!: string;
   public approvalApplicationStatusEnum = ApprovalApplicationStatusEnum;
 
-  private eventStatusValues: (string | EventStatus)[];
+  private eventStatusValues!: (string | EventStatus)[];
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -297,7 +313,7 @@ export class EventCreateEditCardComponent
 
   public selectEventImage(event: Event): void {
     const target: HTMLInputElement = event.target as HTMLInputElement;
-    const files: FileList = target.files;
+    const files = target.files;
 
     if (files?.length) {
       this.eventsClient
@@ -361,34 +377,33 @@ export class EventCreateEditCardComponent
     event.agreement =
       agreementRules?.length > 0
         ? ({
-            id: checkValue(this.event?.agreement?.id),
+            id: checkValue(this.event?.agreement?.id) as number,
             rules: agreementRules,
             requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value,
           } as IEventAgreement)
-        : null;
+        : undefined;
   }
 
   private initForm(): void {
-    // @ts-ignore
-    this.form = this.fb.group({
-      // @ts-ignore
-      name: [null],
-      description: [null],
-      start: [
+    this.form = new FormGroup({
+      // Убрали скобки у Validators.required
+      name: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+      description: new FormControl(''),
+      start: new FormControl(
         EventCreateEditCardComponent.getEventStartDefault(),
-        [this.startDateValidator().bind(this)],
-      ],
-      memberRegistrationMinutes: [10],
-      teamPresentationMinutes: [10],
-      maxEventMembers: [50],
-      minTeamMembers: [2],
-      isCreateTeamsAutomatically: [true],
-      award: ['0'],
-      imageId: [null],
-      fileImage: [null],
-      agreementRules: [null],
-      agreementRequiresConfirmation: [false],
-      tags: [[]],
+        { validators: [this.startDateValidator().bind(this)] }
+      ),
+      memberRegistrationMinutes: new FormControl(10),
+      teamPresentationMinutes: new FormControl(10),
+      maxEventMembers: new FormControl(50),
+      minTeamMembers: new FormControl(2),
+      isCreateTeamsAutomatically: new FormControl(true),
+      award: new FormControl('0'),
+      imageId: new FormControl<string | null>(null),
+      fileImage: new FormControl<any>(null),
+      agreementRules: new FormControl<string | null>(null),
+      agreementRequiresConfirmation: new FormControl(false),
+      tags: new FormControl<string[]>([]),
     });
   }
 
@@ -493,7 +508,8 @@ export class EventCreateEditCardComponent
       imageId: checkValue(this.form.get('imageId')?.value),
       stages: eventStages,
       tasks: eventTaskItems,
-      tags: checkValue(this.tags),
+      //TODO: remove type assertion
+      tags: checkValue(this.tags) as string[],
     };
   }
 
@@ -502,21 +518,22 @@ export class EventCreateEditCardComponent
     eventTaskItems: IEventTaskItem[],
   ): IUpdateEvent {
     return {
-      id: checkValue<number>(this.event?.id),
+      //TODO: remove type assertion
+      id: checkValue<number>(this.event?.id) as number,
       name: checkValue(this.form.get('name')?.value),
       isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
       maxEventMembers: checkValue(this.form.get('maxEventMembers')?.value),
       minTeamMembers: checkValue(this.form.get('minTeamMembers')?.value),
       start: checkValue(this.form.get('start')?.value),
-      userId: checkValue<number>(this.event?.owner?.id),
+      userId: checkValue<number>(this.event?.owner?.id as number) as number,
       changeEventStatusMessages: this.eventStatusDataSource.data,
       stages: eventStages,
       tasks: eventTaskItems,
       award: checkValue(this.form.get('award')?.value),
       description: checkValue(this.form.get('description')?.value),
       imageId: checkValue(this.form.get('imageId')?.value),
-      agreement: checkValue(this.event?.agreement),
-      tags: checkValue(this.tags),
+      agreement: checkValue(this.event?.agreement) as IEventAgreement,
+      tags: checkValue(this.tags) as string[],
     };
   }
 

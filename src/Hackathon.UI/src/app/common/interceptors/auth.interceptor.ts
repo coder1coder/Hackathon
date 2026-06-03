@@ -13,9 +13,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: RouterService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const authJson: string = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
+    const authJson = this.storage.getItem(AuthConstants.STORAGE_AUTH_KEY);
 
-    if (authJson !== undefined) {
+    if (authJson) {
       const auth: IGetTokenResponse = JSON.parse(authJson);
       if (auth && auth.token) {
         request = request.clone({

@@ -33,7 +33,7 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
   }
 
   public ngOnInit(): void {
-    this.form.get('status').valueChanges.subscribe(() => {
+    this.form.get('status')?.valueChanges.subscribe(() => {
       if (this.applyOnChange) this.applyFilter();
     });
 
@@ -55,7 +55,7 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
   public clearFilter(): void {
     this.form.reset();
     this.Changed.emit({
-      status: null,
+      status: undefined,
     });
   }
 }

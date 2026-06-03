@@ -23,7 +23,7 @@ import { EventsClient } from 'src/app/clients/events.client';
     standalone: false
 })
 export class TeamComponent implements OnDestroy {
-  @Input() team: Team;
+  @Input() team!: Team;
 
   public teamEvents: IEventListItem[] = [];
   public authorizedUserId = this.authService.getUserId();
@@ -104,7 +104,7 @@ export class TeamComponent implements OnDestroy {
 
     const parameters: ICancelRequestParameters = {
       requestId: requestId,
-      comment: null,
+      comment: '',
     };
 
     dialogRef

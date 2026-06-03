@@ -40,7 +40,7 @@ export class EventListComponent implements OnInit {
   private params = new GetListParameters<EventFilter>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  @ViewChild('statuses') statusesSelect: MatSelect;
+  @ViewChild('statuses') statusesSelect!: MatSelect;
   constructor(
     public router: RouterService,
     private eventsClient: EventsClient,
@@ -169,7 +169,7 @@ export class EventListComponent implements OnInit {
 
     // @ts-ignore
     if (this.filterForm.value.iAmOwner) {
-      const userId: number = this.authService.getUserId();
+      const userId: number = this.authService.getUserId() as number;
       if (userId) this.params.Filter.ownerIds = [userId];
     }
   }

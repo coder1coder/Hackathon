@@ -21,9 +21,9 @@ import { TeamChatsClient } from 'src/app/clients/team-chats.client';
     standalone: false
 })
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit {
-  @ViewChild('scrollMe') chatBody: ElementRef;
+  @ViewChild('scrollMe') chatBody!: ElementRef;
 
-  @Input() team: Team;
+  @Input() team!: Team;
   @Input() showMembers: boolean = false;
   @Input() set pageIndex(value: number) {
     this.selectedPageIndex.next(value);

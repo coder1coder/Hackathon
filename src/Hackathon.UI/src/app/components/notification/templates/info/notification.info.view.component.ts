@@ -4,10 +4,10 @@ import { ISystemNotificationData } from 'src/app/models/Notification/data/ISyste
 import { Notification } from '../../../../models/Notification/Notification';
 
 @Component({
-    selector: 'notification-info-view',
-    templateUrl: './notification.info.view.component.html',
-    styleUrls: ['./notification.info.view.component.scss'],
-    standalone: false
+  selector: 'notification-info-view',
+  templateUrl: './notification.info.view.component.html',
+  styleUrls: ['./notification.info.view.component.scss'],
+  standalone: false,
 })
 export class NotificationInfoViewComponent {
   notification = Notification;
@@ -15,7 +15,9 @@ export class NotificationInfoViewComponent {
   @Input() notify: Notification | undefined;
   @Input() hideDate: boolean = false;
 
+  //TODO: remove type assertioon
   getMessage(): string {
-    return this.notification.getParsedData<ISystemNotificationData>(this.notify.data)?.Message;
+    return this.notification.getParsedData<ISystemNotificationData>(this.notify?.data as string)
+      ?.Message as string;
   }
 }

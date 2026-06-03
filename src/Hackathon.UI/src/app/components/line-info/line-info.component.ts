@@ -8,8 +8,8 @@ import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular
     standalone: false
 })
 export class LineInfoComponent {
-  @Input() label: string;
-  @Input() value: string | number;
+  @Input() label!: string;
+  @Input() value!: string | number;
   @Input() clickable: boolean = false;
-  @Input() customTemplate: TemplateRef<any>;
+  @Input() customTemplate!: TemplateRef<any>;
 }

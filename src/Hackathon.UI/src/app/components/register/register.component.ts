@@ -21,7 +21,7 @@ import { finalize } from 'rxjs/operators';
     standalone: false
 })
 export class RegisterComponent extends WithFormBaseComponent implements OnInit {
-  @ViewChild('login', { static: true }) inputLogin: ElementRef;
+  @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';

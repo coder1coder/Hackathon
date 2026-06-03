@@ -42,7 +42,7 @@
       </table>
     </mat-tab>
 
-    <mat-tab label="Уведомления" *ngIf="userId === event.owner.id">
+    <mat-tab label="Уведомления" *ngIf="userId === event.owner?.id">
       <table
         mat-table
         [dataSource]="eventStatusesDataSource"

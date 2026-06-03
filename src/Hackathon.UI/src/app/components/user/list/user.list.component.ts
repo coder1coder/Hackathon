@@ -32,7 +32,8 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
 
   override fetch(): void {
     const userFilter: UserFilter = new UserFilter();
-    fromMobx(() => this.currentUserStore.currentUser)
+    //TODO: Remove type assertion
+    fromMobx(() => this.currentUserStore.currentUser as IUser)
       .pipe(
         mergeMap((user: IUser) => {
           if (user?.id != null) {

@@ -26,7 +26,8 @@ export class FileStorageClient extends BaseApiClient {
         }),
       );
     } else {
-      return of(this.cache.get(key));
+      //TODO: remove type assertion
+      return of(this.cache.get(key)) as Observable<SafeUrl>;
     }
   }
 

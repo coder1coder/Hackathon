@@ -86,7 +86,8 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.notifications.items = this.notifications.items.filter(
-          (notification: Notification) => !ids.includes(notification?.id),
+          //TODO: remove type assertioon
+          (notification: Notification) => !ids.includes(notification?.id as string),
         );
         this.notifications.totalCount = this.notifications.totalCount - ids.length;
       });
