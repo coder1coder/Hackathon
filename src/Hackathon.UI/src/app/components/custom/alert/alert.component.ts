@@ -1,10 +1,12 @@
 import { Attribute, Component, HostBinding, Input } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'alert',
     templateUrl: './alert.component.html',
     styleUrls: ['./alert.component.scss'],
-    standalone: false
+    imports: [NgIf, MatIcon]
 })
 export class AlertComponent {
   @Input() showIcon: boolean = true;

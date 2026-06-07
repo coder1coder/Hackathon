@@ -12,12 +12,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorProcessorService } from '../../../../../services/error-processor.service';
 import { Subject, takeUntil } from 'rxjs';
 import { EventsClient } from 'src/app/clients/events.client';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'event-button-actions',
     templateUrl: './event-button-actions.component.html',
     styleUrls: ['./event-button-actions.component.scss'],
-    standalone: false
+    imports: [NgIf, MatButton, MatIcon]
 })
 export class EventButtonActionsComponent implements OnDestroy {
   @Input() event!: Event;

@@ -1,17 +1,43 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
   IApprovalApplication,
   IApprovalApplicationFilter,
 } from '../../../models/approval-application/approval-application.interface';
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
+import { CommonModule } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatDivider } from '@angular/material/list';
+import {
+  ApprovalApplicationStatusComponent
+} from '../approval-application-status/approval-application-status.component';
 
 @Component({
-    selector: 'app-approval-application-filter',
-    templateUrl: './approval-application-filter.component.html',
-    styleUrls: ['./approval-application-filter.component.scss'],
-    standalone: false
+  selector: 'app-approval-application-filter',
+  templateUrl: './approval-application-filter.component.html',
+  styleUrls: ['./approval-application-filter.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatDivider,
+    MatSelectTrigger,
+    MatOption,
+    ApprovalApplicationStatusComponent,
+  ],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalApplicationFilterComponent extends WithFormBaseComponent implements OnInit {
   @Input() isFilterEnabled: boolean = true;

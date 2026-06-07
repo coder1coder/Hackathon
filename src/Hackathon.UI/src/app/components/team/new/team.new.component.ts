@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateTeamModel } from '../../../models/Team/CreateTeamModel';
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
@@ -8,12 +8,17 @@ import { takeUntil } from 'rxjs';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'team-new',
     templateUrl: 'team.new.component.html',
     styleUrls: ['team.new.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, MatButton]
 })
 export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy {
   public selectedTeamType: number = 0;

@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { GoogleUser } from 'src/app/models/User/GoogleUser';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterService } from '../../services/router.service';
 import { SnackService } from '../../services/snack.service';
 import { ErrorProcessorService } from '../../services/error-processor.service';
@@ -13,12 +13,18 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { IProblemDetails } from '../../models/IProblemDetails';
 import { fromMobx } from '../../common/functions/from-mobx.function';
 import { AppStateService } from '../../services/app-state.service';
+import { MatFormField, MatLabel, MatInput, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, NgIf, RecaptchaModule, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class LoginComponent implements AfterViewInit {
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;

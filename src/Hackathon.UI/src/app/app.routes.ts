@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {  Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -18,7 +17,7 @@ import { EventCardFactoryComponent } from './components/event/cards/event-card-f
 import { EventCreateEditCardComponent } from './components/event/cards/event-create-edit-card/event-create-edit-card.component';
 import { ApprovalApplicationListComponent } from './components/approval-application/list/approval-application-list.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent, canActivate: [ProfilePageForLoggedUsersGuard] },
   { path: 'logout', component: LoginComponent },
@@ -54,9 +53,3 @@ const routes: Routes = [
   { path: 'not-found', component: NotFoundComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

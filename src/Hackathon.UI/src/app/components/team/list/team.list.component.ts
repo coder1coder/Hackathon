@@ -4,18 +4,26 @@ import { BaseTableListComponent } from '../../../common/base-components/base-tab
 import { Team, TeamType } from '../../../models/Team/Team';
 import { AuthService } from '../../../services/auth.service';
 import { GetListParameters } from 'src/app/models/GetListParameters';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeamFilter } from 'src/app/models/Team/TeamFilter';
 import { RouterService } from '../../../services/router.service';
 import { takeUntil } from 'rxjs';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'team-list',
     templateUrl: './team.list.component.html',
     styleUrls: ['./team.list.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, NgIf, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {

@@ -11,17 +11,23 @@ import {
 } from '../../../models/Team/ITeamJoinRequest';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
 import { ITeamJoinRequestFilter } from '../../../models/Team/ITeamJoinRequestFilter';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TeamComponent } from '../team/team.component';
+import { AlertComponent } from '../../custom/alert/alert.component';
 
 @Component({
     selector: 'userTeam',
     templateUrl: 'userTeam.component.html',
     styleUrls: ['userTeam.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, NgIf, MatButton, MatIcon, TeamComponent, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
   public team!: Team;

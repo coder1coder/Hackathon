@@ -33,7 +33,7 @@ import { EventsClient } from 'src/app/clients/events.client';
 @Component({
     selector: 'app-event-card-factory',
     template: `<ng-template event-item></ng-template>`,
-    standalone: false
+    imports: [EventDirective]
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
   @ViewChild(EventDirective, { static: true }) eventDirective!: EventDirective;

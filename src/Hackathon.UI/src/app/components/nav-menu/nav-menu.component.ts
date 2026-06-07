@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MenuItem } from '../../common/interfaces/menu-item';
 import { UserRole } from 'src/app/models/User/UserRole';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
@@ -6,12 +6,18 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { IUser } from '../../models/User/IUser';
 import { AppStateService } from '../../services/app-state.service';
+import { NgFor, NgIf } from '@angular/common';
+import { MatMenuItem, MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-nav-menu',
     templateUrl: './nav-menu.component.html',
     styleUrls: ['./nav-menu.component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, MatMenuItem, RouterLink, MatMenuTrigger, MatIcon, MatMenu],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavMenuComponent {
   public items: MenuItem[] = [];

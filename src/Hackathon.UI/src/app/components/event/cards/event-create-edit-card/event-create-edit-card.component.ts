@@ -1,20 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ICreateEvent } from '../../../../models/Event/ICreateEvent';
 import { IUpdateEvent } from '../../../../models/Event/IUpdateEvent';
 import { EventStatus, EventStatusTranslator } from 'src/app/models/Event/EventStatus';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { EventNewStatusDialogComponent } from '../components/status/event-new-status-dialog.component';
 import { SnackService } from '../../../../services/snack.service';
@@ -30,7 +21,7 @@ import {
   EventStageDialogComponent,
   EventStageDialogData,
 } from '../components/event-stage-dialog/event-stage-dialog.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { IEventTaskItem } from '../../../../models/Event/IEventTaskItem';
 import { UploadFileErrorMessages } from '../../../../common/error-messages/upload-file-error-messages';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
@@ -43,9 +34,20 @@ import { IEventAgreement } from '../../../../models/Event/IEventAgreement';
 import { IBaseCreateResponse } from '../../../../models/IBaseCreateResponse';
 import { ApprovalApplicationStatusEnum } from '../../../../models/approval-application/approval-application-status.enum';
 import { AppStateService } from '../../../../services/app-state.service';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipGrid, MatChipOption, MatChipRemove, MatChipInput } from '@angular/material/chips';
 import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
+import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
+import { EventButtonActionsComponent } from '../components/actions/event-button-actions.component';
+import { NgIf, NgFor, AsyncPipe, DatePipe } from '@angular/common';
+import { AlertComponent } from '../../../custom/alert/alert.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 interface IEventForm {
   name: FormControl<string | null>;
@@ -68,7 +70,7 @@ interface IEventForm {
     selector: 'event-create-edit-card',
     templateUrl: './event-create-edit-card.component.html',
     styleUrls: ['./event-create-edit-card.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, EventButtonActionsComponent, NgIf, AlertComponent, FormsModule, ReactiveFormsModule, MatTabGroup, MatTab, MatFormField, MatLabel, MatInput, MatError, CdkTextareaAutosize, MatCheckbox, MatChipGrid, NgFor, MatChipOption, MatChipRemove, MatIcon, MatChipInput, MatButton, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, MatHint, AsyncPipe, DatePipe]
 })
 export class EventCreateEditCardComponent
   extends EventCardBaseComponent

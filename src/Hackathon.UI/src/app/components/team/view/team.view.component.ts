@@ -10,12 +10,16 @@ import { ITeamJoinRequest } from '../../../models/Team/ITeamJoinRequest';
 import { Subject, takeUntil } from 'rxjs';
 import { AppStateService } from '../../../services/app-state.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { TeamComponent } from '../team/team.component';
 
 @Component({
     selector: 'team-view',
     templateUrl: './team.view.component.html',
     styleUrls: ['./team.view.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, NgIf, MatButton, TeamComponent]
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
   @Input() teamId?: number;

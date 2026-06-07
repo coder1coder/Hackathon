@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ChatMessageOption } from '../../../models/chat/TeamChatMessage';
@@ -14,12 +14,36 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { EventsClient } from 'src/app/clients/events.client';
 import { EventChatsClient } from 'src/app/clients/event-chats.client';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
-    selector: 'chat-event',
-    templateUrl: '../base.chat.component.html',
-    styleUrls: ['../base.chat.component.scss'],
-    standalone: false
+  selector: 'chat-event',
+  templateUrl: '../base.chat.component.html',
+  styleUrls: ['../base.chat.component.scss'],
+  imports: [
+    NgIf,
+    InfiniteScrollDirective,
+    NgFor,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckbox,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatHint,
+    MatList,
+    MatListItem,
+    MatProgressSpinner,
+    DatePipe,
+    ProfileImageComponent,
+  ],
 })
 export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit {
   @ViewChild('scrollMe') chatBody!: ElementRef;

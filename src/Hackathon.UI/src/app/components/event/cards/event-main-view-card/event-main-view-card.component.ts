@@ -3,20 +3,25 @@ import { ActivatedRoute } from '@angular/router';
 import { EventStatusTranslator } from '../../../../models/Event/EventStatus';
 import { AuthService } from '../../../../services/auth.service';
 import { Team } from '../../../../models/Team/Team';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { Event } from 'src/app/models/Event/Event';
 import { RouterService } from '../../../../services/router.service';
-import { KeyValue } from '@angular/common';
+import { KeyValue, NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { EventService } from '../../../../services/event/event.service';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { AppStateService } from '../../../../services/app-state.service';
+import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
+import { EventButtonActionsComponent } from '../components/actions/event-button-actions.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { ListDetailsComponent } from '../../../custom/list-details/list-details.component';
+import { AlertComponent } from '../../../custom/alert/alert.component';
 
 @Component({
     selector: 'event-event-main-view-card',
     templateUrl: './event-main-view-card.component.html',
     styleUrls: ['./event-main-view-card.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, EventButtonActionsComponent, MatTabGroup, MatTab, ListDetailsComponent, NgIf, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
 })
 export class EventMainViewCardComponent extends EventCardBaseComponent implements OnInit {
   public eventStatusesDataSource: MatTableDataSource<ChangeEventStatusMessage> =
