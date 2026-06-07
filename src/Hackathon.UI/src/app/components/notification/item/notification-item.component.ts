@@ -2,12 +2,18 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Notification } from 'src/app/models/Notification/Notification';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
+import { NgIf, NgSwitch, NgSwitchCase, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { NotificationInfoViewComponent } from '../templates/info/notification.info.view.component';
+import { NotificationTeamJoinRequestDecisionViewComponent } from '../templates/teams/teamJoinRequestDecision/notification.teamJoinRequestDecision.view.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 @Component({
     selector: `notification-item`,
     templateUrl: `notification-item.component.html`,
     styleUrls: [`notification-item.component.scss`],
-    standalone: false
+    imports: [NgIf, MatIcon, NgSwitch, NgSwitchCase, NotificationInfoViewComponent, NotificationTeamJoinRequestDecisionViewComponent, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, DatePipe]
 })
 export class NotificationItemComponent implements OnDestroy {
   Notification = Notification;

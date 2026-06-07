@@ -9,12 +9,40 @@ import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { mergeMap, takeUntil } from 'rxjs';
 import { UsersClient } from 'src/app/clients/users.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatPaginator } from '@angular/material/paginator';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
-    selector: 'user-list',
-    templateUrl: './user.list.component.html',
-    styleUrls: ['./user.list.component.scss'],
-    standalone: false
+  selector: 'user-list',
+  templateUrl: './user.list.component.html',
+  styleUrls: ['./user.list.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    NgIf,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    ProfileImageComponent,
+  ],
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
   constructor(

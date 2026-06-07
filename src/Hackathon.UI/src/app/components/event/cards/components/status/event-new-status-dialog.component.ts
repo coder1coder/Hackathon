@@ -1,14 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { EventStatusTranslator, EventStatus } from '../../../../../models/Event/EventStatus';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-event-new-status-dialog',
     templateUrl: './event-new-status-dialog.component.html',
     styleUrls: ['./event-new-status-dialog.component.scss'],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class EventNewStatusDialogComponent implements OnInit {
   public statuses: EventStatus[] = [];

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
@@ -14,12 +14,21 @@ import { ErrorProcessorService } from '../../../services/error-processor.service
 import { SnackService } from '../../../services/snack.service';
 import { Router, UrlTree } from '@angular/router';
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
+import {
+  ApprovalApplicationStatusComponent
+} from '../approval-application-status/approval-application-status.component';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
+import { MatIcon } from '@angular/material/icon';
+import { LineInfoComponent } from '../../line-info/line-info.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-approval-application-info-modal',
-    templateUrl: './approval-application-info-modal.component.html',
-    styleUrls: ['./approval-application-info-modal.component.scss'],
-    standalone: false
+  selector: 'app-approval-application-info-modal',
+  templateUrl: './approval-application-info-modal.component.html',
+  styleUrls: ['./approval-application-info-modal.component.scss'],
+  imports: [ApprovalApplicationStatusComponent, ProfileImageComponent, LineInfoComponent, MatIcon, DatePipe],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalApplicationInfoModalComponent {
   public tableDateFormat = TABLE_DATE_FORMAT;

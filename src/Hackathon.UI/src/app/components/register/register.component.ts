@@ -1,9 +1,9 @@
 import '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from '../../services/auth.service';
-import { Location } from '@angular/common';
+import { Location, NgIf, AsyncPipe } from '@angular/common';
 import { SnackService } from '../../services/snack.service';
 import { Observable, takeUntil } from 'rxjs';
 import { WithFormBaseComponent } from '../../common/base-components/with-form-base.component';
@@ -13,12 +13,16 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { AppStateService } from '../../services/app-state.service';
 import { ErrorProcessorService } from '../../services/error-processor.service';
 import { finalize } from 'rxjs/operators';
+import { MatFormField, MatLabel, MatInput, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatButton, NgIf, MatProgressSpinner, AsyncPipe]
 })
 export class RegisterComponent extends WithFormBaseComponent implements OnInit {
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;

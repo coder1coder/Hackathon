@@ -20,12 +20,49 @@ import { ApprovalApplicationRejectModalComponent } from '../approval-application
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
 import { ApprovalApplicationInfoModalComponent } from '../approval-application-info-modal/approval-application-info-modal.component';
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf, DatePipe } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatPaginator } from '@angular/material/paginator';
+import {
+  ApprovalApplicationStatusComponent
+} from '../approval-application-status/approval-application-status.component';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
+import {
+  ApprovalApplicationFilterComponent
+} from '../approval-application-filter/approval-application-filter.component';
 
 @Component({
-    selector: 'app-approval-applications',
-    templateUrl: './approval-application-list.component.html',
-    styleUrls: ['./approval-application-list.component.scss'],
-    standalone: false
+  selector: 'app-approval-applications',
+  templateUrl: './approval-application-list.component.html',
+  styleUrls: ['./approval-application-list.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    NgIf,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    DatePipe,
+    ApprovalApplicationStatusComponent,
+    ProfileImageComponent,
+    ApprovalApplicationFilterComponent,
+  ],
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
   public tableDateFormat = TABLE_DATE_FORMAT;

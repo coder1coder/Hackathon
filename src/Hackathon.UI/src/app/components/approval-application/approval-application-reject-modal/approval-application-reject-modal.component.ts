@@ -1,14 +1,19 @@
 import { Component, Inject } from '@angular/core';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-approval-application-reject-modal',
     templateUrl: './approval-application-reject-modal.component.html',
     styleUrls: ['./approval-application-reject-modal.component.scss'],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, CdkTextareaAutosize, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ApprovalApplicationRejectModalComponent extends WithFormBaseComponent {
   public form: FormGroup = this.fb.group({

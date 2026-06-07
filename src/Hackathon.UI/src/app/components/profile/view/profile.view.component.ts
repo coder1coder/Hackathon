@@ -7,11 +7,11 @@ import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/U
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { Team } from '../../../models/Team/Team';
 import { UserEmailStatus } from 'src/app/models/User/UserEmailStatus';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IKeyValue } from '../../../common/interfaces/key-value.interface';
 import { emailRegex } from '../../../common/patterns/email-regex';
 import { checkValue } from '../../../common/functions/check-value';
@@ -27,11 +27,40 @@ import { PasswordChangeDialogComponent } from '../password-change-dialog/passwor
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { UsersClient } from 'src/app/clients/users.client';
 import { UserProfileReactionsClient } from 'src/app/clients/user-profile-reactions.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../../custom/alert/alert.component';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { FriendshipOfferButtonComponent } from '../../friendship/friendship-offer-button/friendship-offer-button.component';
+import { FriendsListComponent } from '../../friendship/list/friends-list.component';
+import { ProfileImageComponent } from '../image/profile-image.component';
 
 @Component({
-    templateUrl: './profile.view.component.html',
-    styleUrls: ['./profile.view.component.scss'],
-    standalone: false
+  templateUrl: './profile.view.component.html',
+  styleUrls: ['./profile.view.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    NgIf,
+    MatButton,
+    FormsModule,
+    ReactiveFormsModule,
+    AlertComponent,
+    MatFormField,
+    MatInput,
+    NgFor,
+    NgSwitch,
+    NgSwitchCase,
+    MatIcon,
+    FriendshipOfferButtonComponent,
+    MatTabGroup,
+    MatTab,
+    MatTabContent,
+    FriendsListComponent,
+    AsyncPipe,
+    ProfileImageComponent,
+  ],
 })
 export class ProfileViewComponent
   extends WithFormBaseComponent
@@ -226,7 +255,7 @@ export class ProfileViewComponent
           const currentUserId: number = this.authService.getUserId() as number;
           this.canUploadImage = currentUserId === this.userId;
           this.canViewEmail = currentUserId === this.userId;
-          if(user) {
+          if (user) {
             this.user = user;
           }
 

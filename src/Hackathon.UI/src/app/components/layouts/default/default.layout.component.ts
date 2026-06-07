@@ -1,10 +1,17 @@
 import { booleanAttribute, Component, Input } from '@angular/core';
+import { ToolbarComponent } from '../../toolbar/toolbar.component';
+import { NgIf } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'layout-default',
-  templateUrl: './default.layout.component.html',
-  styleUrls: ['./default.layout.component.scss'],
-  standalone: false,
+    selector: 'layout-default',
+    templateUrl: './default.layout.component.html',
+    styleUrls: ['./default.layout.component.scss'],
+    imports: [
+        ToolbarComponent,
+        NgIf,
+        MatProgressSpinner,
+    ],
 })
 export class DefaultLayoutComponent {
   @Input() title: string = '';

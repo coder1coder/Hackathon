@@ -16,12 +16,34 @@ import { IUser } from '../../../../models/User/IUser';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { AppStateService } from '../../../../services/app-state.service';
 import { ProjectsClient } from 'src/app/clients/projects.client';
+import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { ChatTeamComponent } from '../../../chat/team/chat-team.component';
+import { ChatEventComponent } from '../../../chat/event/chat-event.component';
 
 @Component({
-  selector: `event-card-started`,
-  styleUrls: [`event-card-started.component.scss`],
-  templateUrl: `event-card-started.component.html`,
-  standalone: false,
+    selector: `event-card-started`,
+    styleUrls: [`event-card-started.component.scss`],
+    templateUrl: `event-card-started.component.html`,
+    imports: [
+        DefaultLayoutComponent,
+        NgIf,
+        MatButton,
+        MatIcon,
+        MatTabGroup,
+        MatTab,
+        NgFor,
+        MatSelect,
+        MatOption,
+        NgSwitch,
+        NgSwitchCase,
+        ChatTeamComponent,
+        ChatEventComponent,
+    ],
 })
 export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
   public set selectedChatIndex(value) {

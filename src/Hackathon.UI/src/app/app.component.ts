@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ThemeChangeService } from './services/theme-change.service';
 import { SignalRService } from './services/signalr.service';
 import { environment } from '../environments/environment';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
   public title: string = 'Hackathon.UI';

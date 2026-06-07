@@ -8,12 +8,19 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatBadge } from '@angular/material/badge';
+import { NgIf, NgFor } from '@angular/common';
+import { NotificationItemComponent } from '../item/notification-item.component';
+import { MatList, MatListItem } from '@angular/material/list';
 
 @Component({
     selector: 'notification-bell',
     templateUrl: './notification.bell.component.html',
     styleUrls: ['./notification.bell.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatBadge, MatMenu, NgIf, NgFor, NotificationItemComponent, MatButton, MatList, MatListItem]
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
   public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();

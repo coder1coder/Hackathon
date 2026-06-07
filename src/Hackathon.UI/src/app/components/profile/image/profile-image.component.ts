@@ -1,23 +1,33 @@
-import { Component, Input, numberAttribute, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  numberAttribute,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { SnackService } from '../../../services/snack.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { IUser } from '../../../models/User/IUser';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { UsersClient } from 'src/app/clients/users.client';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'profile-image',
-    templateUrl: './profile-image.component.html',
-    styleUrls: ['./profile-image.component.scss'],
-    standalone: false
+  selector: 'profile-image',
+  templateUrl: './profile-image.component.html',
+  styleUrls: ['./profile-image.component.scss'],
+  imports: [MatIcon],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileImageComponent implements OnInit {
   @ViewChild('selectedFile') selectedFile!: HTMLInputElement;
   @Input() canUpload: boolean = false;
   @Input() needUpdateUser: boolean = false;
   @Input() user!: IUser;
-  @Input() userId: number | undefined = undefined
+  @Input() userId: number | undefined = undefined;
 
   private destroy$ = new Subject();
 
@@ -52,7 +62,6 @@ export class ProfileImageComponent implements OnInit {
           this.user = res;
         });
     }
-
   }
 
   private loadData(): void {

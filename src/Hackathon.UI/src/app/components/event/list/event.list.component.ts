@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { EventStatus, EventStatusTranslator } from '../../../models/Event/EventStatus';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFilter } from '../../../models/Event/EventFilter';
 import { GetListParameters } from '../../../models/GetListParameters';
 import * as moment from 'moment/moment';
 import { RouterService } from '../../../services/router.service';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatOption } from '@angular/material/select';
 import { IEventListItem } from '../../../models/Event/IEventListItem';
 import { AuthService } from '../../../services/auth.service';
 import { PageSettingsDefaults } from '../../../models/PageSettings';
@@ -19,12 +19,22 @@ import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { AppStateService } from '../../../services/app-state.service';
 import { finalize } from 'rxjs/operators';
 import { EventsClient } from 'src/app/clients/events.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/list';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { ImageFromStorageComponent } from '../../custom/image-from-storage/image-from-storage.component';
+import { EventStatusComponent } from '../cards/components/event-status/event-status.component';
 
 @Component({
     selector: 'event-list',
     templateUrl: './event.list.component.html',
     styleUrls: ['./event.list.component.scss'],
-    standalone: false
+    imports: [DefaultLayoutComponent, MatButton, MatIcon, NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatDivider, NgFor, MatOption, MatCheckbox, InfiniteScrollDirective, ImageFromStorageComponent, EventStatusComponent, AsyncPipe]
 })
 export class EventListComponent implements OnInit {
   public filterForm = this.fb.group({});

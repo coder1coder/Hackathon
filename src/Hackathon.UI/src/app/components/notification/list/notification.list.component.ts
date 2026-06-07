@@ -8,12 +8,32 @@ import { AuthService } from '../../../services/auth.service';
 import { takeUntil } from 'rxjs';
 import { SignalRService } from '../../../services/signalr.service';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NotificationItemComponent } from '../item/notification-item.component';
+import { MatCardContent, MatCardFooter } from '@angular/material/card';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatList, MatListItem } from '@angular/material/list';
 
 @Component({
-  selector: 'notification-list',
-  templateUrl: './notification.list.component.html',
-  styleUrls: ['./notification.list.component.scss'],
-  standalone: false,
+    selector: 'notification-list',
+    templateUrl: './notification.list.component.html',
+    styleUrls: ['./notification.list.component.scss'],
+    imports: [
+        DefaultLayoutComponent,
+        NgIf,
+        MatButton,
+        MatIcon,
+        NgFor,
+        NotificationItemComponent,
+        MatCardContent,
+        MatCardFooter,
+        MatPaginator,
+        MatList,
+        MatListItem,
+    ],
 })
 export class NotificationListComponent
   extends BaseTableListComponent<Notification>

@@ -11,11 +11,12 @@ import {
 import { SignalRService } from '../../../services/signalr.service';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { FriendshipClient } from 'src/app/clients/friendship.client';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: `friendship-offer-button`,
-  templateUrl: `./friendship-offer-button.component.html`,
-  standalone: false,
+    selector: `friendship-offer-button`,
+    templateUrl: `./friendship-offer-button.component.html`,
+    imports: [MatButton],
 })
 export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()
