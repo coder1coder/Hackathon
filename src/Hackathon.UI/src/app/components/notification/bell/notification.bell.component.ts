@@ -12,7 +12,7 @@ import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatBadge } from '@angular/material/badge';
-import { NgIf, NgFor } from '@angular/common';
+
 import { NotificationItemComponent } from '../item/notification-item.component';
 import { MatList, MatListItem } from '@angular/material/list';
 
@@ -20,7 +20,7 @@ import { MatList, MatListItem } from '@angular/material/list';
     selector: 'notification-bell',
     templateUrl: './notification.bell.component.html',
     styleUrls: ['./notification.bell.component.scss'],
-    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatBadge, MatMenu, NgIf, NgFor, NotificationItemComponent, MatButton, MatList, MatListItem]
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatBadge, MatMenu, NotificationItemComponent, MatButton, MatList, MatListItem]
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
   public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();

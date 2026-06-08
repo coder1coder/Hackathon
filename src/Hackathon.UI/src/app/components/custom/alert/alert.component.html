@@ -1,9 +1,13 @@
 <div class="alert {{ icon }}">
   <div class="icon">
-    <mat-icon *ngIf="showIcon" [innerText]="icon"></mat-icon>
+    @if (showIcon) {
+      <mat-icon [innerText]="icon"></mat-icon>
+    }
   </div>
   <div>
     <div><ng-content></ng-content></div>
-    <mat-icon (click)="isClosed = true" class="alert-close" *ngIf="closeable">close</mat-icon>
+    @if (closeable) {
+      <mat-icon (click)="isClosed = true" class="alert-close">close</mat-icon>
+    }
   </div>
 </div>

@@ -15,7 +15,7 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { AppStateService } from '../../services/app-state.service';
 import { MatFormField, MatLabel, MatInput, MatSuffix } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -24,7 +24,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, NgIf, RecaptchaModule, MatButton, MatProgressSpinner, AsyncPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, RecaptchaModule, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class LoginComponent implements AfterViewInit {
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;

@@ -15,7 +15,7 @@ import { Subject, switchMap, takeUntil } from 'rxjs';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { EventsClient } from 'src/app/clients/events.client';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChatTeamComponent } from '../../chat/team/chat-team.component';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -26,7 +26,6 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss'],
   imports: [
-    NgIf,
     MatTabGroup,
     MatTab,
     MatTabLabel,
@@ -44,8 +43,8 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
     MatRow,
     MatButton,
     MatIcon,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class TeamComponent implements OnDestroy {
   @Input() team!: Team;

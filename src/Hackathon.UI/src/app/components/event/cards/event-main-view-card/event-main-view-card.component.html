@@ -6,7 +6,9 @@
   <mat-tab-group animationDuration="0ms" dynamicHeight class="vertical-tabs">
     <mat-tab label="Общая информация">
       <list-details [items]="eventDetails"></list-details>
-      <alert *ngIf="eventService.isEventOwner(event)">Вы являетесь организатором события</alert>
+      @if (eventService.isEventOwner(event)) {
+        <alert>Вы являетесь организатором события</alert>
+      }
     </mat-tab>
 
     <mat-tab label="Команды">
@@ -14,7 +16,7 @@
         mat-table
         [dataSource]="eventTeamsDataSource"
         [class.empty]="eventTeamsDataSource?.data?.length === 0"
-      >
+        >
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Название</th>
           <td
@@ -28,12 +30,13 @@
         <ng-container matColumnDef="members">
           <th mat-header-cell *matHeaderCellDef>Участники</th>
           <td mat-cell *matCellDef="let element">
-            <div
-              *ngFor="let member of element.members"
-              class="member"
-              (click)="this.router.Users.View(member.id)"
-              [innerText]="member.fullName"
-            ></div>
+            @for (member of element.members; track member) {
+              <div
+                class="member"
+                (click)="this.router.Users.View(member.id)"
+                [innerText]="member.fullName"
+              ></div>
+            }
           </td>
         </ng-container>
 
@@ -42,29 +45,29 @@
       </table>
     </mat-tab>
 
-    <mat-tab label="Уведомления" *ngIf="userId === event.owner?.id">
-      <table
-        mat-table
-        [dataSource]="eventStatusesDataSource"
-        [class.empty]="eventStatusesDataSource.data.length === 0"
-      >
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Статус</th>
-          <td
-            mat-cell
-            *matCellDef="let element"
-            [innerText]="eventStatusTranslator.Translate(element.status)"
-          ></td>
-        </ng-container>
-
-        <ng-container matColumnDef="message">
-          <th mat-header-cell *matHeaderCellDef>Сообщение</th>
-          <td mat-cell *matCellDef="let element" [innerText]="element.message"></td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="getDisplayStatusesColumns()"></tr>
-        <tr mat-row *matRowDef="let row; columns: getDisplayStatusesColumns()"></tr>
-      </table>
-    </mat-tab>
+    @if (userId === event.owner?.id) {
+      <mat-tab label="Уведомления">
+        <table
+          mat-table
+          [dataSource]="eventStatusesDataSource"
+          [class.empty]="eventStatusesDataSource.data.length === 0"
+          >
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Статус</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [innerText]="eventStatusTranslator.Translate(element.status)"
+            ></td>
+          </ng-container>
+          <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef>Сообщение</th>
+            <td mat-cell *matCellDef="let element" [innerText]="element.message"></td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="getDisplayStatusesColumns()"></tr>
+          <tr mat-row *matRowDef="let row; columns: getDisplayStatusesColumns()"></tr>
+        </table>
+      </mat-tab>
+    }
   </mat-tab-group>
 </layout-default>

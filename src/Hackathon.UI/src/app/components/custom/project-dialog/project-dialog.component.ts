@@ -6,13 +6,13 @@ import { IProject } from '../../../models/Project/IProject';
 import { IProjectDialogData } from '../../../models/Project/project-dialog.interface';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'project-dialog',
     templateUrl: './project-dialog.component.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ProjectDialogComponent implements OnInit {
   public form!: FormGroup;

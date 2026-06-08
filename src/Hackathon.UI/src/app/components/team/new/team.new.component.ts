@@ -11,14 +11,14 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
-import { NgFor } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'team-new',
     templateUrl: 'team.new.component.html',
     styleUrls: ['team.new.component.scss'],
-    imports: [DefaultLayoutComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, NgFor, MatOption, MatButton]
+    imports: [DefaultLayoutComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatButton]
 })
 export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy {
   public selectedTeamType: number = 0;

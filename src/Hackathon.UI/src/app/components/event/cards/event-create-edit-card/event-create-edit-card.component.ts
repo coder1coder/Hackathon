@@ -39,7 +39,7 @@ import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
 import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
 import { EventButtonActionsComponent } from '../components/actions/event-button-actions.component';
-import { NgIf, NgFor, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { AlertComponent } from '../../../custom/alert/alert.component';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
@@ -70,7 +70,7 @@ interface IEventForm {
     selector: 'event-create-edit-card',
     templateUrl: './event-create-edit-card.component.html',
     styleUrls: ['./event-create-edit-card.component.scss'],
-    imports: [DefaultLayoutComponent, EventButtonActionsComponent, NgIf, AlertComponent, FormsModule, ReactiveFormsModule, MatTabGroup, MatTab, MatFormField, MatLabel, MatInput, MatError, CdkTextareaAutosize, MatCheckbox, MatChipGrid, NgFor, MatChipOption, MatChipRemove, MatIcon, MatChipInput, MatButton, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, MatHint, AsyncPipe, DatePipe]
+    imports: [DefaultLayoutComponent, EventButtonActionsComponent, AlertComponent, FormsModule, ReactiveFormsModule, MatTabGroup, MatTab, MatFormField, MatLabel, MatInput, MatError, CdkTextareaAutosize, MatCheckbox, MatChipGrid, MatChipOption, MatChipRemove, MatIcon, MatChipInput, MatButton, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, MatHint, AsyncPipe, DatePipe]
 })
 export class EventCreateEditCardComponent
   extends EventCardBaseComponent

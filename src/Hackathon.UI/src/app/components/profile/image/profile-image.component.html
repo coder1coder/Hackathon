@@ -1,8 +1,14 @@
-<ng-container *ngIf="user">
-  <div class="noSelect" *ngIf="!user?.image" [innerText]="user.shortUserName"></div>
-  <img *ngIf="user.image" (error)="onImgError()" [src]="user.image" alt="photo" />
+@if (user) {
+  @if (!user?.image) {
+    <div class="noSelect" [innerText]="user.shortUserName"></div>
+  }
+  @if (user.image) {
+    <img (error)="onImgError()" [src]="user.image" alt="photo" />
+  }
   <input type="file" #selectedFile (change)="selectFile($event)" />
-  <button (click)="selectedFile.click()" *ngIf="canUpload">
-    <mat-icon>photo_camera</mat-icon>
-  </button>
-</ng-container>
+  @if (canUpload) {
+    <button (click)="selectedFile.click()">
+      <mat-icon>photo_camera</mat-icon>
+    </button>
+  }
+}

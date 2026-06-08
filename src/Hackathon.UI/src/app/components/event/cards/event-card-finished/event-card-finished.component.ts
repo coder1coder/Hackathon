@@ -9,14 +9,14 @@ import { IProject } from '../../../../models/Project/IProject';
 import { AppStateService } from '../../../../services/app-state.service';
 import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
 import { EventHeaderComponent } from '../components/event-header/event-header.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ImageFromStorageComponent } from '../../../custom/image-from-storage/image-from-storage.component';
 
 @Component({
     selector: 'app-event-finished-view-card',
     templateUrl: './event-card-finished.component.html',
     styleUrls: ['./event-card-finished.component.scss'],
-    imports: [DefaultLayoutComponent, EventHeaderComponent, NgFor, ImageFromStorageComponent, AsyncPipe]
+    imports: [DefaultLayoutComponent, EventHeaderComponent, ImageFromStorageComponent, AsyncPipe]
 })
 export class EventCardFinishedComponent extends EventCardBaseComponent {
   private readonly userId: number;

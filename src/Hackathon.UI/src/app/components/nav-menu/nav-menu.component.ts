@@ -6,7 +6,7 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { IUser } from '../../models/User/IUser';
 import { AppStateService } from '../../services/app-state.service';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatMenuItem, MatMenuTrigger, MatMenu } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-nav-menu',
     templateUrl: './nav-menu.component.html',
     styleUrls: ['./nav-menu.component.scss'],
-    imports: [NgFor, NgIf, MatMenuItem, RouterLink, MatMenuTrigger, MatIcon, MatMenu],
+    imports: [MatMenuItem, RouterLink, MatMenuTrigger, MatIcon, MatMenu],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

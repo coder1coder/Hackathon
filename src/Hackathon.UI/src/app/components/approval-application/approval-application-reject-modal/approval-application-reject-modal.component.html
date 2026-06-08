@@ -18,13 +18,14 @@
           required
         ></textarea>
 
-        <mat-error
-          *ngIf="
-            getFormControl('comment')?.errors && getFormControl('comment')?.hasError('required')
-          "
-        >
-          Поле обязательно для заполнения
-        </mat-error>
+        @if (
+          getFormControl('comment')?.errors && getFormControl('comment')?.hasError('required')
+          ) {
+          <mat-error
+            >
+            Поле обязательно для заполнения
+          </mat-error>
+        }
       </mat-form-field>
     </div>
   </form>

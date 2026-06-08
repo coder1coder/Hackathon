@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NOTIFICATION_DATETIME_FORMAT } from 'src/app/common/consts/date-formats';
 import { ISystemNotificationData } from 'src/app/models/Notification/data/ISystemNotificationData';
 import { Notification } from '../../../../models/Notification/Notification';
-import { NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatLine } from '@angular/material/grid-list';
 
 @Component({
@@ -10,10 +10,9 @@ import { MatLine } from '@angular/material/grid-list';
     templateUrl: './notification.info.view.component.html',
     styleUrls: ['./notification.info.view.component.scss'],
     imports: [
-        NgIf,
-        MatLine,
-        DatePipe,
-    ],
+    MatLine,
+    DatePipe
+],
 })
 export class NotificationInfoViewComponent {
   notification = Notification;

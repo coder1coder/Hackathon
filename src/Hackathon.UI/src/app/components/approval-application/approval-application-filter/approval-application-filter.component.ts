@@ -13,7 +13,7 @@ import {
   IApprovalApplicationFilter,
 } from '../../../models/approval-application/approval-application.interface';
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
-import { CommonModule } from '@angular/common';
+
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { MatDivider } from '@angular/material/list';
@@ -26,7 +26,6 @@ import {
   templateUrl: './approval-application-filter.component.html',
   styleUrls: ['./approval-application-filter.component.scss'],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormField,
     MatLabel,
@@ -34,8 +33,8 @@ import {
     MatDivider,
     MatSelectTrigger,
     MatOption,
-    ApprovalApplicationStatusComponent,
-  ],
+    ApprovalApplicationStatusComponent
+],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

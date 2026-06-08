@@ -22,7 +22,7 @@ import { EventsClient } from 'src/app/clients/events.client';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/list';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -34,7 +34,7 @@ import { EventStatusComponent } from '../cards/components/event-status/event-sta
     selector: 'event-list',
     templateUrl: './event.list.component.html',
     styleUrls: ['./event.list.component.scss'],
-    imports: [DefaultLayoutComponent, MatButton, MatIcon, NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatDivider, NgFor, MatOption, MatCheckbox, InfiniteScrollDirective, ImageFromStorageComponent, EventStatusComponent, AsyncPipe]
+    imports: [DefaultLayoutComponent, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatDivider, MatOption, MatCheckbox, InfiniteScrollDirective, ImageFromStorageComponent, EventStatusComponent, AsyncPipe]
 })
 export class EventListComponent implements OnInit {
   public filterForm = this.fb.group({});
