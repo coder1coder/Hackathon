@@ -1,7 +1,7 @@
 import { Event } from '../../models/Event/Event';
 import { EventStatus } from '../../models/Event/EventStatus';
 import { AuthService } from '../auth.service';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { ApprovalApplicationStatusEnum } from '../../models/approval-application/approval-application-status.enum';
 import { isNull, isUndefined } from 'lodash';
 import { catchError, filter, Observable, of } from 'rxjs';
@@ -17,15 +17,15 @@ import { EventsClient } from 'src/app/clients/events.client';
   providedIn: 'root',
 })
 export class EventService {
+  private authService = inject(AuthService);
+  private routerService = inject(RouterService);
+  private snackService = inject(SnackService);
+  private globalErrorHandler = inject(GlobalErrorHandler);
+  private eventsClient = inject(EventsClient);
+
   public reloadEvent = new EventEmitter<boolean>();
 
-  constructor(
-    private authService: AuthService,
-    private routerService: RouterService,
-    private snackService: SnackService,
-    private globalErrorHandler: GlobalErrorHandler,
-    private eventsClient: EventsClient,
-  ) {}
+
 
   public checkAccessViewEventById(eventId: number): Observable<boolean> {
     if (!this.authService.isLoggedIn()) {

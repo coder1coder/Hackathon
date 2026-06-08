@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -8,7 +8,10 @@ import { RouterService } from './router.service';
   providedIn: 'root',
 })
 export class ProfilePageForLoggedUsersGuard  {
-  constructor(private authService: AuthService, private router: RouterService) {}
+  private authService = inject(AuthService);
+  private router = inject(RouterService);
+
+
 
   canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this.authService.isLoggedIn()) {

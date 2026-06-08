@@ -1,13 +1,15 @@
 import { SnackService } from './snack.service';
 import { IProblemDetails } from '../models/IProblemDetails';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorProcessorService {
+  private snackService = inject(SnackService);
+
   private readonly UNKNOWN_ERROR: string = 'Произошла непредвиденная ошибка';
-  constructor(private snackService: SnackService) {}
+
 
   public Process(errorContext: any, defaultErrorMessage: string | null = null): void {
     let errorMessage: string = defaultErrorMessage ?? this.UNKNOWN_ERROR;

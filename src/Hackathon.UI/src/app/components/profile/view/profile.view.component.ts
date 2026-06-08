@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { UserRoleTranslator } from 'src/app/models/User/UserRole';
 import { AuthService } from '../../../services/auth.service';
 import { catchError, Observable, of, switchMap, takeUntil } from 'rxjs';
@@ -62,6 +62,19 @@ export class ProfileViewComponent
   extends WithFormBaseComponent
   implements OnInit, AfterViewChecked
 {
+  private authService = inject(AuthService);
+  private teamsClient = inject(TeamsClient);
+  private activateRoute = inject(ActivatedRoute);
+  private usersClient = inject(UsersClient);
+  private userProfileReactionsClient = inject(UserProfileReactionsClient);
+  private snackService = inject(SnackService);
+  private fb = inject(FormBuilder);
+  private profileUserStore = inject(ProfileUserStore);
+  private currentUserStore = inject(CurrentUserStore);
+  private appStateService = inject(AppStateService);
+  private dialogService = inject(MatDialog);
+  private errorProcessor = inject(ErrorProcessorService);
+
   @ViewChild(MatTabGroup) public friendshipTabs!: MatTabGroup;
   @ViewChild('confirmationCodeInput') confirmationCodeInput!: ElementRef;
 
@@ -91,21 +104,11 @@ export class ProfileViewComponent
     email: new FormControl(null, [Validators.required, Validators.pattern(this.emailRegexp)]),
   });
 
-  constructor(
-    private authService: AuthService,
-    private teamsClient: TeamsClient,
-    private activateRoute: ActivatedRoute,
-    private usersClient: UsersClient,
-    private userProfileReactionsClient: UserProfileReactionsClient,
-    private snackService: SnackService,
-    private fb: FormBuilder,
-    private profileUserStore: ProfileUserStore,
-    private currentUserStore: CurrentUserStore,
-    private appStateService: AppStateService,
-    private dialogService: MatDialog,
-    private errorProcessor: ErrorProcessorService,
-  ) {
+  constructor() {
     super();
+    const usersClient = this.usersClient;
+    const snackService = this.snackService;
+
     this.usersClient = usersClient;
     this.snackService = snackService;
     this.authUserId = this.authService.getUserId() ?? 0;

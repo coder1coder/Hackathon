@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { EventStatus, EventStatusTranslator } from '../../../models/Event/EventStatus';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -37,6 +37,14 @@ import { EventStatusComponent } from '../cards/components/event-status/event-sta
     imports: [DefaultLayoutComponent, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatDivider, MatOption, MatCheckbox, InfiniteScrollDirective, ImageFromStorageComponent, EventStatusComponent, AsyncPipe]
 })
 export class EventListComponent implements OnInit {
+  router = inject(RouterService);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private snackService = inject(SnackService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+
   public filterForm = this.fb.group({});
   public eventList: BaseCollection<IEventListItem> = {
     items: [],
@@ -51,15 +59,7 @@ export class EventListComponent implements OnInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   @ViewChild('statuses') statusesSelect!: MatSelect;
-  constructor(
-    public router: RouterService,
-    private eventsClient: EventsClient,
-    private eventService: EventService,
-    private snackService: SnackService,
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-  ) {}
+
 
   ngOnInit(): void {
     this.initDefaultSettings();

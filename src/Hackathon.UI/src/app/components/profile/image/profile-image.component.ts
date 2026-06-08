@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  numberAttribute,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, numberAttribute, OnInit, ViewChild, inject } from '@angular/core';
 import { SnackService } from '../../../services/snack.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
@@ -23,6 +16,11 @@ import { MatIcon } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileImageComponent implements OnInit {
+  private profileUserStore = inject(ProfileUserStore);
+  private snackService = inject(SnackService);
+  private usersClient = inject(UsersClient);
+  private currentUserStore = inject(CurrentUserStore);
+
   @ViewChild('selectedFile') selectedFile!: HTMLInputElement;
   @Input() canUpload: boolean = false;
   @Input() needUpdateUser: boolean = false;
@@ -31,12 +29,7 @@ export class ProfileImageComponent implements OnInit {
 
   private destroy$ = new Subject();
 
-  constructor(
-    private profileUserStore: ProfileUserStore,
-    private snackService: SnackService,
-    private usersClient: UsersClient,
-    private currentUserStore: CurrentUserStore,
-  ) {}
+
 
   ngOnInit(): void {
     this.loadData();

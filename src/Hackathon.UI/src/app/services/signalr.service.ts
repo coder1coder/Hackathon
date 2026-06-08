@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IEventChatNewMessageIntegrationEvent } from '../models/chat/integrationEvents/IEventChatNewMessageIntegrationEvent';
 import { ITeamChatNewMessageIntegrationEvent } from '../models/chat/integrationEvents/ITeamChatNewMessageIntegrationEvent';
 import { INotificationChangedIntegrationEvent } from '../models/IntegrationEvent/INotificationChangedIntegrationEvent';
@@ -12,6 +12,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class SignalRService {
+  private authService = inject(AuthService);
+
   private _connection!: signalR.HubConnection;
   private connectionTimeout: number = 0;
 
@@ -23,7 +25,7 @@ export class SignalRService {
   ) => void;
   public onEventStageChanged!: (integrationEvent: IEventStageChangedIntegrationEvent) => void;
 
-  constructor(private authService: AuthService) {}
+
 
   public initSignalR(hubUrl: string): void {
     const options: IHttpConnectionOptions = {

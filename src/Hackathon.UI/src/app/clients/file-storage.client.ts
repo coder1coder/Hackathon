@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
@@ -9,10 +9,11 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class FileStorageClient extends BaseApiClient {
+  private sanitizer = inject(DomSanitizer);
   private cache = new Map<string, SafeUrl>();
 
-  constructor(private sanitizer: DomSanitizer, http: HttpClient) {
-    super(http, 'fileStorage');
+  constructor() {
+    super('fileStorage');
   }
 
   public getById(id: string): Observable<SafeUrl> {

@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseCollection } from '../models/BaseCollection';
 import { GetListParameters } from '../models/GetListParameters';
@@ -13,8 +12,10 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class UsersClient extends BaseApiClient {
-  constructor(protected http: HttpClient, private fileUploadService: FileUploadService) {
-    super(http, 'user');
+  private fileUploadService = inject(FileUploadService);
+
+  constructor() {
+    super('user');
   }
 
   public getList(getFilterModel: GetListParameters<UserFilter>): Observable<BaseCollection<IUser>> {

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { BaseApiClient } from './base.client';
 import { Observable } from 'rxjs';
 import { BaseCollection } from '../models/BaseCollection';
@@ -9,8 +8,9 @@ import { EventChatMessage } from '../models/chat/EventChatMessage';
   providedIn: 'root',
 })
 export class EventChatsClient extends BaseApiClient {
-  constructor(http: HttpClient) {
-    super(http, 'chat/event');
+
+  constructor() {
+    super('chat/event');
   }
 
   public sendAsync(message: EventChatMessage): Observable<void> {

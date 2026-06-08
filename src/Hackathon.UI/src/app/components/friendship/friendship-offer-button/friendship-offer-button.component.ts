@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { GetListParameters } from '../../../models/GetListParameters';
@@ -19,6 +19,10 @@ import { MatButton } from '@angular/material/button';
     imports: [MatButton],
 })
 export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, OnDestroy {
+  private authService = inject(AuthService);
+  private friendshipClient = inject(FriendshipClient);
+  private signalRService = inject(SignalRService);
+
   @Input()
   set friendId(value) {
     this._friendId.next(value);
@@ -35,11 +39,7 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
   private _friendId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
 
-  constructor(
-    private authService: AuthService,
-    private friendshipClient: FriendshipClient,
-    private signalRService: SignalRService,
-  ) {}
+
 
   ngOnInit(): void {
     //TODO: remove type assertioon

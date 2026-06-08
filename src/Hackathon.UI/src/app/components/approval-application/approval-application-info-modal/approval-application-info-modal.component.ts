@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IApprovalApplication } from '../../../models/approval-application/approval-application.interface';
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
@@ -31,18 +31,18 @@ import { DatePipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalApplicationInfoModalComponent {
+  dialogRef = inject<MatDialogRef<ApprovalApplicationInfoModalComponent>>(MatDialogRef);
+  approvalApplication = inject<IApprovalApplication>(MAT_DIALOG_DATA);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private approvalApplicationsClient = inject(ApprovalApplicationsClient);
+  private errorProcessor = inject(ErrorProcessorService);
+  private snackService = inject(SnackService);
+
   public tableDateFormat = TABLE_DATE_FORMAT;
   private destroy$ = new Subject();
 
-  constructor(
-    public dialogRef: MatDialogRef<ApprovalApplicationInfoModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public approvalApplication: IApprovalApplication,
-    private dialog: MatDialog,
-    private router: Router,
-    private approvalApplicationsClient: ApprovalApplicationsClient,
-    private errorProcessor: ErrorProcessorService,
-    private snackService: SnackService,
-  ) {}
+
 
   public get approvalApplicationHasActiveStatus(): boolean {
     return (

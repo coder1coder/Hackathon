@@ -1,10 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomErrorStateMatcher } from '../../../common/functions/custom-error-state-matcher';
 import { IProject } from '../../../models/Project/IProject';
 import { IProjectDialogData } from '../../../models/Project/project-dialog.interface';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
 
 import { MatButton } from '@angular/material/button';
@@ -12,17 +11,17 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'project-dialog',
     templateUrl: './project-dialog.component.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ProjectDialogComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<ProjectDialogComponent>>(MatDialogRef);
+  dialogData = inject<IProjectDialogData>(MAT_DIALOG_DATA);
+
   public form!: FormGroup;
   matcher = new CustomErrorStateMatcher();
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<ProjectDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dialogData: IProjectDialogData,
-  ) {}
+
 
   ngOnInit(): void {
     this.initForm();

@@ -1,14 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { inject } from '@angular/core';
 
 export abstract class BaseApiClient {
+  protected http = inject(HttpClient);
   protected api: string = environment.api;
   protected baseRoute: string;
 
-  protected constructor(protected http: HttpClient, route: string | null | undefined) {
+  protected constructor(route: string | null | undefined) {
     const headers: HttpHeaders = new HttpHeaders().set('content-type', 'application/json');
 
-    http.options(this.api, {
+    this.http.options(this.api, {
       headers: headers,
     });
 

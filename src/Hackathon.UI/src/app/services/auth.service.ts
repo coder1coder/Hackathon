@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
@@ -16,12 +16,15 @@ import { of } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
+  private googleSignInService = inject(GoogleSignInService);
+
   public authChange: EventEmitter<boolean> = new EventEmitter();
 
   private api: string = environment.api;
   private storage: Storage = sessionStorage;
 
-  constructor(private http: HttpClient, private googleSignInService: GoogleSignInService) {}
+
 
   public isLoggedIn(): boolean {
     const tokenInfo: IGetTokenResponse | null = this.getTokenInfo();

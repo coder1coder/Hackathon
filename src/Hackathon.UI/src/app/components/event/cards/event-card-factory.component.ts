@@ -1,15 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ComponentFactory,
-  ComponentFactoryResolver,
-  ComponentRef,
-  OnDestroy,
-  OnInit,
-  Type,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { EventDirective } from '../event.directive';
 import { EventStatus } from '../../../models/Event/EventStatus';
 import { ActivatedRoute } from '@angular/router';
@@ -36,24 +25,24 @@ import { EventsClient } from 'src/app/clients/events.client';
     imports: [EventDirective]
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private routerService = inject(RouterService);
+  private activeRoute = inject(ActivatedRoute);
+  private componentFactoryResolver = inject(ComponentFactoryResolver);
+  private snackService = inject(SnackService);
+  private globalErrorHandler = inject(GlobalErrorHandler);
+  private cdr = inject(ChangeDetectorRef);
+  private appStateService = inject(AppStateService);
+
   @ViewChild(EventDirective, { static: true }) eventDirective!: EventDirective;
 
   private event: Event = new Event();
   private eventId!: number;
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private authService: AuthService,
-    private eventsClient: EventsClient,
-    private eventService: EventService,
-    private routerService: RouterService,
-    private activeRoute: ActivatedRoute,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private snackService: SnackService,
-    private globalErrorHandler: GlobalErrorHandler,
-    private cdr: ChangeDetectorRef,
-    private appStateService: AppStateService,
-  ) {}
+
 
   ngOnInit(): void {
     this.initEventId();

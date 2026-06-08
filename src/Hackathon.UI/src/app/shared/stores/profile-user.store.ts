@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { IUser } from '../../models/User/IUser';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -11,13 +11,13 @@ import { UsersClient } from 'src/app/clients/users.client';
   providedIn: 'root',
 })
 export class ProfileUserStore {
+  private fileStorageClient = inject(FileStorageClient);
+  private usersClient = inject(UsersClient);
+
   @observable protected users$: Map<number, IUser> = new Map<number, IUser>();
   private fetchObservableMap: Map<number, Observable<IUser>> = new Map<number, Observable<IUser>>();
 
-  constructor(
-    private fileStorageClient: FileStorageClient,
-    private usersClient: UsersClient,
-  ) {
+  constructor() {
     makeObservable(this);
   }
 

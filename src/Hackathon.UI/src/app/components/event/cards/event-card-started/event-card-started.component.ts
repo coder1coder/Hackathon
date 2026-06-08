@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, filter, switchMap, takeUntil } from 'rxjs';
 import { IProject } from '../../../../models/Project/IProject';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
@@ -42,6 +42,13 @@ import { ChatEventComponent } from '../../../chat/event/chat-event.component';
 ],
 })
 export class EventCardStartedComponent extends EventCardBaseComponent implements OnInit {
+  private errorProcessor = inject(ErrorProcessorService);
+  private authService = inject(AuthService);
+  private projectsClient = inject(ProjectsClient);
+  private dialogService = inject(MatDialog);
+  private signalRService = inject(SignalRService);
+  protected appStateService = inject(AppStateService);
+
   public set selectedChatIndex(value) {
     this._selectedChatIndex.next(value);
   }
@@ -60,16 +67,9 @@ export class EventCardStartedComponent extends EventCardBaseComponent implements
   private _selectedChatIndex = new BehaviorSubject<number>(0);
   private currentUserId!: number;
 
-  constructor(
-    private errorProcessor: ErrorProcessorService,
-    private authService: AuthService,
-    private projectsClient: ProjectsClient,
-    private dialogService: MatDialog,
-    private signalRService: SignalRService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
-    signalRService.onEventStageChanged = (integrationEvent): void => {
+  constructor() {
+    super();
+    this.signalRService.onEventStageChanged = (integrationEvent): void => {
       if (integrationEvent.eventId === this.event.id) {
         this.setEventStageName(integrationEvent.eventStageId);
       }

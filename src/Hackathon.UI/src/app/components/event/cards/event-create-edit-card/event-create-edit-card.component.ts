@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ICreateEvent } from '../../../../models/Event/ICreateEvent';
@@ -76,6 +76,17 @@ export class EventCreateEditCardComponent
   extends EventCardBaseComponent
   implements OnInit, AfterViewInit
 {
+  private activateRoute = inject(ActivatedRoute);
+  private fileStorageClient = inject(FileStorageClient);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private snackService = inject(SnackService);
+  private router = inject(RouterService);
+  private dialog = inject(MatDialog);
+  private fb = inject(FormBuilder);
+  private errorProcessor = inject(ErrorProcessorService);
+  protected appStateService = inject(AppStateService);
+
   @ViewChild('eventStagesTable') eventStagesTable!: MatTable<EventStage>;
   @ViewChild('eventTasksTable') eventTasksTable!: MatTable<IEventTaskItem>;
   @ViewChild('eventStatusTable') eventStatusTable!: MatTable<ChangeEventStatusMessage>;
@@ -95,19 +106,8 @@ export class EventCreateEditCardComponent
 
   private eventStatusValues!: (string | EventStatus)[];
 
-  constructor(
-    private activateRoute: ActivatedRoute,
-    private fileStorageClient: FileStorageClient,
-    private eventsClient: EventsClient,
-    public eventService: EventService,
-    private snackService: SnackService,
-    private router: RouterService,
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private errorProcessor: ErrorProcessorService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
+  constructor() {
+    super();
   }
 
   ngOnInit(): void {

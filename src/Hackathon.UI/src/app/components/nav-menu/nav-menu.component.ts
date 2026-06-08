@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MenuItem } from '../../common/interfaces/menu-item';
 import { UserRole } from 'src/app/models/User/UserRole';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
@@ -20,14 +20,16 @@ import { MatIcon } from '@angular/material/icon';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavMenuComponent {
+  private currentUserStore = inject(CurrentUserStore);
+  private appStateService = inject(AppStateService);
+
   public items: MenuItem[] = [];
   public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   private destroy$ = new Subject();
 
-  constructor(
-    private currentUserStore: CurrentUserStore,
-    private appStateService: AppStateService,
-  ) {
+  constructor() {
+    const currentUserStore = this.currentUserStore;
+
     this.currentUserStore.loadCurrentUser();
     fromMobx(() => currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { GetListParameters } from '../../../models/GetListParameters';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
@@ -37,11 +37,11 @@ export class NotificationListComponent
   extends BaseTableListComponent<Notification>
   implements OnInit
 {
-  constructor(
-    private notificationsClient: NotificationsClient,
-    private signalRService: SignalRService,
-    private authService: AuthService,
-  ) {
+  private notificationsClient = inject(NotificationsClient);
+  private signalRService = inject(SignalRService);
+  private authService = inject(AuthService);
+
+  constructor() {
     super(NotificationListComponent.name);
   }
 

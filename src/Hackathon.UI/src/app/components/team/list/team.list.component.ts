@@ -1,4 +1,4 @@
-import { Component, Injectable } from '@angular/core';
+import { Component, Injectable, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import { Team, TeamType } from '../../../models/Team/Team';
@@ -27,6 +27,11 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {
+  private teamsClient = inject(TeamsClient);
+  private authService = inject(AuthService);
+  private router = inject(RouterService);
+  private fb = inject(FormBuilder);
+
   public userId: number | null = this.authService.getUserId();
   public form = this.fb.group({
     teamName: [''],
@@ -37,12 +42,7 @@ export class TeamListComponent extends BaseTableListComponent<Team> {
 
   public canCreateNewTeam: boolean | undefined;
 
-  constructor(
-    private teamsClient: TeamsClient,
-    private authService: AuthService,
-    private router: RouterService,
-    private fb: FormBuilder,
-  ) {
+  constructor() {
     super(TeamListComponent.name);
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterService } from '../../../services/router.service';
 import { Team } from '../../../models/Team/Team';
 import { AuthService } from '../../../services/auth.service';
@@ -30,6 +30,12 @@ import { AlertComponent } from '../../custom/alert/alert.component';
     imports: [DefaultLayoutComponent, MatButton, MatIcon, TeamComponent, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
+  routerService = inject(RouterService);
+  private teamsClient = inject(TeamsClient);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private errorProcessor = inject(ErrorProcessorService);
+
   public team!: Team;
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> =
     new MatTableDataSource<ITeamJoinRequest>([]);
@@ -37,13 +43,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(
-    public routerService: RouterService,
-    private teamsClient: TeamsClient,
-    private authService: AuthService,
-    private router: Router,
-    private errorProcessor: ErrorProcessorService,
-  ) {}
+
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) return;

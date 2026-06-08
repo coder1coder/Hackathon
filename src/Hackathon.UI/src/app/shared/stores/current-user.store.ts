@@ -1,5 +1,5 @@
 import { DictionariesLoading } from '../../common/base-components/dictionaries-loading.component';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IUser } from '../../models/User/IUser';
 import { AuthService } from '../../services/auth.service';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -8,9 +8,11 @@ import { action, makeObservable, observable, runInAction } from 'mobx';
   providedIn: 'root',
 })
 export class CurrentUserStore extends DictionariesLoading {
+  private authService = inject(AuthService);
+
   @observable currentUser: IUser | null = null;
 
-  constructor(private authService: AuthService) {
+  constructor() {
     super();
     makeObservable(this);
   }

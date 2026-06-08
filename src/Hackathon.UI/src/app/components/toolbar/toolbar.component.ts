@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, inject } from '@angular/core';
 import { RouterService } from '../../services/router.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -39,9 +39,16 @@ import { ProfileImageComponent } from '../profile/image/profile-image.component'
     MatIcon,
     NgTemplateOutlet,
     ProfileImageComponent
-],
+  ],
 })
 export class ToolbarComponent implements OnInit {
+  private routerService = inject(RouterService);
+  private dialog = inject(MatDialog);
+  private fb = inject(FormBuilder);
+  private themeChangeService = inject(ThemeChangeService);
+  private currentUserStore = inject(CurrentUserStore);
+  private profileUserStore = inject(ProfileUserStore);
+
   public isDarkMode: boolean = false;
   public userName: string = '';
   public user: IUser | null = null;
@@ -51,15 +58,6 @@ export class ToolbarComponent implements OnInit {
   @Input() secondToolbarCssClasses!: string;
 
   private destroy$ = new Subject();
-
-  constructor(
-    private routerService: RouterService,
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private themeChangeService: ThemeChangeService,
-    private currentUserStore: CurrentUserStore,
-    private profileUserStore: ProfileUserStore,
-  ) {}
 
   ngOnInit(): void {
     this.currentUserStore.loadCurrentUser();

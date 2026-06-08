@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { Event } from '../../../../models/Event/Event';
 import { RouterService } from '../../../../services/router.service';
@@ -19,15 +19,16 @@ import { ImageFromStorageComponent } from '../../../custom/image-from-storage/im
     imports: [DefaultLayoutComponent, EventHeaderComponent, ImageFromStorageComponent, AsyncPipe]
 })
 export class EventCardFinishedComponent extends EventCardBaseComponent {
+  router = inject(RouterService);
+  private authService = inject(AuthService);
+  protected appStateService = inject(AppStateService);
+
   private readonly userId: number;
 
-  constructor(
-    public router: RouterService,
-    private authService: AuthService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
-    this.userId = authService.getUserId() ?? 0;
+  constructor() {
+    super();
+
+    this.userId = this.authService.getUserId() ?? 0;
   }
 
   public getEventMembers(): IUser[] {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseCollection } from '../models/BaseCollection';
@@ -11,8 +11,9 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class NotificationsClient extends BaseApiClient {
-  constructor(protected http: HttpClient) {
-    super(http, 'notification');
+
+  constructor() {
+    super('notification');
   }
 
   public markAsRead(ids: string[]): Observable<void> {

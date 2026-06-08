@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import { GetListParameters } from '../../../models/GetListParameters';
@@ -44,11 +44,11 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
 ],
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
-  constructor(
-    private usersClient: UsersClient,
-    private routerService: RouterService,
-    private currentUserStore: CurrentUserStore,
-  ) {
+  private usersClient = inject(UsersClient);
+  private routerService = inject(RouterService);
+  private currentUserStore = inject(CurrentUserStore);
+
+  constructor() {
     super(UserListComponent.name);
     this.currentUserStore.loadCurrentUser();
   }

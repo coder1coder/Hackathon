@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { FriendshipClient } from '../../../clients/friendship.client';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
@@ -20,13 +20,17 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   imports: [
     MatList,
     MatListItem,
-    MatButton,
     MatIconButton,
     MatIcon,
     ProfileImageComponent
 ],
 })
 export class FriendsListComponent implements OnInit, OnDestroy {
+  private friendshipClient = inject(FriendshipClient);
+  private routerService = inject(RouterService);
+  private authService = inject(AuthService);
+  private signalRService = inject(SignalRService);
+
   @Input()
   set userId(value) {
     this._userId.next(value);
@@ -45,12 +49,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   private _userId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
 
-  constructor(
-    private friendshipClient: FriendshipClient,
-    private routerService: RouterService,
-    private authService: AuthService,
-    private signalRService: SignalRService,
-  ) {}
+
 
   ngOnInit(): void {
     this._userId.pipe(takeUntil(this.destroy$)).subscribe((x) => {

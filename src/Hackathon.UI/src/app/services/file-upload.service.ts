@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { filter, Observable, of, switchMap } from 'rxjs';
@@ -11,9 +11,12 @@ import { ErrorProcessorService } from './error-processor.service';
   providedIn: 'root',
 })
 export class FileUploadService {
+  private http = inject(HttpClient);
+  private errorProcessor = inject(ErrorProcessorService);
+
   private api: string = `${environment.api}`;
 
-  constructor(private http: HttpClient, private errorProcessor: ErrorProcessorService) {}
+
 
   /** Загрузить веб-контент файл помещенных через селект или "drag and drop"
    * @param files Объекты типа элемента HTML input type="file"
