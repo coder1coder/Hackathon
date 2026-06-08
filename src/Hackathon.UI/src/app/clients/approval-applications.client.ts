@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GetListParameters } from '../models/GetListParameters';
 import { BaseCollection } from '../models/BaseCollection';
@@ -13,8 +12,9 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class ApprovalApplicationsClient extends BaseApiClient {
-  constructor(http: HttpClient) {
-    super(http, 'approvalapplications');
+
+  constructor() {
+    super('approvalapplications');
   }
 
   /** Получить список заявок на согласование

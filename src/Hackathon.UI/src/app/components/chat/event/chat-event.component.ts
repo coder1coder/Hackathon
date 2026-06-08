@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { BaseCollection } from '../../../models/BaseCollection';
@@ -14,7 +14,7 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { EventsClient } from 'src/app/clients/events.client';
 import { EventChatsClient } from 'src/app/clients/event-chats.client';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
@@ -27,9 +27,7 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   templateUrl: '../base.chat.component.html',
   styleUrls: ['../base.chat.component.scss'],
   imports: [
-    NgIf,
     InfiniteScrollDirective,
-    NgFor,
     FormsModule,
     ReactiveFormsModule,
     MatCheckbox,
@@ -46,6 +44,14 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   ],
 })
 export class ChatEventComponent extends BaseChatComponent<EventChatMessage> implements OnInit {
+  protected authService = inject(AuthService);
+  protected fb = inject(FormBuilder);
+  protected profileUserStore = inject(ProfileUserStore);
+  protected signalRService = inject(SignalRService);
+  private eventsClient = inject(EventsClient);
+  private eventChatsClient = inject(EventChatsClient);
+  private errorProcessor = inject(ErrorProcessorService);
+
   @ViewChild('scrollMe') chatBody!: ElementRef;
 
   @Input() event!: Event;
@@ -64,17 +70,9 @@ export class ChatEventComponent extends BaseChatComponent<EventChatMessage> impl
   public entityId = new BehaviorSubject<number>(0);
   public messages: EventChatMessage[] = [];
 
-  constructor(
-    protected authService: AuthService,
-    protected fb: FormBuilder,
-    protected profileUserStore: ProfileUserStore,
-    protected signalRService: SignalRService,
-    private eventsClient: EventsClient,
-    private eventChatsClient: EventChatsClient,
-    private errorProcessor: ErrorProcessorService,
-  ) {
-    super(authService, fb, profileUserStore);
-    signalRService.onEventChatNewMessage = (x): void => this.handleNewMessageEvent(x);
+  constructor() {
+    super();
+    this.signalRService.onEventChatNewMessage = (x): void => this.handleNewMessageEvent(x);
   }
 
   ngOnInit(): void {

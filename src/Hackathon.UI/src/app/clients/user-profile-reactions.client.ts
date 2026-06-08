@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { UserProfileReaction, IUserProfileReaction } from '../models/User/UserProfileReaction';
 import { BaseApiClient } from './base.client';
@@ -8,8 +8,9 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class UserProfileReactionsClient extends BaseApiClient {
-  constructor(protected http: HttpClient) {
-    super(http, null);
+
+  constructor() {
+    super(null);
   }
 
   public get(targetUserId: number): Observable<UserProfileReaction> {

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject } from '@angular/core';
 import { Notification } from 'src/app/models/Notification/Notification';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
@@ -16,6 +16,8 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
     imports: [MatIcon, NotificationInfoViewComponent, NotificationTeamJoinRequestDecisionViewComponent, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, DatePipe]
 })
 export class NotificationItemComponent implements OnDestroy {
+  private notificationsClient = inject(NotificationsClient);
+
   Notification = Notification;
 
   @Input() notification: Notification | undefined;
@@ -24,7 +26,7 @@ export class NotificationItemComponent implements OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(private notificationsClient: NotificationsClient) {}
+
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
@@ -23,18 +23,18 @@ import { MatList, MatListItem } from '@angular/material/list';
     imports: [MatIconButton, MatMenuTrigger, MatIcon, MatBadge, MatMenu, NotificationItemComponent, MatButton, MatList, MatListItem]
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
+  private notificationsClient = inject(NotificationsClient);
+  private signalRService = inject(SignalRService);
+  private router = inject(RouterService);
+  private authService = inject(AuthService);
+
   public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();
   public unreadNotificationsCount: number = 0;
   public notificationLimit: number = 3;
 
   private destroy$ = new Subject();
 
-  constructor(
-    private notificationsClient: NotificationsClient,
-    private signalRService: SignalRService,
-    private router: RouterService,
-    private authService: AuthService,
-  ) {}
+
 
   ngOnInit(): void {
     this.signalRService.onNotificationChanged = (): void => {

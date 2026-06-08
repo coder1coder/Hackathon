@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseCollection } from '../models/BaseCollection';
 import { ICreateEvent } from '../models/Event/ICreateEvent';
@@ -17,8 +17,10 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class EventsClient extends BaseApiClient {
-  constructor(protected http: HttpClient, private fileUploadService: FileUploadService) {
-    super(http, 'event');
+  private fileUploadService = inject(FileUploadService);
+
+  constructor() {
+    super('event');
   }
 
   public getList(

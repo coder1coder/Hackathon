@@ -1,4 +1,4 @@
-import { Inject, Injectable, DOCUMENT } from '@angular/core';
+import { Injectable, DOCUMENT, inject } from '@angular/core';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { AuthConstants } from './auth.constants';
 import { IThemeModeInterface } from '../common/interfaces/theme-mode.interface';
@@ -11,12 +11,15 @@ import { filter } from 'rxjs';
   providedIn: 'root',
 })
 export class ThemeChangeService {
+  private document = inject<Document>(DOCUMENT);
+  private overlay = inject(OverlayContainer);
+
   private storage: Storage = sessionStorage;
   private darkClassName = 'theme-dark-mode';
   private lightClassName = 'theme-light-mode';
   @observable themeMode: IThemeModeInterface = this.getMode();
 
-  constructor(@Inject(DOCUMENT) private document: Document, private overlay: OverlayContainer) {
+  constructor() {
     makeObservable(this);
   }
 

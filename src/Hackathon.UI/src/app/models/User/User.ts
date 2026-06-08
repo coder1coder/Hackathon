@@ -8,7 +8,7 @@ export class User {
   token: any | undefined;
   image: any | undefined;
 
-  email: IUserEmail;
+  email?: IUserEmail;
 
   constructor(login?: string, token?: string) {
     this.id = 0;

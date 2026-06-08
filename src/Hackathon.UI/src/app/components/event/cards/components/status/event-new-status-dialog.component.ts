@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
@@ -13,9 +13,13 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-event-new-status-dialog',
     templateUrl: './event-new-status-dialog.component.html',
     styleUrls: ['./event-new-status-dialog.component.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class EventNewStatusDialogComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<EventNewStatusDialogComponent>>(MatDialogRef);
+  private dialogData = inject(MAT_DIALOG_DATA);
+
   public statuses: EventStatus[] = [];
   public selectedStatusValue!: number;
   public EventStatusTranslator = EventStatusTranslator;
@@ -26,11 +30,7 @@ export class EventNewStatusDialogComponent implements OnInit {
 
   private editStatus?: ChangeEventStatusMessage;
 
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<EventNewStatusDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private dialogData: any,
-  ) {}
+
 
   ngOnInit(): void {
     this.initForm();

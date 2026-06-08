@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -39,6 +32,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalApplicationFilterComponent extends WithFormBaseComponent implements OnInit {
+  private fb = inject(FormBuilder);
+
   @Input() isFilterEnabled: boolean = true;
   @Input() applyOnChange: boolean = false;
   @Input() approvalApplications: IApprovalApplication[] = [];
@@ -53,7 +48,7 @@ export class ApprovalApplicationFilterComponent extends WithFormBaseComponent im
     status: [ApprovalApplicationStatusEnum.Requested],
   });
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     super();
   }
 

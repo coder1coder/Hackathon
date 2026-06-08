@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from '../../services/auth.service';
@@ -25,6 +25,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class RegisterComponent extends WithFormBaseComponent implements OnInit {
+  private routerService = inject(RouterService);
+  private location = inject(Location);
+  private authService = inject(AuthService);
+  private snackbar = inject(SnackService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+  private errorProcessor = inject(ErrorProcessorService);
+
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public override form: FormGroup = this.fb.group({});
@@ -34,15 +42,7 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
 
   private emailRegexp: RegExp = emailRegex;
 
-  constructor(
-    private routerService: RouterService,
-    private location: Location,
-    private authService: AuthService,
-    private snackbar: SnackService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-    private errorProcessor: ErrorProcessorService,
-  ) {
+  constructor() {
     super();
   }
 

@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { finalize } from 'rxjs/operators';
@@ -27,6 +27,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, RecaptchaModule, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class LoginComponent implements AfterViewInit {
+  private router = inject(Router);
+  private routerService = inject(RouterService);
+  private errorProcessor = inject(ErrorProcessorService);
+  private snackService = inject(SnackService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
@@ -43,15 +51,9 @@ export class LoginComponent implements AfterViewInit {
   private captcha: string = '';
   private destroy$ = new Subject();
 
-  constructor(
-    private router: Router,
-    private routerService: RouterService,
-    private errorProcessor: ErrorProcessorService,
-    private snackService: SnackService,
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-  ) {
+  constructor() {
+    const router = this.router;
+
     if (router.url === '/logout') {
       this.signOut();
     }

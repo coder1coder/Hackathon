@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateTeamModel } from '../../../models/Team/CreateTeamModel';
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +21,12 @@ import { MatButton } from '@angular/material/button';
     imports: [DefaultLayoutComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatButton]
 })
 export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy {
+  private teamsClient = inject(TeamsClient);
+  private snackBar = inject(SnackService);
+  private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+  private errorProcessor = inject(ErrorProcessorService);
+
   public selectedTeamType: number = 0;
   public teamTypes: TeamType[] = [
     { id: 0, name: 'Закрытый' },
@@ -33,14 +39,10 @@ export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy
 
   private readonly eventId: number;
 
-  constructor(
-    private teamsClient: TeamsClient,
-    private snackBar: SnackService,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private errorProcessor: ErrorProcessorService,
-  ) {
+  constructor() {
     super();
+    const route = this.route;
+
     this.eventId = Number(route.snapshot.queryParamMap.get('eventId'));
   }
 

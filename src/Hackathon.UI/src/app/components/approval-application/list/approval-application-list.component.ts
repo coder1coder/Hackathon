@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import {
   IApprovalApplication,
@@ -64,16 +64,16 @@ import {
 ],
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
+  private approvalApplicationsClient = inject(ApprovalApplicationsClient);
+  private errorProcessor = inject(ErrorProcessorService);
+  private dialog = inject(MatDialog);
+  private snackService = inject(SnackService);
+
   public tableDateFormat = TABLE_DATE_FORMAT;
 
   private approvalApplicationFilter!: IApprovalApplicationFilter;
 
-  constructor(
-    private approvalApplicationsClient: ApprovalApplicationsClient,
-    private errorProcessor: ErrorProcessorService,
-    private dialog: MatDialog,
-    private snackService: SnackService,
-  ) {
+  constructor() {
     super(ApprovalApplicationListComponent.name);
   }
 

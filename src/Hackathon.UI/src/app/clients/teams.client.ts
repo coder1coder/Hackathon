@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BaseCollection } from '../models/BaseCollection';
 import { Team } from '../models/Team/Team';
 import { Observable } from 'rxjs';
@@ -16,8 +16,9 @@ import { BaseApiClient } from './base.client';
   providedIn: 'root',
 })
 export class TeamsClient extends BaseApiClient {
-  constructor(protected http: HttpClient) {
-    super(http, 'team');
+
+  constructor() {
+    super( 'team');
   }
 
   public create(createTeamModel: CreateTeamModel): Observable<IBaseCreateResponse> {

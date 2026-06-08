@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject } from '@angular/core';
 import { Team } from '../../../models/Team/Team';
 import { RouterService } from '../../../services/router.service';
 import { EventFilter } from '../../../models/Event/EventFilter';
@@ -47,6 +47,12 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
 ],
 })
 export class TeamComponent implements OnDestroy {
+  dialog = inject(MatDialog);
+  router = inject(RouterService);
+  private eventsClient = inject(EventsClient);
+  private authService = inject(AuthService);
+  private teamsClient = inject(TeamsClient);
+
   @Input() team!: Team;
 
   public teamEvents: IEventListItem[] = [];
@@ -57,13 +63,7 @@ export class TeamComponent implements OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(
-    public dialog: MatDialog,
-    public router: RouterService,
-    private eventsClient: EventsClient,
-    private authService: AuthService,
-    private teamsClient: TeamsClient,
-  ) {}
+
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

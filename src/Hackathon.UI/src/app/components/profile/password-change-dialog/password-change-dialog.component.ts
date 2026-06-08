@@ -1,24 +1,21 @@
-﻿import { Component, Inject, OnInit } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'password-change-dialog',
     templateUrl: './password-change-dialog.component.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class PasswordChangeDialogComponent implements OnInit {
-  public form!: FormGroup;
+  private formBuilder = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<IUpdatePasswordParameters>>(MatDialogRef);
+  dialogData = inject<IUpdatePasswordParameters>(MAT_DIALOG_DATA);
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<IUpdatePasswordParameters>,
-    @Inject(MAT_DIALOG_DATA) public dialogData: IUpdatePasswordParameters,
-  ) {}
+  public form!: FormGroup;
 
   ngOnInit(): void {
     this.initForm();

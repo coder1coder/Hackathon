@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { BaseCollection } from '../../../models/BaseCollection';
@@ -43,6 +43,14 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
 ],
 })
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit {
+  protected authService = inject(AuthService);
+  protected fb = inject(FormBuilder);
+  protected profileUserStore = inject(ProfileUserStore);
+  private signalRService = inject(SignalRService);
+  private teamsClient = inject(TeamsClient);
+  private teamChatsClient = inject(TeamChatsClient);
+  private errorProcessor = inject(ErrorProcessorService);
+
   @ViewChild('scrollMe') chatBody!: ElementRef;
 
   @Input() team!: Team;
@@ -61,17 +69,9 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   public entityId = new BehaviorSubject<number>(0);
   public messages: TeamChatMessage[] = [];
 
-  constructor(
-    protected authService: AuthService,
-    protected fb: FormBuilder,
-    protected profileUserStore: ProfileUserStore,
-    private signalRService: SignalRService,
-    private teamsClient: TeamsClient,
-    private teamChatsClient: TeamChatsClient,
-    private errorProcessor: ErrorProcessorService,
-  ) {
-    super(authService, fb, profileUserStore);
-    signalRService.onTeamChatNewMessage = (x): void => this.handleNewMessageEvent(x);
+  constructor() {
+    super();
+    this.signalRService.onTeamChatNewMessage = (x): void => this.handleNewMessageEvent(x);
   }
 
   ngOnInit(): void {

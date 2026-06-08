@@ -1,4 +1,4 @@
-import { OnInit, Component, Input, OnDestroy } from '@angular/core';
+import { OnInit, Component, Input, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Team, TeamType } from '../../../models/Team/Team';
 import { finalize } from 'rxjs/operators';
@@ -22,6 +22,13 @@ import { TeamComponent } from '../team/team.component';
     imports: [DefaultLayoutComponent, MatButton, TeamComponent]
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
+  private activateRoute = inject(ActivatedRoute);
+  router = inject(RouterService);
+  private teamsClient = inject(TeamsClient);
+  private authService = inject(AuthService);
+  private snackService = inject(SnackService);
+  private appStateService = inject(AppStateService);
+
   @Input() teamId?: number;
 
   public team!: Team;
@@ -30,14 +37,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(
-    private activateRoute: ActivatedRoute,
-    public router: RouterService,
-    private teamsClient: TeamsClient,
-    private authService: AuthService,
-    private snackService: SnackService,
-    private appStateService: AppStateService,
-  ) {}
+
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId() ?? 0;

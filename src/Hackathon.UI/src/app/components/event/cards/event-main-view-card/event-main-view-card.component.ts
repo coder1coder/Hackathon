@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventStatusTranslator } from '../../../../models/Event/EventStatus';
 import { AuthService } from '../../../../services/auth.service';
@@ -18,29 +18,45 @@ import { ListDetailsComponent } from '../../../custom/list-details/list-details.
 import { AlertComponent } from '../../../custom/alert/alert.component';
 
 @Component({
-    selector: 'event-event-main-view-card',
-    templateUrl: './event-main-view-card.component.html',
-    styleUrls: ['./event-main-view-card.component.scss'],
-    imports: [DefaultLayoutComponent, EventButtonActionsComponent, MatTabGroup, MatTab, ListDetailsComponent, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
+  selector: 'event-event-main-view-card',
+  templateUrl: './event-main-view-card.component.html',
+  styleUrls: ['./event-main-view-card.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    EventButtonActionsComponent,
+    MatTabGroup,
+    MatTab,
+    ListDetailsComponent,
+    AlertComponent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+  ],
 })
 export class EventMainViewCardComponent extends EventCardBaseComponent implements OnInit {
-  public eventStatusesDataSource: MatTableDataSource<ChangeEventStatusMessage> =
-    new MatTableDataSource<ChangeEventStatusMessage>([]);
-  public eventTeamsDataSource: MatTableDataSource<Team> = new MatTableDataSource<Team>([]);
+  private activateRoute = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  protected eventService = inject(EventService);
+  protected router = inject(RouterService);
+  protected appStateService = inject(AppStateService);
+  public eventStatusesDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
+  public eventTeamsDataSource = new MatTableDataSource<Team>([]);
   public eventDetails: KeyValue<string, any>[] = [];
   public eventStatusTranslator = EventStatusTranslator;
   public userId: number;
 
-  constructor(
-    private activateRoute: ActivatedRoute,
-    public eventService: EventService,
-    private authService: AuthService,
-    public router: RouterService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
-    this.eventId = activateRoute.snapshot.params['eventId'];
-    this.userId = authService.getUserId() ?? 0;
+  constructor() {
+    super();
+    this.eventId = this.activateRoute.snapshot.params['eventId'];
+    this.userId = this.authService.getUserId() ?? 0;
   }
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { EventService } from '../../../../services/event/event.service';
 import { Event } from '../../../../models/Event/Event';
@@ -19,16 +19,16 @@ import { ImageFromStorageComponent } from '../../../custom/image-from-storage/im
     imports: [DefaultLayoutComponent, AlertComponent, EventButtonActionsComponent, EventHeaderComponent, ImageFromStorageComponent, AsyncPipe]
 })
 export class EventCardPublishedComponent extends EventCardBaseComponent {
+  eventService = inject(EventService);
+  private authService = inject(AuthService);
+  protected appStateService = inject(AppStateService);
+
   public eventStatusTranslator = EventStatusTranslator;
   public userId: number;
 
-  constructor(
-    public eventService: EventService,
-    private authService: AuthService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
-    this.userId = authService.getUserId() ?? 0;
+  constructor() {
+    super();
+    this.userId = this.authService.getUserId() ?? 0;
   }
 
   public getUsersCount(): number {

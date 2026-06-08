@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ActionsEnum } from '../common/emuns/actions.enum';
 
@@ -6,7 +6,9 @@ import { ActionsEnum } from '../common/emuns/actions.enum';
   providedIn: 'root',
 })
 export class SnackService {
-  constructor(private snackBar: MatSnackBar) {}
+  private snackBar = inject(MatSnackBar);
+
+
 
   public open(
     text: string,

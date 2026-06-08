@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/auth.service';
-import { ElementRef, HostListener, Injectable, OnDestroy, ViewChild } from '@angular/core';
+import { ElementRef, HostListener, Injectable, OnDestroy, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { BehaviorSubject, bufferTime, filter, from, mergeMap, Subject, takeUntil } from 'rxjs';
 import { TABLE_DATE_FORMAT } from '../../common/consts/date-formats';
@@ -14,6 +14,10 @@ export abstract class BaseChatComponent<TChatMessage>
   extends WithFormBaseComponent
   implements OnDestroy
 {
+  protected authService = inject(AuthService);
+  protected fb = inject(FormBuilder);
+  protected profileUserStore = inject(ProfileUserStore);
+
   @ViewChild('formComponent') formComponent!: NgForm;
 
   public currentUserId!: number;
@@ -40,11 +44,7 @@ export abstract class BaseChatComponent<TChatMessage>
   private readonly maxScrollPercentageChatContainer: number = 80;
   private readonly distanceFromBottomChatContainerInPercent: number = 10;
 
-  protected constructor(
-    protected authService: AuthService,
-    protected fb: FormBuilder,
-    protected profileUserStore: ProfileUserStore,
-  ) {
+  protected constructor() {
     super();
   }
 
