@@ -8,7 +8,7 @@ import { RouterService } from '../../../services/router.service';
 import { AuthService } from '../../../services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
 import { MatList, MatListItem } from '@angular/material/list';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ProfileImageComponent } from '../../profile/image/profile-image.component';
@@ -19,14 +19,12 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   templateUrl: `./friends-list.component.html`,
   imports: [
     MatList,
-    NgFor,
     MatListItem,
-    NgIf,
     MatButton,
     MatIconButton,
     MatIcon,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class FriendsListComponent implements OnInit, OnDestroy {
   @Input()

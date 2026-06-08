@@ -16,42 +16,45 @@
           formControlName="password"
           required
           (keyup.enter)="signIn()"
-        />
-        <mat-icon
-          matSuffix
-          (click)="isPassFieldHide = !isPassFieldHide"
-          [attr.aria-pressed]="isPassFieldHide"
-          style="cursor: pointer"
-        >
-          {{ isPassFieldHide ? 'visibility_off' : 'visibility' }}
-        </mat-icon>
-      </mat-form-field>
-    </div>
-
-    <div class="loginForm__reCaptcha re-captcha" *ngIf="captchaEnabled">
-      <re-captcha (resolved)="getCaptchaResponse($event)" siteKey="{{ siteKey }}"></re-captcha>
-    </div>
-
-    <div class="loginForm__bottom">
-      <div class="loginForm__buttons">
-        <button mat-raised-button color="primary" (click)="signIn()">Войти</button>
-        <button mat-button (click)="signUp()">Регистрация</button>
+          />
+          <mat-icon
+            matSuffix
+            (click)="isPassFieldHide = !isPassFieldHide"
+            [attr.aria-pressed]="isPassFieldHide"
+            style="cursor: pointer"
+            >
+            {{ isPassFieldHide ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
+        </mat-form-field>
       </div>
-    </div>
 
-    <ng-container *ngIf="googleClientEnabled">
-      <div class="loginForm_or"><span>ИЛИ</span></div>
-
-      <button class="loginForm-google__button" mat-button (click)="signInByGoogle()">
-        <div class="loginForm-google__block">
-          <img src="assets/img/google.svg" alt="google" />
-          <div class="loginForm-google__title">Войти через Google</div>
+      @if (captchaEnabled) {
+        <div class="loginForm__reCaptcha re-captcha">
+          <re-captcha (resolved)="getCaptchaResponse($event)" siteKey="{{ siteKey }}"></re-captcha>
         </div>
-      </button>
-    </ng-container>
-  </div>
-</form>
+      }
 
-<div class="loader" *ngIf="isLoading$ | async">
-  <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
-</div>
+      <div class="loginForm__bottom">
+        <div class="loginForm__buttons">
+          <button mat-raised-button color="primary" (click)="signIn()">Войти</button>
+          <button mat-button (click)="signUp()">Регистрация</button>
+        </div>
+      </div>
+
+      @if (googleClientEnabled) {
+        <div class="loginForm_or"><span>ИЛИ</span></div>
+        <button class="loginForm-google__button" mat-button (click)="signInByGoogle()">
+          <div class="loginForm-google__block">
+            <img src="assets/img/google.svg" alt="google" />
+            <div class="loginForm-google__title">Войти через Google</div>
+          </div>
+        </button>
+      }
+    </div>
+  </form>
+
+  @if (isLoading$ | async) {
+    <div class="loader">
+      <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
+    </div>
+  }

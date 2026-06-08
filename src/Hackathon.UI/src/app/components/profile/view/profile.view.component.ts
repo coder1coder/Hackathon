@@ -28,7 +28,7 @@ import { TeamsClient } from 'src/app/clients/teams.client';
 import { UsersClient } from 'src/app/clients/users.client';
 import { UserProfileReactionsClient } from 'src/app/clients/user-profile-reactions.client';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { AlertComponent } from '../../custom/alert/alert.component';
 import { MatFormField, MatInput } from '@angular/material/input';
@@ -42,16 +42,12 @@ import { ProfileImageComponent } from '../image/profile-image.component';
   styleUrls: ['./profile.view.component.scss'],
   imports: [
     DefaultLayoutComponent,
-    NgIf,
     MatButton,
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
     MatFormField,
     MatInput,
-    NgFor,
-    NgSwitch,
-    NgSwitchCase,
     MatIcon,
     FriendshipOfferButtonComponent,
     MatTabGroup,
@@ -59,8 +55,8 @@ import { ProfileImageComponent } from '../image/profile-image.component';
     MatTabContent,
     FriendsListComponent,
     AsyncPipe,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class ProfileViewComponent
   extends WithFormBaseComponent

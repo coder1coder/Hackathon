@@ -13,7 +13,7 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { TeamChatsClient } from 'src/app/clients/team-chats.client';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
@@ -26,9 +26,7 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   templateUrl: '../base.chat.component.html',
   styleUrls: ['../base.chat.component.scss'],
   imports: [
-    NgIf,
     InfiniteScrollDirective,
-    NgFor,
     FormsModule,
     ReactiveFormsModule,
     MatCheckbox,
@@ -41,8 +39,8 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
     MatListItem,
     MatProgressSpinner,
     DatePipe,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit {
   @ViewChild('scrollMe') chatBody!: ElementRef;

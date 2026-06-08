@@ -11,7 +11,7 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
 import { LogbookClient } from 'src/app/clients/logbook.client';
 import { DefaultLayoutComponent } from '../layouts/default/default.layout.component';
-import { NgIf } from '@angular/common';
+
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -19,7 +19,7 @@ import { MatPaginator } from '@angular/material/paginator';
     selector: 'eventLog-list',
     templateUrl: './eventLog.list.component.html',
     styleUrls: ['./eventLog.list.component.scss'],
-    imports: [DefaultLayoutComponent, NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
+    imports: [DefaultLayoutComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
   constructor(

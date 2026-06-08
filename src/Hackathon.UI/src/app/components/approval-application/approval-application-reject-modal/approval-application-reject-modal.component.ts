@@ -6,14 +6,14 @@ import { IApprovalApplication } from '../../../models/approval-application/appro
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-approval-application-reject-modal',
     templateUrl: './approval-application-reject-modal.component.html',
     styleUrls: ['./approval-application-reject-modal.component.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, CdkTextareaAutosize, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, CdkTextareaAutosize, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ApprovalApplicationRejectModalComponent extends WithFormBaseComponent {
   public form: FormGroup = this.fb.group({

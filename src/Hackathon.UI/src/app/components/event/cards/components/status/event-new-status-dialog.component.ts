@@ -6,14 +6,14 @@ import { EventStatusTranslator, EventStatus } from '../../../../../models/Event/
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
-import { NgFor } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-event-new-status-dialog',
     templateUrl: './event-new-status-dialog.component.html',
     styleUrls: ['./event-new-status-dialog.component.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class EventNewStatusDialogComponent implements OnInit {
   public statuses: EventStatus[] = [];

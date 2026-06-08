@@ -21,7 +21,7 @@ import { ApprovalApplicationStatusEnum } from '../../../models/approval-applicat
 import { ApprovalApplicationInfoModalComponent } from '../approval-application-info-modal/approval-application-info-modal.component';
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
-import { NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatIconButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
@@ -41,7 +41,6 @@ import {
   styleUrls: ['./approval-application-list.component.scss'],
   imports: [
     DefaultLayoutComponent,
-    NgIf,
     MatTable,
     MatColumnDef,
     MatHeaderCellDef,
@@ -61,8 +60,8 @@ import {
     DatePipe,
     ApprovalApplicationStatusComponent,
     ProfileImageComponent,
-    ApprovalApplicationFilterComponent,
-  ],
+    ApprovalApplicationFilterComponent
+],
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
   public tableDateFormat = TABLE_DATE_FORMAT;

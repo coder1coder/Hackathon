@@ -3,10 +3,12 @@
   [hideTitleBar]="false"
   class="hackathon-background"
   [containerCssClasses]="'theme-color'"
->
-  <div class="event-alert" alert *ngIf="eventService.isEventOwner(event)">
-    <alert>Вы являетесь организатором события</alert>
-  </div>
+  >
+  @if (eventService.isEventOwner(event)) {
+    <div class="event-alert" alert>
+      <alert>Вы являетесь организатором события</alert>
+    </div>
+  }
   <div actions>
     <event-button-actions [event]="event"> </event-button-actions>
   </div>
@@ -58,74 +60,93 @@
       <section class="event-content__section">
         <div class="event-content__section-title">Этапы</div>
         <div class="event-content__section-content">
-          <div class="event-content__stages" *ngIf="event.stages?.length; else empty">
-            <div class="event-content__stage" *ngFor="let stage of event.stages">
-              <div class="event-content__stage-content">
-                <div class="event-content__stage-name">
-                  {{ stage.name }}
+          @if (event.stages?.length) {
+            <div class="event-content__stages">
+              @for (stage of event.stages; track stage) {
+                <div class="event-content__stage">
+                  <div class="event-content__stage-content">
+                    <div class="event-content__stage-name">
+                      {{ stage.name }}
+                    </div>
+                    <div class="event-content__stage-duration">{{ stage.duration }}мин</div>
+                  </div>
                 </div>
-                <div class="event-content__stage-duration">{{ stage.duration }}мин</div>
-              </div>
+              }
             </div>
-          </div>
+          } @else {
+            <div>Нет элементов для отображения</div>
+          }
         </div>
       </section>
 
       <section class="event-content__section">
         <div class="event-content__section-title">Задачи</div>
         <div class="event-content__section-content">
-          <div class="event-content__tasks" *ngIf="event.tasks?.length; else empty">
-            <div class="event-content__task" *ngFor="let task of event.tasks">
-              <div class="event-content__task-content">
-                <div class="event-content__task-name">
-                  {{ task.title }}
+          @if (event.tasks?.length) {
+            <div class="event-content__tasks">
+              @for (task of event.tasks; track task) {
+                <div class="event-content__task">
+                  <div class="event-content__task-content">
+                    <div class="event-content__task-name">
+                      {{ task.title }}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
-          </div>
+          } @else {
+            <div>Нет элементов для отображения</div>
+          }
         </div>
       </section>
 
       <section class="event-content__section">
         <div class="event-content__section-title">Правила</div>
         <div class="event-content__section-content">
-          <div class="event-content__rules" *ngIf="event.agreement?.rules; else empty">
-            {{ event.agreement?.rules }}
-          </div>
+          @if (event.agreement?.rules) {
+            <div class="event-content__rules">
+              {{ event.agreement?.rules }}
+            </div>
+          } @else {
+            <div>Нет элементов для отображения</div>
+          }
         </div>
       </section>
 
-      <section class="event-content__section" *ngIf="userId === event.owner?.id">
-        <div class="event-content__section-title">Уведомления</div>
-        <div class="event-content__section-content">
-          <div
-            class="event-content__statuses"
-            *ngIf="event.changeEventStatusMessages?.length; else empty"
-          >
-            <div class="event-content__status-content status-header">
-              <div class="event-content__status-name">Статус</div>
-              <div class="event-content__status-message">Сообщение</div>
-            </div>
-            <div
-              class="event-content__status"
-              *ngFor="let eventStatus of event.changeEventStatusMessages"
-            >
-              <div class="event-content__status-content">
-                <div class="event-content__status-name">
-                  {{ eventStatusTranslator.Translate(eventStatus.status) }}
+      @if (userId === event.owner?.id) {
+        <section class="event-content__section">
+          <div class="event-content__section-title">Уведомления</div>
+          <div class="event-content__section-content">
+            @if (event.changeEventStatusMessages?.length) {
+              <div
+                class="event-content__statuses"
+                >
+                <div class="event-content__status-content status-header">
+                  <div class="event-content__status-name">Статус</div>
+                  <div class="event-content__status-message">Сообщение</div>
                 </div>
-                <div class="event-content__status-message">
-                  {{ eventStatus.message }}
-                </div>
+                @for (eventStatus of event.changeEventStatusMessages; track eventStatus) {
+                  <div
+                    class="event-content__status"
+                    >
+                    <div class="event-content__status-content">
+                      <div class="event-content__status-name">
+                        {{ eventStatusTranslator.Translate(eventStatus.status) }}
+                      </div>
+                      <div class="event-content__status-message">
+                        {{ eventStatus.message }}
+                      </div>
+                    </div>
+                  </div>
+                }
               </div>
-            </div>
+            } @else {
+              <div>Нет элементов для отображения</div>
+            }
           </div>
-        </div>
-      </section>
+        </section>
+      }
     </div>
   </div>
 </layout-default>
 
-<ng-template #empty>
-  <div>Нет элементов для отображения</div>
-</ng-template>

@@ -17,7 +17,7 @@ import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 import { NotificationBellComponent } from '../notification/bell/notification.bell.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { ProfileImageComponent } from '../profile/image/profile-image.component';
@@ -33,14 +33,13 @@ import { ProfileImageComponent } from '../profile/image/profile-image.component'
     NotificationBellComponent,
     MatIconButton,
     MatMenuTrigger,
-    NgIf,
     MatMenu,
     MatMenuItem,
     RouterLink,
     MatIcon,
     NgTemplateOutlet,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class ToolbarComponent implements OnInit {
   public isDarkMode: boolean = false;

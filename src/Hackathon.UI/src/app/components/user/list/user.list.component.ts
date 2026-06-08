@@ -10,7 +10,7 @@ import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { mergeMap, takeUntil } from 'rxjs';
 import { UsersClient } from 'src/app/clients/users.client';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
-import { NgIf } from '@angular/common';
+
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatIconButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
@@ -24,7 +24,6 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
   styleUrls: ['./user.list.component.scss'],
   imports: [
     DefaultLayoutComponent,
-    NgIf,
     MatTable,
     MatColumnDef,
     MatHeaderCellDef,
@@ -41,8 +40,8 @@ import { ProfileImageComponent } from '../../profile/image/profile-image.compone
     MatRowDef,
     MatRow,
     MatPaginator,
-    ProfileImageComponent,
-  ],
+    ProfileImageComponent
+],
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
   constructor(

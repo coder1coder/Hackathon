@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from '../../services/auth.service';
-import { Location, NgIf, AsyncPipe } from '@angular/common';
+import { Location, AsyncPipe } from '@angular/common';
 import { SnackService } from '../../services/snack.service';
 import { Observable, takeUntil } from 'rxjs';
 import { WithFormBaseComponent } from '../../common/base-components/with-form-base.component';
@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatButton, NgIf, MatProgressSpinner, AsyncPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class RegisterComponent extends WithFormBaseComponent implements OnInit {
   @ViewChild('login', { static: true }) inputLogin!: ElementRef;

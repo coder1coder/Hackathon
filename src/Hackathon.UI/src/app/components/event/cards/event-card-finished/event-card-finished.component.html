@@ -4,7 +4,7 @@
   [hideTitleBar]="true"
   class="hackathon-background"
   [containerCssClasses]="'theme-color'"
->
+  >
   <div class="event event-finished">
     <app-event-header [event]="event"> </app-event-header>
 
@@ -13,16 +13,18 @@
         <div class="event-content__section-title">Участники и команды</div>
         <div class="event-content__section-content">
           <div class="event-content__members">
-            <div class="event-content__member" *ngFor="let member of getEventMembers()">
-              <div class="event-content__member-image">
-                <image-from-storage [imageId]="member.profileImageId"></image-from-storage>
-              </div>
-              <div class="event-content__member-content">
-                <div class="event-content__member-content-name">
-                  {{ member.fullName ?? member.userName }}
+            @for (member of getEventMembers(); track member) {
+              <div class="event-content__member">
+                <div class="event-content__member-image">
+                  <image-from-storage [imageId]="member.profileImageId"></image-from-storage>
+                </div>
+                <div class="event-content__member-content">
+                  <div class="event-content__member-content-name">
+                    {{ member.fullName ?? member.userName }}
+                  </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
       </section>
@@ -31,19 +33,21 @@
         <div class="event-content__section-title">Проекты и решения</div>
         <div class="event-content__section-content">
           <div class="event-content__projects">
-            <div class="event-content__project" *ngFor="let project of getEventProjects()">
-              <div class="event-content__project-image">
-                <image-from-storage [imageId]="project.imageId"></image-from-storage>
-              </div>
-              <div class="event-content__project-content">
-                <div class="event-content__project-name">
-                  {{ project.name }}
+            @for (project of getEventProjects(); track project) {
+              <div class="event-content__project">
+                <div class="event-content__project-image">
+                  <image-from-storage [imageId]="project.imageId"></image-from-storage>
                 </div>
-                <div class="event-content__project-description">
-                  {{ project.description }}
+                <div class="event-content__project-content">
+                  <div class="event-content__project-name">
+                    {{ project.name }}
+                  </div>
+                  <div class="event-content__project-description">
+                    {{ project.description }}
+                  </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
       </section>

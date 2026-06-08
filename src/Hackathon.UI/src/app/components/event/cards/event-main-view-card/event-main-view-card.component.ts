@@ -7,7 +7,7 @@ import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeader
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { Event } from 'src/app/models/Event/Event';
 import { RouterService } from '../../../../services/router.service';
-import { KeyValue, NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { KeyValue, AsyncPipe } from '@angular/common';
 import { EventService } from '../../../../services/event/event.service';
 import { EventCardBaseComponent } from '../components/event-card-base.component';
 import { AppStateService } from '../../../../services/app-state.service';
@@ -21,7 +21,7 @@ import { AlertComponent } from '../../../custom/alert/alert.component';
     selector: 'event-event-main-view-card',
     templateUrl: './event-main-view-card.component.html',
     styleUrls: ['./event-main-view-card.component.scss'],
-    imports: [DefaultLayoutComponent, EventButtonActionsComponent, MatTabGroup, MatTab, ListDetailsComponent, NgIf, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
+    imports: [DefaultLayoutComponent, EventButtonActionsComponent, MatTabGroup, MatTab, ListDetailsComponent, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe]
 })
 export class EventMainViewCardComponent extends EventCardBaseComponent implements OnInit {
   public eventStatusesDataSource: MatTableDataSource<ChangeEventStatusMessage> =

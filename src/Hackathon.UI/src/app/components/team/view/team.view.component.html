@@ -1,22 +1,29 @@
 <layout-default [title]="team ? 'Команда: ' + team?.name : 'Команда'">
   <div actions>
-    <button mat-button color="primary" *ngIf="canJoinToTeam" (click)="joinToTeam()">
-      Вступить в команду
-    </button>
-    <button
-      mat-button
-      color="primary"
-      *ngIf="canSendRequestJoinToTeam"
-      (click)="sendRequestJoinToTeam()"
-    >
-      Подать заявку на вступление
-    </button>
-    <button mat-button color="accent" *ngIf="hasSentJoinRequest" (click)="cancelSentJoinRequest()">
-      Отменить заявку на вступление
-    </button>
-    <button mat-button color="primary" *ngIf="canLeaveTeam" (click)="leaveTeam()">
-      Покинуть команду
-    </button>
+    @if (canJoinToTeam) {
+      <button mat-button color="primary" (click)="joinToTeam()">
+        Вступить в команду
+      </button>
+    }
+    @if (canSendRequestJoinToTeam) {
+      <button
+        mat-button
+        color="primary"
+        (click)="sendRequestJoinToTeam()"
+        >
+        Подать заявку на вступление
+      </button>
+    }
+    @if (hasSentJoinRequest) {
+      <button mat-button color="accent" (click)="cancelSentJoinRequest()">
+        Отменить заявку на вступление
+      </button>
+    }
+    @if (canLeaveTeam) {
+      <button mat-button color="primary" (click)="leaveTeam()">
+        Покинуть команду
+      </button>
+    }
   </div>
 
   <team [team]="team"></team>

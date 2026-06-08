@@ -5,14 +5,14 @@ import { EventStage } from '../../../../../models/Event/EventStage';
 import { CustomErrorStateMatcher } from '../../../../../common/functions/custom-error-state-matcher';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'event-stage-dialog',
     templateUrl: './event-stage-dialog.component.html',
     styleUrls: ['./event-stage-dialog.component.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class EventStageDialogComponent implements OnInit {
   public form = new FormGroup({

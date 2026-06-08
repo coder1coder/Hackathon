@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
-import { NgIf } from '@angular/common';
+
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
@@ -23,7 +23,7 @@ import { MatPaginator } from '@angular/material/paginator';
     selector: 'team-list',
     templateUrl: './team.list.component.html',
     styleUrls: ['./team.list.component.scss'],
-    imports: [DefaultLayoutComponent, NgIf, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
+    imports: [DefaultLayoutComponent, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 @Injectable()
 export class TeamListComponent extends BaseTableListComponent<Team> {
