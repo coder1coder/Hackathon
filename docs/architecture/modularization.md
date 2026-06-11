@@ -102,3 +102,8 @@
 2. **Teams** — после устранения мелкой связи с Events.
 3. **Users** и **Auth** — продолжить ранее начатое выделение, опираясь на готовые абстракции.
 4. **Events** и **ApprovalApplications** — в последнюю очередь, после развязки взаимных зависимостей.
+
+## Детальные планы
+
+- [auth-module-extraction-plan.md](auth-module-extraction-plan.md) — завершение выделения модуля **Auth**.
+- [email-confirmation-to-informing-plan.md](email-confirmation-to-informing-plan.md) — перенос подтверждения **Email** в модуль **Informing**.

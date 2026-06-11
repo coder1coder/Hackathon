@@ -40,3 +40,5 @@ graph TD
 | [communication.md](communication.md) | Чаты, уведомления, дружба |
 | [moderation.md](moderation.md) | Модерация событий, журнал действий |
 | [architecture/modularization.md](architecture/modularization.md) | Кандидаты на выделение в модули и их готовность |
+| [architecture/auth-module-extraction-plan.md](architecture/auth-module-extraction-plan.md) | План выделения модуля Auth |
+| [architecture/email-confirmation-to-informing-plan.md](architecture/email-confirmation-to-informing-plan.md) | План переноса подтверждения Email в модуль Informing |
