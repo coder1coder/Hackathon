@@ -84,7 +84,7 @@ public class Startup
         services.AddSingleton<IMapper, ServiceMapper>();
 
         services
-            .RegisterInfrastructure()
+            .RegisterInfrastructure(Configuration)
             .RegisterServices()
             .RegisterValidators()
             .RegisterIntegrationEvents(_environment.IsDevelopment())

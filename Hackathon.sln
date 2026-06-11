@@ -87,8 +87,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Clients", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Infrastructure", "src\Hackathon.Infrastructure\Hackathon.Infrastructure.csproj", "{B48FEDAD-3E2E-41E9-8392-07A87496AB55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Caching", "src\Hackathon.Caching\Hackathon.Caching.csproj", "{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.Chats.Infrastructure", "src\Hackathon.Chats.Infrastructure\Hackathon.Chats.Infrastructure.csproj", "{ABC279AF-69BB-419A-9F2F-262168780719}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{D5E863A9-AD82-8685-7D8C-28CA0C43B451}"
@@ -541,18 +539,6 @@ Global
 		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Release|x64.Build.0 = Release|Any CPU
 		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Release|x86.ActiveCfg = Release|Any CPU
 		{B48FEDAD-3E2E-41E9-8392-07A87496AB55}.Release|x86.Build.0 = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|x64.Build.0 = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Debug|x86.Build.0 = Debug|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|x64.ActiveCfg = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|x64.Build.0 = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|x86.ActiveCfg = Release|Any CPU
-		{A42E0A7D-B4DA-4C90-80C1-784867C5ACD7}.Release|x86.Build.0 = Release|Any CPU
 		{ABC279AF-69BB-419A-9F2F-262168780719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ABC279AF-69BB-419A-9F2F-262168780719}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC279AF-69BB-419A-9F2F-262168780719}.Debug|x64.ActiveCfg = Debug|Any CPU
