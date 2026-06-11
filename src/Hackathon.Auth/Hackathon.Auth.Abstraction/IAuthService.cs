@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Users;
 
-namespace Hackathon.Common.Abstraction.Auth;
+namespace Hackathon.Auth.Abstraction;
 
 /// <summary>
 /// Методы авторизации/аутентификации

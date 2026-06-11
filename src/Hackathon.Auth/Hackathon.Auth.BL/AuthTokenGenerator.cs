@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Hackathon.Common;
+using Hackathon.Auth.Abstraction;
+using Hackathon.Auth.Abstraction.Configuration;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Auth;
-using Hackathon.Configuration.Auth;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Hackathon.BL.Auth;
+namespace Hackathon.Auth.BL;
 
 public static class AuthTokenGenerator
 {

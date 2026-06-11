@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Configuration.Auth;
+namespace Hackathon.Auth.Abstraction.Configuration;
 
 /// <summary>
 /// Настройки аутентификации
@@ -9,7 +9,7 @@ public class AuthenticateSettings
     /// Настройки встренной аутентификации
     /// </summary>
     public InternalAuthenticateSettings Internal { get; set; }
-    
+
     /// <summary>
     /// Настройки внешней аутентификации
     /// </summary>

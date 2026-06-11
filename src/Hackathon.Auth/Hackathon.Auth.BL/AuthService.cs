@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendTools.Common.Models;
 using FluentValidation;
 using Google.Apis.Auth;
-using Hackathon.BL.Users;
-using Hackathon.Common.Abstraction.Auth;
+using Hackathon.Auth.Abstraction;
 using Hackathon.Common.Abstraction.User;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Auth;
 using Hackathon.Common.Models.Users;
-using Hackathon.Configuration.Auth;
+using Hackathon.Auth.Abstraction.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Hackathon.BL.Auth;
+namespace Hackathon.Auth.BL;
 
 public class AuthService: IAuthService
 {
@@ -25,11 +24,11 @@ public class AuthService: IAuthService
     private readonly IUserService _userService;
 
     public AuthService(
-        IPasswordHashService passwordHashService, 
-        IUserRepository userRepository, 
+        IPasswordHashService passwordHashService,
+        IUserRepository userRepository,
         IValidator<SignInModel> signInModelValidator,
-        IOptions<AuthenticateSettings> authOptions, 
-        ILogger<AuthService> logger, 
+        IOptions<AuthenticateSettings> authOptions,
+        ILogger<AuthService> logger,
         IUserService userService)
     {
         _passwordHashService = passwordHashService;
@@ -46,20 +45,20 @@ public class AuthService: IAuthService
         if (!modelValidationResult.IsValid)
             //Нет необходимости указывать причины некорректного ввода
         {
-            return Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword);
+            return Result<AuthTokenModel>.NotValid(AuthErrorMessages.IncorrectUserNameOrPassword);
         }
 
         var userSignInDetails = await _userRepository.GetUserSignInDetailsAsync(signInModel.UserName);
 
         if (userSignInDetails is null)
         {
-            return Result<AuthTokenModel>.NotFound(UserErrorMessages.UserDoesNotExists);
+            return Result<AuthTokenModel>.NotFound(AuthErrorMessages.UserDoesNotExists);
         }
 
         var verified = _passwordHashService.Verify(signInModel.Password, userSignInDetails.PasswordHash);
 
         return !verified
-            ? Result<AuthTokenModel>.NotValid(UserErrorMessages.IncorrectUserNameOrPassword)
+            ? Result<AuthTokenModel>.NotValid(AuthErrorMessages.IncorrectUserNameOrPassword)
             : Result<AuthTokenModel>.FromValue(AuthTokenGenerator.GenerateToken(new GenerateTokenPayload
             {
                 UserId = userSignInDetails.UserId,
@@ -71,15 +70,15 @@ public class AuthService: IAuthService
     public async Task<Result<AuthTokenModel>> SignInByGoogleAsync(SignInByGoogleModel signInByGoogleModel)
     {
         var payload = await VerifyGoogleToken(signInByGoogleModel.AccessToken);
-        
+
         if (payload is null)
         {
-            return Result<AuthTokenModel>.NotValid("Указан некорректный токен авторизации");
+            return Result<AuthTokenModel>.NotValid(AuthErrorMessages.IncorrectAuthorizationToken);
         }
 
         //TODO: расширить модель UserSignInDetails необходимыми данными и использовать GetUserSignInDetailsAsync
         var userModel = await _userRepository.GetByGoogleIdOrEmailAsync(payload.Subject, payload.Email);
-        
+
         var googleAccount = new GoogleAccountModel
         {
             Id = payload.Subject,
@@ -115,7 +114,7 @@ public class AuthService: IAuthService
             GoogleAccountId = userSignInDetails.GoogleAccountId
         }, _authenticateSettings.Internal));
     }
-    
+
     private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(string tokenId)
     {
         try
@@ -128,7 +127,7 @@ public class AuthService: IAuthService
         catch (InvalidJwtException e)
         {
             _logger.LogError(e, "{Source} Ошибка во время валидации токена Google. {Message}",
-                nameof(UserService), e.Message);
+                nameof(AuthService), e.Message);
             return null;
         }
     }

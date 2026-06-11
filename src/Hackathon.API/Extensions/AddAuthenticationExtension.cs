@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using Hackathon.Configuration.Auth;
+using Hackathon.Auth.Abstraction.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

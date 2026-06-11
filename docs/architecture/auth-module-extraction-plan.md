@@ -4,6 +4,16 @@
 
 Связанный анализ готовности — [modularization.md](modularization.md) (Auth — 🟡 средняя готовность).
 
+> ## ✅ Статус: реализовано
+>
+> Модуль создан в `src/Hackathon.Auth/` (`Hackathon.Auth.Abstraction` / `Hackathon.Auth.BL` / `Hackathon.Auth.Module`), подключён в `Program.cs` (`new AuthApiModule()`), решение собирается, юнит-тесты `Hackathon.BL.Tests` проходят (30/30).
+>
+> **Обоснованные отклонения от плана:**
+> - **Модели оставлены в `Hackathon.Common`** (`AuthTokenModel`, `SignInModel`, `SignInByGoogleModel`, `GenerateTokenPayload`, `AuthorizedUser`). Они потребляются вне Auth — `AuthTokenModel` использует `Hackathon.Client/IAuthApi`, `AuthorizedUser` — `BaseController` и контроллеры всех модулей. Перенос дал бы лишние ссылки и риск без архитектурной выгоды (см. оговорку в плане «при сомнении оставить в Common»). В модуль переехала только абстракция `IAuthService`.
+> - **`SignInModelValidator` оставлен в `Hackathon.BL.Validation`** и регистрируется ядром. Он зависит от общего `PasswordValidator`; перенос затащил бы правила пароля в Auth. Модуль резолвит `IValidator<SignInModel>` из DI по интерфейсу.
+> - **Зависимость от `Hackathon.BL.Users` устранена**: вместо `UserErrorMessages` в `Hackathon.Auth.BL` заведён `AuthErrorMessages` — модуль не ссылается на ядро BL.
+> - **`services.Configure<AuthenticateSettings>(...)` оставлен в `Startup.cs`** (а не перенесён в модуль), так как настройки общие с конвейером проверки токена. `AddAuthentication`/`AddAuthorization` остаются в `Startup` (см. нюанс ниже).
+
 ## Текущее состояние
 
 | Что | Где сейчас |
