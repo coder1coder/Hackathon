@@ -39,3 +39,4 @@ graph TD
 | [teams.md](teams.md) | Команды, вступление, проект команды |
 | [communication.md](communication.md) | Чаты, уведомления, дружба |
 | [moderation.md](moderation.md) | Модерация событий, журнал действий |
+| [architecture/modularization.md](architecture/modularization.md) | Кандидаты на выделение в модули и их готовность |
