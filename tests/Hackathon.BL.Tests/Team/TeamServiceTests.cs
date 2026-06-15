@@ -114,7 +114,7 @@ public class TeamServiceTests : BaseUnitTest
         //assert
         Assert.NotNull(result);
         Assert.Equal(fakeTeams.Length, result.TotalCount);
-        Assert.Equal(1, result.Items.Count);
+        Assert.Single(result.Items);
 
         var first = result.Items.First();
         Assert.Equal(fakeTeams.First().Id, first.Id);

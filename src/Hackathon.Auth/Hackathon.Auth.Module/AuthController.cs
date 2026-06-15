@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Hackathon.API.Contracts.Users;
 using Hackathon.API.Module;
-using Hackathon.Common.Abstraction.Auth;
+using Hackathon.Auth.Abstraction;
 using Hackathon.Common.Models;
 using Hackathon.Common.Models.Users;
 using MapsterMapper;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Hackathon.API.Controllers;
+namespace Hackathon.Auth.Module;
 
 /// <summary>
 /// Авторизация и аутентификация

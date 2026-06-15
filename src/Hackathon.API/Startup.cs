@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Hackathon.API.Extensions;
 using Hackathon.API.Module;
+using Hackathon.Auth.Abstraction.Configuration;
 using Hackathon.BL;
 using Hackathon.BL.Validation;
 using Hackathon.Common.Models.Users;
 using Hackathon.Configuration;
-using Hackathon.Configuration.Auth;
 using Hackathon.DAL;
 using Hackathon.DAL.Mappings;
 using Hackathon.Infrastructure;
@@ -65,7 +65,6 @@ public class Startup
         services.Configure<DataSettings>(Configuration.GetSection("DataSettings"));
         services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
         services.Configure<RestrictedNames>(Configuration.GetSection("RestrictedNames"));
-        services.Configure<AuthenticateSettings>(authSection);
         services.Configure<RouteOptions>(x =>
         {
             x.LowercaseUrls = true;
@@ -85,7 +84,7 @@ public class Startup
         services.AddSingleton<IMapper, ServiceMapper>();
 
         services
-            .RegisterInfrastructure()
+            .RegisterInfrastructure(Configuration)
             .RegisterServices()
             .RegisterValidators()
             .RegisterIntegrationEvents(_environment.IsDevelopment())

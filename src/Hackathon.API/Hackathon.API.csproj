@@ -17,7 +17,6 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="prometheus-net.AspNetCore" />
         <PackageReference Include="Serilog" />
@@ -39,6 +38,7 @@
       <ProjectReference Include="..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
       <ProjectReference Include="..\Hackathon.DAL\Hackathon.DAL.csproj" />
       <ProjectReference Include="..\Hackathon.Jobs\Hackathon.Jobs.csproj" />
+      <ProjectReference Include="..\Hackathon.Auth\Hackathon.Auth.Module\Hackathon.Auth.Module.csproj" />
       <ProjectReference Include="..\Hackathon.FileStorage\Hackathon.FileStorage.Module\Hackathon.FileStorage.Module.csproj" />
       <ProjectReference Include="..\Hackathon.Informing\Hackathon.Informing.Module\Hackathon.Informing.Module.csproj" />
       <ProjectReference Include="..\Hackathon.IntegrationServices\Hackathon.IntegrationServices.csproj" />

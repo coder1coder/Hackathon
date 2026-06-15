@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Configuration.Auth;
+namespace Hackathon.Auth.Abstraction.Configuration;
 
 /// <summary>
 /// Настройки внешней аутентификации

@@ -1,4 +1,4 @@
-namespace Hackathon.Common;
+namespace Hackathon.Auth.Abstraction;
 
 public static class AppClaimTypes
 {

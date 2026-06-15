@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using Hackathon.API.Module;
-using Hackathon.Caching;
 using Hackathon.Chats.Abstractions.IntegrationEvents;
 using Hackathon.Chats.Abstractions.Models;
 using Hackathon.Chats.Abstractions.Models.Events;
@@ -44,7 +43,6 @@ public sealed class ChatsApiModule: ApiModule
         serviceCollection.AddScoped<IEventChatHub, EventChatHub>();
         serviceCollection.AddScoped<ITeamChatHub, TeamChatHub>();
 
-        serviceCollection.AddRedisDistributedCache(configuration.GetConnectionString("Redis"));
         serviceCollection.AddSingleton<IChatConnectionsProvider, ChatConnectionsProvider>();
 
         ConfigureDbContext<ChatsDbContext>(serviceCollection,
