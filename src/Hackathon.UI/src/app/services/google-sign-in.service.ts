@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
 import { BehaviorSubject } from 'rxjs';
 import { SnackService } from './snack.service';
-import { ActionsEnum } from '../common/emuns/actions.enum';
+import { ActionsEnum } from '../common/enums/actions.enum';
 
 @Injectable({
   providedIn: 'root',
