@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { filter, Observable, of, switchMap } from 'rxjs';
@@ -11,9 +11,12 @@ import { ErrorProcessorService } from './error-processor.service';
   providedIn: 'root',
 })
 export class FileUploadService {
+  private http = inject(HttpClient);
+  private errorProcessor = inject(ErrorProcessorService);
+
   private api: string = `${environment.api}`;
 
-  constructor(private http: HttpClient, private errorProcessor: ErrorProcessorService) {}
+
 
   /** Загрузить веб-контент файл помещенных через селект или "drag and drop"
    * @param files Объекты типа элемента HTML input type="file"
@@ -22,8 +25,8 @@ export class FileUploadService {
   public uploadFile(files: FileList, uploadApiUrl: string): Observable<string> {
     return of(files).pipe(
       map((fileList: FileList) => {
-        const file: File = fileList[0];
-        let errorMsg: string;
+        const file: File | undefined = fileList?.[0];
+        let errorMsg: string = '';
         if (fileList?.length <= 0) {
           errorMsg = UploadFileErrorMessages.FileUploadError;
         }
@@ -34,7 +37,7 @@ export class FileUploadService {
           errorMsg = UploadFileErrorMessages.FileSizeOutOfRange;
         }
         if (errorMsg) {
-          files = null;
+          // files = null;
           this.errorProcessor.Process(null, errorMsg);
         }
         return errorMsg ? null : file;

@@ -1,12 +1,12 @@
 import { IUser } from '../User/IUser';
 
 export class Team implements ITeam {
-  id: number;
+  id!: number;
   name?: string;
   members: IUser[] = [];
   owner?: IUser;
   project: any; //TODO: add typed
-  type: TeamType;
+  type!: TeamType;
 
   getMemberStatus = (memberId: number): string => {
     return this.owner?.id == memberId ? 'Владелец' : 'Участник';

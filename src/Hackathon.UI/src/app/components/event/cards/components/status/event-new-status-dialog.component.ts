@@ -1,27 +1,36 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
 import { EventStatusTranslator, EventStatus } from '../../../../../models/Event/EventStatus';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-event-new-status-dialog',
-  templateUrl: './event-new-status-dialog.component.html',
-  styleUrls: ['./event-new-status-dialog.component.scss'],
+    selector: 'app-event-new-status-dialog',
+    templateUrl: './event-new-status-dialog.component.html',
+    styleUrls: ['./event-new-status-dialog.component.scss'],
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class EventNewStatusDialogComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<EventNewStatusDialogComponent>>(MatDialogRef);
+  private dialogData = inject(MAT_DIALOG_DATA);
+
   public statuses: EventStatus[] = [];
   public selectedStatusValue!: number;
   public EventStatusTranslator = EventStatusTranslator;
-  public form = new FormGroup({});
+  public form = new FormGroup({
+    status: new FormControl(''),
+    message: new FormControl(''),
+  });
 
   private editStatus?: ChangeEventStatusMessage;
 
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<EventNewStatusDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private dialogData: any,
-  ) {}
+
 
   ngOnInit(): void {
     this.initForm();
@@ -44,14 +53,15 @@ export class EventNewStatusDialogComponent implements OnInit {
 
   public createStatus(): void {
     this.dialogRef.close(
-      new ChangeEventStatusMessage(this.selectedStatusValue, this.form.get('message')?.value),
+      //TODO: remove type assertion
+      new ChangeEventStatusMessage(this.selectedStatusValue, this.form.get('message')?.value as string),
     );
   }
 
   private initForm(): void {
-    this.form = this.fb.group({
-      status: [null],
-      message: [null],
+    this.form = new FormGroup({
+      status: new FormControl(''),
+      message: new FormControl(''),
     });
   }
 }

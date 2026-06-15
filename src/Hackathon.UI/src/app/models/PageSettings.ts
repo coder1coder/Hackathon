@@ -3,7 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class PageSettings {
   offset: number = PageSettingsDefaults.Offset;
   limit: number = PageSettingsDefaults.Limit;
-  sortBy: string;
+  sortBy!: string;
   sortOrder: SortOrder = SortOrder.ASC;
 
   constructor(pageEvent: PageEvent) {

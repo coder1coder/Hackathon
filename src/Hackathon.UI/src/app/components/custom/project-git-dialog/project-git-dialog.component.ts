@@ -1,22 +1,22 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { CustomErrorStateMatcher } from '../../../common/functions/custom-error-state-matcher';
+import { Component, OnInit, inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IProjectUpdateFromGitBranch } from '../../../models/Project/IProjectUpdateFromGitBranch';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'project-git-dialog',
-  templateUrl: './project-git-dialog.component.html',
+    selector: 'project-git-dialog',
+    templateUrl: './project-git-dialog.component.html',
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ProjectGitDialogComponent implements OnInit {
-  public form: FormGroup;
-  matcher = new CustomErrorStateMatcher();
+  private formBuilder = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<ProjectGitDialogComponent>>(MatDialogRef);
+  dialogData = inject<IProjectUpdateFromGitBranch>(MAT_DIALOG_DATA);
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<ProjectGitDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dialogData: IProjectUpdateFromGitBranch,
-  ) {}
+  public form!: FormGroup;
+  // matcher = new CustomErrorStateMatcher();
 
   ngOnInit(): void {
     this.initForm();
@@ -26,7 +26,7 @@ export class ProjectGitDialogComponent implements OnInit {
     let link: string = this.form.get('linkToGitBranch')?.value;
 
     if (link?.length == 0) {
-      link = null;
+      link = '';
     }
 
     const parameters: IProjectUpdateFromGitBranch = {

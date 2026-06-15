@@ -18,15 +18,18 @@ public class EventChatHub: Hub, IEventChatHub
     private readonly ILogger<EventChatHub> _logger;
     private readonly IChatConnectionsProvider _connectionsProvider;
     private readonly IEventRepository _eventRepository;
+    private readonly IHubContext<EventChatHub> _hubContext;
 
     public EventChatHub(
         ILogger<EventChatHub> logger, 
         IChatConnectionsProvider connectionsProvider, 
-        IEventRepository eventRepository)
+        IEventRepository eventRepository, 
+        IHubContext<EventChatHub> hubContext)
     {
         _logger = logger;
         _connectionsProvider = connectionsProvider;
         _eventRepository = eventRepository;
+        _hubContext = hubContext;
     }
 
     public override async Task OnConnectedAsync()
@@ -47,13 +50,13 @@ public class EventChatHub: Hub, IEventChatHub
 
         foreach (var userTeamId in eventIds)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, _eventGroupNameResolver.Invoke(userTeamId));
+            await _hubContext.Groups.AddToGroupAsync(Context.ConnectionId, _eventGroupNameResolver.Invoke(userTeamId));
         }
 
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("User {UserId} disconnected with connection id {ConnectionId}",
             Context.UserIdentifier,
@@ -71,7 +74,7 @@ public class EventChatHub: Hub, IEventChatHub
 
         foreach (var userTeamId in eventIds)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, _eventGroupNameResolver.Invoke(userTeamId));
+            await _hubContext.Groups.RemoveFromGroupAsync(Context.ConnectionId, _eventGroupNameResolver.Invoke(userTeamId));
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -86,7 +89,7 @@ public class EventChatHub: Hub, IEventChatHub
             return;
         }
 
-        await Clients
+        await _hubContext.Clients
             .Group(_eventGroupNameResolver.Invoke(integrationEvent.EventId))
             .SendCoreAsync(topicName, [ integrationEvent ], cancellationToken);
     }
@@ -105,7 +108,7 @@ public class EventChatHub: Hub, IEventChatHub
 
         foreach (var connectionId in connections)
         {
-            await Groups.AddToGroupAsync(connectionId, groupName, cancellationToken);
+            await _hubContext.Groups.AddToGroupAsync(connectionId, groupName, cancellationToken);
         }
     }
 
@@ -123,7 +126,7 @@ public class EventChatHub: Hub, IEventChatHub
 
         foreach (var connectionId in connections)
         {
-            await Groups.RemoveFromGroupAsync(connectionId, groupName, cancellationToken);
+            await _hubContext.Groups.RemoveFromGroupAsync(connectionId, groupName, cancellationToken);
         }
     }
     

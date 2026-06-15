@@ -4,10 +4,10 @@ import * as moment from 'moment/moment';
 export abstract class BaseChatMessage {
   public context: ChatMessageContext;
   public ownerId: number;
-  public userId: number;
+  public userId!: number;
   public message: string;
-  public ownerFullName: string;
-  public userFullName: string;
+  public ownerFullName: string = '';
+  public userFullName: string = '';
   public options: ChatMessageOption;
   public timestamp: string;
 

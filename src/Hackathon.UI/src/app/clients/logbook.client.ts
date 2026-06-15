@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GetListParameters } from '../models/GetListParameters';
 import { Observable } from 'rxjs';
@@ -11,8 +11,8 @@ import { BaseApiClient } from './base.client';
 })
 export class LogbookClient extends BaseApiClient {
 
-  constructor(protected http: HttpClient) {
-    super(http, 'eventLog');
+  constructor() {
+    super('eventLog');
   }
 
   public getList(

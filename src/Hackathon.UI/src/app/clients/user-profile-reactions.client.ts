@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { UserProfileReaction, IUserProfileReaction } from '../models/User/UserProfileReaction';
 import { BaseApiClient } from './base.client';
@@ -9,8 +9,8 @@ import { BaseApiClient } from './base.client';
 })
 export class UserProfileReactionsClient extends BaseApiClient {
 
-  constructor(protected http: HttpClient) {
-    super(http, null);
+  constructor() {
+    super(null);
   }
 
   public get(targetUserId: number): Observable<UserProfileReaction> {
@@ -28,7 +28,10 @@ export class UserProfileReactionsClient extends BaseApiClient {
       switchMap((r: UserProfileReaction) => {
         return (r & reaction) === reaction
           ? this.http.delete<void>(`${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`)
-          : this.http.post<void>(`${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`, null);
+          : this.http.post<void>(
+              `${this.baseRoute}/User/${targetUserId}/reactions/${reaction}`,
+              null,
+            );
       }),
     );
   }

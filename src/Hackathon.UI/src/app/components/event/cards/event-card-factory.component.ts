@@ -1,15 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ComponentFactory,
-  ComponentFactoryResolver,
-  ComponentRef,
-  OnDestroy,
-  OnInit,
-  Type,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { EventDirective } from '../event.directive';
 import { EventStatus } from '../../../models/Event/EventStatus';
 import { ActivatedRoute } from '@angular/router';
@@ -31,28 +20,29 @@ import { AppStateService } from '../../../services/app-state.service';
 import { EventsClient } from 'src/app/clients/events.client';
 
 @Component({
-  selector: 'app-event-card-factory',
-  template: `<ng-template event-item></ng-template>`,
+    selector: 'app-event-card-factory',
+    template: `<ng-template event-item></ng-template>`,
+    imports: [EventDirective]
 })
 export class EventCardFactoryComponent implements OnInit, OnDestroy {
-  @ViewChild(EventDirective, { static: true }) eventDirective: EventDirective;
+  private authService = inject(AuthService);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private routerService = inject(RouterService);
+  private activeRoute = inject(ActivatedRoute);
+  private componentFactoryResolver = inject(ComponentFactoryResolver);
+  private snackService = inject(SnackService);
+  private globalErrorHandler = inject(GlobalErrorHandler);
+  private cdr = inject(ChangeDetectorRef);
+  private appStateService = inject(AppStateService);
+
+  @ViewChild(EventDirective, { static: true }) eventDirective!: EventDirective;
 
   private event: Event = new Event();
-  private eventId: number;
+  private eventId!: number;
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private authService: AuthService,
-    private eventsClient: EventsClient,
-    private eventService: EventService,
-    private routerService: RouterService,
-    private activeRoute: ActivatedRoute,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private snackService: SnackService,
-    private globalErrorHandler: GlobalErrorHandler,
-    private cdr: ChangeDetectorRef,
-    private appStateService: AppStateService,
-  ) {}
+
 
   ngOnInit(): void {
     this.initEventId();

@@ -1,7 +1,7 @@
 import { Event } from '../../models/Event/Event';
 import { EventStatus } from '../../models/Event/EventStatus';
 import { AuthService } from '../auth.service';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { ApprovalApplicationStatusEnum } from '../../models/approval-application/approval-application-status.enum';
 import { isNull, isUndefined } from 'lodash';
 import { catchError, filter, Observable, of } from 'rxjs';
@@ -17,15 +17,15 @@ import { EventsClient } from 'src/app/clients/events.client';
   providedIn: 'root',
 })
 export class EventService {
+  private authService = inject(AuthService);
+  private routerService = inject(RouterService);
+  private snackService = inject(SnackService);
+  private globalErrorHandler = inject(GlobalErrorHandler);
+  private eventsClient = inject(EventsClient);
+
   public reloadEvent = new EventEmitter<boolean>();
 
-  constructor(
-    private authService: AuthService,
-    private routerService: RouterService,
-    private snackService: SnackService,
-    private globalErrorHandler: GlobalErrorHandler,
-    private eventsClient: EventsClient,
-  ) {}
+
 
   public checkAccessViewEventById(eventId: number): Observable<boolean> {
     if (!this.authService.isLoggedIn()) {
@@ -67,9 +67,9 @@ export class EventService {
   }
 
   public isCanJoinToEvent(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return (
-      userId !== undefined &&
+      userId !== null &&
       !this.isAlreadyInEvent(event, userId) &&
       event.status === EventStatus.Published
     );
@@ -94,10 +94,10 @@ export class EventService {
   }
 
   public isCanLeave(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return (
       event.status !== EventStatus.Finished &&
-      userId !== undefined &&
+      userId !== null &&
       this.isAlreadyInEvent(event, userId)
     );
   }
@@ -137,7 +137,7 @@ export class EventService {
   }
 
   public isCanDeleteEvent(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     return event?.id !== undefined && userId !== null && event?.owner?.id === userId;
   }
 
@@ -150,7 +150,7 @@ export class EventService {
   }
 
   public canView(event: Event): boolean {
-    const userId: number = this.authService.getUserId();
+    const userId: number | null = this.authService.getUserId();
     if (isNull(userId) || isUndefined(userId) || isNull(event) || isUndefined(event)) {
       return false;
     }

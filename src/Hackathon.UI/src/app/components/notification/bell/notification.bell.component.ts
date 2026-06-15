@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
@@ -8,25 +8,33 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatBadge } from '@angular/material/badge';
+
+import { NotificationItemComponent } from '../item/notification-item.component';
+import { MatList, MatListItem } from '@angular/material/list';
 
 @Component({
-  selector: 'notification-bell',
-  templateUrl: './notification.bell.component.html',
-  styleUrls: ['./notification.bell.component.scss'],
+    selector: 'notification-bell',
+    templateUrl: './notification.bell.component.html',
+    styleUrls: ['./notification.bell.component.scss'],
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatBadge, MatMenu, NotificationItemComponent, MatButton, MatList, MatListItem]
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
+  private notificationsClient = inject(NotificationsClient);
+  private signalRService = inject(SignalRService);
+  private router = inject(RouterService);
+  private authService = inject(AuthService);
+
   public notifications: BaseCollection<Notification> = new BaseCollection<Notification>();
   public unreadNotificationsCount: number = 0;
   public notificationLimit: number = 3;
 
   private destroy$ = new Subject();
 
-  constructor(
-    private notificationsClient: NotificationsClient,
-    private signalRService: SignalRService,
-    private router: RouterService,
-    private authService: AuthService,
-  ) {}
+
 
   ngOnInit(): void {
     this.signalRService.onNotificationChanged = (): void => {
@@ -85,7 +93,8 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.notifications.items = this.notifications.items.filter(
-          (notification: Notification) => !ids.includes(notification?.id),
+          //TODO: remove type assertioon
+          (notification: Notification) => !ids.includes(notification?.id as string),
         );
         this.notifications.totalCount = this.notifications.totalCount - ids.length;
       });

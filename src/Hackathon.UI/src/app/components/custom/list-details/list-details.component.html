@@ -1,6 +1,10 @@
-<table *ngIf="this.items.length > 0">
-  <tr *ngFor="let item of this.items">
-    <td [innerText]="item.key"></td>
-    <td [innerHTML]="item.value"></td>
-  </tr>
-</table>
+@if (this.items.length > 0) {
+  <table>
+    @for (item of this.items; track item) {
+      <tr>
+        <td [innerText]="item.key"></td>
+        <td [innerHTML]="item.value"></td>
+      </tr>
+    }
+  </table>
+}

@@ -12,14 +12,14 @@ export abstract class BaseTableListComponent<T> implements OnInit, OnDestroy {
   public abstract getDisplayColumns(): string[];
   public abstract rowClick(item: T): any;
   public abstract fetch(getFilterModel?: GetListParameters<T>): any;
-  protected onInit(): void {};
+  protected onInit(): void {}
 
   protected destroy$ = new Subject();
   private readonly componentName: string | undefined;
 
   protected constructor(private name: string) {
     this.componentName = name;
-    const pageSettingsJson: string = sessionStorage.getItem(
+    const pageSettingsJson = sessionStorage.getItem(
       `${this.componentName}${PageEvent.name}`,
     );
 

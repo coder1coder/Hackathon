@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Mapster" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Hackathon.API.Contracts\Hackathon.API.Contracts.csproj" />
+      <ProjectReference Include="..\..\Hackathon.API.Module\Hackathon.API.Module.csproj" />
+      <ProjectReference Include="..\Hackathon.Auth.Abstraction\Hackathon.Auth.Abstraction.csproj" />
+      <ProjectReference Include="..\Hackathon.Auth.BL\Hackathon.Auth.BL.csproj" />
+    </ItemGroup>
+
+</Project>

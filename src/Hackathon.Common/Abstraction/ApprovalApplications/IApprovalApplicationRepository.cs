@@ -38,6 +38,9 @@ public interface IApprovalApplicationRepository
     /// <param name="approvalApplicationId">Идентификатор заявки</param>
     /// <param name="status">Статус</param>
     /// <param name="comment">Комментарий к решению</param>
-    Task UpdateStatusAsync(long signerId, long approvalApplicationId, ApprovalApplicationStatus status,
+    Task UpdateStatusAsync(
+        long signerId, 
+        long approvalApplicationId, 
+        ApprovalApplicationStatus status,
         string comment = null);
 }

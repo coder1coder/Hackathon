@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseTableListComponent } from '../../common/base-components/base-table-list.component';
 import { RouterService } from '../../services/router.service';
 import { GetListParameters } from '../../models/GetListParameters';
@@ -10,18 +10,23 @@ import { mergeMap, takeUntil } from 'rxjs';
 import { fromMobx } from '../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
 import { LogbookClient } from 'src/app/clients/logbook.client';
+import { DefaultLayoutComponent } from '../layouts/default/default.layout.component';
+
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'eventLog-list',
-  templateUrl: './eventLog.list.component.html',
-  styleUrls: ['./eventLog.list.component.scss'],
+    selector: 'eventLog-list',
+    templateUrl: './eventLog.list.component.html',
+    styleUrls: ['./eventLog.list.component.scss'],
+    imports: [DefaultLayoutComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 export class EventLogComponent extends BaseTableListComponent<IEventLogModel> {
-  constructor(
-    private logbookClient: LogbookClient,
-    private routerService: RouterService,
-    private currentUserStore: CurrentUserStore,
-  ) {
+  private logbookClient = inject(LogbookClient);
+  private routerService = inject(RouterService);
+  private currentUserStore = inject(CurrentUserStore);
+
+  constructor() {
     super(EventLogComponent.name);
     this.currentUserStore.loadCurrentUser();
   }

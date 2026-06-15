@@ -1,17 +1,20 @@
-<div *ngIf="value || customTemplate" class="grid info-line">
-  <div class="grid-1-2 label">
-    <span>{{ label }}</span>
-  </div>
-  <div
-    *ngIf="!customTemplate"
-    class="grid-1-2 value info-value"
-    [ngClass]="{ 'app-link': clickable }"
-  >
-    {{ value ?? 'Не указано' }}
-  </div>
-  <ng-container *ngIf="customTemplate">
-    <div class="grid-1-2 value info-value">
-      <ng-template [ngTemplateOutlet]="customTemplate"></ng-template>
+@if (value || customTemplate) {
+  <div class="grid info-line">
+    <div class="grid-1-2 label">
+      <span>{{ label }}</span>
     </div>
-  </ng-container>
-</div>
+    @if (!customTemplate) {
+      <div
+        class="grid-1-2 value info-value"
+        [ngClass]="{ 'app-link': clickable }"
+        >
+        {{ value ?? 'Не указано' }}
+      </div>
+    }
+    @if (customTemplate) {
+      <div class="grid-1-2 value info-value">
+        <ng-template [ngTemplateOutlet]="customTemplate"></ng-template>
+      </div>
+    }
+  </div>
+}

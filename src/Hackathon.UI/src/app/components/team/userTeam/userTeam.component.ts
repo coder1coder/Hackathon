@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterService } from '../../../services/router.service';
 import { Team } from '../../../models/Team/Team';
 import { AuthService } from '../../../services/auth.service';
@@ -11,32 +11,39 @@ import {
 } from '../../../models/Team/ITeamJoinRequest';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
 import { ITeamJoinRequestFilter } from '../../../models/Team/ITeamJoinRequestFilter';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TeamComponent } from '../team/team.component';
+import { AlertComponent } from '../../custom/alert/alert.component';
 
 @Component({
-  selector: 'userTeam',
-  templateUrl: 'userTeam.component.html',
-  styleUrls: ['userTeam.component.scss'],
+    selector: 'userTeam',
+    templateUrl: 'userTeam.component.html',
+    styleUrls: ['userTeam.component.scss'],
+    imports: [DefaultLayoutComponent, MatButton, MatIcon, TeamComponent, AlertComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
-  public team: Team;
+  routerService = inject(RouterService);
+  private teamsClient = inject(TeamsClient);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private errorProcessor = inject(ErrorProcessorService);
+
+  public team!: Team;
   public sentTeamJoinRequestsDataSource: MatTableDataSource<ITeamJoinRequest> =
     new MatTableDataSource<ITeamJoinRequest>([]);
   public TeamJoinRequestStatusTranslator = TeamJoinRequestStatusTranslator;
 
   private destroy$ = new Subject();
 
-  constructor(
-    public routerService: RouterService,
-    private teamsClient: TeamsClient,
-    private authService: AuthService,
-    private router: Router,
-    private errorProcessor: ErrorProcessorService,
-  ) {}
+
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) return;
@@ -65,7 +72,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
     this.teamsClient
       .cancelJoinRequest({
         requestId: requestId,
-        comment: null,
+        comment: '',
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -80,10 +87,10 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: Team) => (this.team = res),
-        error: (error : HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           if (error.status !== 404) {
             /* нет необходимости отображать пользователю сообщение об ошибке если у пользователя нет команды */
-            this.errorProcessor.Process(error)
+            this.errorProcessor.Process(error);
           }
         },
       });

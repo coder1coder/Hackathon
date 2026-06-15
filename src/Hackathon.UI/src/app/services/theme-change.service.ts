@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, DOCUMENT, inject } from '@angular/core';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { AuthConstants } from './auth.constants';
 import { IThemeModeInterface } from '../common/interfaces/theme-mode.interface';
-import { DOCUMENT } from '@angular/common';
+
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { fromMobx } from '../common/functions/from-mobx.function';
 import { filter } from 'rxjs';
@@ -11,12 +11,15 @@ import { filter } from 'rxjs';
   providedIn: 'root',
 })
 export class ThemeChangeService {
+  private document = inject<Document>(DOCUMENT);
+  private overlay = inject(OverlayContainer);
+
   private storage: Storage = sessionStorage;
   private darkClassName = 'theme-dark-mode';
   private lightClassName = 'theme-light-mode';
   @observable themeMode: IThemeModeInterface = this.getMode();
 
-  constructor(@Inject(DOCUMENT) private document: Document, private overlay: OverlayContainer) {
+  constructor() {
     makeObservable(this);
   }
 
@@ -42,7 +45,7 @@ export class ThemeChangeService {
   }
 
   private getMode(): IThemeModeInterface {
-    const mode: string = this.storage.getItem(AuthConstants.STORAGE_MODE_KEY);
+    const mode: string | null = this.storage.getItem(AuthConstants.STORAGE_MODE_KEY);
     return mode ? JSON.parse(mode) : { modeClass: this.lightClassName, isDarkMode: false };
   }
 

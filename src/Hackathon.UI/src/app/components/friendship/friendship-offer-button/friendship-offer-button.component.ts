@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { GetListParameters } from '../../../models/GetListParameters';
@@ -11,12 +11,18 @@ import {
 import { SignalRService } from '../../../services/signalr.service';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { FriendshipClient } from 'src/app/clients/friendship.client';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: `friendship-offer-button`,
-  templateUrl: `./friendship-offer-button.component.html`,
+    selector: `friendship-offer-button`,
+    templateUrl: `./friendship-offer-button.component.html`,
+    imports: [MatButton],
 })
 export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, OnDestroy {
+  private authService = inject(AuthService);
+  private friendshipClient = inject(FriendshipClient);
+  private signalRService = inject(SignalRService);
+
   @Input()
   set friendId(value) {
     this._friendId.next(value);
@@ -25,22 +31,19 @@ export class FriendshipOfferButtonComponent implements OnInit, AfterViewInit, On
     return this._friendId.getValue();
   }
 
-  public authUserId: number;
+  public authUserId: number = 0;
   public isEnabled: boolean = false;
   public statusText: string = 'Нельзя определить статус';
-  public friendship: IFriendship;
+  public friendship!: IFriendship;
 
   private _friendId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
 
-  constructor(
-    private authService: AuthService,
-    private friendshipClient: FriendshipClient,
-    private signalRService: SignalRService,
-  ) {}
+
 
   ngOnInit(): void {
-    this.authUserId = this.authService.getUserId();
+    //TODO: remove type assertioon
+    this.authUserId = this.authService.getUserId() as number;
 
     this._friendId.pipe(takeUntil(this.destroy$)).subscribe((friendId) => {
       if (friendId !== this.authUserId) this.isEnabled = true;

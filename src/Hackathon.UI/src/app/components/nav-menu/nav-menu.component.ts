@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MenuItem } from '../../common/interfaces/menu-item';
 import { UserRole } from 'src/app/models/User/UserRole';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
@@ -7,24 +7,33 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { IUser } from '../../models/User/IUser';
 import { AppStateService } from '../../services/app-state.service';
 
+import { MatMenuItem, MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss'],
+    selector: 'app-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    imports: [MatMenuItem, RouterLink, MatMenuTrigger, MatIcon, MatMenu],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavMenuComponent {
+  private currentUserStore = inject(CurrentUserStore);
+  private appStateService = inject(AppStateService);
+
   public items: MenuItem[] = [];
   public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   private destroy$ = new Subject();
 
-  constructor(
-    private currentUserStore: CurrentUserStore,
-    private appStateService: AppStateService,
-  ) {
+  constructor() {
+    const currentUserStore = this.currentUserStore;
+
     this.currentUserStore.loadCurrentUser();
     fromMobx(() => currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user: IUser) => {
+      .subscribe((user) => {
         if (user) {
           this.items = [
             new MenuItem('/events', 'События'),

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { IUser } from '../../models/User/IUser';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -11,14 +11,17 @@ import { UsersClient } from 'src/app/clients/users.client';
   providedIn: 'root',
 })
 export class ProfileUserStore {
+  private fileStorageClient = inject(FileStorageClient);
+  private usersClient = inject(UsersClient);
+
   @observable protected users$: Map<number, IUser> = new Map<number, IUser>();
   private fetchObservableMap: Map<number, Observable<IUser>> = new Map<number, Observable<IUser>>();
 
-  constructor(private fileStorageClient: FileStorageClient, private usersClient: UsersClient) {
+  constructor() {
     makeObservable(this);
   }
 
-  public getUser(userId: number, needUpdate = false): Observable<IUser> {
+  public getUser(userId: number, needUpdate = false): Observable<IUser | undefined> {
     if (needUpdate) {
       return this.fetchUser(userId);
     }
@@ -31,7 +34,7 @@ export class ProfileUserStore {
   }
 
   public updateUserUrl(user: IUser, imageId: string): Observable<IUser> {
-    const existUser: IUser = this.getEntity(user.id);
+    const existUser: IUser | undefined = this.getEntity(user.id!);
     if (existUser) {
       return this.loadImageUpdateUser(existUser, imageId);
     } else {
@@ -47,26 +50,27 @@ export class ProfileUserStore {
     });
   }
 
-  private fetchUser(userId: number): Observable<IUser> {
+  private fetchUser(userId: number): Observable<IUser | undefined> {
     if (this.fetchObservableMap.has(userId)) {
-      return this.fetchObservableMap.get(userId);
+      return this.fetchObservableMap.get(userId)!;
     } else {
       const request: Observable<IUser> = this.usersClient.getById(userId).pipe(
         shareReplay(1),
         switchMap((user: IUser) => {
           user.shortUserName = ProfileUserStore.setUserInitials(user);
-          user.bgColor = this.generateColorFromName(user.fullName ?? user.userName);
+          user.bgColor = this.generateColorFromName(user.fullName ?? user.userName ?? '');
           this.addEntity(user);
+
           return user?.profileImageId
-            ? forkJoin([
+            ? forkJoin<[SafeUrl | null, IUser]>([
                 this.fileStorageClient
                   .getById(user.profileImageId)
                   .pipe(catchError(() => of(null))),
                 of(user),
               ])
-            : forkJoin([of(null), of(user)]);
+            : forkJoin<[SafeUrl | null, IUser]>([of(null), of(user)]);
         }),
-        map((res: [SafeUrl, IUser]) => this.updateUserImage(res)),
+        map((res) => this.updateUserImage(res)),
         catchError(() => throwError(() => new Error('Пользователь не найден'))),
       );
       this.fetchObservableMap.set(userId, request);
@@ -77,11 +81,11 @@ export class ProfileUserStore {
   @action
   private addEntity(user: IUser): void {
     runInAction(() => {
-      this.users$.set(user.id, user);
+      this.users$.set(user.id!, user);
     });
   }
 
-  private getEntity(userId: number): IUser {
+  private getEntity(userId: number): IUser | undefined {
     return this.users$.get(userId);
   }
 
@@ -90,10 +94,10 @@ export class ProfileUserStore {
       user.shortUserName = ProfileUserStore.setUserInitials(user);
     }
     if (!user.bgColor) {
-      user.bgColor = this.generateColorFromName(user.fullName ?? user.userName);
+      user.bgColor = this.generateColorFromName(user.fullName as string ?? user.userName as string);
     }
     if (!imageId) {
-      user.profileImageId = null;
+      user.profileImageId = undefined;
       return of(this.updateUserImage([null, user]));
     }
     user.profileImageId = imageId ?? null;
@@ -104,11 +108,11 @@ export class ProfileUserStore {
       : of(this.updateUserImage([null, user]));
   }
 
-  private updateUserImage(res: [SafeUrl, IUser]): IUser {
+  private updateUserImage(res: [SafeUrl | null, IUser]): IUser {
     const user: IUser = res[1];
-    user.image = res[0];
+    user.image = res[0] as SafeUrl;
     this.addEntity(user);
-    this.fetchObservableMap.delete(user.id);
+    this.fetchObservableMap.delete(user.id!);
     return user;
   }
 
@@ -135,7 +139,7 @@ export class ProfileUserStore {
     '#F5A65B',
   ];
 
-  private generateColorFromName(name: string): string {
+  private generateColorFromName(name: string): string | undefined {
     let hash: number = 0;
     for (let i: number = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);

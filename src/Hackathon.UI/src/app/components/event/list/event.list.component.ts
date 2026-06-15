@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { EventStatus, EventStatusTranslator } from '../../../models/Event/EventStatus';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EventFilter } from '../../../models/Event/EventFilter';
 import { GetListParameters } from '../../../models/GetListParameters';
 import * as moment from 'moment/moment';
 import { RouterService } from '../../../services/router.service';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatOption } from '@angular/material/select';
 import { IEventListItem } from '../../../models/Event/IEventListItem';
 import { AuthService } from '../../../services/auth.service';
 import { PageSettingsDefaults } from '../../../models/PageSettings';
@@ -19,13 +19,32 @@ import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { AppStateService } from '../../../services/app-state.service';
 import { finalize } from 'rxjs/operators';
 import { EventsClient } from 'src/app/clients/events.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/list';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { ImageFromStorageComponent } from '../../custom/image-from-storage/image-from-storage.component';
+import { EventStatusComponent } from '../cards/components/event-status/event-status.component';
 
 @Component({
-  selector: 'event-list',
-  templateUrl: './event.list.component.html',
-  styleUrls: ['./event.list.component.scss'],
+    selector: 'event-list',
+    templateUrl: './event.list.component.html',
+    styleUrls: ['./event.list.component.scss'],
+    imports: [DefaultLayoutComponent, MatButton, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatDivider, MatOption, MatCheckbox, InfiniteScrollDirective, ImageFromStorageComponent, EventStatusComponent, AsyncPipe]
 })
 export class EventListComponent implements OnInit {
+  router = inject(RouterService);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private snackService = inject(SnackService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+
   public filterForm = this.fb.group({});
   public eventList: BaseCollection<IEventListItem> = {
     items: [],
@@ -39,16 +58,8 @@ export class EventListComponent implements OnInit {
   private params = new GetListParameters<EventFilter>();
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  @ViewChild('statuses') statusesSelect: MatSelect;
-  constructor(
-    public router: RouterService,
-    private eventsClient: EventsClient,
-    private eventService: EventService,
-    private snackService: SnackService,
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-  ) {}
+  @ViewChild('statuses') statusesSelect!: MatSelect;
+
 
   ngOnInit(): void {
     this.initDefaultSettings();
@@ -72,9 +83,11 @@ export class EventListComponent implements OnInit {
   public statusesToggleAll(event: any): void {
     if (event.target.tag == 0 || event.target.tag == undefined) {
       const all: string[] | number[] = this.statusesSelect?.options.map((x) => x.value);
+      // @ts-ignore
       this.filterForm.controls['statuses'].patchValue(all);
       event.target.tag = 1;
     } else {
+      // @ts-ignore
       this.filterForm.controls['statuses'].patchValue([]);
       event.target.tag = 0;
     }
@@ -82,6 +95,7 @@ export class EventListComponent implements OnInit {
 
   public clearFilter(): void {
     this.filterForm.reset();
+    // @ts-ignore
     this.filterForm.controls['statuses'].patchValue([]);
     this.eventList = {
       items: [],
@@ -123,6 +137,7 @@ export class EventListComponent implements OnInit {
   }
 
   private initFormFilter(): void {
+    // @ts-ignore
     this.filterForm = this.fb.group({
       name: [null],
       startFrom: [null],
@@ -140,22 +155,31 @@ export class EventListComponent implements OnInit {
     }
     this.params.SortBy = 'name';
     this.params.Filter = new EventFilter();
+    // @ts-ignore
     this.params.Filter.name = this.filterForm.controls['name'].value
-      ? this.filterForm.controls['name'].value
+      ? // @ts-ignore
+        this.filterForm.controls['name'].value
       : null;
+    // @ts-ignore
     this.params.Filter.startFrom = this.filterForm.controls['startFrom'].value
-      ? this.filterForm.controls['startFrom'].value
+      ? // @ts-ignore
+        this.filterForm.controls['startFrom'].value
       : null;
+    // @ts-ignore
     this.params.Filter.startTo = this.filterForm.controls['startTo'].value
-      ? this.filterForm.controls['startTo'].value
+      ? // @ts-ignore
+        this.filterForm.controls['startTo'].value
       : null;
+    // @ts-ignore
     this.params.Filter.statuses = this.filterForm.controls['statuses'].value?.length
-      ? this.filterForm.controls['statuses'].value
+      ? // @ts-ignore
+        this.filterForm.controls['statuses'].value
       : null;
     this.params.Filter.excludeOtherUsersDraftedEvents = true;
 
+    // @ts-ignore
     if (this.filterForm.value.iAmOwner) {
-      const userId: number = this.authService.getUserId();
+      const userId: number = this.authService.getUserId() as number;
       if (userId) this.params.Filter.ownerIds = [userId];
     }
   }

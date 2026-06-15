@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, UrlTree } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import { UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { RouterService } from './router.service';
@@ -7,8 +7,11 @@ import { RouterService } from './router.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ProfilePageForLoggedUsersGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: RouterService) {}
+export class ProfilePageForLoggedUsersGuard  {
+  private authService = inject(AuthService);
+  private router = inject(RouterService);
+
+
 
   canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this.authService.isLoggedIn()) {

@@ -2,26 +2,36 @@
   [logoMinWidth]="logoMinWidth"
   [secondToolbar]="!hideTitleBar && !isLoading ? secondToolbar : null"
   [secondToolbarCssClasses]="layoutCssClasses"
->
+  >
 </toolbar>
 
 <ng-template #secondToolbar>
-  <div class="layout-default__page-bar" *ngIf="!hideTitleBar && !isLoading">
-    <div>
-      <div class="layout-default__title" *ngIf="title">{{ title }}</div>
-      <div class="layout-default__subTitle" *ngIf="subTitle">{{ subTitle }}</div>
-      <ng-content select="[alert]"></ng-content>
+  @if (!hideTitleBar && !isLoading) {
+    <div class="layout-default__page-bar">
+      <div>
+        @if (title) {
+          <div class="layout-default__title">{{ title }}</div>
+        }
+        @if (subTitle) {
+          <div class="layout-default__subTitle">{{ subTitle }}</div>
+        }
+        <ng-content select="[alert]"></ng-content>
+      </div>
+      <div class="layout-default__actions">
+        <ng-content select="[actions]"></ng-content>
+      </div>
     </div>
-    <div class="layout-default__actions">
-      <ng-content select="[actions]"></ng-content>
-    </div>
-  </div>
+  }
 </ng-template>
 
-<div class="{{ containerCssClasses }}" *ngIf="!(isLoading && hideContentWhileLoading)">
-  <ng-content></ng-content>
-</div>
+@if (!(isLoading && hideContentWhileLoading)) {
+  <div class="{{ containerCssClasses }}">
+    <ng-content></ng-content>
+  </div>
+}
 
-<div class="layout-default__loader loader-theme" *ngIf="showLoadingIndicator && isLoading">
-  <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
-</div>
+@if (showLoadingIndicator && isLoading) {
+  <div class="layout-default__loader loader-theme">
+    <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
+  </div>
+}

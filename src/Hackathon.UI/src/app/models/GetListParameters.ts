@@ -1,17 +1,17 @@
 import { PageSettingsDefaults } from './PageSettings';
 
 export class GetListParameters<T> implements PaginationSorting {
-  Filter: T;
-  Limit: number;
-  Offset: number;
-  SortBy: string;
-  SortOrder: SortOrder;
+  Filter?: T;
+  Limit: number = 0;
+  Offset: number = 0;
+  SortBy: string = '';
+  SortOrder: SortOrder = 0;
 }
 
 export class PaginationSorting {
   Offset: number = PageSettingsDefaults.Offset;
   Limit: number = PageSettingsDefaults.Limit;
-  SortBy: string;
+  SortBy: string = '';
   SortOrder: SortOrder = SortOrder.Asc;
 }
 

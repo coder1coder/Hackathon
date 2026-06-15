@@ -1,4 +1,4 @@
-import { OnInit, Component, Input, OnDestroy } from '@angular/core';
+import { OnInit, Component, Input, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Team, TeamType } from '../../../models/Team/Team';
 import { finalize } from 'rxjs/operators';
@@ -10,29 +10,34 @@ import { ITeamJoinRequest } from '../../../models/Team/ITeamJoinRequest';
 import { Subject, takeUntil } from 'rxjs';
 import { AppStateService } from '../../../services/app-state.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+
+import { MatButton } from '@angular/material/button';
+import { TeamComponent } from '../team/team.component';
 
 @Component({
-  selector: 'team-view',
-  templateUrl: './team.view.component.html',
-  styleUrls: ['./team.view.component.scss'],
+    selector: 'team-view',
+    templateUrl: './team.view.component.html',
+    styleUrls: ['./team.view.component.scss'],
+    imports: [DefaultLayoutComponent, MatButton, TeamComponent]
 })
 export class TeamViewComponent implements OnInit, OnDestroy {
+  private activateRoute = inject(ActivatedRoute);
+  router = inject(RouterService);
+  private teamsClient = inject(TeamsClient);
+  private authService = inject(AuthService);
+  private snackService = inject(SnackService);
+  private appStateService = inject(AppStateService);
+
   @Input() teamId?: number;
 
-  public team: Team;
-  public userId: number;
-  public existsSentJoinRequest: ITeamJoinRequest;
+  public team!: Team;
+  public userId: number =- 0;
+  public existsSentJoinRequest: ITeamJoinRequest | null = null;
 
   private destroy$ = new Subject();
 
-  constructor(
-    private activateRoute: ActivatedRoute,
-    public router: RouterService,
-    private teamsClient: TeamsClient,
-    private authService: AuthService,
-    private snackService: SnackService,
-    private appStateService: AppStateService,
-  ) {}
+
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId() ?? 0;
@@ -126,7 +131,7 @@ export class TeamViewComponent implements OnInit, OnDestroy {
     this.teamsClient
       .cancelJoinRequest({
         requestId: this.existsSentJoinRequest.id,
-        comment: null,
+        comment: '',
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -152,8 +157,9 @@ export class TeamViewComponent implements OnInit, OnDestroy {
 
   private fetchTeam(): void {
     this.appStateService.setIsLoadingState(true);
+    //TODO: remove type assertion
     this.teamsClient
-      .getById(this.teamId)
+      .getById(this.teamId as number)
       .pipe(
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),

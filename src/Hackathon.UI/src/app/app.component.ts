@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ThemeChangeService } from './services/theme-change.service';
 import { SignalRService } from './services/signalr.service';
 import { environment } from '../environments/environment';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
-  public title : string = 'Hackathon.UI';
+  private signalRService = inject(SignalRService);
+  private themeChangeService = inject(ThemeChangeService);
 
-  constructor(
-    private signalRService: SignalRService,
-    private themeChangeService: ThemeChangeService,
-  ) {}
+  public title: string = 'Hackathon.UI';
+
+
 
   ngOnInit(): void {
     this.signalRService.initSignalR(environment.hubs.chats.events);

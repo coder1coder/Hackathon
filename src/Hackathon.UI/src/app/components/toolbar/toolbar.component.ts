@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, inject } from '@angular/core';
 import { RouterService } from '../../services/router.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -12,31 +12,52 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { IUser } from '../../models/User/IUser';
 import { CurrentUserStore } from '../../shared/stores/current-user.store';
 import { ProfileUserStore } from '../../shared/stores/profile-user.store';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { NavMenuComponent } from '../nav-menu/nav-menu.component';
+import { NotificationBellComponent } from '../notification/bell/notification.bell.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { ProfileImageComponent } from '../profile/image/profile-image.component';
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
+  imports: [
+    MatToolbar,
+    MatToolbarRow,
+    NavMenuComponent,
+    NotificationBellComponent,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    RouterLink,
+    MatIcon,
+    NgTemplateOutlet,
+    ProfileImageComponent
+  ],
 })
 export class ToolbarComponent implements OnInit {
+  private routerService = inject(RouterService);
+  private dialog = inject(MatDialog);
+  private fb = inject(FormBuilder);
+  private themeChangeService = inject(ThemeChangeService);
+  private currentUserStore = inject(CurrentUserStore);
+  private profileUserStore = inject(ProfileUserStore);
+
   public isDarkMode: boolean = false;
-  public userName: string;
-  public user: IUser;
+  public userName: string = '';
+  public user: IUser | null = null;
 
   @Input() logoMinWidth: string = 'initial';
-  @Input() secondToolbar: TemplateRef<any> | null;
-  @Input() secondToolbarCssClasses: string;
+  @Input() secondToolbar!: TemplateRef<any> | null;
+  @Input() secondToolbarCssClasses!: string;
 
   private destroy$ = new Subject();
-
-  constructor(
-    private routerService: RouterService,
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private themeChangeService: ThemeChangeService,
-    private currentUserStore: CurrentUserStore,
-    private profileUserStore: ProfileUserStore,
-  ) {}
 
   ngOnInit(): void {
     this.currentUserStore.loadCurrentUser();
@@ -65,10 +86,10 @@ export class ToolbarComponent implements OnInit {
   private initSubscribe(): void {
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((curUser: IUser) => {
+      .subscribe((curUser) => {
         if (curUser) {
           this.user = curUser;
-          this.userName = curUser.fullName ?? curUser.userName;
+          this.userName = curUser.fullName ?? (curUser.userName as string);
         }
       });
 

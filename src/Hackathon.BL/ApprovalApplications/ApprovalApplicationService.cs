@@ -100,7 +100,10 @@ public class ApprovalApplicationService: IApprovalApplicationService
         return Result.Success;
     }
 
-    public async Task<Result> RejectAsync(long authorizedUserId, long approvalApplicationId, ApprovalApplicationRejectParameters parameters)
+    public async Task<Result> RejectAsync(
+        long authorizedUserId, 
+        long approvalApplicationId, 
+        ApprovalApplicationRejectParameters parameters)
     {
         await _rejectParametersValidator.ValidateAndThrowAsync(parameters);
 

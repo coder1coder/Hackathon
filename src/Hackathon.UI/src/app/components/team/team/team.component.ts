@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject } from '@angular/core';
 import { Team } from '../../../models/Team/Team';
 import { RouterService } from '../../../services/router.service';
 import { EventFilter } from '../../../models/Event/EventFilter';
 import { GetListParameters, SortOrder } from '../../../models/GetListParameters';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 import { IEventListItem } from '../../../models/Event/IEventListItem';
 import { AuthService } from '../../../services/auth.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { ITeamJoinRequest } from '../../../models/Team/ITeamJoinRequest';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CancelJoinRequestCommentDialogComponent } from '../cancelJoinRequestCommentDialog/cancelJoinRequestCommentDialog.component';
@@ -15,14 +15,45 @@ import { Subject, switchMap, takeUntil } from 'rxjs';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { EventsClient } from 'src/app/clients/events.client';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChatTeamComponent } from '../../chat/team/chat-team.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
   selector: 'team',
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss'],
+  imports: [
+    MatTabGroup,
+    MatTab,
+    MatTabLabel,
+    NgTemplateOutlet,
+    ChatTeamComponent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatButton,
+    MatIcon,
+    ProfileImageComponent
+],
 })
 export class TeamComponent implements OnDestroy {
-  @Input() team: Team;
+  dialog = inject(MatDialog);
+  router = inject(RouterService);
+  private eventsClient = inject(EventsClient);
+  private authService = inject(AuthService);
+  private teamsClient = inject(TeamsClient);
+
+  @Input() team!: Team;
 
   public teamEvents: IEventListItem[] = [];
   public authorizedUserId = this.authService.getUserId();
@@ -32,13 +63,7 @@ export class TeamComponent implements OnDestroy {
 
   private destroy$ = new Subject();
 
-  constructor(
-    public dialog: MatDialog,
-    public router: RouterService,
-    private eventsClient: EventsClient,
-    private authService: AuthService,
-    private teamsClient: TeamsClient,
-  ) {}
+
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
@@ -103,7 +128,7 @@ export class TeamComponent implements OnDestroy {
 
     const parameters: ICancelRequestParameters = {
       requestId: requestId,
-      comment: null,
+      comment: '',
     };
 
     dialogRef

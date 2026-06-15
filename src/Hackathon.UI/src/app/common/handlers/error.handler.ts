@@ -1,4 +1,4 @@
-import { ErrorHandler, Injectable, NgZone } from '@angular/core';
+import { ErrorHandler, Injectable, NgZone, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { RouterService } from '../../services/router.service';
@@ -9,12 +9,10 @@ import { ErrorProcessorService } from '../../services/error-processor.service';
   providedIn: 'root',
 })
 export class GlobalErrorHandler implements ErrorHandler {
-  constructor(
-    private router: RouterService,
-    private authService: AuthService,
-    private ngZone: NgZone,
-    private errorProcessor: ErrorProcessorService,
-  ) {}
+  private router = inject(RouterService);
+  private authService = inject(AuthService);
+  private ngZone = inject(NgZone);
+  private errorProcessor = inject(ErrorProcessorService);
 
   handleError(error: Error | HttpErrorResponse): void {
     if (error instanceof HttpErrorResponse) {

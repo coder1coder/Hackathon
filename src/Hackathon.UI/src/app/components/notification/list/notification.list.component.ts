@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { GetListParameters } from '../../../models/GetListParameters';
 import { NotificationFilter } from '../../../models/Notification/NotificationFilter';
@@ -8,21 +8,40 @@ import { AuthService } from '../../../services/auth.service';
 import { takeUntil } from 'rxjs';
 import { SignalRService } from '../../../services/signalr.service';
 import { NotificationsClient } from 'src/app/clients/notifications.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NotificationItemComponent } from '../item/notification-item.component';
+import { MatCardContent, MatCardFooter } from '@angular/material/card';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatList, MatListItem } from '@angular/material/list';
 
 @Component({
-  selector: 'notification-list',
-  templateUrl: './notification.list.component.html',
-  styleUrls: ['./notification.list.component.scss'],
+    selector: 'notification-list',
+    templateUrl: './notification.list.component.html',
+    styleUrls: ['./notification.list.component.scss'],
+    imports: [
+    DefaultLayoutComponent,
+    MatButton,
+    MatIcon,
+    NotificationItemComponent,
+    MatCardContent,
+    MatCardFooter,
+    MatPaginator,
+    MatList,
+    MatListItem
+],
 })
 export class NotificationListComponent
   extends BaseTableListComponent<Notification>
   implements OnInit
 {
-  constructor(
-    private notificationsClient: NotificationsClient,
-    private signalRService: SignalRService,
-    private authService: AuthService,
-  ) {
+  private notificationsClient = inject(NotificationsClient);
+  private signalRService = inject(SignalRService);
+  private authService = inject(AuthService);
+
+  constructor() {
     super(NotificationListComponent.name);
   }
 
@@ -68,7 +87,10 @@ export class NotificationListComponent
   }
 
   public removeAll(event: MouseEvent): void {
-    const ids: string[] = this.items.map((notification: Notification) => notification.id);
+    //TODO: remove type assertioon
+    const ids: string[] = this.items.map(
+      (notification: Notification) => notification.id,
+    ) as string[];
     this.remove(event, ids);
   }
 

@@ -2,17 +2,18 @@
   [title]="'Событие: ' + event.name"
   [subTitle]="currentStageName"
   [containerCssClasses]="'relative'"
->
+  >
   <div class="event-started-wrapper">
     <aside class="event-started-sidebar theme-background">
-      <button
-        mat-button
-        (click)="selectedPageIndex = pagesEnum.EventTasks"
-        *ngIf="Event.hasTasks(event)"
-      >
-        <mat-icon>task</mat-icon>
-        Задачи
-      </button>
+      @if (Event.hasTasks(event)) {
+        <button
+          mat-button
+          (click)="selectedPageIndex = pagesEnum.EventTasks"
+          >
+          <mat-icon>task</mat-icon>
+          Задачи
+        </button>
+      }
       <button mat-button (click)="selectedPageIndex = pagesEnum.Communication">
         <mat-icon>group</mat-icon>
         Общение
@@ -28,14 +29,16 @@
         [selectedIndex]="selectedPageIndex"
         class="without-header team-chat-theme"
         animationDuration="0ms"
-      >
+        >
         <mat-tab [hidden]="!Event.hasTasks(event)">
           <div class="padding-1em">
             <h2>Задачи мероприятия</h2>
             <ol>
-              <li *ngFor="let eventTask of event.tasks">
-                {{ eventTask.title }}
-              </li>
+              @for (eventTask of event.tasks; track eventTask) {
+                <li>
+                  {{ eventTask.title }}
+                </li>
+              }
             </ol>
           </div>
         </mat-tab>
@@ -50,20 +53,24 @@
                 </mat-select>
               </div>
             </div>
-            <div class="event-started__chat-wrapper" [ngSwitch]="selectedChatIndex">
-              <chat-team
-                *ngSwitchCase="chatContextEnum.Team"
-                [teamId]="currentChatId"
-                [showMembers]="true"
-                [pageIndex]="selectedPageIndex"
-              ></chat-team>
-              <chat-event
-                *ngSwitchCase="chatContextEnum.Event"
-                [event]="event"
-                [eventId]="currentChatId"
-                [showMembers]="true"
-                [pageIndex]="selectedPageIndex"
-              ></chat-event>
+            <div class="event-started__chat-wrapper">
+              @switch (selectedChatIndex) {
+                @case (chatContextEnum.Team) {
+                  <chat-team
+                    [teamId]="currentChatId"
+                    [showMembers]="true"
+                    [pageIndex]="selectedPageIndex"
+                  ></chat-team>
+                }
+                @case (chatContextEnum.Event) {
+                  <chat-event
+                    [event]="event"
+                    [eventId]="currentChatId"
+                    [showMembers]="true"
+                    [pageIndex]="selectedPageIndex"
+                  ></chat-event>
+                }
+              }
             </div>
           </div>
         </mat-tab>
@@ -71,40 +78,49 @@
         <mat-tab>
           <div class="padding-1em">
             <h2>Проект</h2>
-            <div *ngIf="project; else hasNoProject">
-              <div *ngIf="project.name">Наименование: {{ project.name }}</div>
-              <div *ngIf="project.description">Описание: {{ project.description }}</div>
-              <div *ngIf="project.linkToGitBranch">
-                Git-репозиторий: {{ project.linkToGitBranch }}
+            @if (project) {
+              <div>
+                @if (project.name) {
+                  <div>Наименование: {{ project.name }}</div>
+                }
+                @if (project.description) {
+                  <div>Описание: {{ project.description }}</div>
+                }
+                @if (project.linkToGitBranch) {
+                  <div>
+                    Git-репозиторий: {{ project.linkToGitBranch }}
+                  </div>
+                }
+                @if (project.files !== null && project.files!.length > 0) {
+                  <div>
+                    <ul>
+                      @for (file of project.files; track file) {
+                        <li>
+                          {{ file.fileName }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                } @else {
+                  <br />
+                  <button mat-button color="primary" (click)="showProjectDialog()">
+                    Обновить информацию о проекте
+                  </button>
+                  <br />
+                  <button mat-button color="primary" (click)="showUpdateProjectFromBitBranchDialog()">
+                    Обновить файлы проекта из Git-репозитория
+                  </button>
+                  <br />
+                  <button mat-button color="primary" (click)="removeProject()">Удалить проект</button>
+                }
               </div>
-              <div *ngIf="project.files !== null && project.files.length > 0; else noFiles">
-                <ul>
-                  <li *ngFor="let file of project.files">
-                    {{ file.fileName }}
-                  </li>
-                </ul>
-              </div>
-
-              <ng-template #noFiles>
-                <br />
-                <button mat-button color="primary" (click)="showProjectDialog()">
-                  Обновить информацию о проекте
-                </button>
-                <br />
-                <button mat-button color="primary" (click)="showUpdateProjectFromBitBranchDialog()">
-                  Обновить файлы проекта из Git-репозитория
-                </button>
-                <br />
-                <button mat-button color="primary" (click)="removeProject()">Удалить проект</button>
-              </ng-template>
-            </div>
-
-            <ng-template #hasNoProject>
+            } @else {
               <button mat-button class="newProjectButton" (click)="showProjectDialog()">
                 <mat-icon color="primary">add</mat-icon>
                 Добавить проект
               </button>
-            </ng-template>
+            }
+
           </div>
         </mat-tab>
       </mat-tab-group>

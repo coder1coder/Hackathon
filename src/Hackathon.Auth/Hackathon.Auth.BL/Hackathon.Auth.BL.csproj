@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Hackathon.Common\Hackathon.Common.csproj" />
+      <ProjectReference Include="..\Hackathon.Auth.Abstraction\Hackathon.Auth.Abstraction.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Backend.Tools.Common" />
+      <PackageReference Include="FluentValidation" />
+      <PackageReference Include="Google.Apis.Auth" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+      <PackageReference Include="Microsoft.Extensions.Options" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    </ItemGroup>
+
+</Project>

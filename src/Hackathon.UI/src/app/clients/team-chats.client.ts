@@ -3,15 +3,15 @@ import { BaseApiClient } from './base.client';
 import { TeamChatMessage } from '../models/chat/TeamChatMessage';
 import { Observable } from 'rxjs';
 import { BaseCollection } from '../models/BaseCollection';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamChatsClient extends BaseApiClient {
-  
-  protected constructor(http: HttpClient) {
-    super(http, 'chat/team');
+
+  protected constructor() {
+    super('chat/team');
   }
 
   public sendAsync(message: TeamChatMessage): Observable<void> {

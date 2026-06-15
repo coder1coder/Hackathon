@@ -1,17 +1,17 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { UserRoleTranslator } from 'src/app/models/User/UserRole';
 import { AuthService } from '../../../services/auth.service';
-import {catchError, Observable, of, switchMap, takeUntil} from 'rxjs';
+import { catchError, Observable, of, switchMap, takeUntil } from 'rxjs';
 import { IUpdateUser, IUser } from '../../../models/User/IUser';
 import { UserProfileReaction, IUserProfileReaction } from 'src/app/models/User/UserProfileReaction';
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { Team } from '../../../models/Team/Team';
 import { UserEmailStatus } from 'src/app/models/User/UserEmailStatus';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IKeyValue } from '../../../common/interfaces/key-value.interface';
 import { emailRegex } from '../../../common/patterns/email-regex';
 import { checkValue } from '../../../common/functions/check-value';
@@ -19,32 +19,73 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { AppStateService } from '../../../services/app-state.service';
-import {filter, finalize } from 'rxjs/operators';
-import {MatDialog} from "@angular/material/dialog";
+import { filter, finalize } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 import { IUpdatePasswordParameters } from 'src/app/models/User/IUpdatePasswordParameters';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import { PasswordChangeDialogComponent } from '../password-change-dialog/password-change-dialog.component';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { UsersClient } from 'src/app/clients/users.client';
 import { UserProfileReactionsClient } from 'src/app/clients/user-profile-reactions.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { AsyncPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../../custom/alert/alert.component';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { FriendshipOfferButtonComponent } from '../../friendship/friendship-offer-button/friendship-offer-button.component';
+import { FriendsListComponent } from '../../friendship/list/friends-list.component';
+import { ProfileImageComponent } from '../image/profile-image.component';
 
 @Component({
   templateUrl: './profile.view.component.html',
   styleUrls: ['./profile.view.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    MatButton,
+    FormsModule,
+    ReactiveFormsModule,
+    AlertComponent,
+    MatFormField,
+    MatInput,
+    MatIcon,
+    FriendshipOfferButtonComponent,
+    MatTabGroup,
+    MatTab,
+    MatTabContent,
+    FriendsListComponent,
+    AsyncPipe,
+    ProfileImageComponent
+],
 })
 export class ProfileViewComponent
   extends WithFormBaseComponent
   implements OnInit, AfterViewChecked
 {
-  @ViewChild(MatTabGroup) public friendshipTabs: MatTabGroup;
-  @ViewChild('confirmationCodeInput') confirmationCodeInput: ElementRef;
+  private authService = inject(AuthService);
+  private teamsClient = inject(TeamsClient);
+  private activateRoute = inject(ActivatedRoute);
+  private usersClient = inject(UsersClient);
+  private userProfileReactionsClient = inject(UserProfileReactionsClient);
+  private snackService = inject(SnackService);
+  private fb = inject(FormBuilder);
+  private profileUserStore = inject(ProfileUserStore);
+  private currentUserStore = inject(CurrentUserStore);
+  private appStateService = inject(AppStateService);
+  private dialogService = inject(MatDialog);
+  private errorProcessor = inject(ErrorProcessorService);
 
-  public form = new FormGroup({});
+  @ViewChild(MatTabGroup) public friendshipTabs!: MatTabGroup;
+  @ViewChild('confirmationCodeInput') confirmationCodeInput!: ElementRef;
+
+  private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
+  private emailRegexp: RegExp = emailRegex;
+
   public UserRoleTranslator = UserRoleTranslator;
   public userId: number;
-  public user: IUser;
-  public currentUser: IUser;
-  public userTeam: Team;
+  public user!: IUser;
+  public currentUser!: IUser;
+  public userTeam!: Team;
   public authUserId: number;
   public isEditMode: boolean = false;
   public canUploadImage: boolean = false;
@@ -54,25 +95,20 @@ export class ProfileViewComponent
   public friendshipStatus = FriendshipStatus;
   public userEmailStatus = UserEmailStatus;
   public userProfileReactionsList: IUserProfileReaction[] = [];
+  public form = new FormGroup({
+    fullName: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100),
+    ]),
+    email: new FormControl(null, [Validators.required, Validators.pattern(this.emailRegexp)]),
+  });
 
-  private userProfileReactions: UserProfileReaction = UserProfileReaction.None;
-  private emailRegexp: RegExp = emailRegex;
-
-  constructor(
-    private authService: AuthService,
-    private teamsClient: TeamsClient,
-    private activateRoute: ActivatedRoute,
-    private usersClient: UsersClient,
-    private userProfileReactionsClient: UserProfileReactionsClient,
-    private snackService: SnackService,
-    private fb: FormBuilder,
-    private profileUserStore: ProfileUserStore,
-    private currentUserStore: CurrentUserStore,
-    private appStateService: AppStateService,
-    private dialogService: MatDialog,
-    private errorProcessor: ErrorProcessorService
-  ) {
+  constructor() {
     super();
+    const usersClient = this.usersClient;
+    const snackService = this.snackService;
+
     this.usersClient = usersClient;
     this.snackService = snackService;
     this.authUserId = this.authService.getUserId() ?? 0;
@@ -99,15 +135,17 @@ export class ProfileViewComponent
   public userEdit(): void {
     this.isEditMode = true;
     if (this.user) {
+      // @ts-ignore
       this.form.setValue(this.mapUserValue(this.user));
     }
   }
 
-  public canChangePassword():boolean{
+  public canChangePassword(): boolean {
     return !this.isEditMode && this.isOwner && !this.user.googleAccount;
   }
 
   public saveUserEdit(): void {
+    // @ts-ignore
     const request: IUpdateUser = {
       id: this.userId,
       ...this.form.getRawValue(),
@@ -192,20 +230,19 @@ export class ProfileViewComponent
       .pipe(
         filter((parameters: IUpdatePasswordParameters) => parameters !== undefined),
         switchMap((parameters: IUpdatePasswordParameters) =>
-          this.usersClient.updatePassword(parameters)),
+          this.usersClient.updatePassword(parameters),
+        ),
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: () => this.snackService.open("Пароль успешно изменен"),
+        next: () => this.snackService.open('Пароль успешно изменен'),
         error: (errorContext) => this.errorProcessor.Process(errorContext),
       });
   }
 
   public getProfileTitle(): string {
-    const currentUserId: number = this.authService.getUserId();
-    return currentUserId === this.userId
-      ? 'Мой профиль'
-      : 'Профиль';
+    const currentUserId: number = this.authService.getUserId() as number;
+    return currentUserId === this.userId ? 'Мой профиль' : 'Профиль';
   }
 
   private fetchData(needReload: boolean = false): void {
@@ -213,11 +250,13 @@ export class ProfileViewComponent
     this.profileUserStore
       .getUser(this.userId, needReload)
       .pipe(
-        switchMap((user: IUser) => {
-          const currentUserId: number = this.authService.getUserId();
+        switchMap((user) => {
+          const currentUserId: number = this.authService.getUserId() as number;
           this.canUploadImage = currentUserId === this.userId;
           this.canViewEmail = currentUserId === this.userId;
-          this.user = user;
+          if (user) {
+            this.user = user;
+          }
 
           if (this.userId !== this.authUserId) {
             this.fetchReactions();
@@ -229,11 +268,11 @@ export class ProfileViewComponent
         finalize(() => this.appStateService.setIsLoadingState(false)),
         takeUntil(this.destroy$),
       )
-      .subscribe((res: Team) => (this.userTeam = res));
+      .subscribe((res) => (this.userTeam = res as Team));
 
     fromMobx(() => this.currentUserStore.currentUser)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user: IUser) => (this.currentUser = user));
+      .subscribe((user) => (this.currentUser = user as IUser));
   }
 
   private fetchReactions(): void {

@@ -1,7 +1,7 @@
 import { BaseApiClient } from './base.client';
 import { HttpClient } from '@angular/common/http';
 import { IProject } from '../models/Project/IProject';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IProjectUpdateFromGitBranch } from '../models/Project/IProjectUpdateFromGitBranch';
 
@@ -10,8 +10,8 @@ import { IProjectUpdateFromGitBranch } from '../models/Project/IProjectUpdateFro
 })
 export class ProjectsClient extends BaseApiClient {
 
-  protected constructor(http: HttpClient) {
-    super(http, 'project');
+  protected constructor() {
+    super('project');
   }
 
   public createAsync(project: IProject): Observable<void> {

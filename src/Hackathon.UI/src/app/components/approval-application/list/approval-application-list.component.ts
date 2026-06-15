@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import {
   IApprovalApplication,
@@ -20,23 +20,60 @@ import { ApprovalApplicationRejectModalComponent } from '../approval-application
 import { ApprovalApplicationStatusEnum } from '../../../models/approval-application/approval-application-status.enum';
 import { ApprovalApplicationInfoModalComponent } from '../approval-application-info-modal/approval-application-info-modal.component';
 import { ApprovalApplicationsClient } from 'src/app/clients/approval-applications.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { DatePipe } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatPaginator } from '@angular/material/paginator';
+import {
+  ApprovalApplicationStatusComponent
+} from '../approval-application-status/approval-application-status.component';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
+import {
+  ApprovalApplicationFilterComponent
+} from '../approval-application-filter/approval-application-filter.component';
 
 @Component({
   selector: 'app-approval-applications',
   templateUrl: './approval-application-list.component.html',
   styleUrls: ['./approval-application-list.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    DatePipe,
+    ApprovalApplicationStatusComponent,
+    ProfileImageComponent,
+    ApprovalApplicationFilterComponent
+],
 })
 export class ApprovalApplicationListComponent extends BaseTableListComponent<IApprovalApplication> {
+  private approvalApplicationsClient = inject(ApprovalApplicationsClient);
+  private errorProcessor = inject(ErrorProcessorService);
+  private dialog = inject(MatDialog);
+  private snackService = inject(SnackService);
+
   public tableDateFormat = TABLE_DATE_FORMAT;
 
-  private approvalApplicationFilter: IApprovalApplicationFilter;
+  private approvalApplicationFilter!: IApprovalApplicationFilter;
 
-  constructor(
-    private approvalApplicationsClient: ApprovalApplicationsClient,
-    private errorProcessor: ErrorProcessorService,
-    private dialog: MatDialog,
-    private snackService: SnackService,
-  ) {
+  constructor() {
     super(ApprovalApplicationListComponent.name);
   }
 
@@ -62,7 +99,7 @@ export class ApprovalApplicationListComponent extends BaseTableListComponent<IAp
     getFilterModel.Offset = this.pageSettings.pageIndex;
     getFilterModel.Limit = this.pageSettings.pageSize;
     getFilterModel.Filter = {
-      status: this.approvalApplicationFilter?.status ?? null,
+      status: this.approvalApplicationFilter?.status ?? undefined,
     };
     return getFilterModel;
   }

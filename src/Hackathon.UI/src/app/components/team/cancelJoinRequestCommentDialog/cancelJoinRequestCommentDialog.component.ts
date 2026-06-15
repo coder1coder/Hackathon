@@ -1,15 +1,18 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'cancel-join-request-comment-dialog',
-  templateUrl: 'cancelJoinRequestCommentDialog.component.html',
+    selector: 'cancel-join-request-comment-dialog',
+    templateUrl: 'cancelJoinRequestCommentDialog.component.html',
+    imports: [MatDialogTitle, MatDialogContent, MatFormField, MatInput, CdkTextareaAutosize, FormsModule, MatButton, MatDialogClose]
 })
 export class CancelJoinRequestCommentDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<CancelJoinRequestCommentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string,
-  ) {}
+  dialogRef = inject<MatDialogRef<CancelJoinRequestCommentDialogComponent>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
 
   onNoClick(): void {
     this.dialogRef.close();

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { FriendshipClient } from '../../../clients/friendship.client';
 import { FriendshipStatus } from '../../../models/Friendship/FriendshipStatus';
@@ -7,13 +7,30 @@ import { IUser } from '../../../models/User/IUser';
 import { RouterService } from '../../../services/router.service';
 import { AuthService } from '../../../services/auth.service';
 import { SignalRService } from '../../../services/signalr.service';
+import { MatList, MatListItem } from '@angular/material/list';
+
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
   selector: `friends-list`,
   styleUrls: ['./friends-list.component.scss'],
   templateUrl: `./friends-list.component.html`,
+  imports: [
+    MatList,
+    MatListItem,
+    MatIconButton,
+    MatIcon,
+    ProfileImageComponent
+],
 })
 export class FriendsListComponent implements OnInit, OnDestroy {
+  private friendshipClient = inject(FriendshipClient);
+  private routerService = inject(RouterService);
+  private authService = inject(AuthService);
+  private signalRService = inject(SignalRService);
+
   @Input()
   set userId(value) {
     this._userId.next(value);
@@ -22,29 +39,25 @@ export class FriendsListComponent implements OnInit, OnDestroy {
     return this._userId.getValue();
   }
 
-  @Input() status: FriendshipStatus;
+  @Input() status!: FriendshipStatus;
   public FriendshipStatus = FriendshipStatus;
   public Number = Number;
   public users: IUser[] = [];
 
-  public authUserId: number;
+  public authUserId: number = 0;
 
   private _userId = new BehaviorSubject<number>(0);
   private destroy$ = new Subject();
 
-  constructor(
-    private friendshipClient: FriendshipClient,
-    private routerService: RouterService,
-    private authService: AuthService,
-    private signalRService: SignalRService,
-  ) {}
+
 
   ngOnInit(): void {
     this._userId.pipe(takeUntil(this.destroy$)).subscribe((x) => {
       this.fetchUsersByStatus(x, this.status);
     });
 
-    this.authUserId = this.authService.getUserId();
+    //TODO: remove type assertioon
+    this.authUserId = this.authService.getUserId() as number;
 
     this.signalRService.onFriendshipChangedIntegration = (x): void => {
       if (

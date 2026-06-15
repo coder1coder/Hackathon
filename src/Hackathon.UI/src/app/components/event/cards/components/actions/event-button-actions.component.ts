@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject } from '@angular/core';
 import { Event } from '../../../../../models/Event/Event';
 import { EventStatus } from '../../../../../models/Event/EventStatus';
 import { SnackService } from '../../../../../services/snack.service';
@@ -13,26 +13,30 @@ import { ErrorProcessorService } from '../../../../../services/error-processor.s
 import { Subject, takeUntil } from 'rxjs';
 import { EventsClient } from 'src/app/clients/events.client';
 
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+
 @Component({
-  selector: 'event-button-actions',
-  templateUrl: './event-button-actions.component.html',
-  styleUrls: ['./event-button-actions.component.scss'],
+    selector: 'event-button-actions',
+    templateUrl: './event-button-actions.component.html',
+    styleUrls: ['./event-button-actions.component.scss'],
+    imports: [MatButton, MatIcon]
 })
 export class EventButtonActionsComponent implements OnDestroy {
-  @Input() event: Event;
-  @Input() submit: () => void;
+  eventService = inject(EventService);
+  private eventsClient = inject(EventsClient);
+  private snack = inject(SnackService);
+  private router = inject(RouterService);
+  dialog = inject(MatDialog);
+  private errorProcessor = inject(ErrorProcessorService);
+
+  @Input() event!: Event;
+  @Input() submit!: () => void;
   @Input() formValidity: boolean = true;
 
   private destroy$ = new Subject();
 
-  constructor(
-    public eventService: EventService,
-    private eventsClient: EventsClient,
-    private snack: SnackService,
-    private router: RouterService,
-    public dialog: MatDialog,
-    private errorProcessor: ErrorProcessorService,
-  ) {}
+
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

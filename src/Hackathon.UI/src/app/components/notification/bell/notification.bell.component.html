@@ -3,43 +3,41 @@
     matBadge="{{ unreadNotificationsCount }}"
     matBadgeColor="warn"
     matBadgeHidden="{{ unreadNotificationsCount === 0 }}"
-  >
+    >
     notifications_none
   </mat-icon>
 </button>
 
 <mat-menu #notificationBellMenu="matMenu" yPosition="below" class="notify__menu theme-color">
-  <ng-template
-    [ngIf]="notifications?.items && notifications.items.length > 0"
-    [ngIfElse]="notificationsEmpty"
-  >
-    <notification-item
-      *ngFor="let item of notifications.items"
-      [notification]="item"
-      [shortView]="true"
-      (click)="$event.stopPropagation()"
-    ></notification-item>
+  @if (notifications?.items && notifications.items.length > 0) {
+    @for (item of notifications.items; track item) {
+      <notification-item
+        [notification]="item"
+        [shortView]="true"
+        (click)="$event.stopPropagation()"
+      ></notification-item>
+    }
     <div class="d-flex flex-align-items-center flex-justify-content-center">
-      <button
-        *ngIf="notifications?.totalCount > notificationLimit"
-        (click)="viewAll()"
-        style="margin-top: 1em"
-        mat-button
-        class="primary mat-primary"
-      >
-        Все уведомления ({{ notifications?.totalCount }})
-      </button>
+      @if (notifications.totalCount > notificationLimit) {
+        <button
+          (click)="viewAll()"
+          style="margin-top: 1em"
+          mat-button
+          class="primary mat-primary"
+          >
+          Все уведомления ({{ notifications?.totalCount }})
+        </button>
+      }
     </div>
-  </ng-template>
+  } @else {
+    <mat-list role="list">
+      <mat-list-item role="listitem"> Нет уведомлений </mat-list-item>
+      <mat-list-item>
+        <div class="d-flex flex-align-items-center flex-justify-content-center w-100">
+          <button mat-button color="primary" (click)="viewAll()">Центр уведомлений</button>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  }
 </mat-menu>
 
-<ng-template #notificationsEmpty>
-  <mat-list role="list">
-    <mat-list-item role="listitem"> Нет уведомлений </mat-list-item>
-    <mat-list-item>
-      <div class="d-flex flex-align-items-center flex-justify-content-center w-100">
-        <button mat-button color="primary" (click)="viewAll()">Центр уведомлений</button>
-      </div>
-    </mat-list-item>
-  </mat-list>
-</ng-template>

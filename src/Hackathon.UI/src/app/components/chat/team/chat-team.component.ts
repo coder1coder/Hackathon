@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { ChatMessageOption, TeamChatMessage } from '../../../models/chat/TeamChatMessage';
@@ -13,16 +13,47 @@ import { ProfileUserStore } from '../../../shared/stores/profile-user.store';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { TeamsClient } from 'src/app/clients/teams.client';
 import { TeamChatsClient } from 'src/app/clients/team-chats.client';
+import { DatePipe } from '@angular/common';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
   selector: 'chat-team',
   templateUrl: '../base.chat.component.html',
   styleUrls: ['../base.chat.component.scss'],
+  imports: [
+    InfiniteScrollDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckbox,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatHint,
+    MatList,
+    MatListItem,
+    MatProgressSpinner,
+    DatePipe,
+    ProfileImageComponent
+],
 })
 export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implements OnInit {
-  @ViewChild('scrollMe') chatBody: ElementRef;
+  protected authService = inject(AuthService);
+  protected fb = inject(FormBuilder);
+  protected profileUserStore = inject(ProfileUserStore);
+  private signalRService = inject(SignalRService);
+  private teamsClient = inject(TeamsClient);
+  private teamChatsClient = inject(TeamChatsClient);
+  private errorProcessor = inject(ErrorProcessorService);
 
-  @Input() team: Team;
+  @ViewChild('scrollMe') chatBody!: ElementRef;
+
+  @Input() team!: Team;
   @Input() showMembers: boolean = false;
   @Input() set pageIndex(value: number) {
     this.selectedPageIndex.next(value);
@@ -38,17 +69,9 @@ export class ChatTeamComponent extends BaseChatComponent<TeamChatMessage> implem
   public entityId = new BehaviorSubject<number>(0);
   public messages: TeamChatMessage[] = [];
 
-  constructor(
-    protected authService: AuthService,
-    protected fb: FormBuilder,
-    protected profileUserStore: ProfileUserStore,
-    private signalRService: SignalRService,
-    private teamsClient: TeamsClient,
-    private teamChatsClient: TeamChatsClient,
-    private errorProcessor: ErrorProcessorService,
-  ) {
-    super(authService, fb, profileUserStore);
-    signalRService.onTeamChatNewMessage = (x): void => this.handleNewMessageEvent(x);
+  constructor() {
+    super();
+    this.signalRService.onTeamChatNewMessage = (x): void => this.handleNewMessageEvent(x);
   }
 
   ngOnInit(): void {

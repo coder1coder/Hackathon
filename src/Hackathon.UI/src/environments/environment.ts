@@ -7,7 +7,7 @@ export const environment: IEnvironment = {
     notification: 'http://localhost:5000/hubs/notifications',
     chats: {
       events: 'http://localhost:5000/hubs/chats/event',
-      teams: 'http://localhost:5000/hubs/chats/team'
+      teams: 'http://localhost:5000/hubs/chats/team',
     },
     friendship: 'http://localhost:5000/hubs/friendship',
     event: 'http://localhost:5000/hubs/events',

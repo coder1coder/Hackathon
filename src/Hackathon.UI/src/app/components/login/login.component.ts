@@ -1,11 +1,11 @@
 import '@angular/compiler';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { GoogleUser } from 'src/app/models/User/GoogleUser';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterService } from '../../services/router.service';
 import { SnackService } from '../../services/snack.service';
 import { ErrorProcessorService } from '../../services/error-processor.service';
@@ -13,38 +13,47 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { IProblemDetails } from '../../models/IProblemDetails';
 import { fromMobx } from '../../common/functions/from-mobx.function';
 import { AppStateService } from '../../services/app-state.service';
+import { MatFormField, MatLabel, MatInput, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, RecaptchaModule, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class LoginComponent implements AfterViewInit {
-  @ViewChild('login', { static: true }) inputLogin: ElementRef;
+  private router = inject(Router);
+  private routerService = inject(RouterService);
+  private errorProcessor = inject(ErrorProcessorService);
+  private snackService = inject(SnackService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+
+  @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public welcomeText: string = 'Добро пожаловать в систему Hackathon';
   public isLoading$: Observable<boolean> = fromMobx(() => this.appStateService.isLoading);
   public isPassFieldHide: boolean = true;
-  public siteKey: string;
+  public siteKey: string = '';
   public captchaEnabled: boolean = environment.captchaEnabled;
   public googleClientEnabled: boolean = true;
   public profileForm = this.fb.group({
-    login: [null],
-    password: [null],
+    login: [''],
+    password: [''],
   });
 
   private captcha: string = '';
   private destroy$ = new Subject();
 
-  constructor(
-    private router: Router,
-    private routerService: RouterService,
-    private errorProcessor: ErrorProcessorService,
-    private snackService: SnackService,
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-  ) {
+  constructor() {
+    const router = this.router;
+
     if (router.url === '/logout') {
       this.signOut();
     }
@@ -69,8 +78,9 @@ export class LoginComponent implements AfterViewInit {
     }
 
     this.appStateService.setIsLoadingState(true);
-    const login: string = this.profileForm.controls['login'].value;
-    const password: string = this.profileForm.controls['password'].value;
+    //TODO: remove type assertioon
+    const login: string = this.profileForm.controls['login'].value as string;
+    const password: string = this.profileForm.controls['password'].value as string;
 
     this.authService
       .login(login, password)
@@ -83,7 +93,8 @@ export class LoginComponent implements AfterViewInit {
           this.routerService.Profile.View();
         },
         error: (errorContext) => {
-          this.profileForm.setValue({ login: this.profileForm.get('login')?.value, password: '' });
+          //TODO: remove type assertioon
+          this.profileForm.setValue({ login: this.profileForm.get('login')?.value as string, password: '' });
           this.errorProcessor.Process(errorContext);
         },
       });
@@ -93,8 +104,8 @@ export class LoginComponent implements AfterViewInit {
     this.routerService.Profile.Register();
   }
 
-  public getCaptchaResponse(captchaResponse: string): void {
-    this.captcha = captchaResponse;
+  public getCaptchaResponse(captchaResponse: string | null): void {
+    if(captchaResponse) this.captcha = captchaResponse;
   }
 
   public signInByGoogle(): void {

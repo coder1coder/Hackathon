@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseCollection } from '../../../models/BaseCollection';
 import { BaseTableListComponent } from '../../../common/base-components/base-table-list.component';
 import { GetListParameters } from '../../../models/GetListParameters';
@@ -9,18 +9,46 @@ import { CurrentUserStore } from '../../../shared/stores/current-user.store';
 import { fromMobx } from '../../../common/functions/from-mobx.function';
 import { mergeMap, takeUntil } from 'rxjs';
 import { UsersClient } from 'src/app/clients/users.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatPaginator } from '@angular/material/paginator';
+import { ProfileImageComponent } from '../../profile/image/profile-image.component';
 
 @Component({
   selector: 'user-list',
   templateUrl: './user.list.component.html',
   styleUrls: ['./user.list.component.scss'],
+  imports: [
+    DefaultLayoutComponent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    ProfileImageComponent
+],
 })
 export class UserListComponent extends BaseTableListComponent<IUser> {
-  constructor(
-    private usersClient: UsersClient,
-    private routerService: RouterService,
-    private currentUserStore: CurrentUserStore,
-  ) {
+  private usersClient = inject(UsersClient);
+  private routerService = inject(RouterService);
+  private currentUserStore = inject(CurrentUserStore);
+
+  constructor() {
     super(UserListComponent.name);
     this.currentUserStore.loadCurrentUser();
   }
@@ -31,7 +59,8 @@ export class UserListComponent extends BaseTableListComponent<IUser> {
 
   override fetch(): void {
     const userFilter: UserFilter = new UserFilter();
-    fromMobx(() => this.currentUserStore.currentUser)
+    //TODO: Remove type assertion
+    fromMobx(() => this.currentUserStore.currentUser as IUser)
       .pipe(
         mergeMap((user: IUser) => {
           if (user?.id != null) {

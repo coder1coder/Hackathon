@@ -1,18 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    ValidationErrors,
-    ValidatorFn,
-} from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ICreateEvent } from '../../../../models/Event/ICreateEvent';
 import { IUpdateEvent } from '../../../../models/Event/IUpdateEvent';
 import { EventStatus, EventStatusTranslator } from 'src/app/models/Event/EventStatus';
 import { ChangeEventStatusMessage } from 'src/app/models/Event/ChangeEventStatusMessage';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { EventNewStatusDialogComponent } from '../components/status/event-new-status-dialog.component';
 import { SnackService } from '../../../../services/snack.service';
@@ -25,39 +18,79 @@ import { EventCardBaseComponent } from '../components/event-card-base.component'
 import { EventService } from '../../../../services/event/event.service';
 import { EventStage } from 'src/app/models/Event/EventStage';
 import {
-    EventStageDialogComponent,
-    EventStageDialogData,
+  EventStageDialogComponent,
+  EventStageDialogData,
 } from '../components/event-stage-dialog/event-stage-dialog.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { IEventTaskItem } from '../../../../models/Event/IEventTaskItem';
 import { UploadFileErrorMessages } from '../../../../common/error-messages/upload-file-error-messages';
 import { ErrorProcessorService } from 'src/app/services/error-processor.service';
 import {
-    DATE_FORMAT_DD_MM_YYYY,
-    DATE_FORMAT_YYYY_MM_DD,
+  DATE_FORMAT_DD_MM_YYYY,
+  DATE_FORMAT_YYYY_MM_DD,
 } from '../../../../common/consts/date-formats';
 import { checkValue } from '../../../../common/functions/check-value';
 import { IEventAgreement } from '../../../../models/Event/IEventAgreement';
 import { IBaseCreateResponse } from '../../../../models/IBaseCreateResponse';
 import { ApprovalApplicationStatusEnum } from '../../../../models/approval-application/approval-application-status.enum';
 import { AppStateService } from '../../../../services/app-state.service';
-import {MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipGrid, MatChipOption, MatChipRemove, MatChipInput } from '@angular/material/chips';
 import { FileStorageClient } from 'src/app/clients/file-storage.client';
 import { EventsClient } from 'src/app/clients/events.client';
+import { DefaultLayoutComponent } from '../../../layouts/default/default.layout.component';
+import { EventButtonActionsComponent } from '../components/actions/event-button-actions.component';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { AlertComponent } from '../../../custom/alert/alert.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatFormField, MatLabel, MatInput, MatError, MatHint } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+
+interface IEventForm {
+  name: FormControl<string | null>;
+  description: FormControl<string | null>;
+  start: FormControl<string | null>;
+  memberRegistrationMinutes: FormControl<number | null>;
+  teamPresentationMinutes: FormControl<number | null>;
+  maxEventMembers: FormControl<number | null>;
+  minTeamMembers: FormControl<number | null>;
+  isCreateTeamsAutomatically: FormControl<boolean | null>;
+  award: FormControl<string | null>;
+  imageId: FormControl<string | null>;
+  fileImage: FormControl<any | null>;
+  agreementRules: FormControl<string | null>;
+  agreementRequiresConfirmation: FormControl<boolean | null>;
+  tags: FormControl<string[] | null>;
+}
 
 @Component({
-  selector: 'event-create-edit-card',
-  templateUrl: './event-create-edit-card.component.html',
-  styleUrls: ['./event-create-edit-card.component.scss'],
+    selector: 'event-create-edit-card',
+    templateUrl: './event-create-edit-card.component.html',
+    styleUrls: ['./event-create-edit-card.component.scss'],
+    imports: [DefaultLayoutComponent, EventButtonActionsComponent, AlertComponent, FormsModule, ReactiveFormsModule, MatTabGroup, MatTab, MatFormField, MatLabel, MatInput, MatError, CdkTextareaAutosize, MatCheckbox, MatChipGrid, MatChipOption, MatChipRemove, MatIcon, MatChipInput, MatButton, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, MatHint, AsyncPipe, DatePipe]
 })
 export class EventCreateEditCardComponent
   extends EventCardBaseComponent
   implements OnInit, AfterViewInit
 {
-  @ViewChild('eventStagesTable') eventStagesTable: MatTable<EventStage>;
-  @ViewChild('eventTasksTable') eventTasksTable: MatTable<IEventTaskItem>;
-  @ViewChild('eventStatusTable') eventStatusTable: MatTable<ChangeEventStatusMessage>;
-  @ViewChild('newTaskInput') newTaskInput: ElementRef;
+  private activateRoute = inject(ActivatedRoute);
+  private fileStorageClient = inject(FileStorageClient);
+  private eventsClient = inject(EventsClient);
+  private eventService = inject(EventService);
+  private snackService = inject(SnackService);
+  private router = inject(RouterService);
+  private dialog = inject(MatDialog);
+  private fb = inject(FormBuilder);
+  private errorProcessor = inject(ErrorProcessorService);
+  protected appStateService = inject(AppStateService);
+
+  @ViewChild('eventStagesTable') eventStagesTable!: MatTable<EventStage>;
+  @ViewChild('eventTasksTable') eventTasksTable!: MatTable<IEventTaskItem>;
+  @ViewChild('eventStatusTable') eventStatusTable!: MatTable<ChangeEventStatusMessage>;
+  @ViewChild('newTaskInput') newTaskInput!: ElementRef;
 
   public editMode: boolean = false;
   public submit: () => void = this.saveForm();
@@ -66,26 +99,15 @@ export class EventCreateEditCardComponent
   public eventStatusDataSource = new MatTableDataSource<ChangeEventStatusMessage>([]);
   public eventTasksDataSource = new MatTableDataSource<IEventTaskItem>([]);
   public eventStagesDataSource = new MatTableDataSource<EventStage>([]);
-  public form = new FormGroup({});
-  public eventImage: SafeUrl;
-  public minDate: string;
+  public form!: FormGroup;
+  public eventImage!: SafeUrl | null;
+  public minDate!: string;
   public approvalApplicationStatusEnum = ApprovalApplicationStatusEnum;
 
-  private eventStatusValues: (string | EventStatus)[];
+  private eventStatusValues!: (string | EventStatus)[];
 
-  constructor(
-    private activateRoute: ActivatedRoute,
-    private fileStorageClient: FileStorageClient,
-    private eventsClient: EventsClient,
-    public eventService: EventService,
-    private snackService: SnackService,
-    private router: RouterService,
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private errorProcessor: ErrorProcessorService,
-    protected appStateService: AppStateService,
-  ) {
-    super(appStateService);
+  constructor() {
+    super();
   }
 
   ngOnInit(): void {
@@ -284,20 +306,23 @@ export class EventCreateEditCardComponent
   }
 
   public clearEventImage(): void {
+    // @ts-ignore
     this.form.controls['fileImage'].reset();
+    // @ts-ignore
     this.form.controls['imageId'].reset();
     this.eventImage = null;
   }
 
   public selectEventImage(event: Event): void {
     const target: HTMLInputElement = event.target as HTMLInputElement;
-    const files: FileList = target.files;
+    const files = target.files;
 
     if (files?.length) {
       this.eventsClient
         .setEventImage(files)
         .pipe(
           switchMap((imageId: string) => {
+            // @ts-ignore
             this.form.controls['imageId'].setValue(imageId);
             return this.fileStorageClient.getById(imageId);
           }),
@@ -314,13 +339,15 @@ export class EventCreateEditCardComponent
   private fetch(): void {
     if (!this.eventId) return;
 
+    // @ts-ignore
     this.form.patchValue({
       ...this.event,
+      // @ts-ignore
       start: moment(this.event.start).local().format(DATE_FORMAT_YYYY_MM_DD),
       agreementRules: checkValue(this.event?.agreement?.rules),
       agreementRequiresConfirmation: this.event?.agreement?.requiresConfirmation,
       imageId: this.event.imageId,
-      tags: this.event.tags
+      tags: this.event.tags,
     });
 
     this.eventStatusDataSource.data = this.event.changeEventStatusMessages;
@@ -342,40 +369,43 @@ export class EventCreateEditCardComponent
     }
 
     this.form.updateValueAndValidity();
+    // @ts-ignore
     this.form.controls['start'].markAsTouched();
   }
 
   private applyAgreement(event: ICreateEvent | IUpdateEvent): void {
+    // @ts-ignore
     const agreementRules: string = this.form.get('agreementRules')?.value;
     event.agreement =
       agreementRules?.length > 0
         ? ({
-            id: checkValue(this.event?.agreement?.id),
+            id: checkValue(this.event?.agreement?.id) as number,
             rules: agreementRules,
             requiresConfirmation: this.form.get('agreementRequiresConfirmation')?.value,
           } as IEventAgreement)
-        : null;
+        : undefined;
   }
 
   private initForm(): void {
-    this.form = this.fb.group({
-      name: [null],
-      description: [null],
-      start: [
+    this.form = new FormGroup({
+      // Убрали скобки у Validators.required
+      name: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+      description: new FormControl(''),
+      start: new FormControl(
         EventCreateEditCardComponent.getEventStartDefault(),
-        [this.startDateValidator().bind(this)],
-      ],
-      memberRegistrationMinutes: [10],
-      teamPresentationMinutes: [10],
-      maxEventMembers: [50],
-      minTeamMembers: [2],
-      isCreateTeamsAutomatically: [true],
-      award: ['0'],
-      imageId: [null],
-      fileImage: [null],
-      agreementRules: [null],
-      agreementRequiresConfirmation: [false],
-      tags: [[]]
+        { validators: [this.startDateValidator().bind(this)] }
+      ),
+      memberRegistrationMinutes: new FormControl(10),
+      teamPresentationMinutes: new FormControl(10),
+      maxEventMembers: new FormControl(50),
+      minTeamMembers: new FormControl(2),
+      isCreateTeamsAutomatically: new FormControl(true),
+      award: new FormControl('0'),
+      imageId: new FormControl<string | null>(null),
+      fileImage: new FormControl<any>(null),
+      agreementRules: new FormControl<string | null>(null),
+      agreementRequiresConfirmation: new FormControl(false),
+      tags: new FormControl<string[]>([]),
     });
   }
 
@@ -417,19 +447,17 @@ export class EventCreateEditCardComponent
     this.eventTasksTable.renderRows();
   }
 
-
-  get tags(): string[]{
+  get tags(): string[] {
     return this.form.get('tags')?.value;
   }
 
-  public canAddTag(): boolean
-  {
+  public canAddTag(): boolean {
     return this.tags?.length < 3;
   }
 
-  public addEventTag(event: MatChipInputEvent): void{
+  public addEventTag(event: MatChipInputEvent): void {
     if (event.value) {
-      var index = this.tags.indexOf(event.value);
+      const index: number = this.tags.indexOf(event.value);
       if (index == -1) {
         this.tags.push(event.value);
       }
@@ -438,8 +466,8 @@ export class EventCreateEditCardComponent
     }
   }
 
-  public removeEventTag(value: string):void{
-    this.tags.splice(this.tags.indexOf(value), 1)
+  public removeEventTag(value: string): void {
+    this.tags.splice(this.tags.indexOf(value), 1);
   }
 
   public addEventTaskFromInput(): void {
@@ -482,7 +510,8 @@ export class EventCreateEditCardComponent
       imageId: checkValue(this.form.get('imageId')?.value),
       stages: eventStages,
       tasks: eventTaskItems,
-      tags: checkValue(this.tags)
+      //TODO: remove type assertion
+      tags: checkValue(this.tags) as string[],
     };
   }
 
@@ -491,21 +520,22 @@ export class EventCreateEditCardComponent
     eventTaskItems: IEventTaskItem[],
   ): IUpdateEvent {
     return {
-      id: checkValue<number>(this.event?.id),
+      //TODO: remove type assertion
+      id: checkValue<number>(this.event?.id) as number,
       name: checkValue(this.form.get('name')?.value),
       isCreateTeamsAutomatically: this.form.get('isCreateTeamsAutomatically')?.value,
       maxEventMembers: checkValue(this.form.get('maxEventMembers')?.value),
       minTeamMembers: checkValue(this.form.get('minTeamMembers')?.value),
       start: checkValue(this.form.get('start')?.value),
-      userId: checkValue<number>(this.event?.owner?.id),
+      userId: checkValue<number>(this.event?.owner?.id as number) as number,
       changeEventStatusMessages: this.eventStatusDataSource.data,
       stages: eventStages,
       tasks: eventTaskItems,
       award: checkValue(this.form.get('award')?.value),
       description: checkValue(this.form.get('description')?.value),
       imageId: checkValue(this.form.get('imageId')?.value),
-      agreement: checkValue(this.event?.agreement),
-      tags: checkValue(this.tags)
+      agreement: checkValue(this.event?.agreement) as IEventAgreement,
+      tags: checkValue(this.tags) as string[],
     };
   }
 

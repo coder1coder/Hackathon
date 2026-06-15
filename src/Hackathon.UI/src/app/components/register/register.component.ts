@@ -1,9 +1,9 @@
 import '@angular/compiler';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ICreateUser } from 'src/app/models/User/CreateUser';
 import { AuthService } from '../../services/auth.service';
-import { Location } from '@angular/common';
+import { Location, AsyncPipe } from '@angular/common';
 import { SnackService } from '../../services/snack.service';
 import { Observable, takeUntil } from 'rxjs';
 import { WithFormBaseComponent } from '../../common/base-components/with-form-base.component';
@@ -13,14 +13,27 @@ import { fromMobx } from '../../common/functions/from-mobx.function';
 import { AppStateService } from '../../services/app-state.service';
 import { ErrorProcessorService } from '../../services/error-processor.service';
 import { finalize } from 'rxjs/operators';
+import { MatFormField, MatLabel, MatInput, MatSuffix } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatButton, MatProgressSpinner, AsyncPipe]
 })
 export class RegisterComponent extends WithFormBaseComponent implements OnInit {
-  @ViewChild('login', { static: true }) inputLogin: ElementRef;
+  private routerService = inject(RouterService);
+  private location = inject(Location);
+  private authService = inject(AuthService);
+  private snackbar = inject(SnackService);
+  private fb = inject(FormBuilder);
+  private appStateService = inject(AppStateService);
+  private errorProcessor = inject(ErrorProcessorService);
+
+  @ViewChild('login', { static: true }) inputLogin!: ElementRef;
 
   public override form: FormGroup = this.fb.group({});
   public welcomeText: string = 'Регистрация в системе Hackathon';
@@ -29,15 +42,7 @@ export class RegisterComponent extends WithFormBaseComponent implements OnInit {
 
   private emailRegexp: RegExp = emailRegex;
 
-  constructor(
-    private routerService: RouterService,
-    private location: Location,
-    private authService: AuthService,
-    private snackbar: SnackService,
-    private fb: FormBuilder,
-    private appStateService: AppStateService,
-    private errorProcessor: ErrorProcessorService,
-  ) {
+  constructor() {
     super();
   }
 

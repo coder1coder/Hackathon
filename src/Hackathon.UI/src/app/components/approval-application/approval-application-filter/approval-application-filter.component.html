@@ -1,4 +1,5 @@
-<div *ngIf="isFilterEnabled">
+@if(isFilterEnabled){
+  <div>
     <form [formGroup]="form" class="applications__filter">
       <mat-form-field appearance="outline">
         <mat-label>Статус модерации</mat-label>
@@ -9,13 +10,17 @@
               [status]="getFormControl('status').value ?? 0"
             ></app-approval-application-status>
           </mat-select-trigger>
-          <mat-option *ngFor="let status of approvalApplicationStatuses" [value]="status">
-            <app-approval-application-status [status]="status"></app-approval-application-status>
-          </mat-option>
+          @for( status of approvalApplicationStatuses; track $index) {
+            <mat-option [value]="status">
+              <app-approval-application-status [status]="status"></app-approval-application-status>
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </form>
-    <div style="display: flex; column-gap: 10px; margin-top: 1.5em" *ngIf="!applyOnChange">
+  </div>
+  @if (!applyOnChange) {
+    <div class="applications__filter-buttons">
       <button
         mat-flat-button
         color="primary"
@@ -28,4 +33,5 @@
         Очистить
       </button>
     </div>
-</div>
+  }
+}

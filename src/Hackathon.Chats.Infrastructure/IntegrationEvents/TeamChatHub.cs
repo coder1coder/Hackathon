@@ -20,15 +20,18 @@ public class TeamChatHub: Hub, ITeamChatHub
     private readonly ILogger<TeamChatHub> _logger;
     private readonly ITeamRepository _teamRepository;
     private readonly IChatConnectionsProvider _connectionsProvider;
+    private readonly IHubContext<TeamChatHub> _hubContext;
     
     public TeamChatHub(
         ILogger<TeamChatHub> logger, 
         ITeamRepository teamRepository, 
-        IChatConnectionsProvider connectionsProvider)
+        IChatConnectionsProvider connectionsProvider, 
+        IHubContext<TeamChatHub> hubContext)
     {
         _logger = logger;
         _teamRepository = teamRepository;
         _connectionsProvider = connectionsProvider;
+        _hubContext = hubContext;
     }
     
     public override async Task OnConnectedAsync()
@@ -49,13 +52,13 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var userTeamId in userTeamIds)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
+            await _hubContext.Groups.AddToGroupAsync(Context.ConnectionId, _teamGroupNameResolver.Invoke(userTeamId));
         }
 
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("User {UserId} disconnected with connection id {ConnectionId}",
             Context.UserIdentifier,
@@ -88,7 +91,7 @@ public class TeamChatHub: Hub, ITeamChatHub
             return;
         }
 
-        await Clients
+        await _hubContext.Clients
             .Group(_teamGroupNameResolver.Invoke(integrationEvent.TeamId))
             .SendCoreAsync(topicName, [ integrationEvent ], cancellationToken);
     }
@@ -107,7 +110,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var connectionId in connections)
         {
-            await Groups.AddToGroupAsync(connectionId, teamGroupName, cancellationToken);
+            await _hubContext.Groups.AddToGroupAsync(connectionId, teamGroupName, cancellationToken);
         }
     }
 
@@ -125,7 +128,7 @@ public class TeamChatHub: Hub, ITeamChatHub
 
         foreach (var connectionId in connections)
         {
-            await Groups.RemoveFromGroupAsync(connectionId, teamGroupName, cancellationToken);
+            await _hubContext.Groups.RemoveFromGroupAsync(connectionId, teamGroupName, cancellationToken);
         }
     }
     

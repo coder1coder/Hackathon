@@ -2,7 +2,7 @@ import { NotificationType } from './NotificationType';
 
 export class Notification {
   id?: string;
-  data: string;
+  data: string = '';
   type?: NotificationType;
   isRead?: boolean;
   ownerId: number = 0;

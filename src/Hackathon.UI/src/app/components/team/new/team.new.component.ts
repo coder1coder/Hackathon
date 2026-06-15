@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnDestroy, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateTeamModel } from '../../../models/Team/CreateTeamModel';
 import { ActivatedRoute } from '@angular/router';
 import { SnackService } from '../../../services/snack.service';
@@ -8,13 +8,25 @@ import { takeUntil } from 'rxjs';
 import { ErrorProcessorService } from '../../../services/error-processor.service';
 import { WithFormBaseComponent } from '../../../common/base-components/with-form-base.component';
 import { TeamsClient } from 'src/app/clients/teams.client';
+import { DefaultLayoutComponent } from '../../layouts/default/default.layout.component';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'team-new',
-  templateUrl: 'team.new.component.html',
-  styleUrls: ['team.new.component.scss'],
+    selector: 'team-new',
+    templateUrl: 'team.new.component.html',
+    styleUrls: ['team.new.component.scss'],
+    imports: [DefaultLayoutComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatButton]
 })
 export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy {
+  private teamsClient = inject(TeamsClient);
+  private snackBar = inject(SnackService);
+  private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+  private errorProcessor = inject(ErrorProcessorService);
+
   public selectedTeamType: number = 0;
   public teamTypes: TeamType[] = [
     { id: 0, name: 'Закрытый' },
@@ -27,14 +39,10 @@ export class TeamNewComponent extends WithFormBaseComponent implements OnDestroy
 
   private readonly eventId: number;
 
-  constructor(
-    private teamsClient: TeamsClient,
-    private snackBar: SnackService,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private errorProcessor: ErrorProcessorService,
-  ) {
+  constructor() {
     super();
+    const route = this.route;
+
     this.eventId = Number(route.snapshot.queryParamMap.get('eventId'));
   }
 

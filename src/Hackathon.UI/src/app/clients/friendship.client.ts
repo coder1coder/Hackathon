@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BaseCollection } from 'src/app/models/BaseCollection';
 import { GetListParameters } from '../models/GetListParameters';
 import { Observable } from 'rxjs';
@@ -13,8 +12,8 @@ import { BaseApiClient } from './base.client';
 })
 export class FriendshipClient extends BaseApiClient {
 
-  constructor(protected http: HttpClient) {
-    super(http, 'friendship');
+  constructor() {
+    super('friendship');
   }
 
   getUsersByFriendshipStatus(

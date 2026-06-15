@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Hackathon.API.Module;
+using Hackathon.Auth.Module;
 using Hackathon.Chats.Module;
 using Hackathon.FileStorage.Module;
 using Hackathon.Informing.Module;
@@ -27,6 +28,7 @@ public class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
+        Modules.Add(new AuthApiModule());
         Modules.Add(new ChatsApiModule());
         Modules.Add(new InformingApiModule());
         Modules.Add(new FileStorageModule());

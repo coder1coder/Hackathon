@@ -11,17 +11,19 @@
           formControlName="name"
           [errorStateMatcher]="matcher"
           required
-        />
+          />
 
-        <mat-error *ngIf="form.get('name')?.errors && form.get('name')?.hasError('required')">
-          Поле обязательно для заполнения
-        </mat-error>
-      </mat-form-field>
-    </div>
-  </form>
-</div>
+          @if (form.get('name')?.errors && form.get('name')?.hasError('required')) {
+            <mat-error>
+              Поле обязательно для заполнения
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
 
-<div mat-dialog-actions>
-  <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">OK</button>
-  <button mat-button mat-dialog-close="">Отмена</button>
-</div>
+  <div mat-dialog-actions>
+    <button mat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">OK</button>
+    <button mat-button mat-dialog-close="">Отмена</button>
+  </div>
